@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <string name="app_name">VampireApp</string>
+    <string name="button_create_character">Neuen Charakter erstellen</string>
+    <string name="context_settings">Einstellungen</string>
+    <string name="char_name">Charakter Name</string>
+    <string name="concept">Konzept</string>
+    <string name="nature_text">Wesen:</string>
+    <string name="behavior_text">Verhalten:</string>
+    <string name="clan_text">Clan:</string>
+    <string name="generation_text">Generation:</string>
+    <string name="attributes">Attribute</string>
+	<string name="abilities">Fähigkeiten</string>
+</resources>
