@@ -2,7 +2,7 @@
 *.apk
 *.ap_
 *.dex
-bin/
+/bin
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
