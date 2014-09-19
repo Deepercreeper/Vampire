@@ -1,6 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <integer-array name="attribute_points">
+        <item>6</item>
+        <item>8</item>
+        <item>10</item>
+    </integer-array>
+    
+    <integer-array name="ability_points">
+        <item>5</item>
+        <item>9</item>
+        <item>13</item>
+    </integer-array>
+    
+    <string-array name = "attributes">
+        <item>Körperlich:Körperkraft,Geschick,Widerstandsfähigkeit</item>
+        <item>Gesellschaftlich:Charisma,Manipulation,Erscheinungsbild</item>
+        <item>Geistig:Wahrnehmung,Intelligenz,Geistesschärfe</item>
+    </string-array>
+    
+    <string-array name = "abilities">
+        <item>Talente:Aufmerksamkeit,Ausflüchte,Ausweichen,Diebstahl,Einschüchtern,Empathie,Führungsqualitäten,Handgemenge,Schauspielerei,Sportlichkeit</item>
+        <item>Fertigkeiten:Bogenschießen,Etikette,Handwerk,Heimlichkeit,Kräuterkunde,Musik,Nahkampf,Reiten,Tierkunde,Überleben</item>
+        <item>Kenntnisse:Akademisches Wissen,Folklore,Gesetzeskenntnis,Linguistik,Medizin,Nachforschungen,Naturwissenschaften,Okkultismus,Politik,Verwaltung</item>
+    </string-array>
+    
     <string-array name="nature_and_behavior"> 
         <item>Autokrat</item>
         <item>Barbar</item>
@@ -39,7 +62,11 @@
         <item>Ventrue:Beherrschung,Präsenz,Seelenstärke</item>
     </string-array>
 
-    <array name="disciplines">
+    <string-array name="clan_generations">
+        <item>Caitiff:13</item>
+    </string-array>
+    
+    <string-array name="disciplines">
         <item>Auspex:Geschärfte Sinne,1;Seelenschau,2,Wahrnehmung#Empathie;Geistige Berührung,3,Wahrnehmung,Empathie;Geraubte Geheimnisse,4,Intelligenz#Ausflüchte;Animawandeln,5,Wahrnehmung#Okkultismus;Weitsicht,6,Wahrnehmung#Empathie</item>
     	<item>Beherrschung:Gehorsam für das gesprochene Wort,1,Manipulation#Einschüchterung;Murmeln des falschen Willens,2,Manipulation#Führungsqualitäten;Die Erinnerung des Zechers,3,Geistesschärfe#Ausflüchte;Verlockung des süßen Flüsterns,4,Charisma#Führungsqualitäten;Gefäß,5,WillenskraftPunkte;Lehnstreue,6,Charisma#Führungsqualitäten</item>
     	<item>Daimonion:Sündengespür,1,Wahrnehmung#Empathie;Furcht vor der Hölle unter uns,2,Geistesschärfe#Einschüchterung;Flammen der Unterwelt,3,Okkultismus#Geschick,Blutpunkte,Würfel;Psychomachie,4;Fluch,5,Intelligenz#Okkultismus;Ignorieren der sängenden Flammen,6</item>
@@ -61,6 +88,6 @@
    		<item>Rego Tempestatem:Nebel,1,Willenskraft;Regen,2,Willenskraft;Wind,3,Willenskraft;Sturm,4,Willenskraft;Blitzschlag,5,Würfel#Willenskraft,10</item>
    		<item>Rego Aquam:Augen der See,1,Willenskraft;Wassergefängnis,2,Willenskraft;Austrocknen,3,Willenskraft;Fließende Wand,4,Willenskraft;Blut zu Wasser,5,Willenskraft</item>
    		<item>Rego Elementum:Elementare Stärke,1,Willenskraft#WillenskraftPunkte,2;Hölzerne Zungen,2,Willenskraft;Unbewegtes Beleben,3,WillenskraftPunkte,1;Elementargestalt,4,Willenskraft;Elementar beschwören,5,Willenskraft;Elementar kontrollieren,5,Geistesschärfe#Okkultismus</item>
-    </array>
+    </string-array>
     
 </resources>

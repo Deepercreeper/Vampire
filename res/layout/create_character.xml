@@ -37,11 +37,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/nature_label"
-            android:layout_alignLeft="@+id/generation_picker"
-            android:layout_alignParentRight="true"
+            android:layout_alignStart="@+id/generation_picker"
+            android:layout_alignParentEnd="true"
             android:layout_alignTop="@+id/nature_label"
             android:layout_below="@+id/concept_text"
-            android:layout_toRightOf="@+id/nature_label"
+            android:layout_toEndOf="@+id/nature_label"
             android:entries="@array/nature_and_behavior" />
 
         <Spinner
@@ -49,21 +49,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/behavior_label"
-            android:layout_alignLeft="@+id/generation_picker"
-            android:layout_alignParentRight="true"
+            android:layout_alignStart="@+id/generation_picker"
+            android:layout_alignParentEnd="true"
             android:layout_alignTop="@+id/behavior_label"
             android:layout_below="@+id/nature_spinner"
-            android:layout_toRightOf="@+id/behavior_label"
+            android:layout_toEndOf="@+id/behavior_label"
             android:entries="@array/nature_and_behavior" />
 
         <TextView
             android:id="@+id/behavior_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_below="@+id/nature_spinner"
             android:gravity="center_vertical"
-            android:paddingBottom="10sp"
+            android:paddingBottom="12sp"
             android:paddingTop="10sp"
             android:text="@string/nature_text"
             android:textSize="20sp" />
@@ -72,10 +72,10 @@
             android:id="@+id/nature_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_below="@+id/concept_text"
             android:gravity="center_vertical"
-            android:paddingBottom="10sp"
+            android:paddingBottom="12sp"
             android:paddingTop="10sp"
             android:text="@string/behavior_text"
             android:textSize="20sp" />
@@ -84,10 +84,10 @@
             android:id="@+id/clan_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_below="@+id/behavior_spinner"
             android:gravity="center_vertical"
-            android:paddingBottom="10sp"
+            android:paddingBottom="12sp"
             android:paddingTop="10sp"
             android:text="@string/clan_text"
             android:textSize="20sp" />
@@ -96,7 +96,7 @@
             android:id="@+id/generation_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_below="@+id/clan_spinner"
             android:gravity="center_vertical"
             android:paddingBottom="70sp"
@@ -109,28 +109,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/clan_label"
-            android:layout_alignLeft="@+id/generation_picker"
-            android:layout_alignParentRight="true"
+            android:layout_alignStart="@+id/generation_picker"
+            android:layout_alignParentEnd="true"
             android:layout_alignTop="@+id/clan_label"
             android:layout_below="@+id/behavior_spinner"
-            android:layout_toRightOf="@+id/clan_label" />
+            android:layout_toEndOf="@+id/clan_label" />
 
         <NumberPicker
             android:id="@+id/generation_picker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/generation_label"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignTop="@+id/generation_label"
             android:layout_below="@+id/clan_spinner"
-            android:layout_toRightOf="@+id/generation_label" />
+            android:layout_toEndOf="@+id/generation_label" />
 
         <Button
             android:id="@+id/show_attributes"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/generation_picker"
-            android:drawableRight="@android:drawable/arrow_down_float"
+            android:drawableEnd="@android:drawable/arrow_down_float"
             android:text="@string/attributes"
             android:textSize="14sp" />
 
@@ -138,8 +138,8 @@
             android:id="@+id/attributes_panel"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:layout_alignLeft="@+id/show_attributes"
-            android:layout_alignRight="@+id/show_attributes"
+            android:layout_alignStart="@+id/show_attributes"
+            android:layout_alignEnd="@+id/show_attributes"
             android:layout_below="@+id/show_attributes"
             android:orientation="vertical" >
 
@@ -155,7 +155,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/attributes_panel"
-            android:drawableRight="@android:drawable/arrow_down_float"
+            android:drawableEnd="@android:drawable/arrow_down_float"
             android:text="@string/abilities"
             android:textSize="14sp" />
 
@@ -163,8 +163,8 @@
             android:id="@+id/abilities_panel"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:layout_alignLeft="@+id/show_abilities"
-            android:layout_alignRight="@+id/show_abilities"
+            android:layout_alignStart="@+id/show_abilities"
+            android:layout_alignEnd="@+id/show_abilities"
             android:layout_below="@+id/show_abilities"
             android:orientation="vertical" >
 

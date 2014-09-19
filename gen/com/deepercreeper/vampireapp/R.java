@@ -9,9 +9,14 @@ package com.deepercreeper.vampireapp;
 
 public final class R {
     public static final class array {
-        public static final int clan=0x7f040001;
-        public static final int disciplines=0x7f040002;
-        public static final int nature_and_behavior=0x7f040000;
+        public static final int abilities=0x7f040003;
+        public static final int ability_points=0x7f040001;
+        public static final int attribute_points=0x7f040000;
+        public static final int attributes=0x7f040002;
+        public static final int clan=0x7f040005;
+        public static final int clan_generations=0x7f040006;
+        public static final int disciplines=0x7f040007;
+        public static final int nature_and_behavior=0x7f040004;
     }
     public static final class attr {
     }
@@ -52,10 +57,11 @@ public final class R {
     }
     public static final class layout {
         public static final int abilities_panel=0x7f030000;
-        public static final int activity_main=0x7f030001;
-        public static final int attributes_panel=0x7f030002;
-        public static final int create_character=0x7f030003;
-        public static final int point_spinner=0x7f030004;
+        public static final int ability_spinner=0x7f030001;
+        public static final int activity_main=0x7f030002;
+        public static final int attribute_spinner=0x7f030003;
+        public static final int attributes_panel=0x7f030004;
+        public static final int create_character=0x7f030005;
     }
     public static final class menu {
         public static final int main=0x7f080000;

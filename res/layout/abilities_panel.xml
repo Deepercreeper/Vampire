@@ -2,7 +2,7 @@
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="match_parent" >
-    
+
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
@@ -22,131 +22,151 @@
         android:layout_height="wrap_content" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="Aufmerksamkeit" />
 
-        <include layout="@layout/point_spinner" />
+        <include layout="@layout/ability_spinner" />
     </TableRow>
-    
+
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="Ausflüchte" />
 
-        <include layout="@layout/point_spinner" />
+        <include layout="@layout/ability_spinner" />
     </TableRow>
-    
+
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="Ausweichen" />
 
-        <include layout="@layout/point_spinner" />
+        <include layout="@layout/ability_spinner" />
     </TableRow>
-    
+
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="Diebstahl" />
 
-        <include layout="@layout/point_spinner" />
+        <include layout="@layout/ability_spinner" />
     </TableRow>
-    
+
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="Einschüchtern" />
 
-        <include layout="@layout/point_spinner" />
+        <include layout="@layout/ability_spinner" />
     </TableRow>
-    
+
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="Empathie" />
 
-        <include layout="@layout/point_spinner" />
+        <include layout="@layout/ability_spinner" />
     </TableRow>
-    
+
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="Führungsqualitäten" />
 
-        <include layout="@layout/point_spinner" />
+        <include layout="@layout/ability_spinner" />
     </TableRow>
-    
+
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="Handgemenge" />
 
-        <include layout="@layout/point_spinner" />
+        <include layout="@layout/ability_spinner" />
     </TableRow>
-    
+
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="Schauspielerei" />
 
-        <include layout="@layout/point_spinner" />
+        <include layout="@layout/ability_spinner" />
     </TableRow>
-    
+
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="Sportlichkeit" />
 
-        <include layout="@layout/point_spinner" />
+        <include layout="@layout/ability_spinner" />
     </TableRow>
-    
+
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
@@ -166,131 +186,151 @@
         android:layout_height="wrap_content" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="Bogenschießen" />
 
-        <include layout="@layout/point_spinner" />
+        <include layout="@layout/ability_spinner" />
     </TableRow>
-    
+
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="Etikette" />
 
-        <include layout="@layout/point_spinner" />
+        <include layout="@layout/ability_spinner" />
     </TableRow>
-    
+
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="Handwerk" />
 
-        <include layout="@layout/point_spinner" />
+        <include layout="@layout/ability_spinner" />
     </TableRow>
-    
+
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="Heimlichkeit" />
 
-        <include layout="@layout/point_spinner" />
+        <include layout="@layout/ability_spinner" />
     </TableRow>
-    
+
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="Kräuterkunde" />
 
-        <include layout="@layout/point_spinner" />
+        <include layout="@layout/ability_spinner" />
     </TableRow>
-    
+
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="Musik" />
 
-        <include layout="@layout/point_spinner" />
+        <include layout="@layout/ability_spinner" />
     </TableRow>
-    
+
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="Nahkampf" />
 
-        <include layout="@layout/point_spinner" />
+        <include layout="@layout/ability_spinner" />
     </TableRow>
-    
+
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="Reiten" />
 
-        <include layout="@layout/point_spinner" />
+        <include layout="@layout/ability_spinner" />
     </TableRow>
-    
+
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="Tierkunde" />
 
-        <include layout="@layout/point_spinner" />
+        <include layout="@layout/ability_spinner" />
     </TableRow>
-    
+
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="Überleben" />
 
-        <include layout="@layout/point_spinner" />
+        <include layout="@layout/ability_spinner" />
     </TableRow>
-    
+
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
@@ -310,129 +350,149 @@
         android:layout_height="wrap_content" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="Akademisches Wissen" />
 
-        <include layout="@layout/point_spinner" />
+        <include layout="@layout/ability_spinner" />
     </TableRow>
-    
+
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="Folklore" />
 
-        <include layout="@layout/point_spinner" />
+        <include layout="@layout/ability_spinner" />
     </TableRow>
-    
+
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="Gesetzeskenntnis" />
 
-        <include layout="@layout/point_spinner" />
+        <include layout="@layout/ability_spinner" />
     </TableRow>
-    
+
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="Linguistik" />
 
-        <include layout="@layout/point_spinner" />
+        <include layout="@layout/ability_spinner" />
     </TableRow>
-    
+
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="Medizin" />
 
-        <include layout="@layout/point_spinner" />
+        <include layout="@layout/ability_spinner" />
     </TableRow>
-    
+
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="Nachforschungen" />
 
-        <include layout="@layout/point_spinner" />
+        <include layout="@layout/ability_spinner" />
     </TableRow>
-    
+
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="Naturwissenschaften" />
 
-        <include layout="@layout/point_spinner" />
+        <include layout="@layout/ability_spinner" />
     </TableRow>
-    
+
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="Okkultismus" />
 
-        <include layout="@layout/point_spinner" />
+        <include layout="@layout/ability_spinner" />
     </TableRow>
-    
+
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="Politik" />
 
-        <include layout="@layout/point_spinner" />
+        <include layout="@layout/ability_spinner" />
     </TableRow>
-    
+
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="Verwaltung" />
 
-        <include layout="@layout/point_spinner" />
+        <include layout="@layout/ability_spinner" />
     </TableRow>
 
 </TableLayout>
