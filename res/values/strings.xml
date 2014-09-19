@@ -12,4 +12,6 @@
     <string name="generation_text">Generation:</string>
     <string name="attributes">Attribute</string>
 	<string name="abilities">Fähigkeiten</string>
+	<string name= "disciplines">Disziplinen</string>
+	<string name ="add_discipline">Disziplin hinzufügen</string>
 </resources>

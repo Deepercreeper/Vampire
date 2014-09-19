@@ -34,7 +34,7 @@ public class MainActivity extends Activity
 {
 	private static final String					DELIM			= ":";
 	
-	private static final int					ATTRIBUTES_HEIGHT	= 1140, ABILITIES_HEIGHT = 3150, ATTRIBUTES_TABLE_ID = 1, ABILITIES_TABLE_ID = 2;
+	private static final int					ATTRIBUTES_HEIGHT	= 1140, ABILITIES_HEIGHT = 3150, DISCIPLINES_HEIGHT = 650;
 	
 	private final HashMap<String, Discipline>	mDisciplines		= new HashMap<>();
 	
@@ -50,11 +50,9 @@ public class MainActivity extends Activity
 	
 	private CharCreator							mCreator;
 	
-	private AttributeListener					mAttributeListener;
+	private boolean								mInitializedAttributes	= false, mInitializedAbilities = false, mInitializedDisciplines = false;
 	
-	private boolean								mInitializedAttributes	= false, mInitializedAbilities = false;
-	
-	private boolean								mShowAttributes			= false, mShowAbilities = false;
+	private boolean								mShowAttributes			= false, mShowAbilities = false, mShowDisciplines = false;
 	
 	@Override
 	protected void onCreate(final Bundle savedInstanceState)
@@ -175,17 +173,7 @@ public class MainActivity extends Activity
 			@Override
 			public void onItemSelected(final AdapterView<?> aParent, final View aView, final int aPosition, final long aId)
 			{
-				if (mClanGenerations.containsKey(aParent.getSelectedItem()))
-				{
-					final int generation = mClanGenerations.get(aParent.getSelectedItem());
-					generationPicker.setMinValue(generation);
-					generationPicker.setMaxValue(generation);
-				}
-				else
-				{
-					generationPicker.setMaxValue(CharCreator.MAX_GENERATION);
-					generationPicker.setMinValue(CharCreator.MIN_GENERATION);
-				}
+				clanChanged((String) aParent.getSelectedItem());
 			}
 			
 			@Override
@@ -196,7 +184,6 @@ public class MainActivity extends Activity
 		});
 		
 		final LinearLayout attributesPanel = (LinearLayout) findViewById(R.id.attributes_panel);
-		
 		final Button showAttributes = (Button) findViewById(R.id.show_attributes);
 		showAttributes.setOnClickListener(new OnClickListener()
 		{
@@ -211,7 +198,7 @@ public class MainActivity extends Activity
 					if ( !mInitializedAttributes)
 					{
 						mInitializedAttributes = true;
-						initAttributes(true, mCreator);
+						initItems(true);
 					}
 					animation = new ResizeAnimation(attributesPanel, attributesPanel.getWidth(), attributesPanel.getHeight(), attributesPanel
 							.getWidth(), ATTRIBUTES_HEIGHT);
@@ -243,7 +230,7 @@ public class MainActivity extends Activity
 					if ( !mInitializedAbilities)
 					{
 						mInitializedAbilities = true;
-						initAttributes(false, mCreator);
+						initItems(false);
 					}
 					animation = new ResizeAnimation(abilitiesPanel, abilitiesPanel.getWidth(), abilitiesPanel.getHeight(), abilitiesPanel.getWidth(),
 							ABILITIES_HEIGHT);
@@ -259,9 +246,138 @@ public class MainActivity extends Activity
 				abilitiesPanel.startAnimation(animation);
 			}
 		});
+		
+		final LinearLayout disciplinesPanel = (LinearLayout) findViewById(R.id.disciplines_panel);
+		final Button showDisciplines = (Button) findViewById(R.id.show_disciplines);
+		showDisciplines.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				mShowDisciplines = !mShowDisciplines;
+				Animation animation;
+				int arrowId;
+				if (mShowDisciplines)
+				{
+					if ( !mInitializedDisciplines)
+					{
+						mInitializedDisciplines = true;
+						initDisciplines();
+					}
+					animation = new ResizeAnimation(disciplinesPanel, disciplinesPanel.getWidth(), disciplinesPanel.getHeight(), disciplinesPanel
+							.getWidth(), DISCIPLINES_HEIGHT);
+					arrowId = android.R.drawable.arrow_up_float;
+				}
+				else
+				{
+					animation = new ResizeAnimation(disciplinesPanel, disciplinesPanel.getWidth(), disciplinesPanel.getHeight(), disciplinesPanel
+							.getWidth(), 0);
+					arrowId = android.R.drawable.arrow_down_float;
+				}
+				showDisciplines.setCompoundDrawablesWithIntrinsicBounds(0, 0, arrowId, 0);
+				disciplinesPanel.startAnimation(animation);
+			}
+		});
 	}
 	
-	private TableRow createItemRow(final Item aItem, final CharCreator aCreator)
+	private void initDisciplines()
+	{
+		final LinearLayout layout = (LinearLayout) findViewById(R.id.disciplines_panel);
+		
+		final Button addDiscipline = new Button(this);
+		final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		addDiscipline.setLayoutParams(params);
+		params.gravity = Gravity.CENTER_HORIZONTAL;
+		addDiscipline.setText(R.string.add_discipline);
+		layout.addView(addDiscipline);
+		
+		for (final String disciplineName : mCreator.getClan().getDisciplines())
+		{
+			final Discipline discipline = mDisciplines.get(disciplineName);
+			// TODO Is not necessary if all disciplines are added
+			if (discipline == null)
+			{
+				continue;
+			}
+			layout.addView(createDisciplinesRow(discipline));
+		}
+	}
+	
+	private void clanChanged(final String aClan)
+	{
+		mCreator.setClan(mClans.get(aClan));
+		
+		// Reload generations
+		final NumberPicker generationPicker = (NumberPicker) findViewById(R.id.generation_picker);
+		if (mClanGenerations.containsKey(aClan))
+		{
+			final int generation = mClanGenerations.get(aClan);
+			generationPicker.setMinValue(generation);
+			generationPicker.setMaxValue(generation);
+		}
+		else
+		{
+			generationPicker.setMaxValue(CharCreator.MAX_GENERATION);
+			generationPicker.setMinValue(CharCreator.MIN_GENERATION);
+		}
+		
+		// Reload disciplines
+		final LinearLayout disciplinesPanel = (LinearLayout) findViewById(R.id.disciplines_panel);
+		if (mShowDisciplines)
+		{
+			mShowDisciplines = false;
+			disciplinesPanel.startAnimation(new ResizeAnimation(disciplinesPanel, disciplinesPanel.getWidth(), disciplinesPanel.getHeight(),
+					disciplinesPanel.getWidth(), 0));
+			final Button showDisciplines = (Button) findViewById(R.id.show_disciplines);
+			showDisciplines.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
+		}
+		disciplinesPanel.removeAllViews();
+		mInitializedDisciplines = false;
+	}
+	
+	private GridLayout createDisciplinesRow(final Discipline aDiscipline)
+	{
+		final GridLayout grid = new GridLayout(this);
+		grid.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+		final TextView name = new TextView(this);
+		name.setText(aDiscipline.getName());
+		final int pixels = dpToPx(120);
+		name.setLayoutParams(new LinearLayout.LayoutParams(pixels, LayoutParams.WRAP_CONTENT));
+		name.setGravity(Gravity.CENTER_VERTICAL);
+		name.setEllipsize(TruncateAt.END);
+		name.setSingleLine();
+		grid.addView(name);
+		
+		final RadioButton[] radios = new RadioButton[CreationItem.MAX_VALUE];
+		
+		final LayoutParams params = new LayoutParams(dpToPx(30), dpToPx(30));
+		params.gravity = Gravity.TOP;
+		final ImageButton sub = new ImageButton(this);
+		sub.setContentDescription("Sub");
+		sub.setLayoutParams(params);
+		sub.setImageResource(android.R.drawable.ic_media_previous);
+		// TODO Add listener
+		grid.addView(sub);
+		
+		for (int i = 0; i < radios.length; i++ )
+		{
+			final RadioButton radio = new RadioButton(this);
+			radio.setLayoutParams(new LayoutParams(dpToPx(25), LayoutParams.WRAP_CONTENT));
+			radio.setClickable(false);
+			grid.addView(radio);
+			radios[i] = radio;
+		}
+		
+		final ImageButton add = new ImageButton(this);
+		add.setContentDescription("Add");
+		add.setLayoutParams(params);
+		add.setImageResource(android.R.drawable.ic_media_next);
+		// TODO Add listener
+		grid.addView(add);
+		return grid;
+	}
+	
+	private TableRow createItemRow(final Item aItem)
 	{
 		final TableRow row = new TableRow(this);
 		row.setLayoutParams(new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
@@ -291,8 +407,8 @@ public class MainActivity extends Activity
 				@Override
 				public void onClick(final View aV)
 				{
-					aCreator.decreaseItem(aItem);
-					applyValue(aCreator.getItem(aItem).getValue(), radios);
+					mCreator.decreaseItem(aItem);
+					applyValue(mCreator.getItem(aItem).getValue(), radios);
 				}
 			});
 			grid.addView(sub);
@@ -315,8 +431,8 @@ public class MainActivity extends Activity
 				@Override
 				public void onClick(final View aV)
 				{
-					aCreator.increaseItem(aItem);
-					applyValue(aCreator.getItem(aItem).getValue(), radios);
+					mCreator.increaseItem(aItem);
+					applyValue(mCreator.getItem(aItem).getValue(), radios);
 				}
 			});
 			applyValue(aItem.getStartValue(), radios);
@@ -339,7 +455,7 @@ public class MainActivity extends Activity
 		return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, aDP, getResources().getDisplayMetrics()));
 	}
 	
-	private void initAttributes(final boolean aAttributes, final CharCreator aCreator)
+	private void initItems(final boolean aAttributes)
 	{
 		final TableLayout table;
 		table = new TableLayout(this);
@@ -360,7 +476,7 @@ public class MainActivity extends Activity
 			table.addView(row);
 			for (final Item item : mItems.getItems(parent, aAttributes))
 			{
-				table.addView(createItemRow(item, aCreator));
+				table.addView(createItemRow(item));
 			}
 		}
 		final LinearLayout layout = (LinearLayout) findViewById(aAttributes ? R.id.attributes_panel : R.id.abilities_panel);

@@ -35,10 +35,8 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int abilities_import=0x7f090011;
-        public static final int abilities_panel=0x7f090010;
+        public static final int abilities_panel=0x7f09000f;
         public static final int action_settings=0x7f090012;
-        public static final int attributes_import=0x7f09000e;
         public static final int attributes_panel=0x7f09000d;
         public static final int behavior_label=0x7f090008;
         public static final int behavior_spinner=0x7f090007;
@@ -47,27 +45,26 @@ public final class R {
         public static final int clan_spinner=0x7f09000b;
         public static final int concept_text=0x7f090003;
         public static final int createCharacterButton=0x7f090001;
+        public static final int disciplines_panel=0x7f090011;
         public static final int generation_label=0x7f09000a;
         public static final int generation_picker=0x7f090006;
         public static final int listView1=0x7f090000;
         public static final int nature_label=0x7f090005;
         public static final int nature_spinner=0x7f090004;
-        public static final int show_abilities=0x7f09000f;
+        public static final int show_abilities=0x7f09000e;
         public static final int show_attributes=0x7f09000c;
+        public static final int show_disciplines=0x7f090010;
     }
     public static final class layout {
-        public static final int abilities_panel=0x7f030000;
-        public static final int ability_spinner=0x7f030001;
-        public static final int activity_main=0x7f030002;
-        public static final int attribute_spinner=0x7f030003;
-        public static final int attributes_panel=0x7f030004;
-        public static final int create_character=0x7f030005;
+        public static final int activity_main=0x7f030000;
+        public static final int create_character=0x7f030001;
     }
     public static final class menu {
         public static final int main=0x7f080000;
     }
     public static final class string {
         public static final int abilities=0x7f06000a;
+        public static final int add_discipline=0x7f06000c;
         public static final int app_name=0x7f060000;
         public static final int attributes=0x7f060009;
         public static final int behavior_text=0x7f060006;
@@ -76,6 +73,7 @@ public final class R {
         public static final int clan_text=0x7f060007;
         public static final int concept=0x7f060004;
         public static final int context_settings=0x7f060002;
+        public static final int disciplines=0x7f06000b;
         public static final int generation_text=0x7f060008;
         public static final int nature_text=0x7f060005;
     }

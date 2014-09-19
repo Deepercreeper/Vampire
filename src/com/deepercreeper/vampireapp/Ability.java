@@ -4,7 +4,8 @@ import java.util.HashSet;
 
 public class Ability
 {
-	private static final String		PROPERTIES_DELIM	= ",", COST_DELIM = "#", WILL_POINTS = "WillenskraftPunkte", BLOOD_POINTS = "Blutpunkte", DICES = "Würfel";
+	private static final String		PROPERTIES_DELIM	= ",", COST_DELIM = "#", VOLITION_POINTS = "VolitionPoints", BLOOD_POINTS = "BloodPoints",
+			DICES = "Dices";
 	
 	private final String			mName;
 	
@@ -18,15 +19,15 @@ public class Ability
 	
 	private int						mDices				= 0;
 	
-	public Ability(String aData)
+	public Ability(final String aData)
 	{
-		String[] properties = aData.split(PROPERTIES_DELIM);
+		final String[] properties = aData.split(PROPERTIES_DELIM);
 		mName = properties[0];
 		mLevel = Integer.parseInt(properties[1]);
 		if (properties.length > 2)
 		{
 			int propertyCounter = 3;
-			for (String cost : properties[2].split(COST_DELIM))
+			for (final String cost : properties[2].split(COST_DELIM))
 			{
 				if (cost.equals(BLOOD_POINTS))
 				{
@@ -42,7 +43,7 @@ public class Ability
 						mBloodPoints = -1;
 					}
 				}
-				else if (cost.equals(WILL_POINTS))
+				else if (cost.equals(VOLITION_POINTS))
 				{
 					if (properties.length > propertyCounter)
 					{

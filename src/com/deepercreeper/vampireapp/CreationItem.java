@@ -43,4 +43,10 @@ public class CreationItem
 		}
 		return false;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "CreationItem: " + mItem.getParent() + "." + mItem.getName() + ":" + mValue;
+	}
 }

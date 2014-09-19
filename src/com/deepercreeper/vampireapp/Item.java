@@ -39,4 +39,10 @@ public class Item
 	{
 		return mStartValue;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "Item: " + mParent + "." + mName;
+	}
 }

@@ -142,12 +142,6 @@
             android:layout_alignEnd="@+id/show_attributes"
             android:layout_below="@+id/show_attributes"
             android:orientation="vertical" >
-
-            <ViewStub
-                android:id="@+id/attributes_import"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout="@layout/attributes_panel" />
         </LinearLayout>
 
         <Button
@@ -167,14 +161,26 @@
             android:layout_alignEnd="@+id/show_abilities"
             android:layout_below="@+id/show_abilities"
             android:orientation="vertical" >
-
-            <ViewStub 
-                android:id="@+id/abilities_import"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout="@layout/abilities_panel"
-                />
         </LinearLayout>
+            
+            <Button
+            android:id="@+id/show_disciplines"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/abilities_panel"
+            android:drawableEnd="@android:drawable/arrow_down_float"
+            android:text="@string/disciplines"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:id="@+id/disciplines_panel"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_alignStart="@+id/show_disciplines"
+            android:layout_alignEnd="@+id/show_disciplines"
+            android:layout_below="@+id/show_disciplines"
+            android:orientation="vertical" >
+            </LinearLayout>
     </RelativeLayout>
 
 </ScrollView>
