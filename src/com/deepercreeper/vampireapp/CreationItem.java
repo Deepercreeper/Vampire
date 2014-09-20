@@ -1,19 +1,42 @@
 package com.deepercreeper.vampireapp;
 
+/**
+ * Each character has specific attributes and abilities with a value for each.<br>
+ * Creation items are used to represent the item and to give it a value.
+ * 
+ * @author Vincent
+ */
 public class CreationItem implements Creation
 {
-	public static final int	MAX_CREATION_VALUE	= 3, MAX_VALUE = 6;
+	/**
+	 * When creating a character the maximum of points to spend into one item is defined by this constant.
+	 */
+	public static final int	MAX_CREATION_VALUE	= 3;
+	
+	/**
+	 * The maximum value of each attribute or ability for a character.
+	 */
+	public static final int	MAX_VALUE			= 6;
 	
 	private final Item		mItem;
 	
 	private int				mValue;
 	
+	/**
+	 * Creates an attribute or ability that is able to contain a value of points.
+	 * 
+	 * @param aItem
+	 *            The item whose identity is used to save the value.
+	 */
 	public CreationItem(final Item aItem)
 	{
 		mItem = aItem;
 		mValue = aItem.getStartValue();
 	}
 	
+	/**
+	 * @return the overlaying item.
+	 */
 	public Item getItem()
 	{
 		return mItem;
