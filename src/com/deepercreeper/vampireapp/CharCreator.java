@@ -21,6 +21,8 @@ public class CharCreator
 	
 	private int														mGeneration		= DEFAULT_GENERATION;
 	
+	private final HashMap<String, CreationDiscipline>				mDisciplines	= new HashMap<>();
+	
 	private final HashMap<String, HashMap<String, CreationItem>>	mAttributes;
 	
 	private final HashMap<String, HashMap<String, CreationItem>>	mAbilities;
@@ -32,7 +34,7 @@ public class CharCreator
 		mAbilities = aAbilities;
 		mNature = aNature;
 		mBehavior = aBehavior;
-		mClan = aClan;
+		setClan(aClan);
 	}
 	
 	public static void init(final int[] aMaxAttributes, final int[] aMaxAbilities)
@@ -72,6 +74,28 @@ public class CharCreator
 		item.decrease();
 	}
 	
+	public void increaseSubDiscipline(final Discipline aDiscipline, final boolean aFirst)
+	{
+		getDiscipline(aDiscipline).getSubDiscipline(aFirst).increase();
+	}
+	
+	public void decreaseSubDiscipline(final Discipline aDiscipline, final boolean aFirst)
+	{
+		getDiscipline(aDiscipline).getSubDiscipline(aFirst).decrease();
+	}
+	
+	public void increaseDiscipline(final Discipline aDiscipline)
+	{
+		final CreationDiscipline discipline = mDisciplines.get(aDiscipline.getName());
+		discipline.increase();
+	}
+	
+	public void decreaseDiscipline(final Discipline aDiscipline)
+	{
+		final CreationDiscipline discipline = mDisciplines.get(aDiscipline.getName());
+		discipline.decrease();
+	}
+	
 	public void setName(final String aName)
 	{
 		mName = aName;
@@ -95,6 +119,16 @@ public class CharCreator
 	public void setClan(final Clan aClan)
 	{
 		mClan = aClan;
+		mDisciplines.clear();
+		for (final Discipline discipline : mClan.getDisciplines())
+		{
+			mDisciplines.put(discipline.getName(), new CreationDiscipline(discipline));
+		}
+	}
+	
+	public CreationDiscipline getDiscipline(final Discipline aDiscipline)
+	{
+		return mDisciplines.get(aDiscipline.getName());
 	}
 	
 	public void setGeneration(final int aGeneration)

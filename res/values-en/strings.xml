@@ -13,5 +13,6 @@
     <string name="attributes">Attributes</string>
 	<string name="abilities">Abilities</string>
 	<string name="disciplines">Disciplines</string>
+	<string name= "discipline">Discipline</string>
 	<string name ="add_discipline">Add discipline</string>
 </resources>

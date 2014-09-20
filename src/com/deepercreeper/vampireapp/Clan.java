@@ -4,23 +4,20 @@ import java.util.HashSet;
 
 public class Clan
 {
-	private static final String		CLAN_DISCIPLIN_DELIM	= ",";
+	public static final String			CLAN_DISCIPLIN_DELIM	= ",";
 	
-	private final String			mName;
+	private final String				mName;
 	
-	private final HashSet<String>	mDisciplines			= new HashSet<>();
+	private final HashSet<Discipline>	mDisciplines			= new HashSet<>();
 	
-	public Clan(String aName)
+	public Clan(final String aName)
 	{
 		mName = aName;
 	}
 	
-	public void addDisciplines(String aDisciplines)
+	public void addDisciplines(final Discipline aDisciplines)
 	{
-		for (String discipline : aDisciplines.split(CLAN_DISCIPLIN_DELIM))
-		{
-			mDisciplines.add(discipline);
-		}
+		mDisciplines.add(aDisciplines);
 	}
 	
 	public String getName()
@@ -28,7 +25,7 @@ public class Clan
 		return mName;
 	}
 	
-	public HashSet<String> getDisciplines()
+	public HashSet<Discipline> getDisciplines()
 	{
 		return mDisciplines;
 	}

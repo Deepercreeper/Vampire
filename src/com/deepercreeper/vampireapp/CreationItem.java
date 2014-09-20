@@ -1,6 +1,6 @@
 package com.deepercreeper.vampireapp;
 
-public class CreationItem
+public class CreationItem implements Creation
 {
 	public static final int	MAX_CREATION_VALUE	= 3, MAX_VALUE = 6;
 	
@@ -19,29 +19,28 @@ public class CreationItem
 		return mItem;
 	}
 	
+	@Override
 	public int getValue()
 	{
 		return mValue;
 	}
 	
-	public boolean increase()
+	@Override
+	public void increase()
 	{
 		if (mValue - mItem.getStartValue() < MAX_CREATION_VALUE && mValue < MAX_VALUE)
 		{
 			mValue++ ;
-			return true;
 		}
-		return false;
 	}
 	
-	public boolean decrease()
+	@Override
+	public void decrease()
 	{
 		if (mValue > mItem.getStartValue())
 		{
 			mValue-- ;
-			return true;
 		}
-		return false;
 	}
 	
 	@Override

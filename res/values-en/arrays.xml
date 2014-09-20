@@ -57,7 +57,7 @@
         <item>Nosferatu:Strength,Animality,Obscuration</item>
         <item>Ravnos:Chimeras,Fortitude,Animality</item>
         <item>Toriador:Auspex,Speed,Presence</item>
-        <item>Tremere:Auspex,Domination,Creo Ignem,Rego Vitam,Rego Motum,Rego Tempestatem,Rego Aquam, Rego Elementum</item>
+        <item>Tremere:Auspex,Domination,Thaumaturgy</item>
         <item>Tzimisce:Auspex,Fleshforming,Animality</item>
         <item>Ventrue:Domination,Presence,Fortitude</item>
     </string-array>
@@ -82,6 +82,7 @@
    		<item>Fortitude:Fortitude,1</item>
    		<item>Serpentis:Snake eyes,1;Viper tongue,2,Strenth;Bituminous flesh,3;Cobra frame,4,BloodPoints,1;Deception at Thoths balance,5;Basilisk breath,6,Blutpukte,1;Basilisk breath attack,6,Dexterity#Hand to hand</item>
    		<item>Strength:Strength,1</item>
+   		<item>#Thaumaturgy:Rego Vitam,Creo Ignem,Rego Motum,Rego Tempestatem,Rego Aquam,Rego Elementum</item>
    		<item>Rego Vitam:A sense for blood,1,Volition;Bloody ecstasis,2,Volition;Blood of might,3,Volition;Vitae-robbery,4,Volition;Blood bowl,5,Volition</item>
    		<item>Creo Ignem:Candle fire,1,Volition;Hand full fire,2,Volition;Campfire,3,Volition;Bonfire,4,Volition;Fireheat,5,Volition</item>
    		<item>Rego Motum:1 pound,1,Volition;10 kilo,2,Volition;100 kilo,3,Volition;250 kilo,4,Volition;500 kilo,5,Volition</item>

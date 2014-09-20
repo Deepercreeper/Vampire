@@ -3,8 +3,10 @@ package com.deepercreeper.vampireapp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.os.Bundle;
 import android.text.TextUtils.TruncateAt;
 import android.util.TypedValue;
@@ -100,10 +102,30 @@ public class MainActivity extends Activity
 		mItems.init(getResources().getStringArray(R.array.attributes), getResources().getStringArray(R.array.abilities));
 		// Initialize disciplines
 		{
-			for (final String discipline : getResources().getStringArray(R.array.disciplines))
+			final HashSet<Discipline> parentDisciplines = new HashSet<>();
+			for (final String disciplineLine : getResources().getStringArray(R.array.disciplines))
 			{
-				final String[] disciplineData = discipline.split(DELIM);
-				mDisciplines.put(disciplineData[0], new Discipline(disciplineData[0], disciplineData[1]));
+				final String[] disciplineData = disciplineLine.split(DELIM);
+				Discipline discipline;
+				if (disciplineData[0].startsWith(Discipline.PARENT_DISCIPLINE))
+				{
+					discipline = new Discipline(disciplineData[0].substring(1), disciplineData[1], true);
+					parentDisciplines.add(discipline);
+				}
+				else
+				{
+					discipline = new Discipline(disciplineData[0], disciplineData[1], false);
+				}
+				mDisciplines.put(discipline.getName(), discipline);
+			}
+			for (final Discipline parentDiscipline : parentDisciplines)
+			{
+				for (final String subDisciplineName : parentDiscipline.getSubDisciplineNames())
+				{
+					final Discipline subDiscipline = mDisciplines.get(subDisciplineName);
+					parentDiscipline.addSubDiscipline(subDiscipline);
+					mDisciplines.remove(subDisciplineName);
+				}
 			}
 		}
 		// Initialize clans
@@ -114,7 +136,15 @@ public class MainActivity extends Activity
 				final Clan clan = new Clan(clanData[0]);
 				if (clanData.length > 1)
 				{
-					clan.addDisciplines(clanData[1]);
+					for (final String clanDiscipline : clanData[1].split(Clan.CLAN_DISCIPLIN_DELIM))
+					{
+						if ( !mDisciplines.containsKey(clanDiscipline))
+						{
+							// TODO Remove when all disciplines are added
+							continue;
+						}
+						clan.addDisciplines(mDisciplines.get(clanDiscipline));
+					}
 				}
 				mClans.put(clanData[0], clan);
 				mClanNames.add(clanData[0]);
@@ -284,22 +314,19 @@ public class MainActivity extends Activity
 	{
 		final LinearLayout layout = (LinearLayout) findViewById(R.id.disciplines_panel);
 		
-		final Button addDiscipline = new Button(this);
-		final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		addDiscipline.setLayoutParams(params);
-		params.gravity = Gravity.CENTER_HORIZONTAL;
-		addDiscipline.setText(R.string.add_discipline);
-		layout.addView(addDiscipline);
-		
-		for (final String disciplineName : mCreator.getClan().getDisciplines())
+		for (final Discipline discipline : mCreator.getClan().getDisciplines())
 		{
-			final Discipline discipline = mDisciplines.get(disciplineName);
-			// TODO Is not necessary if all disciplines are added
-			if (discipline == null)
+			if (discipline.isParentDiscipline())
 			{
-				continue;
+				for (final GridLayout grid : createParentDisciplineRow(discipline))
+				{
+					layout.addView(grid);
+				}
 			}
-			layout.addView(createDisciplinesRow(discipline));
+			else
+			{
+				layout.addView(createDisciplinesRow(discipline));
+			}
 		}
 	}
 	
@@ -335,13 +362,167 @@ public class MainActivity extends Activity
 		mInitializedDisciplines = false;
 	}
 	
+	private GridLayout[] createParentDisciplineRow(final Discipline aDiscipline)
+	{
+		final GridLayout[] grids = new GridLayout[3];
+		int i = 0;
+		
+		final LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, dpToPx(30));
+		final LayoutParams editParams = new LinearLayout.LayoutParams(dpToPx(30), dpToPx(30));
+		params.gravity = Gravity.CENTER_VERTICAL;
+		editParams.gravity = Gravity.CENTER_VERTICAL;
+		
+		grids[i] = new GridLayout(this);
+		grids[i].setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+		final TextView name = new TextView(this);
+		name.setText(aDiscipline.getName() + ":");
+		name.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		name.setEllipsize(TruncateAt.END);
+		name.setSingleLine();
+		grids[i].addView(name);
+		i++ ;
+		
+		grids[i] = new GridLayout(this);
+		grids[i].setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		final TextView first = new TextView(this);
+		first.setText("1.");
+		first.setLayoutParams(params);
+		first.setGravity(Gravity.CENTER_VERTICAL);
+		first.setSingleLine();
+		grids[i].addView(first);
+		
+		final ImageButton editFirst = new ImageButton(this);
+		editFirst.setImageResource(android.R.drawable.ic_menu_add);
+		editFirst.setLayoutParams(editParams);
+		editFirst.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				final DialogFragment newFragment = new SelectSubDisciplineDialogFragment(grids[1], mCreator, aDiscipline, MainActivity.this, true);
+				newFragment.show(getFragmentManager(), "1. " + aDiscipline.getName());
+			}
+		});
+		grids[i].addView(editFirst);
+		i++ ;
+		
+		grids[i] = new GridLayout(this);
+		grids[i].setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		final TextView second = new TextView(this);
+		second.setText("2.");
+		second.setLayoutParams(params);
+		second.setSingleLine();
+		second.setGravity(Gravity.CENTER_VERTICAL);
+		grids[i].addView(second);
+		
+		final ImageButton editSecond = new ImageButton(this);
+		editSecond.setLayoutParams(editParams);
+		editSecond.setImageResource(android.R.drawable.ic_menu_add);
+		editSecond.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				final DialogFragment newFragment = new SelectSubDisciplineDialogFragment(grids[2], mCreator, aDiscipline, MainActivity.this, false);
+				newFragment.show(getFragmentManager(), "2. " + aDiscipline.getName());
+			}
+		});
+		grids[i].addView(editSecond);
+		
+		return grids;
+	}
+	
+	public void applySubDisciplines(final GridLayout aGrid, final Discipline aDiscipline, final boolean aFirst)
+	{
+		aGrid.removeAllViews();
+		
+		final LayoutParams editParams = new LinearLayout.LayoutParams(dpToPx(30), dpToPx(30));
+		editParams.gravity = Gravity.CENTER_VERTICAL;
+		
+		final TextView number = new TextView(this);
+		number.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		number.setText(aFirst ? "1." : "2.");
+		number.setSingleLine();
+		number.setGravity(Gravity.CENTER_VERTICAL);
+		aGrid.addView(number);
+		
+		final ImageButton edit = new ImageButton(this);
+		edit.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_edit));
+		edit.setLayoutParams(editParams);
+		edit.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				final DialogFragment newFragment = new SelectSubDisciplineDialogFragment(aGrid, mCreator, aDiscipline, MainActivity.this, aFirst);
+				newFragment.show(getFragmentManager(), (aFirst ? "1. " : "2. ") + aDiscipline.getName());
+			}
+		});
+		aGrid.addView(edit);
+		
+		if (mCreator.getDiscipline(aDiscipline).hasSubDiscipline(aFirst))
+		{
+			final TextView name = new TextView(this);
+			name.setText(mCreator.getDiscipline(aDiscipline).getSubDiscipline(aFirst).getDiscipline().getName());
+			name.setLayoutParams(new LayoutParams(dpToPx(80), LayoutParams.WRAP_CONTENT));
+			name.setGravity(Gravity.CENTER_VERTICAL);
+			name.setEllipsize(TruncateAt.END);
+			name.setSingleLine();
+			aGrid.addView(name);
+			
+			final RadioButton[] radios = new RadioButton[CreationItem.MAX_VALUE];
+			
+			final LayoutParams params = new LayoutParams(dpToPx(30), dpToPx(30));
+			params.gravity = Gravity.TOP;
+			final ImageButton sub = new ImageButton(this);
+			sub.setContentDescription("Sub");
+			sub.setLayoutParams(params);
+			sub.setImageResource(android.R.drawable.ic_media_previous);
+			sub.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					mCreator.decreaseSubDiscipline(aDiscipline, aFirst);
+					applyValue(mCreator.getDiscipline(aDiscipline).getSubDiscipline(aFirst).getValue(), radios);
+				}
+			});
+			aGrid.addView(sub);
+			
+			for (int i = 0; i < radios.length; i++ )
+			{
+				final RadioButton radio = new RadioButton(this);
+				radio.setLayoutParams(new LayoutParams(dpToPx(25), LayoutParams.WRAP_CONTENT));
+				radio.setClickable(false);
+				aGrid.addView(radio);
+				radios[i] = radio;
+			}
+			
+			final ImageButton add = new ImageButton(this);
+			add.setContentDescription("Add");
+			add.setLayoutParams(params);
+			add.setImageResource(android.R.drawable.ic_media_next);
+			add.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					mCreator.increaseSubDiscipline(aDiscipline, aFirst);
+					applyValue(mCreator.getDiscipline(aDiscipline).getSubDiscipline(aFirst).getValue(), radios);
+				}
+			});
+			applyValue(mCreator.getDiscipline(aDiscipline).getValue(), radios);
+			aGrid.addView(add);
+		}
+	}
+	
 	private GridLayout createDisciplinesRow(final Discipline aDiscipline)
 	{
 		final GridLayout grid = new GridLayout(this);
 		grid.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 		final TextView name = new TextView(this);
 		name.setText(aDiscipline.getName());
-		final int pixels = dpToPx(120);
+		final int pixels = dpToPx(122);
 		name.setLayoutParams(new LinearLayout.LayoutParams(pixels, LayoutParams.WRAP_CONTENT));
 		name.setGravity(Gravity.CENTER_VERTICAL);
 		name.setEllipsize(TruncateAt.END);
@@ -356,7 +537,15 @@ public class MainActivity extends Activity
 		sub.setContentDescription("Sub");
 		sub.setLayoutParams(params);
 		sub.setImageResource(android.R.drawable.ic_media_previous);
-		// TODO Add listener
+		sub.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				mCreator.decreaseDiscipline(aDiscipline);
+				applyValue(mCreator.getDiscipline(aDiscipline).getValue(), radios);
+			}
+		});
 		grid.addView(sub);
 		
 		for (int i = 0; i < radios.length; i++ )
@@ -372,7 +561,16 @@ public class MainActivity extends Activity
 		add.setContentDescription("Add");
 		add.setLayoutParams(params);
 		add.setImageResource(android.R.drawable.ic_media_next);
-		// TODO Add listener
+		add.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				mCreator.increaseDiscipline(aDiscipline);
+				applyValue(mCreator.getDiscipline(aDiscipline).getValue(), radios);
+			}
+		});
+		applyValue(mCreator.getDiscipline(aDiscipline).getValue(), radios);
 		grid.addView(add);
 		return grid;
 	}
@@ -384,7 +582,7 @@ public class MainActivity extends Activity
 		
 		final TextView name = new TextView(this);
 		name.setText(aItem.getName());
-		final int pixels = dpToPx(120);
+		final int pixels = dpToPx(122);
 		name.setLayoutParams(new TableRow.LayoutParams(pixels, LayoutParams.WRAP_CONTENT));
 		name.setGravity(Gravity.CENTER_VERTICAL);
 		name.setEllipsize(TruncateAt.END);

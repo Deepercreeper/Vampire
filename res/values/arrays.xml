@@ -57,7 +57,7 @@
         <item>Nosferatu:Stärke,Tierhaftigkeit,Verdunkelung</item>
         <item>Ravnos:Shimären,Seelenstärke,Tierhaftigkeit</item>
         <item>Toriador:Auspex,Geschwindigkeit,Präsenz</item>
-        <item>Tremere:Auspex,Beherrschung,Creo Ignem,Rego Vitam,Rego Motum,Rego Tempestatem,Rego Aquam, Rego Elementum</item>
+        <item>Tremere:Auspex,Beherrschung,Thaumaturgie</item>
         <item>Tzimisce:Auspex,Fleischformen,Tierhaftigkeit</item>
         <item>Ventrue:Beherrschung,Präsenz,Seelenstärke</item>
     </string-array>
@@ -82,6 +82,7 @@
    		<item>Seelenstärke:Seelenstärke,1</item>
    		<item>Serpentis:Die Augen der Schlange,1;Natterzunge,2,Körperkraft;Bituminöses Fleisch,3;Kobragestalt,4,BloodPoints,1;Betrug an Thoths Waage,5;Basiliskenodem,6,Blutpukte,1;Basiliskenodem Angriff,6,Geschick#Handgemenge</item>
    		<item>Stärke:Stärke,1</item>
+   		<item>#Thaumaturgie:Rego Vitam,Creo Ignem,Rego Motum,Rego Tempestatem,Rego Aquam,Rego Elementum</item>
    		<item>Rego Vitam:Ein Sinn für Blut,1,Willenskraft;Blutige Extase,2,Willenskraft;Blut der Macht,3,Willenskraft;Vitae-Raub,4,Willenskraft;Blutkessel,5,Willenskraft</item>
    		<item>Creo Ignem:Ein Kerzenfeuer,1,Willenskraft;Eine Hand voll Feuer,2,Willenskraft;Lagerfeuer,3,Willenskraft;Freudenfeuer,4,Willenskraft;Feuerbrunst,5,Willenskraft</item>
    		<item>Rego Motum:1 Pfund,1,Willenskraft;10 Kilo,2,Willenskraft;100 Kilo,3,Willenskraft;250 Kilo,4,Willenskraft;500 Kilo,5,Willenskraft</item>
