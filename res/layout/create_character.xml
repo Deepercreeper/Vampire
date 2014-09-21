@@ -37,8 +37,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/nature_label"
-            android:layout_alignStart="@+id/generation_picker"
             android:layout_alignParentEnd="true"
+            android:layout_alignStart="@+id/generation_picker"
             android:layout_alignTop="@+id/nature_label"
             android:layout_below="@+id/concept_text"
             android:layout_toEndOf="@+id/nature_label"
@@ -49,8 +49,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/behavior_label"
-            android:layout_alignStart="@+id/generation_picker"
             android:layout_alignParentEnd="true"
+            android:layout_alignStart="@+id/generation_picker"
             android:layout_alignTop="@+id/behavior_label"
             android:layout_below="@+id/nature_spinner"
             android:layout_toEndOf="@+id/behavior_label"
@@ -109,8 +109,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/clan_label"
-            android:layout_alignStart="@+id/generation_picker"
             android:layout_alignParentEnd="true"
+            android:layout_alignStart="@+id/generation_picker"
             android:layout_alignTop="@+id/clan_label"
             android:layout_below="@+id/behavior_spinner"
             android:layout_toEndOf="@+id/clan_label" />
@@ -138,8 +138,8 @@
             android:id="@+id/attributes_panel"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:layout_alignStart="@+id/show_attributes"
             android:layout_alignEnd="@+id/show_attributes"
+            android:layout_alignStart="@+id/show_attributes"
             android:layout_below="@+id/show_attributes"
             android:orientation="vertical" >
         </LinearLayout>
@@ -157,13 +157,13 @@
             android:id="@+id/abilities_panel"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:layout_alignStart="@+id/show_abilities"
             android:layout_alignEnd="@+id/show_abilities"
+            android:layout_alignStart="@+id/show_abilities"
             android:layout_below="@+id/show_abilities"
             android:orientation="vertical" >
         </LinearLayout>
-            
-            <Button
+
+        <Button
             android:id="@+id/show_disciplines"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -176,11 +176,63 @@
             android:id="@+id/disciplines_panel"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:layout_alignStart="@+id/show_disciplines"
             android:layout_alignEnd="@+id/show_disciplines"
+            android:layout_alignStart="@+id/show_disciplines"
             android:layout_below="@+id/show_disciplines"
             android:orientation="vertical" >
-            </LinearLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/show_backgrounds"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/disciplines_panel"
+            android:drawableEnd="@android:drawable/arrow_down_float"
+            android:text="@string/backgrounds"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:id="@+id/backgrounds_panel"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_alignEnd="@+id/show_backgrounds"
+            android:layout_alignStart="@+id/show_backgrounds"
+            android:layout_below="@+id/show_backgrounds"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/add_background"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/add_background" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/show_properties"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/backgrounds_panel"
+            android:drawableEnd="@android:drawable/arrow_down_float"
+            android:text="@string/properties"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:id="@+id/properties_panel"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_alignEnd="@+id/show_properties"
+            android:layout_alignStart="@+id/show_properties"
+            android:layout_below="@id/show_properties"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/add_property"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/add_property" />
+        </LinearLayout>
     </RelativeLayout>
 
 </ScrollView>

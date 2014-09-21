@@ -2,12 +2,11 @@ package com.deepercreeper.vampireapp;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Set;
 
 public class CharCreator
 {
 	public static final int											MIN_GENERATION	= 8, DEFAULT_GENERATION = 12, MAX_GENERATION = 12;
-	
-	private static int[]											sMaxAttributes, sMaxAbilities;
 	
 	private String													mName			= "";
 	
@@ -23,9 +22,11 @@ public class CharCreator
 	
 	private final HashMap<String, CreationDiscipline>				mDisciplines	= new HashMap<>();
 	
-	private final HashMap<String, HashMap<String, CreationItem>>	mAttributes;
+	private final HashMap<String, HashMap<String, CreationItem>>	mAttributes, mAbilities;
 	
-	private final HashMap<String, HashMap<String, CreationItem>>	mAbilities;
+	private final HashMap<Background, CreationBackground>			mBackgrounds	= new HashMap<>();
+	
+	private final HashMap<Property, CreationProperty>				mProperties		= new HashMap<>();
 	
 	public CharCreator(final HashMap<String, HashMap<String, CreationItem>> aAttributes,
 			final HashMap<String, HashMap<String, CreationItem>> aAbilities, final String aNature, final String aBehavior, final Clan aClan)
@@ -37,17 +38,11 @@ public class CharCreator
 		setClan(aClan);
 	}
 	
-	public static void init(final int[] aMaxAttributes, final int[] aMaxAbilities)
-	{
-		sMaxAttributes = aMaxAttributes;
-		sMaxAbilities = aMaxAbilities;
-	}
-	
 	public void increaseItem(final Item aItem)
 	{
 		if (canIncreaseItem(aItem))
 		{
-			CreationItem item;
+			final CreationItem item;
 			if (aItem.isAttribute())
 			{
 				item = mAttributes.get(aItem.getParent()).get(aItem.getName());
@@ -62,7 +57,7 @@ public class CharCreator
 	
 	public void decreaseItem(final Item aItem)
 	{
-		CreationItem item;
+		final CreationItem item;
 		if (aItem.isAttribute())
 		{
 			item = mAttributes.get(aItem.getParent()).get(aItem.getName());
@@ -105,6 +100,35 @@ public class CharCreator
 		discipline.decrease();
 	}
 	
+	public void increaseBackground(final Background aBackground)
+	{
+		if (canIncreaseBackground(aBackground))
+		{
+			getBackground(aBackground).increase();
+		}
+	}
+	
+	public void decreaseBackground(final Background aBackground)
+	{
+		getBackground(aBackground).decrease();
+	}
+	
+	public void increaseProperty(final Property aProperty)
+	{
+		if (canIncreaseProperty(aProperty))
+		{
+			getProperty(aProperty).increase();
+		}
+	}
+	
+	public void decreaseProperty(final Property aProperty)
+	{
+		if (canDecreaseProperty(aProperty))
+		{
+			getProperty(aProperty).decrease();
+		}
+	}
+	
 	public void setName(final String aName)
 	{
 		mName = aName;
@@ -133,6 +157,56 @@ public class CharCreator
 		{
 			mDisciplines.put(discipline.getName(), new CreationDiscipline(discipline));
 		}
+	}
+	
+	public void removeProperty(final Property aProperty)
+	{
+		mProperties.remove(aProperty);
+	}
+	
+	public void removeBackground(final Background aBackground)
+	{
+		mBackgrounds.remove(aBackground);
+	}
+	
+	public Set<Property> getProperties()
+	{
+		return mProperties.keySet();
+	}
+	
+	public Set<Background> getBackgrounds()
+	{
+		return mBackgrounds.keySet();
+	}
+	
+	public int getPropertiesCount()
+	{
+		return mProperties.size();
+	}
+	
+	public int getBackgroundsCount()
+	{
+		return mBackgrounds.size();
+	}
+	
+	public CreationProperty getProperty(final Property aProperty)
+	{
+		return mProperties.get(aProperty);
+	}
+	
+	public CreationBackground getBackground(final Background aBackground)
+	{
+		return mBackgrounds.get(aBackground);
+	}
+	
+	public void addProperty(final CreationProperty aProperty)
+	{
+		mProperties.put(aProperty.getProperty(), aProperty);
+	}
+	
+	public void addBackground(final CreationBackground aBackground)
+	{
+		mBackgrounds.put(aBackground.getBackground(), aBackground);
 	}
 	
 	public CreationDiscipline getDiscipline(final Discipline aDiscipline)
@@ -199,6 +273,56 @@ public class CharCreator
 		return values;
 	}
 	
+	private boolean canIncreaseProperty(final Property aProperty)
+	{
+		if (aProperty.isNegative())
+		{
+			return true;
+		}
+		int value = 0;
+		for (final CreationProperty property : mProperties.values())
+		{
+			value += property.getValue() * (property.getProperty().isNegative() ? -1 : 1);
+		}
+		final int valueId = getProperty(aProperty).getValueId();
+		final int[] values = aProperty.getValues();
+		if (values.length > valueId + 1 && value - values[valueId] + values[valueId + 1] <= 0)
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean canDecreaseProperty(final Property aProperty)
+	{
+		if ( !aProperty.isNegative())
+		{
+			return true;
+		}
+		int value = 0;
+		for (final CreationProperty property : mProperties.values())
+		{
+			value += property.getValue() * (property.getProperty().isNegative() ? -1 : 1);
+		}
+		final int valueId = getProperty(aProperty).getValueId();
+		final int[] values = aProperty.getValues();
+		if (valueId > 0 && value + values[valueId] - values[valueId - 1] <= 0)
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean canIncreaseBackground(final Background aBackground)
+	{
+		int value = 0;
+		for (final CreationBackground background : mBackgrounds.values())
+		{
+			value += background.getValue();
+		}
+		return value < Background.START_POINTS;
+	}
+	
 	private boolean canIncreaseDiscipline(final Discipline aDiscipline)
 	{
 		if (aDiscipline.isSubDiscipline())
@@ -252,7 +376,7 @@ public class CharCreator
 	
 	private boolean canIncreaseItem(final Item aItem)
 	{
-		final int[] maxPoints = aItem.isAttribute() ? sMaxAttributes : sMaxAbilities;
+		final int[] maxPoints = aItem.getMaxPoints();
 		final HashMap<String, Integer> values = getValues(aItem.isAttribute() ? mAttributes : mAbilities);
 		final int parentValue = values.get(aItem.getParent());
 		values.remove(aItem.getParent());

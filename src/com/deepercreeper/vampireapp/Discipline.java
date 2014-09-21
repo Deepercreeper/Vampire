@@ -71,6 +71,12 @@ public class Discipline
 		}
 	}
 	
+	/**
+	 * Sets the parent discipline of this one.
+	 * 
+	 * @param aParent
+	 *            The new parent.
+	 */
 	public void setSubDisciplineOf(final Discipline aParent)
 	{
 		mParent = aParent;
@@ -107,11 +113,17 @@ public class Discipline
 		return mParentDiscipline;
 	}
 	
+	/**
+	 * @return the parent discipline of this one.
+	 */
 	public Discipline getParentDiscipline()
 	{
 		return mParent;
 	}
 	
+	/**
+	 * @return whether this discipline has a parent discipline.
+	 */
 	public boolean isSubDiscipline()
 	{
 		return mParent != null;
@@ -147,6 +159,47 @@ public class Discipline
 	public HashSet<Ability> getAbilities()
 	{
 		return mAbilities;
+	}
+	
+	/**
+	 * @return a description for this discipline.
+	 */
+	public String getDescription()
+	{
+		final StringBuilder descr = new StringBuilder();
+		descr.append(mName + ": ");
+		boolean first = true;
+		if (isParentDiscipline())
+		{
+			for (final String subDiscipline : getSubDisciplineNames())
+			{
+				if (first)
+				{
+					descr.append(subDiscipline);
+					first = false;
+				}
+				else
+				{
+					descr.append(", " + subDiscipline);
+				}
+			}
+		}
+		else
+		{
+			for (final Ability ability : getAbilities())
+			{
+				if (first)
+				{
+					descr.append(ability.getName());
+					first = false;
+				}
+				else
+				{
+					descr.append(", " + ability.getName());
+				}
+			}
+		}
+		return descr.toString();
 	}
 	
 	@Override

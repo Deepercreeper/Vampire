@@ -1,30 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer-array name="attribute_points">
-        <item>6</item>
-        <item>8</item>
-        <item>10</item>
-    </integer-array>
-    
-    <integer-array name="ability_points">
-        <item>5</item>
-        <item>9</item>
-        <item>13</item>
-    </integer-array>
-    
-    <string-array name = "attributes">
+    <string-array name="attributes">
         <item>Physically:Strength,Dexterity,Resistance</item>
         <item>Social:Charisma,Manipulation,Appearance</item>
         <item>Mental:Cognition,Intelligence,Intellect</item>
     </string-array>
-    
-    <string-array name = "abilities">
+    <string-array name="abilities">
         <item>Talents:Attention,Excuses,Ducking,Theft,Intimidation,Empathy,Leadership,Hand to hand,Acting,Sportiness</item>
         <item>Skills:Archery,Etiquette,Crafting,Stealth,Herbalism,Music,Melee,Riding,Zoology,Survival</item>
         <item>Knowledge:Academic knowledge,Folklore,Legislation,Linguistics,Medicine,Inquiring,Science,Occultism,Politics,Management</item>
     </string-array>
-    
-    <string-array name="nature_and_behavior"> 
+    <string-array name="nature_and_behavior">
         <item>Autocrat</item>
         <item>Barbarian</item>
         <item>Ascetic</item>
@@ -44,7 +30,6 @@
         <item>Defender</item>
         <item>Celebrant</item>
     </string-array>
-
     <string-array name="clan">
         <item>Assamites:Speed,Quietus,Obscuration</item>
         <item>Brujah:Speed,Presence,Strenth</item>
@@ -61,36 +46,44 @@
         <item>Tzimisce:Auspex,Fleshforming,Animality</item>
         <item>Ventrue:Domination,Presence,Fortitude</item>
     </string-array>
-
     <string-array name="clan_generations">
         <item>Caitiff:13</item>
     </string-array>
-    
     <string-array name="disciplines">
         <item>Auspex:Sharpened senses,1;Soul sight,2,Cognition#Empathy;Mental touch,3,Cognition#Empathy;Stolen secrets,4,Intelligence#Ducking;Anima altering,5,Cognition#Occultism;Foresight,6,Cognition#Empathy</item>
-    	<item>Domination:Obedience for the spoken word,1,Manipulation#Intimidation;Mussitation of wrong will,2,Manipulation#Leadership;Revelers recognition,3,Intellect#Ducking;Temptation of sweet whispering,4,Charisma#Leadership;Jar,5,VolitionPoints;Fealty,6,Charisma#Leadership</item>
-    	<item>Daimonion:Sinnsence,1,Cognition#Empathy;Fear of the hell below us,2,Intellect#Intimidation;flames of the underworld,3,Occultism#Dexterity#BloodPoints#Dices;Psychomachy,4;Curse,5,Intelligence#Occultism;Ignoring the blazing flames,6</item>
-    	<item>Fleshforming:Formable face,1,Intelligence#Crafting;Pugging of mortal pug,2,Dexterity#Crafting;Tearing the skeleton,3,Strenth#Crafting;Awakening the Zulo frame,4,BloodPoints,2;Rising the blood fluid,5;Robbery-Chiropter,6,BloodPoints,3</item>
-    	<item>Speed:Speed,1,BloodPoints,1</item>
-    	<item>Gestalt-switch:Deponent of darkness,1;Claws of the animal,2,BloodPoints,1;Burial in earth,3,BloodPoints,1;Animal form,4,BloodPoints,1;Ghost body,5,BloodPoints,1;Blessed sleep,6,BloodPoints,5</item>
-    	<item>Insanity:Passion of the incubus,1,Charisma#Empathy;Soul spook,3,Manipulation#Ducking;Eyes of chaos,3,Cognition#Occultism;Confusion,4,Manipulation#Intimidation;Howling insanity,5,Manipulation#Intimidation;Moon kiss,6,Manipulation#Empathy</item>
-    	<item>Mortis:Deadmask,1,BloodPoints,1;Blight,2,Manipulation#Medicine#VolitionPoints,1;Awakening,3,VolitionPoints,2;Whispering of death,4;Black death,5,Resistance#Occultism;Vigor Mortis,6,BloodPoints,3</item>
-    	<item>Presence:Ehrfurcht,1,Charisma#Acting;Look of fear,2,Charisma#Intimidation;Enrapturing,3,Appearance#Empathy;Summoning,4,Charisma#Ducking;Majesty,5,Intimidation#Charisma;Passion,6,Manipulation#Ducking</item>
-   		<item>Quietus:Silence of death,1,BloodPoints,1;Weakness,2,BloodPoints#Volition,1;Illness,3,BloodPoints#Volition,3;Blood agony,4,BloodPoints,1;Blood essence,5,Volition;Bloody sweat,6,Volition</item>
-   		<item>Shadow play:Shadow play,1,BloodPoints,1;Notturno,2,Cognition#Occultism;Arms of Ahriman,3,Manipulation#Occultism;Nightshadow,4,Intellect#Occultism;Shadow body,5,BloodPoints,3;Abyss ramble,6,Intelligence#Stealth;Abyss ramble with others,6,Intelligence#Hand to hand</item>
-   		<item>Chimeras:Illusion,1,VolitionPoints,1;Fata morgana,2,VolitionPoints,2;Phenomenon,3,BloodPoints,1;Permanence,4,BloodPoints,1;Horrible reality,5,VolitionPoints,2;Horrible reality attack,5,Manipulation#Ducking;Mass horror,6,VolitionPoints,2;Mass horror attack,6,Manipulation#Ducking</item>
-   		<item>Fortitude:Fortitude,1</item>
-   		<item>Serpentis:Snake eyes,1;Viper tongue,2,Strenth;Bituminous flesh,3;Cobra frame,4,BloodPoints,1;Deception at Thoths balance,5;Basilisk breath,6,Blutpukte,1;Basilisk breath attack,6,Dexterity#Hand to hand</item>
-   		<item>Strength:Strength,1</item>
-   		<item>#Thaumaturgy:Rego Vitam,Creo Ignem,Rego Motum,Rego Tempestatem,Rego Aquam,Rego Elementum</item>
-   		<item>Rego Vitam:A sense for blood,1,Volition;Bloody ecstasis,2,Volition;Blood of might,3,Volition;Vitae-robbery,4,Volition;Blood bowl,5,Volition</item>
-   		<item>Creo Ignem:Candle fire,1,Volition;Hand full fire,2,Volition;Campfire,3,Volition;Bonfire,4,Volition;Fireheat,5,Volition</item>
-   		<item>Rego Motum:1 pound,1,Volition;10 kilo,2,Volition;100 kilo,3,Volition;250 kilo,4,Volition;500 kilo,5,Volition</item>
-   		<item>Rego Tempestatem:Fog,1,Volition;Rain,2,Volition;Wind,3,Volition;Storm,4,Volition;Lightning,5,Dices#Volition,10</item>
-   		<item>Rego Aquam:Eyes of sea,1,Volition;Water prison,2,Volition;Dehydration,3,Volition;Floating wall,4,Volition;Blood to water,5,Volition</item>
-   		<item>Rego Elementum:Elementary Strength,1,Volition#VolitionPoints,2;Wooden tongues,2,Volition;Revive stationaries,3,VolitionPoints,1;Elementary frame,4,Volition;Elemental summoning,5,Volition;Elemental control,5,Intellect#Occultism</item>
-   		<item>Animality:Language of wlderness,1;Language of wilderness pleasure,1,Manipulation#Zoology;Noahs call,2,Charisma#Survuval;Animal intimidation,3,Manipulation#Intimidation;Ride on the wild ghost,4,Charisma#Zoology;Animal expulsion,5,Manipulation#Zoology;Accelerated unity,6,Cognition#Zoology</item>
-   		<item>Obscuration:Shadow coat,1;Invisible presence,2;Mask of thousand faces,3,Manipulation#Acting;Disappearance in front of the mind\'s eye,4,Charisma#Stealth;Protective cloak for the convened,5,Stealth;Soulmask,6</item>
-   	</string-array>
-    
+        <item>Domination:Obedience for the spoken word,1,Manipulation#Intimidation;Mussitation of wrong will,2,Manipulation#Leadership;Revelers recognition,3,Intellect#Ducking;Temptation of sweet whispering,4,Charisma#Leadership;Jar,5,VolitionPoints;Fealty,6,Charisma#Leadership</item>
+        <item>Daimonion:Sinnsence,1,Cognition#Empathy;Fear of the hell below us,2,Intellect#Intimidation;flames of the underworld,3,Occultism#Dexterity#BloodPoints#Dices;Psychomachy,4;Curse,5,Intelligence#Occultism;Ignoring the blazing flames,6</item>
+        <item>Fleshforming:Formable face,1,Intelligence#Crafting;Pugging of mortal pug,2,Dexterity#Crafting;Tearing the skeleton,3,Strenth#Crafting;Awakening the Zulo frame,4,BloodPoints,2;Rising the blood fluid,5;Robbery-Chiropter,6,BloodPoints,3</item>
+        <item>Speed:Speed,1,BloodPoints,1</item>
+        <item>Gestalt-switch:Deponent of darkness,1;Claws of the animal,2,BloodPoints,1;Burial in earth,3,BloodPoints,1;Animal form,4,BloodPoints,1;Ghost body,5,BloodPoints,1;Blessed sleep,6,BloodPoints,5</item>
+        <item>Insanity:Passion of the incubus,1,Charisma#Empathy;Soul spook,3,Manipulation#Ducking;Eyes of chaos,3,Cognition#Occultism;Confusion,4,Manipulation#Intimidation;Howling insanity,5,Manipulation#Intimidation;Moon kiss,6,Manipulation#Empathy</item>
+        <item>Mortis:Deadmask,1,BloodPoints,1;Blight,2,Manipulation#Medicine#VolitionPoints,1;Awakening,3,VolitionPoints,2;Whispering of death,4;Black death,5,Resistance#Occultism;Vigor Mortis,6,BloodPoints,3</item>
+        <item>Presence:Ehrfurcht,1,Charisma#Acting;Look of fear,2,Charisma#Intimidation;Enrapturing,3,Appearance#Empathy;Summoning,4,Charisma#Ducking;Majesty,5,Intimidation#Charisma;Passion,6,Manipulation#Ducking</item>
+        <item>Quietus:Silence of death,1,BloodPoints,1;Weakness,2,BloodPoints#Volition,1;Illness,3,BloodPoints#Volition,3;Blood agony,4,BloodPoints,1;Blood essence,5,Volition;Bloody sweat,6,Volition</item>
+        <item>Shadow play:Shadow play,1,BloodPoints,1;Notturno,2,Cognition#Occultism;Arms of Ahriman,3,Manipulation#Occultism;Nightshadow,4,Intellect#Occultism;Shadow body,5,BloodPoints,3;Abyss ramble,6,Intelligence#Stealth;Abyss ramble with others,6,Intelligence#Hand to hand</item>
+        <item>Chimeras:Illusion,1,VolitionPoints,1;Fata morgana,2,VolitionPoints,2;Phenomenon,3,BloodPoints,1;Permanence,4,BloodPoints,1;Horrible reality,5,VolitionPoints,2;Horrible reality attack,5,Manipulation#Ducking;Mass horror,6,VolitionPoints,2;Mass horror attack,6,Manipulation#Ducking</item>
+        <item>Fortitude:Fortitude,1</item>
+        <item>Serpentis:Snake eyes,1;Viper tongue,2,Strenth;Bituminous flesh,3;Cobra frame,4,BloodPoints,1;Deception at Thoths balance,5;Basilisk breath,6,Blutpukte,1;Basilisk breath attack,6,Dexterity#Hand to hand</item>
+        <item>Strength:Strength,1</item>
+        <item>#Thaumaturgy:Rego Vitam,Creo Ignem,Rego Motum,Rego Tempestatem,Rego Aquam,Rego Elementum</item>
+        <item>Rego Vitam:A sense for blood,1,Volition;Bloody ecstasis,2,Volition;Blood of might,3,Volition;Vitae-robbery,4,Volition;Blood bowl,5,Volition</item>
+        <item>Creo Ignem:Candle fire,1,Volition;Hand full fire,2,Volition;Campfire,3,Volition;Bonfire,4,Volition;Fireheat,5,Volition</item>
+        <item>Rego Motum:1 pound,1,Volition;10 kilo,2,Volition;100 kilo,3,Volition;250 kilo,4,Volition;500 kilo,5,Volition</item>
+        <item>Rego Tempestatem:Fog,1,Volition;Rain,2,Volition;Wind,3,Volition;Storm,4,Volition;Lightning,5,Dices#Volition,10</item>
+        <item>Rego Aquam:Eyes of sea,1,Volition;Water prison,2,Volition;Dehydration,3,Volition;Floating wall,4,Volition;Blood to water,5,Volition</item>
+        <item>Rego Elementum:Elementary Strength,1,Volition#VolitionPoints,2;Wooden tongues,2,Volition;Revive stationaries,3,VolitionPoints,1;Elementary frame,4,Volition;Elemental summoning,5,Volition;Elemental control,5,Intellect#Occultism</item>
+        <item>Animality:Language of wlderness,1;Language of wilderness pleasure,1,Manipulation#Zoology;Noahs call,2,Charisma#Survuval;Animal intimidation,3,Manipulation#Intimidation;Ride on the wild ghost,4,Charisma#Zoology;Animal expulsion,5,Manipulation#Zoology;Accelerated unity,6,Cognition#Zoology</item>
+        <item>Obscuration:Shadow coat,1;Invisible presence,2;Mask of thousand faces,3,Manipulation#Acting;Disappearance in front of the mind\'s eye,4,Charisma#Stealth;Protective cloak for the convened,5,Stealth;Soulmask,6</item>
+    </string-array>
+	<string-array name="backgrounds">
+        <item>Influence</item>
+        <item>Minions</item>
+        <item>Generation</item>
+        <item>Drove</item>
+        <item>Contacts</item>
+        <item>Mentor</item>
+        <item>Resources</item>
+        <item>Status</item>
+        <item>Allies</item>
+    </string-array>
 </resources>

@@ -10,11 +10,11 @@ public class Item
 {
 	private static final int	ATTRIBUTE_START_VALUE	= 1, ABILITY_START_VALUE = 0;
 	
+	private static final int[]	MAX_ATTRIBUTE_POINTS	= new int[] { 6, 8, 10 }, MAX_ABILITIE_POINTS = new int[] { 5, 9, 13 };
+	
 	private final String		mName;
 	
 	private final String		mParent;
-	
-	private final int			mStartValue;
 	
 	private final boolean		mAttribute;
 	
@@ -33,7 +33,6 @@ public class Item
 		mName = aName;
 		mParent = aParent;
 		mAttribute = aAttribute;
-		mStartValue = aAttribute ? ATTRIBUTE_START_VALUE : ABILITY_START_VALUE;
 	}
 	
 	/**
@@ -42,6 +41,14 @@ public class Item
 	public boolean isAttribute()
 	{
 		return mAttribute;
+	}
+	
+	/**
+	 * @return the number of points that can be spent per parent.
+	 */
+	public int[] getMaxPoints()
+	{
+		return mAttribute ? MAX_ATTRIBUTE_POINTS : MAX_ABILITIE_POINTS;
 	}
 	
 	/**
@@ -67,7 +74,7 @@ public class Item
 	 */
 	public int getStartValue()
 	{
-		return mStartValue;
+		return mAttribute ? ATTRIBUTE_START_VALUE : ABILITY_START_VALUE;
 	}
 	
 	@Override

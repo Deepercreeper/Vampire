@@ -30,6 +30,33 @@ public class Clan
 		return mDisciplines;
 	}
 	
+	public String getDescription()
+	{
+		final StringBuilder descr = new StringBuilder();
+		if (getDisciplines().isEmpty())
+		{
+			descr.append(mName);
+		}
+		else
+		{
+			descr.append(mName + ": ");
+			boolean first = true;
+			for (final Discipline discipline : getDisciplines())
+			{
+				if (first)
+				{
+					descr.append(discipline.getName());
+					first = false;
+				}
+				else
+				{
+					descr.append(", " + discipline.getName());
+				}
+			}
+		}
+		return descr.toString();
+	}
+	
 	@Override
 	public String toString()
 	{

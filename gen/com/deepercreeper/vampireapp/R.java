@@ -9,14 +9,14 @@ package com.deepercreeper.vampireapp;
 
 public final class R {
     public static final class array {
-        public static final int abilities=0x7f040003;
-        public static final int ability_points=0x7f040001;
-        public static final int attribute_points=0x7f040000;
-        public static final int attributes=0x7f040002;
-        public static final int clan=0x7f040005;
-        public static final int clan_generations=0x7f040006;
-        public static final int disciplines=0x7f040007;
-        public static final int nature_and_behavior=0x7f040004;
+        public static final int abilities=0x7f040001;
+        public static final int attributes=0x7f040000;
+        public static final int backgrounds=0x7f040006;
+        public static final int clan=0x7f040003;
+        public static final int clan_generations=0x7f040004;
+        public static final int disciplines=0x7f040005;
+        public static final int nature_and_behavior=0x7f040002;
+        public static final int properties=0x7f040007;
     }
     public static final class attr {
     }
@@ -36,8 +36,11 @@ public final class R {
     }
     public static final class id {
         public static final int abilities_panel=0x7f09000f;
-        public static final int action_settings=0x7f090012;
+        public static final int action_settings=0x7f090018;
+        public static final int add_background=0x7f090014;
+        public static final int add_property=0x7f090017;
         public static final int attributes_panel=0x7f09000d;
+        public static final int backgrounds_panel=0x7f090013;
         public static final int behavior_label=0x7f090008;
         public static final int behavior_spinner=0x7f090007;
         public static final int char_name_text=0x7f090002;
@@ -51,9 +54,12 @@ public final class R {
         public static final int listView1=0x7f090000;
         public static final int nature_label=0x7f090005;
         public static final int nature_spinner=0x7f090004;
+        public static final int properties_panel=0x7f090016;
         public static final int show_abilities=0x7f09000e;
         public static final int show_attributes=0x7f09000c;
+        public static final int show_backgrounds=0x7f090012;
         public static final int show_disciplines=0x7f090010;
+        public static final int show_properties=0x7f090015;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -64,8 +70,11 @@ public final class R {
     }
     public static final class string {
         public static final int abilities=0x7f06000a;
+        public static final int add_background=0x7f06000e;
+        public static final int add_property=0x7f060011;
         public static final int app_name=0x7f060000;
         public static final int attributes=0x7f060009;
+        public static final int backgrounds=0x7f06000d;
         public static final int behavior_text=0x7f060006;
         public static final int button_create_character=0x7f060001;
         public static final int char_name=0x7f060003;
@@ -74,8 +83,11 @@ public final class R {
         public static final int context_settings=0x7f060002;
         public static final int discipline=0x7f06000c;
         public static final int disciplines=0x7f06000b;
+        public static final int edit_background=0x7f06000f;
+        public static final int edit_property=0x7f060012;
         public static final int generation_text=0x7f060008;
         public static final int nature_text=0x7f060005;
+        public static final int properties=0x7f060010;
     }
     public static final class style {
         /** 

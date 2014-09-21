@@ -11,7 +11,13 @@
     <string name="clan_text">Clan:</string>
     <string name="generation_text">Generation:</string>
     <string name="attributes">Attributes</string>
-	<string name="abilities">Abilities</string>
-	<string name="disciplines">Disciplines</string>
-	<string name= "discipline">Discipline</string>
+    <string name="abilities">Abilities</string>
+    <string name="disciplines">Disciplines</string>
+    <string name="discipline">Discipline</string>
+    <string name="backgrounds">Backgrounds</string>
+    <string name="add_background">Add background</string>
+    <string name="edit_background">Edit property</string>
+<string name="properties">Properties</string>
+<string name="add_property">Add property</string>
+<string name="edit_property">Edit property</string>
 </resources>

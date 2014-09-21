@@ -1,30 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer-array name="attribute_points">
-        <item>6</item>
-        <item>8</item>
-        <item>10</item>
-    </integer-array>
-    
-    <integer-array name="ability_points">
-        <item>5</item>
-        <item>9</item>
-        <item>13</item>
-    </integer-array>
-    
-    <string-array name = "attributes">
+
+    <string-array name="attributes">
         <item>Körperlich:Körperkraft,Geschick,Widerstandsfähigkeit</item>
         <item>Gesellschaftlich:Charisma,Manipulation,Erscheinungsbild</item>
         <item>Geistig:Wahrnehmung,Intelligenz,Geistesschärfe</item>
     </string-array>
-    
-    <string-array name = "abilities">
+    <string-array name="abilities">
         <item>Talente:Aufmerksamkeit,Ausflüchte,Ausweichen,Diebstahl,Einschüchtern,Empathie,Führungsqualitäten,Handgemenge,Schauspielerei,Sportlichkeit</item>
         <item>Fertigkeiten:Bogenschießen,Etikette,Handwerk,Heimlichkeit,Kräuterkunde,Musik,Nahkampf,Reiten,Tierkunde,Überleben</item>
         <item>Kenntnisse:Akademisches Wissen,Folklore,Gesetzeskenntnis,Linguistik,Medizin,Nachforschungen,Naturwissenschaften,Okkultismus,Politik,Verwaltung</item>
     </string-array>
-    
-    <string-array name="nature_and_behavior"> 
+    <string-array name="nature_and_behavior">
         <item>Autokrat</item>
         <item>Barbar</item>
         <item>Büßer</item>
@@ -44,7 +31,6 @@
         <item>Verteidiger</item>
         <item>Zelebrant</item>
     </string-array>
-
     <string-array name="clan">
         <item>Assamiten:Geschwindigkeit,Quietus,Verdunkelung</item>
         <item>Brujah:Geschwindigkeit,Präsenz,Stärke</item>
@@ -61,35 +47,131 @@
         <item>Tzimisce:Auspex,Fleischformen,Tierhaftigkeit</item>
         <item>Ventrue:Beherrschung,Präsenz,Seelenstärke</item>
     </string-array>
-
     <string-array name="clan_generations">
         <item>Caitiff:13</item>
     </string-array>
-    
     <string-array name="disciplines">
         <item>Auspex:Geschärfte Sinne,1;Seelenschau,2,Wahrnehmung#Empathie;Geistige Berührung,3,Wahrnehmung#Empathie;Geraubte Geheimnisse,4,Intelligenz#Ausflüchte;Animawandeln,5,Wahrnehmung#Okkultismus;Weitsicht,6,Wahrnehmung#Empathie</item>
-    	<item>Beherrschung:Gehorsam für das gesprochene Wort,1,Manipulation#Einschüchterung;Murmeln des falschen Willens,2,Manipulation#Führungsqualitäten;Die Erinnerung des Zechers,3,Geistesschärfe#Ausflüchte;Verlockung des süßen Flüsterns,4,Charisma#Führungsqualitäten;Gefäß,5,VolitionPoints;Lehnstreue,6,Charisma#Führungsqualitäten</item>
-    	<item>Daimonion:Sündengespür,1,Wahrnehmung#Empathie;Furcht vor der Hölle unter uns,2,Geistesschärfe#Einschüchterung;Flammen der Unterwelt,3,Okkultismus#Geschick,BloodPoints,Dices;Psychomachie,4;Fluch,5,Intelligenz#Okkultismus;Ignorieren der sengenden Flammen,6</item>
-    	<item>Fleischformen:Formbares Gesicht,1,Intelligenz#Handwerk;Kneten des sterblichen Tons,2,Geschick#Handwerk;Zerreißen des Knochengerüsts,3,Körperkraft#Handwerk;Erwecken der Zulo-Gestalt,4,BloodPoints,2;Emporsteigen der Blutflüssigkeit,5;Raub-Chiropter,6,BloodPoints,3</item>
-    	<item>Geschwindigkeit:Geschwindigkeit,1,BloodPoints,1</item>
-    	<item>Gestaltwandel:Zeuge der Dunkelheit,1;Klauen des Tiers,2,BloodPoints,1;Begraben in der Erde,3,BloodPoints,1;Tiergestalt,4,BloodPoints,1;Geisterleib,5,BloodPoints,1;Gesegneter Schlaf,6,BloodPoints,5</item>
-    	<item>Irrsinn:Leidenschaft des Inkubus,1,Charisma#Empathie;Seelenspuk,3,Manipulation#Ausflüchte;Augen des Chaos,3,Wahrnehmung#Okkultismus;Konfusion,4,Manipulation#Einschüchtern;Heulender Wahnsinn,5,Manipulation#Einschüchern;Kuss des Mondes,6,Manipulation#Empathie</item>
-    	<item>Mortis:Totenmaske,1,BloodPoints,1;Pesthauch,2,Manipulation#Medizin#VolitionPoints,1;Erwecken,3,VolitionPoints,2;Geflüster des Todes,4;Schwarzer Tod,5,Widerstandsfähigkeit#Okkultismus;Vigor Mortis,6,BloodPoints,3</item>
-    	<item>Präsenz:Ehrfurcht,1,Charisma#Schauspielerei;Blick der Furcht,2,Charisma#Einschüchterung;Entzücken,3,Erscheinungsbild#Empathie;Herbeirufen,4,Charisma#Ausflüchte;Majestät,5,Einschüchtern#Charisma;Leidenschaft,6,Manipulation#Ausflüchte</item>
-   		<item>Quietus:Stille des Todes,1,BloodPoints,1;Schwäche,2,BloodPoints#Willenskraft,1;Krankheit,3,BloodPoints#Willenskraft,3;Blutagonie,4,BloodPoints,1;Blutessenz,5,Willenskraft;Blutiger Schweiß,6,Willenskraft</item>
-   		<item>Schattenspiele:Schattenspiel,1,BloodPoints,1;Notturno,2,Wahrnehmung#Okkultismus;Arme des Ahriman,3,Manipulation#Okkultismus;Nachtschatten,4,Geistesschärfe#Okkultismus;Schattenkörper,5,BloodPoints,3;Wanderung im Abgrund,6,Intelligent#Heimlichkeit;Wanderung im Abgrund mit Person,6,Intelligenz#Handgemenge</item>
-   		<item>Shimären:Trugbild,1,VolitionPoints,1;Fata Morgana,2,VolitionPoints,2;Erscheinung,3,BloodPoints,1;Dauerhaftigkeit,4,BloodPoints,1;Fürchterliche Realität,5,VolitionPoints,2;Fürchterlicher Realitäts Angriff,5,Manipulation#Ausflüchte;Massenhorror,6,VolitionPoints,2;Massenhorror Angriff,6,Manipulation#Ausflüchte</item>
-   		<item>Seelenstärke:Seelenstärke,1</item>
-   		<item>Serpentis:Die Augen der Schlange,1;Natterzunge,2,Körperkraft;Bituminöses Fleisch,3;Kobragestalt,4,BloodPoints,1;Betrug an Thoths Waage,5;Basiliskenodem,6,Blutpukte,1;Basiliskenodem Angriff,6,Geschick#Handgemenge</item>
-   		<item>Stärke:Stärke,1</item>
-   		<item>#Thaumaturgie:Rego Vitam,Creo Ignem,Rego Motum,Rego Tempestatem,Rego Aquam,Rego Elementum</item>
-   		<item>Rego Vitam:Ein Sinn für Blut,1,Willenskraft;Blutige Extase,2,Willenskraft;Blut der Macht,3,Willenskraft;Vitae-Raub,4,Willenskraft;Blutkessel,5,Willenskraft</item>
-   		<item>Creo Ignem:Ein Kerzenfeuer,1,Willenskraft;Eine Hand voll Feuer,2,Willenskraft;Lagerfeuer,3,Willenskraft;Freudenfeuer,4,Willenskraft;Feuerbrunst,5,Willenskraft</item>
-   		<item>Rego Motum:1 Pfund,1,Willenskraft;10 Kilo,2,Willenskraft;100 Kilo,3,Willenskraft;250 Kilo,4,Willenskraft;500 Kilo,5,Willenskraft</item>
-   		<item>Rego Tempestatem:Nebel,1,Willenskraft;Regen,2,Willenskraft;Wind,3,Willenskraft;Sturm,4,Willenskraft;Blitzschlag,5,Dices#Willenskraft,10</item>
-   		<item>Rego Aquam:Augen der See,1,Willenskraft;Wassergefängnis,2,Willenskraft;Austrocknen,3,Willenskraft;Fließende Wand,4,Willenskraft;Blut zu Wasser,5,Willenskraft</item>
-   		<item>Rego Elementum:Elementare Stärke,1,Willenskraft#VolitionPoints,2;Hölzerne Zungen,2,Willenskraft;Unbewegtes Beleben,3,VolitionPoints,1;Elementargestalt,4,Willenskraft;Elementar beschwören,5,Willenskraft;Elementar kontrollieren,5,Geistesschärfe#Okkultismus</item>
-    	<item>Tierhaftigkeit:Sprache der Wildnis,1;Sprache der Wildnis Gefallen,1,Manipulation#Tierkunde;Noahs Ruf,2,Charisma#Überleben;Einschüchterung des Tiers,3,Manipulation#Einschüchtern;Ritt auf dem Wilden Geist,4,Charisma#Tierkunde;Austreibung des Tiers,5,Manipulation#Tierkunde;Beschleunigte Einheit,6,Wahrnehmung#Tierkunde</item>
-    	<item>Verdunkelung:Schattenmantel,1;Unsichtbare Gegenwart,2;Maske der tausend Gesichter,3,Manipulation#Schauspielerei;Verschwinden vor dem geistigen Auge,4,Charisma#Heimlichkeit;Schutzmantel für die Versammelten,5,Heimlichkeit;Seelenmaske,6</item>
+        <item>Beherrschung:Gehorsam für das gesprochene Wort,1,Manipulation#Einschüchterung;Murmeln des falschen Willens,2,Manipulation#Führungsqualitäten;Die Erinnerung des Zechers,3,Geistesschärfe#Ausflüchte;Verlockung des süßen Flüsterns,4,Charisma#Führungsqualitäten;Gefäß,5,VolitionPoints;Lehnstreue,6,Charisma#Führungsqualitäten</item>
+        <item>Daimonion:Sündengespür,1,Wahrnehmung#Empathie;Furcht vor der Hölle unter uns,2,Geistesschärfe#Einschüchterung;Flammen der Unterwelt,3,Okkultismus#Geschick,BloodPoints,Dices;Psychomachie,4;Fluch,5,Intelligenz#Okkultismus;Ignorieren der sengenden Flammen,6</item>
+        <item>Fleischformen:Formbares Gesicht,1,Intelligenz#Handwerk;Kneten des sterblichen Tons,2,Geschick#Handwerk;Zerreißen des Knochengerüsts,3,Körperkraft#Handwerk;Erwecken der Zulo-Gestalt,4,BloodPoints,2;Emporsteigen der Blutflüssigkeit,5;Raub-Chiropter,6,BloodPoints,3</item>
+        <item>Geschwindigkeit:Geschwindigkeit,1,BloodPoints,1</item>
+        <item>Gestaltwandel:Zeuge der Dunkelheit,1;Klauen des Tiers,2,BloodPoints,1;Begraben in der Erde,3,BloodPoints,1;Tiergestalt,4,BloodPoints,1;Geisterleib,5,BloodPoints,1;Gesegneter Schlaf,6,BloodPoints,5</item>
+        <item>Irrsinn:Leidenschaft des Inkubus,1,Charisma#Empathie;Seelenspuk,3,Manipulation#Ausflüchte;Augen des Chaos,3,Wahrnehmung#Okkultismus;Konfusion,4,Manipulation#Einschüchtern;Heulender Wahnsinn,5,Manipulation#Einschüchern;Kuss des Mondes,6,Manipulation#Empathie</item>
+        <item>Mortis:Totenmaske,1,BloodPoints,1;Pesthauch,2,Manipulation#Medizin#VolitionPoints,1;Erwecken,3,VolitionPoints,2;Geflüster des Todes,4;Schwarzer Tod,5,Widerstandsfähigkeit#Okkultismus;Vigor Mortis,6,BloodPoints,3</item>
+        <item>Präsenz:Ehrfurcht,1,Charisma#Schauspielerei;Blick der Furcht,2,Charisma#Einschüchterung;Entzücken,3,Erscheinungsbild#Empathie;Herbeirufen,4,Charisma#Ausflüchte;Majestät,5,Einschüchtern#Charisma;Leidenschaft,6,Manipulation#Ausflüchte</item>
+        <item>Quietus:Stille des Todes,1,BloodPoints,1;Schwäche,2,BloodPoints#Willenskraft,1;Krankheit,3,BloodPoints#Willenskraft,3;Blutagonie,4,BloodPoints,1;Blutessenz,5,Willenskraft;Blutiger Schweiß,6,Willenskraft</item>
+        <item>Schattenspiele:Schattenspiel,1,BloodPoints,1;Notturno,2,Wahrnehmung#Okkultismus;Arme des Ahriman,3,Manipulation#Okkultismus;Nachtschatten,4,Geistesschärfe#Okkultismus;Schattenkörper,5,BloodPoints,3;Wanderung im Abgrund,6,Intelligent#Heimlichkeit;Wanderung im Abgrund mit Person,6,Intelligenz#Handgemenge</item>
+        <item>Shimären:Trugbild,1,VolitionPoints,1;Fata Morgana,2,VolitionPoints,2;Erscheinung,3,BloodPoints,1;Dauerhaftigkeit,4,BloodPoints,1;Fürchterliche Realität,5,VolitionPoints,2;Fürchterlicher Realitäts Angriff,5,Manipulation#Ausflüchte;Massenhorror,6,VolitionPoints,2;Massenhorror Angriff,6,Manipulation#Ausflüchte</item>
+        <item>Seelenstärke:Seelenstärke,1</item>
+        <item>Serpentis:Die Augen der Schlange,1;Natterzunge,2,Körperkraft;Bituminöses Fleisch,3;Kobragestalt,4,BloodPoints,1;Betrug an Thoths Waage,5;Basiliskenodem,6,Blutpukte,1;Basiliskenodem Angriff,6,Geschick#Handgemenge</item>
+        <item>Stärke:Stärke,1</item>
+        <item>#Thaumaturgie:Rego Vitam,Creo Ignem,Rego Motum,Rego Tempestatem,Rego Aquam,Rego Elementum</item>
+        <item>Rego Vitam:Ein Sinn für Blut,1,Willenskraft;Blutige Extase,2,Willenskraft;Blut der Macht,3,Willenskraft;Vitae-Raub,4,Willenskraft;Blutkessel,5,Willenskraft</item>
+        <item>Creo Ignem:Ein Kerzenfeuer,1,Willenskraft;Eine Hand voll Feuer,2,Willenskraft;Lagerfeuer,3,Willenskraft;Freudenfeuer,4,Willenskraft;Feuerbrunst,5,Willenskraft</item>
+        <item>Rego Motum:1 Pfund,1,Willenskraft;10 Kilo,2,Willenskraft;100 Kilo,3,Willenskraft;250 Kilo,4,Willenskraft;500 Kilo,5,Willenskraft</item>
+        <item>Rego Tempestatem:Nebel,1,Willenskraft;Regen,2,Willenskraft;Wind,3,Willenskraft;Sturm,4,Willenskraft;Blitzschlag,5,Dices#Willenskraft,10</item>
+        <item>Rego Aquam:Augen der See,1,Willenskraft;Wassergefängnis,2,Willenskraft;Austrocknen,3,Willenskraft;Fließende Wand,4,Willenskraft;Blut zu Wasser,5,Willenskraft</item>
+        <item>Rego Elementum:Elementare Stärke,1,Willenskraft#VolitionPoints,2;Hölzerne Zungen,2,Willenskraft;Unbewegtes Beleben,3,VolitionPoints,1;Elementargestalt,4,Willenskraft;Elementar beschwören,5,Willenskraft;Elementar kontrollieren,5,Geistesschärfe#Okkultismus</item>
+        <item>Tierhaftigkeit:Sprache der Wildnis,1;Sprache der Wildnis Gefallen,1,Manipulation#Tierkunde;Noahs Ruf,2,Charisma#Überleben;Einschüchterung des Tiers,3,Manipulation#Einschüchtern;Ritt auf dem Wilden Geist,4,Charisma#Tierkunde;Austreibung des Tiers,5,Manipulation#Tierkunde;Beschleunigte Einheit,6,Wahrnehmung#Tierkunde</item>
+        <item>Verdunkelung:Schattenmantel,1;Unsichtbare Gegenwart,2;Maske der tausend Gesichter,3,Manipulation#Schauspielerei;Verschwinden vor dem geistigen Auge,4,Charisma#Heimlichkeit;Schutzmantel für die Versammelten,5,Heimlichkeit;Seelenmaske,6</item>
     </string-array>
+    <string-array name="backgrounds">
+        <item>Einfluss</item>
+        <item>Gefolgsleute</item>
+        <item>Generation</item>
+        <item>Herde</item>
+        <item>Kontakte</item>
+        <item>Mentor</item>
+        <item>Resourcen</item>
+        <item>Status</item>
+        <item>Verbündete</item>
+    </string-array>
+	<string-array name="properties">
+	    <item>Bestimmung:1</item>
+	    <item>Gesunder Menschenverstand:1</item>
+	    <item>Konzentration:1</item>
+	    <item>Sternendeuter:1</item>
+	    <item>Leichter Schlaf:2</item>
+	    <item>Fotografisches Gedächtnis:2</item>
+	    <item>Ruhe:3</item>
+	    <item>Eiserner Wille:4</item>
+	    <item>Selbstsicherheit:5</item>
+	    <item>Hervorragende Sinne:1,2,3,4,5</item>
+	    <item>Beidhändigkeit:1</item>
+	    <item>Essen:1</item>
+	    <item>Sprachtalent:2</item>
+	    <item>Guter Schüler:5</item>
+	    <item>Hans Dampf in allen Gassen:5</item>
+	    <item>Wahre Liebe:1</item>
+	    <item>Feenzuneigung:2</item>
+	    <item>Sechster Sinn:2</item>
+	    <item>Immun gegen Blutsbande:3</item>
+	    <item>Glück:4</item>
+	    <item>Wahrer Glaube:7</item>
+	    <item>Beistand:1,2,3</item>
+	    <item>Besonderes Geschenk:1,2,3</item>
+	    <item>Guter Ruf:2</item>
+	    <item>Marionette:3</item>
+	    <item>Adliger:1,2,3</item>
+	    <item>Kirchlicher Rang:1,2,3</item>
+	    <item>Gutshaus:2</item>
+	    <item>Kontrolle über eine Institution:2,3,4,5</item>
+	    <item>Spionagenetz:2</item>
+	    <item>Schlangenmensch:1</item>
+	    <item>Gute Durchblutung:2</item>
+	    <item>Verschobenes Herz:2</item>
+	    <item>Wirksame Verdauung:3</item>
+	    <item>Riesenwuchs:4</item>
+	    <item>-Alpträume:1</item>
+	    <item>-Beuteeinschränkung:1</item>
+	    <item>-Intoleranz/Hass:1,2,3</item>
+	    <item>-Phobie:1,3</item>
+	    <item>-Selbstüberschätzung:1</item>
+	    <item>-Zwangsvorstellungen:1</item>
+	    <item>-Minderwertigkeitskomplexe:2</item>
+	    <item>-Ortsgebunden:2</item>
+	    <item>-Rache:2</item>
+	    <item>-Sensibilität:2</item>
+	    <item>-Besessenheit:3</item>
+	    <item>-Tiefer Schlaf:1</item>
+	    <item>-Amnesie:2</item>
+	    <item>-Verwirrt:2</item>
+	    <item>-Schwacher Wille:2</item>
+	    <item>-Geistesabwesend:3</item>
+	    <item>-Farbenblindheit:1</item>
+	    <item>-Schwerhörigkeit:1</item>
+	    <item>-Einäugigkeit:2</item>
+	    <item>-Schlechtes Sehvermögen:2</item>
+	    <item>-Taubheit:4</item>
+	    <item>-Blindheit:5</item>
+	    <item>-Unbegabt:5</item>
+	    <item>-Unfähig:5</item>
+	    <item>-Ungebildet:5</item>
+	    <item>-Makel des Verderbens:1</item>
+	    <item>-Von Dämonen gehetzt:1,2,3,4</item>
+	    <item>-Abgestoßen von Knoblauch:2</item>
+	    <item>-Spuk:3</item>
+	    <item>-Dunkles Schicksal:5</item>
+	    <item>-Ablehnung des Erzeugers:1</item>
+	    <item>-Berüchtigter Erzeuger:1</item>
+	    <item>-Feind:1,2,3,4,5</item>
+	    <item>-Berüchtigt:3</item>
+	    <item>-Bürger zweiter Klasse:2</item>
+	    <item>-Totgeglaubt:2</item>
+	    <item>-Mündel:3</item>
+	    <item>-Gejagt:4</item>
+	    <item>-Klein:1</item>
+	    <item>-Schwaches Blut:1</item>
+	    <item>-Entstellt:2</item>
+	    <item>-Selektive Verdauung:2</item>
+	    <item>-Dauerhafte Wunde:3</item>
+	    <item>-Einarmig:3</item>
+	    <item>-Kind:3</item>
+	    <item>-Lähmung:3</item>
+	    <item>-Leprakranker:3</item>
+	    <item>-Missbildung:3</item>
+	    <item>-Anämie:4</item>
+	    <item>-Stummheit:4</item>
+	</string-array>
 </resources>
