@@ -20,11 +20,18 @@ public class Discipline
 	 */
 	public static final String					PARENT_DISCIPLINE	= "#";
 	
+	/**
+	 * This is the number of points available to spend into disciplines at creation.
+	 */
+	public static final int						START_POINTS		= 4;
+	
 	private static final String					ABILITIES_DELIM		= ";", SUB_DISCIPLINES_DELIM = ",";
 	
 	private final String						mName;
 	
 	private final boolean						mParentDiscipline;
+	
+	private Discipline							mParent				= null;
 	
 	private final HashMap<String, Discipline>	mSubDisciplines		= new HashMap<>();
 	
@@ -64,6 +71,11 @@ public class Discipline
 		}
 	}
 	
+	public void setSubDisciplineOf(final Discipline aParent)
+	{
+		mParent = aParent;
+	}
+	
 	/**
 	 * If this is a parent discipline the sub discipline with the given name is returned.
 	 * 
@@ -93,6 +105,16 @@ public class Discipline
 	public boolean isParentDiscipline()
 	{
 		return mParentDiscipline;
+	}
+	
+	public Discipline getParentDiscipline()
+	{
+		return mParent;
+	}
+	
+	public boolean isSubDiscipline()
+	{
+		return mParent != null;
 	}
 	
 	/**
@@ -125,6 +147,23 @@ public class Discipline
 	public HashSet<Ability> getAbilities()
 	{
 		return mAbilities;
+	}
+	
+	@Override
+	public boolean equals(final Object aO)
+	{
+		if (aO instanceof Discipline)
+		{
+			final Discipline d = (Discipline) aO;
+			return d.getName().equals(getName());
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return getName().hashCode();
 	}
 	
 	@Override

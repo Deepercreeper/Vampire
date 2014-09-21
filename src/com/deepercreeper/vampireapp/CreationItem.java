@@ -8,19 +8,16 @@ package com.deepercreeper.vampireapp;
  */
 public class CreationItem implements Creation
 {
-	/**
-	 * When creating a character the maximum of points to spend into one item is defined by this constant.
-	 */
-	public static final int	MAX_CREATION_VALUE	= 3;
+	private static final int	MAX_CREATION_VALUE	= 3;
 	
 	/**
 	 * The maximum value of each attribute or ability for a character.
 	 */
-	public static final int	MAX_VALUE			= 6;
+	public static final int		MAX_VALUE			= 6;
 	
-	private final Item		mItem;
+	private final Item			mItem;
 	
-	private int				mValue;
+	private int					mValue;
 	
 	/**
 	 * Creates an attribute or ability that is able to contain a value of points.

@@ -64,7 +64,6 @@ public final class R {
     }
     public static final class string {
         public static final int abilities=0x7f06000a;
-        public static final int add_discipline=0x7f06000d;
         public static final int app_name=0x7f060000;
         public static final int attributes=0x7f060009;
         public static final int behavior_text=0x7f060006;

@@ -124,6 +124,7 @@ public class MainActivity extends Activity
 				{
 					final Discipline subDiscipline = mDisciplines.get(subDisciplineName);
 					parentDiscipline.addSubDiscipline(subDiscipline);
+					subDiscipline.setSubDisciplineOf(parentDiscipline);
 					mDisciplines.remove(subDisciplineName);
 				}
 			}
@@ -138,11 +139,6 @@ public class MainActivity extends Activity
 				{
 					for (final String clanDiscipline : clanData[1].split(Clan.CLAN_DISCIPLIN_DELIM))
 					{
-						if ( !mDisciplines.containsKey(clanDiscipline))
-						{
-							// TODO Remove when all disciplines are added
-							continue;
-						}
 						clan.addDisciplines(mDisciplines.get(clanDiscipline));
 					}
 				}
@@ -360,6 +356,8 @@ public class MainActivity extends Activity
 		}
 		disciplinesPanel.removeAllViews();
 		mInitializedDisciplines = false;
+		
+		((Button) findViewById(R.id.show_disciplines)).setEnabled( !mClans.get(aClan).getDisciplines().isEmpty());
 	}
 	
 	private GridLayout[] createParentDisciplineRow(final Discipline aDiscipline)
@@ -399,7 +397,7 @@ public class MainActivity extends Activity
 			@Override
 			public void onClick(final View aV)
 			{
-				final DialogFragment newFragment = new SelectSubDisciplineDialogFragment(grids[1], mCreator, aDiscipline, MainActivity.this, true);
+				final DialogFragment newFragment = new SelectSubDisciplineDialog(grids[1], mCreator, aDiscipline, MainActivity.this, true);
 				newFragment.show(getFragmentManager(), "1. " + aDiscipline.getName());
 			}
 		});
@@ -423,7 +421,7 @@ public class MainActivity extends Activity
 			@Override
 			public void onClick(final View aV)
 			{
-				final DialogFragment newFragment = new SelectSubDisciplineDialogFragment(grids[2], mCreator, aDiscipline, MainActivity.this, false);
+				final DialogFragment newFragment = new SelectSubDisciplineDialog(grids[2], mCreator, aDiscipline, MainActivity.this, false);
 				newFragment.show(getFragmentManager(), "2. " + aDiscipline.getName());
 			}
 		});
@@ -454,7 +452,7 @@ public class MainActivity extends Activity
 			@Override
 			public void onClick(final View aV)
 			{
-				final DialogFragment newFragment = new SelectSubDisciplineDialogFragment(aGrid, mCreator, aDiscipline, MainActivity.this, aFirst);
+				final DialogFragment newFragment = new SelectSubDisciplineDialog(aGrid, mCreator, aDiscipline, MainActivity.this, aFirst);
 				newFragment.show(getFragmentManager(), (aFirst ? "1. " : "2. ") + aDiscipline.getName());
 			}
 		});

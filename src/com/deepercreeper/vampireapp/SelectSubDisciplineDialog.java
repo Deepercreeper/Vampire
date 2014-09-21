@@ -10,7 +10,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.GridLayout;
 
-public class SelectSubDisciplineDialogFragment extends DialogFragment
+public class SelectSubDisciplineDialog extends DialogFragment
 {
 	private final CharCreator	mCreator;
 	
@@ -22,8 +22,8 @@ public class SelectSubDisciplineDialogFragment extends DialogFragment
 	
 	private final GridLayout	mGrid;
 	
-	public SelectSubDisciplineDialogFragment(final GridLayout aGrid, final CharCreator aCreator, final Discipline aDiscipline, final MainActivity aParent,
-			final boolean aFirst)
+	public SelectSubDisciplineDialog(final GridLayout aGrid, final CharCreator aCreator, final Discipline aDiscipline,
+			final MainActivity aParent, final boolean aFirst)
 	{
 		mGrid = aGrid;
 		mCreator = aCreator;
@@ -45,8 +45,8 @@ public class SelectSubDisciplineDialogFragment extends DialogFragment
 		Arrays.sort(subDisciplines);
 		
 		final AlertDialog.Builder builder = new AlertDialog.Builder(mParent);
-		builder.setTitle("1. " + mDiscipline.getName() + " " + getResources().getString(R.string.discipline)).setItems(subDisciplines,
-				new DialogInterface.OnClickListener()
+		builder.setTitle((mFirst ? "1. " : "2. ") + mDiscipline.getName() + " " + getResources().getString(R.string.discipline)).setItems(
+				subDisciplines, new DialogInterface.OnClickListener()
 				{
 					@Override
 					public void onClick(final DialogInterface dialog, final int which)

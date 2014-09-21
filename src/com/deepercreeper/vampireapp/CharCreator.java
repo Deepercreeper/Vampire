@@ -76,18 +76,27 @@ public class CharCreator
 	
 	public void increaseSubDiscipline(final Discipline aDiscipline, final boolean aFirst)
 	{
-		getDiscipline(aDiscipline).getSubDiscipline(aFirst).increase();
+		if (canIncreaseDiscipline(getDiscipline(aDiscipline).getSubDiscipline(aFirst).getDiscipline()))
+		{
+			getDiscipline(aDiscipline).getSubDiscipline(aFirst).increase();
+		}
 	}
 	
 	public void decreaseSubDiscipline(final Discipline aDiscipline, final boolean aFirst)
 	{
-		getDiscipline(aDiscipline).getSubDiscipline(aFirst).decrease();
+		if (canDecreaseDiscipline(getDiscipline(aDiscipline).getSubDiscipline(aFirst).getDiscipline()))
+		{
+			getDiscipline(aDiscipline).getSubDiscipline(aFirst).decrease();
+		}
 	}
 	
 	public void increaseDiscipline(final Discipline aDiscipline)
 	{
-		final CreationDiscipline discipline = mDisciplines.get(aDiscipline.getName());
-		discipline.increase();
+		if (canIncreaseDiscipline(aDiscipline))
+		{
+			final CreationDiscipline discipline = mDisciplines.get(aDiscipline.getName());
+			discipline.increase();
+		}
 	}
 	
 	public void decreaseDiscipline(final Discipline aDiscipline)
@@ -188,6 +197,57 @@ public class CharCreator
 			values.put(parent, value);
 		}
 		return values;
+	}
+	
+	private boolean canIncreaseDiscipline(final Discipline aDiscipline)
+	{
+		if (aDiscipline.isSubDiscipline())
+		{
+			final CreationDiscipline parent = getDiscipline(aDiscipline.getParentDiscipline());
+			if (parent.hasSubDiscipline(false) && parent.getSubDiscipline(false).getDiscipline().equals(aDiscipline))
+			{
+				if ( !parent.hasSubDiscipline(true) || parent.getSubDiscipline(true).getValue() < 2)
+				{
+					return false;
+				}
+			}
+		}
+		int values = 0;
+		for (final CreationDiscipline discipline : mDisciplines.values())
+		{
+			if (discipline.getDiscipline().isParentDiscipline())
+			{
+				if (discipline.hasSubDiscipline(true))
+				{
+					values += discipline.getSubDiscipline(true).getValue();
+				}
+				if (discipline.hasSubDiscipline(false))
+				{
+					values += discipline.getSubDiscipline(false).getValue();
+				}
+			}
+			else
+			{
+				values += discipline.getValue();
+			}
+		}
+		return values < Discipline.START_POINTS;
+	}
+	
+	private boolean canDecreaseDiscipline(final Discipline aDiscipline)
+	{
+		if (aDiscipline.isSubDiscipline())
+		{
+			final CreationDiscipline parent = getDiscipline(aDiscipline.getParentDiscipline());
+			if (parent.hasSubDiscipline(true) && parent.getSubDiscipline(true).getDiscipline().equals(aDiscipline))
+			{
+				if (parent.getSubDiscipline(true).getValue() == 2 && parent.hasSubDiscipline(false) && parent.getSubDiscipline(false).getValue() > 0)
+				{
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 	
 	private boolean canIncreaseItem(final Item aItem)

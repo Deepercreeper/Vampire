@@ -2,13 +2,13 @@ package com.deepercreeper.vampireapp;
 
 public class CreationDiscipline implements Creation
 {
-	private static final int	MAX_VALUE	= 6;
+	private static final int	MAX_CREATION_VALUE	= 3, MAX_VALUE = 6;
 	
 	private final Discipline	mDiscipline;
 	
 	private CreationDiscipline	mFirstSubDiscipline, mSecondSubDiscipline;
 	
-	private int					mValue		= 0;
+	private int					mValue				= 0;
 	
 	public CreationDiscipline(final Discipline aDiscipline)
 	{
@@ -54,7 +54,7 @@ public class CreationDiscipline implements Creation
 	@Override
 	public void increase()
 	{
-		if (mValue < 6)
+		if (mValue < MAX_VALUE && mValue < MAX_CREATION_VALUE)
 		{
 			mValue++ ;
 		}

@@ -89,6 +89,7 @@
    		<item>Rego Tempestatem:Nebel,1,Willenskraft;Regen,2,Willenskraft;Wind,3,Willenskraft;Sturm,4,Willenskraft;Blitzschlag,5,Dices#Willenskraft,10</item>
    		<item>Rego Aquam:Augen der See,1,Willenskraft;Wassergefängnis,2,Willenskraft;Austrocknen,3,Willenskraft;Fließende Wand,4,Willenskraft;Blut zu Wasser,5,Willenskraft</item>
    		<item>Rego Elementum:Elementare Stärke,1,Willenskraft#VolitionPoints,2;Hölzerne Zungen,2,Willenskraft;Unbewegtes Beleben,3,VolitionPoints,1;Elementargestalt,4,Willenskraft;Elementar beschwören,5,Willenskraft;Elementar kontrollieren,5,Geistesschärfe#Okkultismus</item>
+    	<item>Tierhaftigkeit:Sprache der Wildnis,1;Sprache der Wildnis Gefallen,1,Manipulation#Tierkunde;Noahs Ruf,2,Charisma#Überleben;Einschüchterung des Tiers,3,Manipulation#Einschüchtern;Ritt auf dem Wilden Geist,4,Charisma#Tierkunde;Austreibung des Tiers,5,Manipulation#Tierkunde;Beschleunigte Einheit,6,Wahrnehmung#Tierkunde</item>
+    	<item>Verdunkelung:Schattenmantel,1;Unsichtbare Gegenwart,2;Maske der tausend Gesichter,3,Manipulation#Schauspielerei;Verschwinden vor dem geistigen Auge,4,Charisma#Heimlichkeit;Schutzmantel für die Versammelten,5,Heimlichkeit;Seelenmaske,6</item>
     </string-array>
-    
 </resources>
