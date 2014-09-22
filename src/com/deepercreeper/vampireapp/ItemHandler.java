@@ -8,15 +8,15 @@ public class ItemHandler
 {
 	private static final String					HEADER_DELIM	= ":", ITEM_DELIM = ",";
 	
-	private final HashMap<String, Item[]>		mAttributes		= new HashMap<>();
+	private final HashMap<String, Item[]>		mAttributes		= new HashMap<String, Item[]>();
 	
-	private final HashMap<String, Item[]>		mAbilities		= new HashMap<>();
+	private final HashMap<String, Item[]>		mAbilities		= new HashMap<String, Item[]>();
 	
-	private final HashMap<String, Background>	mBackgrounds	= new HashMap<>();
+	private final HashMap<String, Background>	mBackgrounds	= new HashMap<String, Background>();
 	
-	private final HashMap<String, Property>		mProperties		= new HashMap<>();
+	private final HashMap<String, Property>		mProperties		= new HashMap<String, Property>();
 	
-	private final HashMap<String, Item>			mAllItems		= new HashMap<>();
+	private final HashMap<String, Item>			mAllItems		= new HashMap<String, Item>();
 	
 	public void init(final String[] aAttributes, final String[] aAbilities, final String[] aBackgrounds, final String[] aProperties)
 	{
@@ -63,10 +63,10 @@ public class ItemHandler
 	public HashMap<String, HashMap<String, CreationItem>> createItems(final boolean aAttribute)
 	{
 		final HashMap<String, Item[]> source = aAttribute ? mAttributes : mAbilities;
-		final HashMap<String, HashMap<String, CreationItem>> parents = new HashMap<>();
+		final HashMap<String, HashMap<String, CreationItem>> parents = new HashMap<String, HashMap<String, CreationItem>>();
 		for (final String parent : source.keySet())
 		{
-			final HashMap<String, CreationItem> attributes = new HashMap<>();
+			final HashMap<String, CreationItem> attributes = new HashMap<String, CreationItem>();
 			for (final Item attribute : source.get(parent))
 			{
 				attributes.put(attribute.getName(), new CreationItem(attribute));

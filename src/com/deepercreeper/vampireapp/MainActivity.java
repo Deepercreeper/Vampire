@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.os.Bundle;
 import android.text.TextUtils.TruncateAt;
 import android.util.TypedValue;
@@ -15,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -23,7 +23,6 @@ import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.Space;
@@ -35,31 +34,34 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity
 {
-	private static final String							DELIM		= ":";
+	private static final String							DELIM				= ":";
 	
-	private static final int							ATTRIBUTES_HEIGHT	= 1140, ABILITIES_HEIGHT = 3150, DISCIPLINES_HEIGHT = 460, BACKGROUNDS_HEIGHT = 620, PROPERTIES_HEIGHT = 1000;
+	private static final int							ATTRIBUTES_HEIGHT	= 1140, ABILITIES_HEIGHT = 3150, DISCIPLINES_HEIGHT = 460,
+			BACKGROUNDS_HEIGHT = 620, PROPERTIES_HEIGHT = 1000;
 	
-	private final HashMap<String, Discipline>			mDisciplines		= new HashMap<>();
+	private final HashMap<String, Discipline>			mDisciplines		= new HashMap<String, Discipline>();
 	
-	private final HashMap<String, Clan>					mClans				= new HashMap<>();
+	private final HashMap<String, Clan>					mClans				= new HashMap<String, Clan>();
 	
-	private final HashMap<String, Integer>				mClanGenerations	= new HashMap<>();
+	private final HashMap<String, Integer>				mClanGenerations	= new HashMap<String, Integer>();
 	
-	private final List<String>							mClanNames			= new ArrayList<>();
+	private final List<String>							mClanNames			= new ArrayList<String>();
 	
-	private final List<String>							mNatureAndBehavior	= new ArrayList<>();
+	private final List<String>							mNatureAndBehavior	= new ArrayList<String>();
 	
 	private final ItemHandler							mItems				= new ItemHandler();
 	
-	private final HashMap<Item, HashSet<Discipline>>	mItemsUse			= new HashMap<>();
+	private final HashMap<Item, HashSet<Discipline>>	mItemsUse			= new HashMap<Item, HashSet<Discipline>>();
 	
 	private CharCreator									mCreator;
 	
 	private boolean										mInitializedClans	= false;
 	
-	private boolean										mInitializedAttributes	= false, mInitializedAbilities = false, mInitializedDisciplines = false;
+	private boolean										mInitializedAttributes	= false, mInitializedAbilities = false,
+			mInitializedDisciplines = false;
 	
-	private boolean										mShowAttributes			= false, mShowAbilities = false, mShowDisciplines = false, mShowBackgrounds = false, mShowProperties = false;
+	private boolean										mShowAttributes			= false, mShowAbilities = false, mShowDisciplines = false,
+			mShowBackgrounds = false, mShowProperties = false;
 	
 	@Override
 	protected void onCreate(final Bundle savedInstanceState)
@@ -95,17 +97,20 @@ public class MainActivity extends Activity
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		final int id = item.getItemId();
-		if (id == R.id.action_settings) { return true; }
+		if (id == R.id.action_settings)
+		{
+			return true;
+		}
 		return super.onOptionsItemSelected(item);
 	}
 	
 	private void init()
 	{
-		mItems.init(getResources().getStringArray(R.array.attributes), getResources().getStringArray(R.array.abilities), getResources().getStringArray(R.array.backgrounds), getResources()
-				.getStringArray(R.array.properties));
+		mItems.init(getResources().getStringArray(R.array.attributes), getResources().getStringArray(R.array.abilities), getResources()
+				.getStringArray(R.array.backgrounds), getResources().getStringArray(R.array.properties));
 		// Initialize disciplines
 		{
-			final HashSet<Discipline> parentDisciplines = new HashSet<>();
+			final HashSet<Discipline> parentDisciplines = new HashSet<Discipline>();
 			for (final String disciplineLine : getResources().getStringArray(R.array.disciplines))
 			{
 				final String[] disciplineData = disciplineLine.split(DELIM);
@@ -126,7 +131,7 @@ public class MainActivity extends Activity
 							HashSet<Discipline> uses = mItemsUse.get(item);
 							if (uses == null)
 							{
-								uses = new HashSet<>();
+								uses = new HashSet<Discipline>();
 								mItemsUse.put(item, uses);
 							}
 							uses.add(discipline);
@@ -186,7 +191,8 @@ public class MainActivity extends Activity
 	{
 		setContentView(R.layout.create_character);
 		
-		mCreator = new CharCreator(mItems.createItems(true), mItems.createItems(false), mNatureAndBehavior.get(0), mNatureAndBehavior.get(0), mClans.get(mClanNames.get(0)));
+		mCreator = new CharCreator(mItems.createItems(true), mItems.createItems(false), mNatureAndBehavior.get(0), mNatureAndBehavior.get(0),
+				mClans.get(mClanNames.get(0)));
 		
 		ArrayAdapter<String> adapter;
 		
@@ -246,12 +252,14 @@ public class MainActivity extends Activity
 						mInitializedAttributes = true;
 						initItems(true);
 					}
-					animation = new ResizeAnimation(attributesPanel, attributesPanel.getWidth(), attributesPanel.getHeight(), attributesPanel.getWidth(), ATTRIBUTES_HEIGHT);
+					animation = new ResizeAnimation(attributesPanel, attributesPanel.getWidth(), attributesPanel.getHeight(), attributesPanel
+							.getWidth(), ATTRIBUTES_HEIGHT);
 					arrowId = android.R.drawable.arrow_up_float;
 				}
 				else
 				{
-					animation = new ResizeAnimation(attributesPanel, attributesPanel.getWidth(), attributesPanel.getHeight(), attributesPanel.getWidth(), 0);
+					animation = new ResizeAnimation(attributesPanel, attributesPanel.getWidth(), attributesPanel.getHeight(), attributesPanel
+							.getWidth(), 0);
 					arrowId = android.R.drawable.arrow_down_float;
 				}
 				showAttributes.setCompoundDrawablesWithIntrinsicBounds(0, 0, arrowId, 0);
@@ -276,12 +284,14 @@ public class MainActivity extends Activity
 						mInitializedAbilities = true;
 						initItems(false);
 					}
-					animation = new ResizeAnimation(abilitiesPanel, abilitiesPanel.getWidth(), abilitiesPanel.getHeight(), abilitiesPanel.getWidth(), ABILITIES_HEIGHT);
+					animation = new ResizeAnimation(abilitiesPanel, abilitiesPanel.getWidth(), abilitiesPanel.getHeight(), abilitiesPanel.getWidth(),
+							ABILITIES_HEIGHT);
 					arrowId = android.R.drawable.arrow_up_float;
 				}
 				else
 				{
-					animation = new ResizeAnimation(abilitiesPanel, abilitiesPanel.getWidth(), abilitiesPanel.getHeight(), abilitiesPanel.getWidth(), 0);
+					animation = new ResizeAnimation(abilitiesPanel, abilitiesPanel.getWidth(), abilitiesPanel.getHeight(), abilitiesPanel.getWidth(),
+							0);
 					arrowId = android.R.drawable.arrow_down_float;
 				}
 				showAbilities.setCompoundDrawablesWithIntrinsicBounds(0, 0, arrowId, 0);
@@ -306,12 +316,14 @@ public class MainActivity extends Activity
 						mInitializedDisciplines = true;
 						initDisciplines();
 					}
-					animation = new ResizeAnimation(disciplinesPanel, disciplinesPanel.getWidth(), disciplinesPanel.getHeight(), disciplinesPanel.getWidth(), DISCIPLINES_HEIGHT);
+					animation = new ResizeAnimation(disciplinesPanel, disciplinesPanel.getWidth(), disciplinesPanel.getHeight(), disciplinesPanel
+							.getWidth(), DISCIPLINES_HEIGHT);
 					arrowId = android.R.drawable.arrow_up_float;
 				}
 				else
 				{
-					animation = new ResizeAnimation(disciplinesPanel, disciplinesPanel.getWidth(), disciplinesPanel.getHeight(), disciplinesPanel.getWidth(), 0);
+					animation = new ResizeAnimation(disciplinesPanel, disciplinesPanel.getWidth(), disciplinesPanel.getHeight(), disciplinesPanel
+							.getWidth(), 0);
 					arrowId = android.R.drawable.arrow_down_float;
 				}
 				showDisciplines.setCompoundDrawablesWithIntrinsicBounds(0, 0, arrowId, 0);
@@ -331,12 +343,14 @@ public class MainActivity extends Activity
 				int arrowId;
 				if (mShowBackgrounds)
 				{
-					animation = new ResizeAnimation(backgroundsPanel, backgroundsPanel.getWidth(), backgroundsPanel.getHeight(), backgroundsPanel.getWidth(), BACKGROUNDS_HEIGHT);
+					animation = new ResizeAnimation(backgroundsPanel, backgroundsPanel.getWidth(), backgroundsPanel.getHeight(), backgroundsPanel
+							.getWidth(), BACKGROUNDS_HEIGHT);
 					arrowId = android.R.drawable.arrow_up_float;
 				}
 				else
 				{
-					animation = new ResizeAnimation(backgroundsPanel, backgroundsPanel.getWidth(), backgroundsPanel.getHeight(), backgroundsPanel.getWidth(), 0);
+					animation = new ResizeAnimation(backgroundsPanel, backgroundsPanel.getWidth(), backgroundsPanel.getHeight(), backgroundsPanel
+							.getWidth(), 0);
 					arrowId = android.R.drawable.arrow_down_float;
 				}
 				showBackgrounds.setCompoundDrawablesWithIntrinsicBounds(0, 0, arrowId, 0);
@@ -366,12 +380,14 @@ public class MainActivity extends Activity
 				int arrowId;
 				if (mShowProperties)
 				{
-					animation = new ResizeAnimation(propertiesPanel, propertiesPanel.getWidth(), propertiesPanel.getHeight(), propertiesPanel.getWidth(), PROPERTIES_HEIGHT);
+					animation = new ResizeAnimation(propertiesPanel, propertiesPanel.getWidth(), propertiesPanel.getHeight(), propertiesPanel
+							.getWidth(), PROPERTIES_HEIGHT);
 					arrowId = android.R.drawable.arrow_up_float;
 				}
 				else
 				{
-					animation = new ResizeAnimation(propertiesPanel, propertiesPanel.getWidth(), propertiesPanel.getHeight(), propertiesPanel.getWidth(), 0);
+					animation = new ResizeAnimation(propertiesPanel, propertiesPanel.getWidth(), propertiesPanel.getHeight(), propertiesPanel
+							.getWidth(), 0);
 					arrowId = android.R.drawable.arrow_down_float;
 				}
 				showProperties.setCompoundDrawablesWithIntrinsicBounds(0, 0, arrowId, 0);
@@ -392,7 +408,7 @@ public class MainActivity extends Activity
 	
 	private void addProperty()
 	{
-		final DialogFragment newFragment = new SelectPropertyDialog(mCreator, this, mItems);
+		final SelectPropertyDialog newFragment = new SelectPropertyDialog(mCreator, this, mItems);
 		newFragment.show(getFragmentManager(), "new property");
 	}
 	
@@ -400,7 +416,7 @@ public class MainActivity extends Activity
 	{
 		if (mCreator.getBackgroundsCount() < Background.NUMBER_BACKGROUNDS)
 		{
-			final DialogFragment newFragment = new SelectBackgroundDialog(mCreator, this, mItems);
+			final SelectBackgroundDialog newFragment = new SelectBackgroundDialog(mCreator, this, mItems);
 			newFragment.show(getFragmentManager(), "new background");
 		}
 	}
@@ -420,7 +436,6 @@ public class MainActivity extends Activity
 	{
 		aGrid.removeAllViews();
 		final LayoutParams editParams = new LinearLayout.LayoutParams(dpToPx(30), dpToPx(30));
-		editParams.gravity = Gravity.CENTER_VERTICAL;
 		
 		final ImageButton edit = new ImageButton(this);
 		edit.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_edit));
@@ -430,7 +445,7 @@ public class MainActivity extends Activity
 			@Override
 			public void onClick(final View aV)
 			{
-				final DialogFragment newFragment = new SelectPropertyDialog(aGrid, mCreator, MainActivity.this, mItems, aProperty);
+				final SelectPropertyDialog newFragment = new SelectPropertyDialog(aGrid, mCreator, MainActivity.this, mItems, aProperty);
 				newFragment.show(getFragmentManager(), "edit property");
 			}
 		});
@@ -456,7 +471,6 @@ public class MainActivity extends Activity
 		final RadioButton[] radios = new RadioButton[CreationItem.MAX_VALUE];
 		
 		final LayoutParams params = new LayoutParams(dpToPx(30), dpToPx(30));
-		params.gravity = Gravity.TOP;
 		final ImageButton sub = new ImageButton(this);
 		sub.setContentDescription("Sub");
 		sub.setLayoutParams(params);
@@ -513,7 +527,6 @@ public class MainActivity extends Activity
 	{
 		aGrid.removeAllViews();
 		final LayoutParams editParams = new LinearLayout.LayoutParams(dpToPx(30), dpToPx(30));
-		editParams.gravity = Gravity.CENTER_VERTICAL;
 		
 		final ImageButton edit = new ImageButton(this);
 		edit.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_edit));
@@ -523,7 +536,7 @@ public class MainActivity extends Activity
 			@Override
 			public void onClick(final View aV)
 			{
-				final DialogFragment newFragment = new SelectBackgroundDialog(aGrid, mCreator, MainActivity.this, mItems, aBackground);
+				final SelectBackgroundDialog newFragment = new SelectBackgroundDialog(aGrid, mCreator, MainActivity.this, mItems, aBackground);
 				newFragment.show(getFragmentManager(), "edit background");
 			}
 		});
@@ -540,7 +553,6 @@ public class MainActivity extends Activity
 		final RadioButton[] radios = new RadioButton[CreationItem.MAX_VALUE];
 		
 		final LayoutParams params = new LayoutParams(dpToPx(30), dpToPx(30));
-		params.gravity = Gravity.TOP;
 		final ImageButton sub = new ImageButton(this);
 		sub.setContentDescription("Sub");
 		sub.setLayoutParams(params);
@@ -625,7 +637,8 @@ public class MainActivity extends Activity
 		if (mShowDisciplines)
 		{
 			mShowDisciplines = false;
-			disciplinesPanel.startAnimation(new ResizeAnimation(disciplinesPanel, disciplinesPanel.getWidth(), disciplinesPanel.getHeight(), disciplinesPanel.getWidth(), 0));
+			disciplinesPanel.startAnimation(new ResizeAnimation(disciplinesPanel, disciplinesPanel.getWidth(), disciplinesPanel.getHeight(),
+					disciplinesPanel.getWidth(), 0));
 			final Button showDisciplines = (Button) findViewById(R.id.show_disciplines);
 			showDisciplines.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
 		}
@@ -642,8 +655,6 @@ public class MainActivity extends Activity
 		
 		final LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, dpToPx(30));
 		final LayoutParams editParams = new LinearLayout.LayoutParams(dpToPx(30), dpToPx(30));
-		params.gravity = Gravity.CENTER_VERTICAL;
-		editParams.gravity = Gravity.CENTER_VERTICAL;
 		
 		grids[i] = new GridLayout(this);
 		grids[i].setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
@@ -681,7 +692,7 @@ public class MainActivity extends Activity
 			@Override
 			public void onClick(final View aV)
 			{
-				final DialogFragment newFragment = new SelectSubDisciplineDialog(grids[1], mCreator, aDiscipline, MainActivity.this, true);
+				final SelectSubDisciplineDialog newFragment = new SelectSubDisciplineDialog(grids[1], mCreator, aDiscipline, MainActivity.this, true);
 				newFragment.show(getFragmentManager(), "1. " + aDiscipline.getName());
 			}
 		});
@@ -705,7 +716,7 @@ public class MainActivity extends Activity
 			@Override
 			public void onClick(final View aV)
 			{
-				final DialogFragment newFragment = new SelectSubDisciplineDialog(grids[2], mCreator, aDiscipline, MainActivity.this, false);
+				final SelectSubDisciplineDialog newFragment = new SelectSubDisciplineDialog(grids[2], mCreator, aDiscipline, MainActivity.this, false);
 				newFragment.show(getFragmentManager(), "2. " + aDiscipline.getName());
 			}
 		});
@@ -719,7 +730,6 @@ public class MainActivity extends Activity
 		aGrid.removeAllViews();
 		
 		final LayoutParams editParams = new LinearLayout.LayoutParams(dpToPx(30), dpToPx(30));
-		editParams.gravity = Gravity.CENTER_VERTICAL;
 		
 		final TextView number = new TextView(this);
 		number.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
@@ -736,7 +746,7 @@ public class MainActivity extends Activity
 			@Override
 			public void onClick(final View aV)
 			{
-				final DialogFragment newFragment = new SelectSubDisciplineDialog(aGrid, mCreator, aDiscipline, MainActivity.this, aFirst);
+				final SelectSubDisciplineDialog newFragment = new SelectSubDisciplineDialog(aGrid, mCreator, aDiscipline, MainActivity.this, aFirst);
 				newFragment.show(getFragmentManager(), (aFirst ? "1. " : "2. ") + aDiscipline.getName());
 			}
 		});
@@ -752,7 +762,8 @@ public class MainActivity extends Activity
 				@Override
 				public void onClick(final View aV)
 				{
-					Toast.makeText(MainActivity.this, mCreator.getDiscipline(aDiscipline).getSubDiscipline(aFirst).getDiscipline().getDescription(), Toast.LENGTH_LONG).show();
+					Toast.makeText(MainActivity.this, mCreator.getDiscipline(aDiscipline).getSubDiscipline(aFirst).getDiscipline().getDescription(),
+							Toast.LENGTH_LONG).show();
 				}
 			});
 			name.setLayoutParams(new LayoutParams(dpToPx(80), LayoutParams.WRAP_CONTENT));
@@ -764,7 +775,6 @@ public class MainActivity extends Activity
 			final RadioButton[] radios = new RadioButton[CreationItem.MAX_VALUE];
 			
 			final LayoutParams params = new LayoutParams(dpToPx(30), dpToPx(30));
-			params.gravity = Gravity.TOP;
 			final ImageButton sub = new ImageButton(this);
 			sub.setContentDescription("Sub");
 			sub.setLayoutParams(params);
@@ -832,7 +842,6 @@ public class MainActivity extends Activity
 		final RadioButton[] radios = new RadioButton[CreationItem.MAX_VALUE];
 		
 		final LayoutParams params = new LayoutParams(dpToPx(30), dpToPx(30));
-		params.gravity = Gravity.TOP;
 		final ImageButton sub = new ImageButton(this);
 		sub.setContentDescription("Sub");
 		sub.setLayoutParams(params);
@@ -893,7 +902,7 @@ public class MainActivity extends Activity
 			}
 		});
 		final int pixels = dpToPx(122);
-		name.setLayoutParams(new TableRow.LayoutParams(pixels, LayoutParams.WRAP_CONTENT));
+		name.setLayoutParams(new TableRow.LayoutParams(pixels, dpToPx(30)));
 		name.setGravity(Gravity.CENTER_VERTICAL);
 		name.setEllipsize(TruncateAt.END);
 		name.setSingleLine();
@@ -905,7 +914,6 @@ public class MainActivity extends Activity
 			final RadioButton[] radios = new RadioButton[CreationItem.MAX_VALUE];
 			
 			final LayoutParams params = new LayoutParams(dpToPx(30), dpToPx(30));
-			params.gravity = Gravity.TOP;
 			final ImageButton sub = new ImageButton(this);
 			sub.setContentDescription("Sub");
 			sub.setLayoutParams(params);
@@ -1002,7 +1010,6 @@ public class MainActivity extends Activity
 			row.addView(new Space(this));
 			final TextView parentView = new TextView(this);
 			final LayoutParams params = new TableRow.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-			params.gravity = Gravity.CENTER_HORIZONTAL;
 			parentView.setLayoutParams(params);
 			parentView.setText(parent);
 			parentView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);

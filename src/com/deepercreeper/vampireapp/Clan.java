@@ -8,7 +8,7 @@ public class Clan
 	
 	private final String				mName;
 	
-	private final HashSet<Discipline>	mDisciplines			= new HashSet<>();
+	private final HashSet<Discipline>	mDisciplines			= new HashSet<Discipline>();
 	
 	public Clan(final String aName)
 	{

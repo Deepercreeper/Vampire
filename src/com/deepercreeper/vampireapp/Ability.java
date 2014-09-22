@@ -11,7 +11,7 @@ public class Ability
 	
 	private final int				mLevel;
 	
-	private final HashSet<String>	mCosts				= new HashSet<>();
+	private final HashSet<String>	mCosts				= new HashSet<String>();
 	
 	private int						mBloodPoints		= 0;
 	

@@ -22,8 +22,8 @@ public class SelectSubDisciplineDialog extends DialogFragment
 	
 	private final GridLayout	mGrid;
 	
-	public SelectSubDisciplineDialog(final GridLayout aGrid, final CharCreator aCreator, final Discipline aDiscipline,
-			final MainActivity aParent, final boolean aFirst)
+	public SelectSubDisciplineDialog(final GridLayout aGrid, final CharCreator aCreator, final Discipline aDiscipline, final MainActivity aParent,
+			final boolean aFirst)
 	{
 		mGrid = aGrid;
 		mCreator = aCreator;
@@ -35,7 +35,7 @@ public class SelectSubDisciplineDialog extends DialogFragment
 	@Override
 	public Dialog onCreateDialog(final Bundle savedInstanceState)
 	{
-		final List<String> subDisciplinesList = new ArrayList<>();
+		final List<String> subDisciplinesList = new ArrayList<String>();
 		subDisciplinesList.addAll(mDiscipline.getSubDisciplineNames());
 		if (mCreator.getDiscipline(mDiscipline).hasSubDiscipline( !mFirst))
 		{

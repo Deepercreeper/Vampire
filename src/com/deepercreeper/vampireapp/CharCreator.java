@@ -20,13 +20,13 @@ public class CharCreator
 	
 	private int														mGeneration		= DEFAULT_GENERATION;
 	
-	private final HashMap<String, CreationDiscipline>				mDisciplines	= new HashMap<>();
+	private final HashMap<String, CreationDiscipline>				mDisciplines	= new HashMap<String, CreationDiscipline>();
 	
 	private final HashMap<String, HashMap<String, CreationItem>>	mAttributes, mAbilities;
 	
-	private final HashMap<Background, CreationBackground>			mBackgrounds	= new HashMap<>();
+	private final HashMap<Background, CreationBackground>			mBackgrounds	= new HashMap<Background, CreationBackground>();
 	
-	private final HashMap<Property, CreationProperty>				mProperties		= new HashMap<>();
+	private final HashMap<Property, CreationProperty>				mProperties		= new HashMap<Property, CreationProperty>();
 	
 	public CharCreator(final HashMap<String, HashMap<String, CreationItem>> aAttributes,
 			final HashMap<String, HashMap<String, CreationItem>> aAbilities, final String aNature, final String aBehavior, final Clan aClan)
@@ -260,7 +260,7 @@ public class CharCreator
 	
 	private HashMap<String, Integer> getValues(final HashMap<String, HashMap<String, CreationItem>> aParents)
 	{
-		final HashMap<String, Integer> values = new HashMap<>();
+		final HashMap<String, Integer> values = new HashMap<String, Integer>();
 		for (final String parent : aParents.keySet())
 		{
 			int value = 0;

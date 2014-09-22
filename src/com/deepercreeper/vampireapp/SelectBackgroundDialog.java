@@ -48,7 +48,7 @@ public class SelectBackgroundDialog extends DialogFragment
 	@Override
 	public Dialog onCreateDialog(final Bundle savedInstanceState)
 	{
-		final List<String> backgroundsList = new ArrayList<>();
+		final List<String> backgroundsList = new ArrayList<String>();
 		for (final Background background : mItems.getBackgrounds())
 		{
 			backgroundsList.add(background.getName());

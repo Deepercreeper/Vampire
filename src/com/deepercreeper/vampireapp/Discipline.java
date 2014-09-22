@@ -33,9 +33,9 @@ public class Discipline
 	
 	private Discipline							mParent				= null;
 	
-	private final HashMap<String, Discipline>	mSubDisciplines		= new HashMap<>();
+	private final HashMap<String, Discipline>	mSubDisciplines		= new HashMap<String, Discipline>();
 	
-	private final HashSet<Ability>				mAbilities			= new HashSet<>();
+	private final HashSet<Ability>				mAbilities			= new HashSet<Ability>();
 	
 	/**
 	 * Creates a discipline out of the name and the given data.<br>
