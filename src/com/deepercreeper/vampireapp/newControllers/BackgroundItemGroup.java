@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 public class BackgroundItemGroup implements ItemGroup<BackgroundItem>
 {
@@ -14,7 +13,7 @@ public class BackgroundItemGroup implements ItemGroup<BackgroundItem>
 	
 	private final HashMap<String, BackgroundItem>	mItemNames	= new HashMap<String, BackgroundItem>();
 	
-	public BackgroundItemGroup(String aName)
+	private BackgroundItemGroup(final String aName)
 	{
 		mName = aName;
 	}
@@ -32,19 +31,16 @@ public class BackgroundItemGroup implements ItemGroup<BackgroundItem>
 	}
 	
 	@Override
-	public BackgroundItem getItem(String aName)
+	public BackgroundItem getItem(final String aName)
 	{
 		return mItemNames.get(aName);
 	}
 	
 	@Override
-	public void init(Set<BackgroundItem> aItems)
+	public void addItem(final BackgroundItem aItem)
 	{
-		for (final BackgroundItem item : aItems)
-		{
-			mItems.add(item);
-			mItemNames.put(item.getName(), item);
-		}
+		mItems.add(aItem);
+		mItemNames.put(aItem.getName(), aItem);
 		Collections.sort(mItems);
 	}
 }

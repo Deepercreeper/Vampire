@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 public class PropertyItemGroup implements ItemGroup<PropertyItem>
 {
@@ -14,7 +13,7 @@ public class PropertyItemGroup implements ItemGroup<PropertyItem>
 	
 	private final HashMap<String, PropertyItem>	mItemNames	= new HashMap<String, PropertyItem>();
 	
-	public PropertyItemGroup(final String aName)
+	private PropertyItemGroup(final String aName)
 	{
 		mName = aName;
 	}
@@ -38,13 +37,10 @@ public class PropertyItemGroup implements ItemGroup<PropertyItem>
 	}
 	
 	@Override
-	public void init(final Set<PropertyItem> aItems)
+	public void addItem(final PropertyItem aItem)
 	{
-		for (final PropertyItem item : aItems)
-		{
-			mItems.add(item);
-			mItemNames.put(item.getName(), item);
-		}
+		mItems.add(aItem);
+		mItemNames.put(aItem.getName(), aItem);
 		Collections.sort(mItems);
 	}
 }

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 public class DisciplineItemGroup implements ItemGroup<DisciplineItem>
 {
@@ -14,7 +13,7 @@ public class DisciplineItemGroup implements ItemGroup<DisciplineItem>
 	
 	private final HashMap<String, DisciplineItem>	mItemNames	= new HashMap<String, DisciplineItem>();
 	
-	public DisciplineItemGroup(String aName)
+	private DisciplineItemGroup(final String aName)
 	{
 		mName = aName;
 	}
@@ -26,18 +25,15 @@ public class DisciplineItemGroup implements ItemGroup<DisciplineItem>
 	}
 	
 	@Override
-	public void init(Set<DisciplineItem> aItems)
+	public void addItem(final DisciplineItem aItem)
 	{
-		for (final DisciplineItem item : aItems)
-		{
-			mItems.add(item);
-			mItemNames.put(item.getName(), item);
-		}
+		mItems.add(aItem);
+		mItemNames.put(aItem.getName(), aItem);
 		Collections.sort(mItems);
 	}
 	
 	@Override
-	public DisciplineItem getItem(String aName)
+	public DisciplineItem getItem(final String aName)
 	{
 		return mItemNames.get(aName);
 	}

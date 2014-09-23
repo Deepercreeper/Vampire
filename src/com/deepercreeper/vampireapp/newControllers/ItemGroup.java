@@ -1,11 +1,10 @@
 package com.deepercreeper.vampireapp.newControllers;
 
 import java.util.List;
-import java.util.Set;
 
 public interface ItemGroup <T extends Item>
 {
-	public void init(Set<T> aItems);
+	public void addItem(T aItem);
 	
 	public String getName();
 	

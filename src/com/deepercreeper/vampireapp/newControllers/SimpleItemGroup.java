@@ -4,29 +4,27 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 public class SimpleItemGroup implements ItemGroup<SimpleItem>
 {
+	private static final String					NAME_DELIM	= ":", ITEMS_DELIM = ",";
+	
 	private final String						mName;
 	
 	private final List<SimpleItem>				mItems		= new ArrayList<SimpleItem>();
 	
 	private final HashMap<String, SimpleItem>	mItemNames	= new HashMap<String, SimpleItem>();
 	
-	public SimpleItemGroup(final String aName)
+	private SimpleItemGroup(final String aName)
 	{
 		mName = aName;
 	}
 	
 	@Override
-	public void init(final Set<SimpleItem> aItems)
+	public void addItem(final SimpleItem aItem)
 	{
-		for (final SimpleItem item : aItems)
-		{
-			mItems.add(item);
-			mItemNames.put(item.getName(), item);
-		}
+		mItems.add(aItem);
+		mItemNames.put(aItem.getName(), aItem);
 		Collections.sort(mItems);
 	}
 	
@@ -46,5 +44,19 @@ public class SimpleItemGroup implements ItemGroup<SimpleItem>
 	public String getName()
 	{
 		return mName;
+	}
+	
+	public static SimpleItemGroup create(final String aData, final int aStartValue)
+	{
+		final String[] data = aData.split(NAME_DELIM);
+		final SimpleItemGroup group = new SimpleItemGroup(data[0]);
+		if (data.length > 1)
+		{
+			for (final String item : data[1].split(ITEMS_DELIM))
+			{
+				group.addItem(SimpleItem.create(item, aStartValue));
+			}
+		}
+		return group;
 	}
 }

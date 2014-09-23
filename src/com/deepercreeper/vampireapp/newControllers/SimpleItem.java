@@ -10,7 +10,7 @@ public class SimpleItem implements Item
 	
 	private final String		mDescription;
 	
-	public SimpleItem(final String aName, int aStartValue)
+	public SimpleItem(final String aName, final int aStartValue)
 	{
 		mName = aName;
 		mStartValue = aStartValue;
@@ -53,14 +53,14 @@ public class SimpleItem implements Item
 		return mName;
 	}
 	
-	public static SimpleItem read(final String aData, int aStartValue)
-	{
-		return new SimpleItem(aData, aStartValue);
-	}
-	
 	@Override
 	public int compareTo(final Item aAnother)
 	{
 		return getName().compareTo(aAnother.getName());
+	}
+	
+	public static SimpleItem create(final String aData, final int aStartValue)
+	{
+		return new SimpleItem(aData, aStartValue);
 	}
 }

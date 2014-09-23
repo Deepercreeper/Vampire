@@ -10,11 +10,19 @@ public class PropertyItem implements Item
 	
 	private final int[]			mValues;
 	
-	public PropertyItem(final String aName, final int[] aValues)
+	private final boolean		mNegative;
+	
+	public PropertyItem(final String aName, final int[] aValues, final boolean aNegative)
 	{
 		mName = aName;
 		mValues = aValues;
+		mNegative = aNegative;
 		mDescription = createDescription();
+	}
+	
+	public boolean isNegative()
+	{
+		return mNegative;
 	}
 	
 	public int[] getValues()
