@@ -57,7 +57,7 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 	@Override
 	public void increase()
 	{
-		if (mValue < mItem.getMaxValue())
+		if (mValue < getItem().getMaxValue())
 		{
 			mValue++ ;
 		}
@@ -66,7 +66,7 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 	@Override
 	public void decrease()
 	{
-		if (mValue > mItem.getStartValue())
+		if (mValue > getItem().getStartValue())
 		{
 			mValue-- ;
 		}

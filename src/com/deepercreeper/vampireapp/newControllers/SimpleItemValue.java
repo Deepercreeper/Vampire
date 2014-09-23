@@ -23,7 +23,7 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 	@Override
 	public void increase()
 	{
-		if (mValue < mItem.getMaxValue())
+		if (mValue < getItem().getMaxValue())
 		{
 			mValue++ ;
 		}
@@ -32,7 +32,7 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 	@Override
 	public void decrease()
 	{
-		if (mValue > mItem.getStartValue())
+		if (mValue > getItem().getStartValue())
 		{
 			mValue++ ;
 		}

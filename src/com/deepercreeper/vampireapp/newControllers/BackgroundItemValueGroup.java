@@ -39,6 +39,25 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 	}
 	
 	@Override
+	public void removeValue(final BackgroundItemValue aValue)
+	{
+		mValues.remove(aValue);
+		mValueItems.remove(aValue.getItem());
+	}
+	
+	@Override
+	public void removeValue(final BackgroundItem aItem)
+	{
+		removeValue(aItem.createValue());
+	}
+	
+	@Override
+	public void removeValue(final String aName)
+	{
+		removeValue(getGroup().getItem(aName));
+	}
+	
+	@Override
 	public ItemGroup<BackgroundItem> getGroup()
 	{
 		return mGroup;
