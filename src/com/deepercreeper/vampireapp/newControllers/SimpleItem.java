@@ -2,20 +2,43 @@ package com.deepercreeper.vampireapp.newControllers;
 
 public class SimpleItem implements Item
 {
-	private final String	mName;
+	private static final int	MAX_VALUE	= 6;
 	
-	private final String	mDescription;
+	private final String		mName;
 	
-	public SimpleItem(final String aName)
+	private final int			mStartValue;
+	
+	private final String		mDescription;
+	
+	public SimpleItem(final String aName, int aStartValue)
 	{
 		mName = aName;
+		mStartValue = aStartValue;
 		mDescription = createDescription();
+	}
+	
+	@Override
+	public int getMaxValue()
+	{
+		return MAX_VALUE;
+	}
+	
+	@Override
+	public int getStartValue()
+	{
+		return mStartValue;
 	}
 	
 	private String createDescription()
 	{
 		// TODO Implement
 		return mName;
+	}
+	
+	@Override
+	public SimpleItemValue createValue()
+	{
+		return new SimpleItemValue(this);
 	}
 	
 	@Override
@@ -30,9 +53,9 @@ public class SimpleItem implements Item
 		return mName;
 	}
 	
-	public static SimpleItem read(final String aData)
+	public static SimpleItem read(final String aData, int aStartValue)
 	{
-		return new SimpleItem(aData);
+		return new SimpleItem(aData, aStartValue);
 	}
 	
 	@Override

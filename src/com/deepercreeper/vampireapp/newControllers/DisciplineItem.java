@@ -8,6 +8,8 @@ import java.util.Set;
 
 public class DisciplineItem implements Item
 {
+	private static final int						MAX_VALUE		= 6, START_VALUE = 0;
+	
 	private final String							mName;
 	
 	private final String							mDescription;
@@ -47,6 +49,18 @@ public class DisciplineItem implements Item
 		return mSubItems.get(aName);
 	}
 	
+	@Override
+	public DisciplineItemValue createValue()
+	{
+		return new DisciplineItemValue(this);
+	}
+	
+	@Override
+	public int getMaxValue()
+	{
+		return MAX_VALUE;
+	}
+	
 	public DisciplineItem(final String aName)
 	{
 		this(aName, null);
@@ -55,6 +69,12 @@ public class DisciplineItem implements Item
 	public List<Ability> getAbilities()
 	{
 		return mAbilities;
+	}
+	
+	@Override
+	public int getStartValue()
+	{
+		return START_VALUE;
 	}
 	
 	public void initSubItems(final Set<DisciplineItem> aSubItems)

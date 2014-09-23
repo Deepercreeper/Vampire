@@ -1,0 +1,64 @@
+package com.deepercreeper.vampireapp.newControllers;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+
+public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>, VariableItemValueGroup<DisciplineItem, DisciplineItemValue>
+{
+	private final DisciplineItemGroup							mGroup;
+	
+	private final List<DisciplineItemValue>						mValues		= new ArrayList<DisciplineItemValue>();
+	
+	private final HashMap<DisciplineItem, DisciplineItemValue>	mValueItems	= new HashMap<DisciplineItem, DisciplineItemValue>();
+	
+	public DisciplineItemValueGroup(DisciplineItemGroup aGroup)
+	{
+		mGroup = aGroup;
+	}
+	
+	@Override
+	public DisciplineItemGroup getGroup()
+	{
+		return mGroup;
+	}
+	
+	@Override
+	public List<DisciplineItemValue> getValues()
+	{
+		return mValues;
+	}
+	
+	@Override
+	public DisciplineItemValue getValue(String aName)
+	{
+		return getValue(getGroup().getItem(aName));
+	}
+	
+	@Override
+	public DisciplineItemValue getValue(DisciplineItem aItem)
+	{
+		return mValueItems.get(aItem);
+	}
+	
+	@Override
+	public void addValue(DisciplineItemValue aValue)
+	{
+		mValues.add(aValue);
+		mValueItems.put(aValue.getItem(), aValue);
+		Collections.sort(mValues);
+	}
+	
+	@Override
+	public void addValue(DisciplineItem aItem)
+	{
+		addValue(aItem.createValue());
+	}
+	
+	@Override
+	public void addValue(String aName)
+	{
+		addValue(getGroup().getItem(aName));
+	}
+}

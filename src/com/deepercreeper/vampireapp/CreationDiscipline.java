@@ -27,11 +27,6 @@ public class CreationDiscipline implements Creation
 		}
 	}
 	
-	public void setSecondSubDiscipline(final CreationDiscipline aSecondSubDiscipline)
-	{
-		mSecondSubDiscipline = aSecondSubDiscipline;
-	}
-	
 	public CreationDiscipline getSubDiscipline(final boolean aFirst)
 	{
 		return aFirst ? mFirstSubDiscipline : mSecondSubDiscipline;
@@ -39,10 +34,7 @@ public class CreationDiscipline implements Creation
 	
 	public boolean hasSubDiscipline(final boolean aFirst)
 	{
-		if (aFirst)
-		{
-			return mFirstSubDiscipline != null;
-		}
+		if (aFirst) { return mFirstSubDiscipline != null; }
 		return mSecondSubDiscipline != null;
 	}
 	
