@@ -13,7 +13,7 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	
 	private final HashMap<DisciplineItem, DisciplineItemValue>	mValueItems	= new HashMap<DisciplineItem, DisciplineItemValue>();
 	
-	public DisciplineItemValueGroup(DisciplineItemGroup aGroup)
+	public DisciplineItemValueGroup(final DisciplineItemGroup aGroup)
 	{
 		mGroup = aGroup;
 	}
@@ -31,33 +31,33 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	}
 	
 	@Override
-	public DisciplineItemValue getValue(String aName)
+	public DisciplineItemValue getValue(final String aName)
 	{
 		return getValue(getGroup().getItem(aName));
 	}
 	
 	@Override
-	public DisciplineItemValue getValue(DisciplineItem aItem)
+	public DisciplineItemValue getValue(final DisciplineItem aItem)
 	{
 		return mValueItems.get(aItem);
 	}
 	
 	@Override
-	public void addValue(DisciplineItemValue aValue)
+	public void addValue(final DisciplineItemValue aValue)
 	{
 		mValues.add(aValue);
 		mValueItems.put(aValue.getItem(), aValue);
-		Collections.sort(mValues);
+		Collections.sort(mValues, DisciplineItemValue.getComparator());
 	}
 	
 	@Override
-	public void addValue(DisciplineItem aItem)
+	public void addValue(final DisciplineItem aItem)
 	{
 		addValue(aItem.createValue());
 	}
 	
 	@Override
-	public void addValue(String aName)
+	public void addValue(final String aName)
 	{
 		addValue(getGroup().getItem(aName));
 	}

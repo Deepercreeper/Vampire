@@ -1,8 +1,7 @@
 package com.deepercreeper.vampireapp.newControllers;
 
-import java.util.Comparator;
 
-public interface ItemValue <T extends Item> extends Comparable<ItemValue<? super T>>
+public interface ItemValue <T extends Item>
 {
 	public T getItem();
 	
@@ -11,6 +10,4 @@ public interface ItemValue <T extends Item> extends Comparable<ItemValue<? super
 	public void increase();
 	
 	public void decrease();
-	
-	public Comparator<ItemValue<T>> getComparator();
 }

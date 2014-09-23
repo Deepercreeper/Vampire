@@ -1,12 +1,14 @@
 package com.deepercreeper.vampireapp.newControllers;
 
+import java.util.Comparator;
+
 public class SimpleItemValue implements ItemValue<SimpleItem>
 {
 	private final SimpleItem	mItem;
 	
 	private int					mValue;
 	
-	public SimpleItemValue(SimpleItem aItem)
+	public SimpleItemValue(final SimpleItem aItem)
 	{
 		mItem = aItem;
 		mValue = mItem.getStartValue();
@@ -40,5 +42,17 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 	public SimpleItem getItem()
 	{
 		return mItem;
+	}
+	
+	public static Comparator<? super SimpleItemValue> getComparator()
+	{
+		return new Comparator<SimpleItemValue>()
+		{
+			@Override
+			public int compare(final SimpleItemValue aLhs, final SimpleItemValue aRhs)
+			{
+				return aLhs.getItem().compareTo(aRhs.getItem());
+			}
+		};
 	}
 }

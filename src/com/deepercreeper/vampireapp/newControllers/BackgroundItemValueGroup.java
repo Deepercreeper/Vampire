@@ -1,6 +1,7 @@
 package com.deepercreeper.vampireapp.newControllers;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -12,58 +13,53 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 	
 	private final HashMap<BackgroundItem, BackgroundItemValue>	mValueItems	= new HashMap<BackgroundItem, BackgroundItemValue>();
 	
-	public BackgroundItemValueGroup(BackgroundItemGroup aGroup)
+	public BackgroundItemValueGroup(final BackgroundItemGroup aGroup)
 	{
 		mGroup = aGroup;
 	}
 	
 	@Override
-	public void addValue(BackgroundItemValue aValue)
+	public void addValue(final BackgroundItemValue aValue)
 	{
 		mValues.add(aValue);
 		mValueItems.put(aValue.getItem(), aValue);
+		Collections.sort(mValues, BackgroundItemValue.getComparator());
 	}
 	
 	@Override
-	public void addValue(BackgroundItem aItem)
+	public void addValue(final BackgroundItem aItem)
 	{
-		// TODO Auto-generated method stub
-		
+		addValue(aItem.createValue());
 	}
 	
 	@Override
-	public void addValue(String aName)
+	public void addValue(final String aName)
 	{
-		// TODO Auto-generated method stub
-		
+		addValue(getGroup().getItem(aName));
 	}
 	
 	@Override
 	public ItemGroup<BackgroundItem> getGroup()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return mGroup;
 	}
 	
 	@Override
-	public List<? extends ItemValue<BackgroundItem>> getValues()
+	public List<BackgroundItemValue> getValues()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return mValues;
 	}
 	
 	@Override
-	public ItemValue<BackgroundItem> getValue(String aName)
+	public BackgroundItemValue getValue(final String aName)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return getValue(getGroup().getItem(aName));
 	}
 	
 	@Override
-	public ItemValue<BackgroundItem> getValue(BackgroundItem aItem)
+	public BackgroundItemValue getValue(final BackgroundItem aItem)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return mValueItems.get(aItem);
 	}
 	
 }
