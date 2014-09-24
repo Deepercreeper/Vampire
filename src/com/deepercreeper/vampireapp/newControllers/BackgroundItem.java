@@ -8,7 +8,7 @@ public class BackgroundItem implements Item
 	
 	private final String		mDescription;
 	
-	public BackgroundItem(String aName)
+	private BackgroundItem(String aName)
 	{
 		mName = aName;
 		mDescription = createDescription();
@@ -54,5 +54,10 @@ public class BackgroundItem implements Item
 	public int compareTo(Item aAnother)
 	{
 		return getName().compareTo(aAnother.getName());
+	}
+	
+	public static BackgroundItem create(String aData)
+	{
+		return new BackgroundItem(aData);
 	}
 }

@@ -2,6 +2,7 @@ package com.deepercreeper.vampireapp.newControllers;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -20,8 +21,7 @@ public class SimpleItemGroup implements ItemGroup<SimpleItem>
 		mName = aName;
 	}
 	
-	@Override
-	public void addItem(final SimpleItem aItem)
+	private void addItem(final SimpleItem aItem)
 	{
 		mItems.add(aItem);
 		mItemNames.put(aItem.getName(), aItem);
@@ -58,5 +58,17 @@ public class SimpleItemGroup implements ItemGroup<SimpleItem>
 			}
 		}
 		return group;
+	}
+	
+	public static Comparator<SimpleItemGroup> getComparator()
+	{
+		return new Comparator<SimpleItemGroup>()
+		{
+			@Override
+			public int compare(SimpleItemGroup aLhs, SimpleItemGroup aRhs)
+			{
+				return aLhs.getName().compareTo(aRhs.getName());
+			}
+		};
 	}
 }

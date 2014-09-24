@@ -24,12 +24,27 @@ public class DisciplineItemGroup implements ItemGroup<DisciplineItem>
 		return mItems;
 	}
 	
-	@Override
-	public void addItem(final DisciplineItem aItem)
+	private void addItem(final DisciplineItem aItem)
 	{
 		mItems.add(aItem);
 		mItemNames.put(aItem.getName(), aItem);
 		Collections.sort(mItems);
+	}
+	
+	private void initParents()
+	{
+		for (DisciplineItem parent : mItems)
+		{
+			if (parent.isParentItem())
+			{
+				for (String subItemName : parent.getSubItemNames())
+				{
+					DisciplineItem subItem = mItemNames.get(subItemName);
+					parent.addSubItem(subItem);
+					subItem.setParent(parent);
+				}
+			}
+		}
 	}
 	
 	@Override
@@ -42,5 +57,16 @@ public class DisciplineItemGroup implements ItemGroup<DisciplineItem>
 	public String getName()
 	{
 		return mName;
+	}
+	
+	public static DisciplineItemGroup create(String aName, String[] aData)
+	{
+		DisciplineItemGroup group = new DisciplineItemGroup(aName);
+		for (String discipline : aData)
+		{
+			group.addItem(DisciplineItem.create(discipline));
+		}
+		group.initParents();
+		return group;
 	}
 }

@@ -2,22 +2,28 @@ package com.deepercreeper.vampireapp.newControllers;
 
 public class PropertyItem implements Item
 {
+	private static final String	NAME_DELIM	= ":", NEGATIVE_PREFIX = "-", VALUE_DELIM = ",";
+	
 	private static final int	START_VALUE	= 0;
 	
 	private final String		mName;
 	
 	private final String		mDescription;
 	
-	private final int[]			mValues;
+	private int[]				mValues;
 	
 	private final boolean		mNegative;
 	
-	public PropertyItem(final String aName, final int[] aValues, final boolean aNegative)
+	private PropertyItem(final String aName, final boolean aNegative)
 	{
 		mName = aName;
-		mValues = aValues;
 		mNegative = aNegative;
 		mDescription = createDescription();
+	}
+	
+	private void setValues(int[] aValues)
+	{
+		mValues = aValues;
 	}
 	
 	public boolean isNegative()
@@ -70,5 +76,30 @@ public class PropertyItem implements Item
 	{
 		// TODO Implement
 		return mName;
+	}
+	
+	public static PropertyItem create(String aData)
+	{
+		PropertyItem item;
+		String[] data;
+		if (aData.startsWith(NEGATIVE_PREFIX))
+		{
+			data = aData.substring(1).split(NAME_DELIM);
+			item = new PropertyItem(data[0], true);
+		}
+		else
+		{
+			data = aData.split(NAME_DELIM);
+			item = new PropertyItem(data[0], false);
+		}
+		String[] valueData = data[1].split(VALUE_DELIM);
+		int[] values = new int[valueData.length + 1];
+		values[0] = 0;
+		for (int i = 0; i < valueData.length; i++ )
+		{
+			values[i + 1] = Integer.parseInt(valueData[i]);
+		}
+		item.setValues(values);
+		return item;
 	}
 }

@@ -36,11 +36,20 @@ public class BackgroundItemGroup implements ItemGroup<BackgroundItem>
 		return mItemNames.get(aName);
 	}
 	
-	@Override
-	public void addItem(final BackgroundItem aItem)
+	private void addItem(final BackgroundItem aItem)
 	{
 		mItems.add(aItem);
 		mItemNames.put(aItem.getName(), aItem);
 		Collections.sort(mItems);
+	}
+	
+	public static BackgroundItemGroup create(String aName, String[] aData)
+	{
+		BackgroundItemGroup group = new BackgroundItemGroup(aName);
+		for (String item : aData)
+		{
+			group.addItem(BackgroundItem.create(item));
+		}
+		return group;
 	}
 }

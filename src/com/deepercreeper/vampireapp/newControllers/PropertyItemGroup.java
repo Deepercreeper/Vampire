@@ -36,11 +36,20 @@ public class PropertyItemGroup implements ItemGroup<PropertyItem>
 		return mItemNames.get(aName);
 	}
 	
-	@Override
-	public void addItem(final PropertyItem aItem)
+	private void addItem(final PropertyItem aItem)
 	{
 		mItems.add(aItem);
 		mItemNames.put(aItem.getName(), aItem);
 		Collections.sort(mItems);
+	}
+	
+	public static PropertyItemGroup create(String aName, String[] aData)
+	{
+		PropertyItemGroup group = new PropertyItemGroup(aName);
+		for (String property : aData)
+		{
+			group.addItem(PropertyItem.create(property));
+		}
+		return group;
 	}
 }
