@@ -52,4 +52,9 @@ public class SimpleController
 	{
 		return mVirtues;
 	}
+	
+	public SimpleValueController createValue()
+	{
+		return new SimpleValueController(this);
+	}
 }
