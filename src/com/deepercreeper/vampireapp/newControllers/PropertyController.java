@@ -3,7 +3,7 @@ package com.deepercreeper.vampireapp.newControllers;
 import android.content.res.Resources;
 import com.deepercreeper.vampireapp.R;
 
-public class PropertyController
+public class PropertyController implements Controller
 {
 	private final PropertyItemGroup	mProperties;
 	
@@ -15,10 +15,5 @@ public class PropertyController
 	public PropertyItemGroup getProperties()
 	{
 		return mProperties;
-	}
-	
-	public PropertyValueController createValue()
-	{
-		return new PropertyValueController(this);
 	}
 }

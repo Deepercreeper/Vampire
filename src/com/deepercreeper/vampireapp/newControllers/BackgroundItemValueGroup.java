@@ -4,18 +4,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import android.widget.LinearLayout;
 
 public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>, VariableItemValueGroup<BackgroundItem, BackgroundItemValue>
 {
+	private boolean												mCreation;
+	
 	private final BackgroundItemGroup							mGroup;
 	
 	private final List<BackgroundItemValue>						mValues		= new ArrayList<BackgroundItemValue>();
 	
 	private final HashMap<BackgroundItem, BackgroundItemValue>	mValueItems	= new HashMap<BackgroundItem, BackgroundItemValue>();
 	
-	public BackgroundItemValueGroup(final BackgroundItemGroup aGroup)
+	public BackgroundItemValueGroup(final BackgroundItemGroup aGroup, final boolean aCreation)
 	{
 		mGroup = aGroup;
+		mCreation = aCreation;
 	}
 	
 	@Override
@@ -81,4 +85,21 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 		return mValueItems.get(aItem);
 	}
 	
+	@Override
+	public boolean isCreation()
+	{
+		return mCreation;
+	}
+	
+	@Override
+	public void setCreation(final boolean aCreation)
+	{
+		mCreation = aCreation;
+	}
+	
+	@Override
+	public void initLayout(final LinearLayout aLayout)
+	{
+		// TODO Implement
+	}
 }

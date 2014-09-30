@@ -4,18 +4,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import android.widget.LinearLayout;
 
 public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>, VariableItemValueGroup<DisciplineItem, DisciplineItemValue>
 {
+	private boolean												mCreation;
+	
 	private final DisciplineItemGroup							mGroup;
 	
 	private final List<DisciplineItemValue>						mValues		= new ArrayList<DisciplineItemValue>();
 	
 	private final HashMap<DisciplineItem, DisciplineItemValue>	mValueItems	= new HashMap<DisciplineItem, DisciplineItemValue>();
 	
-	public DisciplineItemValueGroup(final DisciplineItemGroup aGroup)
+	public DisciplineItemValueGroup(final DisciplineItemGroup aGroup, final boolean aCreation)
 	{
 		mGroup = aGroup;
+		mCreation = aCreation;
 	}
 	
 	@Override
@@ -79,5 +83,23 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	public void removeValue(final String aName)
 	{
 		removeValue(getGroup().getItem(aName));
+	}
+	
+	@Override
+	public boolean isCreation()
+	{
+		return mCreation;
+	}
+	
+	@Override
+	public void setCreation(final boolean aCreation)
+	{
+		mCreation = aCreation;
+	}
+	
+	@Override
+	public void initLayout(final LinearLayout aLayout)
+	{
+		// TODO Implement
 	}
 }

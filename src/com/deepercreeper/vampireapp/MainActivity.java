@@ -34,10 +34,11 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity
 {
-	private static final String							DELIM				= ":";
+	private static final String							DELIM		= ":";
 	
-	private static final int							ATTRIBUTES_HEIGHT	= 1140, ABILITIES_HEIGHT = 3150, DISCIPLINES_HEIGHT = 460,
-			BACKGROUNDS_HEIGHT = 620, PROPERTIES_HEIGHT = 1000;
+	private static final int							ATTRIBUTES_HEIGHT	= 1140, ABILITIES_HEIGHT = 3150, DISCIPLINES_HEIGHT = 460;
+	
+	private static final int							BACKGROUNDS_HEIGHT	= 620, PROPERTIES_HEIGHT = 1000;
 	
 	private final HashMap<String, Discipline>			mDisciplines		= new HashMap<String, Discipline>();
 	

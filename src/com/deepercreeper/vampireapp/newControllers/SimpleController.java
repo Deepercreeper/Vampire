@@ -7,7 +7,7 @@ import java.util.List;
 import android.content.res.Resources;
 import com.deepercreeper.vampireapp.R;
 
-public class SimpleController
+public class SimpleController implements Controller
 {
 	private final HashMap<String, SimpleItemGroup>	mAttributes			= new HashMap<String, SimpleItemGroup>();
 	
@@ -51,10 +51,5 @@ public class SimpleController
 	public SimpleItemGroup getVirtues()
 	{
 		return mVirtues;
-	}
-	
-	public SimpleValueController createValue()
-	{
-		return new SimpleValueController(this);
 	}
 }

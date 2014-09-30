@@ -2,26 +2,26 @@ package com.deepercreeper.vampireapp.newControllers;
 
 import android.widget.LinearLayout;
 
-public class PropertyValueController implements ValueController
+public class BackgroundValueController implements ValueController
 {
 	private boolean							mCreation;
 	
-	private final PropertyController		mController;
+	private final BackgroundController		mController;
 	
-	private final PropertyItemValueGroup	mProperties;
+	private final BackgroundItemValueGroup	mBackgrounds;
 	
-	public PropertyValueController(final PropertyController aController, final boolean aCreation)
+	public BackgroundValueController(final BackgroundController aController, final boolean aCreation)
 	{
 		mCreation = aCreation;
 		mController = aController;
-		mProperties = new PropertyItemValueGroup(mController.getProperties(), mCreation);
+		mBackgrounds = new BackgroundItemValueGroup(mController.getBackgrounds(), mCreation);
 	}
 	
 	@Override
 	public void setCreation(final boolean aCreation)
 	{
 		mCreation = aCreation;
-		mProperties.setCreation(mCreation);
+		mBackgrounds.setCreation(mCreation);
 	}
 	
 	@Override
@@ -31,7 +31,7 @@ public class PropertyValueController implements ValueController
 	}
 	
 	@Override
-	public PropertyController getController()
+	public BackgroundController getController()
 	{
 		return mController;
 	}

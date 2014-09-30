@@ -4,18 +4,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import android.widget.LinearLayout;
 
 public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, VariableItemValueGroup<PropertyItem, PropertyItemValue>
 {
+	private boolean											mCreation;
+	
 	private final PropertyItemGroup							mGroup;
 	
 	private final List<PropertyItemValue>					mValues		= new ArrayList<PropertyItemValue>();
 	
 	private final HashMap<PropertyItem, PropertyItemValue>	mValueItems	= new HashMap<PropertyItem, PropertyItemValue>();
 	
-	public PropertyItemValueGroup(final PropertyItemGroup aGroup)
+	public PropertyItemValueGroup(final PropertyItemGroup aGroup, final boolean aCreation)
 	{
 		mGroup = aGroup;
+		mCreation = aCreation;
 	}
 	
 	@Override
@@ -79,5 +83,23 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 	public PropertyItemGroup getGroup()
 	{
 		return mGroup;
+	}
+	
+	@Override
+	public boolean isCreation()
+	{
+		return mCreation;
+	}
+	
+	@Override
+	public void setCreation(final boolean aCreation)
+	{
+		mCreation = aCreation;
+	}
+	
+	@Override
+	public void initLayout(final LinearLayout aLayout)
+	{
+		// TODO Implement
 	}
 }
