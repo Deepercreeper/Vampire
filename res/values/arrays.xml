@@ -12,7 +12,7 @@
         <item>Kenntnisse:Akademisches Wissen,Folklore,Gesetzeskenntnis,Linguistik,Medizin,Nachforschungen,Naturwissenschaften,Okkultismus,Politik,Verwaltung</item>
     </string-array>
 
-    <string name="virutes">Tugenden:Gewissen/Überzeugung,Selbstbeherrschung/Instinkt,Mut</string>
+    <string name="virtue_values">Tugenden:Gewissen/Überzeugung,Selbstbeherrschung/Instinkt,Mut</string>
 
     <string-array name="nature_and_behavior">
         <item>Autokrat</item>

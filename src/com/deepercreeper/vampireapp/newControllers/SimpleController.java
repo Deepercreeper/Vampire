@@ -35,7 +35,7 @@ public class SimpleController implements Controller
 			mAbilityGroups.add(group);
 		}
 		Collections.sort(mAbilityGroups, SimpleItemGroup.getComparator());
-		mVirtues = SimpleItemGroup.create(aResources.getString(R.string.virutes), 1);
+		mVirtues = SimpleItemGroup.create(aResources.getString(R.string.virtues), 1);
 	}
 	
 	public List<SimpleItemGroup> getAbilities()

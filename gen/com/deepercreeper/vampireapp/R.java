@@ -88,7 +88,8 @@ public final class R {
         public static final int generation_text=0x7f050009;
         public static final int nature_text=0x7f050006;
         public static final int properties=0x7f050011;
-        public static final int virutes=0x7f050000;
+        public static final int virtue_values=0x7f050000;
+        public static final int virtues=0x7f050014;
     }
     public static final class style {
         /** 

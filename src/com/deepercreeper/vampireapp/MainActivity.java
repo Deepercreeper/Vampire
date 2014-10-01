@@ -58,11 +58,13 @@ public class MainActivity extends Activity
 	
 	private boolean										mInitializedClans	= false;
 	
-	private boolean										mInitializedAttributes	= false, mInitializedAbilities = false,
-			mInitializedDisciplines = false;
+	private boolean										mInitializedAttributes	= false, mInitializedAbilities = false;
 	
-	private boolean										mShowAttributes			= false, mShowAbilities = false, mShowDisciplines = false,
-			mShowBackgrounds = false, mShowProperties = false;
+	private boolean										mInitializedDisciplines	= false;
+	
+	private boolean										mShowAttributes			= false, mShowAbilities = false, mShowDisciplines = false;
+	
+	private boolean										mShowBackgrounds		= false, mShowProperties = false;
 	
 	@Override
 	protected void onCreate(final Bundle savedInstanceState)
@@ -253,14 +255,12 @@ public class MainActivity extends Activity
 						mInitializedAttributes = true;
 						initItems(true);
 					}
-					animation = new ResizeAnimation(attributesPanel, attributesPanel.getWidth(), attributesPanel.getHeight(), attributesPanel
-							.getWidth(), ATTRIBUTES_HEIGHT);
+					animation = new ResizeAnimation(attributesPanel, attributesPanel.getWidth(), ATTRIBUTES_HEIGHT);
 					arrowId = android.R.drawable.arrow_up_float;
 				}
 				else
 				{
-					animation = new ResizeAnimation(attributesPanel, attributesPanel.getWidth(), attributesPanel.getHeight(), attributesPanel
-							.getWidth(), 0);
+					animation = new ResizeAnimation(attributesPanel, attributesPanel.getWidth(), 0);
 					arrowId = android.R.drawable.arrow_down_float;
 				}
 				showAttributes.setCompoundDrawablesWithIntrinsicBounds(0, 0, arrowId, 0);
@@ -285,14 +285,12 @@ public class MainActivity extends Activity
 						mInitializedAbilities = true;
 						initItems(false);
 					}
-					animation = new ResizeAnimation(abilitiesPanel, abilitiesPanel.getWidth(), abilitiesPanel.getHeight(), abilitiesPanel.getWidth(),
-							ABILITIES_HEIGHT);
+					animation = new ResizeAnimation(abilitiesPanel, abilitiesPanel.getWidth(), ABILITIES_HEIGHT);
 					arrowId = android.R.drawable.arrow_up_float;
 				}
 				else
 				{
-					animation = new ResizeAnimation(abilitiesPanel, abilitiesPanel.getWidth(), abilitiesPanel.getHeight(), abilitiesPanel.getWidth(),
-							0);
+					animation = new ResizeAnimation(abilitiesPanel, abilitiesPanel.getWidth(), 0);
 					arrowId = android.R.drawable.arrow_down_float;
 				}
 				showAbilities.setCompoundDrawablesWithIntrinsicBounds(0, 0, arrowId, 0);
@@ -317,14 +315,12 @@ public class MainActivity extends Activity
 						mInitializedDisciplines = true;
 						initDisciplines();
 					}
-					animation = new ResizeAnimation(disciplinesPanel, disciplinesPanel.getWidth(), disciplinesPanel.getHeight(), disciplinesPanel
-							.getWidth(), DISCIPLINES_HEIGHT);
+					animation = new ResizeAnimation(disciplinesPanel, disciplinesPanel.getWidth(), DISCIPLINES_HEIGHT);
 					arrowId = android.R.drawable.arrow_up_float;
 				}
 				else
 				{
-					animation = new ResizeAnimation(disciplinesPanel, disciplinesPanel.getWidth(), disciplinesPanel.getHeight(), disciplinesPanel
-							.getWidth(), 0);
+					animation = new ResizeAnimation(disciplinesPanel, disciplinesPanel.getWidth(), 0);
 					arrowId = android.R.drawable.arrow_down_float;
 				}
 				showDisciplines.setCompoundDrawablesWithIntrinsicBounds(0, 0, arrowId, 0);
@@ -344,14 +340,12 @@ public class MainActivity extends Activity
 				int arrowId;
 				if (mShowBackgrounds)
 				{
-					animation = new ResizeAnimation(backgroundsPanel, backgroundsPanel.getWidth(), backgroundsPanel.getHeight(), backgroundsPanel
-							.getWidth(), BACKGROUNDS_HEIGHT);
+					animation = new ResizeAnimation(backgroundsPanel, backgroundsPanel.getWidth(), BACKGROUNDS_HEIGHT);
 					arrowId = android.R.drawable.arrow_up_float;
 				}
 				else
 				{
-					animation = new ResizeAnimation(backgroundsPanel, backgroundsPanel.getWidth(), backgroundsPanel.getHeight(), backgroundsPanel
-							.getWidth(), 0);
+					animation = new ResizeAnimation(backgroundsPanel, backgroundsPanel.getWidth(), 0);
 					arrowId = android.R.drawable.arrow_down_float;
 				}
 				showBackgrounds.setCompoundDrawablesWithIntrinsicBounds(0, 0, arrowId, 0);
@@ -381,14 +375,12 @@ public class MainActivity extends Activity
 				int arrowId;
 				if (mShowProperties)
 				{
-					animation = new ResizeAnimation(propertiesPanel, propertiesPanel.getWidth(), propertiesPanel.getHeight(), propertiesPanel
-							.getWidth(), PROPERTIES_HEIGHT);
+					animation = new ResizeAnimation(propertiesPanel, propertiesPanel.getWidth(), PROPERTIES_HEIGHT);
 					arrowId = android.R.drawable.arrow_up_float;
 				}
 				else
 				{
-					animation = new ResizeAnimation(propertiesPanel, propertiesPanel.getWidth(), propertiesPanel.getHeight(), propertiesPanel
-							.getWidth(), 0);
+					animation = new ResizeAnimation(propertiesPanel, propertiesPanel.getWidth(), 0);
 					arrowId = android.R.drawable.arrow_down_float;
 				}
 				showProperties.setCompoundDrawablesWithIntrinsicBounds(0, 0, arrowId, 0);
@@ -638,8 +630,7 @@ public class MainActivity extends Activity
 		if (mShowDisciplines)
 		{
 			mShowDisciplines = false;
-			disciplinesPanel.startAnimation(new ResizeAnimation(disciplinesPanel, disciplinesPanel.getWidth(), disciplinesPanel.getHeight(),
-					disciplinesPanel.getWidth(), 0));
+			disciplinesPanel.startAnimation(new ResizeAnimation(disciplinesPanel, disciplinesPanel.getWidth(), 0));
 			final Button showDisciplines = (Button) findViewById(R.id.show_disciplines);
 			showDisciplines.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
 		}

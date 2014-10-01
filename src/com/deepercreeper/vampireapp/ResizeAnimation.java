@@ -14,31 +14,25 @@ public class ResizeAnimation extends Animation
 	private final float	mToWidth;
 	private final float	mFromWidth;
 	
-	public ResizeAnimation(View aV, float aFromWidth, float aFromHeight, float aToWidth, float aToHeight)
+	public ResizeAnimation(final View aV, final float aToWidth, final float aToHeight)
 	{
 		mToHeight = aToHeight;
 		mToWidth = aToWidth;
-		mFromHeight = aFromHeight;
-		mFromWidth = aFromWidth;
+		mFromHeight = aV.getHeight();
+		mFromWidth = aV.getWidth();
 		mView = aV;
 		setDuration(100);
 	}
 	
 	@Override
-	protected void applyTransformation(float aInterpolatedTime, Transformation aTransformation)
+	protected void applyTransformation(final float aInterpolatedTime, final Transformation aTransformation)
 	{
-		float height = (mToHeight - mFromHeight) * aInterpolatedTime + mFromHeight;
-		float width = (mToWidth - mFromWidth) * aInterpolatedTime + mFromWidth;
-		LayoutParams p = mView.getLayoutParams();
+		final float height = mFromHeight + (mToHeight - mFromHeight) * aInterpolatedTime;
+		final float width = mFromWidth + (mToWidth - mFromWidth) * aInterpolatedTime;
+		final LayoutParams p = mView.getLayoutParams();
 		p.height = (int) height;
 		p.width = (int) width;
 		mView.requestLayout();
-	}
-	
-	@Override
-	public void initialize(int aWidth, int aHeight, int aParentWidth, int aParentHeight)
-	{
-		super.initialize(aWidth, aHeight, aParentWidth, aParentHeight);
 	}
 	
 	@Override

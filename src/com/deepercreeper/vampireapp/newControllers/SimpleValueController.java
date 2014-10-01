@@ -4,7 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import android.content.Context;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.ResizeAnimation;
+import com.deepercreeper.vampireapp.util.ViewUtil;
 
 public class SimpleValueController implements ValueController
 {
@@ -14,11 +21,11 @@ public class SimpleValueController implements ValueController
 	
 	private final HashMap<String, SimpleItemValueGroup>	mAttributes			= new HashMap<String, SimpleItemValueGroup>();
 	
-	private final List<SimpleItemValueGroup>			mAttributeGroups	= new ArrayList<SimpleItemValueGroup>();
+	private final List<SimpleItemValueGroup>			mAttributesList	= new ArrayList<SimpleItemValueGroup>();
 	
 	private final HashMap<String, SimpleItemValueGroup>	mAbilities			= new HashMap<String, SimpleItemValueGroup>();
 	
-	private final List<SimpleItemValueGroup>			mAbilityGroups		= new ArrayList<SimpleItemValueGroup>();
+	private final List<SimpleItemValueGroup>			mAbilitiesList		= new ArrayList<SimpleItemValueGroup>();
 	
 	private final SimpleItemValueGroup					mVirtues;
 	
@@ -30,13 +37,13 @@ public class SimpleValueController implements ValueController
 		{
 			final SimpleItemValueGroup valueGroup = new SimpleItemValueGroup(group, mCreation);
 			mAttributes.put(group.getName(), valueGroup);
-			mAttributeGroups.add(valueGroup);
+			mAttributesList.add(valueGroup);
 		}
 		for (final SimpleItemGroup group : mController.getAbilities())
 		{
 			final SimpleItemValueGroup valueGroup = new SimpleItemValueGroup(group, mCreation);
 			mAbilities.put(group.getName(), valueGroup);
-			mAbilityGroups.add(valueGroup);
+			mAbilitiesList.add(valueGroup);
 		}
 		mVirtues = new SimpleItemValueGroup(mController.getVirtues(), mCreation);
 	}
@@ -45,11 +52,11 @@ public class SimpleValueController implements ValueController
 	public void setCreation(final boolean aCreation)
 	{
 		mCreation = aCreation;
-		for (final SimpleItemValueGroup valueGroup : mAttributeGroups)
+		for (final SimpleItemValueGroup valueGroup : mAttributesList)
 		{
 			valueGroup.setCreation(mCreation);
 		}
-		for (final SimpleItemValueGroup valueGroup : mAbilityGroups)
+		for (final SimpleItemValueGroup valueGroup : mAbilitiesList)
 		{
 			valueGroup.setCreation(mCreation);
 		}
@@ -62,12 +69,130 @@ public class SimpleValueController implements ValueController
 		final Context context = aLayout.getContext();
 		aLayout.removeAllViews();
 		
-		/*
-		 * TODO Initialize layout
-		 * - Create 3 buttons and add linear layouts below them.
-		 * - Each SimpleItemValueGroup should be initialized into one of the layouts.
-		 * - This has to handle the opening and closing the layouts.
-		 */
+		final LayoutParams wrapHeight = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		final LayoutParams zeroHeight = new LayoutParams(LayoutParams.MATCH_PARENT, 0);
+		
+		aLayout.setLayoutParams(wrapHeight);
+		
+		// Attributes
+		final Button showAttributes = new Button(context);
+		final LinearLayout attributes = new LinearLayout(context);
+		attributes.setLayoutParams(zeroHeight);
+		
+		showAttributes.setLayoutParams(wrapHeight);
+		showAttributes.setText(R.string.attributes);
+		showAttributes.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
+		showAttributes.setOnClickListener(new OnClickListener()
+		{
+			private boolean			mOpen			= false;
+			
+			private final boolean	mInitialized	= false;
+			
+			@Override
+			public void onClick(final View aArg0)
+			{
+				mOpen = !mOpen;
+				if (mOpen)
+				{
+					if ( !mInitialized)
+					{
+						for (final SimpleItemValueGroup valueGroup : mAttributesList)
+						{
+							valueGroup.initLayout(attributes);
+						}
+					}
+					attributes.startAnimation(new ResizeAnimation(attributes, attributes.getWidth(), ViewUtil.calcHeight(attributes)));
+					showAttributes.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
+				}
+				else
+				{
+					attributes.startAnimation(new ResizeAnimation(attributes, attributes.getWidth(), 0));
+					showAttributes.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
+				}
+			}
+		});
+		
+		aLayout.addView(showAttributes);
+		aLayout.addView(attributes);
+		
+		// Abilities
+		final Button showAbilities = new Button(context);
+		final LinearLayout abilities = new LinearLayout(context);
+		abilities.setLayoutParams(zeroHeight);
+		
+		showAbilities.setLayoutParams(wrapHeight);
+		showAbilities.setText(R.string.abilities);
+		showAbilities.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
+		showAbilities.setOnClickListener(new OnClickListener()
+		{
+			private boolean			mOpen			= false;
+			
+			private final boolean	mInitialized	= false;
+			
+			@Override
+			public void onClick(final View aArg0)
+			{
+				mOpen = !mOpen;
+				if (mOpen)
+				{
+					if ( !mInitialized)
+					{
+						for (final SimpleItemValueGroup valueGroup : mAbilitiesList)
+						{
+							valueGroup.initLayout(abilities);
+						}
+					}
+					abilities.startAnimation(new ResizeAnimation(abilities, abilities.getWidth(), ViewUtil.calcHeight(abilities)));
+					showAbilities.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
+				}
+				else
+				{
+					abilities.startAnimation(new ResizeAnimation(abilities, abilities.getWidth(), 0));
+					showAbilities.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
+				}
+			}
+		});
+		
+		aLayout.addView(showAbilities);
+		aLayout.addView(abilities);
+		
+		// Virtues
+		final Button showVirtues = new Button(context);
+		final LinearLayout virtues = new LinearLayout(context);
+		virtues.setLayoutParams(zeroHeight);
+		
+		showVirtues.setLayoutParams(wrapHeight);
+		showVirtues.setText(R.string.virtues);
+		showVirtues.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
+		showVirtues.setOnClickListener(new OnClickListener()
+		{
+			private boolean			mOpen			= false;
+			
+			private final boolean	mInitialized	= false;
+			
+			@Override
+			public void onClick(final View aArg0)
+			{
+				mOpen = !mOpen;
+				if (mOpen)
+				{
+					if ( !mInitialized)
+					{
+						mVirtues.initLayout(virtues);
+					}
+					virtues.startAnimation(new ResizeAnimation(virtues, virtues.getWidth(), ViewUtil.calcHeight(virtues)));
+					showVirtues.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
+				}
+				else
+				{
+					virtues.startAnimation(new ResizeAnimation(virtues, virtues.getWidth(), 0));
+					showVirtues.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
+				}
+			}
+		});
+		
+		aLayout.addView(showVirtues);
+		aLayout.addView(virtues);
 	}
 	
 	@Override

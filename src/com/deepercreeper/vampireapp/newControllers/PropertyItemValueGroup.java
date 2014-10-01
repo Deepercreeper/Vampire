@@ -12,9 +12,9 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 	
 	private final PropertyItemGroup							mGroup;
 	
-	private final List<PropertyItemValue>					mValues		= new ArrayList<PropertyItemValue>();
+	private final List<PropertyItemValue>					mValuesList		= new ArrayList<PropertyItemValue>();
 	
-	private final HashMap<PropertyItem, PropertyItemValue>	mValueItems	= new HashMap<PropertyItem, PropertyItemValue>();
+	private final HashMap<PropertyItem, PropertyItemValue>	mValues	= new HashMap<PropertyItem, PropertyItemValue>();
 	
 	public PropertyItemValueGroup(final PropertyItemGroup aGroup, final boolean aCreation)
 	{
@@ -25,9 +25,9 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 	@Override
 	public void addValue(final PropertyItemValue aValue)
 	{
-		mValues.add(aValue);
-		mValueItems.put(aValue.getItem(), aValue);
-		Collections.sort(mValues, PropertyItemValue.getComparator());
+		mValuesList.add(aValue);
+		mValues.put(aValue.getItem(), aValue);
+		Collections.sort(mValuesList, PropertyItemValue.getComparator());
 	}
 	
 	@Override
@@ -45,8 +45,8 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 	@Override
 	public void removeValue(final PropertyItemValue aValue)
 	{
-		mValues.remove(aValue);
-		mValueItems.remove(aValue.getItem());
+		mValuesList.remove(aValue);
+		mValues.remove(aValue.getItem());
 	}
 	
 	@Override
@@ -64,7 +64,7 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 	@Override
 	public PropertyItemValue getValue(final PropertyItem aItem)
 	{
-		return mValueItems.get(aItem);
+		return mValues.get(aItem);
 	}
 	
 	@Override
@@ -76,7 +76,7 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 	@Override
 	public List<PropertyItemValue> getValues()
 	{
-		return mValues;
+		return mValuesList;
 	}
 	
 	@Override

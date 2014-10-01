@@ -37,11 +37,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/nature_label"
-            android:layout_alignParentEnd="true"
-            android:layout_alignStart="@+id/generation_picker"
+            android:layout_alignParentRight="true"
+            android:layout_alignLeft="@+id/generation_picker"
             android:layout_alignTop="@+id/nature_label"
             android:layout_below="@+id/concept_text"
-            android:layout_toEndOf="@+id/nature_label"
+            android:layout_toRightOf="@+id/nature_label"
             android:entries="@array/nature_and_behavior" />
 
         <Spinner
@@ -49,18 +49,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/behavior_label"
-            android:layout_alignParentEnd="true"
-            android:layout_alignStart="@+id/generation_picker"
+            android:layout_alignParentRight="true"
+            android:layout_alignLeft="@+id/generation_picker"
             android:layout_alignTop="@+id/behavior_label"
             android:layout_below="@+id/nature_spinner"
-            android:layout_toEndOf="@+id/behavior_label"
+            android:layout_toRightOf="@+id/behavior_label"
             android:entries="@array/nature_and_behavior" />
 
         <TextView
             android:id="@+id/behavior_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_below="@+id/nature_spinner"
             android:gravity="center_vertical"
             android:paddingBottom="12sp"
@@ -72,7 +72,7 @@
             android:id="@+id/nature_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_below="@+id/concept_text"
             android:gravity="center_vertical"
             android:paddingBottom="12sp"
@@ -84,7 +84,7 @@
             android:id="@+id/clan_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_below="@+id/behavior_spinner"
             android:gravity="center_vertical"
             android:paddingBottom="12sp"
@@ -96,7 +96,7 @@
             android:id="@+id/generation_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_below="@+id/clan_spinner"
             android:gravity="center_vertical"
             android:paddingBottom="70sp"
@@ -109,21 +109,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/clan_label"
-            android:layout_alignParentEnd="true"
-            android:layout_alignStart="@+id/generation_picker"
+            android:layout_alignParentRight="true"
+            android:layout_alignLeft="@+id/generation_picker"
             android:layout_alignTop="@+id/clan_label"
             android:layout_below="@+id/behavior_spinner"
-            android:layout_toEndOf="@+id/clan_label" />
+            android:layout_toRightOf="@+id/clan_label" />
 
         <NumberPicker
             android:id="@+id/generation_picker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/generation_label"
-            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/generation_label"
             android:layout_below="@+id/clan_spinner"
-            android:layout_toEndOf="@+id/generation_label" />
+            android:layout_toRightOf="@+id/generation_label" />
 
         <Button
             android:id="@+id/show_attributes"
@@ -138,8 +138,8 @@
             android:id="@+id/attributes_panel"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:layout_alignEnd="@+id/show_attributes"
-            android:layout_alignStart="@+id/show_attributes"
+            android:layout_alignRight="@+id/show_attributes"
+            android:layout_alignLeft="@+id/show_attributes"
             android:layout_below="@+id/show_attributes"
             android:orientation="vertical" >
         </LinearLayout>
@@ -157,8 +157,8 @@
             android:id="@+id/abilities_panel"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:layout_alignEnd="@+id/show_abilities"
-            android:layout_alignStart="@+id/show_abilities"
+            android:layout_alignRight="@+id/show_abilities"
+            android:layout_alignLeft="@+id/show_abilities"
             android:layout_below="@+id/show_abilities"
             android:orientation="vertical" >
         </LinearLayout>
@@ -176,8 +176,8 @@
             android:id="@+id/disciplines_panel"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:layout_alignEnd="@+id/show_disciplines"
-            android:layout_alignStart="@+id/show_disciplines"
+            android:layout_alignRight="@+id/show_disciplines"
+            android:layout_alignLeft="@+id/show_disciplines"
             android:layout_below="@+id/show_disciplines"
             android:orientation="vertical" >
         </LinearLayout>
@@ -195,8 +195,8 @@
             android:id="@+id/backgrounds_panel"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:layout_alignEnd="@+id/show_backgrounds"
-            android:layout_alignStart="@+id/show_backgrounds"
+            android:layout_alignRight="@+id/show_backgrounds"
+            android:layout_alignLeft="@+id/show_backgrounds"
             android:layout_below="@+id/show_backgrounds"
             android:orientation="vertical" >
 
@@ -221,8 +221,8 @@
             android:id="@+id/properties_panel"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_alignEnd="@+id/show_properties"
-            android:layout_alignStart="@+id/show_properties"
+            android:layout_alignRight="@+id/show_properties"
+            android:layout_alignLeft="@+id/show_properties"
             android:layout_below="@id/show_properties"
             android:orientation="vertical" >
 

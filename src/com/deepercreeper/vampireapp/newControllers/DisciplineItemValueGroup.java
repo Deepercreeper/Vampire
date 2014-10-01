@@ -12,9 +12,9 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	
 	private final DisciplineItemGroup							mGroup;
 	
-	private final List<DisciplineItemValue>						mValues		= new ArrayList<DisciplineItemValue>();
+	private final List<DisciplineItemValue>						mValuesList		= new ArrayList<DisciplineItemValue>();
 	
-	private final HashMap<DisciplineItem, DisciplineItemValue>	mValueItems	= new HashMap<DisciplineItem, DisciplineItemValue>();
+	private final HashMap<DisciplineItem, DisciplineItemValue>	mValues	= new HashMap<DisciplineItem, DisciplineItemValue>();
 	
 	public DisciplineItemValueGroup(final DisciplineItemGroup aGroup, final boolean aCreation)
 	{
@@ -31,7 +31,7 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	@Override
 	public List<DisciplineItemValue> getValues()
 	{
-		return mValues;
+		return mValuesList;
 	}
 	
 	@Override
@@ -43,15 +43,15 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	@Override
 	public DisciplineItemValue getValue(final DisciplineItem aItem)
 	{
-		return mValueItems.get(aItem);
+		return mValues.get(aItem);
 	}
 	
 	@Override
 	public void addValue(final DisciplineItemValue aValue)
 	{
-		mValues.add(aValue);
-		mValueItems.put(aValue.getItem(), aValue);
-		Collections.sort(mValues, DisciplineItemValue.getComparator());
+		mValuesList.add(aValue);
+		mValues.put(aValue.getItem(), aValue);
+		Collections.sort(mValuesList, DisciplineItemValue.getComparator());
 	}
 	
 	@Override
@@ -69,8 +69,8 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	@Override
 	public void removeValue(final DisciplineItemValue aValue)
 	{
-		mValues.remove(aValue);
-		mValueItems.remove(aValue.getItem());
+		mValuesList.remove(aValue);
+		mValues.remove(aValue.getItem());
 	}
 	
 	@Override

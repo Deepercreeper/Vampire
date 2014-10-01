@@ -12,9 +12,9 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 	
 	private final BackgroundItemGroup							mGroup;
 	
-	private final List<BackgroundItemValue>						mValues		= new ArrayList<BackgroundItemValue>();
+	private final List<BackgroundItemValue>						mValuesList		= new ArrayList<BackgroundItemValue>();
 	
-	private final HashMap<BackgroundItem, BackgroundItemValue>	mValueItems	= new HashMap<BackgroundItem, BackgroundItemValue>();
+	private final HashMap<BackgroundItem, BackgroundItemValue>	mValues	= new HashMap<BackgroundItem, BackgroundItemValue>();
 	
 	public BackgroundItemValueGroup(final BackgroundItemGroup aGroup, final boolean aCreation)
 	{
@@ -25,9 +25,9 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 	@Override
 	public void addValue(final BackgroundItemValue aValue)
 	{
-		mValues.add(aValue);
-		mValueItems.put(aValue.getItem(), aValue);
-		Collections.sort(mValues, BackgroundItemValue.getComparator());
+		mValuesList.add(aValue);
+		mValues.put(aValue.getItem(), aValue);
+		Collections.sort(mValuesList, BackgroundItemValue.getComparator());
 	}
 	
 	@Override
@@ -45,8 +45,8 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 	@Override
 	public void removeValue(final BackgroundItemValue aValue)
 	{
-		mValues.remove(aValue);
-		mValueItems.remove(aValue.getItem());
+		mValuesList.remove(aValue);
+		mValues.remove(aValue.getItem());
 	}
 	
 	@Override
@@ -70,7 +70,7 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 	@Override
 	public List<BackgroundItemValue> getValues()
 	{
-		return mValues;
+		return mValuesList;
 	}
 	
 	@Override
@@ -82,7 +82,7 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 	@Override
 	public BackgroundItemValue getValue(final BackgroundItem aItem)
 	{
-		return mValueItems.get(aItem);
+		return mValues.get(aItem);
 	}
 	
 	@Override
