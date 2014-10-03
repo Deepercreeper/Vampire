@@ -67,12 +67,7 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 		if (mItem.isSubItem())
 		{
 			final DisciplineItemValue parentValue = getParentValue();
-			if (parentValue == null)
-			{
-				// TODO Remove when can't happen anymore
-				throw new IllegalStateException("Parent discipline wasn't set!");
-			}
-			final boolean firstSubItem = parentValue.getSubValue(0).getItem().equals(mItem);
+			final boolean firstSubItem = parentValue.hasSubDiscipline(0) && mItem.equals(parentValue.getSubValue(0).getItem());
 			if (firstSubItem || parentValue.getSubValue(0).getValue() >= DisciplineItem.MIN_FIRST_SUB_VALUE)
 			{
 				return true;
@@ -86,16 +81,28 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 	public boolean canDecrease(final boolean aCreation)
 	{
 		// TODO Move into DisciplineItemValueGroup.updateValues()
+		
 		if (mItem.isSubItem())
 		{
 			final DisciplineItemValue parentValue = getParentValue();
-			if (parentValue == null)
+			final boolean firstSubItem = parentValue.hasSubDiscipline(0) && mItem.equals(parentValue.getSubValue(0).getItem());
+			if (firstSubItem)
 			{
-				// TODO Remove when can't happen anymore
-				throw new IllegalStateException("Parent discipline wasn't set!");
+				if (mValue == DisciplineItem.MIN_FIRST_SUB_VALUE)
+				{
+					for (int i = 1; i < DisciplineItem.MAX_SUB_DISCIPLINES; i++ )
+					{
+						if (parentValue.hasSubDiscipline(i))
+						{
+							if (parentValue.getSubValue(i).getValue() > 0)
+							{
+								return false;
+							}
+						}
+					}
+				}
 			}
-			final boolean firstSubItem = parentValue.getSubValue(0).getItem().equals(mItem);
-			return !firstSubItem;
+			return true;
 		}
 		return canDecrease();
 	}

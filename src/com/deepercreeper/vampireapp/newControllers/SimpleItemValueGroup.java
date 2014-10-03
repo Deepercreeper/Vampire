@@ -196,8 +196,10 @@ public class SimpleItemValueGroup implements ItemValueGroup<SimpleItem>
 				value.setDecreaseButton(decrease);
 				
 				ViewUtil.applyValue(value.getValue(), valueDisplay);
+				mController.updateValues();
 			}
 			valueRow.addView(spinnerGrid);
+			table.addView(valueRow);
 		}
 	}
 }

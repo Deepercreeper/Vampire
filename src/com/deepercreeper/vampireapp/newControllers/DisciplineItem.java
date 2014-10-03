@@ -12,7 +12,7 @@ public class DisciplineItem implements Item
 	
 	private static final int						MAX_VALUE			= 6, MAX_START_VALUE = 3, START_VALUE = 0;
 	
-	public static final int							MIN_FIRST_SUB_VALUE	= 2;
+	public static final int							MIN_FIRST_SUB_VALUE	= 2, MAX_SUB_DISCIPLINES = 2;
 	
 	private final String							mName;
 	

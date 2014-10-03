@@ -4,7 +4,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import android.content.Context;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
+import android.widget.GridLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.Space;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
+import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.util.ViewUtil;
 
 public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>, VariableItemValueGroup<BackgroundItem, BackgroundItemValue>
 {
@@ -130,6 +144,100 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 	@Override
 	public void initLayout(final LinearLayout aLayout)
 	{
-		// TODO Implement
+		final Context context = aLayout.getContext();
+		final TableLayout table = new TableLayout(context);
+		
+		final LayoutParams wrapHeight = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		final LayoutParams wrapAll = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		final LayoutParams buttonSize = new LayoutParams(ViewUtil.calcPx(30, context), ViewUtil.calcPx(30, context));
+		final LayoutParams valueSize = new LayoutParams(ViewUtil.calcPx(25, context), LayoutParams.WRAP_CONTENT);
+		
+		table.setLayoutParams(wrapHeight);
+		
+		final TableRow titleRow = new TableRow(context);
+		titleRow.setLayoutParams(wrapAll);
+		{
+			titleRow.addView(new Space(context));
+			
+			final Button title = new Button(context);
+			title.setLayoutParams(wrapAll);
+			title.setText(context.getResources().getString(R.string.add_background));
+			title.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					// TODO Implement
+				}
+			});
+			titleRow.addView(title);
+		}
+		table.addView(titleRow);
+		
+		for (final BackgroundItemValue value : mValuesList)
+		{
+			final TableRow valueRow = new TableRow(context);
+			valueRow.setLayoutParams(wrapAll);
+			
+			final TextView valueName = new TextView(context);
+			valueName.setLayoutParams(wrapAll);
+			valueName.setText(value.getItem().getName());
+			valueRow.addView(valueName);
+			
+			final GridLayout spinnerGrid = new GridLayout(context);
+			spinnerGrid.setLayoutParams(wrapAll);
+			{
+				final ImageButton decrease = new ImageButton(context);
+				final ImageButton increase = new ImageButton(context);
+				final RadioButton[] valueDisplay = new RadioButton[value.getItem().getMaxValue()];
+				
+				decrease.setLayoutParams(buttonSize);
+				decrease.setContentDescription("Decrease");
+				decrease.setImageResource(android.R.drawable.ic_media_previous);
+				decrease.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(final View aV)
+					{
+						value.decrease();
+						ViewUtil.applyValue(value.getValue(), valueDisplay);
+						mController.updateValues();
+					}
+				});
+				spinnerGrid.addView(decrease);
+				
+				for (int i = 0; i < valueDisplay.length; i++ )
+				{
+					final RadioButton valuePoint = new RadioButton(context);
+					valuePoint.setLayoutParams(valueSize);
+					valuePoint.setClickable(false);
+					spinnerGrid.addView(valuePoint);
+					valueDisplay[i] = valuePoint;
+				}
+				
+				increase.setLayoutParams(buttonSize);
+				increase.setContentDescription("Increase");
+				increase.setImageResource(android.R.drawable.ic_media_next);
+				increase.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(final View aV)
+					{
+						value.increase();
+						ViewUtil.applyValue(value.getValue(), valueDisplay);
+						mController.updateValues();
+					}
+				});
+				spinnerGrid.addView(increase);
+				
+				value.setIncreaseButton(increase);
+				value.setDecreaseButton(decrease);
+				
+				ViewUtil.applyValue(value.getValue(), valueDisplay);
+				mController.updateValues();
+			}
+			valueRow.addView(spinnerGrid);
+			table.addView(valueRow);
+		}
 	}
 }
