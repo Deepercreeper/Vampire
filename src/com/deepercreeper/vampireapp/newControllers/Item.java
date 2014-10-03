@@ -2,15 +2,15 @@ package com.deepercreeper.vampireapp.newControllers;
 
 public interface Item extends Comparable<Item>
 {
-	public String getName();
+	public ItemValue<? extends Item> createValue();
 	
 	public String getDescription();
 	
-	public int getStartValue();
+	public int getMaxStartValue();
 	
 	public int getMaxValue();
 	
-	public int getMaxStartValue();
+	public String getName();
 	
-	public ItemValue<? extends Item> createValue();
+	public int getStartValue();
 }

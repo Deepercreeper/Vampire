@@ -27,6 +27,47 @@ public class Ability implements Comparable<Ability>
 		mLevel = aLevel;
 	}
 	
+	@Override
+	public int compareTo(Ability aAnother)
+	{
+		return getName().compareTo(aAnother.getName());
+	}
+	
+	public int getBloodPoints()
+	{
+		return mBloodPoints;
+	}
+	
+	public Set<String> getCosts()
+	{
+		return mCosts;
+	}
+	
+	public int getDices()
+	{
+		return mDices;
+	}
+	
+	public int getLevel()
+	{
+		return mLevel;
+	}
+	
+	public String getName()
+	{
+		return mName;
+	}
+	
+	public int getVolitionPoints()
+	{
+		return mVolitionPoints;
+	}
+	
+	public boolean hasVolitionCost()
+	{
+		return mVolition;
+	}
+	
 	private void addCost(String aCost, List<Integer> aNumberData)
 	{
 		if (aCost.equals(VOLITION))
@@ -72,41 +113,6 @@ public class Ability implements Comparable<Ability>
 		}
 	}
 	
-	public String getName()
-	{
-		return mName;
-	}
-	
-	public int getLevel()
-	{
-		return mLevel;
-	}
-	
-	public int getBloodPoints()
-	{
-		return mBloodPoints;
-	}
-	
-	public int getDices()
-	{
-		return mDices;
-	}
-	
-	public int getVolitionPoints()
-	{
-		return mVolitionPoints;
-	}
-	
-	public boolean hasVolitionCost()
-	{
-		return mVolition;
-	}
-	
-	public Set<String> getCosts()
-	{
-		return mCosts;
-	}
-	
 	public static Ability create(String aData)
 	{
 		String[] data = aData.split(NAME_DELIM);
@@ -121,11 +127,5 @@ public class Ability implements Comparable<Ability>
 			ability.addCost(cost, numberData);
 		}
 		return ability;
-	}
-	
-	@Override
-	public int compareTo(Ability aAnother)
-	{
-		return getName().compareTo(aAnother.getName());
 	}
 }

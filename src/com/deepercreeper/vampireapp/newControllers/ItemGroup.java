@@ -4,9 +4,9 @@ import java.util.List;
 
 public interface ItemGroup <T extends Item>
 {
-	public String getName();
+	public T getItem(String aName);
 	
 	public List<T> getItems();
 	
-	public T getItem(String aName);
+	public String getName();
 }

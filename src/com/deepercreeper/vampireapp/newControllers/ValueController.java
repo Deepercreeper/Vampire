@@ -4,13 +4,7 @@ import android.widget.LinearLayout;
 
 public interface ValueController <T extends Item>
 {
-	public void setCreation(boolean aCreation);
-	
-	public boolean isCreation();
-	
 	public Controller<T> getController();
-	
-	public void updateValues();
 	
 	/**
 	 * The given layout is a container for a drop down button and a linear layout<br>
@@ -22,4 +16,10 @@ public interface ValueController <T extends Item>
 	 *            The layout to put the content into.
 	 */
 	public void initLayout(LinearLayout aLayout);
+	
+	public boolean isCreation();
+	
+	public void setCreation(boolean aCreation);
+	
+	public void updateValues();
 }
