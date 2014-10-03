@@ -22,20 +22,40 @@ public class SimpleItemValueGroup implements ItemValueGroup<SimpleItem>
 {
 	private boolean										mCreation;
 	
+	private final SimpleValueController					mController;
+	
 	private final SimpleItemGroup						mGroup;
 	
 	private final List<SimpleItemValue>					mValuesList	= new ArrayList<SimpleItemValue>();
 	
 	private final HashMap<SimpleItem, SimpleItemValue>	mValues		= new HashMap<SimpleItem, SimpleItemValue>();
 	
-	public SimpleItemValueGroup(final SimpleItemGroup aGroup, final boolean aCreation)
+	public SimpleItemValueGroup(final SimpleItemGroup aGroup, final SimpleValueController aController, final boolean aCreation)
 	{
+		mController = aController;
 		mCreation = aCreation;
 		mGroup = aGroup;
 		for (final SimpleItem item : mGroup.getItems())
 		{
 			addValue(item.createValue());
 		}
+	}
+	
+	@Override
+	public SimpleValueController getController()
+	{
+		return mController;
+	}
+	
+	@Override
+	public int getValue()
+	{
+		int value = 0;
+		for (final SimpleItemValue itemValue : mValuesList)
+		{
+			value += itemValue.getValue();
+		}
+		return value;
 	}
 	
 	private void addValue(final SimpleItemValue aValue)
@@ -51,7 +71,7 @@ public class SimpleItemValueGroup implements ItemValueGroup<SimpleItem>
 	}
 	
 	@Override
-	public List<SimpleItemValue> getValues()
+	public List<SimpleItemValue> getValuesList()
 	{
 		return mValuesList;
 	}
@@ -81,12 +101,18 @@ public class SimpleItemValueGroup implements ItemValueGroup<SimpleItem>
 	}
 	
 	@Override
+	public void updateValues(final boolean aCanIncrease, final boolean aCanDecrease)
+	{
+		for (final SimpleItemValue value : mValuesList)
+		{
+			value.getIncreaseButton().setEnabled(aCanIncrease && value.canIncrease(mCreation));
+			value.getDecreaseButton().setEnabled(aCanDecrease && value.canDecrease(mCreation));
+		}
+	}
+	
+	@Override
 	public void initLayout(final LinearLayout aLayout)
 	{
-		// TODO Add on click actions
-		// TODO Set decrease and increase buttons enabled/disabled
-		// TODO Calculate whether increase and decrease is possible
-		
 		final Context context = aLayout.getContext();
 		final TableLayout table = new TableLayout(context);
 		
@@ -134,8 +160,10 @@ public class SimpleItemValueGroup implements ItemValueGroup<SimpleItem>
 				{
 					@Override
 					public void onClick(final View aV)
-					{	
-						
+					{
+						value.decrease();
+						ViewUtil.applyValue(value.getValue(), valueDisplay);
+						mController.updateValues();
 					}
 				});
 				spinnerGrid.addView(decrease);
@@ -156,11 +184,16 @@ public class SimpleItemValueGroup implements ItemValueGroup<SimpleItem>
 				{
 					@Override
 					public void onClick(final View aV)
-					{	
-						
+					{
+						value.increase();
+						ViewUtil.applyValue(value.getValue(), valueDisplay);
+						mController.updateValues();
 					}
 				});
 				spinnerGrid.addView(increase);
+				
+				value.setIncreaseButton(increase);
+				value.setDecreaseButton(decrease);
 				
 				ViewUtil.applyValue(value.getValue(), valueDisplay);
 			}

@@ -3,6 +3,7 @@ package com.deepercreeper.vampireapp.newControllers;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import android.widget.ImageButton;
 
 public class DisciplineItemValue implements ItemValue<DisciplineItem>
 {
@@ -10,12 +11,105 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 	
 	private int								mValue;
 	
+	private ImageButton						mIncreaseButton;
+	
+	private ImageButton						mDecreaseButton;
+	
+	private DisciplineItemValue				mParentValue;
+	
 	private final List<DisciplineItemValue>	mSubValues	= new ArrayList<DisciplineItemValue>();
 	
 	public DisciplineItemValue(final DisciplineItem aItem)
 	{
 		mItem = aItem;
 		mValue = mItem.getStartValue();
+	}
+	
+	public void setParentValue(final DisciplineItemValue aParentValue)
+	{
+		mParentValue = aParentValue;
+	}
+	
+	public DisciplineItemValue getParentValue()
+	{
+		return mParentValue;
+	}
+	
+	@Override
+	public ImageButton getDecreaseButton()
+	{
+		return mDecreaseButton;
+	}
+	
+	@Override
+	public ImageButton getIncreaseButton()
+	{
+		return mIncreaseButton;
+	}
+	
+	@Override
+	public void setDecreaseButton(final ImageButton aDecreaseButton)
+	{
+		mDecreaseButton = aDecreaseButton;
+	}
+	
+	@Override
+	public void setIncreaseButton(final ImageButton aIncreaseButton)
+	{
+		mIncreaseButton = aIncreaseButton;
+	}
+	
+	@Override
+	public boolean canIncrease(final boolean aCreation)
+	{
+		// TODO Move into DisciplineItemValueGroup.updateValues()
+		
+		if (mItem.isSubItem())
+		{
+			final DisciplineItemValue parentValue = getParentValue();
+			if (parentValue == null)
+			{
+				// TODO Remove when can't happen anymore
+				throw new IllegalStateException("Parent discipline wasn't set!");
+			}
+			final boolean firstSubItem = parentValue.getSubValue(0).getItem().equals(mItem);
+			if (firstSubItem || parentValue.getSubValue(0).getValue() >= DisciplineItem.MIN_FIRST_SUB_VALUE)
+			{
+				return true;
+			}
+			return false;
+		}
+		return canIncrease() && ( !aCreation || mValue < getItem().getMaxStartValue());
+	}
+	
+	@Override
+	public boolean canDecrease(final boolean aCreation)
+	{
+		// TODO Move into DisciplineItemValueGroup.updateValues()
+		if (mItem.isSubItem())
+		{
+			final DisciplineItemValue parentValue = getParentValue();
+			if (parentValue == null)
+			{
+				// TODO Remove when can't happen anymore
+				throw new IllegalStateException("Parent discipline wasn't set!");
+			}
+			final boolean firstSubItem = parentValue.getSubValue(0).getItem().equals(mItem);
+			return !firstSubItem;
+		}
+		return canDecrease();
+	}
+	
+	@Override
+	public boolean canIncrease()
+	{
+		return mValue < getItem().getMaxValue();
+	}
+	
+	@Override
+	public boolean canDecrease()
+	{
+		return mValue > getItem().getStartValue();
 	}
 	
 	public DisciplineItemValue getSubValue(final int aPos)
@@ -30,6 +124,7 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 	public void setSubValue(final int aPos, final DisciplineItemValue aSubValue)
 	{
 		mSubValues.add(aPos, aSubValue);
+		aSubValue.setParentValue(this);
 	}
 	
 	public boolean hasSubDiscipline(final int aPos)
@@ -57,7 +152,7 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 	@Override
 	public void increase()
 	{
-		if (mValue < getItem().getMaxValue())
+		if (canIncrease())
 		{
 			mValue++ ;
 		}
@@ -66,7 +161,7 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 	@Override
 	public void decrease()
 	{
-		if (mValue > getItem().getStartValue())
+		if (canDecrease())
 		{
 			mValue-- ;
 		}

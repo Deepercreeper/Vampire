@@ -21,7 +21,7 @@ public class PropertyItem implements Item
 		mDescription = createDescription();
 	}
 	
-	private void setValues(int[] aValues)
+	private void setValues(final int[] aValues)
 	{
 		mValues = aValues;
 	}
@@ -31,9 +31,20 @@ public class PropertyItem implements Item
 		return mNegative;
 	}
 	
-	public int[] getValues()
+	public int getValue(final int aValueId)
 	{
-		return mValues;
+		return mValues[aValueId];
+	}
+	
+	public int getFinalValue(final int aValueId)
+	{
+		return mValues[aValueId] * (mNegative ? -1 : 1);
+	}
+	
+	@Override
+	public int getMaxStartValue()
+	{
+		return mValues.length;
 	}
 	
 	@Override
@@ -78,7 +89,24 @@ public class PropertyItem implements Item
 		return mName;
 	}
 	
-	public static PropertyItem create(String aData)
+	@Override
+	public int hashCode()
+	{
+		return mName.hashCode();
+	}
+	
+	@Override
+	public boolean equals(final Object aO)
+	{
+		if (aO instanceof PropertyItem)
+		{
+			final PropertyItem item = (PropertyItem) aO;
+			return getName().equals(item.getName());
+		}
+		return false;
+	}
+	
+	public static PropertyItem create(final String aData)
 	{
 		PropertyItem item;
 		String[] data;
@@ -92,8 +120,8 @@ public class PropertyItem implements Item
 			data = aData.split(NAME_DELIM);
 			item = new PropertyItem(data[0], false);
 		}
-		String[] valueData = data[1].split(VALUE_DELIM);
-		int[] values = new int[valueData.length + 1];
+		final String[] valueData = data[1].split(VALUE_DELIM);
+		final int[] values = new int[valueData.length + 1];
 		values[0] = 0;
 		for (int i = 0; i < valueData.length; i++ )
 		{

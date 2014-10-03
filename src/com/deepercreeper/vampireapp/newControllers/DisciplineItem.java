@@ -8,9 +8,11 @@ import java.util.Set;
 
 public class DisciplineItem implements Item
 {
-	private static final String						PARENT_PREFIX	= "#", NAME_DELIM = ":", ABILITIES_DELIM = ";", SUB_ITEMS_DELIM = ",";
+	private static final String						PARENT_PREFIX		= "#", NAME_DELIM = ":", ABILITIES_DELIM = ";", SUB_ITEMS_DELIM = ",";
 	
-	private static final int						MAX_VALUE		= 6, START_VALUE = 0;
+	private static final int						MAX_VALUE			= 6, MAX_START_VALUE = 3, START_VALUE = 0;
+	
+	public static final int							MIN_FIRST_SUB_VALUE	= 2;
 	
 	private final String							mName;
 	
@@ -18,11 +20,11 @@ public class DisciplineItem implements Item
 	
 	private DisciplineItem							mParent;
 	
-	private final HashMap<String, DisciplineItem>	mSubItems		= new HashMap<String, DisciplineItem>();
+	private final HashMap<String, DisciplineItem>	mSubItems			= new HashMap<String, DisciplineItem>();
 	
-	private final List<DisciplineItem>				mSubItemNames	= new ArrayList<DisciplineItem>();
+	private final List<DisciplineItem>				mSubItemNames		= new ArrayList<DisciplineItem>();
 	
-	private final List<Ability>						mAbilities		= new ArrayList<Ability>();
+	private final List<Ability>						mAbilities			= new ArrayList<Ability>();
 	
 	private DisciplineItem(final String aName)
 	{
@@ -30,17 +32,17 @@ public class DisciplineItem implements Item
 		mDescription = createDescription();
 	}
 	
-	public void setParent(DisciplineItem aParent)
+	public void setParent(final DisciplineItem aParent)
 	{
 		mParent = aParent;
 	}
 	
-	private void addSubItemName(String aName)
+	private void addSubItemName(final String aName)
 	{
 		mSubItems.put(aName, null);
 	}
 	
-	private void addAbility(Ability aAbility)
+	private void addAbility(final Ability aAbility)
 	{
 		mAbilities.add(aAbility);
 		Collections.sort(mAbilities);
@@ -68,6 +70,12 @@ public class DisciplineItem implements Item
 	}
 	
 	@Override
+	public int getMaxStartValue()
+	{
+		return MAX_START_VALUE;
+	}
+	
+	@Override
 	public int getMaxValue()
 	{
 		return MAX_VALUE;
@@ -84,7 +92,7 @@ public class DisciplineItem implements Item
 		return START_VALUE;
 	}
 	
-	public void addSubItem(DisciplineItem aSubItem)
+	public void addSubItem(final DisciplineItem aSubItem)
 	{
 		mSubItems.put(aSubItem.getName(), aSubItem);
 		mSubItemNames.add(aSubItem);
@@ -130,16 +138,33 @@ public class DisciplineItem implements Item
 		return getName().compareTo(mName);
 	}
 	
-	public static DisciplineItem create(String aData)
+	@Override
+	public int hashCode()
+	{
+		return mName.hashCode();
+	}
+	
+	@Override
+	public boolean equals(final Object aO)
+	{
+		if (aO instanceof DisciplineItem)
+		{
+			final DisciplineItem item = (DisciplineItem) aO;
+			return getName().equals(item.getName());
+		}
+		return false;
+	}
+	
+	public static DisciplineItem create(final String aData)
 	{
 		DisciplineItem discipline;
 		if (aData.startsWith(PARENT_PREFIX))
 		{
-			String[] data = aData.substring(1).split(NAME_DELIM);
+			final String[] data = aData.substring(1).split(NAME_DELIM);
 			discipline = new DisciplineItem(data[0]);
 			if (data.length > 1)
 			{
-				for (String subItem : data[1].split(SUB_ITEMS_DELIM))
+				for (final String subItem : data[1].split(SUB_ITEMS_DELIM))
 				{
 					discipline.addSubItemName(subItem);
 				}
@@ -147,11 +172,11 @@ public class DisciplineItem implements Item
 		}
 		else
 		{
-			String[] data = aData.split(NAME_DELIM);
+			final String[] data = aData.split(NAME_DELIM);
 			discipline = new DisciplineItem(data[0]);
 			if (data.length > 1)
 			{
-				for (String ability : data[1].split(ABILITIES_DELIM))
+				for (final String ability : data[1].split(ABILITIES_DELIM))
 				{
 					discipline.addAbility(Ability.create(ability));
 				}

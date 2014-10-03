@@ -46,7 +46,7 @@ public class SimpleItemGroup implements ItemGroup<SimpleItem>
 		return mName;
 	}
 	
-	public static SimpleItemGroup create(final String aData, final int aStartValue)
+	public static SimpleItemGroup create(final String aData, final int aStartValue, final int aMaxStartValue)
 	{
 		final String[] data = aData.split(NAME_DELIM);
 		final SimpleItemGroup group = new SimpleItemGroup(data[0]);
@@ -54,7 +54,7 @@ public class SimpleItemGroup implements ItemGroup<SimpleItem>
 		{
 			for (final String item : data[1].split(ITEMS_DELIM))
 			{
-				group.addItem(SimpleItem.create(item, aStartValue));
+				group.addItem(SimpleItem.create(item, aStartValue, aMaxStartValue));
 			}
 		}
 		return group;
@@ -65,7 +65,7 @@ public class SimpleItemGroup implements ItemGroup<SimpleItem>
 		return new Comparator<SimpleItemGroup>()
 		{
 			@Override
-			public int compare(SimpleItemGroup aLhs, SimpleItemGroup aRhs)
+			public int compare(final SimpleItemGroup aLhs, final SimpleItemGroup aRhs)
 			{
 				return aLhs.getName().compareTo(aRhs.getName());
 			}

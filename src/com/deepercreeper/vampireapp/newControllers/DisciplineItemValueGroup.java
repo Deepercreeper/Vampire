@@ -10,16 +10,25 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 {
 	private boolean												mCreation;
 	
+	private final DisciplineValueController						mController;
+	
 	private final DisciplineItemGroup							mGroup;
 	
-	private final List<DisciplineItemValue>						mValuesList		= new ArrayList<DisciplineItemValue>();
+	private final List<DisciplineItemValue>						mValuesList	= new ArrayList<DisciplineItemValue>();
 	
-	private final HashMap<DisciplineItem, DisciplineItemValue>	mValues	= new HashMap<DisciplineItem, DisciplineItemValue>();
+	private final HashMap<DisciplineItem, DisciplineItemValue>	mValues		= new HashMap<DisciplineItem, DisciplineItemValue>();
 	
-	public DisciplineItemValueGroup(final DisciplineItemGroup aGroup, final boolean aCreation)
+	public DisciplineItemValueGroup(final DisciplineItemGroup aGroup, final DisciplineValueController aController, final boolean aCreation)
 	{
+		mController = aController;
 		mGroup = aGroup;
 		mCreation = aCreation;
+	}
+	
+	@Override
+	public DisciplineValueController getController()
+	{
+		return mController;
 	}
 	
 	@Override
@@ -29,7 +38,7 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	}
 	
 	@Override
-	public List<DisciplineItemValue> getValues()
+	public List<DisciplineItemValue> getValuesList()
 	{
 		return mValuesList;
 	}
@@ -44,6 +53,41 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	public DisciplineItemValue getValue(final DisciplineItem aItem)
 	{
 		return mValues.get(aItem);
+	}
+	
+	@Override
+	public void updateValues(final boolean aCanIncrease, final boolean aCanDecrease)
+	{
+		for (final DisciplineItemValue value : mValuesList)
+		{
+			if (value.getItem().isParentItem())
+			{
+				for (final DisciplineItemValue subValue : value.getSubValues())
+				{
+					if (subValue != null)
+					{
+						value.getIncreaseButton().setEnabled(aCanIncrease && value.canIncrease(mCreation));
+						value.getDecreaseButton().setEnabled(aCanDecrease && value.canDecrease(mCreation));
+					}
+				}
+			}
+			else
+			{
+				value.getIncreaseButton().setEnabled(aCanIncrease && value.canIncrease(mCreation));
+				value.getDecreaseButton().setEnabled(aCanDecrease && value.canDecrease(mCreation));
+			}
+		}
+	}
+	
+	@Override
+	public int getValue()
+	{
+		int value = 0;
+		for (final DisciplineItemValue valueItem : mValuesList)
+		{
+			value += valueItem.getValue();
+		}
+		return value;
 	}
 	
 	@Override

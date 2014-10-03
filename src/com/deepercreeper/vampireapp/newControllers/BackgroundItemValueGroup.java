@@ -10,16 +10,25 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 {
 	private boolean												mCreation;
 	
+	private final BackgroundValueController						mController;
+	
 	private final BackgroundItemGroup							mGroup;
 	
-	private final List<BackgroundItemValue>						mValuesList		= new ArrayList<BackgroundItemValue>();
+	private final List<BackgroundItemValue>						mValuesList	= new ArrayList<BackgroundItemValue>();
 	
-	private final HashMap<BackgroundItem, BackgroundItemValue>	mValues	= new HashMap<BackgroundItem, BackgroundItemValue>();
+	private final HashMap<BackgroundItem, BackgroundItemValue>	mValues		= new HashMap<BackgroundItem, BackgroundItemValue>();
 	
-	public BackgroundItemValueGroup(final BackgroundItemGroup aGroup, final boolean aCreation)
+	public BackgroundItemValueGroup(final BackgroundItemGroup aGroup, final BackgroundValueController aController, final boolean aCreation)
 	{
+		mController = aController;
 		mGroup = aGroup;
 		mCreation = aCreation;
+	}
+	
+	@Override
+	public BackgroundValueController getController()
+	{
+		return mController;
 	}
 	
 	@Override
@@ -62,13 +71,34 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 	}
 	
 	@Override
+	public int getValue()
+	{
+		int value = 0;
+		for (final BackgroundItemValue valueItem : mValuesList)
+		{
+			value += valueItem.getValue();
+		}
+		return value;
+	}
+	
+	@Override
+	public void updateValues(final boolean aCanIncrease, final boolean aCanDecrease)
+	{
+		for (final BackgroundItemValue value : mValuesList)
+		{
+			value.getIncreaseButton().setEnabled(aCanIncrease && value.canIncrease(mCreation));
+			value.getDecreaseButton().setEnabled(aCanDecrease && value.canDecrease(mCreation));
+		}
+	}
+	
+	@Override
 	public ItemGroup<BackgroundItem> getGroup()
 	{
 		return mGroup;
 	}
 	
 	@Override
-	public List<BackgroundItemValue> getValues()
+	public List<BackgroundItemValue> getValuesList()
 	{
 		return mValuesList;
 	}

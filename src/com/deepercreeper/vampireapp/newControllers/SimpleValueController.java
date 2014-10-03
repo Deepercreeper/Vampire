@@ -1,7 +1,9 @@
 package com.deepercreeper.vampireapp.newControllers;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import android.content.Context;
 import android.view.View;
@@ -13,19 +15,19 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
-public class SimpleValueController implements ValueController
+public class SimpleValueController implements ValueController<SimpleItem>
 {
 	private boolean										mCreation;
 	
 	private final SimpleController						mController;
 	
-	private final HashMap<String, SimpleItemValueGroup>	mAttributes			= new HashMap<String, SimpleItemValueGroup>();
+	private final HashMap<String, SimpleItemValueGroup>	mAttributes		= new HashMap<String, SimpleItemValueGroup>();
 	
 	private final List<SimpleItemValueGroup>			mAttributesList	= new ArrayList<SimpleItemValueGroup>();
 	
-	private final HashMap<String, SimpleItemValueGroup>	mAbilities			= new HashMap<String, SimpleItemValueGroup>();
+	private final HashMap<String, SimpleItemValueGroup>	mAbilities		= new HashMap<String, SimpleItemValueGroup>();
 	
-	private final List<SimpleItemValueGroup>			mAbilitiesList		= new ArrayList<SimpleItemValueGroup>();
+	private final List<SimpleItemValueGroup>			mAbilitiesList	= new ArrayList<SimpleItemValueGroup>();
 	
 	private final SimpleItemValueGroup					mVirtues;
 	
@@ -35,17 +37,17 @@ public class SimpleValueController implements ValueController
 		mController = aController;
 		for (final SimpleItemGroup group : mController.getAttributes())
 		{
-			final SimpleItemValueGroup valueGroup = new SimpleItemValueGroup(group, mCreation);
+			final SimpleItemValueGroup valueGroup = new SimpleItemValueGroup(group, this, mCreation);
 			mAttributes.put(group.getName(), valueGroup);
 			mAttributesList.add(valueGroup);
 		}
 		for (final SimpleItemGroup group : mController.getAbilities())
 		{
-			final SimpleItemValueGroup valueGroup = new SimpleItemValueGroup(group, mCreation);
+			final SimpleItemValueGroup valueGroup = new SimpleItemValueGroup(group, this, mCreation);
 			mAbilities.put(group.getName(), valueGroup);
 			mAbilitiesList.add(valueGroup);
 		}
-		mVirtues = new SimpleItemValueGroup(mController.getVirtues(), mCreation);
+		mVirtues = new SimpleItemValueGroup(mController.getVirtues(), this, mCreation);
 	}
 	
 	@Override
@@ -193,6 +195,58 @@ public class SimpleValueController implements ValueController
 		
 		aLayout.addView(showVirtues);
 		aLayout.addView(virtues);
+	}
+	
+	@Override
+	public void updateValues()
+	{
+		int[] maxValues;
+		
+		maxValues = mController.getAttributeCreationValues();
+		for (final SimpleItemValueGroup group : mAttributesList)
+		{
+			group.updateValues(canIncrease(group, mAttributesList, maxValues), true);
+		}
+		
+		maxValues = mController.getAbilityCreationValues();
+		for (final SimpleItemValueGroup group : mAbilitiesList)
+		{
+			group.updateValues(canIncrease(group, mAbilitiesList, maxValues), true);
+		}
+		
+		mVirtues.updateValues(mVirtues.getValue() < mController.getVirtueCreationValue(), true);
+	}
+	
+	private boolean canIncrease(final SimpleItemValueGroup aGroup, final List<SimpleItemValueGroup> aGroups, final int[] aMaxValues)
+	{
+		final int value = aGroup.getValue();
+		final HashSet<Integer> values = new HashSet<Integer>();
+		for (final SimpleItemValueGroup group : aGroups)
+		{
+			if (group != aGroup)
+			{
+				values.add(group.getValue());
+			}
+		}
+		
+		boolean maxDone = false, midDone = false;
+		if (Collections.max(values) > aMaxValues[1])
+		{
+			maxDone = true;
+		}
+		if (Collections.min(values) > aMaxValues[0])
+		{
+			midDone = true;
+		}
+		if (value == aMaxValues[0] && midDone)
+		{
+			return false;
+		}
+		if (value == aMaxValues[1] && maxDone)
+		{
+			return false;
+		}
+		return value < aMaxValues[2];
 	}
 	
 	@Override

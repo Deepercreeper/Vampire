@@ -2,13 +2,15 @@ package com.deepercreeper.vampireapp.newControllers;
 
 import android.widget.LinearLayout;
 
-public interface ValueController <T extends Controller>
+public interface ValueController <T extends Item>
 {
 	public void setCreation(boolean aCreation);
 	
 	public boolean isCreation();
 	
-	public T getController();
+	public Controller<T> getController();
+	
+	public void updateValues();
 	
 	/**
 	 * The given layout is a container for a drop down button and a linear layout<br>

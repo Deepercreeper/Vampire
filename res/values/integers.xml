@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="virtue_max_creation_value">7</integer>
+    
+    <integer name="background_max_creation_value">5</integer>
+    
+    <integer name="discipline_max_creation_value">4</integer>
+    
+    <integer-array name="attributes_max_creation_values">
+        <item>6</item>
+        <item>8</item>
+        <item>10</item>
+    </integer-array>
+    
+    <integer-array name="abilities_max_creation_values">
+        <item>5</item>
+        <item>9</item>
+        <item>13</item>
+    </integer-array>
+</resources>

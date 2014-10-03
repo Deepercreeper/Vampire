@@ -10,5 +10,7 @@ public interface Item extends Comparable<Item>
 	
 	public int getMaxValue();
 	
+	public int getMaxStartValue();
+	
 	public ItemValue<? extends Item> createValue();
 }

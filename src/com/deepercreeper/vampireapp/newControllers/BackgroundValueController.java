@@ -10,7 +10,7 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
-public class BackgroundValueController implements ValueController
+public class BackgroundValueController implements ValueController<BackgroundItem>
 {
 	private boolean							mCreation;
 	
@@ -22,7 +22,7 @@ public class BackgroundValueController implements ValueController
 	{
 		mCreation = aCreation;
 		mController = aController;
-		mBackgrounds = new BackgroundItemValueGroup(mController.getBackgrounds(), mCreation);
+		mBackgrounds = new BackgroundItemValueGroup(mController.getBackgrounds(), this, mCreation);
 	}
 	
 	@Override
@@ -30,6 +30,12 @@ public class BackgroundValueController implements ValueController
 	{
 		mCreation = aCreation;
 		mBackgrounds.setCreation(mCreation);
+	}
+	
+	@Override
+	public void updateValues()
+	{
+		mBackgrounds.updateValues(mBackgrounds.getValue() < mController.getMaxCreationValue(), true);
 	}
 	
 	@Override

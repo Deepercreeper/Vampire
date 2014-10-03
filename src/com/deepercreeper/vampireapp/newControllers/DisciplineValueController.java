@@ -10,7 +10,7 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
-public class DisciplineValueController implements ValueController
+public class DisciplineValueController implements ValueController<DisciplineItem>
 {
 	private boolean							mCreation;
 	
@@ -22,7 +22,7 @@ public class DisciplineValueController implements ValueController
 	{
 		mCreation = aCreation;
 		mController = aController;
-		mDisciplines = new DisciplineItemValueGroup(mController.getDisciplines(), mCreation);
+		mDisciplines = new DisciplineItemValueGroup(mController.getDisciplines(), this, mCreation);
 	}
 	
 	@Override
@@ -36,6 +36,12 @@ public class DisciplineValueController implements ValueController
 	public boolean isCreation()
 	{
 		return mCreation;
+	}
+	
+	@Override
+	public void updateValues()
+	{
+		mDisciplines.updateValues(mDisciplines.getValue() < mController.getMaxCreationValue(), true);
 	}
 	
 	@Override

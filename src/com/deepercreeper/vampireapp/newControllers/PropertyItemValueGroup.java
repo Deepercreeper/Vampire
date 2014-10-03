@@ -10,16 +10,59 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 {
 	private boolean											mCreation;
 	
+	private final PropertyValueController					mController;
+	
 	private final PropertyItemGroup							mGroup;
 	
-	private final List<PropertyItemValue>					mValuesList		= new ArrayList<PropertyItemValue>();
+	private final List<PropertyItemValue>					mValuesList	= new ArrayList<PropertyItemValue>();
 	
-	private final HashMap<PropertyItem, PropertyItemValue>	mValues	= new HashMap<PropertyItem, PropertyItemValue>();
+	private final HashMap<PropertyItem, PropertyItemValue>	mValues		= new HashMap<PropertyItem, PropertyItemValue>();
 	
-	public PropertyItemValueGroup(final PropertyItemGroup aGroup, final boolean aCreation)
+	public PropertyItemValueGroup(final PropertyItemGroup aGroup, final PropertyValueController aController, final boolean aCreation)
 	{
+		mController = aController;
 		mGroup = aGroup;
 		mCreation = aCreation;
+	}
+	
+	@Override
+	public PropertyValueController getController()
+	{
+		return mController;
+	}
+	
+	@Override
+	public int getValue()
+	{
+		int value = 0;
+		for (final PropertyItemValue valueItem : mValuesList)
+		{
+			value += valueItem.getFinalValue();
+		}
+		return value;
+	}
+	
+	@Override
+	public void updateValues(final boolean aCanIncrease, final boolean aCanDecrease)
+	{
+		final int value = getValue();
+		for (final PropertyItemValue valueItem : mValuesList)
+		{
+			boolean canIncrease = aCanIncrease && valueItem.canIncrease(mCreation);
+			boolean canDecrease = aCanDecrease && valueItem.canDecrease(mCreation);
+			if (canIncrease)
+			{
+				final int increasedValue = value - valueItem.getFinalValue() + valueItem.getItem().getFinalValue(valueItem.getValueId() + 1);
+				canIncrease = increasedValue <= 0;
+			}
+			if (canDecrease)
+			{
+				final int decreasedValue = value - valueItem.getFinalValue() + valueItem.getItem().getFinalValue(valueItem.getValueId() - 1);
+				canDecrease = decreasedValue <= 0;
+			}
+			valueItem.getIncreaseButton().setEnabled(canIncrease);
+			valueItem.getDecreaseButton().setEnabled(canDecrease);
+		}
 	}
 	
 	@Override
@@ -74,7 +117,7 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 	}
 	
 	@Override
-	public List<PropertyItemValue> getValues()
+	public List<PropertyItemValue> getValuesList()
 	{
 		return mValuesList;
 	}

@@ -6,6 +6,7 @@
         <item>Gesellschaftlich:Charisma,Manipulation,Erscheinungsbild</item>
         <item>Geistig:Wahrnehmung,Intelligenz,Geistesschärfe</item>
     </string-array>
+
     <string-array name="abilities">
         <item>Talente:Aufmerksamkeit,Ausflüchte,Ausweichen,Diebstahl,Einschüchtern,Empathie,Führungsqualitäten,Handgemenge,Schauspielerei,Sportlichkeit</item>
         <item>Fertigkeiten:Bogenschießen,Etikette,Handwerk,Heimlichkeit,Kräuterkunde,Musik,Nahkampf,Reiten,Tierkunde,Überleben</item>

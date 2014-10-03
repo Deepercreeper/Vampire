@@ -10,7 +10,7 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
-public class PropertyValueController implements ValueController
+public class PropertyValueController implements ValueController<PropertyItem>
 {
 	private boolean							mCreation;
 	
@@ -22,7 +22,7 @@ public class PropertyValueController implements ValueController
 	{
 		mCreation = aCreation;
 		mController = aController;
-		mProperties = new PropertyItemValueGroup(mController.getProperties(), mCreation);
+		mProperties = new PropertyItemValueGroup(mController.getProperties(), this, mCreation);
 	}
 	
 	@Override
@@ -91,5 +91,11 @@ public class PropertyValueController implements ValueController
 		
 		aLayout.addView(showProperties);
 		aLayout.addView(properties);
+	}
+	
+	@Override
+	public void updateValues()
+	{
+		mProperties.updateValues(true, true);
 	}
 }

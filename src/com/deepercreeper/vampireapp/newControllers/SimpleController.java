@@ -7,8 +7,14 @@ import java.util.List;
 import android.content.res.Resources;
 import com.deepercreeper.vampireapp.R;
 
-public class SimpleController implements Controller
+public class SimpleController implements Controller<SimpleItem>
 {
+	private final int[]								mAttributeCreationValues;
+	
+	private final int[]								mAbilityCreationValues;
+	
+	private final int								mVirtueCreationValue;
+	
 	private final HashMap<String, SimpleItemGroup>	mAttributes			= new HashMap<String, SimpleItemGroup>();
 	
 	private final List<SimpleItemGroup>				mAttributeGroups	= new ArrayList<SimpleItemGroup>();
@@ -21,21 +27,40 @@ public class SimpleController implements Controller
 	
 	public SimpleController(final Resources aResources)
 	{
+		
+		mAttributeCreationValues = aResources.getIntArray(R.array.attributes_max_creation_values);
+		mAbilityCreationValues = aResources.getIntArray(R.array.abilities_max_creation_values);
+		mVirtueCreationValue = aResources.getInteger(R.integer.virtue_max_creation_value);
 		for (final String attributesGroup : aResources.getStringArray(R.array.attributes))
 		{
-			final SimpleItemGroup group = SimpleItemGroup.create(attributesGroup, 1);
+			final SimpleItemGroup group = SimpleItemGroup.create(attributesGroup, 1, 4);
 			mAttributes.put(group.getName(), group);
 			mAttributeGroups.add(group);
 		}
 		Collections.sort(mAttributeGroups, SimpleItemGroup.getComparator());
 		for (final String abilitiesGroup : aResources.getStringArray(R.array.abilities))
 		{
-			final SimpleItemGroup group = SimpleItemGroup.create(abilitiesGroup, 0);
+			final SimpleItemGroup group = SimpleItemGroup.create(abilitiesGroup, 0, 3);
 			mAbilities.put(group.getName(), group);
 			mAbilityGroups.add(group);
 		}
 		Collections.sort(mAbilityGroups, SimpleItemGroup.getComparator());
-		mVirtues = SimpleItemGroup.create(aResources.getString(R.string.virtues), 1);
+		mVirtues = SimpleItemGroup.create(aResources.getString(R.string.virtues), 1, 4);
+	}
+	
+	public int[] getAttributeCreationValues()
+	{
+		return mAttributeCreationValues;
+	}
+	
+	public int[] getAbilityCreationValues()
+	{
+		return mAbilityCreationValues;
+	}
+	
+	public int getVirtueCreationValue()
+	{
+		return mVirtueCreationValue;
 	}
 	
 	public List<SimpleItemGroup> getAbilities()

@@ -8,13 +8,22 @@ public class SimpleItem implements Item
 	
 	private final int			mStartValue;
 	
+	private final int			mMaxStartValue;
+	
 	private final String		mDescription;
 	
-	public SimpleItem(final String aName, final int aStartValue)
+	public SimpleItem(final String aName, final int aStartValue, final int aMaxStartValue)
 	{
 		mName = aName;
 		mStartValue = aStartValue;
+		mMaxStartValue = aMaxStartValue;
 		mDescription = createDescription();
+	}
+	
+	@Override
+	public int getMaxStartValue()
+	{
+		return mMaxStartValue;
 	}
 	
 	@Override
@@ -59,8 +68,25 @@ public class SimpleItem implements Item
 		return getName().compareTo(aAnother.getName());
 	}
 	
-	public static SimpleItem create(final String aData, final int aStartValue)
+	@Override
+	public int hashCode()
 	{
-		return new SimpleItem(aData, aStartValue);
+		return mName.hashCode();
+	}
+	
+	@Override
+	public boolean equals(final Object aO)
+	{
+		if (aO instanceof SimpleItem)
+		{
+			final SimpleItem item = (SimpleItem) aO;
+			return getName().equals(item.getName());
+		}
+		return false;
+	}
+	
+	public static SimpleItem create(final String aData, final int aStartValue, final int aMaxStartValue)
+	{
+		return new SimpleItem(aData, aStartValue, aMaxStartValue);
 	}
 }

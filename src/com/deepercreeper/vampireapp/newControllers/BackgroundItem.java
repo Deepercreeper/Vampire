@@ -2,13 +2,13 @@ package com.deepercreeper.vampireapp.newControllers;
 
 public class BackgroundItem implements Item
 {
-	private static final int	MAX_VALUE	= 6, START_VALUE = 0;
+	private static final int	MAX_VALUE	= 6, MAX_START_VALUE = 5, START_VALUE = 0;
 	
 	private final String		mName;
 	
 	private final String		mDescription;
 	
-	private BackgroundItem(String aName)
+	private BackgroundItem(final String aName)
 	{
 		mName = aName;
 		mDescription = createDescription();
@@ -33,6 +33,12 @@ public class BackgroundItem implements Item
 	}
 	
 	@Override
+	public int getMaxStartValue()
+	{
+		return MAX_START_VALUE;
+	}
+	
+	@Override
 	public int getMaxValue()
 	{
 		return MAX_VALUE;
@@ -51,12 +57,29 @@ public class BackgroundItem implements Item
 	}
 	
 	@Override
-	public int compareTo(Item aAnother)
+	public int compareTo(final Item aAnother)
 	{
 		return getName().compareTo(aAnother.getName());
 	}
 	
-	public static BackgroundItem create(String aData)
+	@Override
+	public int hashCode()
+	{
+		return mName.hashCode();
+	}
+	
+	@Override
+	public boolean equals(final Object aO)
+	{
+		if (aO instanceof BackgroundItem)
+		{
+			final BackgroundItem item = (BackgroundItem) aO;
+			return getName().equals(item.getName());
+		}
+		return false;
+	}
+	
+	public static BackgroundItem create(final String aData)
 	{
 		return new BackgroundItem(aData);
 	}

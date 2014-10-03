@@ -1,10 +1,15 @@
 package com.deepercreeper.vampireapp.newControllers;
 
 import java.util.Comparator;
+import android.widget.ImageButton;
 
 public class PropertyItemValue implements ItemValue<PropertyItem>
 {
 	private final PropertyItem	mItem;
+	
+	private ImageButton			mIncreaseButton;
+	
+	private ImageButton			mDecreaseButton;
 	
 	private int					mValueId;
 	
@@ -12,6 +17,30 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 	{
 		mItem = aItem;
 		mValueId = aItem.getStartValue();
+	}
+	
+	@Override
+	public ImageButton getDecreaseButton()
+	{
+		return mDecreaseButton;
+	}
+	
+	@Override
+	public ImageButton getIncreaseButton()
+	{
+		return mIncreaseButton;
+	}
+	
+	@Override
+	public void setDecreaseButton(final ImageButton aDecreaseButton)
+	{
+		mDecreaseButton = aDecreaseButton;
+	}
+	
+	@Override
+	public void setIncreaseButton(final ImageButton aIncreaseButton)
+	{
+		mIncreaseButton = aIncreaseButton;
 	}
 	
 	@Override
@@ -23,13 +52,47 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 	@Override
 	public int getValue()
 	{
-		return getItem().getValues()[mValueId];
+		return getItem().getValue(mValueId);
+	}
+	
+	public int getFinalValue()
+	{
+		return getItem().getFinalValue(mValueId);
+	}
+	
+	public int getValueId()
+	{
+		return mValueId;
+	}
+	
+	@Override
+	public boolean canIncrease()
+	{
+		return mValueId < getItem().getMaxValue();
+	}
+	
+	@Override
+	public boolean canDecrease()
+	{
+		return mValueId > getItem().getStartValue();
+	}
+	
+	@Override
+	public boolean canIncrease(final boolean aCreation)
+	{
+		return canIncrease() && ( !aCreation || mValueId < getItem().getMaxStartValue());
+	}
+	
+	@Override
+	public boolean canDecrease(final boolean aCreation)
+	{
+		return canDecrease();
 	}
 	
 	@Override
 	public void increase()
 	{
-		if (mValueId < getItem().getMaxValue())
+		if (canIncrease())
 		{
 			mValueId++ ;
 		}
@@ -38,7 +101,7 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 	@Override
 	public void decrease()
 	{
-		if (mValueId > getItem().getStartValue())
+		if (canDecrease())
 		{
 			mValueId-- ;
 		}
