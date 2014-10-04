@@ -18,6 +18,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.newControllers.SelectItemDialog.SelectionListener;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>, VariableItemValueGroup<BackgroundItem, BackgroundItemValue>
@@ -149,8 +150,6 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 		
 		final LayoutParams wrapHeight = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		final LayoutParams wrapAll = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		final LayoutParams buttonSize = new LayoutParams(ViewUtil.calcPx(30, context), ViewUtil.calcPx(30, context));
-		final LayoutParams valueSize = new LayoutParams(ViewUtil.calcPx(25, context), LayoutParams.WRAP_CONTENT);
 		
 		table.setLayoutParams(wrapHeight);
 		
@@ -159,85 +158,113 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 		{
 			titleRow.addView(new Space(context));
 			
-			final Button title = new Button(context);
-			title.setLayoutParams(wrapAll);
-			title.setText(context.getResources().getString(R.string.add_background));
-			title.setOnClickListener(new OnClickListener()
+			final Button addBackground = new Button(context);
+			addBackground.setLayoutParams(wrapAll);
+			addBackground.setText(context.getResources().getString(R.string.add_background));
+			addBackground.setOnClickListener(new OnClickListener()
 			{
 				@Override
 				public void onClick(final View aV)
 				{
-					// TODO Implement
+					final List<BackgroundItem> items = new ArrayList<BackgroundItem>();
+					items.addAll(mGroup.getItems());
+					for (final BackgroundItemValue value : mValuesList)
+					{
+						items.remove(value.getItem());
+					}
+					
+					final SelectionListener<BackgroundItem> action = new SelectionListener<BackgroundItem>()
+					{
+						@Override
+						public void select(final BackgroundItem aItem)
+						{
+							final BackgroundItemValue value = aItem.createValue();
+							addValue(value);
+							table.addView(createRow(value, context));
+						}
+					};
+					
+					new SelectItemDialog<BackgroundItem>(items, context.getResources().getString(R.string.add_background), context, action);
 				}
 			});
-			titleRow.addView(title);
+			titleRow.addView(addBackground);
 		}
 		table.addView(titleRow);
 		
 		for (final BackgroundItemValue value : mValuesList)
 		{
-			final TableRow valueRow = new TableRow(context);
-			valueRow.setLayoutParams(wrapAll);
-			
-			final TextView valueName = new TextView(context);
-			valueName.setLayoutParams(wrapAll);
-			valueName.setText(value.getItem().getName());
-			valueRow.addView(valueName);
-			
-			final GridLayout spinnerGrid = new GridLayout(context);
-			spinnerGrid.setLayoutParams(wrapAll);
-			{
-				final ImageButton decrease = new ImageButton(context);
-				final ImageButton increase = new ImageButton(context);
-				final RadioButton[] valueDisplay = new RadioButton[value.getItem().getMaxValue()];
-				
-				decrease.setLayoutParams(buttonSize);
-				decrease.setContentDescription("Decrease");
-				decrease.setImageResource(android.R.drawable.ic_media_previous);
-				decrease.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(final View aV)
-					{
-						value.decrease();
-						ViewUtil.applyValue(value.getValue(), valueDisplay);
-						mController.updateValues();
-					}
-				});
-				spinnerGrid.addView(decrease);
-				
-				for (int i = 0; i < valueDisplay.length; i++ )
-				{
-					final RadioButton valuePoint = new RadioButton(context);
-					valuePoint.setLayoutParams(valueSize);
-					valuePoint.setClickable(false);
-					spinnerGrid.addView(valuePoint);
-					valueDisplay[i] = valuePoint;
-				}
-				
-				increase.setLayoutParams(buttonSize);
-				increase.setContentDescription("Increase");
-				increase.setImageResource(android.R.drawable.ic_media_next);
-				increase.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(final View aV)
-					{
-						value.increase();
-						ViewUtil.applyValue(value.getValue(), valueDisplay);
-						mController.updateValues();
-					}
-				});
-				spinnerGrid.addView(increase);
-				
-				value.setIncreaseButton(increase);
-				value.setDecreaseButton(decrease);
-				
-				ViewUtil.applyValue(value.getValue(), valueDisplay);
-				mController.updateValues();
-			}
-			valueRow.addView(spinnerGrid);
-			table.addView(valueRow);
+			table.addView(createRow(value, context));
 		}
+	}
+	
+	private TableRow createRow(final BackgroundItemValue aValue, final Context aContext)
+	{
+		final LayoutParams wrapAll = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		final LayoutParams buttonSize = new LayoutParams(ViewUtil.calcPx(30, aContext), ViewUtil.calcPx(30, aContext));
+		final LayoutParams valueSize = new LayoutParams(ViewUtil.calcPx(25, aContext), LayoutParams.WRAP_CONTENT);
+		
+		final TableRow valueRow = new TableRow(aContext);
+		valueRow.setLayoutParams(wrapAll);
+		
+		final TextView valueName = new TextView(aContext);
+		valueName.setLayoutParams(wrapAll);
+		valueName.setText(aValue.getItem().getName());
+		valueRow.addView(valueName);
+		
+		final GridLayout spinnerGrid = new GridLayout(aContext);
+		spinnerGrid.setLayoutParams(wrapAll);
+		{
+			final ImageButton decrease = new ImageButton(aContext);
+			final ImageButton increase = new ImageButton(aContext);
+			final RadioButton[] valueDisplay = new RadioButton[aValue.getItem().getMaxValue()];
+			
+			decrease.setLayoutParams(buttonSize);
+			decrease.setContentDescription("Decrease");
+			decrease.setImageResource(android.R.drawable.ic_media_previous);
+			decrease.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					aValue.decrease();
+					ViewUtil.applyValue(aValue.getValue(), valueDisplay);
+					mController.updateValues();
+				}
+			});
+			spinnerGrid.addView(decrease);
+			
+			for (int i = 0; i < valueDisplay.length; i++ )
+			{
+				final RadioButton valuePoint = new RadioButton(aContext);
+				valuePoint.setLayoutParams(valueSize);
+				valuePoint.setClickable(false);
+				spinnerGrid.addView(valuePoint);
+				valueDisplay[i] = valuePoint;
+			}
+			
+			increase.setLayoutParams(buttonSize);
+			increase.setContentDescription("Increase");
+			increase.setImageResource(android.R.drawable.ic_media_next);
+			increase.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					aValue.increase();
+					ViewUtil.applyValue(aValue.getValue(), valueDisplay);
+					mController.updateValues();
+				}
+			});
+			spinnerGrid.addView(increase);
+			
+			aValue.setIncreaseButton(increase);
+			aValue.setDecreaseButton(decrease);
+			
+			ViewUtil.applyValue(aValue.getValue(), valueDisplay);
+			mController.updateValues();
+		}
+		valueRow.addView(spinnerGrid);
+		
+		return valueRow;
 	}
 }

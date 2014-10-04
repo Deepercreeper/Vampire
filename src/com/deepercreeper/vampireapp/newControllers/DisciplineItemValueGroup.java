@@ -16,6 +16,8 @@ import android.widget.Space;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.newControllers.SelectItemDialog.SelectionListener;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>, VariableItemValueGroup<DisciplineItem, DisciplineItemValue>
@@ -241,9 +243,6 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	private void addParentDisciplineRows(final DisciplineItemValue aParent, final TableLayout aTable, final Context aContext)
 	{
 		final LayoutParams wrapAll = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		final LayoutParams buttonSize = new LayoutParams(ViewUtil.calcPx(30, aContext), ViewUtil.calcPx(30, aContext));
-		final LayoutParams valueSize = new LayoutParams(ViewUtil.calcPx(25, aContext), LayoutParams.WRAP_CONTENT);
-		final LayoutParams nameSize = new LayoutParams(ViewUtil.calcPx(80, aContext), LayoutParams.WRAP_CONTENT);
 		
 		final TableRow parentRow = new TableRow(aContext);
 		parentRow.setLayoutParams(wrapAll);
@@ -262,90 +261,121 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 			final TableRow subRow = new TableRow(aContext);
 			subRow.setLayoutParams(wrapAll);
 			
-			final TextView number = new TextView(aContext);
-			number.setLayoutParams(wrapAll);
-			number.setText(i + ".");
-			subRow.addView(number);
+			createSubRow(subRow, aContext, aParent.getSubValue(i), aParent, i);
 			
-			final ImageButton edit = new ImageButton(aContext);
-			edit.setLayoutParams(buttonSize);
-			edit.setContentDescription("Edit");
-			edit.setImageResource(android.R.drawable.ic_menu_add);
-			edit.setOnClickListener(new OnClickListener()
-			{
-				@Override
-				public void onClick(final View aV)
-				{
-					// TODO Implement
-				}
-			});
-			subRow.addView(edit);
-			
-			if (aParent.hasSubDiscipline(i))
-			{
-				final DisciplineItemValue subDiscipline = aParent.getSubValue(i);
-				edit.setImageResource(android.R.drawable.ic_menu_edit);
-				
-				final TextView name = new TextView(aContext);
-				name.setLayoutParams(nameSize);
-				name.setText(subDiscipline.getItem().getName());
-				subRow.addView(name);
-				
-				final GridLayout spinnerGrid = new GridLayout(aContext);
-				spinnerGrid.setLayoutParams(wrapAll);
-				{
-					final ImageButton decrease = new ImageButton(aContext);
-					final ImageButton increase = new ImageButton(aContext);
-					final RadioButton[] valueDisplay = new RadioButton[subDiscipline.getItem().getMaxValue()];
-					
-					decrease.setLayoutParams(buttonSize);
-					decrease.setContentDescription("Decrease");
-					decrease.setImageResource(android.R.drawable.ic_media_previous);
-					decrease.setOnClickListener(new OnClickListener()
-					{
-						@Override
-						public void onClick(final View aV)
-						{
-							subDiscipline.decrease();
-							ViewUtil.applyValue(subDiscipline.getValue(), valueDisplay);
-							mController.updateValues();
-						}
-					});
-					spinnerGrid.addView(decrease);
-					
-					for (int j = 0; j < valueDisplay.length; j++ )
-					{
-						final RadioButton valuePoint = new RadioButton(aContext);
-						valuePoint.setLayoutParams(valueSize);
-						valuePoint.setClickable(false);
-						spinnerGrid.addView(valuePoint);
-						valueDisplay[j] = valuePoint;
-					}
-					
-					increase.setLayoutParams(buttonSize);
-					increase.setContentDescription("Increase");
-					increase.setImageResource(android.R.drawable.ic_media_next);
-					increase.setOnClickListener(new OnClickListener()
-					{
-						@Override
-						public void onClick(final View aV)
-						{
-							subDiscipline.increase();
-							ViewUtil.applyValue(subDiscipline.getValue(), valueDisplay);
-							mController.updateValues();
-						}
-					});
-					spinnerGrid.addView(increase);
-					
-					subDiscipline.setIncreaseButton(increase);
-					subDiscipline.setDecreaseButton(decrease);
-					
-					ViewUtil.applyValue(subDiscipline.getValue(), valueDisplay);
-					mController.updateValues();
-				}
-				subRow.addView(spinnerGrid);
-			}
 			aTable.addView(subRow);
+		}
+	}
+	
+	private void createSubRow(final TableRow aRow, final Context aContext, final DisciplineItemValue aValue, final DisciplineItemValue aParent,
+			final int aValueIx)
+	{
+		aRow.removeAllViews();
+		
+		final LayoutParams wrapAll = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		final LayoutParams buttonSize = new LayoutParams(ViewUtil.calcPx(30, aContext), ViewUtil.calcPx(30, aContext));
+		final LayoutParams valueSize = new LayoutParams(ViewUtil.calcPx(25, aContext), LayoutParams.WRAP_CONTENT);
+		final LayoutParams nameSize = new LayoutParams(ViewUtil.calcPx(80, aContext), LayoutParams.WRAP_CONTENT);
+		
+		final TextView number = new TextView(aContext);
+		number.setLayoutParams(wrapAll);
+		number.setText(aValueIx + ".");
+		aRow.addView(number);
+		
+		final ImageButton edit = new ImageButton(aContext);
+		edit.setLayoutParams(buttonSize);
+		edit.setContentDescription("Edit");
+		edit.setImageResource(android.R.drawable.ic_menu_add);
+		edit.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				final List<DisciplineItem> items = new ArrayList<DisciplineItem>();
+				items.addAll(aParent.getItem().getSubItems());
+				for (final DisciplineItemValue value : aParent.getSubValues())
+				{
+					items.remove(value.getItem());
+				}
+				
+				final SelectionListener<DisciplineItem> action = new SelectionListener<DisciplineItem>()
+				{
+					@Override
+					public void select(final DisciplineItem aItem)
+					{
+						final DisciplineItemValue value = aItem.createValue();
+						addValue(value);
+						createSubRow(aRow, aContext, value, aParent, aValueIx);
+					}
+				};
+				
+				new SelectItemDialog<DisciplineItem>(items, aContext.getResources().getString(R.string.add_background), aContext, action);
+			}
+		});
+		aRow.addView(edit);
+		
+		if (aValue != null)
+		{
+			edit.setImageResource(android.R.drawable.ic_menu_edit);
+			
+			final TextView name = new TextView(aContext);
+			name.setLayoutParams(nameSize);
+			name.setText(aValue.getItem().getName());
+			aRow.addView(name);
+			
+			final GridLayout spinnerGrid = new GridLayout(aContext);
+			spinnerGrid.setLayoutParams(wrapAll);
+			{
+				final ImageButton decrease = new ImageButton(aContext);
+				final ImageButton increase = new ImageButton(aContext);
+				final RadioButton[] valueDisplay = new RadioButton[aValue.getItem().getMaxValue()];
+				
+				decrease.setLayoutParams(buttonSize);
+				decrease.setContentDescription("Decrease");
+				decrease.setImageResource(android.R.drawable.ic_media_previous);
+				decrease.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(final View aV)
+					{
+						aValue.decrease();
+						ViewUtil.applyValue(aValue.getValue(), valueDisplay);
+						mController.updateValues();
+					}
+				});
+				spinnerGrid.addView(decrease);
+				
+				for (int j = 0; j < valueDisplay.length; j++ )
+				{
+					final RadioButton valuePoint = new RadioButton(aContext);
+					valuePoint.setLayoutParams(valueSize);
+					valuePoint.setClickable(false);
+					spinnerGrid.addView(valuePoint);
+					valueDisplay[j] = valuePoint;
+				}
+				
+				increase.setLayoutParams(buttonSize);
+				increase.setContentDescription("Increase");
+				increase.setImageResource(android.R.drawable.ic_media_next);
+				increase.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(final View aV)
+					{
+						aValue.increase();
+						ViewUtil.applyValue(aValue.getValue(), valueDisplay);
+						mController.updateValues();
+					}
+				});
+				spinnerGrid.addView(increase);
+				
+				aValue.setIncreaseButton(increase);
+				aValue.setDecreaseButton(decrease);
+				
+				ViewUtil.applyValue(aValue.getValue(), valueDisplay);
+				mController.updateValues();
+			}
+			aRow.addView(spinnerGrid);
 		}
 	}
 }
