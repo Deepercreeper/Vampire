@@ -18,6 +18,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.newControllers.SelectItemDialog.SelectionListener;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, VariableItemValueGroup<PropertyItem, PropertyItemValue>
@@ -172,18 +173,36 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 		{
 			titleRow.addView(new Space(context));
 			
-			final Button title = new Button(context);
-			title.setLayoutParams(wrapAll);
-			title.setText(context.getResources().getString(R.string.add_property));
-			title.setOnClickListener(new OnClickListener()
+			final Button addProperty = new Button(context);
+			addProperty.setLayoutParams(wrapAll);
+			addProperty.setText(context.getResources().getString(R.string.add_property));
+			addProperty.setOnClickListener(new OnClickListener()
 			{
 				@Override
 				public void onClick(final View aV)
 				{
-					// TODO Implement
+					final List<PropertyItem> items = new ArrayList<PropertyItem>();
+					items.addAll(mGroup.getItems());
+					for (final PropertyItemValue value : mValuesList)
+					{
+						items.remove(value.getItem());
+					}
+					
+					final SelectionListener<PropertyItem> action = new SelectionListener<PropertyItem>()
+					{
+						@Override
+						public void select(final PropertyItem aItem)
+						{
+							final PropertyItemValue value = aItem.createValue();
+							addValue(value);
+							table.addView(createRow(value, context));
+						}
+					};
+					
+					new SelectItemDialog<PropertyItem>(items, context.getResources().getString(R.string.add_property), context, action);
 				}
 			});
-			titleRow.addView(title);
+			titleRow.addView(addProperty);
 		}
 		table.addView(titleRow);
 		
@@ -252,5 +271,76 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 			valueRow.addView(spinnerGrid);
 			table.addView(valueRow);
 		}
+	}
+	
+	private TableRow createRow(final PropertyItemValue aValue, final Context aContext)
+	{
+		final LayoutParams wrapAll = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		final LayoutParams buttonSize = new LayoutParams(ViewUtil.calcPx(30, aContext), ViewUtil.calcPx(30, aContext));
+		final LayoutParams valueSize = new LayoutParams(ViewUtil.calcPx(25, aContext), LayoutParams.WRAP_CONTENT);
+		
+		final TableRow valueRow = new TableRow(aContext);
+		valueRow.setLayoutParams(wrapAll);
+		
+		final TextView valueName = new TextView(aContext);
+		valueName.setLayoutParams(wrapAll);
+		valueName.setText(aValue.getItem().getName());
+		valueRow.addView(valueName);
+		
+		final GridLayout spinnerGrid = new GridLayout(aContext);
+		spinnerGrid.setLayoutParams(wrapAll);
+		{
+			final ImageButton decrease = new ImageButton(aContext);
+			final ImageButton increase = new ImageButton(aContext);
+			final RadioButton[] valueDisplay = new RadioButton[aValue.getItem().getMaxValue()];
+			
+			decrease.setLayoutParams(buttonSize);
+			decrease.setContentDescription("Decrease");
+			decrease.setImageResource(android.R.drawable.ic_media_previous);
+			decrease.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					aValue.decrease();
+					ViewUtil.applyValue(aValue.getValue(), valueDisplay);
+					mController.updateValues();
+				}
+			});
+			spinnerGrid.addView(decrease);
+			
+			for (int i = 0; i < valueDisplay.length; i++ )
+			{
+				final RadioButton valuePoint = new RadioButton(aContext);
+				valuePoint.setLayoutParams(valueSize);
+				valuePoint.setClickable(false);
+				spinnerGrid.addView(valuePoint);
+				valueDisplay[i] = valuePoint;
+			}
+			
+			increase.setLayoutParams(buttonSize);
+			increase.setContentDescription("Increase");
+			increase.setImageResource(android.R.drawable.ic_media_next);
+			increase.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					aValue.increase();
+					ViewUtil.applyValue(aValue.getValue(), valueDisplay);
+					mController.updateValues();
+				}
+			});
+			spinnerGrid.addView(increase);
+			
+			aValue.setIncreaseButton(increase);
+			aValue.setDecreaseButton(decrease);
+			
+			ViewUtil.applyValue(aValue.getValue(), valueDisplay);
+			mController.updateValues();
+		}
+		valueRow.addView(spinnerGrid);
+		
+		return valueRow;
 	}
 }

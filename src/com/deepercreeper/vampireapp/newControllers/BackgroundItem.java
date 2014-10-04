@@ -2,7 +2,9 @@ package com.deepercreeper.vampireapp.newControllers;
 
 public class BackgroundItem implements Item
 {
-	private static final int	MAX_VALUE	= 6, MAX_START_VALUE = 5, START_VALUE = 0;
+	private static final int	MAX_VALUE		= 6, MAX_START_VALUE = 5, START_VALUE = 0;
+	
+	public static final int		MAX_BACKGROUNDS	= 5;
 	
 	private final String		mName;
 	

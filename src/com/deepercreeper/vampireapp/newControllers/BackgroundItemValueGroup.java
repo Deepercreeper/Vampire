@@ -161,6 +161,7 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 			final Button addBackground = new Button(context);
 			addBackground.setLayoutParams(wrapAll);
 			addBackground.setText(context.getResources().getString(R.string.add_background));
+			addBackground.setEnabled(mValuesList.size() < BackgroundItem.MAX_BACKGROUNDS);
 			addBackground.setOnClickListener(new OnClickListener()
 			{
 				@Override
@@ -180,6 +181,7 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 						{
 							final BackgroundItemValue value = aItem.createValue();
 							addValue(value);
+							addBackground.setEnabled(mValuesList.size() < BackgroundItem.MAX_BACKGROUNDS);
 							table.addView(createRow(value, context));
 						}
 					};
