@@ -2,7 +2,9 @@ package com.deepercreeper.vampireapp.util;
 
 import android.content.Context;
 import android.util.TypedValue;
-import android.widget.LinearLayout;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.RadioButton;
 
 public class ViewUtil
@@ -12,12 +14,29 @@ public class ViewUtil
 		// Should not be instanced
 	}
 	
-	public static int calcHeight(final LinearLayout aLayout)
+	public static int calcHeight(final ViewGroup aLayout)
 	{
 		int height = 0;
 		for (int i = 0; i < aLayout.getChildCount(); i++ )
 		{
-			height += aLayout.getChildAt(i).getHeight();
+			final View child = aLayout.getChildAt(i);
+			final LayoutParams params = child.getLayoutParams();
+			
+			if (child instanceof ViewGroup)
+			{
+				if (params.height == LayoutParams.WRAP_CONTENT)
+				{
+					height += calcHeight((ViewGroup) child);
+				}
+				else if (params.height >= 0)
+				{
+					height += params.height;
+				}
+			}
+			else if (params.height >= 0)
+			{
+				height += params.height;
+			}
 		}
 		return height;
 	}

@@ -1,29 +1,33 @@
 package com.deepercreeper.vampireapp.newControllers;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
-import android.widget.GridLayout;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.Space;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.ResizeAnimation;
+import com.deepercreeper.vampireapp.newControllers.ItemValue.UpdateAction;
 import com.deepercreeper.vampireapp.newControllers.SelectItemDialog.SelectionListener;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
-public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>, VariableItemValueGroup<BackgroundItem, BackgroundItemValue>
+public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>, VariableValueGroup<BackgroundItem, BackgroundItemValue>
 {
 	private boolean												mCreation;
+	
+	private final Context										mContext;
+	
+	private LinearLayout										mBackgroundsPanel;
+	
+	private TableLayout											mBackgroundsTable;
 	
 	private final BackgroundValueController						mController;
 	
@@ -33,11 +37,23 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 	
 	private final HashMap<BackgroundItem, BackgroundItemValue>	mValues		= new HashMap<BackgroundItem, BackgroundItemValue>();
 	
-	public BackgroundItemValueGroup(final BackgroundItemGroup aGroup, final BackgroundValueController aController, final boolean aCreation)
+	private final UpdateAction									mAction;
+	
+	public BackgroundItemValueGroup(final BackgroundItemGroup aGroup, final BackgroundValueController aController, final Context aContext,
+			final boolean aCreation)
 	{
 		mController = aController;
 		mGroup = aGroup;
+		mContext = aContext;
 		mCreation = aCreation;
+		mAction = new UpdateAction()
+		{
+			@Override
+			public void update()
+			{
+				mController.updateValues();
+			}
+		};
 	}
 	
 	@Override
@@ -46,43 +62,34 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 		return mController;
 	}
 	
-	@Override
-	public void addValue(final BackgroundItemValue aValue)
+	private void addValue(final BackgroundItemValue aValue)
 	{
 		mValuesList.add(aValue);
 		mValues.put(aValue.getItem(), aValue);
-		Collections.sort(mValuesList, BackgroundItemValue.getComparator());
+		if (mBackgroundsTable != null)
+		{
+			mBackgroundsTable.addView(aValue.getContainer());
+		}
 	}
 	
 	@Override
-	public void addValue(final BackgroundItem aItem)
+	public void addItem(final BackgroundItem aItem)
 	{
-		addValue(aItem.createValue());
+		addValue(new BackgroundItemValue(aItem, mContext, mAction));
 	}
 	
 	@Override
-	public void addValue(final String aName)
+	public void resize()
 	{
-		addValue(getGroup().getItem(aName));
+		mBackgroundsPanel
+				.startAnimation(new ResizeAnimation(mBackgroundsPanel, mBackgroundsPanel.getWidth(), ViewUtil.calcHeight(mBackgroundsPanel)));
 	}
 	
 	@Override
-	public void removeValue(final BackgroundItemValue aValue)
+	public void clear()
 	{
-		mValuesList.remove(aValue);
-		mValues.remove(aValue.getItem());
-	}
-	
-	@Override
-	public void removeValue(final BackgroundItem aItem)
-	{
-		removeValue(aItem.createValue());
-	}
-	
-	@Override
-	public void removeValue(final String aName)
-	{
-		removeValue(getGroup().getItem(aName));
+		mValuesList.clear();
+		mValues.clear();
 	}
 	
 	@Override
@@ -101,8 +108,8 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 	{
 		for (final BackgroundItemValue value : mValuesList)
 		{
-			value.getIncreaseButton().setEnabled(aCanIncrease && value.canIncrease(mCreation));
-			value.getDecreaseButton().setEnabled(aCanDecrease && value.canDecrease(mCreation));
+			value.setIncreasable(aCanIncrease && value.canIncrease(mCreation));
+			value.setDecreasable(aCanDecrease && value.canDecrease(mCreation));
 		}
 	}
 	
@@ -143,24 +150,24 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 	}
 	
 	@Override
-	public void initLayout(final LinearLayout aLayout)
+	public void initLayout(final ViewGroup aLayout)
 	{
-		final Context context = aLayout.getContext();
-		final TableLayout table = new TableLayout(context);
+		mBackgroundsPanel = (LinearLayout) aLayout;
+		mBackgroundsTable = new TableLayout(mContext);
 		
 		final LayoutParams wrapHeight = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		final LayoutParams wrapAll = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		
-		table.setLayoutParams(wrapHeight);
+		mBackgroundsTable.setLayoutParams(wrapHeight);
 		
-		final TableRow titleRow = new TableRow(context);
+		final TableRow titleRow = new TableRow(mContext);
 		titleRow.setLayoutParams(wrapAll);
 		{
-			titleRow.addView(new Space(context));
+			titleRow.addView(new Space(mContext));
 			
-			final Button addBackground = new Button(context);
+			final Button addBackground = new Button(mContext);
 			addBackground.setLayoutParams(wrapAll);
-			addBackground.setText(context.getResources().getString(R.string.add_background));
+			addBackground.setText(mContext.getResources().getString(R.string.add_background));
 			addBackground.setEnabled(mValuesList.size() < BackgroundItem.MAX_BACKGROUNDS);
 			addBackground.setOnClickListener(new OnClickListener()
 			{
@@ -179,94 +186,25 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 						@Override
 						public void select(final BackgroundItem aItem)
 						{
-							final BackgroundItemValue value = aItem.createValue();
+							final BackgroundItemValue value = new BackgroundItemValue(aItem, mContext, mAction);
 							addValue(value);
 							addBackground.setEnabled(mValuesList.size() < BackgroundItem.MAX_BACKGROUNDS);
-							table.addView(createRow(value, context));
+							mBackgroundsTable.addView(value.getContainer());
 						}
 					};
 					
-					new SelectItemDialog<BackgroundItem>(items, context.getResources().getString(R.string.add_background), context, action);
+					new SelectItemDialog<BackgroundItem>(items, mContext.getResources().getString(R.string.add_background), mContext, action);
 				}
 			});
 			titleRow.addView(addBackground);
 		}
-		table.addView(titleRow);
+		mBackgroundsTable.addView(titleRow);
 		
 		for (final BackgroundItemValue value : mValuesList)
 		{
-			table.addView(createRow(value, context));
+			mBackgroundsTable.addView(value.getContainer());
 		}
-	}
-	
-	private TableRow createRow(final BackgroundItemValue aValue, final Context aContext)
-	{
-		final LayoutParams wrapAll = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		final LayoutParams buttonSize = new LayoutParams(ViewUtil.calcPx(30, aContext), ViewUtil.calcPx(30, aContext));
-		final LayoutParams valueSize = new LayoutParams(ViewUtil.calcPx(25, aContext), LayoutParams.WRAP_CONTENT);
-		
-		final TableRow valueRow = new TableRow(aContext);
-		valueRow.setLayoutParams(wrapAll);
-		
-		final TextView valueName = new TextView(aContext);
-		valueName.setLayoutParams(wrapAll);
-		valueName.setText(aValue.getItem().getName());
-		valueRow.addView(valueName);
-		
-		final GridLayout spinnerGrid = new GridLayout(aContext);
-		spinnerGrid.setLayoutParams(wrapAll);
-		{
-			final ImageButton decrease = new ImageButton(aContext);
-			final ImageButton increase = new ImageButton(aContext);
-			final RadioButton[] valueDisplay = new RadioButton[aValue.getItem().getMaxValue()];
-			
-			decrease.setLayoutParams(buttonSize);
-			decrease.setContentDescription("Decrease");
-			decrease.setImageResource(android.R.drawable.ic_media_previous);
-			decrease.setOnClickListener(new OnClickListener()
-			{
-				@Override
-				public void onClick(final View aV)
-				{
-					aValue.decrease();
-					ViewUtil.applyValue(aValue.getValue(), valueDisplay);
-					mController.updateValues();
-				}
-			});
-			spinnerGrid.addView(decrease);
-			
-			for (int i = 0; i < valueDisplay.length; i++ )
-			{
-				final RadioButton valuePoint = new RadioButton(aContext);
-				valuePoint.setLayoutParams(valueSize);
-				valuePoint.setClickable(false);
-				spinnerGrid.addView(valuePoint);
-				valueDisplay[i] = valuePoint;
-			}
-			
-			increase.setLayoutParams(buttonSize);
-			increase.setContentDescription("Increase");
-			increase.setImageResource(android.R.drawable.ic_media_next);
-			increase.setOnClickListener(new OnClickListener()
-			{
-				@Override
-				public void onClick(final View aV)
-				{
-					aValue.increase();
-					ViewUtil.applyValue(aValue.getValue(), valueDisplay);
-					mController.updateValues();
-				}
-			});
-			spinnerGrid.addView(increase);
-			
-			aValue.setIncreaseButton(increase);
-			aValue.setDecreaseButton(decrease);
-			
-			ViewUtil.applyValue(aValue.getValue(), valueDisplay);
-			mController.updateValues();
-		}
-		valueRow.addView(spinnerGrid);
-		
-		return valueRow;
+		aLayout.addView(mBackgroundsTable);
+		mController.updateValues();
 	}
 }

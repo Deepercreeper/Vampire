@@ -10,19 +10,64 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
-public class PropertyValueController implements ValueController<PropertyItem>
+public class PropertyValueController implements ValueController<PropertyItem>, VariableValueGroup<PropertyItem, PropertyItemValue>
 {
 	private boolean							mCreation;
+	
+	private final Context					mContext;
+	
+	private Button							mShowPanel;
+	
+	private boolean							mPropertiesOpen	= false;
 	
 	private final PropertyController		mController;
 	
 	private final PropertyItemValueGroup	mProperties;
 	
-	public PropertyValueController(final PropertyController aController, final boolean aCreation)
+	public PropertyValueController(final PropertyController aController, final Context aContext, final boolean aCreation)
 	{
 		mCreation = aCreation;
 		mController = aController;
-		mProperties = new PropertyItemValueGroup(mController.getProperties(), this, mCreation);
+		mContext = aContext;
+		mProperties = new PropertyItemValueGroup(mController.getProperties(), this, mContext, mCreation);
+	}
+	
+	@Override
+	public void addItem(final PropertyItem aItem)
+	{
+		mProperties.addItem(aItem);
+		resize();
+	}
+	
+	@Override
+	public void resize()
+	{
+		mProperties.resize();
+	}
+	
+	@Override
+	public void close()
+	{
+		if (mPropertiesOpen)
+		{
+			mShowPanel.callOnClick();
+		}
+	}
+	
+	@Override
+	public void clear()
+	{
+		mProperties.clear();
+		close();
+	}
+	
+	@Override
+	public void setEnabled(final boolean aEnabled)
+	{
+		if (mShowPanel != null)
+		{
+			mShowPanel.setEnabled(aEnabled);
+		}
 	}
 	
 	@Override
@@ -53,43 +98,39 @@ public class PropertyValueController implements ValueController<PropertyItem>
 		final LayoutParams wrapHeight = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		final LayoutParams zeroHeight = new LayoutParams(LayoutParams.MATCH_PARENT, 0);
 		
-		aLayout.setLayoutParams(wrapHeight);
-		
-		final Button showProperties = new Button(context);
+		mShowPanel = new Button(context);
 		final LinearLayout properties = new LinearLayout(context);
 		properties.setLayoutParams(zeroHeight);
 		
-		showProperties.setLayoutParams(wrapHeight);
-		showProperties.setText(R.string.properties);
-		showProperties.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
-		showProperties.setOnClickListener(new OnClickListener()
+		mShowPanel.setLayoutParams(wrapHeight);
+		mShowPanel.setText(R.string.properties);
+		mShowPanel.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
+		mShowPanel.setOnClickListener(new OnClickListener()
 		{
-			private boolean			mOpen			= false;
-			
 			private final boolean	mInitialized	= false;
 			
 			@Override
 			public void onClick(final View aArg0)
 			{
-				mOpen = !mOpen;
-				if (mOpen)
+				mPropertiesOpen = !mPropertiesOpen;
+				if (mPropertiesOpen)
 				{
 					if ( !mInitialized)
 					{
 						mProperties.initLayout(properties);
 					}
 					properties.startAnimation(new ResizeAnimation(properties, properties.getWidth(), ViewUtil.calcHeight(properties)));
-					showProperties.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
+					mShowPanel.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
 				}
 				else
 				{
 					properties.startAnimation(new ResizeAnimation(properties, properties.getWidth(), 0));
-					showProperties.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
+					mShowPanel.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
 				}
 			}
 		});
 		
-		aLayout.addView(showProperties);
+		aLayout.addView(mShowPanel);
 		aLayout.addView(properties);
 	}
 	

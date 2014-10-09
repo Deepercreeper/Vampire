@@ -12,7 +12,7 @@ public class SimpleItem implements Item
 	
 	private final String		mDescription;
 	
-	public SimpleItem(final String aName, final int aStartValue, final int aMaxStartValue)
+	private SimpleItem(final String aName, final int aStartValue, final int aMaxStartValue)
 	{
 		mName = aName;
 		mStartValue = aStartValue;
@@ -42,12 +42,6 @@ public class SimpleItem implements Item
 	{
 		// TODO Implement
 		return mName;
-	}
-	
-	@Override
-	public SimpleItemValue createValue()
-	{
-		return new SimpleItemValue(this);
 	}
 	
 	@Override

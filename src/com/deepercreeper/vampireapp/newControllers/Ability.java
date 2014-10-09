@@ -21,14 +21,14 @@ public class Ability implements Comparable<Ability>
 	
 	private final Set<String>	mCosts			= new HashSet<String>();
 	
-	private Ability(final String aName, int aLevel)
+	private Ability(final String aName, final int aLevel)
 	{
 		mName = aName;
 		mLevel = aLevel;
 	}
 	
 	@Override
-	public int compareTo(Ability aAnother)
+	public int compareTo(final Ability aAnother)
 	{
 		return getName().compareTo(aAnother.getName());
 	}
@@ -68,7 +68,7 @@ public class Ability implements Comparable<Ability>
 		return mVolition;
 	}
 	
-	private void addCost(String aCost, List<Integer> aNumberData)
+	private void addCost(final String aCost, final List<Integer> aNumberData)
 	{
 		if (aCost.equals(VOLITION))
 		{
@@ -113,18 +113,21 @@ public class Ability implements Comparable<Ability>
 		}
 	}
 	
-	public static Ability create(String aData)
+	public static Ability create(final String aData)
 	{
-		String[] data = aData.split(NAME_DELIM);
-		Ability ability = new Ability(data[0], Integer.parseInt(data[1]));
-		List<Integer> numberData = new ArrayList<Integer>();
-		for (int i = 3; i < data.length; i++ )
+		final String[] data = aData.split(NAME_DELIM);
+		final Ability ability = new Ability(data[0], Integer.parseInt(data[1]));
+		if (data.length > 2)
 		{
-			numberData.add(Integer.parseInt(data[i]));
-		}
-		for (String cost : data[2].split(COST_DELIM))
-		{
-			ability.addCost(cost, numberData);
+			final List<Integer> numberData = new ArrayList<Integer>();
+			for (int i = 3; i < data.length; i++ )
+			{
+				numberData.add(Integer.parseInt(data[i]));
+			}
+			for (final String cost : data[2].split(COST_DELIM))
+			{
+				ability.addCost(cost, numberData);
+			}
 		}
 		return ability;
 	}

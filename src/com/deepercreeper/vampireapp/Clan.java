@@ -1,21 +1,22 @@
 package com.deepercreeper.vampireapp;
 
 import java.util.HashSet;
+import com.deepercreeper.vampireapp.newControllers.DisciplineItem;
 
 public class Clan
 {
-	public static final String			CLAN_DISCIPLIN_DELIM	= ",";
+	public static final String				CLAN_DISCIPLIN_DELIM	= ",";
 	
-	private final String				mName;
+	private final String					mName;
 	
-	private final HashSet<Discipline>	mDisciplines			= new HashSet<Discipline>();
+	private final HashSet<DisciplineItem>	mDisciplines			= new HashSet<DisciplineItem>();
 	
 	public Clan(final String aName)
 	{
 		mName = aName;
 	}
 	
-	public void addDisciplines(final Discipline aDisciplines)
+	public void addDisciplines(final DisciplineItem aDisciplines)
 	{
 		mDisciplines.add(aDisciplines);
 	}
@@ -25,7 +26,7 @@ public class Clan
 		return mName;
 	}
 	
-	public HashSet<Discipline> getDisciplines()
+	public HashSet<DisciplineItem> getDisciplines()
 	{
 		return mDisciplines;
 	}
@@ -41,7 +42,7 @@ public class Clan
 		{
 			descr.append(mName + ": ");
 			boolean first = true;
-			for (final Discipline discipline : getDisciplines())
+			for (final DisciplineItem discipline : getDisciplines())
 			{
 				if (first)
 				{

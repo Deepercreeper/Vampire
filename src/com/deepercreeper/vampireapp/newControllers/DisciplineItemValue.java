@@ -3,77 +3,266 @@ package com.deepercreeper.vampireapp.newControllers;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import android.content.Context;
+import android.text.TextUtils.TruncateAt;
+import android.view.Gravity;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.GridLayout;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.Space;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
+import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.newControllers.SelectItemDialog.SelectionListener;
+import com.deepercreeper.vampireapp.util.ViewUtil;
 
 public class DisciplineItemValue implements ItemValue<DisciplineItem>
 {
-	private final DisciplineItem			mItem;
+	private final DisciplineItem				mItem;
 	
-	private int								mValue;
+	private int									mValue;
 	
-	private ImageButton						mIncreaseButton;
+	private final Context						mContext;
 	
-	private ImageButton						mDecreaseButton;
+	private final TableRow						mContainer;
 	
-	private DisciplineItemValue				mParentValue;
+	private ImageButton							mIncreaseButton;
 	
-	private final List<DisciplineItemValue>	mSubValues	= new ArrayList<DisciplineItemValue>();
+	private ImageButton							mDecreaseButton;
 	
-	public DisciplineItemValue(final DisciplineItem aItem)
+	private final UpdateAction					mAction;
+	
+	private final List<SubDisciplineItemValue>	mSubValues	= new ArrayList<SubDisciplineItemValue>();
+	
+	public DisciplineItemValue(final DisciplineItem aItem, final Context aContext, final UpdateAction aAction)
 	{
 		mItem = aItem;
+		mContext = aContext;
+		mAction = aAction;
+		mContainer = new TableRow(mContext);
+		mIncreaseButton = new ImageButton(mContext);
+		mDecreaseButton = new ImageButton(mContext);
 		mValue = mItem.getStartValue();
+		init();
 	}
 	
-	public void setParentValue(final DisciplineItemValue aParentValue)
+	protected void init()
 	{
-		mParentValue = aParentValue;
+		if (mItem.isParentItem())
+		{
+			initParentDiscipline();
+		}
+		else
+		{
+			initDiscipline();
+		}
 	}
 	
-	public DisciplineItemValue getParentValue()
+	private void initParentDiscipline()
 	{
-		return mParentValue;
+		final LayoutParams wrapTableAll = new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		final LayoutParams wrapAll = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		final LayoutParams wrapHeight = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		
+		mContainer.setLayoutParams(wrapTableAll);
+		
+		final TableLayout table = new TableLayout(mContext);
+		table.setLayoutParams(wrapHeight);
+		
+		final TableRow parentRow = new TableRow(mContext);
+		parentRow.setLayoutParams(wrapAll);
+		{
+			parentRow.addView(new Space(mContext));
+			
+			final TextView parentName = new TextView(mContext);
+			parentName.setLayoutParams(wrapAll);
+			parentName.setText(getItem().getName() + ":");
+			parentRow.addView(parentName);
+		}
+		table.addView(parentRow);
+		
+		for (int i = 0; i < DisciplineItem.MAX_SUB_DISCIPLINES; i++ )
+		{
+			table.addView(createSubDisciplineRow(i));
+		}
+		
+		mContainer.addView(table);
 	}
 	
-	@Override
-	public ImageButton getDecreaseButton()
+	protected void setIncreaseButton(final ImageButton aIncreaseButton)
 	{
-		return mDecreaseButton;
+		mIncreaseButton = aIncreaseButton;
 	}
 	
-	@Override
-	public ImageButton getIncreaseButton()
-	{
-		return mIncreaseButton;
-	}
-	
-	@Override
-	public void setDecreaseButton(final ImageButton aDecreaseButton)
+	protected void setDecreaseButton(final ImageButton aDecreaseButton)
 	{
 		mDecreaseButton = aDecreaseButton;
 	}
 	
-	@Override
-	public void setIncreaseButton(final ImageButton aIncreaseButton)
+	private void initDiscipline()
 	{
-		mIncreaseButton = aIncreaseButton;
+		final LayoutParams wrapTableAll = new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		final LayoutParams wrapRowAll = new TableRow.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		final LayoutParams nameSize = new TableRow.LayoutParams(ViewUtil.calcPx(120, mContext), LayoutParams.MATCH_PARENT);
+		final LayoutParams buttonSize = new LayoutParams(ViewUtil.calcPx(30, mContext), ViewUtil.calcPx(30, mContext));
+		final LayoutParams valueSize = new LayoutParams(ViewUtil.calcPx(25, mContext), LayoutParams.WRAP_CONTENT);
+		
+		mContainer.setLayoutParams(wrapTableAll);
+		
+		final TextView valueName = new TextView(mContext);
+		valueName.setLayoutParams(nameSize);
+		valueName.setGravity(Gravity.CENTER_VERTICAL);
+		valueName.setSingleLine();
+		valueName.setEllipsize(TruncateAt.END);
+		valueName.setText(getItem().getName());
+		mContainer.addView(valueName);
+		
+		final GridLayout spinnerGrid = new GridLayout(mContext);
+		spinnerGrid.setLayoutParams(wrapRowAll);
+		{
+			final ImageButton decrease = new ImageButton(mContext);
+			final ImageButton increase = new ImageButton(mContext);
+			final RadioButton[] valueDisplay = new RadioButton[getItem().getMaxValue()];
+			
+			decrease.setLayoutParams(buttonSize);
+			decrease.setContentDescription("Decrease");
+			decrease.setImageResource(android.R.drawable.ic_media_previous);
+			decrease.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					decrease();
+					ViewUtil.applyValue(getValue(), valueDisplay);
+					mAction.update();
+				}
+			});
+			spinnerGrid.addView(decrease);
+			
+			for (int i = 0; i < valueDisplay.length; i++ )
+			{
+				final RadioButton valuePoint = new RadioButton(mContext);
+				valuePoint.setLayoutParams(valueSize);
+				valuePoint.setClickable(false);
+				spinnerGrid.addView(valuePoint);
+				valueDisplay[i] = valuePoint;
+			}
+			
+			increase.setLayoutParams(buttonSize);
+			increase.setContentDescription("Increase");
+			increase.setImageResource(android.R.drawable.ic_media_next);
+			increase.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					increase();
+					ViewUtil.applyValue(getValue(), valueDisplay);
+					mAction.update();
+				}
+			});
+			spinnerGrid.addView(increase);
+			
+			ViewUtil.applyValue(getValue(), valueDisplay);
+		}
+		mContainer.addView(spinnerGrid);
+	}
+	
+	private TableRow createSubDisciplineRow(final int aValueIx)
+	{
+		final LayoutParams wrapAll = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		final LayoutParams buttonSize = new LayoutParams(ViewUtil.calcPx(30, mContext), ViewUtil.calcPx(30, mContext));
+		
+		final TableRow subRow = new TableRow(mContext);
+		subRow.setLayoutParams(wrapAll);
+		
+		final TextView number = new TextView(mContext);
+		number.setLayoutParams(wrapAll);
+		number.setText(aValueIx + ".");
+		subRow.addView(number);
+		
+		final ImageButton edit = new ImageButton(mContext);
+		edit.setLayoutParams(buttonSize);
+		edit.setContentDescription("Edit");
+		edit.setImageResource(android.R.drawable.ic_menu_add);
+		edit.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				final List<SubDisciplineItem> items = new ArrayList<SubDisciplineItem>();
+				items.addAll(getItem().getSubItems());
+				for (final SubDisciplineItemValue value : getSubValues())
+				{
+					items.remove(value.getItem());
+				}
+				
+				final SelectionListener<SubDisciplineItem> action = new SelectionListener<SubDisciplineItem>()
+				{
+					@Override
+					public void select(final SubDisciplineItem aItem)
+					{
+						final SubDisciplineItemValue value = new SubDisciplineItemValue(aItem, mContext, mAction);
+						setSubValue(aValueIx, value);
+						value.initRow(subRow, aValueIx);
+					}
+				};
+				
+				new SelectItemDialog<SubDisciplineItem>(items, mContext.getResources().getString(R.string.edit_discipline), mContext, action);
+			}
+		});
+		subRow.addView(edit);
+		return subRow;
+	}
+	
+	protected UpdateAction getAction()
+	{
+		return mAction;
+	}
+	
+	public int getSubValueIndex(final SubDisciplineItemValue aSubValue)
+	{
+		for (int i = 0; i < mSubValues.size(); i++ )
+		{
+			if (aSubValue.equals(mSubValues.get(i)))
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	@Override
+	public TableRow getContainer()
+	{
+		return mContainer;
+	}
+	
+	protected Context getContext()
+	{
+		return mContext;
+	}
+	
+	@Override
+	public void setDecreasable(final boolean aEnabled)
+	{
+		mDecreaseButton.setEnabled(aEnabled);
+	}
+	
+	@Override
+	public void setIncreasable(final boolean aEnabled)
+	{
+		mIncreaseButton.setEnabled(aEnabled);
 	}
 	
 	@Override
 	public boolean canIncrease(final boolean aCreation)
 	{
 		// TODO Move into DisciplineItemValueGroup.updateValues()
-		
-		if (mItem.isSubItem())
-		{
-			final DisciplineItemValue parentValue = getParentValue();
-			final boolean firstSubItem = parentValue.hasSubDiscipline(0) && mItem.equals(parentValue.getSubValue(0).getItem());
-			if (firstSubItem || parentValue.getSubValue(0).getValue() >= DisciplineItem.MIN_FIRST_SUB_VALUE)
-			{
-				return true;
-			}
-			return false;
-		}
 		return canIncrease() && ( !aCreation || mValue < getItem().getMaxStartValue());
 	}
 	
@@ -81,29 +270,6 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 	public boolean canDecrease(final boolean aCreation)
 	{
 		// TODO Move into DisciplineItemValueGroup.updateValues()
-		
-		if (mItem.isSubItem())
-		{
-			final DisciplineItemValue parentValue = getParentValue();
-			final boolean firstSubItem = parentValue.hasSubDiscipline(0) && mItem.equals(parentValue.getSubValue(0).getItem());
-			if (firstSubItem)
-			{
-				if (mValue == DisciplineItem.MIN_FIRST_SUB_VALUE)
-				{
-					for (int i = 1; i < DisciplineItem.MAX_SUB_DISCIPLINES; i++ )
-					{
-						if (parentValue.hasSubDiscipline(i))
-						{
-							if (parentValue.getSubValue(i).getValue() > 0)
-							{
-								return false;
-							}
-						}
-					}
-				}
-			}
-			return true;
-		}
 		return canDecrease();
 	}
 	
@@ -119,7 +285,7 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 		return mValue > getItem().getStartValue();
 	}
 	
-	public DisciplineItemValue getSubValue(final int aPos)
+	public SubDisciplineItemValue getSubValue(final int aPos)
 	{
 		if (aPos >= mSubValues.size())
 		{
@@ -128,10 +294,10 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 		return mSubValues.get(aPos);
 	}
 	
-	public void setSubValue(final int aPos, final DisciplineItemValue aSubValue)
+	public void setSubValue(final int aPos, final SubDisciplineItemValue aSubValue)
 	{
 		mSubValues.add(aPos, aSubValue);
-		aSubValue.setParentValue(this);
+		aSubValue.setParent(this);
 	}
 	
 	public boolean hasSubDiscipline(final int aPos)
@@ -145,7 +311,7 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 		return mItem;
 	}
 	
-	public List<DisciplineItemValue> getSubValues()
+	public List<SubDisciplineItemValue> getSubValues()
 	{
 		return mSubValues;
 	}

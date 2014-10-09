@@ -54,12 +54,6 @@ public class PropertyItem implements Item
 	}
 	
 	@Override
-	public PropertyItemValue createValue()
-	{
-		return new PropertyItemValue(this);
-	}
-	
-	@Override
 	public int compareTo(final Item aAnother)
 	{
 		return getName().compareTo(aAnother.getName());

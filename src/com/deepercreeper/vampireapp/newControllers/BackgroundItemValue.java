@@ -1,46 +1,124 @@
 package com.deepercreeper.vampireapp.newControllers;
 
 import java.util.Comparator;
+import android.content.Context;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.GridLayout;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.TableRow;
+import android.widget.TextView;
+import com.deepercreeper.vampireapp.util.ViewUtil;
 
 public class BackgroundItemValue implements ItemValue<BackgroundItem>
 {
 	private final BackgroundItem	mItem;
 	
-	private ImageButton				mIncreaseButton;
+	private final Context			mContext;
 	
-	private ImageButton				mDecreaseButton;
+	private final ImageButton		mIncreaseButton;
+	
+	private final ImageButton		mDecreaseButton;
+	
+	private final TableRow			mContainer;
+	
+	private final UpdateAction		mAction;
 	
 	private int						mValue;
 	
-	public BackgroundItemValue(final BackgroundItem aItem)
+	public BackgroundItemValue(final BackgroundItem aItem, final Context aContext, final UpdateAction aAction)
 	{
+		mIncreaseButton = new ImageButton(aContext);
+		mDecreaseButton = new ImageButton(aContext);
+		mContainer = new TableRow(aContext);
 		mItem = aItem;
+		mContext = aContext;
+		mAction = aAction;
 		mValue = mItem.getStartValue();
+		init();
+	}
+	
+	private void init()
+	{
+		final LayoutParams wrapAll = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		final LayoutParams nameSize = new TableRow.LayoutParams(ViewUtil.calcPx(120, mContext), LayoutParams.WRAP_CONTENT);
+		final LayoutParams buttonSize = new LayoutParams(ViewUtil.calcPx(30, mContext), ViewUtil.calcPx(30, mContext));
+		final LayoutParams valueSize = new LayoutParams(ViewUtil.calcPx(25, mContext), LayoutParams.WRAP_CONTENT);
+		
+		mContainer.setLayoutParams(wrapAll);
+		
+		final TextView valueName = new TextView(mContext);
+		valueName.setLayoutParams(nameSize);
+		valueName.setText(mItem.getName());
+		mContainer.addView(valueName);
+		
+		final GridLayout spinnerGrid = new GridLayout(mContext);
+		spinnerGrid.setLayoutParams(wrapAll);
+		{
+			final RadioButton[] valueDisplay = new RadioButton[mItem.getMaxValue()];
+			
+			mDecreaseButton.setLayoutParams(buttonSize);
+			mDecreaseButton.setContentDescription("Decrease");
+			mDecreaseButton.setImageResource(android.R.drawable.ic_media_previous);
+			mDecreaseButton.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					decrease();
+					ViewUtil.applyValue(getValue(), valueDisplay);
+					mAction.update();
+				}
+			});
+			spinnerGrid.addView(mDecreaseButton);
+			
+			for (int i = 0; i < valueDisplay.length; i++ )
+			{
+				final RadioButton valuePoint = new RadioButton(mContext);
+				valuePoint.setLayoutParams(valueSize);
+				valuePoint.setClickable(false);
+				spinnerGrid.addView(valuePoint);
+				valueDisplay[i] = valuePoint;
+			}
+			
+			mIncreaseButton.setLayoutParams(buttonSize);
+			mIncreaseButton.setContentDescription("Increase");
+			mIncreaseButton.setImageResource(android.R.drawable.ic_media_next);
+			mIncreaseButton.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					increase();
+					ViewUtil.applyValue(getValue(), valueDisplay);
+					mAction.update();
+				}
+			});
+			spinnerGrid.addView(mIncreaseButton);
+			
+			ViewUtil.applyValue(getValue(), valueDisplay);
+		}
+		mContainer.addView(spinnerGrid);
 	}
 	
 	@Override
-	public void setDecreaseButton(final ImageButton aButton)
+	public TableRow getContainer()
 	{
-		mDecreaseButton = aButton;
+		return mContainer;
 	}
 	
 	@Override
-	public void setIncreaseButton(final ImageButton aButton)
+	public void setDecreasable(final boolean aEnabled)
 	{
-		mIncreaseButton = aButton;
+		mDecreaseButton.setEnabled(aEnabled);
 	}
 	
 	@Override
-	public ImageButton getIncreaseButton()
+	public void setIncreasable(final boolean aEnabled)
 	{
-		return mIncreaseButton;
-	}
-	
-	@Override
-	public ImageButton getDecreaseButton()
-	{
-		return mDecreaseButton;
+		mIncreaseButton.setEnabled(aEnabled);
 	}
 	
 	@Override

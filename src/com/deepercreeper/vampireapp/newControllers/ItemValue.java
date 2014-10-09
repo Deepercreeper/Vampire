@@ -1,9 +1,14 @@
 package com.deepercreeper.vampireapp.newControllers;
 
-import android.widget.ImageButton;
+import android.widget.TableRow;
 
 public interface ItemValue <T extends Item>
 {
+	public interface UpdateAction
+	{
+		public void update();
+	}
+	
 	public boolean canDecrease();
 	
 	public boolean canDecrease(boolean aCreation);
@@ -14,17 +19,15 @@ public interface ItemValue <T extends Item>
 	
 	public void decrease();
 	
-	public ImageButton getDecreaseButton();
+	public void setIncreasable(boolean aEnabled);
 	
-	public ImageButton getIncreaseButton();
+	public void setDecreasable(boolean aEnabled);
+	
+	public TableRow getContainer();
 	
 	public T getItem();
 	
 	public int getValue();
 	
 	public void increase();
-	
-	public void setDecreaseButton(ImageButton aDecreaseButton);
-	
-	public void setIncreaseButton(ImageButton aIncreaseButton);
 }

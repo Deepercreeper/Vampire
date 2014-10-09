@@ -4,6 +4,10 @@ import android.widget.LinearLayout;
 
 public interface ValueController <T extends Item>
 {
+	public void setEnabled(boolean aEnabled);
+	
+	public void close();
+	
 	public Controller<T> getController();
 	
 	/**

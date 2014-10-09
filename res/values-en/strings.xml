@@ -17,7 +17,9 @@
     <string name="backgrounds">Backgrounds</string>
     <string name="add_background">Add background</string>
     <string name="edit_background">Edit property</string>
-<string name="properties">Properties</string>
-<string name="add_property">Add property</string>
-<string name="edit_property">Edit property</string>
+    <string name="properties">Properties</string>
+    <string name="add_property">Add property</string>
+    <string name="edit_discipline">Edit discipline</string>
+    <string name="edit_property">Edit property</string>
+
 </resources>

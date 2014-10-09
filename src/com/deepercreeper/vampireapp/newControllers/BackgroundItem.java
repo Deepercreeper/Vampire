@@ -29,12 +29,6 @@ public class BackgroundItem implements Item
 	}
 	
 	@Override
-	public BackgroundItemValue createValue()
-	{
-		return new BackgroundItemValue(this);
-	}
-	
-	@Override
 	public int getMaxStartValue()
 	{
 		return MAX_START_VALUE;

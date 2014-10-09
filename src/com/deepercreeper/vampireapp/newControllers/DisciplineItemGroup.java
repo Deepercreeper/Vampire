@@ -33,13 +33,13 @@ public class DisciplineItemGroup implements ItemGroup<DisciplineItem>
 	
 	private void initParents()
 	{
-		for (DisciplineItem parent : mItems)
+		for (final DisciplineItem parent : mItems)
 		{
 			if (parent.isParentItem())
 			{
-				for (String subItemName : parent.getSubItemNames())
+				for (final String subItemName : parent.getSubItemNames())
 				{
-					DisciplineItem subItem = mItemNames.get(subItemName);
+					final SubDisciplineItem subItem = (SubDisciplineItem) mItemNames.get(subItemName);
 					parent.addSubItem(subItem);
 					subItem.setParent(parent);
 				}
@@ -59,10 +59,10 @@ public class DisciplineItemGroup implements ItemGroup<DisciplineItem>
 		return mName;
 	}
 	
-	public static DisciplineItemGroup create(String aName, String[] aData)
+	public static DisciplineItemGroup create(final String aName, final String[] aData)
 	{
-		DisciplineItemGroup group = new DisciplineItemGroup(aName);
-		for (String discipline : aData)
+		final DisciplineItemGroup group = new DisciplineItemGroup(aName);
+		for (final String discipline : aData)
 		{
 			group.addItem(DisciplineItem.create(discipline));
 		}

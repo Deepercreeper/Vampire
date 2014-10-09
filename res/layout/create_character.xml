@@ -125,114 +125,33 @@
             android:layout_below="@+id/clan_spinner"
             android:layout_toRightOf="@+id/generation_label" />
 
-        <Button
-            android:id="@+id/show_attributes"
-            android:layout_width="fill_parent"
+        <LinearLayout
+            android:id="@+id/simple_items_panel"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/generation_picker"
-            android:drawableEnd="@android:drawable/arrow_down_float"
-            android:text="@string/attributes"
-            android:textSize="14sp" />
-
-        <LinearLayout
-            android:id="@+id/attributes_panel"
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_alignRight="@+id/show_attributes"
-            android:layout_alignLeft="@+id/show_attributes"
-            android:layout_below="@+id/show_attributes"
-            android:orientation="vertical" >
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/show_abilities"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/attributes_panel"
-            android:drawableEnd="@android:drawable/arrow_down_float"
-            android:text="@string/abilities"
-            android:textSize="14sp" />
-
-        <LinearLayout
-            android:id="@+id/abilities_panel"
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_alignRight="@+id/show_abilities"
-            android:layout_alignLeft="@+id/show_abilities"
-            android:layout_below="@+id/show_abilities"
-            android:orientation="vertical" >
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/show_disciplines"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/abilities_panel"
-            android:drawableEnd="@android:drawable/arrow_down_float"
-            android:text="@string/disciplines"
-            android:textSize="14sp" />
+            android:orientation="vertical" />
 
         <LinearLayout
             android:id="@+id/disciplines_panel"
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_alignRight="@+id/show_disciplines"
-            android:layout_alignLeft="@+id/show_disciplines"
-            android:layout_below="@+id/show_disciplines"
-            android:orientation="vertical" >
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/show_backgrounds"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/disciplines_panel"
-            android:drawableEnd="@android:drawable/arrow_down_float"
-            android:text="@string/backgrounds"
-            android:textSize="14sp" />
+            android:layout_below="@+id/simple_items_panel"
+            android:orientation="vertical" />
 
         <LinearLayout
             android:id="@+id/backgrounds_panel"
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_alignRight="@+id/show_backgrounds"
-            android:layout_alignLeft="@+id/show_backgrounds"
-            android:layout_below="@+id/show_backgrounds"
-            android:orientation="vertical" >
-
-            <Button
-                android:id="@+id/add_background"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/add_background" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/show_properties"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/backgrounds_panel"
-            android:drawableEnd="@android:drawable/arrow_down_float"
-            android:text="@string/properties"
-            android:textSize="14sp" />
+            android:layout_below="@+id/disciplines_panel"
+            android:orientation="vertical" />
 
         <LinearLayout
             android:id="@+id/properties_panel"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_alignRight="@+id/show_properties"
-            android:layout_alignLeft="@+id/show_properties"
-            android:layout_below="@id/show_properties"
-            android:orientation="vertical" >
-
-            <Button
-                android:id="@+id/add_property"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/add_property" />
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_below="@id/backgrounds_panel"
+            android:orientation="vertical" />
     </RelativeLayout>
 
 </ScrollView>

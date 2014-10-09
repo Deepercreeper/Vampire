@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string-array name="attributes">
+    <string-array name="attribute_values">
         <item>Körperlich:Körperkraft,Geschick,Widerstandsfähigkeit</item>
         <item>Gesellschaftlich:Charisma,Manipulation,Erscheinungsbild</item>
         <item>Geistig:Wahrnehmung,Intelligenz,Geistesschärfe</item>
     </string-array>
 
-    <string-array name="abilities">
+    <string-array name="ability_values">
         <item>Talente:Aufmerksamkeit,Ausflüchte,Ausweichen,Diebstahl,Einschüchtern,Empathie,Führungsqualitäten,Handgemenge,Schauspielerei,Sportlichkeit</item>
         <item>Fertigkeiten:Bogenschießen,Etikette,Handwerk,Heimlichkeit,Kräuterkunde,Musik,Nahkampf,Reiten,Tierkunde,Überleben</item>
         <item>Kenntnisse:Akademisches Wissen,Folklore,Gesetzeskenntnis,Linguistik,Medizin,Nachforschungen,Naturwissenschaften,Okkultismus,Politik,Verwaltung</item>
@@ -35,6 +35,7 @@
         <item>Verteidiger</item>
         <item>Zelebrant</item>
     </string-array>
+    
     <string-array name="clan">
         <item>Assamiten:Geschwindigkeit,Quietus,Verdunkelung</item>
         <item>Brujah:Geschwindigkeit,Präsenz,Stärke</item>
@@ -51,13 +52,15 @@
         <item>Tzimisce:Auspex,Fleischformen,Tierhaftigkeit</item>
         <item>Ventrue:Beherrschung,Präsenz,Seelenstärke</item>
     </string-array>
+    
     <string-array name="clan_generations">
         <item>Caitiff:13</item>
     </string-array>
+    
     <string-array name="disciplines">
         <item>Auspex:Geschärfte Sinne,1;Seelenschau,2,Wahrnehmung#Empathie;Geistige Berührung,3,Wahrnehmung#Empathie;Geraubte Geheimnisse,4,Intelligenz#Ausflüchte;Animawandeln,5,Wahrnehmung#Okkultismus;Weitsicht,6,Wahrnehmung#Empathie</item>
         <item>Beherrschung:Gehorsam für das gesprochene Wort,1,Manipulation#Einschüchterung;Murmeln des falschen Willens,2,Manipulation#Führungsqualitäten;Die Erinnerung des Zechers,3,Geistesschärfe#Ausflüchte;Verlockung des süßen Flüsterns,4,Charisma#Führungsqualitäten;Gefäß,5,VolitionPoints;Lehnstreue,6,Charisma#Führungsqualitäten</item>
-        <item>Daimonion:Sündengespür,1,Wahrnehmung#Empathie;Furcht vor der Hölle unter uns,2,Geistesschärfe#Einschüchterung;Flammen der Unterwelt,3,Okkultismus#Geschick,BloodPoints,Dices;Psychomachie,4;Fluch,5,Intelligenz#Okkultismus;Ignorieren der sengenden Flammen,6</item>
+        <item>Daimonion:Sündengespür,1,Wahrnehmung#Empathie;Furcht vor der Hölle unter uns,2,Geistesschärfe#Einschüchterung;Flammen der Unterwelt,3,Okkultismus#Geschick#BloodPoints#Dices;Psychomachie,4;Fluch,5,Intelligenz#Okkultismus;Ignorieren der sengenden Flammen,6</item>
         <item>Fleischformen:Formbares Gesicht,1,Intelligenz#Handwerk;Kneten des sterblichen Tons,2,Geschick#Handwerk;Zerreißen des Knochengerüsts,3,Körperkraft#Handwerk;Erwecken der Zulo-Gestalt,4,BloodPoints,2;Emporsteigen der Blutflüssigkeit,5;Raub-Chiropter,6,BloodPoints,3</item>
         <item>Geschwindigkeit:Geschwindigkeit,1,BloodPoints,1</item>
         <item>Gestaltwandel:Zeuge der Dunkelheit,1;Klauen des Tiers,2,BloodPoints,1;Begraben in der Erde,3,BloodPoints,1;Tiergestalt,4,BloodPoints,1;Geisterleib,5,BloodPoints,1;Gesegneter Schlaf,6,BloodPoints,5</item>
@@ -80,6 +83,7 @@
         <item>Tierhaftigkeit:Sprache der Wildnis,1;Sprache der Wildnis Gefallen,1,Manipulation#Tierkunde;Noahs Ruf,2,Charisma#Überleben;Einschüchterung des Tiers,3,Manipulation#Einschüchtern;Ritt auf dem Wilden Geist,4,Charisma#Tierkunde;Austreibung des Tiers,5,Manipulation#Tierkunde;Beschleunigte Einheit,6,Wahrnehmung#Tierkunde</item>
         <item>Verdunkelung:Schattenmantel,1;Unsichtbare Gegenwart,2;Maske der tausend Gesichter,3,Manipulation#Schauspielerei;Verschwinden vor dem geistigen Auge,4,Charisma#Heimlichkeit;Schutzmantel für die Versammelten,5,Heimlichkeit;Seelenmaske,6</item>
     </string-array>
+    
     <string-array name="backgrounds">
         <item>Einfluss</item>
         <item>Gefolgsleute</item>
@@ -91,6 +95,7 @@
         <item>Status</item>
         <item>Verbündete</item>
     </string-array>
+    
     <string-array name="properties">
         <item>Bestimmung:1</item>
         <item>Gesunder Menschenverstand:1</item>
@@ -106,7 +111,7 @@
         <item>Essen:1</item>
         <item>Sprachtalent:2</item>
         <item>Guter Schüler:5</item>
-        <item>Hans Dampf in allen Gassen:5</item>
+        <item>Hansdampf in allen Gassen:5</item>
         <item>Wahre Liebe:1</item>
         <item>Feenzuneigung:2</item>
         <item>Sechster Sinn:2</item>

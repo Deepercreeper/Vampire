@@ -10,19 +10,65 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
-public class DisciplineValueController implements ValueController<DisciplineItem>
+public class DisciplineValueController implements ValueController<DisciplineItem>, VariableValueGroup<DisciplineItem, DisciplineItemValue>
 {
 	private boolean							mCreation;
+	
+	private final Context					mContext;
+	
+	private Button							mShowPanel;
+	
+	private LinearLayout					mDisciplinesPanel;
+	
+	private boolean							mDisciplinesOpen	= false;
 	
 	private final DisciplineController		mController;
 	
 	private final DisciplineItemValueGroup	mDisciplines;
 	
-	public DisciplineValueController(final DisciplineController aController, final boolean aCreation)
+	public DisciplineValueController(final DisciplineController aController, final Context aContext, final boolean aCreation)
 	{
 		mCreation = aCreation;
+		mContext = aContext;
 		mController = aController;
-		mDisciplines = new DisciplineItemValueGroup(mController.getDisciplines(), this, mCreation);
+		mDisciplines = new DisciplineItemValueGroup(mController.getDisciplines(), this, mContext, mCreation);
+	}
+	
+	@Override
+	public void addItem(final DisciplineItem aItem)
+	{
+		mDisciplines.addItem(aItem);
+	}
+	
+	@Override
+	public void close()
+	{
+		if (mDisciplinesOpen)
+		{
+			mShowPanel.callOnClick();
+		}
+	}
+	
+	@Override
+	public void clear()
+	{
+		mDisciplines.clear();
+		close();
+	}
+	
+	@Override
+	public void resize()
+	{
+		mDisciplines.resize();
+	}
+	
+	@Override
+	public void setEnabled(final boolean aEnabled)
+	{
+		if (mShowPanel != null)
+		{
+			mShowPanel.setEnabled(aEnabled);
+		}
 	}
 	
 	@Override
@@ -59,43 +105,40 @@ public class DisciplineValueController implements ValueController<DisciplineItem
 		final LayoutParams wrapHeight = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		final LayoutParams zeroHeight = new LayoutParams(LayoutParams.MATCH_PARENT, 0);
 		
-		aLayout.setLayoutParams(wrapHeight);
+		mShowPanel = new Button(context);
+		mDisciplinesPanel = new LinearLayout(context);
+		mDisciplinesPanel.setLayoutParams(zeroHeight);
 		
-		final Button showDisciplines = new Button(context);
-		final LinearLayout disciplines = new LinearLayout(context);
-		disciplines.setLayoutParams(zeroHeight);
-		
-		showDisciplines.setLayoutParams(wrapHeight);
-		showDisciplines.setText(R.string.disciplines);
-		showDisciplines.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
-		showDisciplines.setOnClickListener(new OnClickListener()
+		mShowPanel.setLayoutParams(wrapHeight);
+		mShowPanel.setText(R.string.disciplines);
+		mShowPanel.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
+		mShowPanel.setOnClickListener(new OnClickListener()
 		{
-			private boolean			mOpen			= false;
-			
 			private final boolean	mInitialized	= false;
 			
 			@Override
 			public void onClick(final View aArg0)
 			{
-				mOpen = !mOpen;
-				if (mOpen)
+				mDisciplinesOpen = !mDisciplinesOpen;
+				if (mDisciplinesOpen)
 				{
 					if ( !mInitialized)
 					{
-						mDisciplines.initLayout(disciplines);
+						mDisciplines.initLayout(mDisciplinesPanel);
 					}
-					disciplines.startAnimation(new ResizeAnimation(disciplines, disciplines.getWidth(), ViewUtil.calcHeight(disciplines)));
-					showDisciplines.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
+					mDisciplinesPanel.startAnimation(new ResizeAnimation(mDisciplinesPanel, mDisciplinesPanel.getWidth(), ViewUtil
+							.calcHeight(mDisciplinesPanel)));
+					mShowPanel.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
 				}
 				else
 				{
-					disciplines.startAnimation(new ResizeAnimation(disciplines, disciplines.getWidth(), 0));
-					showDisciplines.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
+					mDisciplinesPanel.startAnimation(new ResizeAnimation(mDisciplinesPanel, mDisciplinesPanel.getWidth(), 0));
+					mShowPanel.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
 				}
 			}
 		});
 		
-		aLayout.addView(showDisciplines);
-		aLayout.addView(disciplines);
+		aLayout.addView(mShowPanel);
+		aLayout.addView(mDisciplinesPanel);
 	}
 }

@@ -11,6 +11,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.util.ViewUtil;
@@ -19,35 +20,90 @@ public class SimpleValueController implements ValueController<SimpleItem>
 {
 	private boolean										mCreation;
 	
+	private final Context								mContext;
+	
+	private Button										mShowAttributesPanel;
+	
+	private Button										mShowAbilitiesPanel;
+	
+	private Button										mShowVirtuesPanel;
+	
+	private boolean										mAttributesOpen			= false;
+	
+	private boolean										mAbilitiesOpen			= false;
+	
+	private boolean										mVirtuesOpen			= false;
+	
+	private boolean										mInitializedAttributes	= false;
+	
+	private boolean										mInitializedAbilities	= false;
+	
+	private boolean										mInitializedVirtues		= false;
+	
 	private final SimpleController						mController;
 	
-	private final HashMap<String, SimpleItemValueGroup>	mAttributes		= new HashMap<String, SimpleItemValueGroup>();
+	private final HashMap<String, SimpleItemValueGroup>	mAttributes				= new HashMap<String, SimpleItemValueGroup>();
 	
-	private final List<SimpleItemValueGroup>			mAttributesList	= new ArrayList<SimpleItemValueGroup>();
+	private final List<SimpleItemValueGroup>			mAttributesList			= new ArrayList<SimpleItemValueGroup>();
 	
-	private final HashMap<String, SimpleItemValueGroup>	mAbilities		= new HashMap<String, SimpleItemValueGroup>();
+	private final HashMap<String, SimpleItemValueGroup>	mAbilities				= new HashMap<String, SimpleItemValueGroup>();
 	
-	private final List<SimpleItemValueGroup>			mAbilitiesList	= new ArrayList<SimpleItemValueGroup>();
+	private final List<SimpleItemValueGroup>			mAbilitiesList			= new ArrayList<SimpleItemValueGroup>();
 	
 	private final SimpleItemValueGroup					mVirtues;
 	
-	public SimpleValueController(final SimpleController aController, final boolean aCreation)
+	public SimpleValueController(final SimpleController aController, final Context aContext, final boolean aCreation)
 	{
 		mCreation = aCreation;
 		mController = aController;
+		mContext = aContext;
 		for (final SimpleItemGroup group : mController.getAttributes())
 		{
-			final SimpleItemValueGroup valueGroup = new SimpleItemValueGroup(group, this, mCreation);
+			final SimpleItemValueGroup valueGroup = new SimpleItemValueGroup(group, this, mContext, mCreation);
 			mAttributes.put(group.getName(), valueGroup);
 			mAttributesList.add(valueGroup);
 		}
 		for (final SimpleItemGroup group : mController.getAbilities())
 		{
-			final SimpleItemValueGroup valueGroup = new SimpleItemValueGroup(group, this, mCreation);
+			final SimpleItemValueGroup valueGroup = new SimpleItemValueGroup(group, this, mContext, mCreation);
 			mAbilities.put(group.getName(), valueGroup);
 			mAbilitiesList.add(valueGroup);
 		}
-		mVirtues = new SimpleItemValueGroup(mController.getVirtues(), this, mCreation);
+		mVirtues = new SimpleItemValueGroup(mController.getVirtues(), this, mContext, mCreation);
+	}
+	
+	@Override
+	public void close()
+	{
+		if (mAttributesOpen)
+		{
+			mShowAttributesPanel.callOnClick();
+		}
+		if (mAbilitiesOpen)
+		{
+			mShowAbilitiesPanel.callOnClick();
+		}
+		if (mVirtuesOpen)
+		{
+			mShowVirtuesPanel.callOnClick();
+		}
+	}
+	
+	@Override
+	public void setEnabled(final boolean aEnabled)
+	{
+		if (mShowAttributesPanel != null)
+		{
+			mShowAttributesPanel.setEnabled(aEnabled);
+		}
+		if (mShowAbilitiesPanel != null)
+		{
+			mShowAbilitiesPanel.setEnabled(aEnabled);
+		}
+		if (mShowVirtuesPanel != null)
+		{
+			mShowVirtuesPanel.setEnabled(aEnabled);
+		}
 	}
 	
 	@Override
@@ -74,126 +130,118 @@ public class SimpleValueController implements ValueController<SimpleItem>
 		final LayoutParams wrapHeight = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		final LayoutParams zeroHeight = new LayoutParams(LayoutParams.MATCH_PARENT, 0);
 		
-		aLayout.setLayoutParams(wrapHeight);
-		
 		// Attributes
-		final Button showAttributes = new Button(context);
-		final LinearLayout attributes = new LinearLayout(context);
+		mShowAttributesPanel = new Button(context);
+		final TableLayout attributes = new TableLayout(context);
 		attributes.setLayoutParams(zeroHeight);
 		
-		showAttributes.setLayoutParams(wrapHeight);
-		showAttributes.setText(R.string.attributes);
-		showAttributes.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
-		showAttributes.setOnClickListener(new OnClickListener()
+		mShowAttributesPanel.setLayoutParams(wrapHeight);
+		mShowAttributesPanel.setText(R.string.attributes);
+		mShowAttributesPanel.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
+		mShowAttributesPanel.setOnClickListener(new OnClickListener()
 		{
-			private boolean			mOpen			= false;
-			
-			private final boolean	mInitialized	= false;
-			
 			@Override
 			public void onClick(final View aArg0)
 			{
-				mOpen = !mOpen;
-				if (mOpen)
+				mAttributesOpen = !mAttributesOpen;
+				if (mAttributesOpen)
 				{
-					if ( !mInitialized)
+					if ( !mInitializedAttributes)
 					{
 						for (final SimpleItemValueGroup valueGroup : mAttributesList)
 						{
 							valueGroup.initLayout(attributes);
 						}
+						mInitializedAttributes = true;
+						updateValues();
 					}
 					attributes.startAnimation(new ResizeAnimation(attributes, attributes.getWidth(), ViewUtil.calcHeight(attributes)));
-					showAttributes.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
+					mShowAttributesPanel.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
 				}
 				else
 				{
 					attributes.startAnimation(new ResizeAnimation(attributes, attributes.getWidth(), 0));
-					showAttributes.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
+					mShowAttributesPanel.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
 				}
 			}
 		});
 		
-		aLayout.addView(showAttributes);
+		aLayout.addView(mShowAttributesPanel);
 		aLayout.addView(attributes);
 		
 		// Abilities
-		final Button showAbilities = new Button(context);
-		final LinearLayout abilities = new LinearLayout(context);
+		mShowAbilitiesPanel = new Button(context);
+		final TableLayout abilities = new TableLayout(context);
 		abilities.setLayoutParams(zeroHeight);
 		
-		showAbilities.setLayoutParams(wrapHeight);
-		showAbilities.setText(R.string.abilities);
-		showAbilities.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
-		showAbilities.setOnClickListener(new OnClickListener()
+		mShowAbilitiesPanel.setLayoutParams(wrapHeight);
+		mShowAbilitiesPanel.setText(R.string.abilities);
+		mShowAbilitiesPanel.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
+		mShowAbilitiesPanel.setOnClickListener(new OnClickListener()
 		{
-			private boolean			mOpen			= false;
-			
-			private final boolean	mInitialized	= false;
-			
 			@Override
 			public void onClick(final View aArg0)
 			{
-				mOpen = !mOpen;
-				if (mOpen)
+				mAbilitiesOpen = !mAbilitiesOpen;
+				if (mAbilitiesOpen)
 				{
-					if ( !mInitialized)
+					if ( !mInitializedAbilities)
 					{
 						for (final SimpleItemValueGroup valueGroup : mAbilitiesList)
 						{
 							valueGroup.initLayout(abilities);
 						}
+						mInitializedAbilities = true;
+						updateValues();
 					}
 					abilities.startAnimation(new ResizeAnimation(abilities, abilities.getWidth(), ViewUtil.calcHeight(abilities)));
-					showAbilities.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
+					mShowAbilitiesPanel.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
 				}
 				else
 				{
 					abilities.startAnimation(new ResizeAnimation(abilities, abilities.getWidth(), 0));
-					showAbilities.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
+					mShowAbilitiesPanel.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
 				}
 			}
 		});
 		
-		aLayout.addView(showAbilities);
+		aLayout.addView(mShowAbilitiesPanel);
 		aLayout.addView(abilities);
 		
 		// Virtues
-		final Button showVirtues = new Button(context);
-		final LinearLayout virtues = new LinearLayout(context);
+		mShowVirtuesPanel = new Button(context);
+		final TableLayout virtues = new TableLayout(context);
 		virtues.setLayoutParams(zeroHeight);
 		
-		showVirtues.setLayoutParams(wrapHeight);
-		showVirtues.setText(R.string.virtues);
-		showVirtues.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
-		showVirtues.setOnClickListener(new OnClickListener()
+		mShowVirtuesPanel.setLayoutParams(wrapHeight);
+		mShowVirtuesPanel.setText(R.string.virtues);
+		mShowVirtuesPanel.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
+		mShowVirtuesPanel.setOnClickListener(new OnClickListener()
 		{
-			private boolean			mOpen			= false;
-			
-			private final boolean	mInitialized	= false;
-			
 			@Override
 			public void onClick(final View aArg0)
 			{
-				mOpen = !mOpen;
-				if (mOpen)
+				mVirtuesOpen = !mVirtuesOpen;
+				if (mVirtuesOpen)
 				{
-					if ( !mInitialized)
+					if ( !mInitializedVirtues)
 					{
 						mVirtues.initLayout(virtues);
+						mInitializedVirtues = true;
+						updateValues();
 					}
 					virtues.startAnimation(new ResizeAnimation(virtues, virtues.getWidth(), ViewUtil.calcHeight(virtues)));
-					showVirtues.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
+					mShowVirtuesPanel.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
 				}
 				else
 				{
 					virtues.startAnimation(new ResizeAnimation(virtues, virtues.getWidth(), 0));
-					showVirtues.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
+					mShowVirtuesPanel.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
 				}
 			}
 		});
 		
-		aLayout.addView(showVirtues);
+		aLayout.addView(mShowVirtuesPanel);
 		aLayout.addView(virtues);
 	}
 	
@@ -202,19 +250,28 @@ public class SimpleValueController implements ValueController<SimpleItem>
 	{
 		int[] maxValues;
 		
-		maxValues = mController.getAttributeCreationValues();
-		for (final SimpleItemValueGroup group : mAttributesList)
+		if (mInitializedAttributes)
 		{
-			group.updateValues(canIncrease(group, mAttributesList, maxValues), true);
+			maxValues = mController.getAttributeCreationValues();
+			for (final SimpleItemValueGroup group : mAttributesList)
+			{
+				group.updateValues(canIncrease(group, mAttributesList, maxValues), true);
+			}
 		}
 		
-		maxValues = mController.getAbilityCreationValues();
-		for (final SimpleItemValueGroup group : mAbilitiesList)
+		if (mInitializedAbilities)
 		{
-			group.updateValues(canIncrease(group, mAbilitiesList, maxValues), true);
+			maxValues = mController.getAbilityCreationValues();
+			for (final SimpleItemValueGroup group : mAbilitiesList)
+			{
+				group.updateValues(canIncrease(group, mAbilitiesList, maxValues), true);
+			}
 		}
 		
-		mVirtues.updateValues(mVirtues.getValue() < mController.getVirtueCreationValue(), true);
+		if (mInitializedVirtues)
+		{
+			mVirtues.updateValues(mVirtues.getValue() < mController.getVirtueCreationValue(), true);
+		}
 	}
 	
 	private boolean canIncrease(final SimpleItemValueGroup aGroup, final List<SimpleItemValueGroup> aGroups, final int[] aMaxValues)

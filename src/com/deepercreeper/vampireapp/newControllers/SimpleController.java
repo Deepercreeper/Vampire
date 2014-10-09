@@ -31,21 +31,21 @@ public class SimpleController implements Controller<SimpleItem>
 		mAttributeCreationValues = aResources.getIntArray(R.array.attributes_max_creation_values);
 		mAbilityCreationValues = aResources.getIntArray(R.array.abilities_max_creation_values);
 		mVirtueCreationValue = aResources.getInteger(R.integer.virtue_max_creation_value);
-		for (final String attributesGroup : aResources.getStringArray(R.array.attributes))
+		for (final String attributesGroup : aResources.getStringArray(R.array.attribute_values))
 		{
 			final SimpleItemGroup group = SimpleItemGroup.create(attributesGroup, 1, 4);
 			mAttributes.put(group.getName(), group);
 			mAttributeGroups.add(group);
 		}
 		Collections.sort(mAttributeGroups, SimpleItemGroup.getComparator());
-		for (final String abilitiesGroup : aResources.getStringArray(R.array.abilities))
+		for (final String abilitiesGroup : aResources.getStringArray(R.array.ability_values))
 		{
 			final SimpleItemGroup group = SimpleItemGroup.create(abilitiesGroup, 0, 3);
 			mAbilities.put(group.getName(), group);
 			mAbilityGroups.add(group);
 		}
 		Collections.sort(mAbilityGroups, SimpleItemGroup.getComparator());
-		mVirtues = SimpleItemGroup.create(aResources.getString(R.string.virtues), 1, 4);
+		mVirtues = SimpleItemGroup.create(aResources.getString(R.string.virtue_values), 1, 4);
 	}
 	
 	public int[] getAttributeCreationValues()

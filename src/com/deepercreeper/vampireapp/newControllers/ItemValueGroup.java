@@ -1,7 +1,7 @@
 package com.deepercreeper.vampireapp.newControllers;
 
 import java.util.List;
-import android.widget.LinearLayout;
+import android.view.ViewGroup;
 
 public interface ItemValueGroup <T extends Item>
 {
@@ -17,7 +17,7 @@ public interface ItemValueGroup <T extends Item>
 	
 	public List<? extends ItemValue<T>> getValuesList();
 	
-	public void initLayout(LinearLayout aLayout);
+	public void initLayout(ViewGroup aLayout);
 	
 	public boolean isCreation();
 	

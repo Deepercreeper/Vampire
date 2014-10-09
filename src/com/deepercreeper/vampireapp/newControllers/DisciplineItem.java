@@ -8,65 +8,62 @@ import java.util.Set;
 
 public class DisciplineItem implements Item
 {
-	private static final String						PARENT_PREFIX		= "#", NAME_DELIM = ":", ABILITIES_DELIM = ";", SUB_ITEMS_DELIM = ",";
+	private static final String							SUB_PREFIX			= "#", PARENT_PREFIX = "#", NAME_DELIM = ":", ABILITIES_DELIM = ";",
+			SUB_ITEMS_DELIM = ",";
 	
-	private static final int						MAX_VALUE			= 6, MAX_START_VALUE = 3, START_VALUE = 0;
+	private static final int							MAX_VALUE			= 6, MAX_START_VALUE = 3, START_VALUE = 0;
 	
-	public static final int							MIN_FIRST_SUB_VALUE	= 2, MAX_SUB_DISCIPLINES = 2;
+	public static final int								MIN_FIRST_SUB_VALUE	= 2, MAX_SUB_DISCIPLINES = 2;
 	
-	private final String							mName;
+	private final String								mName;
 	
-	private final String							mDescription;
+	private final String								mDescription;
 	
-	private DisciplineItem							mParent;
+	private final HashMap<String, SubDisciplineItem>	mSubItems			= new HashMap<String, SubDisciplineItem>();
 	
-	private final HashMap<String, DisciplineItem>	mSubItems			= new HashMap<String, DisciplineItem>();
+	private final List<SubDisciplineItem>				mSubItemNames		= new ArrayList<SubDisciplineItem>();
 	
-	private final List<DisciplineItem>				mSubItemNames		= new ArrayList<DisciplineItem>();
+	private final List<Ability>							mAbilities			= new ArrayList<Ability>();
 	
-	private final List<Ability>						mAbilities			= new ArrayList<Ability>();
-	
-	private DisciplineItem(final String aName)
+	protected DisciplineItem(final String aName)
 	{
 		mName = aName;
 		mDescription = createDescription();
 	}
 	
-	public void setParent(final DisciplineItem aParent)
+	public void addSubItem(final SubDisciplineItem aSubItem)
 	{
-		mParent = aParent;
-	}
-	
-	private void addSubItemName(final String aName)
-	{
-		mSubItems.put(aName, null);
-	}
-	
-	private void addAbility(final Ability aAbility)
-	{
-		mAbilities.add(aAbility);
-		Collections.sort(mAbilities);
-	}
-	
-	public boolean isSubItem()
-	{
-		return mParent != null;
-	}
-	
-	public boolean isParentItem()
-	{
-		return mSubItems.isEmpty();
-	}
-	
-	public DisciplineItem getSubItem(final String aName)
-	{
-		return mSubItems.get(aName);
+		mSubItems.put(aSubItem.getName(), aSubItem);
+		mSubItemNames.add(aSubItem);
+		Collections.sort(mSubItemNames);
 	}
 	
 	@Override
-	public DisciplineItemValue createValue()
+	public int compareTo(final Item aAnother)
 	{
-		return new DisciplineItemValue(this);
+		return getName().compareTo(mName);
+	}
+	
+	@Override
+	public boolean equals(final Object aO)
+	{
+		if (aO instanceof DisciplineItem)
+		{
+			final DisciplineItem item = (DisciplineItem) aO;
+			return getName().equals(item.getName());
+		}
+		return false;
+	}
+	
+	public List<Ability> getAbilities()
+	{
+		return mAbilities;
+	}
+	
+	@Override
+	public String getDescription()
+	{
+		return mDescription;
 	}
 	
 	@Override
@@ -81,9 +78,10 @@ public class DisciplineItem implements Item
 		return MAX_VALUE;
 	}
 	
-	public List<Ability> getAbilities()
+	@Override
+	public String getName()
 	{
-		return mAbilities;
+		return mName;
 	}
 	
 	@Override
@@ -92,16 +90,9 @@ public class DisciplineItem implements Item
 		return START_VALUE;
 	}
 	
-	public void addSubItem(final DisciplineItem aSubItem)
+	public SubDisciplineItem getSubItem(final String aName)
 	{
-		mSubItems.put(aSubItem.getName(), aSubItem);
-		mSubItemNames.add(aSubItem);
-		Collections.sort(mSubItemNames);
-	}
-	
-	public List<DisciplineItem> getSubItems()
-	{
-		return mSubItemNames;
+		return mSubItems.get(aName);
 	}
 	
 	public Set<String> getSubItemNames()
@@ -109,33 +100,9 @@ public class DisciplineItem implements Item
 		return mSubItems.keySet();
 	}
 	
-	public DisciplineItem getParent()
+	public List<SubDisciplineItem> getSubItems()
 	{
-		return mParent;
-	}
-	
-	private String createDescription()
-	{
-		// TODO Implement
-		return mName;
-	}
-	
-	@Override
-	public String getDescription()
-	{
-		return mDescription;
-	}
-	
-	@Override
-	public String getName()
-	{
-		return mName;
-	}
-	
-	@Override
-	public int compareTo(final Item aAnother)
-	{
-		return getName().compareTo(mName);
+		return mSubItemNames;
 	}
 	
 	@Override
@@ -144,21 +111,36 @@ public class DisciplineItem implements Item
 		return mName.hashCode();
 	}
 	
-	@Override
-	public boolean equals(final Object aO)
+	public boolean isParentItem()
 	{
-		if (aO instanceof DisciplineItem)
-		{
-			final DisciplineItem item = (DisciplineItem) aO;
-			return getName().equals(item.getName());
-		}
-		return false;
+		return mSubItems.isEmpty();
+	}
+	
+	private void addAbility(final Ability aAbility)
+	{
+		mAbilities.add(aAbility);
+		Collections.sort(mAbilities);
+	}
+	
+	private void addSubItemName(final String aName)
+	{
+		mSubItems.put(aName, null);
+	}
+	
+	private String createDescription()
+	{
+		// TODO Implement
+		return mName;
 	}
 	
 	public static DisciplineItem create(final String aData)
 	{
 		DisciplineItem discipline;
-		if (aData.startsWith(PARENT_PREFIX))
+		if (aData.startsWith(SUB_PREFIX))
+		{
+			discipline = SubDisciplineItem.create(aData);
+		}
+		else if (aData.startsWith(PARENT_PREFIX))
 		{
 			final String[] data = aData.substring(1).split(NAME_DELIM);
 			discipline = new DisciplineItem(data[0]);
