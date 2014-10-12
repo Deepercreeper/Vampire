@@ -56,6 +56,27 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 		};
 	}
 	
+	public void editValue(final BackgroundItemValue aValue)
+	{
+		final List<BackgroundItem> items = new ArrayList<BackgroundItem>();
+		items.addAll(mGroup.getItems());
+		for (final BackgroundItemValue value : mValuesList)
+		{
+			items.remove(value.getItem());
+		}
+		
+		final SelectionListener<BackgroundItem> action = new SelectionListener<BackgroundItem>()
+		{
+			@Override
+			public void select(final BackgroundItem aItem)
+			{
+				setValue(aValue, aItem);
+			}
+		};
+		
+		new SelectItemDialog<BackgroundItem>(items, mContext.getResources().getString(R.string.edit_background), mContext, action);
+	}
+	
 	@Override
 	public BackgroundValueController getController()
 	{
@@ -68,21 +89,40 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 		mValues.put(aValue.getItem(), aValue);
 		if (mBackgroundsTable != null)
 		{
-			mBackgroundsTable.addView(aValue.getContainer());
+			final TableRow row = new TableRow(mContext);
+			aValue.initRow(row);
+			mBackgroundsTable.addView(row);
+		}
+	}
+	
+	private void setValue(final BackgroundItemValue aOldValue, final BackgroundItem aNewItem)
+	{
+		final int oldIndex = mValuesList.indexOf(aOldValue);
+		final BackgroundItemValue newValue = new BackgroundItemValue(aNewItem, mContext, mAction, this);
+		mValuesList.set(oldIndex, newValue);
+		mValues.remove(aOldValue.getItem());
+		mValues.put(aNewItem, newValue);
+		if (mBackgroundsTable != null)
+		{
+			newValue.initRow(aOldValue.getContainer());
 		}
 	}
 	
 	@Override
 	public void addItem(final BackgroundItem aItem)
 	{
-		addValue(new BackgroundItemValue(aItem, mContext, mAction));
+		addValue(new BackgroundItemValue(aItem, mContext, mAction, this));
+		resize();
 	}
 	
 	@Override
 	public void resize()
 	{
-		mBackgroundsPanel
-				.startAnimation(new ResizeAnimation(mBackgroundsPanel, mBackgroundsPanel.getWidth(), ViewUtil.calcHeight(mBackgroundsPanel)));
+		if (mBackgroundsPanel != null)
+		{
+			mBackgroundsPanel.startAnimation(new ResizeAnimation(mBackgroundsPanel, mBackgroundsPanel.getWidth(), ViewUtil
+					.calcHeight(mBackgroundsPanel)));
+		}
 	}
 	
 	@Override
@@ -156,6 +196,7 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 		mBackgroundsTable = new TableLayout(mContext);
 		
 		final LayoutParams wrapHeight = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		final LayoutParams wrapRowAll = new TableRow.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		final LayoutParams wrapAll = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		
 		mBackgroundsTable.setLayoutParams(wrapHeight);
@@ -164,9 +205,10 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 		titleRow.setLayoutParams(wrapAll);
 		{
 			titleRow.addView(new Space(mContext));
+			titleRow.addView(new Space(mContext));
 			
 			final Button addBackground = new Button(mContext);
-			addBackground.setLayoutParams(wrapAll);
+			addBackground.setLayoutParams(wrapRowAll);
 			addBackground.setText(mContext.getResources().getString(R.string.add_background));
 			addBackground.setEnabled(mValuesList.size() < BackgroundItem.MAX_BACKGROUNDS);
 			addBackground.setOnClickListener(new OnClickListener()
@@ -186,10 +228,8 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 						@Override
 						public void select(final BackgroundItem aItem)
 						{
-							final BackgroundItemValue value = new BackgroundItemValue(aItem, mContext, mAction);
-							addValue(value);
+							addItem(aItem);
 							addBackground.setEnabled(mValuesList.size() < BackgroundItem.MAX_BACKGROUNDS);
-							mBackgroundsTable.addView(value.getContainer());
 						}
 					};
 					

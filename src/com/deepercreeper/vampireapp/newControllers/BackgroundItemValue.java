@@ -8,54 +8,77 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
+import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 public class BackgroundItemValue implements ItemValue<BackgroundItem>
 {
-	private final BackgroundItem	mItem;
+	private final BackgroundItem			mItem;
 	
-	private final Context			mContext;
+	private final Context					mContext;
 	
-	private final ImageButton		mIncreaseButton;
+	private final BackgroundItemValueGroup	mGroup;
 	
-	private final ImageButton		mDecreaseButton;
+	private final ImageButton				mIncreaseButton;
 	
-	private final TableRow			mContainer;
+	private final ImageButton				mDecreaseButton;
 	
-	private final UpdateAction		mAction;
+	private TableRow						mContainer;
 	
-	private int						mValue;
+	private final UpdateAction				mAction;
 	
-	public BackgroundItemValue(final BackgroundItem aItem, final Context aContext, final UpdateAction aAction)
+	private int								mValue;
+	
+	public BackgroundItemValue(final BackgroundItem aItem, final Context aContext, final UpdateAction aAction, final BackgroundItemValueGroup aGroup)
 	{
 		mIncreaseButton = new ImageButton(aContext);
 		mDecreaseButton = new ImageButton(aContext);
-		mContainer = new TableRow(aContext);
 		mItem = aItem;
 		mContext = aContext;
 		mAction = aAction;
+		mGroup = aGroup;
 		mValue = mItem.getStartValue();
-		init();
 	}
 	
-	private void init()
+	public void initRow(final TableRow aRow)
 	{
+		mContainer = aRow;
+		
 		final LayoutParams wrapAll = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		final LayoutParams nameSize = new TableRow.LayoutParams(ViewUtil.calcPx(120, mContext), LayoutParams.WRAP_CONTENT);
+		final LayoutParams wrapAllTable = new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		final LayoutParams wrapRowAll = new TableRow.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		final LayoutParams nameSize = new TableRow.LayoutParams(ViewUtil.calcPx(82, mContext), LayoutParams.WRAP_CONTENT);
 		final LayoutParams buttonSize = new LayoutParams(ViewUtil.calcPx(30, mContext), ViewUtil.calcPx(30, mContext));
+		final LayoutParams rowButtonSize = new TableRow.LayoutParams(ViewUtil.calcPx(30, mContext), ViewUtil.calcPx(30, mContext));
 		final LayoutParams valueSize = new LayoutParams(ViewUtil.calcPx(25, mContext), LayoutParams.WRAP_CONTENT);
 		
-		mContainer.setLayoutParams(wrapAll);
+		mContainer.setLayoutParams(wrapAllTable);
+		
+		aRow.removeAllViews();
 		
 		final TextView valueName = new TextView(mContext);
 		valueName.setLayoutParams(nameSize);
 		valueName.setText(mItem.getName());
 		mContainer.addView(valueName);
 		
+		final ImageButton edit = new ImageButton(mContext);
+		edit.setLayoutParams(rowButtonSize);
+		edit.setContentDescription("Edit");
+		edit.setImageResource(android.R.drawable.ic_menu_edit);
+		edit.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				mGroup.editValue(BackgroundItemValue.this);
+			}
+		});
+		mContainer.addView(edit);
+		
 		final GridLayout spinnerGrid = new GridLayout(mContext);
-		spinnerGrid.setLayoutParams(wrapAll);
+		spinnerGrid.setLayoutParams(wrapRowAll);
 		{
 			final RadioButton[] valueDisplay = new RadioButton[mItem.getMaxValue()];
 			

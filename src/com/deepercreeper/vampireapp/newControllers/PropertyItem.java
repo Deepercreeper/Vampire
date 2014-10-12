@@ -44,13 +44,13 @@ public class PropertyItem implements Item
 	@Override
 	public int getMaxStartValue()
 	{
-		return mValues.length;
+		return mValues.length - 1;
 	}
 	
 	@Override
 	public int getMaxValue()
 	{
-		return mValues.length;
+		return mValues.length - 1;
 	}
 	
 	@Override

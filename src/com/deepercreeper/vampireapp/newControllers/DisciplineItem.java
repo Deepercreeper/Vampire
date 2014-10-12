@@ -8,7 +8,7 @@ import java.util.Set;
 
 public class DisciplineItem implements Item
 {
-	private static final String							SUB_PREFIX			= "#", PARENT_PREFIX = "#", NAME_DELIM = ":", ABILITIES_DELIM = ";",
+	private static final String							SUB_PREFIX			= ">", PARENT_PREFIX = "#", NAME_DELIM = ":", ABILITIES_DELIM = ";",
 			SUB_ITEMS_DELIM = ",";
 	
 	private static final int							MAX_VALUE			= 6, MAX_START_VALUE = 3, START_VALUE = 0;

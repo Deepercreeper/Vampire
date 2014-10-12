@@ -46,6 +46,7 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 		final LayoutParams buttonSize = new LayoutParams(ViewUtil.calcPx(30, mContext), ViewUtil.calcPx(30, mContext));
 		final LayoutParams valueSize = new LayoutParams(ViewUtil.calcPx(25, mContext), LayoutParams.WRAP_CONTENT);
 		final LayoutParams wrapAll = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		final LayoutParams wrapRowAll = new TableRow.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		
 		mContainer.setLayoutParams(wrapAll);
 		
@@ -55,9 +56,9 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 		mContainer.addView(valueName);
 		
 		final GridLayout spinnerGrid = new GridLayout(mContext);
-		spinnerGrid.setLayoutParams(wrapAll);
+		spinnerGrid.setLayoutParams(wrapRowAll);
 		{
-			final RadioButton[] valueDisplay = new RadioButton[getItem().getMaxValue()];
+			final RadioButton[] valueDisplay = new RadioButton[getItem().getValue(getItem().getMaxValue())];
 			
 			mDecreaseButton.setLayoutParams(buttonSize);
 			mDecreaseButton.setContentDescription("Decrease");
@@ -99,6 +100,7 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 			spinnerGrid.addView(mIncreaseButton);
 			
 			ViewUtil.applyValue(getValue(), valueDisplay);
+			mAction.update();
 		}
 		mContainer.addView(spinnerGrid);
 	}

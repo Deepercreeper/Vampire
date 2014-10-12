@@ -51,8 +51,7 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 		final LayoutParams buttonSize = new LayoutParams(ViewUtil.calcPx(30, mContext), ViewUtil.calcPx(30, mContext));
 		final LayoutParams valueSize = new LayoutParams(ViewUtil.calcPx(25, mContext), LayoutParams.WRAP_CONTENT);
 		
-		final TableRow valueRow = new TableRow(mContext);
-		valueRow.setLayoutParams(wrapTableAll);
+		mContainer.setLayoutParams(wrapTableAll);
 		
 		final TextView valueName = new TextView(mContext);
 		valueName.setLayoutParams(nameSize);
@@ -60,7 +59,7 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 		valueName.setGravity(Gravity.CENTER_VERTICAL);
 		valueName.setSingleLine();
 		valueName.setEllipsize(TruncateAt.END);
-		valueRow.addView(valueName);
+		mContainer.addView(valueName);
 		
 		final GridLayout spinnerGrid = new GridLayout(mContext);
 		spinnerGrid.setLayoutParams(wrapRowAll);
@@ -108,7 +107,7 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 			
 			ViewUtil.applyValue(getValue(), valueDisplay);
 		}
-		valueRow.addView(spinnerGrid);
+		mContainer.addView(spinnerGrid);
 	}
 	
 	@Override

@@ -107,7 +107,7 @@ public class PropertyValueController implements ValueController<PropertyItem>, V
 		mShowPanel.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
 		mShowPanel.setOnClickListener(new OnClickListener()
 		{
-			private final boolean	mInitialized	= false;
+			private boolean	mInitialized	= false;
 			
 			@Override
 			public void onClick(final View aArg0)
@@ -118,6 +118,7 @@ public class PropertyValueController implements ValueController<PropertyItem>, V
 					if ( !mInitialized)
 					{
 						mProperties.initLayout(properties);
+						mInitialized = true;
 					}
 					properties.startAnimation(new ResizeAnimation(properties, properties.getWidth(), ViewUtil.calcHeight(properties)));
 					mShowPanel.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);

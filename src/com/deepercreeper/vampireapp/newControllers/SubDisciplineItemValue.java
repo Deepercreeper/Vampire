@@ -53,7 +53,7 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 		final ImageButton edit = new ImageButton(context);
 		edit.setLayoutParams(buttonSize);
 		edit.setContentDescription("Edit");
-		edit.setImageResource(android.R.drawable.ic_menu_add);
+		edit.setImageResource(android.R.drawable.ic_menu_edit);
 		edit.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -81,8 +81,6 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 			}
 		});
 		aRow.addView(edit);
-		
-		edit.setImageResource(android.R.drawable.ic_menu_edit);
 		
 		final TextView name = new TextView(context);
 		name.setLayoutParams(nameSize);

@@ -74,12 +74,12 @@
         <item>Serpentis:Snake eyes,1;Viper tongue,2,Strenth;Bituminous flesh,3;Cobra frame,4,BloodPoints,1;Deception at Thoths balance,5;Basilisk breath,6,Blutpukte,1;Basilisk breath attack,6,Dexterity#Hand to hand</item>
         <item>Strength:Strength,1</item>
         <item>#Thaumaturgy:Rego Vitam,Creo Ignem,Rego Motum,Rego Tempestatem,Rego Aquam,Rego Elementum</item>
-        <item>Rego Vitam:A sense for blood,1,Volition;Bloody ecstasis,2,Volition;Blood of might,3,Volition;Vitae-robbery,4,Volition;Blood bowl,5,Volition</item>
-        <item>Creo Ignem:Candle fire,1,Volition;Hand full fire,2,Volition;Campfire,3,Volition;Bonfire,4,Volition;Fireheat,5,Volition</item>
-        <item>Rego Motum:1 pound,1,Volition;10 kilo,2,Volition;100 kilo,3,Volition;250 kilo,4,Volition;500 kilo,5,Volition</item>
-        <item>Rego Tempestatem:Fog,1,Volition;Rain,2,Volition;Wind,3,Volition;Storm,4,Volition;Lightning,5,Dices#Volition,10</item>
-        <item>Rego Aquam:Eyes of sea,1,Volition;Water prison,2,Volition;Dehydration,3,Volition;Floating wall,4,Volition;Blood to water,5,Volition</item>
-        <item>Rego Elementum:Elementary Strength,1,Volition#VolitionPoints,2;Wooden tongues,2,Volition;Revive stationaries,3,VolitionPoints,1;Elementary frame,4,Volition;Elemental summoning,5,Volition;Elemental control,5,Intellect#Occultism</item>
+        <item>>Rego Vitam:A sense for blood,1,Volition;Bloody ecstasis,2,Volition;Blood of might,3,Volition;Vitae-robbery,4,Volition;Blood bowl,5,Volition</item>
+        <item>>Creo Ignem:Candle fire,1,Volition;Hand full fire,2,Volition;Campfire,3,Volition;Bonfire,4,Volition;Fireheat,5,Volition</item>
+        <item>>Rego Motum:1 pound,1,Volition;10 kilo,2,Volition;100 kilo,3,Volition;250 kilo,4,Volition;500 kilo,5,Volition</item>
+        <item>>Rego Tempestatem:Fog,1,Volition;Rain,2,Volition;Wind,3,Volition;Storm,4,Volition;Lightning,5,Dices#Volition,10</item>
+        <item>>Rego Aquam:Eyes of sea,1,Volition;Water prison,2,Volition;Dehydration,3,Volition;Floating wall,4,Volition;Blood to water,5,Volition</item>
+        <item>>Rego Elementum:Elementary Strength,1,Volition#VolitionPoints,2;Wooden tongues,2,Volition;Revive stationaries,3,VolitionPoints,1;Elementary frame,4,Volition;Elemental summoning,5,Volition;Elemental control,5,Intellect#Occultism</item>
         <item>Animality:Language of wlderness,1;Language of wilderness pleasure,1,Manipulation#Zoology;Noahs call,2,Charisma#Survuval;Animal intimidation,3,Manipulation#Intimidation;Ride on the wild ghost,4,Charisma#Zoology;Animal expulsion,5,Manipulation#Zoology;Accelerated unity,6,Cognition#Zoology</item>
         <item>Obscuration:Shadow coat,1;Invisible presence,2;Mask of thousand faces,3,Manipulation#Acting;Disappearance in front of the mind\'s eye,4,Charisma#Stealth;Protective cloak for the convened,5,Stealth;Soulmask,6</item>
     </string-array>

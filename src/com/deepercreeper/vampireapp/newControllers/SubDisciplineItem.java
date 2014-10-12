@@ -94,7 +94,7 @@ public class SubDisciplineItem extends DisciplineItem
 	public static SubDisciplineItem create(final String aData)
 	{
 		SubDisciplineItem discipline;
-		final String[] data = aData.split(NAME_DELIM);
+		final String[] data = aData.substring(1).split(NAME_DELIM);
 		discipline = new SubDisciplineItem(data[0]);
 		if (data.length > 1)
 		{

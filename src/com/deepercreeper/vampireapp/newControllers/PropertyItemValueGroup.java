@@ -110,12 +110,17 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 	public void addItem(final PropertyItem aItem)
 	{
 		addValue(new PropertyItemValue(aItem, mContext, mAction));
+		resize();
 	}
 	
 	@Override
 	public void resize()
 	{
-		mPropertiesPanel.startAnimation(new ResizeAnimation(mPropertiesPanel, mPropertiesPanel.getWidth(), ViewUtil.calcHeight(mPropertiesPanel)));
+		if (mPropertiesPanel != null)
+		{
+			mPropertiesPanel
+					.startAnimation(new ResizeAnimation(mPropertiesPanel, mPropertiesPanel.getWidth(), ViewUtil.calcHeight(mPropertiesPanel)));
+		}
 	}
 	
 	@Override
@@ -168,6 +173,7 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 		mPropertiesTable = new TableLayout(mContext);
 		
 		final LayoutParams wrapHeight = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		final LayoutParams wrapRowAll = new TableRow.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		final LayoutParams wrapAll = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		
 		mPropertiesTable.setLayoutParams(wrapHeight);
@@ -178,7 +184,7 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 			titleRow.addView(new Space(mContext));
 			
 			final Button addProperty = new Button(mContext);
-			addProperty.setLayoutParams(wrapAll);
+			addProperty.setLayoutParams(wrapRowAll);
 			addProperty.setText(mContext.getResources().getString(R.string.add_property));
 			addProperty.setOnClickListener(new OnClickListener()
 			{
@@ -197,9 +203,7 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 						@Override
 						public void select(final PropertyItem aItem)
 						{
-							final PropertyItemValue value = new PropertyItemValue(aItem, mContext, mAction);
-							addValue(value);
-							mPropertiesTable.addView(value.getContainer());
+							addItem(aItem);
 						}
 					};
 					

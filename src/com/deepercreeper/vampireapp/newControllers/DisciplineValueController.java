@@ -38,6 +38,7 @@ public class DisciplineValueController implements ValueController<DisciplineItem
 	public void addItem(final DisciplineItem aItem)
 	{
 		mDisciplines.addItem(aItem);
+		resize();
 	}
 	
 	@Override
@@ -114,7 +115,7 @@ public class DisciplineValueController implements ValueController<DisciplineItem
 		mShowPanel.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
 		mShowPanel.setOnClickListener(new OnClickListener()
 		{
-			private final boolean	mInitialized	= false;
+			private boolean	mInitialized	= false;
 			
 			@Override
 			public void onClick(final View aArg0)
@@ -125,6 +126,7 @@ public class DisciplineValueController implements ValueController<DisciplineItem
 					if ( !mInitialized)
 					{
 						mDisciplines.initLayout(mDisciplinesPanel);
+						mInitialized = true;
 					}
 					mDisciplinesPanel.startAnimation(new ResizeAnimation(mDisciplinesPanel, mDisciplinesPanel.getWidth(), ViewUtil
 							.calcHeight(mDisciplinesPanel)));

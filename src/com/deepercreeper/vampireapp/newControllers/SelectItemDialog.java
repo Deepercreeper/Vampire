@@ -2,6 +2,7 @@ package com.deepercreeper.vampireapp.newControllers;
 
 import java.util.HashMap;
 import java.util.List;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -39,7 +40,11 @@ public class SelectItemDialog <T extends Item> extends DialogFragment
 		mContext = aContext;
 		mAction = aAction;
 		
-		show(getFragmentManager(), mTitle);
+		if ( !(aContext instanceof Activity))
+		{
+			throw new IllegalStateException("The current context is no activity!");
+		}
+		show(((Activity) mContext).getFragmentManager(), mTitle);
 	}
 	
 	@Override

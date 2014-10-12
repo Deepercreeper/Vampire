@@ -133,8 +133,11 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	@Override
 	public void resize()
 	{
-		mDisciplinesPanel
-				.startAnimation(new ResizeAnimation(mDisciplinesPanel, mDisciplinesPanel.getWidth(), ViewUtil.calcHeight(mDisciplinesPanel)));
+		if (mDisciplinesPanel != null)
+		{
+			mDisciplinesPanel.startAnimation(new ResizeAnimation(mDisciplinesPanel, mDisciplinesPanel.getWidth(), ViewUtil
+					.calcHeight(mDisciplinesPanel)));
+		}
 	}
 	
 	@Override
