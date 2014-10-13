@@ -96,6 +96,7 @@ public class CharCreator
 		{
 			mDisciplines.addItem(discipline);
 		}
+		mDisciplines.close();
 	}
 	
 	public void setGeneration(final int aGeneration)

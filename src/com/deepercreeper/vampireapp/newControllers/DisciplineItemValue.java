@@ -11,6 +11,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Space;
 import android.widget.TableLayout;
@@ -28,7 +29,7 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 	
 	private final Context						mContext;
 	
-	private final TableRow						mContainer;
+	private final LinearLayout					mContainer;
 	
 	private ImageButton							mIncreaseButton;
 	
@@ -43,7 +44,7 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 		mItem = aItem;
 		mContext = aContext;
 		mAction = aAction;
-		mContainer = new TableRow(mContext);
+		mContainer = new LinearLayout(mContext);
 		mIncreaseButton = new ImageButton(mContext);
 		mDecreaseButton = new ImageButton(mContext);
 		mValue = mItem.getStartValue();
@@ -65,7 +66,7 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 	private void initParentDiscipline()
 	{
 		final LayoutParams wrapTableAll = new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		final LayoutParams wrapAll = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		final LayoutParams wrapAll = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		final LayoutParams wrapHeight = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		
 		mContainer.setLayoutParams(wrapTableAll);
@@ -73,8 +74,8 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 		final TableLayout table = new TableLayout(mContext);
 		table.setLayoutParams(wrapHeight);
 		
-		final TableRow parentRow = new TableRow(mContext);
-		parentRow.setLayoutParams(wrapAll);
+		final LinearLayout parentRow = new LinearLayout(mContext);
+		parentRow.setLayoutParams(wrapTableAll);
 		{
 			parentRow.addView(new Space(mContext));
 			
@@ -174,48 +175,62 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 	
 	private TableRow createSubDisciplineRow(final int aValueIx)
 	{
+		final LayoutParams nameSize = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
+		final LayoutParams wrapTableAll = new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		final LayoutParams wrapAll = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		final LayoutParams buttonSize = new LayoutParams(ViewUtil.calcPx(30, mContext), ViewUtil.calcPx(30, mContext));
 		
 		final TableRow subRow = new TableRow(mContext);
-		subRow.setLayoutParams(wrapAll);
+		subRow.setLayoutParams(wrapTableAll);
 		
-		final TextView number = new TextView(mContext);
-		number.setLayoutParams(wrapAll);
-		number.setText(aValueIx + ".");
-		subRow.addView(number);
-		
-		final ImageButton edit = new ImageButton(mContext);
-		edit.setLayoutParams(buttonSize);
-		edit.setContentDescription("Edit");
-		edit.setImageResource(android.R.drawable.ic_menu_add);
-		edit.setOnClickListener(new OnClickListener()
+		final GridLayout numberAndName = new GridLayout(mContext);
+		numberAndName.setLayoutParams(wrapAll);
 		{
-			@Override
-			public void onClick(final View aV)
+			final TextView number = new TextView(mContext);
+			number.setLayoutParams(nameSize);
+			number.setText((aValueIx + 1) + ".");
+			number.setEllipsize(TruncateAt.END);
+			number.setGravity(Gravity.CENTER_VERTICAL);
+			number.setSingleLine();
+			numberAndName.addView(number);
+			
+			final ImageButton edit = new ImageButton(mContext);
+			edit.setLayoutParams(buttonSize);
+			edit.setContentDescription("Edit");
+			edit.setImageResource(android.R.drawable.ic_menu_add);
+			edit.setOnClickListener(new OnClickListener()
 			{
-				final List<SubDisciplineItem> items = new ArrayList<SubDisciplineItem>();
-				items.addAll(getItem().getSubItems());
-				for (final SubDisciplineItemValue value : getSubValues())
+				@Override
+				public void onClick(final View aV)
 				{
-					items.remove(value.getItem());
-				}
-				
-				final SelectionListener<SubDisciplineItem> action = new SelectionListener<SubDisciplineItem>()
-				{
-					@Override
-					public void select(final SubDisciplineItem aItem)
+					if (SelectItemDialog.isDialogOpen())
 					{
-						final SubDisciplineItemValue value = new SubDisciplineItemValue(aItem, mContext, mAction);
-						setSubValue(aValueIx, value);
-						value.initRow(subRow, aValueIx);
+						return;
 					}
-				};
-				
-				new SelectItemDialog<SubDisciplineItem>(items, mContext.getResources().getString(R.string.edit_discipline), mContext, action);
-			}
-		});
-		subRow.addView(edit);
+					final List<SubDisciplineItem> items = new ArrayList<SubDisciplineItem>();
+					items.addAll(getItem().getSubItems());
+					for (final SubDisciplineItemValue value : getSubValues())
+					{
+						items.remove(value.getItem());
+					}
+					
+					final SelectionListener<SubDisciplineItem> action = new SelectionListener<SubDisciplineItem>()
+					{
+						@Override
+						public void select(final SubDisciplineItem aItem)
+						{
+							final SubDisciplineItemValue value = new SubDisciplineItemValue(aItem, mContext, mAction);
+							setSubValue(aValueIx, value);
+							value.initRow(subRow, aValueIx);
+						}
+					};
+					
+					new SelectItemDialog<SubDisciplineItem>(items, mContext.getResources().getString(R.string.edit_discipline), mContext, action);
+				}
+			});
+			numberAndName.addView(edit);
+		}
+		subRow.addView(numberAndName);
 		return subRow;
 	}
 	
@@ -237,7 +252,7 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 	}
 	
 	@Override
-	public TableRow getContainer()
+	public LinearLayout getContainer()
 	{
 		return mContainer;
 	}
@@ -296,7 +311,14 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 	
 	public void setSubValue(final int aPos, final SubDisciplineItemValue aSubValue)
 	{
-		mSubValues.add(aPos, aSubValue);
+		if (mSubValues.size() <= aPos)
+		{
+			mSubValues.add(aPos, aSubValue);
+		}
+		else
+		{
+			mSubValues.set(aPos, aSubValue);
+		}
 		aSubValue.setParent(this);
 	}
 	

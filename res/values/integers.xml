@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="virtue_max_creation_value">7</integer>
+    <integer name="virtue_max_creation_value">10</integer>
     
     <integer name="background_max_creation_value">5</integer>
     

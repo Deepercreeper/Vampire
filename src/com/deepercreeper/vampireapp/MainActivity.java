@@ -106,7 +106,7 @@ public class MainActivity extends Activity
 				{
 					for (final String clanDiscipline : clanData[1].split(Clan.CLAN_DISCIPLIN_DELIM))
 					{
-						clan.addDisciplines(mDisciplines.getDisciplines().getItem(clanDiscipline));
+						clan.addDiscipline(mDisciplines.getDisciplines().getItem(clanDiscipline));
 					}
 				}
 				mClans.put(clanData[0], clan);

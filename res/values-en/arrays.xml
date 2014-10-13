@@ -38,7 +38,7 @@
     
     <string-array name="clan">
         <item>Assamites:Speed,Quietus,Obscuration</item>
-        <item>Brujah:Speed,Presence,Strenth</item>
+        <item>Brujah:Speed,Presence,Strength</item>
         <item>Caitiff</item>
         <item>Gangrel:Gestalt-switch,Fortitude,Animality</item>
         <item>Followers of Seth:Presence,Serpentis,Obscuration</item>
@@ -80,7 +80,7 @@
         <item>>Rego Tempestatem:Fog,1,Volition;Rain,2,Volition;Wind,3,Volition;Storm,4,Volition;Lightning,5,Dices#Volition,10</item>
         <item>>Rego Aquam:Eyes of sea,1,Volition;Water prison,2,Volition;Dehydration,3,Volition;Floating wall,4,Volition;Blood to water,5,Volition</item>
         <item>>Rego Elementum:Elementary Strength,1,Volition#VolitionPoints,2;Wooden tongues,2,Volition;Revive stationaries,3,VolitionPoints,1;Elementary frame,4,Volition;Elemental summoning,5,Volition;Elemental control,5,Intellect#Occultism</item>
-        <item>Animality:Language of wlderness,1;Language of wilderness pleasure,1,Manipulation#Zoology;Noahs call,2,Charisma#Survuval;Animal intimidation,3,Manipulation#Intimidation;Ride on the wild ghost,4,Charisma#Zoology;Animal expulsion,5,Manipulation#Zoology;Accelerated unity,6,Cognition#Zoology</item>
+        <item>Animality:Language of wilderness,1;Language of wilderness pleasure,1,Manipulation#Zoology;Noahs call,2,Charisma#Survival;Animal intimidation,3,Manipulation#Intimidation;Ride on the wild ghost,4,Charisma#Zoology;Animal expulsion,5,Manipulation#Zoology;Accelerated unity,6,Cognition#Zoology</item>
         <item>Obscuration:Shadow coat,1;Invisible presence,2;Mask of thousand faces,3,Manipulation#Acting;Disappearance in front of the mind\'s eye,4,Charisma#Stealth;Protective cloak for the convened,5,Stealth;Soulmask,6</item>
     </string-array>
     

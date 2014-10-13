@@ -1,6 +1,6 @@
 package com.deepercreeper.vampireapp.newControllers;
 
-import android.widget.TableRow;
+import android.widget.LinearLayout;
 
 public interface ItemValue <T extends Item>
 {
@@ -23,7 +23,7 @@ public interface ItemValue <T extends Item>
 	
 	public void setDecreasable(boolean aEnabled);
 	
-	public TableRow getContainer();
+	public LinearLayout getContainer();
 	
 	public T getItem();
 	

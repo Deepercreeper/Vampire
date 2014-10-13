@@ -3,6 +3,8 @@ package com.deepercreeper.vampireapp.newControllers;
 import java.util.ArrayList;
 import java.util.List;
 import android.content.Context;
+import android.text.TextUtils.TruncateAt;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -38,54 +40,68 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	{
 		final Context context = getContext();
 		
-		final LayoutParams wrapAll = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		final LayoutParams wrapAll = new TableRow.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		final LayoutParams numberSize = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
 		final LayoutParams buttonSize = new LayoutParams(ViewUtil.calcPx(30, context), ViewUtil.calcPx(30, context));
 		final LayoutParams valueSize = new LayoutParams(ViewUtil.calcPx(25, context), LayoutParams.WRAP_CONTENT);
-		final LayoutParams nameSize = new LayoutParams(ViewUtil.calcPx(80, context), LayoutParams.WRAP_CONTENT);
+		final LayoutParams nameSize = new LayoutParams(ViewUtil.calcPx(80, context), LayoutParams.MATCH_PARENT);
 		
 		aRow.removeAllViews();
 		
-		final TextView number = new TextView(context);
-		number.setLayoutParams(wrapAll);
-		number.setText(aValueIx + ".");
-		aRow.addView(number);
-		
-		final ImageButton edit = new ImageButton(context);
-		edit.setLayoutParams(buttonSize);
-		edit.setContentDescription("Edit");
-		edit.setImageResource(android.R.drawable.ic_menu_edit);
-		edit.setOnClickListener(new OnClickListener()
+		final GridLayout numberAndName = new GridLayout(context);
+		numberAndName.setLayoutParams(wrapAll);
 		{
-			@Override
-			public void onClick(final View aV)
+			final TextView number = new TextView(context);
+			number.setLayoutParams(numberSize);
+			number.setGravity(Gravity.CENTER_VERTICAL);
+			number.setText((aValueIx + 1) + ".");
+			numberAndName.addView(number);
+			
+			final ImageButton edit = new ImageButton(context);
+			edit.setLayoutParams(buttonSize);
+			edit.setContentDescription("Edit");
+			edit.setImageResource(android.R.drawable.ic_menu_edit);
+			edit.setOnClickListener(new OnClickListener()
 			{
-				final List<SubDisciplineItem> items = new ArrayList<SubDisciplineItem>();
-				items.addAll(mParent.getItem().getSubItems());
-				for (final SubDisciplineItemValue value : mParent.getSubValues())
+				@Override
+				public void onClick(final View aV)
 				{
-					items.remove(value.getItem());
-				}
-				
-				final SelectionListener<SubDisciplineItem> action = new SelectionListener<SubDisciplineItem>()
-				{
-					@Override
-					public void select(final SubDisciplineItem aItem)
+					if (SelectItemDialog.isDialogOpen())
 					{
-						final SubDisciplineItemValue value = new SubDisciplineItemValue(aItem, getContext(), getAction());
-						mParent.setSubValue(aValueIx, value);
-						value.initRow(aRow, aValueIx);
+						return;
 					}
-				};
-				
-				new SelectItemDialog<SubDisciplineItem>(items, context.getResources().getString(R.string.edit_discipline), context, action);
-			}
-		});
-		aRow.addView(edit);
-		
-		final TextView name = new TextView(context);
-		name.setLayoutParams(nameSize);
-		name.setText(getItem().getName());
-		aRow.addView(name);
+					final List<SubDisciplineItem> items = new ArrayList<SubDisciplineItem>();
+					items.addAll(mParent.getItem().getSubItems());
+					for (final SubDisciplineItemValue value : mParent.getSubValues())
+					{
+						items.remove(value.getItem());
+					}
+					
+					final SelectionListener<SubDisciplineItem> action = new SelectionListener<SubDisciplineItem>()
+					{
+						@Override
+						public void select(final SubDisciplineItem aItem)
+						{
+							final SubDisciplineItemValue value = new SubDisciplineItemValue(aItem, getContext(), getAction());
+							mParent.setSubValue(aValueIx, value);
+							value.initRow(aRow, aValueIx);
+						}
+					};
+					
+					new SelectItemDialog<SubDisciplineItem>(items, context.getResources().getString(R.string.edit_discipline), context, action);
+				}
+			});
+			numberAndName.addView(edit);
+			
+			final TextView name = new TextView(context);
+			name.setLayoutParams(nameSize);
+			name.setGravity(Gravity.CENTER_VERTICAL);
+			name.setEllipsize(TruncateAt.END);
+			name.setSingleLine();
+			name.setText(getItem().getName());
+			numberAndName.addView(name);
+		}
+		aRow.addView(numberAndName);
 		
 		final GridLayout spinnerGrid = new GridLayout(context);
 		spinnerGrid.setLayoutParams(wrapAll);

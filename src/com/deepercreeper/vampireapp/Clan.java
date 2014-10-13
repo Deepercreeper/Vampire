@@ -16,9 +16,9 @@ public class Clan
 		mName = aName;
 	}
 	
-	public void addDisciplines(final DisciplineItem aDisciplines)
+	public void addDiscipline(final DisciplineItem aDiscipline)
 	{
-		mDisciplines.add(aDisciplines);
+		mDisciplines.add(aDiscipline);
 	}
 	
 	public String getName()

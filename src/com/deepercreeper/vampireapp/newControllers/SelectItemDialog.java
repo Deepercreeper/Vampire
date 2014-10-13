@@ -12,6 +12,8 @@ import android.os.Bundle;
 
 public class SelectItemDialog <T extends Item> extends DialogFragment
 {
+	private static boolean	sDialogOpen	= false;
+	
 	public static interface SelectionListener <S extends Item>
 	{
 		public void select(S aItem);
@@ -29,6 +31,7 @@ public class SelectItemDialog <T extends Item> extends DialogFragment
 	
 	public SelectItemDialog(final List<T> aItems, final String aTitle, final Context aContext, final SelectionListener<T> aAction)
 	{
+		sDialogOpen = true;
 		mNames = new String[aItems.size()];
 		for (int i = 0; i < mNames.length; i++ )
 		{
@@ -45,6 +48,18 @@ public class SelectItemDialog <T extends Item> extends DialogFragment
 			throw new IllegalStateException("The current context is no activity!");
 		}
 		show(((Activity) mContext).getFragmentManager(), mTitle);
+	}
+	
+	public static boolean isDialogOpen()
+	{
+		return sDialogOpen;
+	}
+	
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		sDialogOpen = false;
 	}
 	
 	@Override

@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Space;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import com.deepercreeper.vampireapp.R;
@@ -58,6 +57,10 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 	
 	public void editValue(final BackgroundItemValue aValue)
 	{
+		if (SelectItemDialog.isDialogOpen())
+		{
+			return;
+		}
 		final List<BackgroundItem> items = new ArrayList<BackgroundItem>();
 		items.addAll(mGroup.getItems());
 		for (final BackgroundItemValue value : mValuesList)
@@ -93,6 +96,7 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 			aValue.initRow(row);
 			mBackgroundsTable.addView(row);
 		}
+		mAction.update();
 	}
 	
 	private void setValue(final BackgroundItemValue aOldValue, final BackgroundItem aNewItem)
@@ -196,19 +200,17 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 		mBackgroundsTable = new TableLayout(mContext);
 		
 		final LayoutParams wrapHeight = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		final LayoutParams wrapRowAll = new TableRow.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		final LayoutParams wrapAll = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		final LinearLayout.LayoutParams wrapButton = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		final LayoutParams wrapAll = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		
 		mBackgroundsTable.setLayoutParams(wrapHeight);
 		
-		final TableRow titleRow = new TableRow(mContext);
+		final LinearLayout titleRow = new LinearLayout(mContext);
 		titleRow.setLayoutParams(wrapAll);
 		{
-			titleRow.addView(new Space(mContext));
-			titleRow.addView(new Space(mContext));
-			
 			final Button addBackground = new Button(mContext);
-			addBackground.setLayoutParams(wrapRowAll);
+			addBackground.setLayoutParams(wrapButton);
+			addBackground.setTextSize(14);
 			addBackground.setText(mContext.getResources().getString(R.string.add_background));
 			addBackground.setEnabled(mValuesList.size() < BackgroundItem.MAX_BACKGROUNDS);
 			addBackground.setOnClickListener(new OnClickListener()
@@ -216,6 +218,10 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 				@Override
 				public void onClick(final View aV)
 				{
+					if (SelectItemDialog.isDialogOpen())
+					{
+						return;
+					}
 					final List<BackgroundItem> items = new ArrayList<BackgroundItem>();
 					items.addAll(mGroup.getItems());
 					for (final BackgroundItemValue value : mValuesList)

@@ -44,9 +44,14 @@ public class DisciplineValueController implements ValueController<DisciplineItem
 	@Override
 	public void close()
 	{
-		if (mDisciplinesOpen)
+		mDisciplinesOpen = false;
+		if (mDisciplinesPanel != null)
 		{
-			mShowPanel.callOnClick();
+			mDisciplinesPanel.startAnimation(new ResizeAnimation(mDisciplinesPanel, mDisciplinesPanel.getWidth(), 0));
+		}
+		if (mShowPanel != null)
+		{
+			mShowPanel.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
 		}
 	}
 	
@@ -54,7 +59,6 @@ public class DisciplineValueController implements ValueController<DisciplineItem
 	public void clear()
 	{
 		mDisciplines.clear();
-		close();
 	}
 	
 	@Override

@@ -2,6 +2,8 @@ package com.deepercreeper.vampireapp.newControllers;
 
 import java.util.Comparator;
 import android.content.Context;
+import android.text.TextUtils.TruncateAt;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -42,7 +44,7 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 	
 	private void init()
 	{
-		final LayoutParams nameSize = new TableRow.LayoutParams(ViewUtil.calcPx(120, mContext), LayoutParams.WRAP_CONTENT);
+		final LayoutParams nameSize = new TableRow.LayoutParams(ViewUtil.calcPx(82, mContext), LayoutParams.MATCH_PARENT);
 		final LayoutParams buttonSize = new LayoutParams(ViewUtil.calcPx(30, mContext), ViewUtil.calcPx(30, mContext));
 		final LayoutParams valueSize = new LayoutParams(ViewUtil.calcPx(25, mContext), LayoutParams.WRAP_CONTENT);
 		final LayoutParams wrapAll = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -52,6 +54,9 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 		
 		final TextView valueName = new TextView(mContext);
 		valueName.setLayoutParams(nameSize);
+		valueName.setGravity(Gravity.CENTER_VERTICAL);
+		valueName.setEllipsize(TruncateAt.END);
+		valueName.setSingleLine();
 		valueName.setText(getItem().getName());
 		mContainer.addView(valueName);
 		
@@ -100,7 +105,6 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 			spinnerGrid.addView(mIncreaseButton);
 			
 			ViewUtil.applyValue(getValue(), valueDisplay);
-			mAction.update();
 		}
 		mContainer.addView(spinnerGrid);
 	}

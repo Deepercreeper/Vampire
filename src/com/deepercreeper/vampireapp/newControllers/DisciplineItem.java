@@ -113,7 +113,7 @@ public class DisciplineItem implements Item
 	
 	public boolean isParentItem()
 	{
-		return mSubItems.isEmpty();
+		return !mSubItems.isEmpty();
 	}
 	
 	private void addAbility(final Ability aAbility)

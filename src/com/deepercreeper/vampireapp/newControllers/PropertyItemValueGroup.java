@@ -10,9 +10,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Space;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.newControllers.ItemValue.UpdateAction;
@@ -104,6 +102,7 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 		{
 			mPropertiesTable.addView(aValue.getContainer());
 		}
+		mAction.update();
 	}
 	
 	@Override
@@ -173,24 +172,27 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 		mPropertiesTable = new TableLayout(mContext);
 		
 		final LayoutParams wrapHeight = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		final LayoutParams wrapRowAll = new TableRow.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		final LayoutParams wrapAll = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		final LinearLayout.LayoutParams wrapButton = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		final LayoutParams wrapAll = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		
 		mPropertiesTable.setLayoutParams(wrapHeight);
 		
-		final TableRow titleRow = new TableRow(mContext);
+		final LinearLayout titleRow = new LinearLayout(mContext);
 		titleRow.setLayoutParams(wrapAll);
 		{
-			titleRow.addView(new Space(mContext));
-			
 			final Button addProperty = new Button(mContext);
-			addProperty.setLayoutParams(wrapRowAll);
+			addProperty.setLayoutParams(wrapButton);
+			addProperty.setTextSize(14);
 			addProperty.setText(mContext.getResources().getString(R.string.add_property));
 			addProperty.setOnClickListener(new OnClickListener()
 			{
 				@Override
 				public void onClick(final View aV)
 				{
+					if (SelectItemDialog.isDialogOpen())
+					{
+						return;
+					}
 					final List<PropertyItem> items = new ArrayList<PropertyItem>();
 					items.addAll(mGroup.getItems());
 					for (final PropertyItemValue value : mValuesList)

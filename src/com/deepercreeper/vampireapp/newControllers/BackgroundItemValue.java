@@ -2,6 +2,8 @@ package com.deepercreeper.vampireapp.newControllers;
 
 import java.util.Comparator;
 import android.content.Context;
+import android.text.TextUtils.TruncateAt;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -46,10 +48,9 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	{
 		mContainer = aRow;
 		
-		final LayoutParams wrapAll = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		final LayoutParams wrapAllTable = new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		final LayoutParams wrapRowAll = new TableRow.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		final LayoutParams nameSize = new TableRow.LayoutParams(ViewUtil.calcPx(82, mContext), LayoutParams.WRAP_CONTENT);
+		final LayoutParams nameSize = new TableRow.LayoutParams(ViewUtil.calcPx(82, mContext), LayoutParams.MATCH_PARENT);
 		final LayoutParams buttonSize = new LayoutParams(ViewUtil.calcPx(30, mContext), ViewUtil.calcPx(30, mContext));
 		final LayoutParams rowButtonSize = new TableRow.LayoutParams(ViewUtil.calcPx(30, mContext), ViewUtil.calcPx(30, mContext));
 		final LayoutParams valueSize = new LayoutParams(ViewUtil.calcPx(25, mContext), LayoutParams.WRAP_CONTENT);
@@ -60,6 +61,9 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 		
 		final TextView valueName = new TextView(mContext);
 		valueName.setLayoutParams(nameSize);
+		valueName.setGravity(Gravity.CENTER_VERTICAL);
+		valueName.setEllipsize(TruncateAt.END);
+		valueName.setSingleLine();
 		valueName.setText(mItem.getName());
 		mContainer.addView(valueName);
 		

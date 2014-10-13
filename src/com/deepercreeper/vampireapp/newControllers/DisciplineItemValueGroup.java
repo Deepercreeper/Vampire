@@ -145,6 +145,10 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	{
 		mValuesList.clear();
 		mValues.clear();
+		if (mDisciplinesTable != null)
+		{
+			mDisciplinesTable.removeAllViews();
+		}
 	}
 	
 	@Override
@@ -166,7 +170,7 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 		final Context context = aLayout.getContext();
 		mDisciplinesTable = new TableLayout(context);
 		
-		final LayoutParams wrapHeight = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		final LayoutParams wrapHeight = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		
 		mDisciplinesTable.setLayoutParams(wrapHeight);
 		
