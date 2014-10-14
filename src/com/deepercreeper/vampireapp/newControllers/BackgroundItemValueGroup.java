@@ -7,7 +7,6 @@ import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -199,17 +198,13 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 		mBackgroundsPanel = (LinearLayout) aLayout;
 		mBackgroundsTable = new TableLayout(mContext);
 		
-		final LayoutParams wrapHeight = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		final LinearLayout.LayoutParams wrapButton = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		final LayoutParams wrapAll = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		
-		mBackgroundsTable.setLayoutParams(wrapHeight);
+		mBackgroundsTable.setLayoutParams(ViewUtil.instance().getWrapHeight());
 		
 		final LinearLayout titleRow = new LinearLayout(mContext);
-		titleRow.setLayoutParams(wrapAll);
+		titleRow.setLayoutParams(ViewUtil.instance().getWrapHeight());
 		{
 			final Button addBackground = new Button(mContext);
-			addBackground.setLayoutParams(wrapButton);
+			addBackground.setLayoutParams(ViewUtil.instance().getWrapHeight());
 			addBackground.setTextSize(14);
 			addBackground.setText(mContext.getResources().getString(R.string.add_background));
 			addBackground.setEnabled(mValuesList.size() < BackgroundItem.MAX_BACKGROUNDS);

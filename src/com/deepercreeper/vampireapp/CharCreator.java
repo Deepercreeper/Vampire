@@ -92,11 +92,14 @@ public class CharCreator
 	{
 		mClan = aClan;
 		mDisciplines.clear();
+		boolean hasDisciplines = false;
 		for (final DisciplineItem discipline : mClan.getDisciplines())
 		{
 			mDisciplines.addItem(discipline);
+			hasDisciplines = true;
 		}
 		mDisciplines.close();
+		mDisciplines.setEnabled(hasDisciplines);
 	}
 	
 	public void setGeneration(final int aGeneration)

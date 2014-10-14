@@ -23,6 +23,7 @@ import com.deepercreeper.vampireapp.newControllers.BackgroundController;
 import com.deepercreeper.vampireapp.newControllers.DisciplineController;
 import com.deepercreeper.vampireapp.newControllers.PropertyController;
 import com.deepercreeper.vampireapp.newControllers.SimpleController;
+import com.deepercreeper.vampireapp.util.ViewUtil;
 
 public class MainActivity extends Activity
 {
@@ -91,6 +92,8 @@ public class MainActivity extends Activity
 	
 	private void init()
 	{
+		ViewUtil.init(this);
+		
 		mDisciplines = new DisciplineController(getResources());
 		mProperties = new PropertyController(getResources());
 		mBackgrounds = new BackgroundController(getResources());

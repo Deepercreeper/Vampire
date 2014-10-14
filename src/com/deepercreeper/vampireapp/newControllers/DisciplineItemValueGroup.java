@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import android.content.Context;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import com.deepercreeper.vampireapp.ResizeAnimation;
@@ -180,9 +179,7 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 		final Context context = aLayout.getContext();
 		mDisciplinesTable = new TableLayout(context);
 		
-		final LayoutParams wrapHeight = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		
-		mDisciplinesTable.setLayoutParams(wrapHeight);
+		mDisciplinesTable.setLayoutParams(ViewUtil.instance().getWrapHeight());
 		
 		for (final DisciplineItemValue value : mValuesList)
 		{

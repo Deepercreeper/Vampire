@@ -3,7 +3,6 @@ package com.deepercreeper.vampireapp.newControllers;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.R;
@@ -100,14 +99,11 @@ public class BackgroundValueController implements ValueController<BackgroundItem
 	{
 		aLayout.removeAllViews();
 		
-		final LayoutParams wrapHeight = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		final LayoutParams zeroHeight = new LayoutParams(LayoutParams.MATCH_PARENT, 0);
-		
 		mShowPanel = new Button(mContext);
 		final LinearLayout backgrounds = new LinearLayout(mContext);
-		backgrounds.setLayoutParams(zeroHeight);
+		backgrounds.setLayoutParams(ViewUtil.instance().getZeroHeight());
 		
-		mShowPanel.setLayoutParams(wrapHeight);
+		mShowPanel.setLayoutParams(ViewUtil.instance().getWrapHeight());
 		mShowPanel.setText(R.string.backgrounds);
 		mShowPanel.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
 		mShowPanel.setOnClickListener(new OnClickListener()

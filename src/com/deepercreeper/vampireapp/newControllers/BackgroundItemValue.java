@@ -6,11 +6,9 @@ import android.text.TextUtils.TruncateAt;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
-import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.util.ViewUtil;
@@ -48,19 +46,12 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	{
 		mContainer = aRow;
 		
-		final LayoutParams wrapAllTable = new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		final LayoutParams wrapRowAll = new TableRow.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		final LayoutParams nameSize = new TableRow.LayoutParams(ViewUtil.calcPx(82, mContext), LayoutParams.MATCH_PARENT);
-		final LayoutParams buttonSize = new LayoutParams(ViewUtil.calcPx(30, mContext), ViewUtil.calcPx(30, mContext));
-		final LayoutParams rowButtonSize = new TableRow.LayoutParams(ViewUtil.calcPx(30, mContext), ViewUtil.calcPx(30, mContext));
-		final LayoutParams valueSize = new LayoutParams(ViewUtil.calcPx(25, mContext), LayoutParams.WRAP_CONTENT);
-		
-		mContainer.setLayoutParams(wrapAllTable);
+		mContainer.setLayoutParams(ViewUtil.instance().getTableWrapAll());
 		
 		aRow.removeAllViews();
 		
 		final TextView valueName = new TextView(mContext);
-		valueName.setLayoutParams(nameSize);
+		valueName.setLayoutParams(ViewUtil.instance().getRowNameShort());
 		valueName.setGravity(Gravity.CENTER_VERTICAL);
 		valueName.setEllipsize(TruncateAt.END);
 		valueName.setSingleLine();
@@ -68,7 +59,7 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 		mContainer.addView(valueName);
 		
 		final ImageButton edit = new ImageButton(mContext);
-		edit.setLayoutParams(rowButtonSize);
+		edit.setLayoutParams(ViewUtil.instance().getRowButtonSize());
 		edit.setContentDescription("Edit");
 		edit.setImageResource(android.R.drawable.ic_menu_edit);
 		edit.setOnClickListener(new OnClickListener()
@@ -82,11 +73,11 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 		mContainer.addView(edit);
 		
 		final GridLayout spinnerGrid = new GridLayout(mContext);
-		spinnerGrid.setLayoutParams(wrapRowAll);
+		spinnerGrid.setLayoutParams(ViewUtil.instance().getRowWrapAll());
 		{
 			final RadioButton[] valueDisplay = new RadioButton[mItem.getMaxValue()];
 			
-			mDecreaseButton.setLayoutParams(buttonSize);
+			mDecreaseButton.setLayoutParams(ViewUtil.instance().getButtonSize());
 			mDecreaseButton.setContentDescription("Decrease");
 			mDecreaseButton.setImageResource(android.R.drawable.ic_media_previous);
 			mDecreaseButton.setOnClickListener(new OnClickListener()
@@ -104,13 +95,13 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 			for (int i = 0; i < valueDisplay.length; i++ )
 			{
 				final RadioButton valuePoint = new RadioButton(mContext);
-				valuePoint.setLayoutParams(valueSize);
+				valuePoint.setLayoutParams(ViewUtil.instance().getValueSize());
 				valuePoint.setClickable(false);
 				spinnerGrid.addView(valuePoint);
 				valueDisplay[i] = valuePoint;
 			}
 			
-			mIncreaseButton.setLayoutParams(buttonSize);
+			mIncreaseButton.setLayoutParams(ViewUtil.instance().getButtonSize());
 			mIncreaseButton.setContentDescription("Increase");
 			mIncreaseButton.setImageResource(android.R.drawable.ic_media_next);
 			mIncreaseButton.setOnClickListener(new OnClickListener()

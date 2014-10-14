@@ -6,11 +6,9 @@ import android.text.TextUtils.TruncateAt;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
-import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.util.ViewUtil;
@@ -45,16 +43,10 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 	
 	private void init()
 	{
-		final LayoutParams wrapTableAll = new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		final LayoutParams wrapRowAll = new TableRow.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		final LayoutParams nameSize = new TableRow.LayoutParams(ViewUtil.calcPx(120, mContext), LayoutParams.MATCH_PARENT);
-		final LayoutParams buttonSize = new LayoutParams(ViewUtil.calcPx(30, mContext), ViewUtil.calcPx(30, mContext));
-		final LayoutParams valueSize = new LayoutParams(ViewUtil.calcPx(25, mContext), LayoutParams.WRAP_CONTENT);
-		
-		mContainer.setLayoutParams(wrapTableAll);
+		mContainer.setLayoutParams(ViewUtil.instance().getTableWrapAll());
 		
 		final TextView valueName = new TextView(mContext);
-		valueName.setLayoutParams(nameSize);
+		valueName.setLayoutParams(ViewUtil.instance().getRowNameLong());
 		valueName.setText(getItem().getName());
 		valueName.setGravity(Gravity.CENTER_VERTICAL);
 		valueName.setSingleLine();
@@ -62,11 +54,11 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 		mContainer.addView(valueName);
 		
 		final GridLayout spinnerGrid = new GridLayout(mContext);
-		spinnerGrid.setLayoutParams(wrapRowAll);
+		spinnerGrid.setLayoutParams(ViewUtil.instance().getRowWrapAll());
 		{
 			final RadioButton[] valueDisplay = new RadioButton[getItem().getMaxValue()];
 			
-			mDecreaseButton.setLayoutParams(buttonSize);
+			mDecreaseButton.setLayoutParams(ViewUtil.instance().getButtonSize());
 			mDecreaseButton.setContentDescription("Decrease");
 			mDecreaseButton.setImageResource(android.R.drawable.ic_media_previous);
 			mDecreaseButton.setOnClickListener(new OnClickListener()
@@ -84,13 +76,13 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 			for (int i = 0; i < valueDisplay.length; i++ )
 			{
 				final RadioButton valuePoint = new RadioButton(mContext);
-				valuePoint.setLayoutParams(valueSize);
+				valuePoint.setLayoutParams(ViewUtil.instance().getValueSize());
 				valuePoint.setClickable(false);
 				spinnerGrid.addView(valuePoint);
 				valueDisplay[i] = valuePoint;
 			}
 			
-			mIncreaseButton.setLayoutParams(buttonSize);
+			mIncreaseButton.setLayoutParams(ViewUtil.instance().getButtonSize());
 			mIncreaseButton.setContentDescription("Increase");
 			mIncreaseButton.setImageResource(android.R.drawable.ic_media_next);
 			mIncreaseButton.setOnClickListener(new OnClickListener()

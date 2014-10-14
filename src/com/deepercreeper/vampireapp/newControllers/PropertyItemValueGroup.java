@@ -7,7 +7,6 @@ import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -171,17 +170,13 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 		mPropertiesPanel = (LinearLayout) aLayout;
 		mPropertiesTable = new TableLayout(mContext);
 		
-		final LayoutParams wrapHeight = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		final LinearLayout.LayoutParams wrapButton = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		final LayoutParams wrapAll = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		
-		mPropertiesTable.setLayoutParams(wrapHeight);
+		mPropertiesTable.setLayoutParams(ViewUtil.instance().getWrapHeight());
 		
 		final LinearLayout titleRow = new LinearLayout(mContext);
-		titleRow.setLayoutParams(wrapAll);
+		titleRow.setLayoutParams(ViewUtil.instance().getWrapHeight());
 		{
 			final Button addProperty = new Button(mContext);
-			addProperty.setLayoutParams(wrapButton);
+			addProperty.setLayoutParams(ViewUtil.instance().getWrapHeight());
 			addProperty.setTextSize(14);
 			addProperty.setText(mContext.getResources().getString(R.string.add_property));
 			addProperty.setOnClickListener(new OnClickListener()

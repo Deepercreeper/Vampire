@@ -6,12 +6,11 @@ import java.util.List;
 import android.content.Context;
 import android.util.TypedValue;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.Space;
-import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.newControllers.ItemValue.UpdateAction;
+import com.deepercreeper.vampireapp.util.ViewUtil;
 
 public class SimpleItemValueGroup implements ItemValueGroup<SimpleItem>
 {
@@ -123,16 +122,13 @@ public class SimpleItemValueGroup implements ItemValueGroup<SimpleItem>
 	{
 		final Context context = aLayout.getContext();
 		
-		final LayoutParams wrapTableAll = new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		final LayoutParams wrapRowAll = new TableRow.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		
 		final TableRow titleRow = new TableRow(context);
-		titleRow.setLayoutParams(wrapTableAll);
+		titleRow.setLayoutParams(ViewUtil.instance().getTableWrapAll());
 		{
 			titleRow.addView(new Space(context));
 			
 			final TextView title = new TextView(context);
-			title.setLayoutParams(wrapRowAll);
+			title.setLayoutParams(ViewUtil.instance().getRowWrapAll());
 			title.setText(mGroup.getName());
 			title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
 			titleRow.addView(title);

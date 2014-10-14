@@ -7,7 +7,6 @@ import android.text.TextUtils.TruncateAt;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
@@ -40,25 +39,19 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	{
 		final Context context = getContext();
 		
-		final LayoutParams wrapAll = new TableRow.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		final LayoutParams numberSize = new LayoutParams(LayoutParams.WRAP_CONTENT, ViewUtil.calcPx(30, context));
-		final LayoutParams buttonSize = new LayoutParams(ViewUtil.calcPx(30, context), ViewUtil.calcPx(30, context));
-		final LayoutParams valueSize = new LayoutParams(ViewUtil.calcPx(25, context), LayoutParams.WRAP_CONTENT);
-		final LayoutParams nameSize = new LayoutParams(ViewUtil.calcPx(80, context), ViewUtil.calcPx(30, context));
-		
 		aRow.removeAllViews();
 		
 		final GridLayout numberAndName = new GridLayout(context);
-		numberAndName.setLayoutParams(wrapAll);
+		numberAndName.setLayoutParams(ViewUtil.instance().getRowWrapAll());
 		{
 			final TextView number = new TextView(context);
-			number.setLayoutParams(numberSize);
+			number.setLayoutParams(ViewUtil.instance().getNumberSize());
 			number.setGravity(Gravity.CENTER_VERTICAL);
 			number.setText((aValueIx + 1) + ".");
 			numberAndName.addView(number);
 			
 			final ImageButton edit = new ImageButton(context);
-			edit.setLayoutParams(buttonSize);
+			edit.setLayoutParams(ViewUtil.instance().getButtonSize());
 			edit.setContentDescription("Edit");
 			edit.setImageResource(android.R.drawable.ic_menu_edit);
 			edit.setOnClickListener(new OnClickListener()
@@ -94,7 +87,7 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 			numberAndName.addView(edit);
 			
 			final TextView name = new TextView(context);
-			name.setLayoutParams(nameSize);
+			name.setLayoutParams(ViewUtil.instance().getNameSizeShort());
 			name.setGravity(Gravity.CENTER_VERTICAL);
 			name.setEllipsize(TruncateAt.END);
 			name.setSingleLine();
@@ -104,7 +97,7 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 		aRow.addView(numberAndName);
 		
 		final GridLayout spinnerGrid = new GridLayout(context);
-		spinnerGrid.setLayoutParams(wrapAll);
+		spinnerGrid.setLayoutParams(ViewUtil.instance().getRowWrapAll());
 		{
 			final ImageButton decrease = new ImageButton(context);
 			final ImageButton increase = new ImageButton(context);
@@ -113,7 +106,7 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 			
 			final RadioButton[] valueDisplay = new RadioButton[getItem().getMaxValue()];
 			
-			decrease.setLayoutParams(buttonSize);
+			decrease.setLayoutParams(ViewUtil.instance().getButtonSize());
 			decrease.setContentDescription("Decrease");
 			decrease.setImageResource(android.R.drawable.ic_media_previous);
 			decrease.setOnClickListener(new OnClickListener()
@@ -131,13 +124,13 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 			for (int j = 0; j < valueDisplay.length; j++ )
 			{
 				final RadioButton valuePoint = new RadioButton(context);
-				valuePoint.setLayoutParams(valueSize);
+				valuePoint.setLayoutParams(ViewUtil.instance().getValueSize());
 				valuePoint.setClickable(false);
 				spinnerGrid.addView(valuePoint);
 				valueDisplay[j] = valuePoint;
 			}
 			
-			increase.setLayoutParams(buttonSize);
+			increase.setLayoutParams(ViewUtil.instance().getButtonSize());
 			increase.setContentDescription("Increase");
 			increase.setImageResource(android.R.drawable.ic_media_next);
 			increase.setOnClickListener(new OnClickListener()

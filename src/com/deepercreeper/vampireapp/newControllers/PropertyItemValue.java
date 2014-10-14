@@ -6,7 +6,6 @@ import android.text.TextUtils.TruncateAt;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
@@ -44,16 +43,10 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 	
 	private void init()
 	{
-		final LayoutParams nameSize = new TableRow.LayoutParams(ViewUtil.calcPx(82, mContext), LayoutParams.MATCH_PARENT);
-		final LayoutParams buttonSize = new LayoutParams(ViewUtil.calcPx(30, mContext), ViewUtil.calcPx(30, mContext));
-		final LayoutParams valueSize = new LayoutParams(ViewUtil.calcPx(25, mContext), LayoutParams.WRAP_CONTENT);
-		final LayoutParams wrapAll = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		final LayoutParams wrapRowAll = new TableRow.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		
-		mContainer.setLayoutParams(wrapAll);
+		mContainer.setLayoutParams(ViewUtil.instance().getWrapAll());
 		
 		final TextView valueName = new TextView(mContext);
-		valueName.setLayoutParams(nameSize);
+		valueName.setLayoutParams(ViewUtil.instance().getRowNameShort());
 		valueName.setGravity(Gravity.CENTER_VERTICAL);
 		valueName.setEllipsize(TruncateAt.END);
 		valueName.setSingleLine();
@@ -61,11 +54,11 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 		mContainer.addView(valueName);
 		
 		final GridLayout spinnerGrid = new GridLayout(mContext);
-		spinnerGrid.setLayoutParams(wrapRowAll);
+		spinnerGrid.setLayoutParams(ViewUtil.instance().getRowWrapAll());
 		{
 			final RadioButton[] valueDisplay = new RadioButton[getItem().getValue(getItem().getMaxValue())];
 			
-			mDecreaseButton.setLayoutParams(buttonSize);
+			mDecreaseButton.setLayoutParams(ViewUtil.instance().getButtonSize());
 			mDecreaseButton.setContentDescription("Decrease");
 			mDecreaseButton.setImageResource(android.R.drawable.ic_media_previous);
 			mDecreaseButton.setOnClickListener(new OnClickListener()
@@ -83,13 +76,13 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 			for (int i = 0; i < valueDisplay.length; i++ )
 			{
 				final RadioButton valuePoint = new RadioButton(mContext);
-				valuePoint.setLayoutParams(valueSize);
+				valuePoint.setLayoutParams(ViewUtil.instance().getValueSize());
 				valuePoint.setClickable(false);
 				spinnerGrid.addView(valuePoint);
 				valueDisplay[i] = valuePoint;
 			}
 			
-			mIncreaseButton.setLayoutParams(buttonSize);
+			mIncreaseButton.setLayoutParams(ViewUtil.instance().getButtonSize());
 			mIncreaseButton.setContentDescription("Increase");
 			mIncreaseButton.setImageResource(android.R.drawable.ic_media_next);
 			mIncreaseButton.setOnClickListener(new OnClickListener()

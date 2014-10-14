@@ -8,7 +8,6 @@ import java.util.List;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -127,15 +126,12 @@ public class SimpleValueController implements ValueController<SimpleItem>
 		final Context context = aLayout.getContext();
 		aLayout.removeAllViews();
 		
-		final LayoutParams wrapHeight = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		final LayoutParams zeroHeight = new LayoutParams(LayoutParams.MATCH_PARENT, 0);
-		
 		// Attributes
 		mShowAttributesPanel = new Button(context);
 		final TableLayout attributes = new TableLayout(context);
-		attributes.setLayoutParams(zeroHeight);
+		attributes.setLayoutParams(ViewUtil.instance().getZeroHeight());
 		
-		mShowAttributesPanel.setLayoutParams(wrapHeight);
+		mShowAttributesPanel.setLayoutParams(ViewUtil.instance().getWrapHeight());
 		mShowAttributesPanel.setText(R.string.attributes);
 		mShowAttributesPanel.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
 		mShowAttributesPanel.setOnClickListener(new OnClickListener()
@@ -172,9 +168,9 @@ public class SimpleValueController implements ValueController<SimpleItem>
 		// Abilities
 		mShowAbilitiesPanel = new Button(context);
 		final TableLayout abilities = new TableLayout(context);
-		abilities.setLayoutParams(zeroHeight);
+		abilities.setLayoutParams(ViewUtil.instance().getZeroHeight());
 		
-		mShowAbilitiesPanel.setLayoutParams(wrapHeight);
+		mShowAbilitiesPanel.setLayoutParams(ViewUtil.instance().getWrapHeight());
 		mShowAbilitiesPanel.setText(R.string.abilities);
 		mShowAbilitiesPanel.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
 		mShowAbilitiesPanel.setOnClickListener(new OnClickListener()
@@ -211,9 +207,9 @@ public class SimpleValueController implements ValueController<SimpleItem>
 		// Virtues
 		mShowVirtuesPanel = new Button(context);
 		final TableLayout virtues = new TableLayout(context);
-		virtues.setLayoutParams(zeroHeight);
+		virtues.setLayoutParams(ViewUtil.instance().getZeroHeight());
 		
-		mShowVirtuesPanel.setLayoutParams(wrapHeight);
+		mShowVirtuesPanel.setLayoutParams(ViewUtil.instance().getWrapHeight());
 		mShowVirtuesPanel.setText(R.string.virtues);
 		mShowVirtuesPanel.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
 		mShowVirtuesPanel.setOnClickListener(new OnClickListener()
