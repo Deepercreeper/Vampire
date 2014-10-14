@@ -41,10 +41,10 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 		final Context context = getContext();
 		
 		final LayoutParams wrapAll = new TableRow.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		final LayoutParams numberSize = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
+		final LayoutParams numberSize = new LayoutParams(LayoutParams.WRAP_CONTENT, ViewUtil.calcPx(30, context));
 		final LayoutParams buttonSize = new LayoutParams(ViewUtil.calcPx(30, context), ViewUtil.calcPx(30, context));
 		final LayoutParams valueSize = new LayoutParams(ViewUtil.calcPx(25, context), LayoutParams.WRAP_CONTENT);
-		final LayoutParams nameSize = new LayoutParams(ViewUtil.calcPx(80, context), LayoutParams.MATCH_PARENT);
+		final LayoutParams nameSize = new LayoutParams(ViewUtil.calcPx(80, context), ViewUtil.calcPx(30, context));
 		
 		aRow.removeAllViews();
 		
@@ -185,7 +185,7 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 				}
 			}
 		}
-		return true;
+		return canDecrease();
 	}
 	
 	@Override

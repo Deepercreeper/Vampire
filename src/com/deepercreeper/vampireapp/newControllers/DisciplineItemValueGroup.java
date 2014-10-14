@@ -86,12 +86,12 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 		{
 			if (value.getItem().isParentItem())
 			{
-				for (final DisciplineItemValue subValue : value.getSubValues())
+				for (final SubDisciplineItemValue subValue : value.getSubValues())
 				{
 					if (subValue != null)
 					{
-						value.setIncreasable(aCanIncrease && value.canIncrease(mCreation));
-						value.setDecreasable(aCanDecrease && value.canDecrease(mCreation));
+						subValue.setIncreasable(aCanIncrease && subValue.canIncrease(mCreation));
+						subValue.setDecreasable(aCanDecrease && subValue.canDecrease(mCreation));
 					}
 				}
 			}
@@ -109,7 +109,17 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 		int value = 0;
 		for (final DisciplineItemValue valueItem : mValuesList)
 		{
-			value += valueItem.getValue();
+			if (valueItem.getItem().isParentItem())
+			{
+				for (final SubDisciplineItemValue subValue : valueItem.getSubValues())
+				{
+					value += subValue.getValue();
+				}
+			}
+			else
+			{
+				value += valueItem.getValue();
+			}
 		}
 		return value;
 	}

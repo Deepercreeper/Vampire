@@ -13,7 +13,6 @@ import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.Space;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -67,7 +66,7 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 	{
 		final LayoutParams wrapTableAll = new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		final LayoutParams wrapAll = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		final LayoutParams wrapHeight = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		final LayoutParams wrapHeight = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		
 		mContainer.setLayoutParams(wrapTableAll);
 		
@@ -77,8 +76,6 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 		final LinearLayout parentRow = new LinearLayout(mContext);
 		parentRow.setLayoutParams(wrapTableAll);
 		{
-			parentRow.addView(new Space(mContext));
-			
 			final TextView parentName = new TextView(mContext);
 			parentName.setLayoutParams(wrapAll);
 			parentName.setText(getItem().getName() + ":");
@@ -125,14 +122,12 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 		final GridLayout spinnerGrid = new GridLayout(mContext);
 		spinnerGrid.setLayoutParams(wrapRowAll);
 		{
-			final ImageButton decrease = new ImageButton(mContext);
-			final ImageButton increase = new ImageButton(mContext);
 			final RadioButton[] valueDisplay = new RadioButton[getItem().getMaxValue()];
 			
-			decrease.setLayoutParams(buttonSize);
-			decrease.setContentDescription("Decrease");
-			decrease.setImageResource(android.R.drawable.ic_media_previous);
-			decrease.setOnClickListener(new OnClickListener()
+			mDecreaseButton.setLayoutParams(buttonSize);
+			mDecreaseButton.setContentDescription("Decrease");
+			mDecreaseButton.setImageResource(android.R.drawable.ic_media_previous);
+			mDecreaseButton.setOnClickListener(new OnClickListener()
 			{
 				@Override
 				public void onClick(final View aV)
@@ -142,7 +137,7 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 					mAction.update();
 				}
 			});
-			spinnerGrid.addView(decrease);
+			spinnerGrid.addView(mDecreaseButton);
 			
 			for (int i = 0; i < valueDisplay.length; i++ )
 			{
@@ -153,10 +148,10 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 				valueDisplay[i] = valuePoint;
 			}
 			
-			increase.setLayoutParams(buttonSize);
-			increase.setContentDescription("Increase");
-			increase.setImageResource(android.R.drawable.ic_media_next);
-			increase.setOnClickListener(new OnClickListener()
+			mIncreaseButton.setLayoutParams(buttonSize);
+			mIncreaseButton.setContentDescription("Increase");
+			mIncreaseButton.setImageResource(android.R.drawable.ic_media_next);
+			mIncreaseButton.setOnClickListener(new OnClickListener()
 			{
 				@Override
 				public void onClick(final View aV)
@@ -166,7 +161,7 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 					mAction.update();
 				}
 			});
-			spinnerGrid.addView(increase);
+			spinnerGrid.addView(mIncreaseButton);
 			
 			ViewUtil.applyValue(getValue(), valueDisplay);
 		}
@@ -175,9 +170,9 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 	
 	private TableRow createSubDisciplineRow(final int aValueIx)
 	{
-		final LayoutParams nameSize = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
+		final LayoutParams nameSize = new LayoutParams(LayoutParams.WRAP_CONTENT, ViewUtil.calcPx(30, mContext));
 		final LayoutParams wrapTableAll = new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		final LayoutParams wrapAll = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		final LayoutParams wrapAll = new TableRow.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		final LayoutParams buttonSize = new LayoutParams(ViewUtil.calcPx(30, mContext), ViewUtil.calcPx(30, mContext));
 		
 		final TableRow subRow = new TableRow(mContext);
@@ -277,14 +272,12 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 	@Override
 	public boolean canIncrease(final boolean aCreation)
 	{
-		// TODO Move into DisciplineItemValueGroup.updateValues()
 		return canIncrease() && ( !aCreation || mValue < getItem().getMaxStartValue());
 	}
 	
 	@Override
 	public boolean canDecrease(final boolean aCreation)
 	{
-		// TODO Move into DisciplineItemValueGroup.updateValues()
 		return canDecrease();
 	}
 	
