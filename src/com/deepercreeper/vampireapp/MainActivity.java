@@ -19,10 +19,10 @@ import android.widget.NumberPicker;
 import android.widget.NumberPicker.OnValueChangeListener;
 import android.widget.Spinner;
 import android.widget.Toast;
-import com.deepercreeper.vampireapp.newControllers.BackgroundController;
-import com.deepercreeper.vampireapp.newControllers.DisciplineController;
-import com.deepercreeper.vampireapp.newControllers.PropertyController;
-import com.deepercreeper.vampireapp.newControllers.SimpleController;
+import com.deepercreeper.vampireapp.controller.BackgroundController;
+import com.deepercreeper.vampireapp.controller.DisciplineController;
+import com.deepercreeper.vampireapp.controller.PropertyController;
+import com.deepercreeper.vampireapp.controller.SimpleController;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 public class MainActivity extends Activity

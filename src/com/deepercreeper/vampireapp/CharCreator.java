@@ -1,15 +1,15 @@
 package com.deepercreeper.vampireapp;
 
 import android.content.Context;
-import com.deepercreeper.vampireapp.newControllers.BackgroundController;
-import com.deepercreeper.vampireapp.newControllers.BackgroundValueController;
-import com.deepercreeper.vampireapp.newControllers.DisciplineController;
-import com.deepercreeper.vampireapp.newControllers.DisciplineItem;
-import com.deepercreeper.vampireapp.newControllers.DisciplineValueController;
-import com.deepercreeper.vampireapp.newControllers.PropertyController;
-import com.deepercreeper.vampireapp.newControllers.PropertyValueController;
-import com.deepercreeper.vampireapp.newControllers.SimpleController;
-import com.deepercreeper.vampireapp.newControllers.SimpleValueController;
+import com.deepercreeper.vampireapp.controller.BackgroundController;
+import com.deepercreeper.vampireapp.controller.BackgroundValueController;
+import com.deepercreeper.vampireapp.controller.DisciplineController;
+import com.deepercreeper.vampireapp.controller.DisciplineItem;
+import com.deepercreeper.vampireapp.controller.DisciplineValueController;
+import com.deepercreeper.vampireapp.controller.PropertyController;
+import com.deepercreeper.vampireapp.controller.PropertyValueController;
+import com.deepercreeper.vampireapp.controller.SimpleController;
+import com.deepercreeper.vampireapp.controller.SimpleValueController;
 
 public class CharCreator
 {

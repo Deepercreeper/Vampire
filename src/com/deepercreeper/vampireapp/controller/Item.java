@@ -1,0 +1,44 @@
+package com.deepercreeper.vampireapp.controller;
+
+/**
+ * There are several items that define character property types.
+ * 
+ * @author Vincent
+ */
+public interface Item extends Comparable<Item>
+{
+	/**
+	 * Each item has to have a description.<br>
+	 * It is displayed when the user touches any item name.
+	 * 
+	 * @return the item description.
+	 */
+	public String getDescription();
+	
+	/**
+	 * Each item has a specific maximum start value,<br>
+	 * which can be reached when creating a new character.
+	 * 
+	 * @return the item start value.
+	 */
+	public int getMaxStartValue();
+	
+	/**
+	 * Each item has a maximum value that can be reached.
+	 * 
+	 * @return the maximum item value.
+	 */
+	public int getMaxValue();
+	
+	/**
+	 * @return the item name.
+	 */
+	public String getName();
+	
+	/**
+	 * Each item has a specific start value, which is set when creating a value of it.
+	 * 
+	 * @return the item start value.
+	 */
+	public int getStartValue();
+}
