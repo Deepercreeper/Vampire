@@ -9,6 +9,11 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
+/**
+ * A controller for property value groups.
+ * 
+ * @author Vincent
+ */
 public class PropertyValueController implements ValueController<PropertyItem>, VariableValueGroup<PropertyItem, PropertyItemValue>
 {
 	private boolean							mCreation;
@@ -23,6 +28,16 @@ public class PropertyValueController implements ValueController<PropertyItem>, V
 	
 	private final PropertyItemValueGroup	mProperties;
 	
+	/**
+	 * Creates a new property value controller.
+	 * 
+	 * @param aController
+	 *            The controller type.
+	 * @param aContext
+	 *            The context.
+	 * @param aCreation
+	 *            Whether this controller is inside the creation mode.
+	 */
 	public PropertyValueController(final PropertyController aController, final Context aContext, final boolean aCreation)
 	{
 		mCreation = aCreation;

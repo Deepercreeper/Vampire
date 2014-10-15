@@ -2,12 +2,31 @@ package com.deepercreeper.vampireapp.controller;
 
 import android.widget.LinearLayout;
 
+/**
+ * A controller that handles value groups.
+ * 
+ * @author Vincent
+ * @param <T>
+ *            The item type.
+ */
 public interface ValueController <T extends Item>
 {
+	/**
+	 * Enables or disabled the value groups for changing anything.
+	 * 
+	 * @param aEnabled
+	 *            Whether the groups should be enabled or not.
+	 */
 	public void setEnabled(boolean aEnabled);
 	
+	/**
+	 * Closes the widget container. Maybe for refilling with new values.
+	 */
 	public void close();
 	
+	/**
+	 * @return the controller.
+	 */
 	public Controller<T> getController();
 	
 	/**
@@ -21,9 +40,21 @@ public interface ValueController <T extends Item>
 	 */
 	public void initLayout(LinearLayout aLayout);
 	
+	/**
+	 * @return whether this controller is in the creation mode.
+	 */
 	public boolean isCreation();
 	
+	/**
+	 * Sets whether this controller is in the creation mode.
+	 * 
+	 * @param aCreation
+	 *            Whether creation mode or not.
+	 */
 	public void setCreation(boolean aCreation);
 	
+	/**
+	 * Updates all value groups.
+	 */
 	public void updateValues();
 }

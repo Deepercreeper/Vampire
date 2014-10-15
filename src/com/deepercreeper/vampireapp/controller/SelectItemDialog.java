@@ -10,12 +10,32 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+/**
+ * Used for selecting items from a list and then invoking the given action.
+ * 
+ * @author Vincent
+ * @param <T>
+ *            The item type.
+ */
 public class SelectItemDialog <T extends Item> extends DialogFragment
 {
 	private static boolean	sDialogOpen	= false;
 	
+	/**
+	 * A listener that is invoked when a selection was made.
+	 * 
+	 * @author Vincent
+	 * @param <S>
+	 *            The item type.
+	 */
 	public static interface SelectionListener <S extends Item>
 	{
+		/**
+		 * Invoked when the given item was selected.
+		 * 
+		 * @param aItem
+		 *            The item that was selected.
+		 */
 		public void select(S aItem);
 	}
 	
@@ -49,12 +69,32 @@ public class SelectItemDialog <T extends Item> extends DialogFragment
 		}
 	}
 	
+	/**
+	 * Shows an item selection dialog that invokes the selection listener when any item was selected.<br>
+	 * Only one dialog can be shown at one time.
+	 * 
+	 * @param aItems
+	 *            A list of items that are able to be selected inside the dialog.
+	 * @param aTitle
+	 *            The dialog title.
+	 * @param aContext
+	 *            The context.
+	 * @param aAction
+	 *            The selection action.
+	 */
 	public static <S extends Item> void showSelectionDialog(final List<S> aItems, final String aTitle, final Context aContext,
 			final SelectionListener<S> aAction)
 	{
+		if (sDialogOpen)
+		{
+			return;
+		}
 		new SelectItemDialog<S>(aItems, aTitle, aContext, aAction).show(((Activity) aContext).getFragmentManager(), aTitle);
 	}
 	
+	/**
+	 * @return whether any dialog is open at this time.
+	 */
 	public static boolean isDialogOpen()
 	{
 		return sDialogOpen;

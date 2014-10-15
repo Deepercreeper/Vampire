@@ -9,6 +9,11 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
+/**
+ * A controller of discipline value groups.
+ * 
+ * @author Vincent
+ */
 public class DisciplineValueController implements ValueController<DisciplineItem>, VariableValueGroup<DisciplineItem, DisciplineItemValue>
 {
 	private boolean							mCreation;
@@ -25,6 +30,16 @@ public class DisciplineValueController implements ValueController<DisciplineItem
 	
 	private final DisciplineItemValueGroup	mDisciplines;
 	
+	/**
+	 * Creates a new discipline value group.
+	 * 
+	 * @param aController
+	 *            The controller type.
+	 * @param aContext
+	 *            The context.
+	 * @param aCreation
+	 *            Whether this controller is inside the creation mode.
+	 */
 	public DisciplineValueController(final DisciplineController aController, final Context aContext, final boolean aCreation)
 	{
 		mCreation = aCreation;

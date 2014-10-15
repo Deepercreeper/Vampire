@@ -9,6 +9,11 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
+/**
+ * A controller for background value groups.
+ * 
+ * @author Vincent
+ */
 public class BackgroundValueController implements ValueController<BackgroundItem>, VariableValueGroup<BackgroundItem, BackgroundItemValue>
 {
 	private boolean							mCreation;
@@ -23,6 +28,16 @@ public class BackgroundValueController implements ValueController<BackgroundItem
 	
 	private final BackgroundItemValueGroup	mBackgrounds;
 	
+	/**
+	 * Creates a new background value controller.
+	 * 
+	 * @param aController
+	 *            The controller type.
+	 * @param aContext
+	 *            The context.
+	 * @param aCreation
+	 *            Whether this controller is in the creation mode.
+	 */
 	public BackgroundValueController(final BackgroundController aController, final Context aContext, final boolean aCreation)
 	{
 		mCreation = aCreation;

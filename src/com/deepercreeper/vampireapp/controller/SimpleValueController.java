@@ -15,6 +15,11 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
+/**
+ * A controller for simple value groups.
+ * 
+ * @author Vincent
+ */
 public class SimpleValueController implements ValueController<SimpleItem>
 {
 	private boolean										mCreation;
@@ -51,6 +56,16 @@ public class SimpleValueController implements ValueController<SimpleItem>
 	
 	private final SimpleItemValueGroup					mVirtues;
 	
+	/**
+	 * Creates a new simple value controller.
+	 * 
+	 * @param aController
+	 *            The controller type.
+	 * @param aContext
+	 *            The context.
+	 * @param aCreation
+	 *            Whether this controller is inside the creation mode.
+	 */
 	public SimpleValueController(final SimpleController aController, final Context aContext, final boolean aCreation)
 	{
 		mCreation = aCreation;
