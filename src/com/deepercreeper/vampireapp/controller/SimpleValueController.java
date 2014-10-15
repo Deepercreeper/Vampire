@@ -87,6 +87,20 @@ public class SimpleValueController implements ValueController<SimpleItem>
 	}
 	
 	@Override
+	public void release()
+	{
+		for (final SimpleItemValueGroup group : mAttributesList)
+		{
+			group.release();
+		}
+		for (final SimpleItemValueGroup group : mAbilitiesList)
+		{
+			group.release();
+		}
+		mVirtues.release();
+	}
+	
+	@Override
 	public void close()
 	{
 		if (mAttributesOpen)

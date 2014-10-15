@@ -27,7 +27,12 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
 
 public class MainActivity extends Activity
 {
-	private static final String				DELIM				= ":";
+	private static final String	DELIM	= ":";
+	
+	private enum State
+	{
+		MAIN, CREATION, FREE_POINTS;
+	}
 	
 	private DisciplineController			mDisciplines;
 	
@@ -36,6 +41,8 @@ public class MainActivity extends Activity
 	private SimpleController				mSimpleItems;
 	
 	private BackgroundController			mBackgrounds;
+	
+	private State							mState;
 	
 	private final HashMap<String, Clan>		mClans				= new HashMap<String, Clan>();
 	
@@ -53,19 +60,54 @@ public class MainActivity extends Activity
 	protected void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
 		init();
-		
 		loadChars();
+		initMain();
+	}
+	
+	private void initMain()
+	{
+		release();
+		setContentView(R.layout.activity_main);
+		mState = State.MAIN;
 		final Button createChar = (Button) findViewById(R.id.createCharacterButton);
 		createChar.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(final View aV)
 			{
-				createCharacter();
+				initCreateCharacter(new CharCreator(MainActivity.this, mDisciplines, mProperties, mBackgrounds, mSimpleItems, mNatureAndBehavior
+						.get(0), mNatureAndBehavior.get(0), mClans.get(mClanNames.get(0))));
 			}
 		});
+	}
+	
+	private void release()
+	{
+		if (mCreator != null)
+		{
+			mCreator.release();
+		}
+	}
+	
+	@Override
+	public void onBackPressed()
+	{
+		switch (mState)
+		{
+			case CREATION :
+				mCreator = null;
+				initMain();
+				break;
+			case FREE_POINTS :
+				initCreateCharacter(mCreator);
+				break;
+			case MAIN :
+				super.onBackPressed();
+				break;
+			default :
+				break;
+		}
 	}
 	
 	@Override
@@ -135,22 +177,28 @@ public class MainActivity extends Activity
 		}
 	}
 	
+	private void initCreateCharacter(final CharCreator aCreator)
+	{
+		release();
+		mCreator = aCreator;
+		setContentView(R.layout.create_character);
+		mState = State.CREATION;
+		createCharacter();
+	}
+	
 	private void createCharacter()
 	{
-		setContentView(R.layout.create_character);
-		
-		mCreator = new CharCreator(this, mDisciplines, mProperties, mBackgrounds, mSimpleItems, mNatureAndBehavior.get(0), mNatureAndBehavior.get(0),
-				mClans.get(mClanNames.get(0)));
-		
 		ArrayAdapter<String> adapter;
 		
 		final Spinner natureSpinner = (Spinner) findViewById(R.id.nature_spinner);
 		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, mNatureAndBehavior);
 		natureSpinner.setAdapter(adapter);
+		natureSpinner.setSelection(mNatureAndBehavior.indexOf(mCreator.getNature()));
 		
 		final Spinner behaviorSpinner = (Spinner) findViewById(R.id.behavior_spinner);
 		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, mNatureAndBehavior);
 		behaviorSpinner.setAdapter(adapter);
+		behaviorSpinner.setSelection(mNatureAndBehavior.indexOf(mCreator.getBehavior()));
 		
 		final NumberPicker generationPicker = (NumberPicker) findViewById(R.id.generation_picker);
 		generationPicker.setMinValue(CharCreator.MIN_GENERATION);
@@ -164,6 +212,8 @@ public class MainActivity extends Activity
 				mCreator.setGeneration(aNewVal);
 			}
 		});
+		
+		mInitializedClans = false;
 		
 		final Spinner clanSpinner = (Spinner) findViewById(R.id.clan_spinner);
 		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, mClanNames);
@@ -190,6 +240,7 @@ public class MainActivity extends Activity
 				// Do nothing
 			}
 		});
+		clanSpinner.setSelection(mClanNames.indexOf(mCreator.getClan().getName()));
 		
 		final LinearLayout simpleItemsPanel = (LinearLayout) findViewById(R.id.simple_items_panel);
 		mCreator.getSimpleValues().initLayout(simpleItemsPanel);
@@ -202,6 +253,23 @@ public class MainActivity extends Activity
 		
 		final LinearLayout propertiesPanel = (LinearLayout) findViewById(R.id.properties_panel);
 		mCreator.getProperties().initLayout(propertiesPanel);
+		
+		final Button nextButton = (Button) findViewById(R.id.next_button);
+		nextButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				applyBonusPoints();
+			}
+		});
+	}
+	
+	private void applyBonusPoints()
+	{
+		release();
+		setContentView(R.layout.free_points_view);
+		mState = State.FREE_POINTS;
 	}
 	
 	private void clanChanged(final String aClan)

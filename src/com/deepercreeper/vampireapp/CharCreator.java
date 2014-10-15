@@ -48,6 +48,14 @@ public class CharCreator
 		setClan(aClan);
 	}
 	
+	public void release()
+	{
+		mDisciplines.release();
+		mProperties.release();
+		mBackgrounds.release();
+		mSimpleValues.release();
+	}
+	
 	public SimpleValueController getSimpleValues()
 	{
 		return mSimpleValues;

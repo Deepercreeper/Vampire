@@ -55,6 +55,14 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 		init();
 	}
 	
+	@Override
+	public void release()
+	{
+		ViewUtil.release(mContainer);
+		ViewUtil.release(mIncreaseButton);
+		ViewUtil.release(mDecreaseButton);
+	}
+	
 	private void init()
 	{
 		mContainer.setLayoutParams(ViewUtil.instance().getTableWrapAll());

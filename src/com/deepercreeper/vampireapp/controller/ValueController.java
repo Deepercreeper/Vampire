@@ -20,6 +20,11 @@ public interface ValueController <T extends Item>
 	public void setEnabled(boolean aEnabled);
 	
 	/**
+	 * Removes all widgets from their parent container.
+	 */
+	public void release();
+	
+	/**
 	 * Closes the widget container. Maybe for refilling with new values.
 	 */
 	public void close();

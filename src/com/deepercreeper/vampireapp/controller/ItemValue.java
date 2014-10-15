@@ -82,6 +82,11 @@ public interface ItemValue <T extends Item>
 	public void setDecreasable(boolean aEnabled);
 	
 	/**
+	 * Removes all widgets from their parent containers.
+	 */
+	public void release();
+	
+	/**
 	 * Each value has a specified widget that contains some buttons and text views to handle its value.
 	 * 
 	 * @return the value container.

@@ -40,6 +40,13 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 		super(aItem, aContext, aAction);
 	}
 	
+	@Override
+	public void release()
+	{
+		ViewUtil.release(getIncreaseButton());
+		ViewUtil.release(getDecreaseButton());
+	}
+	
 	/**
 	 * Sets the parent discipline value.
 	 * 

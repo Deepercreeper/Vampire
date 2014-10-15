@@ -66,6 +66,15 @@ public class SimpleItemValueGroup implements ItemValueGroup<SimpleItem>
 	}
 	
 	@Override
+	public void release()
+	{
+		for (final SimpleItemValue value : mValuesList)
+		{
+			value.release();
+		}
+	}
+	
+	@Override
 	public SimpleValueController getController()
 	{
 		return mController;

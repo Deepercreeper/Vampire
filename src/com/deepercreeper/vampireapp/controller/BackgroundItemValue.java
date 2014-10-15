@@ -58,6 +58,13 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 		mValue = mItem.getStartValue();
 	}
 	
+	@Override
+	public void release()
+	{
+		ViewUtil.release(mIncreaseButton);
+		ViewUtil.release(mDecreaseButton);
+	}
+	
 	/**
 	 * Initializes a table row so that all needed widgets are added to handle this value.
 	 * 

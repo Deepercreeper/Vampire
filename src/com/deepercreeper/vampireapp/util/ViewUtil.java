@@ -2,8 +2,10 @@ package com.deepercreeper.vampireapp.util;
 
 import android.content.Context;
 import android.util.TypedValue;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.ViewParent;
 import android.widget.RadioButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -55,6 +57,15 @@ public class ViewUtil
 		mValueSize = new LayoutParams(calcPx(25, aContext), LayoutParams.WRAP_CONTENT);
 		mNumberSize = new LayoutParams(LayoutParams.WRAP_CONTENT, calcPx(30, aContext));
 		mNameSizeShort = new LayoutParams(calcPx(82, aContext), calcPx(30, aContext));
+	}
+	
+	public static void release(final View aView)
+	{
+		final ViewParent parent = aView.getParent();
+		if (parent instanceof ViewGroup)
+		{
+			((ViewGroup) parent).removeView(aView);
+		}
 	}
 	
 	public LayoutParams getNameSizeShort()

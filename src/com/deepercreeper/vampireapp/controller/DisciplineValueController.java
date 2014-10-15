@@ -49,6 +49,12 @@ public class DisciplineValueController implements ValueController<DisciplineItem
 	}
 	
 	@Override
+	public void release()
+	{
+		mDisciplines.release();
+	}
+	
+	@Override
 	public void addItem(final DisciplineItem aItem)
 	{
 		mDisciplines.addItem(aItem);

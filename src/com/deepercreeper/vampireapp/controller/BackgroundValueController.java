@@ -47,6 +47,12 @@ public class BackgroundValueController implements ValueController<BackgroundItem
 	}
 	
 	@Override
+	public void release()
+	{
+		mBackgrounds.release();
+	}
+	
+	@Override
 	public void addItem(final BackgroundItem aItem)
 	{
 		mBackgrounds.addItem(aItem);

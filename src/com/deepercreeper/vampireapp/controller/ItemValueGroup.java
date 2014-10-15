@@ -34,6 +34,11 @@ public interface ItemValueGroup <T extends Item>
 	public ItemValue<T> getValue(String aName);
 	
 	/**
+	 * Removes all widgets from their parent containers.
+	 */
+	public void release();
+	
+	/**
 	 * @return a list of all value items.
 	 */
 	public List<? extends ItemValue<T>> getValuesList();

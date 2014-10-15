@@ -71,6 +71,15 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 		};
 	}
 	
+	@Override
+	public void release()
+	{
+		for (final BackgroundItemValue value : mValuesList)
+		{
+			value.release();
+		}
+	}
+	
 	/**
 	 * Creates a select item dialog that sets the given value.
 	 * 

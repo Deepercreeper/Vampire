@@ -63,6 +63,21 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 		init();
 	}
 	
+	@Override
+	public void release()
+	{
+		if (getItem().isParentItem())
+		{
+			for (final SubDisciplineItemValue subValue : mSubValues)
+			{
+				subValue.release();
+			}
+		}
+		ViewUtil.release(mContainer);
+		ViewUtil.release(mIncreaseButton);
+		ViewUtil.release(mDecreaseButton);
+	}
+	
 	protected void init()
 	{
 		if (mItem.isParentItem())
@@ -108,6 +123,16 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 	protected void setDecreaseButton(final ImageButton aDecreaseButton)
 	{
 		mDecreaseButton = aDecreaseButton;
+	}
+	
+	protected ImageButton getIncreaseButton()
+	{
+		return mIncreaseButton;
+	}
+	
+	protected ImageButton getDecreaseButton()
+	{
+		return mDecreaseButton;
 	}
 	
 	private void initDiscipline()

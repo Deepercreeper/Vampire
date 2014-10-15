@@ -71,6 +71,15 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 	}
 	
 	@Override
+	public void release()
+	{
+		for (final PropertyItemValue value : mValuesList)
+		{
+			value.release();
+		}
+	}
+	
+	@Override
 	public PropertyValueController getController()
 	{
 		return mController;

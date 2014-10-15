@@ -47,6 +47,12 @@ public class PropertyValueController implements ValueController<PropertyItem>, V
 	}
 	
 	@Override
+	public void release()
+	{
+		mProperties.release();
+	}
+	
+	@Override
 	public void addItem(final PropertyItem aItem)
 	{
 		mProperties.addItem(aItem);

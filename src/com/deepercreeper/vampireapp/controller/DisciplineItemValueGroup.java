@@ -66,6 +66,15 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	}
 	
 	@Override
+	public void release()
+	{
+		for (final DisciplineItemValue value : mValuesList)
+		{
+			value.release();
+		}
+	}
+	
+	@Override
 	public DisciplineValueController getController()
 	{
 		return mController;
