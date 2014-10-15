@@ -6,6 +6,8 @@
     
     <integer name="discipline_max_creation_value">4</integer>
     
+    <integer name="free_points">20</integer>
+    
     <integer-array name="attributes_max_creation_values">
         <item>6</item>
         <item>8</item>

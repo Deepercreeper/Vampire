@@ -17,7 +17,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.NumberPicker.OnValueChangeListener;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.deepercreeper.vampireapp.controller.BackgroundController;
 import com.deepercreeper.vampireapp.controller.DisciplineController;
@@ -260,16 +262,39 @@ public class MainActivity extends Activity
 			@Override
 			public void onClick(final View aV)
 			{
-				applyBonusPoints();
+				initBonusPoints();
 			}
 		});
 	}
 	
-	private void applyBonusPoints()
+	private void initBonusPoints()
 	{
 		release();
 		setContentView(R.layout.free_points_view);
 		mState = State.FREE_POINTS;
+		
+		final int freePoints = getResources().getInteger(R.integer.free_points);
+		
+		final TextView pointsText = (TextView) findViewById(R.id.free_points_text);
+		pointsText.setText("" + freePoints);
+		
+		final ProgressBar pointsBar = (ProgressBar) findViewById(R.id.free_points_bar);
+		pointsBar.setMax(freePoints);
+		pointsBar.setProgress(freePoints);
+		
+		final Button showDescriptions = (Button) findViewById(R.id.show_descriptions_button);
+		showDescriptions.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				mCreator.setFreePoints(Math.max(0, mCreator.getFreePoints() - 1));
+				pointsText.setText("" + mCreator.getFreePoints());
+				pointsBar.setProgress(mCreator.getFreePoints());
+			}
+		});
+		
+		mCreator.setFreePoints(freePoints);
 	}
 	
 	private void clanChanged(final String aClan)

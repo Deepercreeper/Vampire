@@ -27,6 +27,8 @@ public class CharCreator
 	
 	private int								mGeneration		= DEFAULT_GENERATION;
 	
+	private int								mFreePoints;
+	
 	private final DisciplineValueController	mDisciplines;
 	
 	private final PropertyValueController	mProperties;
@@ -46,6 +48,16 @@ public class CharCreator
 		mNature = aNature;
 		mBehavior = aBehavior;
 		setClan(aClan);
+	}
+	
+	public void setFreePoints(final int aFreePoints)
+	{
+		mFreePoints = aFreePoints;
+	}
+	
+	public int getFreePoints()
+	{
+		return mFreePoints;
 	}
 	
 	public void release()
