@@ -48,15 +48,15 @@ public interface ValueController <T extends Item>
 	/**
 	 * @return whether this controller is in the creation mode.
 	 */
-	public boolean isCreation();
+	public CreationMode getCreationMode();
 	
 	/**
 	 * Sets whether this controller is in the creation mode.
 	 * 
-	 * @param aCreation
+	 * @param aMode
 	 *            Whether creation mode or not.
 	 */
-	public void setCreation(boolean aCreation);
+	public void setCreationMode(CreationMode aMode);
 	
 	/**
 	 * Updates all value groups.

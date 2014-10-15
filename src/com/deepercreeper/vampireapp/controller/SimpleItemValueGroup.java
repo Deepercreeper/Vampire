@@ -19,7 +19,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class SimpleItemValueGroup implements ItemValueGroup<SimpleItem>
 {
-	private boolean										mCreation;
+	private CreationMode								mMode;
 	
 	private final Context								mContext;
 	
@@ -42,13 +42,14 @@ public class SimpleItemValueGroup implements ItemValueGroup<SimpleItem>
 	 *            The parent controller.
 	 * @param aContext
 	 *            The context.
-	 * @param aCreation
+	 * @param aMode
 	 *            Whether this value group is inside the creation mode.
 	 */
-	public SimpleItemValueGroup(final SimpleItemGroup aGroup, final SimpleValueController aController, final Context aContext, final boolean aCreation)
+	public SimpleItemValueGroup(final SimpleItemGroup aGroup, final SimpleValueController aController, final Context aContext,
+			final CreationMode aMode)
 	{
 		mController = aController;
-		mCreation = aCreation;
+		mMode = aMode;
 		mGroup = aGroup;
 		mContext = aContext;
 		mAction = new UpdateAction()
@@ -91,6 +92,17 @@ public class SimpleItemValueGroup implements ItemValueGroup<SimpleItem>
 		return value;
 	}
 	
+	@Override
+	public int getTempPoints()
+	{
+		int value = 0;
+		for (final SimpleItemValue itemValue : mValuesList)
+		{
+			value += itemValue.getTempPoints();
+		}
+		return value;
+	}
+	
 	private void addValue(final SimpleItemValue aValue)
 	{
 		mValuesList.add(aValue);
@@ -116,15 +128,15 @@ public class SimpleItemValueGroup implements ItemValueGroup<SimpleItem>
 	}
 	
 	@Override
-	public void setCreation(final boolean aCreation)
+	public CreationMode getCreationMode()
 	{
-		mCreation = aCreation;
+		return mMode;
 	}
 	
 	@Override
-	public boolean isCreation()
+	public void setCreationMode(final CreationMode aMode)
 	{
-		return mCreation;
+		mMode = aMode;
 	}
 	
 	@Override
@@ -132,8 +144,8 @@ public class SimpleItemValueGroup implements ItemValueGroup<SimpleItem>
 	{
 		for (final SimpleItemValue value : mValuesList)
 		{
-			value.setIncreasable(aCanIncrease && value.canIncrease(mCreation));
-			value.setDecreasable(aCanDecrease && value.canDecrease(mCreation));
+			value.setIncreasable(aCanIncrease && value.canIncrease(mMode));
+			value.setDecreasable(aCanDecrease && value.canDecrease(mMode));
 		}
 	}
 	

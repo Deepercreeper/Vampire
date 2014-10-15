@@ -35,6 +35,8 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	
 	private int								mValue;
 	
+	private int								mTempPoints;
+	
 	/**
 	 * Creates a new background value.
 	 * 
@@ -59,10 +61,17 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	}
 	
 	@Override
+	public int getTempPoints()
+	{
+		return mTempPoints;
+	}
+	
+	@Override
 	public void release()
 	{
 		ViewUtil.release(mIncreaseButton);
 		ViewUtil.release(mDecreaseButton);
+		ViewUtil.release(mContainer);
 	}
 	
 	/**
@@ -169,15 +178,39 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	}
 	
 	@Override
-	public boolean canIncrease(final boolean aCreation)
+	public boolean canIncrease(final CreationMode aMode)
 	{
-		return canIncrease() && ( !aCreation || mValue < getItem().getMaxStartValue());
+		switch (aMode)
+		{
+			case CREATION :
+				return canIncrease() && mValue < getItem().getMaxStartValue();
+			case FREE_POINTS :
+				return canIncrease() && mValue + mTempPoints < getItem().getMaxStartValue();
+			case NORMAL :
+				return canIncrease();
+		}
+		return false;
 	}
 	
 	@Override
-	public boolean canDecrease(final boolean aCreation)
+	public void resetTempPoints()
 	{
-		return canDecrease();
+		mTempPoints = 0;
+	}
+	
+	@Override
+	public boolean canDecrease(final CreationMode aMode)
+	{
+		switch (aMode)
+		{
+			case CREATION :
+				return canDecrease();
+			case FREE_POINTS :
+				return mTempPoints > 0;
+			case NORMAL :
+				return false;
+		}
+		return false;
 	}
 	
 	@Override

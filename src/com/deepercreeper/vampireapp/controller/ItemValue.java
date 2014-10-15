@@ -35,11 +35,11 @@ public interface ItemValue <T extends Item>
 	/**
 	 * If the value has special decrease properties this defines whether it is able to be decreased.
 	 * 
-	 * @param aCreation
+	 * @param aMode
 	 *            Whether the value is used when a character is created.
 	 * @return whether this value is able to be decreased.
 	 */
-	public boolean canDecrease(boolean aCreation);
+	public boolean canDecrease(CreationMode aMode);
 	
 	/**
 	 * @return whether this value can be increased.
@@ -49,11 +49,11 @@ public interface ItemValue <T extends Item>
 	/**
 	 * If the value has special increase properties this defines whether it is able to be increased.
 	 * 
-	 * @param aCreation
+	 * @param aMode
 	 *            Whether the value is used when a character is created.
 	 * @return whether this value is able to be increased.
 	 */
-	public boolean canIncrease(boolean aCreation);
+	public boolean canIncrease(CreationMode aMode);
 	
 	/**
 	 * Increases this value if possible.
@@ -80,6 +80,18 @@ public interface ItemValue <T extends Item>
 	 *            Whether the decrease button should be enabled.
 	 */
 	public void setDecreasable(boolean aEnabled);
+	
+	/**
+	 * Removes all temporary points.
+	 */
+	public void resetTempPoints();
+	
+	/**
+	 * Free bonus points are handled as temporary points. They need to be saved separately.
+	 * 
+	 * @return the number of temporary points.
+	 */
+	public int getTempPoints();
 	
 	/**
 	 * Removes all widgets from their parent containers.

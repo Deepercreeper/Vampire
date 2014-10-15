@@ -29,6 +29,8 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 	
 	private int									mValue;
 	
+	private int									mTempPoints;
+	
 	private final Context						mContext;
 	
 	private final LinearLayout					mContainer;
@@ -61,6 +63,12 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 		mDecreaseButton = new ImageButton(mContext);
 		mValue = mItem.getStartValue();
 		init();
+	}
+	
+	@Override
+	public int getTempPoints()
+	{
+		return mTempPoints;
 	}
 	
 	@Override
@@ -300,15 +308,39 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 	}
 	
 	@Override
-	public boolean canIncrease(final boolean aCreation)
+	public void resetTempPoints()
 	{
-		return canIncrease() && ( !aCreation || mValue < getItem().getMaxStartValue());
+		mTempPoints = 0;
 	}
 	
 	@Override
-	public boolean canDecrease(final boolean aCreation)
+	public boolean canIncrease(final CreationMode aMode)
 	{
-		return canDecrease();
+		switch (aMode)
+		{
+			case CREATION :
+				return canIncrease() && mValue < getItem().getMaxStartValue();
+			case FREE_POINTS :
+				return canIncrease() && mValue + mTempPoints < getItem().getMaxStartValue();
+			case NORMAL :
+				return canIncrease();
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean canDecrease(final CreationMode aMode)
+	{
+		switch (aMode)
+		{
+			case CREATION :
+				return canDecrease();
+			case FREE_POINTS :
+				return mTempPoints > 0;
+			case NORMAL :
+				return false;
+		}
+		return false;
 	}
 	
 	@Override

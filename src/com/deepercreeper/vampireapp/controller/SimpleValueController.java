@@ -22,7 +22,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class SimpleValueController implements ValueController<SimpleItem>
 {
-	private boolean										mCreation;
+	private CreationMode								mMode;
 	
 	private final Context								mContext;
 	
@@ -63,27 +63,27 @@ public class SimpleValueController implements ValueController<SimpleItem>
 	 *            The controller type.
 	 * @param aContext
 	 *            The context.
-	 * @param aCreation
+	 * @param aMode
 	 *            Whether this controller is inside the creation mode.
 	 */
-	public SimpleValueController(final SimpleController aController, final Context aContext, final boolean aCreation)
+	public SimpleValueController(final SimpleController aController, final Context aContext, final CreationMode aMode)
 	{
-		mCreation = aCreation;
+		mMode = aMode;
 		mController = aController;
 		mContext = aContext;
 		for (final SimpleItemGroup group : mController.getAttributes())
 		{
-			final SimpleItemValueGroup valueGroup = new SimpleItemValueGroup(group, this, mContext, mCreation);
+			final SimpleItemValueGroup valueGroup = new SimpleItemValueGroup(group, this, mContext, mMode);
 			mAttributes.put(group.getName(), valueGroup);
 			mAttributesList.add(valueGroup);
 		}
 		for (final SimpleItemGroup group : mController.getAbilities())
 		{
-			final SimpleItemValueGroup valueGroup = new SimpleItemValueGroup(group, this, mContext, mCreation);
+			final SimpleItemValueGroup valueGroup = new SimpleItemValueGroup(group, this, mContext, mMode);
 			mAbilities.put(group.getName(), valueGroup);
 			mAbilitiesList.add(valueGroup);
 		}
-		mVirtues = new SimpleItemValueGroup(mController.getVirtues(), this, mContext, mCreation);
+		mVirtues = new SimpleItemValueGroup(mController.getVirtues(), this, mContext, mMode);
 	}
 	
 	@Override
@@ -135,18 +135,24 @@ public class SimpleValueController implements ValueController<SimpleItem>
 	}
 	
 	@Override
-	public void setCreation(final boolean aCreation)
+	public void setCreationMode(final CreationMode aMode)
 	{
-		mCreation = aCreation;
+		mMode = aMode;
 		for (final SimpleItemValueGroup valueGroup : mAttributesList)
 		{
-			valueGroup.setCreation(mCreation);
+			valueGroup.setCreationMode(mMode);
 		}
 		for (final SimpleItemValueGroup valueGroup : mAbilitiesList)
 		{
-			valueGroup.setCreation(mCreation);
+			valueGroup.setCreationMode(mMode);
 		}
-		mVirtues.setCreation(mCreation);
+		mVirtues.setCreationMode(mMode);
+	}
+	
+	@Override
+	public CreationMode getCreationMode()
+	{
+		return mMode;
 	}
 	
 	@Override
@@ -270,8 +276,7 @@ public class SimpleValueController implements ValueController<SimpleItem>
 		aLayout.addView(virtues);
 	}
 	
-	@Override
-	public void updateValues()
+	private void updateCreation()
 	{
 		int[] maxValues;
 		
@@ -280,7 +285,7 @@ public class SimpleValueController implements ValueController<SimpleItem>
 			maxValues = mController.getAttributeCreationValues();
 			for (final SimpleItemValueGroup group : mAttributesList)
 			{
-				group.updateValues(canIncrease(group, mAttributesList, maxValues), true);
+				group.updateValues(canIncreaseCreation(group, mAttributesList, maxValues), true);
 			}
 		}
 		
@@ -289,7 +294,7 @@ public class SimpleValueController implements ValueController<SimpleItem>
 			maxValues = mController.getAbilityCreationValues();
 			for (final SimpleItemValueGroup group : mAbilitiesList)
 			{
-				group.updateValues(canIncrease(group, mAbilitiesList, maxValues), true);
+				group.updateValues(canIncreaseCreation(group, mAbilitiesList, maxValues), true);
 			}
 		}
 		
@@ -299,7 +304,72 @@ public class SimpleValueController implements ValueController<SimpleItem>
 		}
 	}
 	
-	private boolean canIncrease(final SimpleItemValueGroup aGroup, final List<SimpleItemValueGroup> aGroups, final int[] aMaxValues)
+	private void updateFreePoints()
+	{
+		if (mInitializedAttributes)
+		{
+			for (final SimpleItemValueGroup group : mAttributesList)
+			{
+				group.updateValues(true, true);
+			}
+		}
+		
+		if (mInitializedAbilities)
+		{
+			for (final SimpleItemValueGroup group : mAbilitiesList)
+			{
+				group.updateValues(true, true);
+			}
+		}
+		
+		if (mInitializedVirtues)
+		{
+			mVirtues.updateValues(true, true);
+		}
+	}
+	
+	private void updateNormal()
+	{
+		if (mInitializedAttributes)
+		{
+			for (final SimpleItemValueGroup group : mAttributesList)
+			{
+				group.updateValues(true, false);
+			}
+		}
+		
+		if (mInitializedAbilities)
+		{
+			for (final SimpleItemValueGroup group : mAbilitiesList)
+			{
+				group.updateValues(true, false);
+			}
+		}
+		
+		if (mInitializedVirtues)
+		{
+			mVirtues.updateValues(true, false);
+		}
+	}
+	
+	@Override
+	public void updateValues()
+	{
+		switch (mMode)
+		{
+			case CREATION :
+				updateCreation();
+				break;
+			case FREE_POINTS :
+				updateFreePoints();
+				break;
+			case NORMAL :
+				updateNormal();
+				break;
+		}
+	}
+	
+	private boolean canIncreaseCreation(final SimpleItemValueGroup aGroup, final List<SimpleItemValueGroup> aGroups, final int[] aMaxValues)
 	{
 		final int value = aGroup.getValue();
 		final HashSet<Integer> values = new HashSet<Integer>();
@@ -329,12 +399,6 @@ public class SimpleValueController implements ValueController<SimpleItem>
 			return false;
 		}
 		return value < aMaxValues[2];
-	}
-	
-	@Override
-	public boolean isCreation()
-	{
-		return mCreation;
 	}
 	
 	@Override

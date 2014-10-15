@@ -198,7 +198,21 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	}
 	
 	@Override
-	public boolean canDecrease(final boolean aCreation)
+	public boolean canDecrease(final CreationMode aMode)
+	{
+		switch (aMode)
+		{
+			case CREATION :
+				return canDecreaseCreation();
+			case FREE_POINTS :
+				return getTempPoints() > 0;
+			case NORMAL :
+				return false;
+		}
+		return false;
+	}
+	
+	private boolean canDecreaseCreation()
 	{
 		final DisciplineItemValue parentValue = getParent();
 		final boolean firstSubItem = parentValue.getSubValueIndex(this) == 0;
@@ -222,7 +236,33 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	}
 	
 	@Override
-	public boolean canIncrease(final boolean aCreation)
+	public boolean canIncrease(final CreationMode aMode)
+	{
+		switch (aMode)
+		{
+			case CREATION :
+				return canIncreaseCreation();
+			case FREE_POINTS :
+				return canIncreaseFreePoints();
+			case NORMAL :
+				return canIncrease();
+		}
+		return false;
+	}
+	
+	private boolean canIncreaseFreePoints()
+	{
+		final DisciplineItemValue parentValue = getParent();
+		final boolean firstSubItem = parentValue.getSubValueIndex(this) == 0;
+		if (firstSubItem
+				|| parentValue.getSubValue(0).getValue() + parentValue.getSubValue(0).getTempPoints() >= SubDisciplineItem.MIN_FIRST_SUB_VALUE)
+		{
+			return canIncrease();
+		}
+		return false;
+	}
+	
+	private boolean canIncreaseCreation()
 	{
 		final DisciplineItemValue parentValue = getParent();
 		final boolean firstSubItem = parentValue.getSubValueIndex(this) == 0;

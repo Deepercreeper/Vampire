@@ -16,7 +16,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class BackgroundValueController implements ValueController<BackgroundItem>, VariableValueGroup<BackgroundItem, BackgroundItemValue>
 {
-	private boolean							mCreation;
+	private CreationMode					mMode;
 	
 	private final Context					mContext;
 	
@@ -35,15 +35,15 @@ public class BackgroundValueController implements ValueController<BackgroundItem
 	 *            The controller type.
 	 * @param aContext
 	 *            The context.
-	 * @param aCreation
+	 * @param aMode
 	 *            Whether this controller is in the creation mode.
 	 */
-	public BackgroundValueController(final BackgroundController aController, final Context aContext, final boolean aCreation)
+	public BackgroundValueController(final BackgroundController aController, final Context aContext, final CreationMode aMode)
 	{
-		mCreation = aCreation;
+		mMode = aMode;
 		mController = aController;
 		mContext = aContext;
-		mBackgrounds = new BackgroundItemValueGroup(mController.getBackgrounds(), this, aContext, mCreation);
+		mBackgrounds = new BackgroundItemValueGroup(mController.getBackgrounds(), this, aContext, mMode);
 	}
 	
 	@Override
@@ -91,22 +91,33 @@ public class BackgroundValueController implements ValueController<BackgroundItem
 	}
 	
 	@Override
-	public void setCreation(final boolean aCreation)
+	public CreationMode getCreationMode()
 	{
-		mCreation = aCreation;
-		mBackgrounds.setCreation(mCreation);
+		return mMode;
+	}
+	
+	@Override
+	public void setCreationMode(final CreationMode aMode)
+	{
+		mMode = aMode;
+		mBackgrounds.setCreationMode(mMode);
 	}
 	
 	@Override
 	public void updateValues()
 	{
-		mBackgrounds.updateValues(mBackgrounds.getValue() < mController.getMaxCreationValue(), true);
-	}
-	
-	@Override
-	public boolean isCreation()
-	{
-		return mCreation;
+		switch (mMode)
+		{
+			case CREATION :
+				mBackgrounds.updateValues(mBackgrounds.getValue() < mController.getMaxCreationValue(), true);
+				break;
+			case FREE_POINTS :
+				mBackgrounds.updateValues(mBackgrounds.getValue() + mBackgrounds.getTempPoints() < mController.getMaxCreationValue(), true);
+				break;
+			case NORMAL :
+				mBackgrounds.updateValues(true, false);
+				break;
+		}
 	}
 	
 	@Override

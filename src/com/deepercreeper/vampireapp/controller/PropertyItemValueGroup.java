@@ -23,7 +23,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, VariableValueGroup<PropertyItem, PropertyItemValue>
 {
-	private boolean											mCreation;
+	private CreationMode									mMode;
 	
 	private final Context									mContext;
 	
@@ -50,16 +50,16 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 	 *            The parent controller.
 	 * @param aContext
 	 *            The context.
-	 * @param aCreation
+	 * @param aMode
 	 *            Whether this group is inside creation mode.
 	 */
 	public PropertyItemValueGroup(final PropertyItemGroup aGroup, final PropertyValueController aController, final Context aContext,
-			final boolean aCreation)
+			final CreationMode aMode)
 	{
 		mController = aController;
 		mContext = aContext;
 		mGroup = aGroup;
-		mCreation = aCreation;
+		mMode = aMode;
 		mAction = new UpdateAction()
 		{
 			@Override
@@ -97,13 +97,19 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 	}
 	
 	@Override
+	public int getTempPoints()
+	{
+		return 0;
+	}
+	
+	@Override
 	public void updateValues(final boolean aCanIncrease, final boolean aCanDecrease)
 	{
 		final int value = getValue();
 		for (final PropertyItemValue valueItem : mValuesList)
 		{
-			boolean canIncrease = aCanIncrease && valueItem.canIncrease(mCreation);
-			boolean canDecrease = aCanDecrease && valueItem.canDecrease(mCreation);
+			boolean canIncrease = aCanIncrease && valueItem.canIncrease(mMode);
+			boolean canDecrease = aCanDecrease && valueItem.canDecrease(mMode);
 			if (canIncrease)
 			{
 				final int increasedValue = value - valueItem.getFinalValue() + valueItem.getItem().getFinalValue(valueItem.getValueId() + 1);
@@ -173,15 +179,15 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 	}
 	
 	@Override
-	public boolean isCreation()
+	public CreationMode getCreationMode()
 	{
-		return mCreation;
+		return mMode;
 	}
 	
 	@Override
-	public void setCreation(final boolean aCreation)
+	public void setCreationMode(final CreationMode aMode)
 	{
-		mCreation = aCreation;
+		mMode = aMode;
 	}
 	
 	@Override

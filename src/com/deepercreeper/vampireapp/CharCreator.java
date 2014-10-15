@@ -3,6 +3,7 @@ package com.deepercreeper.vampireapp;
 import android.content.Context;
 import com.deepercreeper.vampireapp.controller.BackgroundController;
 import com.deepercreeper.vampireapp.controller.BackgroundValueController;
+import com.deepercreeper.vampireapp.controller.CreationMode;
 import com.deepercreeper.vampireapp.controller.DisciplineController;
 import com.deepercreeper.vampireapp.controller.DisciplineItem;
 import com.deepercreeper.vampireapp.controller.DisciplineValueController;
@@ -41,13 +42,21 @@ public class CharCreator
 			final BackgroundController aBackgrounds, final SimpleController aSimpleItems, final String aNature, final String aBehavior,
 			final Clan aClan)
 	{
-		mDisciplines = new DisciplineValueController(aDisciplines, aContext, true);
-		mProperties = new PropertyValueController(aProperties, aContext, true);
-		mBackgrounds = new BackgroundValueController(aBackgrounds, aContext, true);
-		mSimpleValues = new SimpleValueController(aSimpleItems, aContext, true);
+		mDisciplines = new DisciplineValueController(aDisciplines, aContext, CreationMode.CREATION);
+		mProperties = new PropertyValueController(aProperties, aContext, CreationMode.CREATION);
+		mBackgrounds = new BackgroundValueController(aBackgrounds, aContext, CreationMode.CREATION);
+		mSimpleValues = new SimpleValueController(aSimpleItems, aContext, CreationMode.CREATION);
 		mNature = aNature;
 		mBehavior = aBehavior;
 		setClan(aClan);
+	}
+	
+	public void setCreationMode(final CreationMode aMode)
+	{
+		mDisciplines.setCreationMode(aMode);
+		mProperties.setCreationMode(aMode);
+		mBackgrounds.setCreationMode(aMode);
+		mSimpleValues.setCreationMode(aMode);
 	}
 	
 	public void setFreePoints(final int aFreePoints)

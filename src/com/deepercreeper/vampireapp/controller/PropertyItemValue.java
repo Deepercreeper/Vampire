@@ -56,6 +56,12 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 	}
 	
 	@Override
+	public int getTempPoints()
+	{
+		return 0;
+	}
+	
+	@Override
 	public void release()
 	{
 		ViewUtil.release(mContainer);
@@ -171,15 +177,39 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 	}
 	
 	@Override
-	public boolean canIncrease(final boolean aCreation)
+	public boolean canIncrease(final CreationMode aMode)
 	{
-		return canIncrease() && ( !aCreation || mValueId < getItem().getMaxStartValue());
+		switch (aMode)
+		{
+			case CREATION :
+				return canIncrease() && mValueId < getItem().getMaxStartValue();
+			case FREE_POINTS :
+				return false;
+			case NORMAL :
+				return false;
+		}
+		return false;
 	}
 	
 	@Override
-	public boolean canDecrease(final boolean aCreation)
+	public void resetTempPoints()
 	{
-		return canDecrease();
+		return;
+	}
+	
+	@Override
+	public boolean canDecrease(final CreationMode aMode)
+	{
+		switch (aMode)
+		{
+			case CREATION :
+				return canDecrease();
+			case FREE_POINTS :
+				return false;
+			case NORMAL :
+				return false;
+		}
+		return false;
 	}
 	
 	@Override

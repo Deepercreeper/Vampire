@@ -27,6 +27,11 @@ public interface ItemValueGroup <T extends Item>
 	public int getValue();
 	
 	/**
+	 * @return the sum of all temporary points inside this value group.
+	 */
+	public int getTempPoints();
+	
+	/**
 	 * @param aName
 	 *            The name of the value item.
 	 * @return the value with the given name.
@@ -54,15 +59,15 @@ public interface ItemValueGroup <T extends Item>
 	/**
 	 * @return whether this group is in creation mode.
 	 */
-	public boolean isCreation();
+	public CreationMode getCreationMode();
 	
 	/**
 	 * Sets whether this group is in creation mode.
 	 * 
-	 * @param aCreation
+	 * @param aMode
 	 *            Whether this group represents the values inside a character creation.
 	 */
-	public void setCreation(boolean aCreation);
+	public void setCreationMode(CreationMode aMode);
 	
 	/**
 	 * Updates all values and whether they can be increased and decreased.

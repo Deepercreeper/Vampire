@@ -18,7 +18,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>, VariableValueGroup<DisciplineItem, DisciplineItemValue>
 {
-	private boolean												mCreation;
+	private CreationMode										mMode;
 	
 	private final Context										mContext;
 	
@@ -45,16 +45,16 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	 *            The parent controller.
 	 * @param aContext
 	 *            The context.
-	 * @param aCreation
+	 * @param aMode
 	 *            Whether this group is inside creation mode.
 	 */
 	public DisciplineItemValueGroup(final DisciplineItemGroup aGroup, final DisciplineValueController aController, final Context aContext,
-			final boolean aCreation)
+			final CreationMode aMode)
 	{
 		mController = aController;
 		mContext = aContext;
 		mGroup = aGroup;
-		mCreation = aCreation;
+		mMode = aMode;
 		mAction = new UpdateAction()
 		{
 			@Override
@@ -109,15 +109,15 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 				{
 					if (subValue != null)
 					{
-						subValue.setIncreasable(aCanIncrease && subValue.canIncrease(mCreation));
-						subValue.setDecreasable(aCanDecrease && subValue.canDecrease(mCreation));
+						subValue.setIncreasable(aCanIncrease && subValue.canIncrease(mMode));
+						subValue.setDecreasable(aCanDecrease && subValue.canDecrease(mMode));
 					}
 				}
 			}
 			else
 			{
-				value.setIncreasable(aCanIncrease && value.canIncrease(mCreation));
-				value.setDecreasable(aCanDecrease && value.canDecrease(mCreation));
+				value.setIncreasable(aCanIncrease && value.canIncrease(mMode));
+				value.setDecreasable(aCanDecrease && value.canDecrease(mMode));
 			}
 		}
 	}
@@ -138,6 +138,27 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 			else
 			{
 				value += valueItem.getValue();
+			}
+		}
+		return value;
+	}
+	
+	@Override
+	public int getTempPoints()
+	{
+		int value = 0;
+		for (final DisciplineItemValue valueItem : mValuesList)
+		{
+			if (valueItem.getItem().isParentItem())
+			{
+				for (final SubDisciplineItemValue subValue : valueItem.getSubValues())
+				{
+					value += subValue.getTempPoints();
+				}
+			}
+			else
+			{
+				value += valueItem.getTempPoints();
 			}
 		}
 		return value;
@@ -181,15 +202,15 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	}
 	
 	@Override
-	public boolean isCreation()
+	public CreationMode getCreationMode()
 	{
-		return mCreation;
+		return mMode;
 	}
 	
 	@Override
-	public void setCreation(final boolean aCreation)
+	public void setCreationMode(final CreationMode aMode)
 	{
-		mCreation = aCreation;
+		mMode = aMode;
 	}
 	
 	@Override

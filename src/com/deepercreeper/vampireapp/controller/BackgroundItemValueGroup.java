@@ -24,7 +24,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>, VariableValueGroup<BackgroundItem, BackgroundItemValue>
 {
-	private boolean												mCreation;
+	private CreationMode										mMode;
 	
 	private final Context										mContext;
 	
@@ -51,16 +51,16 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 	 *            The parent controller.
 	 * @param aContext
 	 *            The context.
-	 * @param aCreation
+	 * @param aMode
 	 *            Whether this is inside creation mode.
 	 */
 	public BackgroundItemValueGroup(final BackgroundItemGroup aGroup, final BackgroundValueController aController, final Context aContext,
-			final boolean aCreation)
+			final CreationMode aMode)
 	{
 		mController = aController;
 		mGroup = aGroup;
 		mContext = aContext;
-		mCreation = aCreation;
+		mMode = aMode;
 		mAction = new UpdateAction()
 		{
 			@Override
@@ -179,12 +179,23 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 	}
 	
 	@Override
+	public int getTempPoints()
+	{
+		int value = 0;
+		for (final BackgroundItemValue valueItem : mValuesList)
+		{
+			value += valueItem.getTempPoints();
+		}
+		return value;
+	}
+	
+	@Override
 	public void updateValues(final boolean aCanIncrease, final boolean aCanDecrease)
 	{
 		for (final BackgroundItemValue value : mValuesList)
 		{
-			value.setIncreasable(aCanIncrease && value.canIncrease(mCreation));
-			value.setDecreasable(aCanDecrease && value.canDecrease(mCreation));
+			value.setIncreasable(aCanIncrease && value.canIncrease(mMode));
+			value.setDecreasable(aCanDecrease && value.canDecrease(mMode));
 		}
 	}
 	
@@ -207,15 +218,15 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 	}
 	
 	@Override
-	public boolean isCreation()
+	public CreationMode getCreationMode()
 	{
-		return mCreation;
+		return mMode;
 	}
 	
 	@Override
-	public void setCreation(final boolean aCreation)
+	public void setCreationMode(final CreationMode aMode)
 	{
-		mCreation = aCreation;
+		mMode = aMode;
 	}
 	
 	@Override

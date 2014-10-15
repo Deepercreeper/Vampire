@@ -16,7 +16,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class PropertyValueController implements ValueController<PropertyItem>, VariableValueGroup<PropertyItem, PropertyItemValue>
 {
-	private boolean							mCreation;
+	private CreationMode					mMode;
 	
 	private final Context					mContext;
 	
@@ -35,15 +35,15 @@ public class PropertyValueController implements ValueController<PropertyItem>, V
 	 *            The controller type.
 	 * @param aContext
 	 *            The context.
-	 * @param aCreation
+	 * @param aMode
 	 *            Whether this controller is inside the creation mode.
 	 */
-	public PropertyValueController(final PropertyController aController, final Context aContext, final boolean aCreation)
+	public PropertyValueController(final PropertyController aController, final Context aContext, final CreationMode aMode)
 	{
-		mCreation = aCreation;
+		mMode = aMode;
 		mController = aController;
 		mContext = aContext;
-		mProperties = new PropertyItemValueGroup(mController.getProperties(), this, mContext, mCreation);
+		mProperties = new PropertyItemValueGroup(mController.getProperties(), this, mContext, mMode);
 	}
 	
 	@Override
@@ -91,16 +91,16 @@ public class PropertyValueController implements ValueController<PropertyItem>, V
 	}
 	
 	@Override
-	public void setCreation(final boolean aCreation)
+	public CreationMode getCreationMode()
 	{
-		mCreation = aCreation;
-		mProperties.setCreation(mCreation);
+		return mMode;
 	}
 	
 	@Override
-	public boolean isCreation()
+	public void setCreationMode(final CreationMode aMode)
 	{
-		return mCreation;
+		mMode = aMode;
+		mProperties.setCreationMode(mMode);
 	}
 	
 	@Override
@@ -155,6 +155,17 @@ public class PropertyValueController implements ValueController<PropertyItem>, V
 	@Override
 	public void updateValues()
 	{
-		mProperties.updateValues(true, true);
+		switch (mMode)
+		{
+			case CREATION :
+				mProperties.updateValues(true, true);
+				break;
+			case FREE_POINTS :
+				mProperties.updateValues(false, false);
+				break;
+			case NORMAL :
+				mProperties.updateValues(false, false);
+				break;
+		}
 	}
 }

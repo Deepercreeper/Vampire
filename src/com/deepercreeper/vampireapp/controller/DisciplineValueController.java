@@ -16,7 +16,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class DisciplineValueController implements ValueController<DisciplineItem>, VariableValueGroup<DisciplineItem, DisciplineItemValue>
 {
-	private boolean							mCreation;
+	private CreationMode					mMode;
 	
 	private final Context					mContext;
 	
@@ -37,15 +37,15 @@ public class DisciplineValueController implements ValueController<DisciplineItem
 	 *            The controller type.
 	 * @param aContext
 	 *            The context.
-	 * @param aCreation
+	 * @param aMode
 	 *            Whether this controller is inside the creation mode.
 	 */
-	public DisciplineValueController(final DisciplineController aController, final Context aContext, final boolean aCreation)
+	public DisciplineValueController(final DisciplineController aController, final Context aContext, final CreationMode aMode)
 	{
-		mCreation = aCreation;
+		mMode = aMode;
 		mContext = aContext;
 		mController = aController;
-		mDisciplines = new DisciplineItemValueGroup(mController.getDisciplines(), this, mContext, mCreation);
+		mDisciplines = new DisciplineItemValueGroup(mController.getDisciplines(), this, mContext, mMode);
 	}
 	
 	@Override
@@ -97,22 +97,33 @@ public class DisciplineValueController implements ValueController<DisciplineItem
 	}
 	
 	@Override
-	public void setCreation(final boolean aCreation)
+	public void setCreationMode(final CreationMode aMode)
 	{
-		mCreation = aCreation;
-		mDisciplines.setCreation(mCreation);
+		mMode = aMode;
+		mDisciplines.setCreationMode(mMode);
 	}
 	
 	@Override
-	public boolean isCreation()
+	public CreationMode getCreationMode()
 	{
-		return mCreation;
+		return mMode;
 	}
 	
 	@Override
 	public void updateValues()
 	{
-		mDisciplines.updateValues(mDisciplines.getValue() < mController.getMaxCreationValue(), true);
+		switch (mMode)
+		{
+			case CREATION :
+				mDisciplines.updateValues(mDisciplines.getValue() < mController.getMaxCreationValue(), true);
+				break;
+			case FREE_POINTS :
+				mDisciplines.updateValues(mDisciplines.getValue() + mDisciplines.getTempPoints() < mController.getMaxCreationValue(), true);
+				break;
+			case NORMAL :
+				mDisciplines.updateValues(true, false);
+				break;
+		}
 	}
 	
 	@Override

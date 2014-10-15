@@ -22,6 +22,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.deepercreeper.vampireapp.controller.BackgroundController;
+import com.deepercreeper.vampireapp.controller.CreationMode;
 import com.deepercreeper.vampireapp.controller.DisciplineController;
 import com.deepercreeper.vampireapp.controller.PropertyController;
 import com.deepercreeper.vampireapp.controller.SimpleController;
@@ -102,6 +103,7 @@ public class MainActivity extends Activity
 				initMain();
 				break;
 			case FREE_POINTS :
+				mCreator.setCreationMode(CreationMode.CREATION);
 				initCreateCharacter(mCreator);
 				break;
 			case MAIN :
@@ -272,6 +274,7 @@ public class MainActivity extends Activity
 		release();
 		setContentView(R.layout.free_points_view);
 		mState = State.FREE_POINTS;
+		mCreator.setCreationMode(CreationMode.FREE_POINTS);
 		
 		final int freePoints = getResources().getInteger(R.integer.free_points);
 		
