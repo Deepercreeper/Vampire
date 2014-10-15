@@ -1,9 +1,18 @@
 package com.deepercreeper.vampireapp.controller;
 
+/**
+ * Background items are items that are not able to be changed after the character creation.<br>
+ * It represents a background information for the character.
+ * 
+ * @author Vincent
+ */
 public class BackgroundItem implements Item
 {
 	private static final int	MAX_VALUE		= 6, MAX_START_VALUE = 5, START_VALUE = 0;
 	
+	/**
+	 * The number of backgrounds that can be set for one character.
+	 */
 	public static final int		MAX_BACKGROUNDS	= 5;
 	
 	private final String		mName;
@@ -75,6 +84,13 @@ public class BackgroundItem implements Item
 		return false;
 	}
 	
+	/**
+	 * Creates a background out of the given data.
+	 * 
+	 * @param aData
+	 *            The data out of which the background is created.
+	 * @return the created background.
+	 */
 	public static BackgroundItem create(final String aData)
 	{
 		return new BackgroundItem(aData);

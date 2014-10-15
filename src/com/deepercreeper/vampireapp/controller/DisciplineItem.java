@@ -6,6 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Each clan has several disciplines. The consist of some abilities or sub disciplines.<br>
+ * There are other disciplines that don't belong to any clan.<br>
+ * They can be learned by being taught or sucking heart blood from other characters that are able to use it.
+ * 
+ * @author Vincent
+ */
 public class DisciplineItem implements Item
 {
 	private static final String							SUB_PREFIX			= ">", PARENT_PREFIX = "#", NAME_DELIM = ":", ABILITIES_DELIM = ";",
@@ -13,7 +20,10 @@ public class DisciplineItem implements Item
 	
 	private static final int							MAX_VALUE			= 6, MAX_START_VALUE = 3, START_VALUE = 0;
 	
-	public static final int								MIN_FIRST_SUB_VALUE	= 2, MAX_SUB_DISCIPLINES = 2;
+	/**
+	 * The number of sub disciplines a parent discipline can contain.
+	 */
+	public static final int								MAX_SUB_DISCIPLINES	= 2;
 	
 	private final String								mName;
 	
@@ -31,6 +41,12 @@ public class DisciplineItem implements Item
 		mDescription = createDescription();
 	}
 	
+	/**
+	 * Adds a sub discipline to this discipline.
+	 * 
+	 * @param aSubItem
+	 *            The sub discipline.
+	 */
 	public void addSubItem(final SubDisciplineItem aSubItem)
 	{
 		mSubItems.put(aSubItem.getName(), aSubItem);
@@ -55,6 +71,9 @@ public class DisciplineItem implements Item
 		return false;
 	}
 	
+	/**
+	 * @return a list of all abilities of this discipline. May be empty.
+	 */
 	public List<Ability> getAbilities()
 	{
 		return mAbilities;
@@ -90,16 +109,35 @@ public class DisciplineItem implements Item
 		return START_VALUE;
 	}
 	
+	/**
+	 * If this is a parent discipline this returns the sub discipline with the given name.
+	 * 
+	 * @param aName
+	 *            The sub discipline name.
+	 * @return the sub discipline with the given name.
+	 */
 	public SubDisciplineItem getSubItem(final String aName)
 	{
 		return mSubItems.get(aName);
 	}
 	
+	/**
+	 * When a parent discipline is created, at first the names of all sub disciplines are added.<br>
+	 * After that it has to be initialized for adding the corresponding sub disciplines.<br>
+	 * This returns all names of the sub disciplines to add to this parent discipline.
+	 * 
+	 * @return a set of sub discipline names.
+	 */
 	public Set<String> getSubItemNames()
 	{
 		return mSubItems.keySet();
 	}
 	
+	/**
+	 * After this parent item was initialized this returns all sub discipline items of this discipline.
+	 * 
+	 * @return a list of sub discipline items.
+	 */
 	public List<SubDisciplineItem> getSubItems()
 	{
 		return mSubItemNames;
@@ -111,6 +149,9 @@ public class DisciplineItem implements Item
 		return mName.hashCode();
 	}
 	
+	/**
+	 * @return whether this is a parent discipline and contains sub disciplines or not.
+	 */
 	public boolean isParentItem()
 	{
 		return !mSubItems.isEmpty();
@@ -133,6 +174,13 @@ public class DisciplineItem implements Item
 		return mName;
 	}
 	
+	/**
+	 * Creates a discipline item out of the given data.
+	 * 
+	 * @param aData
+	 *            The data out of the discipline item is created.
+	 * @return the created discipline item.
+	 */
 	public static DisciplineItem create(final String aData)
 	{
 		DisciplineItem discipline;

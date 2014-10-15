@@ -1,5 +1,11 @@
 package com.deepercreeper.vampireapp.controller;
 
+/**
+ * Each character has several properties which can't be changed after the creation.<br>
+ * They define some attributes of the character more precisely.
+ * 
+ * @author Vincent
+ */
 public class PropertyItem implements Item
 {
 	private static final String	NAME_DELIM	= ":", NEGATIVE_PREFIX = "-", VALUE_DELIM = ",";
@@ -26,16 +32,39 @@ public class PropertyItem implements Item
 		mValues = aValues;
 	}
 	
+	/**
+	 * Some properties are positive, some negative.<br>
+	 * When a character is created the sum of values from the negative properties<br>
+	 * has to be at least as large as the sum of values from the positive properties.
+	 * 
+	 * @return {@code true} if this is a negative property and {@code false} if positive.
+	 */
 	public boolean isNegative()
 	{
 		return mNegative;
 	}
 	
+	/**
+	 * Properties have a specified set of possible values that can be set.<br>
+	 * They all have a unique id which is used to increase and decrease the property value.
+	 * 
+	 * @param aValueId
+	 *            The id of the corresponding value.
+	 * @return the value with the given id.
+	 */
 	public int getValue(final int aValueId)
 	{
 		return mValues[aValueId];
 	}
 	
+	/**
+	 * If this is a negative property the value multiplied with negative one is returned.<br>
+	 * Otherwise this returns just the value as specified in {@link PropertyItem#getValue(int)}.
+	 * 
+	 * @param aValueId
+	 *            The id of the corresponding value.
+	 * @return the final signed value of this property.
+	 */
 	public int getFinalValue(final int aValueId)
 	{
 		return mValues[aValueId] * (mNegative ? -1 : 1);
@@ -100,6 +129,13 @@ public class PropertyItem implements Item
 		return false;
 	}
 	
+	/**
+	 * Creates a property item out of the given data.
+	 * 
+	 * @param aData
+	 *            The data out of which the property item is created.
+	 * @return the created property item.
+	 */
 	public static PropertyItem create(final String aData)
 	{
 		PropertyItem item;

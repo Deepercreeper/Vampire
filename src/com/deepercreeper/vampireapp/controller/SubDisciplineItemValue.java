@@ -164,7 +164,7 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 		final boolean firstSubItem = parentValue.getSubValueIndex(this) == 0;
 		if (firstSubItem)
 		{
-			if (getValue() == DisciplineItem.MIN_FIRST_SUB_VALUE)
+			if (getValue() == SubDisciplineItem.MIN_FIRST_SUB_VALUE)
 			{
 				for (int i = 1; i < DisciplineItem.MAX_SUB_DISCIPLINES; i++ )
 				{
@@ -186,7 +186,7 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	{
 		final DisciplineItemValue parentValue = getParent();
 		final boolean firstSubItem = parentValue.getSubValueIndex(this) == 0;
-		if (firstSubItem || parentValue.getSubValue(0).getValue() >= DisciplineItem.MIN_FIRST_SUB_VALUE)
+		if (firstSubItem || parentValue.getSubValue(0).getValue() >= SubDisciplineItem.MIN_FIRST_SUB_VALUE)
 		{
 			return true;
 		}

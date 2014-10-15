@@ -4,17 +4,29 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Parent disciplines have sub disciplines that act like normal disciplines.<br>
+ * They have specified permissions to be created and a character can only have<br>
+ * a subset of all sub disciplines from any parent discipline.
+ * 
+ * @author Vincent
+ */
 public class SubDisciplineItem extends DisciplineItem
 {
-	private static final String	NAME_DELIM	= ":", ABILITIES_DELIM = ";";
+	private static final String	NAME_DELIM			= ":", ABILITIES_DELIM = ";";
 	
-	private static final int	MAX_VALUE	= 6, MAX_START_VALUE = 3, START_VALUE = 0;
+	private static final int	MAX_VALUE			= 6, MAX_START_VALUE = 3, START_VALUE = 0;
+	
+	/**
+	 * The number of points that have to be set for the first sub discipline to add other sub disciplines.
+	 */
+	public static final int		MIN_FIRST_SUB_VALUE	= 2;
 	
 	private final String		mDescription;
 	
 	private DisciplineItem		mParent;
 	
-	private final List<Ability>	mAbilities	= new ArrayList<Ability>();
+	private final List<Ability>	mAbilities			= new ArrayList<Ability>();
 	
 	private SubDisciplineItem(final String aName)
 	{
@@ -22,6 +34,12 @@ public class SubDisciplineItem extends DisciplineItem
 		mDescription = createDescription();
 	}
 	
+	/**
+	 * Sets the parent discipline for this sub discipline.
+	 * 
+	 * @param aParent
+	 *            The parent discipline.
+	 */
 	public void setParent(final DisciplineItem aParent)
 	{
 		mParent = aParent;
@@ -39,6 +57,9 @@ public class SubDisciplineItem extends DisciplineItem
 		Collections.sort(mAbilities);
 	}
 	
+	/**
+	 * @return the parent discipline if set already.
+	 */
 	public DisciplineItem getParent()
 	{
 		return mParent;
@@ -91,6 +112,13 @@ public class SubDisciplineItem extends DisciplineItem
 		return false;
 	}
 	
+	/**
+	 * Creates a sub discipline out of the given data.
+	 * 
+	 * @param aData
+	 *            The data out of which the sub discipline is created.
+	 * @return the created sub discipline item.
+	 */
 	public static SubDisciplineItem create(final String aData)
 	{
 		SubDisciplineItem discipline;

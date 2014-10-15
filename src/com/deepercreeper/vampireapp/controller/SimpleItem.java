@@ -1,5 +1,11 @@
 package com.deepercreeper.vampireapp.controller;
 
+/**
+ * Attributes, abilities and virtues are simple items.<br>
+ * They are final and a character has to set all of them.
+ * 
+ * @author Vincent
+ */
 public class SimpleItem implements Item
 {
 	private static final int	MAX_VALUE	= 6;
@@ -79,6 +85,17 @@ public class SimpleItem implements Item
 		return false;
 	}
 	
+	/**
+	 * Creates a simple item out of the given data and other specifications.
+	 * 
+	 * @param aData
+	 *            The data out of which the simple item is created.
+	 * @param aStartValue
+	 *            The start value for this item, which is set at character creation.
+	 * @param aMaxStartValue
+	 *            The maximum value that can be set when creating a new character.
+	 * @return the created simple item.
+	 */
 	public static SimpleItem create(final String aData, final int aStartValue, final int aMaxStartValue)
 	{
 		return new SimpleItem(aData, aStartValue, aMaxStartValue);
