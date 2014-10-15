@@ -6,6 +6,11 @@ import java.util.List;
 import android.content.res.Resources;
 import com.deepercreeper.vampireapp.R;
 
+/**
+ * A controller of simple item groups.
+ * 
+ * @author Vincent
+ */
 public class SimpleController implements Controller<SimpleItem>
 {
 	private final int[]								mAttributeCreationValues;
@@ -24,6 +29,12 @@ public class SimpleController implements Controller<SimpleItem>
 	
 	private final SimpleItemGroup					mVirtues;
 	
+	/**
+	 * Creates a new simple controller out of the given resources.
+	 * 
+	 * @param aResources
+	 *            The context resources.
+	 */
 	public SimpleController(final Resources aResources)
 	{
 		
@@ -45,31 +56,49 @@ public class SimpleController implements Controller<SimpleItem>
 		mVirtues = SimpleItemGroup.create(aResources.getString(R.string.virtue_values), 1, 4);
 	}
 	
+	/**
+	 * @return the maximum creation values for the attributes.
+	 */
 	public int[] getAttributeCreationValues()
 	{
 		return mAttributeCreationValues;
 	}
 	
+	/**
+	 * @return the maximum creation values for the abilities.
+	 */
 	public int[] getAbilityCreationValues()
 	{
 		return mAbilityCreationValues;
 	}
 	
+	/**
+	 * @return the maximum creation values for the virtues.
+	 */
 	public int getVirtueCreationValue()
 	{
 		return mVirtueCreationValue;
 	}
 	
+	/**
+	 * @return a list of all ability item groups.
+	 */
 	public List<SimpleItemGroup> getAbilities()
 	{
 		return mAbilityGroups;
 	}
 	
+	/**
+	 * @return a list of all attribute item groups.
+	 */
 	public List<SimpleItemGroup> getAttributes()
 	{
 		return mAttributeGroups;
 	}
 	
+	/**
+	 * @return the virtue item group.
+	 */
 	public SimpleItemGroup getVirtues()
 	{
 		return mVirtues;
