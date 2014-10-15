@@ -204,7 +204,8 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 						}
 					};
 					
-					new SelectItemDialog<PropertyItem>(items, mContext.getResources().getString(R.string.add_property), mContext, action);
+					SelectItemDialog.<PropertyItem> showSelectionDialog(items, mContext.getResources().getString(R.string.add_property), mContext,
+							action);
 				}
 			});
 			titleRow.addView(addProperty);

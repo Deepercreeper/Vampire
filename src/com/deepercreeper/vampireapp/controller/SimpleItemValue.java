@@ -1,6 +1,5 @@
 package com.deepercreeper.vampireapp.controller;
 
-import java.util.Comparator;
 import android.content.Context;
 import android.text.TextUtils.TruncateAt;
 import android.view.Gravity;
@@ -13,6 +12,11 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
+/**
+ * The value instance of the simple item.
+ * 
+ * @author Vincent
+ */
 public class SimpleItemValue implements ItemValue<SimpleItem>
 {
 	private final SimpleItem	mItem;
@@ -29,6 +33,16 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 	
 	private final UpdateAction	mAction;
 	
+	/**
+	 * Creates a new simple item value.
+	 * 
+	 * @param aItem
+	 *            The item type.
+	 * @param aContext
+	 *            The context.
+	 * @param aAction
+	 *            The update action.
+	 */
 	public SimpleItemValue(final SimpleItem aItem, final Context aContext, final UpdateAction aAction)
 	{
 		mItem = aItem;
@@ -172,17 +186,5 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 	public SimpleItem getItem()
 	{
 		return mItem;
-	}
-	
-	public static Comparator<? super SimpleItemValue> getComparator()
-	{
-		return new Comparator<SimpleItemValue>()
-		{
-			@Override
-			public int compare(final SimpleItemValue aLhs, final SimpleItemValue aRhs)
-			{
-				return aLhs.getItem().compareTo(aRhs.getItem());
-			}
-		};
 	}
 }

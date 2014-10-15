@@ -1,7 +1,6 @@
 package com.deepercreeper.vampireapp.controller;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import android.content.Context;
 import android.text.TextUtils.TruncateAt;
@@ -19,6 +18,11 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.controller.SelectItemDialog.SelectionListener;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
+/**
+ * The value of the discipline items.
+ * 
+ * @author Vincent
+ */
 public class DisciplineItemValue implements ItemValue<DisciplineItem>
 {
 	private final DisciplineItem				mItem;
@@ -37,6 +41,16 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 	
 	private final List<SubDisciplineItemValue>	mSubValues	= new ArrayList<SubDisciplineItemValue>();
 	
+	/**
+	 * Creates a new discipline item value.
+	 * 
+	 * @param aItem
+	 *            The item type.
+	 * @param aContext
+	 *            The context.
+	 * @param aAction
+	 *            The update action.
+	 */
 	public DisciplineItemValue(final DisciplineItem aItem, final Context aContext, final UpdateAction aAction)
 	{
 		mItem = aItem;
@@ -203,8 +217,8 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 							value.initRow(subRow, aValueIx);
 						}
 					};
-					
-					new SelectItemDialog<SubDisciplineItem>(items, mContext.getResources().getString(R.string.edit_discipline), mContext, action);
+					SelectItemDialog.<SubDisciplineItem> showSelectionDialog(items, mContext.getResources().getString(R.string.edit_discipline),
+							mContext, action);
 				}
 			});
 			numberAndName.addView(edit);
@@ -218,6 +232,13 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 		return mAction;
 	}
 	
+	/**
+	 * Returns the index of the given sub discipline value.
+	 * 
+	 * @param aSubValue
+	 *            The sub value.
+	 * @return the sub discipline value index.
+	 */
 	public int getSubValueIndex(final SubDisciplineItemValue aSubValue)
 	{
 		for (int i = 0; i < mSubValues.size(); i++ )
@@ -277,6 +298,13 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 		return mValue > getItem().getStartValue();
 	}
 	
+	/**
+	 * Returns the sub discipline value at the given position.
+	 * 
+	 * @param aPos
+	 *            The sub discipline position.
+	 * @return the sub discipline value at the given position.
+	 */
 	public SubDisciplineItemValue getSubValue(final int aPos)
 	{
 		if (aPos >= mSubValues.size())
@@ -286,6 +314,14 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 		return mSubValues.get(aPos);
 	}
 	
+	/**
+	 * Sets the sub discipline item value at the given position.
+	 * 
+	 * @param aPos
+	 *            The sub discipline value position.
+	 * @param aSubValue
+	 *            The sub discipline value to set.
+	 */
 	public void setSubValue(final int aPos, final SubDisciplineItemValue aSubValue)
 	{
 		if (mSubValues.size() <= aPos)
@@ -299,6 +335,14 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 		aSubValue.setParent(this);
 	}
 	
+	/**
+	 * This returns whether this discipline has a sub discipline value at the<br>
+	 * given position if this is a parent discipline.
+	 * 
+	 * @param aPos
+	 *            The sub discipline position.
+	 * @return {@code false} if the sub discipline at the given position is {@code null} or not.
+	 */
 	public boolean hasSubDiscipline(final int aPos)
 	{
 		return mSubValues.size() > aPos && mSubValues.get(aPos) != null;
@@ -310,6 +354,9 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 		return mItem;
 	}
 	
+	/**
+	 * @return a list of all sub discipline item values.
+	 */
 	public List<SubDisciplineItemValue> getSubValues()
 	{
 		return mSubValues;
@@ -337,17 +384,5 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 		{
 			mValue-- ;
 		}
-	}
-	
-	public static Comparator<? super DisciplineItemValue> getComparator()
-	{
-		return new Comparator<DisciplineItemValue>()
-		{
-			@Override
-			public int compare(final DisciplineItemValue aLhs, final DisciplineItemValue aRhs)
-			{
-				return aLhs.getItem().compareTo(aRhs.getItem());
-			}
-		};
 	}
 }

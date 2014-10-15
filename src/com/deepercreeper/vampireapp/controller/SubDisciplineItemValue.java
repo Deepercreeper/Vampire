@@ -16,25 +16,57 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.controller.SelectItemDialog.SelectionListener;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
+/**
+ * The value instance of the sub discipline item.
+ * 
+ * @author Vincent
+ */
 public class SubDisciplineItemValue extends DisciplineItemValue
 {
 	private DisciplineItemValue	mParent;
 	
+	/**
+	 * Creates a new sub discipline item value.
+	 * 
+	 * @param aItem
+	 *            The item type.
+	 * @param aContext
+	 *            The context.
+	 * @param aAction
+	 *            The update action.
+	 */
 	public SubDisciplineItemValue(final SubDisciplineItem aItem, final Context aContext, final UpdateAction aAction)
 	{
 		super(aItem, aContext, aAction);
 	}
 	
+	/**
+	 * Sets the parent discipline value.
+	 * 
+	 * @param aParent
+	 *            The new parent discipline.
+	 */
 	public void setParent(final DisciplineItemValue aParent)
 	{
 		mParent = aParent;
 	}
 	
+	/**
+	 * @return the parent discipline item value.
+	 */
 	public DisciplineItemValue getParent()
 	{
 		return mParent;
 	}
 	
+	/**
+	 * Initializes a table row so that all needed widgets are added to handle this value.
+	 * 
+	 * @param aRow
+	 *            The row to initialize into.
+	 * @param aValueIx
+	 *            The sub discipline value index.
+	 */
 	public void initRow(final TableRow aRow, final int aValueIx)
 	{
 		final Context context = getContext();
@@ -81,7 +113,8 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 						}
 					};
 					
-					new SelectItemDialog<SubDisciplineItem>(items, context.getResources().getString(R.string.edit_discipline), context, action);
+					SelectItemDialog.<SubDisciplineItem> showSelectionDialog(items, context.getResources().getString(R.string.edit_discipline),
+							context, action);
 				}
 			});
 			numberAndName.addView(edit);
@@ -191,6 +224,12 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 			return true;
 		}
 		return false;
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return getItem().hashCode();
 	}
 	
 	@Override

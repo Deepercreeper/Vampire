@@ -29,7 +29,7 @@ public class SelectItemDialog <T extends Item> extends DialogFragment
 	
 	private final SelectionListener<T>	mAction;
 	
-	public SelectItemDialog(final List<T> aItems, final String aTitle, final Context aContext, final SelectionListener<T> aAction)
+	private SelectItemDialog(final List<T> aItems, final String aTitle, final Context aContext, final SelectionListener<T> aAction)
 	{
 		sDialogOpen = true;
 		mNames = new String[aItems.size()];
@@ -47,7 +47,12 @@ public class SelectItemDialog <T extends Item> extends DialogFragment
 		{
 			throw new IllegalStateException("The current context is no activity!");
 		}
-		show(((Activity) mContext).getFragmentManager(), mTitle);
+	}
+	
+	public static <S extends Item> void showSelectionDialog(final List<S> aItems, final String aTitle, final Context aContext,
+			final SelectionListener<S> aAction)
+	{
+		new SelectItemDialog<S>(aItems, aTitle, aContext, aAction).show(((Activity) aContext).getFragmentManager(), aTitle);
 	}
 	
 	public static boolean isDialogOpen()

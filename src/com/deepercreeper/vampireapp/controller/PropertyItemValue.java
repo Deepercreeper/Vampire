@@ -1,6 +1,5 @@
 package com.deepercreeper.vampireapp.controller;
 
-import java.util.Comparator;
 import android.content.Context;
 import android.text.TextUtils.TruncateAt;
 import android.view.Gravity;
@@ -13,6 +12,11 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
+/**
+ * The value instance of the property item.
+ * 
+ * @author Vincent
+ */
 public class PropertyItemValue implements ItemValue<PropertyItem>
 {
 	private final PropertyItem	mItem;
@@ -29,6 +33,16 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 	
 	private int					mValueId;
 	
+	/**
+	 * Creates a new property item value.
+	 * 
+	 * @param aItem
+	 *            The item type.
+	 * @param aContext
+	 *            The context.
+	 * @param aAction
+	 *            The update action.
+	 */
 	public PropertyItemValue(final PropertyItem aItem, final Context aContext, final UpdateAction aAction)
 	{
 		mIncreaseButton = new ImageButton(aContext);
@@ -120,11 +134,17 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 		return getItem().getValue(mValueId);
 	}
 	
+	/**
+	 * @return the current value specified in {@link PropertyItem#getFinalValue(int)}.
+	 */
 	public int getFinalValue()
 	{
 		return getItem().getFinalValue(mValueId);
 	}
 	
+	/**
+	 * @return the current value id.
+	 */
 	public int getValueId()
 	{
 		return mValueId;
@@ -170,18 +190,6 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 		{
 			mValueId-- ;
 		}
-	}
-	
-	public static Comparator<? super PropertyItemValue> getComparator()
-	{
-		return new Comparator<PropertyItemValue>()
-		{
-			@Override
-			public int compare(final PropertyItemValue aLhs, final PropertyItemValue aRhs)
-			{
-				return aLhs.getItem().compareTo(aRhs.getItem());
-			}
-		};
 	}
 	
 	@Override

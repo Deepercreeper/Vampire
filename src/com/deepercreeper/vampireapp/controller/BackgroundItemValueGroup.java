@@ -76,7 +76,7 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 			}
 		};
 		
-		new SelectItemDialog<BackgroundItem>(items, mContext.getResources().getString(R.string.edit_background), mContext, action);
+		SelectItemDialog.<BackgroundItem> showSelectionDialog(items, mContext.getResources().getString(R.string.edit_background), mContext, action);
 	}
 	
 	@Override
@@ -234,7 +234,8 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 						}
 					};
 					
-					new SelectItemDialog<BackgroundItem>(items, mContext.getResources().getString(R.string.add_background), mContext, action);
+					SelectItemDialog.<BackgroundItem> showSelectionDialog(items, mContext.getResources().getString(R.string.add_background),
+							mContext, action);
 				}
 			});
 			titleRow.addView(addBackground);

@@ -1,6 +1,5 @@
 package com.deepercreeper.vampireapp.controller;
 
-import java.util.Comparator;
 import android.content.Context;
 import android.text.TextUtils.TruncateAt;
 import android.view.Gravity;
@@ -13,6 +12,11 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
+/**
+ * This is the value of the background item.
+ * 
+ * @author Vincent
+ */
 public class BackgroundItemValue implements ItemValue<BackgroundItem>
 {
 	private final BackgroundItem			mItem;
@@ -31,6 +35,18 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	
 	private int								mValue;
 	
+	/**
+	 * Creates a new background value.
+	 * 
+	 * @param aItem
+	 *            The background item type.
+	 * @param aContext
+	 *            The context.
+	 * @param aAction
+	 *            The update action.
+	 * @param aGroup
+	 *            The parent value group.
+	 */
 	public BackgroundItemValue(final BackgroundItem aItem, final Context aContext, final UpdateAction aAction, final BackgroundItemValueGroup aGroup)
 	{
 		mIncreaseButton = new ImageButton(aContext);
@@ -42,6 +58,12 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 		mValue = mItem.getStartValue();
 	}
 	
+	/**
+	 * Initializes a table row so that all needed widgets are added to handle this value.
+	 * 
+	 * @param aRow
+	 *            The row to initialize into.
+	 */
 	public void initRow(final TableRow aRow)
 	{
 		mContainer = aRow;
@@ -191,17 +213,5 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	public BackgroundItem getItem()
 	{
 		return mItem;
-	}
-	
-	public static Comparator<? super BackgroundItemValue> getComparator()
-	{
-		return new Comparator<BackgroundItemValue>()
-		{
-			@Override
-			public int compare(final BackgroundItemValue aLhs, final BackgroundItemValue aRhs)
-			{
-				return aLhs.getItem().compareTo(aRhs.getItem());
-			}
-		};
 	}
 }

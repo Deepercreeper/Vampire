@@ -60,7 +60,7 @@
     <string-array name="disciplines">
         <item>Auspex:Sharpened senses,1;Soul sight,2,Cognition#Empathy;Mental touch,3,Cognition#Empathy;Stolen secrets,4,Intelligence#Ducking;Anima altering,5,Cognition#Occultism;Foresight,6,Cognition#Empathy</item>
         <item>Domination:Obedience for the spoken word,1,Manipulation#Intimidation;Mussitation of wrong will,2,Manipulation#Leadership;Revelers recognition,3,Intellect#Ducking;Temptation of sweet whispering,4,Charisma#Leadership;Jar,5,VolitionPoints;Fealty,6,Charisma#Leadership</item>
-        <item>Daimonion:Sinnsence,1,Cognition#Empathy;Fear of the hell below us,2,Intellect#Intimidation;flames of the underworld,3,Occultism#Dexterity#BloodPoints#Dices;Psychomachy,4;Curse,5,Intelligence#Occultism;Ignoring the blazing flames,6</item>
+        <item>Daimonion:Sinnsence,1,Cognition#Empathy;Fear of the hell below us,2,Intellect#Intimidation;Flames of the underworld,3,Occultism#Dexterity;Damage of flames of the underworld,3,BloodPoints#Dices;Psychomachy,4;Curse,5,Intelligence#Occultism;Ignoring the blazing flames,6</item>
         <item>Fleshforming:Formable face,1,Intelligence#Crafting;Pugging of mortal pug,2,Dexterity#Crafting;Tearing the skeleton,3,Strenth#Crafting;Awakening the Zulo frame,4,BloodPoints,2;Rising the blood fluid,5;Robbery-Chiropter,6,BloodPoints,3</item>
         <item>Speed:Speed,1,BloodPoints,1</item>
         <item>Gestalt-switch:Deponent of darkness,1;Claws of the animal,2,BloodPoints,1;Burial in earth,3,BloodPoints,1;Animal form,4,BloodPoints,1;Ghost body,5,BloodPoints,1;Blessed sleep,6,BloodPoints,5</item>
