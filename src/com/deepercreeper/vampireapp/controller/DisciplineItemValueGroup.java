@@ -11,6 +11,11 @@ import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.controller.ItemValue.UpdateAction;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
+/**
+ * A discipline value group.
+ * 
+ * @author Vincent
+ */
 public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>, VariableValueGroup<DisciplineItem, DisciplineItemValue>
 {
 	private boolean												mCreation;
@@ -31,6 +36,18 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	
 	private final HashMap<DisciplineItem, DisciplineItemValue>	mValues		= new HashMap<DisciplineItem, DisciplineItemValue>();
 	
+	/**
+	 * Creates a discipline item value group.
+	 * 
+	 * @param aGroup
+	 *            The item group type.
+	 * @param aController
+	 *            The parent controller.
+	 * @param aContext
+	 *            The context.
+	 * @param aCreation
+	 *            Whether this group is inside creation mode.
+	 */
 	public DisciplineItemValueGroup(final DisciplineItemGroup aGroup, final DisciplineValueController aController, final Context aContext,
 			final boolean aCreation)
 	{
@@ -69,13 +86,7 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	@Override
 	public DisciplineItemValue getValue(final String aName)
 	{
-		return getValue(getGroup().getItem(aName));
-	}
-	
-	@Override
-	public DisciplineItemValue getValue(final DisciplineItem aItem)
-	{
-		return mValues.get(aItem);
+		return mValues.get(getGroup().getItem(aName));
 	}
 	
 	@Override

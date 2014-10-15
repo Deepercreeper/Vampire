@@ -16,6 +16,11 @@ import com.deepercreeper.vampireapp.controller.ItemValue.UpdateAction;
 import com.deepercreeper.vampireapp.controller.SelectItemDialog.SelectionListener;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
+/**
+ * A group of property values.
+ * 
+ * @author Vincent
+ */
 public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, VariableValueGroup<PropertyItem, PropertyItemValue>
 {
 	private boolean											mCreation;
@@ -36,6 +41,18 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 	
 	private final HashMap<PropertyItem, PropertyItemValue>	mValues		= new HashMap<PropertyItem, PropertyItemValue>();
 	
+	/**
+	 * Creates a new property value group.
+	 * 
+	 * @param aGroup
+	 *            The item group type.
+	 * @param aController
+	 *            The parent controller.
+	 * @param aContext
+	 *            The context.
+	 * @param aCreation
+	 *            Whether this group is inside creation mode.
+	 */
 	public PropertyItemValueGroup(final PropertyItemGroup aGroup, final PropertyValueController aController, final Context aContext,
 			final boolean aCreation)
 	{
@@ -129,15 +146,9 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 	}
 	
 	@Override
-	public PropertyItemValue getValue(final PropertyItem aItem)
-	{
-		return mValues.get(aItem);
-	}
-	
-	@Override
 	public PropertyItemValue getValue(final String aName)
 	{
-		return getValue(getGroup().getItem(aName));
+		return mValues.get(getGroup().getItem(aName));
 	}
 	
 	@Override

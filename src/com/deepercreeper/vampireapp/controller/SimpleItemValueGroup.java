@@ -12,6 +12,11 @@ import android.widget.TextView;
 import com.deepercreeper.vampireapp.controller.ItemValue.UpdateAction;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
+/**
+ * A group of simple values.
+ * 
+ * @author Vincent
+ */
 public class SimpleItemValueGroup implements ItemValueGroup<SimpleItem>
 {
 	private boolean										mCreation;
@@ -28,6 +33,18 @@ public class SimpleItemValueGroup implements ItemValueGroup<SimpleItem>
 	
 	private final HashMap<SimpleItem, SimpleItemValue>	mValues		= new HashMap<SimpleItem, SimpleItemValue>();
 	
+	/**
+	 * Creates a new item value group.
+	 * 
+	 * @param aGroup
+	 *            The item group type.
+	 * @param aController
+	 *            The parent controller.
+	 * @param aContext
+	 *            The context.
+	 * @param aCreation
+	 *            Whether this value group is inside the creation mode.
+	 */
 	public SimpleItemValueGroup(final SimpleItemGroup aGroup, final SimpleValueController aController, final Context aContext, final boolean aCreation)
 	{
 		mController = aController;
@@ -84,15 +101,9 @@ public class SimpleItemValueGroup implements ItemValueGroup<SimpleItem>
 	}
 	
 	@Override
-	public SimpleItemValue getValue(final SimpleItem aItem)
-	{
-		return mValues.get(aItem);
-	}
-	
-	@Override
 	public SimpleItemValue getValue(final String aName)
 	{
-		return getValue(getGroup().getItem(aName));
+		return mValues.get(getGroup().getItem(aName));
 	}
 	
 	@Override

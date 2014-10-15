@@ -17,6 +17,11 @@ import com.deepercreeper.vampireapp.controller.ItemValue.UpdateAction;
 import com.deepercreeper.vampireapp.controller.SelectItemDialog.SelectionListener;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
+/**
+ * A value group for background values.
+ * 
+ * @author Vincent
+ */
 public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>, VariableValueGroup<BackgroundItem, BackgroundItemValue>
 {
 	private boolean												mCreation;
@@ -37,6 +42,18 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 	
 	private final UpdateAction									mAction;
 	
+	/**
+	 * Creates a new background value group.
+	 * 
+	 * @param aGroup
+	 *            The item group type.
+	 * @param aController
+	 *            The parent controller.
+	 * @param aContext
+	 *            The context.
+	 * @param aCreation
+	 *            Whether this is inside creation mode.
+	 */
 	public BackgroundItemValueGroup(final BackgroundItemGroup aGroup, final BackgroundValueController aController, final Context aContext,
 			final boolean aCreation)
 	{
@@ -54,6 +71,12 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 		};
 	}
 	
+	/**
+	 * Creates a select item dialog that sets the given value.
+	 * 
+	 * @param aValue
+	 *            The value to edit.
+	 */
 	public void editValue(final BackgroundItemValue aValue)
 	{
 		if (SelectItemDialog.isDialogOpen())
@@ -171,13 +194,7 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 	@Override
 	public BackgroundItemValue getValue(final String aName)
 	{
-		return getValue(getGroup().getItem(aName));
-	}
-	
-	@Override
-	public BackgroundItemValue getValue(final BackgroundItem aItem)
-	{
-		return mValues.get(aItem);
+		return mValues.get(getGroup().getItem(aName));
 	}
 	
 	@Override
