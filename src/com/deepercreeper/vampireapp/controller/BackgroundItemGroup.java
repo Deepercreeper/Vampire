@@ -5,6 +5,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * A group of background items.
+ * 
+ * @author Vincent
+ */
 public class BackgroundItemGroup implements ItemGroup<BackgroundItem>
 {
 	private final String							mName;
@@ -43,10 +48,19 @@ public class BackgroundItemGroup implements ItemGroup<BackgroundItem>
 		Collections.sort(mItems);
 	}
 	
-	public static BackgroundItemGroup create(String aName, String[] aData)
+	/**
+	 * Creates a new background item group out of the given data.
+	 * 
+	 * @param aName
+	 *            The group name.
+	 * @param aData
+	 *            The data out of which the group is created.
+	 * @return the created group.
+	 */
+	public static BackgroundItemGroup create(final String aName, final String[] aData)
 	{
-		BackgroundItemGroup group = new BackgroundItemGroup(aName);
-		for (String item : aData)
+		final BackgroundItemGroup group = new BackgroundItemGroup(aName);
+		for (final String item : aData)
 		{
 			group.addItem(BackgroundItem.create(item));
 		}

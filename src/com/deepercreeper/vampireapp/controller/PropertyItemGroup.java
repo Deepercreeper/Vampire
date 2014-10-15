@@ -5,6 +5,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * A group for property items.
+ * 
+ * @author Vincent
+ */
 public class PropertyItemGroup implements ItemGroup<PropertyItem>
 {
 	private final String						mName;
@@ -43,10 +48,19 @@ public class PropertyItemGroup implements ItemGroup<PropertyItem>
 		Collections.sort(mItems);
 	}
 	
-	public static PropertyItemGroup create(String aName, String[] aData)
+	/**
+	 * Creates a new property item group out of the given data.
+	 * 
+	 * @param aName
+	 *            The group name.
+	 * @param aData
+	 *            The data out of which is the group created.
+	 * @return the created property group.
+	 */
+	public static PropertyItemGroup create(final String aName, final String[] aData)
 	{
-		PropertyItemGroup group = new PropertyItemGroup(aName);
-		for (String property : aData)
+		final PropertyItemGroup group = new PropertyItemGroup(aName);
+		for (final String property : aData)
 		{
 			group.addItem(PropertyItem.create(property));
 		}

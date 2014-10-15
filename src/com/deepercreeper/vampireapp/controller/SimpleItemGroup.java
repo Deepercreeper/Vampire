@@ -2,10 +2,14 @@ package com.deepercreeper.vampireapp.controller;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * A group of simple items.
+ * 
+ * @author Vincent
+ */
 public class SimpleItemGroup implements ItemGroup<SimpleItem>
 {
 	private static final String					NAME_DELIM	= ":", ITEMS_DELIM = ",";
@@ -46,6 +50,17 @@ public class SimpleItemGroup implements ItemGroup<SimpleItem>
 		return mName;
 	}
 	
+	/**
+	 * Creates a new simple item group out of the given data.
+	 * 
+	 * @param aData
+	 *            The data out of which the group is created.
+	 * @param aStartValue
+	 *            The character creation start value for all values inside this group.
+	 * @param aMaxStartValue
+	 *            The maximum character creation value for all values inside this group.
+	 * @return the created simple item group.
+	 */
 	public static SimpleItemGroup create(final String aData, final int aStartValue, final int aMaxStartValue)
 	{
 		final String[] data = aData.split(NAME_DELIM);
@@ -58,17 +73,5 @@ public class SimpleItemGroup implements ItemGroup<SimpleItem>
 			}
 		}
 		return group;
-	}
-	
-	public static Comparator<SimpleItemGroup> getComparator()
-	{
-		return new Comparator<SimpleItemGroup>()
-		{
-			@Override
-			public int compare(final SimpleItemGroup aLhs, final SimpleItemGroup aRhs)
-			{
-				return aLhs.getName().compareTo(aRhs.getName());
-			}
-		};
 	}
 }

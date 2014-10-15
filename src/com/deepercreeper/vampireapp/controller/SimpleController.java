@@ -1,7 +1,6 @@
 package com.deepercreeper.vampireapp.controller;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import android.content.res.Resources;
@@ -37,14 +36,12 @@ public class SimpleController implements Controller<SimpleItem>
 			mAttributes.put(group.getName(), group);
 			mAttributeGroups.add(group);
 		}
-		Collections.sort(mAttributeGroups, SimpleItemGroup.getComparator());
 		for (final String abilitiesGroup : aResources.getStringArray(R.array.ability_values))
 		{
 			final SimpleItemGroup group = SimpleItemGroup.create(abilitiesGroup, 0, 3);
 			mAbilities.put(group.getName(), group);
 			mAbilityGroups.add(group);
 		}
-		Collections.sort(mAbilityGroups, SimpleItemGroup.getComparator());
 		mVirtues = SimpleItemGroup.create(aResources.getString(R.string.virtue_values), 1, 4);
 	}
 	

@@ -5,6 +5,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * A group of discipline items.
+ * 
+ * @author Vincent
+ */
 public class DisciplineItemGroup implements ItemGroup<DisciplineItem>
 {
 	private final String							mName;
@@ -59,6 +64,15 @@ public class DisciplineItemGroup implements ItemGroup<DisciplineItem>
 		return mName;
 	}
 	
+	/**
+	 * Creates a new discipline group out of the given data.
+	 * 
+	 * @param aName
+	 *            The group name.
+	 * @param aData
+	 *            The data out of which the group is created.
+	 * @return the created discipline item group.
+	 */
 	public static DisciplineItemGroup create(final String aName, final String[] aData)
 	{
 		final DisciplineItemGroup group = new DisciplineItemGroup(aName);
