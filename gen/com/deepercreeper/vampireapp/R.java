@@ -38,7 +38,8 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f0a0014;
+        public static final int action_settings=0x7f0a0016;
+        public static final int back_button=0x7f0a0010;
         public static final int backgrounds_panel=0x7f0a000e;
         public static final int behavior_label=0x7f0a0008;
         public static final int behavior_spinner=0x7f0a0007;
@@ -48,16 +49,17 @@ public final class R {
         public static final int concept_text=0x7f0a0003;
         public static final int createCharacterButton=0x7f0a0001;
         public static final int disciplines_panel=0x7f0a000d;
-        public static final int free_points_bar=0x7f0a0012;
-        public static final int free_points_text=0x7f0a0011;
+        public static final int free_points_bar=0x7f0a0013;
+        public static final int free_points_text=0x7f0a0012;
         public static final int generation_label=0x7f0a000a;
         public static final int generation_picker=0x7f0a0006;
         public static final int listView1=0x7f0a0000;
         public static final int nature_label=0x7f0a0005;
         public static final int nature_spinner=0x7f0a0004;
-        public static final int next_button=0x7f0a0010;
+        public static final int next_button=0x7f0a0011;
         public static final int properties_panel=0x7f0a000f;
-        public static final int show_descriptions_button=0x7f0a0013;
+        public static final int show_creation_button=0x7f0a0014;
+        public static final int show_descriptions_button=0x7f0a0015;
         public static final int simple_items_panel=0x7f0a000c;
     }
     public static final class integer {
@@ -80,6 +82,7 @@ public final class R {
         public static final int add_property=0x7f050012;
         public static final int app_name=0x7f050001;
         public static final int attributes=0x7f05000a;
+        public static final int back=0x7f050017;
         public static final int backgrounds=0x7f05000e;
         public static final int behavior_text=0x7f050007;
         public static final int button_create_character=0x7f050002;

@@ -37,8 +37,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/nature_label"
-            android:layout_alignParentRight="true"
             android:layout_alignLeft="@+id/generation_picker"
+            android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/nature_label"
             android:layout_below="@+id/concept_text"
             android:layout_toRightOf="@+id/nature_label"
@@ -49,8 +49,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/behavior_label"
-            android:layout_alignParentRight="true"
             android:layout_alignLeft="@+id/generation_picker"
+            android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/behavior_label"
             android:layout_below="@+id/nature_spinner"
             android:layout_toRightOf="@+id/behavior_label"
@@ -109,8 +109,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/clan_label"
-            android:layout_alignParentRight="true"
             android:layout_alignLeft="@+id/generation_picker"
+            android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/clan_label"
             android:layout_below="@+id/behavior_spinner"
             android:layout_toRightOf="@+id/clan_label" />
@@ -152,14 +152,21 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/backgrounds_panel"
             android:orientation="vertical" />
-    
-    	<Button 
-    	    android:id="@+id/next_button"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_below="@id/properties_panel"
-			android:text="@string/next"
-    	    />
+
+        <Button
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/properties_panel"
+            android:text="@string/back" />
+
+        <Button
+            android:id="@+id/next_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/properties_panel"
+            android:layout_toRightOf="@id/back_button"
+            android:text="@string/next" />
     </RelativeLayout>
 
 </ScrollView>

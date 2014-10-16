@@ -49,6 +49,12 @@ public class DisciplineValueController implements ValueController<DisciplineItem
 		mDisciplines = new DisciplineItemValueGroup(mController.getDisciplines(), this, mContext, mMode);
 	}
 	
+	/**
+	 * Used to initialize all disciplines corresponding to the new clan.
+	 * 
+	 * @param aClan
+	 *            The new clan of the current character.
+	 */
 	public void changeClan(final Clan aClan)
 	{
 		clear();

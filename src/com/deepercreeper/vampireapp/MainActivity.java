@@ -72,6 +72,7 @@ public class MainActivity extends Activity
 	
 	private void initMain()
 	{
+		mCreator = null;
 		release();
 		setContentView(R.layout.activity_main);
 		mState = State.MAIN;
@@ -101,11 +102,9 @@ public class MainActivity extends Activity
 		switch (mState)
 		{
 			case CREATION :
-				mCreator = null;
 				initMain();
 				break;
 			case FREE_POINTS :
-				mCreator.setCreationMode(CreationMode.CREATION);
 				initCreateCharacter(mCreator);
 				break;
 			case MAIN :
@@ -188,6 +187,7 @@ public class MainActivity extends Activity
 		release();
 		mCreator = aCreator;
 		setContentView(R.layout.create_character);
+		mCreator.setCreationMode(CreationMode.CREATION);
 		mState = State.CREATION;
 		createCharacter();
 	}
@@ -321,6 +321,16 @@ public class MainActivity extends Activity
 				initBonusPoints();
 			}
 		});
+		
+		final Button backButton = (Button) findViewById(R.id.back_button);
+		backButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				initMain();
+			}
+		});
 	}
 	
 	private void initBonusPoints()
@@ -348,6 +358,16 @@ public class MainActivity extends Activity
 				mCreator.setFreePoints(Math.max(0, mCreator.getFreePoints() - 1));
 				pointsText.setText("" + mCreator.getFreePoints());
 				pointsBar.setProgress(mCreator.getFreePoints());
+			}
+		});
+		
+		final Button showCreation = (Button) findViewById(R.id.show_creation_button);
+		showCreation.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				initCreateCharacter(mCreator);
 			}
 		});
 		
