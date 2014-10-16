@@ -22,7 +22,7 @@ public class PropertyValueController implements ValueController<PropertyItem>, V
 	
 	private Button							mShowPanel;
 	
-	private boolean							mPropertiesOpen	= false;
+	private boolean							mPropertiesOpen;
 	
 	private final PropertyController		mController;
 	
@@ -62,7 +62,10 @@ public class PropertyValueController implements ValueController<PropertyItem>, V
 	@Override
 	public void resize()
 	{
-		mProperties.resize();
+		if ( !mPropertiesOpen)
+		{
+			mProperties.resize();
+		}
 	}
 	
 	@Override
@@ -114,6 +117,8 @@ public class PropertyValueController implements ValueController<PropertyItem>, V
 	{
 		final Context context = aLayout.getContext();
 		aLayout.removeAllViews();
+		
+		mPropertiesOpen = false;
 		
 		mShowPanel = new Button(context);
 		final LinearLayout properties = new LinearLayout(context);

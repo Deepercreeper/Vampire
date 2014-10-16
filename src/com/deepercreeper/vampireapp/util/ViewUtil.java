@@ -59,12 +59,20 @@ public class ViewUtil
 		mNameSizeShort = new LayoutParams(calcPx(82, aContext), calcPx(30, aContext));
 	}
 	
-	public static void release(final View aView)
+	public static void release(final View aView, final boolean aChildren)
 	{
+		if (aView == null)
+		{
+			return;
+		}
+		if (aChildren && aView instanceof ViewGroup)
+		{
+			((ViewGroup) aView).removeAllViews();
+		}
 		final ViewParent parent = aView.getParent();
 		if (parent instanceof ViewGroup)
 		{
-			((ViewGroup) parent).removeView(aView);
+			((ViewGroup) parent).removeAllViews();
 		}
 	}
 	

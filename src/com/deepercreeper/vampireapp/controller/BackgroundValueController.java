@@ -22,7 +22,7 @@ public class BackgroundValueController implements ValueController<BackgroundItem
 	
 	private Button							mShowPanel;
 	
-	private boolean							mBackgroundsOpen	= false;
+	private boolean							mBackgroundsOpen;
 	
 	private final BackgroundController		mController;
 	
@@ -62,7 +62,10 @@ public class BackgroundValueController implements ValueController<BackgroundItem
 	@Override
 	public void resize()
 	{
-		mBackgrounds.resize();
+		if ( !mBackgroundsOpen)
+		{
+			mBackgrounds.resize();
+		}
 	}
 	
 	@Override
@@ -130,6 +133,8 @@ public class BackgroundValueController implements ValueController<BackgroundItem
 	public void initLayout(final LinearLayout aLayout)
 	{
 		aLayout.removeAllViews();
+		
+		mBackgroundsOpen = false;
 		
 		mShowPanel = new Button(mContext);
 		final LinearLayout backgrounds = new LinearLayout(mContext);

@@ -66,9 +66,7 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 	@Override
 	public void release()
 	{
-		ViewUtil.release(mContainer);
-		ViewUtil.release(mIncreaseButton);
-		ViewUtil.release(mDecreaseButton);
+		ViewUtil.release(mContainer, false);
 	}
 	
 	private void init()

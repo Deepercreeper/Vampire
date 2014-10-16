@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import com.deepercreeper.vampireapp.Clan;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.util.ViewUtil;
@@ -24,7 +25,7 @@ public class DisciplineValueController implements ValueController<DisciplineItem
 	
 	private LinearLayout					mDisciplinesPanel;
 	
-	private boolean							mDisciplinesOpen	= false;
+	private boolean							mDisciplinesOpen;
 	
 	private final DisciplineController		mController;
 	
@@ -46,6 +47,15 @@ public class DisciplineValueController implements ValueController<DisciplineItem
 		mContext = aContext;
 		mController = aController;
 		mDisciplines = new DisciplineItemValueGroup(mController.getDisciplines(), this, mContext, mMode);
+	}
+	
+	public void changeClan(final Clan aClan)
+	{
+		clear();
+		for (final DisciplineItem discipline : aClan.getDisciplines())
+		{
+			mDisciplines.addItem(discipline);
+		}
 	}
 	
 	@Override
@@ -84,7 +94,10 @@ public class DisciplineValueController implements ValueController<DisciplineItem
 	@Override
 	public void resize()
 	{
-		mDisciplines.resize();
+		if ( !mDisciplinesOpen)
+		{
+			mDisciplines.resize();
+		}
 	}
 	
 	@Override
@@ -137,6 +150,8 @@ public class DisciplineValueController implements ValueController<DisciplineItem
 	{
 		final Context context = aLayout.getContext();
 		aLayout.removeAllViews();
+		
+		mDisciplinesOpen = false;
 		
 		mShowPanel = new Button(context);
 		mDisciplinesPanel = new LinearLayout(context);

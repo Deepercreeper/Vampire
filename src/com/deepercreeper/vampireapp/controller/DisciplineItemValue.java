@@ -81,9 +81,7 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 				subValue.release();
 			}
 		}
-		ViewUtil.release(mContainer);
-		ViewUtil.release(mIncreaseButton);
-		ViewUtil.release(mDecreaseButton);
+		ViewUtil.release(mContainer, false);
 	}
 	
 	protected void init()

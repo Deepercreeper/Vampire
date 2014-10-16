@@ -69,9 +69,9 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	@Override
 	public void release()
 	{
-		ViewUtil.release(mIncreaseButton);
-		ViewUtil.release(mDecreaseButton);
-		ViewUtil.release(mContainer);
+		ViewUtil.release(mIncreaseButton, false);
+		ViewUtil.release(mDecreaseButton, false);
+		ViewUtil.release(mContainer, true);
 	}
 	
 	/**

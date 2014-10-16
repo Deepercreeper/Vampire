@@ -68,6 +68,7 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	@Override
 	public void release()
 	{
+		ViewUtil.release(mDisciplinesTable, true);
 		for (final DisciplineItemValue value : mValuesList)
 		{
 			value.release();
@@ -224,6 +225,11 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 		
 		for (final DisciplineItemValue value : mValuesList)
 		{
+			final ViewGroup container = value.getContainer();
+			if (container.getParent() != null)
+			{
+				ViewUtil.release(container, false);
+			}
 			mDisciplinesTable.addView(value.getContainer());
 		}
 		aLayout.addView(mDisciplinesTable);

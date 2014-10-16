@@ -59,6 +59,17 @@ public class Clan
 	}
 	
 	@Override
+	public boolean equals(final Object aO)
+	{
+		if (aO instanceof Clan)
+		{
+			final Clan c = (Clan) aO;
+			return mName.equals(c.mName);
+		}
+		return false;
+	}
+	
+	@Override
 	public String toString()
 	{
 		return mName + " " + mDisciplines;

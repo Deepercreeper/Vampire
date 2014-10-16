@@ -32,11 +32,11 @@ public class SimpleValueController implements ValueController<SimpleItem>
 	
 	private Button										mShowVirtuesPanel;
 	
-	private boolean										mAttributesOpen			= false;
+	private boolean										mAttributesOpen;
 	
-	private boolean										mAbilitiesOpen			= false;
+	private boolean										mAbilitiesOpen;
 	
-	private boolean										mVirtuesOpen			= false;
+	private boolean										mVirtuesOpen;
 	
 	private boolean										mInitializedAttributes	= false;
 	
@@ -160,6 +160,10 @@ public class SimpleValueController implements ValueController<SimpleItem>
 	{
 		final Context context = aLayout.getContext();
 		aLayout.removeAllViews();
+		
+		mAttributesOpen = mInitializedAttributes = false;
+		mAbilitiesOpen = mInitializedAbilities = false;
+		mVirtuesOpen = mInitializedVirtues = false;
 		
 		// Attributes
 		mShowAttributesPanel = new Button(context);

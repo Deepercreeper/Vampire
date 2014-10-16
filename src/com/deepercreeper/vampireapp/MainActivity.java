@@ -6,10 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -192,16 +194,68 @@ public class MainActivity extends Activity
 	
 	private void createCharacter()
 	{
+		final TextView nameView = (TextView) findViewById(R.id.char_name_text);
+		nameView.setText(mCreator.getName());
+		nameView.setOnKeyListener(new OnKeyListener()
+		{
+			@Override
+			public boolean onKey(final View aV, final int aKeyCode, final KeyEvent aEvent)
+			{
+				mCreator.setName("" + nameView.getText());
+				return true;
+			}
+		});
+		
+		final TextView conceptView = (TextView) findViewById(R.id.concept_text);
+		conceptView.setText(mCreator.getConcept());
+		conceptView.setOnKeyListener(new OnKeyListener()
+		{
+			@Override
+			public boolean onKey(final View aV, final int aKeyCode, final KeyEvent aEvent)
+			{
+				mCreator.setConcept("" + conceptView.getText());
+				return true;
+			}
+		});
+		
 		ArrayAdapter<String> adapter;
 		
 		final Spinner natureSpinner = (Spinner) findViewById(R.id.nature_spinner);
 		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, mNatureAndBehavior);
 		natureSpinner.setAdapter(adapter);
+		natureSpinner.setOnItemSelectedListener(new OnItemSelectedListener()
+		{
+			@Override
+			public void onItemSelected(final AdapterView<?> aParent, final View aView, final int aPosition, final long aId)
+			{
+				mCreator.setNature(mNatureAndBehavior.get(aPosition));
+			}
+			
+			@Override
+			public void onNothingSelected(final AdapterView<?> aParent)
+			{
+				return;
+			}
+		});
 		natureSpinner.setSelection(mNatureAndBehavior.indexOf(mCreator.getNature()));
 		
 		final Spinner behaviorSpinner = (Spinner) findViewById(R.id.behavior_spinner);
 		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, mNatureAndBehavior);
 		behaviorSpinner.setAdapter(adapter);
+		behaviorSpinner.setOnItemSelectedListener(new OnItemSelectedListener()
+		{
+			@Override
+			public void onItemSelected(final AdapterView<?> aParent, final View aView, final int aPosition, final long aId)
+			{
+				mCreator.setBehavior(mNatureAndBehavior.get(aPosition));
+			}
+			
+			@Override
+			public void onNothingSelected(final AdapterView<?> aParent)
+			{
+				return;
+			}
+		});
 		behaviorSpinner.setSelection(mNatureAndBehavior.indexOf(mCreator.getBehavior()));
 		
 		final NumberPicker generationPicker = (NumberPicker) findViewById(R.id.generation_picker);
@@ -302,7 +356,7 @@ public class MainActivity extends Activity
 	
 	private void clanChanged(final String aClan)
 	{
-		mCreator.setClan(mClans.get(aClan));
+		mCreator.setClan(mClans.get(aClan), false);
 		
 		// Reload generations
 		final NumberPicker generationPicker = (NumberPicker) findViewById(R.id.generation_picker);

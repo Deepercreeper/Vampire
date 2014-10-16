@@ -8,7 +8,7 @@ package com.deepercreeper.vampireapp.controller;
  */
 public class BackgroundItem implements Item
 {
-	private static final int	MAX_VALUE		= 6, MAX_START_VALUE = 5, START_VALUE = 0;
+	private static final int	MAX_VALUE		= 5, MAX_START_VALUE = 5, START_VALUE = 0;
 	
 	/**
 	 * The number of backgrounds that can be set for one character.

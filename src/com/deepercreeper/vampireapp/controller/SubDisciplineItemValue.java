@@ -43,8 +43,9 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	@Override
 	public void release()
 	{
-		ViewUtil.release(getIncreaseButton());
-		ViewUtil.release(getDecreaseButton());
+		ViewUtil.release(getIncreaseButton(), false);
+		ViewUtil.release(getDecreaseButton(), false);
+		ViewUtil.release(super.getContainer(), true);
 	}
 	
 	/**

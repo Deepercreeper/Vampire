@@ -5,7 +5,6 @@ import com.deepercreeper.vampireapp.controller.BackgroundController;
 import com.deepercreeper.vampireapp.controller.BackgroundValueController;
 import com.deepercreeper.vampireapp.controller.CreationMode;
 import com.deepercreeper.vampireapp.controller.DisciplineController;
-import com.deepercreeper.vampireapp.controller.DisciplineItem;
 import com.deepercreeper.vampireapp.controller.DisciplineValueController;
 import com.deepercreeper.vampireapp.controller.PropertyController;
 import com.deepercreeper.vampireapp.controller.PropertyValueController;
@@ -48,7 +47,7 @@ public class CharCreator
 		mSimpleValues = new SimpleValueController(aSimpleItems, aContext, CreationMode.CREATION);
 		mNature = aNature;
 		mBehavior = aBehavior;
-		setClan(aClan);
+		setClan(aClan, true);
 	}
 	
 	public void setCreationMode(final CreationMode aMode)
@@ -117,18 +116,22 @@ public class CharCreator
 		mBehavior = aBehavior;
 	}
 	
-	public void setClan(final Clan aClan)
+	public void setClan(final Clan aClan, final boolean aForceSet)
 	{
-		mClan = aClan;
-		mDisciplines.clear();
-		boolean hasDisciplines = false;
-		for (final DisciplineItem discipline : mClan.getDisciplines())
+		if (aForceSet || !aClan.equals(mClan))
 		{
-			mDisciplines.addItem(discipline);
-			hasDisciplines = true;
+			mClan = aClan;
+			mDisciplines.close();
+			mDisciplines.changeClan(aClan);
 		}
-		mDisciplines.close();
-		mDisciplines.setEnabled(hasDisciplines);
+		if (aClan.getDisciplines().isEmpty())
+		{
+			mDisciplines.setEnabled(false);
+		}
+		else
+		{
+			mDisciplines.setEnabled(true);
+		}
 	}
 	
 	public void setGeneration(final int aGeneration)

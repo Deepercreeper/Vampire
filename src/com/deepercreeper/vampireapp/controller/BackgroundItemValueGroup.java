@@ -281,7 +281,9 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 		
 		for (final BackgroundItemValue value : mValuesList)
 		{
-			mBackgroundsTable.addView(value.getContainer());
+			final TableRow row = new TableRow(mContext);
+			value.initRow(row);
+			mBackgroundsTable.addView(row);
 		}
 		aLayout.addView(mBackgroundsTable);
 		mController.updateValues();
