@@ -19,6 +19,8 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class BackgroundItemValue implements ItemValue<BackgroundItem>
 {
+	private CreationMode					mMode;
+	
 	private final BackgroundItem			mItem;
 	
 	private final Context					mContext;
@@ -28,6 +30,8 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	private final ImageButton				mIncreaseButton;
 	
 	private final ImageButton				mDecreaseButton;
+	
+	private RadioButton[]					mValueDisplay;
 	
 	private TableRow						mContainer;
 	
@@ -48,9 +52,13 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	 *            The update action.
 	 * @param aGroup
 	 *            The parent value group.
+	 * @param aMode
+	 *            The current creation mode.
 	 */
-	public BackgroundItemValue(final BackgroundItem aItem, final Context aContext, final UpdateAction aAction, final BackgroundItemValueGroup aGroup)
+	public BackgroundItemValue(final BackgroundItem aItem, final Context aContext, final UpdateAction aAction, final BackgroundItemValueGroup aGroup,
+			final CreationMode aMode)
 	{
+		mMode = aMode;
 		mIncreaseButton = new ImageButton(aContext);
 		mDecreaseButton = new ImageButton(aContext);
 		mItem = aItem;
@@ -72,6 +80,18 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 		ViewUtil.release(mIncreaseButton, false);
 		ViewUtil.release(mDecreaseButton, false);
 		ViewUtil.release(mContainer, true);
+	}
+	
+	@Override
+	public void setCreationMode(final CreationMode aMode)
+	{
+		mMode = aMode;
+	}
+	
+	@Override
+	public CreationMode getCreationMode()
+	{
+		return mMode;
 	}
 	
 	/**
@@ -96,24 +116,27 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 		valueName.setText(mItem.getName());
 		mContainer.addView(valueName);
 		
-		final ImageButton edit = new ImageButton(mContext);
-		edit.setLayoutParams(ViewUtil.instance().getRowButtonSize());
-		edit.setContentDescription("Edit");
-		edit.setImageResource(android.R.drawable.ic_menu_edit);
-		edit.setOnClickListener(new OnClickListener()
+		if (mMode == CreationMode.CREATION)
 		{
-			@Override
-			public void onClick(final View aV)
+			final ImageButton edit = new ImageButton(mContext);
+			edit.setLayoutParams(ViewUtil.instance().getRowButtonSize());
+			edit.setContentDescription("Edit");
+			edit.setImageResource(android.R.drawable.ic_menu_edit);
+			edit.setOnClickListener(new OnClickListener()
 			{
-				mGroup.editValue(BackgroundItemValue.this);
-			}
-		});
-		mContainer.addView(edit);
+				@Override
+				public void onClick(final View aV)
+				{
+					mGroup.editValue(BackgroundItemValue.this);
+				}
+			});
+			mContainer.addView(edit);
+		}
 		
 		final GridLayout spinnerGrid = new GridLayout(mContext);
 		spinnerGrid.setLayoutParams(ViewUtil.instance().getRowWrapAll());
 		{
-			final RadioButton[] valueDisplay = new RadioButton[mItem.getMaxValue()];
+			mValueDisplay = new RadioButton[mItem.getMaxValue()];
 			
 			mDecreaseButton.setLayoutParams(ViewUtil.instance().getButtonSize());
 			mDecreaseButton.setContentDescription("Decrease");
@@ -124,19 +147,19 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 				public void onClick(final View aV)
 				{
 					decrease();
-					ViewUtil.applyValue(getValue(), valueDisplay);
+					refreshValue();
 					mAction.update();
 				}
 			});
 			spinnerGrid.addView(mDecreaseButton);
 			
-			for (int i = 0; i < valueDisplay.length; i++ )
+			for (int i = 0; i < mValueDisplay.length; i++ )
 			{
 				final RadioButton valuePoint = new RadioButton(mContext);
 				valuePoint.setLayoutParams(ViewUtil.instance().getValueSize());
 				valuePoint.setClickable(false);
 				spinnerGrid.addView(valuePoint);
-				valueDisplay[i] = valuePoint;
+				mValueDisplay[i] = valuePoint;
 			}
 			
 			mIncreaseButton.setLayoutParams(ViewUtil.instance().getButtonSize());
@@ -148,13 +171,13 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 				public void onClick(final View aV)
 				{
 					increase();
-					ViewUtil.applyValue(getValue(), valueDisplay);
+					refreshValue();
 					mAction.update();
 				}
 			});
 			spinnerGrid.addView(mIncreaseButton);
 			
-			ViewUtil.applyValue(getValue(), valueDisplay);
+			refreshValue();
 		}
 		mContainer.addView(spinnerGrid);
 	}
@@ -216,7 +239,7 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	@Override
 	public boolean canIncrease()
 	{
-		return mValue < getItem().getMaxValue();
+		return getValue() < getItem().getMaxValue();
 	}
 	
 	@Override
@@ -224,14 +247,21 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	{
 		if (canIncrease())
 		{
-			mValue++ ;
+			if (mMode == CreationMode.FREE_POINTS)
+			{
+				mTempPoints++ ;
+			}
+			else
+			{
+				mValue++ ;
+			}
 		}
 	}
 	
 	@Override
 	public boolean canDecrease()
 	{
-		return mValue > getItem().getStartValue();
+		return getValue() > getItem().getStartValue();
 	}
 	
 	@Override
@@ -239,19 +269,32 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	{
 		if (canDecrease())
 		{
-			mValue-- ;
+			if (mMode == CreationMode.FREE_POINTS)
+			{
+				mTempPoints-- ;
+			}
+			else
+			{
+				mValue-- ;
+			}
 		}
 	}
 	
 	@Override
 	public int getValue()
 	{
-		return mValue;
+		return mValue + mTempPoints;
 	}
 	
 	@Override
 	public BackgroundItem getItem()
 	{
 		return mItem;
+	}
+	
+	@Override
+	public void refreshValue()
+	{
+		ViewUtil.applyValue(getValue(), mValueDisplay);
 	}
 }

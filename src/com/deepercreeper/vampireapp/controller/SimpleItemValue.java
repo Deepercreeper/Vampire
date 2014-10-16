@@ -19,6 +19,8 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class SimpleItemValue implements ItemValue<SimpleItem>
 {
+	private CreationMode		mMode;
+	
 	private final SimpleItem	mItem;
 	
 	private int					mValue;
@@ -30,6 +32,8 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 	private final ImageButton	mIncreaseButton;
 	
 	private final ImageButton	mDecreaseButton;
+	
+	private final RadioButton[]	mValueDisplay;
 	
 	private final TableRow		mContainer;
 	
@@ -44,17 +48,33 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 	 *            The context.
 	 * @param aAction
 	 *            The update action.
+	 * @param aMode
+	 *            The current creation mode.
 	 */
-	public SimpleItemValue(final SimpleItem aItem, final Context aContext, final UpdateAction aAction)
+	public SimpleItemValue(final SimpleItem aItem, final Context aContext, final UpdateAction aAction, final CreationMode aMode)
 	{
+		mMode = aMode;
 		mItem = aItem;
 		mContext = aContext;
 		mAction = aAction;
+		mValueDisplay = new RadioButton[mItem.getMaxValue()];
 		mContainer = new TableRow(mContext);
 		mIncreaseButton = new ImageButton(mContext);
 		mDecreaseButton = new ImageButton(mContext);
 		mValue = mItem.getStartValue();
 		init();
+	}
+	
+	@Override
+	public void setCreationMode(final CreationMode aMode)
+	{
+		mMode = aMode;
+	}
+	
+	@Override
+	public CreationMode getCreationMode()
+	{
+		return mMode;
 	}
 	
 	@Override
@@ -84,8 +104,6 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 		final GridLayout spinnerGrid = new GridLayout(mContext);
 		spinnerGrid.setLayoutParams(ViewUtil.instance().getRowWrapAll());
 		{
-			final RadioButton[] valueDisplay = new RadioButton[getItem().getMaxValue()];
-			
 			mDecreaseButton.setLayoutParams(ViewUtil.instance().getButtonSize());
 			mDecreaseButton.setContentDescription("Decrease");
 			mDecreaseButton.setImageResource(android.R.drawable.ic_media_previous);
@@ -95,19 +113,19 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 				public void onClick(final View aV)
 				{
 					decrease();
-					ViewUtil.applyValue(getValue(), valueDisplay);
+					refreshValue();
 					mAction.update();
 				}
 			});
 			spinnerGrid.addView(mDecreaseButton);
 			
-			for (int i = 0; i < valueDisplay.length; i++ )
+			for (int i = 0; i < mValueDisplay.length; i++ )
 			{
 				final RadioButton valuePoint = new RadioButton(mContext);
 				valuePoint.setLayoutParams(ViewUtil.instance().getValueSize());
 				valuePoint.setClickable(false);
 				spinnerGrid.addView(valuePoint);
-				valueDisplay[i] = valuePoint;
+				mValueDisplay[i] = valuePoint;
 			}
 			
 			mIncreaseButton.setLayoutParams(ViewUtil.instance().getButtonSize());
@@ -119,13 +137,13 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 				public void onClick(final View aV)
 				{
 					increase();
-					ViewUtil.applyValue(getValue(), valueDisplay);
+					refreshValue();
 					mAction.update();
 				}
 			});
 			spinnerGrid.addView(mIncreaseButton);
 			
-			ViewUtil.applyValue(getValue(), valueDisplay);
+			refreshValue();
 		}
 		mContainer.addView(spinnerGrid);
 	}
@@ -149,21 +167,27 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 	}
 	
 	@Override
+	public void refreshValue()
+	{
+		ViewUtil.applyValue(getValue(), mValueDisplay);
+	}
+	
+	@Override
 	public int getValue()
 	{
-		return mValue;
+		return mValue + mTempPoints;
 	}
 	
 	@Override
 	public boolean canIncrease()
 	{
-		return mValue < getItem().getMaxValue();
+		return getValue() < getItem().getMaxValue();
 	}
 	
 	@Override
 	public boolean canDecrease()
 	{
-		return mValue > getItem().getStartValue();
+		return getValue() > getItem().getStartValue();
 	}
 	
 	@Override
@@ -207,7 +231,14 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 	{
 		if (canIncrease())
 		{
-			mValue++ ;
+			if (mMode == CreationMode.FREE_POINTS)
+			{
+				mTempPoints++ ;
+			}
+			else
+			{
+				mValue++ ;
+			}
 		}
 	}
 	
@@ -216,7 +247,14 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 	{
 		if (canDecrease())
 		{
-			mValue-- ;
+			if (mMode == CreationMode.FREE_POINTS)
+			{
+				mTempPoints-- ;
+			}
+			else
+			{
+				mValue-- ;
+			}
 		}
 	}
 	

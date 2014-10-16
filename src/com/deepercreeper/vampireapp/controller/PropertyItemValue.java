@@ -19,6 +19,8 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class PropertyItemValue implements ItemValue<PropertyItem>
 {
+	private CreationMode		mMode;
+	
 	private final PropertyItem	mItem;
 	
 	private final Context		mContext;
@@ -26,6 +28,8 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 	private final ImageButton	mIncreaseButton;
 	
 	private final ImageButton	mDecreaseButton;
+	
+	private final RadioButton[]	mValueDisplay;
 	
 	private final TableRow		mContainer;
 	
@@ -42,13 +46,17 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 	 *            The context.
 	 * @param aAction
 	 *            The update action.
+	 * @param aMode
+	 *            The current creation mode.
 	 */
-	public PropertyItemValue(final PropertyItem aItem, final Context aContext, final UpdateAction aAction)
+	public PropertyItemValue(final PropertyItem aItem, final Context aContext, final UpdateAction aAction, final CreationMode aMode)
 	{
+		mMode = aMode;
+		mItem = aItem;
 		mIncreaseButton = new ImageButton(aContext);
 		mDecreaseButton = new ImageButton(aContext);
 		mContainer = new TableRow(aContext);
-		mItem = aItem;
+		mValueDisplay = new RadioButton[getItem().getValue(getItem().getMaxValue())];
 		mContext = aContext;
 		mAction = aAction;
 		mValueId = aItem.getStartValue();
@@ -67,6 +75,18 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 		ViewUtil.release(mContainer, false);
 	}
 	
+	@Override
+	public CreationMode getCreationMode()
+	{
+		return mMode;
+	}
+	
+	@Override
+	public void setCreationMode(final CreationMode aMode)
+	{
+		mMode = aMode;
+	}
+	
 	private void init()
 	{
 		mContainer.setLayoutParams(ViewUtil.instance().getWrapAll());
@@ -82,8 +102,6 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 		final GridLayout spinnerGrid = new GridLayout(mContext);
 		spinnerGrid.setLayoutParams(ViewUtil.instance().getRowWrapAll());
 		{
-			final RadioButton[] valueDisplay = new RadioButton[getItem().getValue(getItem().getMaxValue())];
-			
 			mDecreaseButton.setLayoutParams(ViewUtil.instance().getButtonSize());
 			mDecreaseButton.setContentDescription("Decrease");
 			mDecreaseButton.setImageResource(android.R.drawable.ic_media_previous);
@@ -93,19 +111,19 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 				public void onClick(final View aV)
 				{
 					decrease();
-					ViewUtil.applyValue(getValue(), valueDisplay);
+					refreshValue();
 					mAction.update();
 				}
 			});
 			spinnerGrid.addView(mDecreaseButton);
 			
-			for (int i = 0; i < valueDisplay.length; i++ )
+			for (int i = 0; i < mValueDisplay.length; i++ )
 			{
 				final RadioButton valuePoint = new RadioButton(mContext);
 				valuePoint.setLayoutParams(ViewUtil.instance().getValueSize());
 				valuePoint.setClickable(false);
 				spinnerGrid.addView(valuePoint);
-				valueDisplay[i] = valuePoint;
+				mValueDisplay[i] = valuePoint;
 			}
 			
 			mIncreaseButton.setLayoutParams(ViewUtil.instance().getButtonSize());
@@ -117,15 +135,21 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 				public void onClick(final View aV)
 				{
 					increase();
-					ViewUtil.applyValue(getValue(), valueDisplay);
+					refreshValue();
 					mAction.update();
 				}
 			});
 			spinnerGrid.addView(mIncreaseButton);
 			
-			ViewUtil.applyValue(getValue(), valueDisplay);
+			refreshValue();
 		}
 		mContainer.addView(spinnerGrid);
+	}
+	
+	@Override
+	public void refreshValue()
+	{
+		ViewUtil.applyValue(getValue(), mValueDisplay);
 	}
 	
 	@Override

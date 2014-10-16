@@ -133,7 +133,7 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 	private void setValue(final BackgroundItemValue aOldValue, final BackgroundItem aNewItem)
 	{
 		final int oldIndex = mValuesList.indexOf(aOldValue);
-		final BackgroundItemValue newValue = new BackgroundItemValue(aNewItem, mContext, mAction, this);
+		final BackgroundItemValue newValue = new BackgroundItemValue(aNewItem, mContext, mAction, this, mMode);
 		mValuesList.set(oldIndex, newValue);
 		mValues.remove(aOldValue.getItem());
 		mValues.put(aNewItem, newValue);
@@ -146,7 +146,7 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 	@Override
 	public void addItem(final BackgroundItem aItem)
 	{
-		addValue(new BackgroundItemValue(aItem, mContext, mAction, this));
+		addValue(new BackgroundItemValue(aItem, mContext, mAction, this, mMode));
 		resize();
 	}
 	
@@ -226,7 +226,16 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 	@Override
 	public void setCreationMode(final CreationMode aMode)
 	{
+		final boolean resetTempPoints = mMode == CreationMode.FREE_POINTS && aMode == CreationMode.CREATION;
 		mMode = aMode;
+		for (final BackgroundItemValue value : mValuesList)
+		{
+			value.setCreationMode(mMode);
+			if (resetTempPoints)
+			{
+				value.resetTempPoints();
+			}
+		}
 	}
 	
 	@Override
@@ -239,6 +248,7 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 		
 		final LinearLayout titleRow = new LinearLayout(mContext);
 		titleRow.setLayoutParams(ViewUtil.instance().getWrapHeight());
+		if (mMode == CreationMode.CREATION)
 		{
 			final Button addBackground = new Button(mContext);
 			addBackground.setLayoutParams(ViewUtil.instance().getWrapHeight());
@@ -284,6 +294,7 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 			final TableRow row = new TableRow(mContext);
 			value.initRow(row);
 			mBackgroundsTable.addView(row);
+			value.refreshValue();
 		}
 		aLayout.addView(mBackgroundsTable);
 		mController.updateValues();

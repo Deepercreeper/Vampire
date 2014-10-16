@@ -139,7 +139,7 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 	@Override
 	public void addItem(final PropertyItem aItem)
 	{
-		addValue(new PropertyItemValue(aItem, mContext, mAction));
+		addValue(new PropertyItemValue(aItem, mContext, mAction, mMode));
 		resize();
 	}
 	
@@ -187,7 +187,16 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 	@Override
 	public void setCreationMode(final CreationMode aMode)
 	{
+		final boolean resetTempPoints = mMode == CreationMode.FREE_POINTS && aMode == CreationMode.CREATION;
 		mMode = aMode;
+		for (final PropertyItemValue value : mValuesList)
+		{
+			value.setCreationMode(mMode);
+			if (resetTempPoints)
+			{
+				value.resetTempPoints();
+			}
+		}
 	}
 	
 	@Override
@@ -241,6 +250,7 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 		for (final PropertyItemValue value : mValuesList)
 		{
 			mPropertiesTable.addView(value.getContainer());
+			value.refreshValue();
 		}
 		aLayout.addView(mPropertiesTable);
 		mController.updateValues();

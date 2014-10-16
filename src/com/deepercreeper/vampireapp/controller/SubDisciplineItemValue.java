@@ -25,6 +25,8 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 {
 	private DisciplineItemValue	mParent;
 	
+	private ImageButton			mEditButton;
+	
 	/**
 	 * Creates a new sub discipline item value.
 	 * 
@@ -34,18 +36,18 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	 *            The context.
 	 * @param aAction
 	 *            The update action.
+	 * @param aMode
+	 *            The current creation mode.
 	 */
-	public SubDisciplineItemValue(final SubDisciplineItem aItem, final Context aContext, final UpdateAction aAction)
+	public SubDisciplineItemValue(final SubDisciplineItem aItem, final Context aContext, final UpdateAction aAction, final CreationMode aMode)
 	{
-		super(aItem, aContext, aAction);
+		super(aItem, aContext, aAction, aMode);
 	}
 	
 	@Override
 	public void release()
 	{
-		ViewUtil.release(getIncreaseButton(), false);
-		ViewUtil.release(getDecreaseButton(), false);
-		ViewUtil.release(super.getContainer(), true);
+		return;
 	}
 	
 	/**
@@ -90,11 +92,12 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 			number.setText((aValueIx + 1) + ".");
 			numberAndName.addView(number);
 			
-			final ImageButton edit = new ImageButton(context);
-			edit.setLayoutParams(ViewUtil.instance().getButtonSize());
-			edit.setContentDescription("Edit");
-			edit.setImageResource(android.R.drawable.ic_menu_edit);
-			edit.setOnClickListener(new OnClickListener()
+			mEditButton = new ImageButton(context);
+			mEditButton.setLayoutParams(ViewUtil.instance().getButtonSize());
+			mEditButton.setContentDescription("Edit");
+			mEditButton.setEnabled(getCreationMode() == CreationMode.CREATION);
+			mEditButton.setImageResource(android.R.drawable.ic_menu_edit);
+			mEditButton.setOnClickListener(new OnClickListener()
 			{
 				@Override
 				public void onClick(final View aV)
@@ -115,7 +118,7 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 						@Override
 						public void select(final SubDisciplineItem aItem)
 						{
-							final SubDisciplineItemValue value = new SubDisciplineItemValue(aItem, getContext(), getAction());
+							final SubDisciplineItemValue value = new SubDisciplineItemValue(aItem, getContext(), getAction(), getCreationMode());
 							mParent.setSubValue(aValueIx, value);
 							value.initRow(aRow, aValueIx);
 						}
@@ -125,7 +128,7 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 							context, action);
 				}
 			});
-			numberAndName.addView(edit);
+			numberAndName.addView(mEditButton);
 			
 			final TextView name = new TextView(context);
 			name.setLayoutParams(ViewUtil.instance().getNameSizeShort());
@@ -145,7 +148,7 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 			setDecreaseButton(decrease);
 			setIncreaseButton(increase);
 			
-			final RadioButton[] valueDisplay = new RadioButton[getItem().getMaxValue()];
+			mValueDisplay = new RadioButton[getItem().getMaxValue()];
 			
 			decrease.setLayoutParams(ViewUtil.instance().getButtonSize());
 			decrease.setContentDescription("Decrease");
@@ -156,19 +159,19 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 				public void onClick(final View aV)
 				{
 					decrease();
-					ViewUtil.applyValue(getValue(), valueDisplay);
+					refreshValue();
 					getAction().update();
 				}
 			});
 			spinnerGrid.addView(decrease);
 			
-			for (int j = 0; j < valueDisplay.length; j++ )
+			for (int j = 0; j < mValueDisplay.length; j++ )
 			{
 				final RadioButton valuePoint = new RadioButton(context);
 				valuePoint.setLayoutParams(ViewUtil.instance().getValueSize());
 				valuePoint.setClickable(false);
 				spinnerGrid.addView(valuePoint);
-				valueDisplay[j] = valuePoint;
+				mValueDisplay[j] = valuePoint;
 			}
 			
 			increase.setLayoutParams(ViewUtil.instance().getButtonSize());
@@ -180,13 +183,13 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 				public void onClick(final View aV)
 				{
 					increase();
-					ViewUtil.applyValue(getValue(), valueDisplay);
+					refreshValue();
 					getAction().update();
 				}
 			});
 			spinnerGrid.addView(increase);
 			
-			ViewUtil.applyValue(getValue(), valueDisplay);
+			refreshValue();
 			getAction().update();
 		}
 		aRow.addView(spinnerGrid);
@@ -242,34 +245,21 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 		switch (aMode)
 		{
 			case CREATION :
-				return canIncreaseCreation();
 			case FREE_POINTS :
-				return canIncreaseFreePoints();
+				return canIncreaseValue();
 			case NORMAL :
 				return canIncrease();
 		}
 		return false;
 	}
 	
-	private boolean canIncreaseFreePoints()
-	{
-		final DisciplineItemValue parentValue = getParent();
-		final boolean firstSubItem = parentValue.getSubValueIndex(this) == 0;
-		if (firstSubItem
-				|| parentValue.getSubValue(0).getValue() + parentValue.getSubValue(0).getTempPoints() >= SubDisciplineItem.MIN_FIRST_SUB_VALUE)
-		{
-			return canIncrease();
-		}
-		return false;
-	}
-	
-	private boolean canIncreaseCreation()
+	private boolean canIncreaseValue()
 	{
 		final DisciplineItemValue parentValue = getParent();
 		final boolean firstSubItem = parentValue.getSubValueIndex(this) == 0;
 		if (firstSubItem || parentValue.getSubValue(0).getValue() >= SubDisciplineItem.MIN_FIRST_SUB_VALUE)
 		{
-			return true;
+			return canIncrease();
 		}
 		return false;
 	}
@@ -278,6 +268,13 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	public int hashCode()
 	{
 		return getItem().hashCode();
+	}
+	
+	@Override
+	public void setCreationMode(final CreationMode aMode)
+	{
+		mMode = aMode;
+		mEditButton.setEnabled(getCreationMode() == CreationMode.CREATION);
 	}
 	
 	@Override

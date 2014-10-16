@@ -33,6 +33,19 @@ public interface ItemValue <T extends Item>
 	public boolean canDecrease();
 	
 	/**
+	 * @return whether this group is in creation mode.
+	 */
+	public CreationMode getCreationMode();
+	
+	/**
+	 * Sets whether this group is in creation mode.
+	 * 
+	 * @param aMode
+	 *            Whether this group represents the values inside a character creation.
+	 */
+	public void setCreationMode(CreationMode aMode);
+	
+	/**
 	 * If the value has special decrease properties this defines whether it is able to be decreased.
 	 * 
 	 * @param aMode
@@ -109,6 +122,11 @@ public interface ItemValue <T extends Item>
 	 * @return the item that defines the type of this value.
 	 */
 	public T getItem();
+	
+	/**
+	 * Applies the value to the value display again.
+	 */
+	public void refreshValue();
 	
 	/**
 	 * @return the current item value.

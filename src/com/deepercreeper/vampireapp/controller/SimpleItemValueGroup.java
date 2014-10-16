@@ -62,7 +62,7 @@ public class SimpleItemValueGroup implements ItemValueGroup<SimpleItem>
 		};
 		for (final SimpleItem item : mGroup.getItems())
 		{
-			addValue(new SimpleItemValue(item, mContext, mAction));
+			addValue(new SimpleItemValue(item, mContext, mAction, mMode));
 		}
 	}
 	
@@ -136,7 +136,16 @@ public class SimpleItemValueGroup implements ItemValueGroup<SimpleItem>
 	@Override
 	public void setCreationMode(final CreationMode aMode)
 	{
+		final boolean resetTempPoints = mMode == CreationMode.FREE_POINTS && aMode == CreationMode.CREATION;
 		mMode = aMode;
+		for (final SimpleItemValue value : mValuesList)
+		{
+			value.setCreationMode(mMode);
+			if (resetTempPoints)
+			{
+				value.resetTempPoints();
+			}
+		}
 	}
 	
 	@Override
@@ -170,6 +179,7 @@ public class SimpleItemValueGroup implements ItemValueGroup<SimpleItem>
 		for (final SimpleItemValue value : mValuesList)
 		{
 			aLayout.addView(value.getContainer());
+			value.refreshValue();
 		}
 	}
 }

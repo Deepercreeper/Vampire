@@ -23,18 +23,39 @@
 			android:layout_below="@id/free_points_text"
 		/>
 
+        <LinearLayout
+            android:id="@+id/free_points_simple_items_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/free_points_bar"
+            android:orientation="vertical" />
+
+        <LinearLayout
+            android:id="@+id/free_points_disciplines_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/free_points_simple_items_panel"
+            android:orientation="vertical" />
+
+        <LinearLayout
+            android:id="@+id/free_points_backgrounds_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/free_points_disciplines_panel"
+            android:orientation="vertical" />
+        
         <Button
             android:id="@+id/show_creation_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/free_points_bar"
+            android:layout_below="@id/free_points_backgrounds_panel"
             android:text="@string/back" />
         
         <Button 
             android:id="@+id/show_descriptions_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/free_points_bar"
+            android:layout_below="@id/free_points_backgrounds_panel"
             android:layout_toRightOf="@id/show_creation_button"
             android:text="@string/next"
             />

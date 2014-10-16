@@ -178,7 +178,7 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	@Override
 	public void addItem(final DisciplineItem aItem)
 	{
-		addValue(new DisciplineItemValue(aItem, mContext, mAction));
+		addValue(new DisciplineItemValue(aItem, mContext, mAction, mMode));
 	}
 	
 	@Override
@@ -211,7 +211,16 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	@Override
 	public void setCreationMode(final CreationMode aMode)
 	{
+		final boolean resetTempPoints = mMode == CreationMode.FREE_POINTS && aMode == CreationMode.CREATION;
 		mMode = aMode;
+		for (final DisciplineItemValue value : mValuesList)
+		{
+			value.setCreationMode(mMode);
+			if (resetTempPoints)
+			{
+				value.resetTempPoints();
+			}
+		}
 	}
 	
 	@Override
@@ -231,6 +240,7 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 				ViewUtil.release(container, false);
 			}
 			mDisciplinesTable.addView(value.getContainer());
+			value.refreshValue();
 		}
 		aLayout.addView(mDisciplinesTable);
 		mController.updateValues();

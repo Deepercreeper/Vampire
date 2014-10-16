@@ -5,33 +5,51 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 
+/**
+ * An animation used to resize layouts along the y-axis.
+ * 
+ * @author Vincent
+ */
 public class ResizeAnimation extends Animation
 {
-	private final View	mView;
-	private final float	mToHeight;
-	private final float	mFromHeight;
+	private static final int	DURATION	= 300;
 	
-	private final float	mToWidth;
-	private final float	mFromWidth;
+	private final View			mView;
 	
-	public ResizeAnimation(final View aV, final float aToWidth, final float aToHeight)
+	private final float			mDestinationHeight;
+	
+	private final float			mStartHeight;
+	
+	private final float			mDestinationWidth;
+	
+	private final float			mStartWidth;
+	
+	/**
+	 * Creates a new animation for the given view.
+	 * 
+	 * @param aView
+	 *            The view to resize.
+	 * @param aDestinationWidth
+	 *            The width that should be reached.
+	 * @param aDestinationHeight
+	 *            The height that should be reached.
+	 */
+	public ResizeAnimation(final View aView, final float aDestinationWidth, final float aDestinationHeight)
 	{
-		mToHeight = aToHeight;
-		mToWidth = aToWidth;
-		mFromHeight = aV.getHeight();
-		mFromWidth = aV.getWidth();
-		mView = aV;
-		setDuration(100);
+		mDestinationHeight = aDestinationHeight;
+		mDestinationWidth = aDestinationWidth;
+		mStartHeight = aView.getHeight();
+		mStartWidth = aView.getWidth();
+		mView = aView;
+		setDuration(DURATION);
 	}
 	
 	@Override
 	protected void applyTransformation(final float aInterpolatedTime, final Transformation aTransformation)
 	{
-		final float height = mFromHeight + (mToHeight - mFromHeight) * aInterpolatedTime;
-		final float width = mFromWidth + (mToWidth - mFromWidth) * aInterpolatedTime;
 		final LayoutParams p = mView.getLayoutParams();
-		p.height = (int) height;
-		p.width = (int) width;
+		p.height = (int) (mStartHeight + (mDestinationHeight - mStartHeight) * aInterpolatedTime);
+		p.width = (int) (mStartWidth + (mDestinationWidth - mStartWidth) * aInterpolatedTime);
 		mView.requestLayout();
 	}
 	

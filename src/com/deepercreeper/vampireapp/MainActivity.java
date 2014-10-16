@@ -201,8 +201,8 @@ public class MainActivity extends Activity
 			@Override
 			public boolean onKey(final View aV, final int aKeyCode, final KeyEvent aEvent)
 			{
-				mCreator.setName("" + nameView.getText());
-				return true;
+				mCreator.setName(nameView.getEditableText().toString());
+				return false;
 			}
 		});
 		
@@ -213,8 +213,8 @@ public class MainActivity extends Activity
 			@Override
 			public boolean onKey(final View aV, final int aKeyCode, final KeyEvent aEvent)
 			{
-				mCreator.setConcept("" + conceptView.getText());
-				return true;
+				mCreator.setConcept(conceptView.getEditableText().toString());
+				return false;
 			}
 		});
 		
@@ -360,6 +360,15 @@ public class MainActivity extends Activity
 				pointsBar.setProgress(mCreator.getFreePoints());
 			}
 		});
+		
+		final LinearLayout simpleItemsPanel = (LinearLayout) findViewById(R.id.free_points_simple_items_panel);
+		mCreator.getSimpleValues().initLayout(simpleItemsPanel);
+		
+		final LinearLayout disciplinesPanel = (LinearLayout) findViewById(R.id.free_points_disciplines_panel);
+		mCreator.getDisciplines().initLayout(disciplinesPanel);
+		
+		final LinearLayout backgroundsPanel = (LinearLayout) findViewById(R.id.free_points_backgrounds_panel);
+		mCreator.getBackgrounds().initLayout(backgroundsPanel);
 		
 		final Button showCreation = (Button) findViewById(R.id.show_creation_button);
 		showCreation.setOnClickListener(new OnClickListener()
