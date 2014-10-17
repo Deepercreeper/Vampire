@@ -1,6 +1,5 @@
 package com.deepercreeper.vampireapp;
 
-import android.content.Context;
 import com.deepercreeper.vampireapp.controller.BackgroundController;
 import com.deepercreeper.vampireapp.controller.BackgroundValueController;
 import com.deepercreeper.vampireapp.controller.CreationMode;
@@ -10,10 +9,11 @@ import com.deepercreeper.vampireapp.controller.PropertyController;
 import com.deepercreeper.vampireapp.controller.PropertyValueController;
 import com.deepercreeper.vampireapp.controller.SimpleController;
 import com.deepercreeper.vampireapp.controller.SimpleValueController;
+import com.deepercreeper.vampireapp.controller.ValueController.PointHandler;
 
 public class CharCreator
 {
-	public static final int					MIN_GENERATION	= 8, DEFAULT_GENERATION = 12, MAX_GENERATION = 12;
+	public static final int					MIN_GENERATION	= 8, DEFAULT_GENERATION = 12, MAX_GENERATION = 12, START_FREE_POINTS = 20;
 	
 	private String							mName			= "";
 	
@@ -27,7 +27,7 @@ public class CharCreator
 	
 	private int								mGeneration		= DEFAULT_GENERATION;
 	
-	private int								mFreePoints;
+	private int								mFreePoints		= START_FREE_POINTS;
 	
 	private final DisciplineValueController	mDisciplines;
 	
@@ -37,17 +37,48 @@ public class CharCreator
 	
 	private final SimpleValueController		mSimpleValues;
 	
-	public CharCreator(final Context aContext, final DisciplineController aDisciplines, final PropertyController aProperties,
+	public CharCreator(final MainActivity aContext, final DisciplineController aDisciplines, final PropertyController aProperties,
 			final BackgroundController aBackgrounds, final SimpleController aSimpleItems, final String aNature, final String aBehavior,
 			final Clan aClan)
 	{
-		mDisciplines = new DisciplineValueController(aDisciplines, aContext, CreationMode.CREATION);
+		final PointHandler points = new PointHandler()
+		{
+			@Override
+			public int getPoints()
+			{
+				return mFreePoints;
+			}
+			
+			@Override
+			public void increase(final int aValue)
+			{
+				mFreePoints += aValue;
+				aContext.setFreePoints(mFreePoints);
+			}
+			
+			@Override
+			public void decrease(final int aValue)
+			{
+				mFreePoints -= aValue;
+				aContext.setFreePoints(mFreePoints);
+			}
+		};
+		mDisciplines = new DisciplineValueController(aDisciplines, aContext, CreationMode.CREATION, points);
 		mProperties = new PropertyValueController(aProperties, aContext, CreationMode.CREATION);
-		mBackgrounds = new BackgroundValueController(aBackgrounds, aContext, CreationMode.CREATION);
-		mSimpleValues = new SimpleValueController(aSimpleItems, aContext, CreationMode.CREATION);
+		mBackgrounds = new BackgroundValueController(aBackgrounds, aContext, CreationMode.CREATION, points);
+		mSimpleValues = new SimpleValueController(aSimpleItems, aContext, CreationMode.CREATION, points);
 		mNature = aNature;
 		mBehavior = aBehavior;
 		setClan(aClan, true);
+	}
+	
+	public void resetFreePoints()
+	{
+		mDisciplines.resetTempPoints();
+		mProperties.resetTempPoints();
+		mBackgrounds.resetTempPoints();
+		mSimpleValues.resetTempPoints();
+		mFreePoints = START_FREE_POINTS;
 	}
 	
 	public void setCreationMode(final CreationMode aMode)

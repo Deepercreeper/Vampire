@@ -340,14 +340,10 @@ public class MainActivity extends Activity
 		mState = State.FREE_POINTS;
 		mCreator.setCreationMode(CreationMode.FREE_POINTS);
 		
-		final int freePoints = getResources().getInteger(R.integer.free_points);
-		
-		final TextView pointsText = (TextView) findViewById(R.id.free_points_text);
-		pointsText.setText("" + freePoints);
-		
 		final ProgressBar pointsBar = (ProgressBar) findViewById(R.id.free_points_bar);
-		pointsBar.setMax(freePoints);
-		pointsBar.setProgress(freePoints);
+		pointsBar.setMax(CharCreator.START_FREE_POINTS);
+		
+		setFreePoints(mCreator.getFreePoints());
 		
 		final Button showDescriptions = (Button) findViewById(R.id.show_descriptions_button);
 		showDescriptions.setOnClickListener(new OnClickListener()
@@ -355,9 +351,7 @@ public class MainActivity extends Activity
 			@Override
 			public void onClick(final View aV)
 			{
-				mCreator.setFreePoints(Math.max(0, mCreator.getFreePoints() - 1));
-				pointsText.setText("" + mCreator.getFreePoints());
-				pointsBar.setProgress(mCreator.getFreePoints());
+				// TODO Go to the description step.
 			}
 		});
 		
@@ -380,7 +374,23 @@ public class MainActivity extends Activity
 			}
 		});
 		
-		mCreator.setFreePoints(freePoints);
+		final Button resetTempPoints = (Button) findViewById(R.id.reset_temp_points_button);
+		resetTempPoints.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				mCreator.resetFreePoints();
+				setFreePoints(mCreator.getFreePoints());
+			}
+		});
+	}
+	
+	public void setFreePoints(final int aValue)
+	{
+		((TextView) findViewById(R.id.free_points_text)).setText("" + aValue);
+		((ProgressBar) findViewById(R.id.free_points_bar)).setProgress(aValue);
+		((Button) findViewById(R.id.show_descriptions_button)).setEnabled(aValue == 0);
 	}
 	
 	private void clanChanged(final String aClan)

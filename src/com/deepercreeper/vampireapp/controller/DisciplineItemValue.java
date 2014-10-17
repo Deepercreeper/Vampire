@@ -17,6 +17,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.controller.SelectItemDialog.SelectionListener;
+import com.deepercreeper.vampireapp.controller.ValueController.PointHandler;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 /**
@@ -28,11 +29,13 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 {
 	protected CreationMode						mMode;
 	
+	protected PointHandler						mPoints;
+	
 	private final DisciplineItem				mItem;
 	
 	private int									mValue;
 	
-	private int									mTempPoints;
+	protected int								mTempPoints;
 	
 	private final Context						mContext;
 	
@@ -62,9 +65,11 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 	 * @param aMode
 	 *            The current creation mode.
 	 */
-	public DisciplineItemValue(final DisciplineItem aItem, final Context aContext, final UpdateAction aAction, final CreationMode aMode)
+	public DisciplineItemValue(final DisciplineItem aItem, final Context aContext, final UpdateAction aAction, final CreationMode aMode,
+			final PointHandler aPoints)
 	{
 		mMode = aMode;
+		mPoints = aPoints;
 		mItem = aItem;
 		mContext = aContext;
 		mAction = aAction;
@@ -73,6 +78,19 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 		mDecreaseButton = new ImageButton(mContext);
 		mValue = mItem.getStartValue();
 		init();
+	}
+	
+	@Override
+	public void setPoints(final PointHandler aPoints)
+	{
+		mPoints = aPoints;
+		if (getItem().isParentItem())
+		{
+			for (final SubDisciplineItemValue subValue : mSubValues)
+			{
+				subValue.setPoints(mPoints);
+			}
+		}
 	}
 	
 	@Override
@@ -303,7 +321,7 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 						@Override
 						public void select(final SubDisciplineItem aItem)
 						{
-							final SubDisciplineItemValue value = new SubDisciplineItemValue(aItem, mContext, mAction, mMode);
+							final SubDisciplineItemValue value = new SubDisciplineItemValue(aItem, mContext, mAction, mMode, mPoints);
 							setSubValue(aValueIx, value);
 							value.initRow(subRow, aValueIx);
 						}
@@ -380,6 +398,7 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 		else
 		{
 			mTempPoints = 0;
+			refreshValue();
 		}
 	}
 	
@@ -391,7 +410,7 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 			case CREATION :
 				return canIncrease() && mValue < getItem().getMaxStartValue();
 			case FREE_POINTS :
-				return canIncrease() && mValue + mTempPoints < getItem().getMaxStartValue();
+				return canIncrease() && mPoints.getPoints() >= getItem().getFreePointsCost();
 			case NORMAL :
 				return canIncrease();
 		}
@@ -503,6 +522,7 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 			if (mMode == CreationMode.FREE_POINTS)
 			{
 				mTempPoints++ ;
+				mPoints.decrease(getItem().getFreePointsCost());
 			}
 			else
 			{
@@ -519,6 +539,7 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 			if (mMode == CreationMode.FREE_POINTS)
 			{
 				mTempPoints-- ;
+				mPoints.increase(getItem().getFreePointsCost());
 			}
 			else
 			{

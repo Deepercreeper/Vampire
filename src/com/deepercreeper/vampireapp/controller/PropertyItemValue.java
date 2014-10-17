@@ -10,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.TableRow;
 import android.widget.TextView;
+import com.deepercreeper.vampireapp.controller.ValueController.PointHandler;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 /**
@@ -144,6 +145,12 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 			refreshValue();
 		}
 		mContainer.addView(spinnerGrid);
+	}
+	
+	@Override
+	public void setPoints(final PointHandler aPoints)
+	{
+		return;
 	}
 	
 	@Override

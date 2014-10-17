@@ -8,22 +8,32 @@ package com.deepercreeper.vampireapp.controller;
  */
 public class SimpleItem implements Item
 {
-	private static final int	MAX_VALUE	= 6;
+	private final String	mName;
 	
-	private final String		mName;
+	private final int		mMaxValue;
 	
-	private final int			mStartValue;
+	private final int		mFreePointsCost;
 	
-	private final int			mMaxStartValue;
+	private final int		mStartValue;
 	
-	private final String		mDescription;
+	private final int		mMaxStartValue;
 	
-	private SimpleItem(final String aName, final int aStartValue, final int aMaxStartValue)
+	private final String	mDescription;
+	
+	private SimpleItem(final String aName, final int aStartValue, final int aMaxStartValue, final int aMaxValue, final int aFreePointsCost)
 	{
 		mName = aName;
+		mFreePointsCost = aFreePointsCost;
+		mMaxValue = aMaxValue;
 		mStartValue = aStartValue;
 		mMaxStartValue = aMaxStartValue;
 		mDescription = createDescription();
+	}
+	
+	@Override
+	public int getFreePointsCost()
+	{
+		return mFreePointsCost;
 	}
 	
 	@Override
@@ -35,7 +45,7 @@ public class SimpleItem implements Item
 	@Override
 	public int getMaxValue()
 	{
-		return MAX_VALUE;
+		return mMaxValue;
 	}
 	
 	@Override
@@ -94,10 +104,15 @@ public class SimpleItem implements Item
 	 *            The start value for this item, which is set at character creation.
 	 * @param aMaxStartValue
 	 *            The maximum value that can be set when creating a new character.
+	 * @param aMaxValue
+	 *            The maximum value for this item.
+	 * @param aFreePointsCost
+	 *            The number of free points needed to increase values of this item.
 	 * @return the created simple item.
 	 */
-	public static SimpleItem create(final String aData, final int aStartValue, final int aMaxStartValue)
+	public static SimpleItem create(final String aData, final int aStartValue, final int aMaxStartValue, final int aMaxValue,
+			final int aFreePointsCost)
 	{
-		return new SimpleItem(aData, aStartValue, aMaxStartValue);
+		return new SimpleItem(aData, aStartValue, aMaxStartValue, aMaxValue, aFreePointsCost);
 	}
 }

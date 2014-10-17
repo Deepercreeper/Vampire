@@ -24,4 +24,5 @@
     <string name="virtues">Virtues</string>
 	<string name="next">Next</string>
 	<string name="back">Back</string>
+	<string name="reset">Reset</string>
 </resources>

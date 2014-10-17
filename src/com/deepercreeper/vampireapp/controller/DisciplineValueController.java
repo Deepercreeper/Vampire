@@ -17,6 +17,8 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class DisciplineValueController implements ValueController<DisciplineItem>, VariableValueGroup<DisciplineItem, DisciplineItemValue>
 {
+	private PointHandler					mPoints;
+	
 	private CreationMode					mMode;
 	
 	private final Context					mContext;
@@ -40,13 +42,24 @@ public class DisciplineValueController implements ValueController<DisciplineItem
 	 *            The context.
 	 * @param aMode
 	 *            Whether this controller is inside the creation mode.
+	 * @param aPoints
+	 *            The caller for free or experience points.
 	 */
-	public DisciplineValueController(final DisciplineController aController, final Context aContext, final CreationMode aMode)
+	public DisciplineValueController(final DisciplineController aController, final Context aContext, final CreationMode aMode,
+			final PointHandler aPoints)
 	{
 		mMode = aMode;
+		mPoints = aPoints;
 		mContext = aContext;
 		mController = aController;
-		mDisciplines = new DisciplineItemValueGroup(mController.getDisciplines(), this, mContext, mMode);
+		mDisciplines = new DisciplineItemValueGroup(mController.getDisciplines(), this, mContext, mMode, mPoints);
+	}
+	
+	@Override
+	public void setPoints(final com.deepercreeper.vampireapp.controller.ValueController.PointHandler aPoints)
+	{
+		mPoints = aPoints;
+		mDisciplines.setPoints(mPoints);
 	}
 	
 	/**
@@ -62,6 +75,12 @@ public class DisciplineValueController implements ValueController<DisciplineItem
 		{
 			mDisciplines.addItem(discipline);
 		}
+	}
+	
+	@Override
+	public void resetTempPoints()
+	{
+		mDisciplines.resetTempPoints();
 	}
 	
 	@Override
@@ -137,7 +156,7 @@ public class DisciplineValueController implements ValueController<DisciplineItem
 				mDisciplines.updateValues(mDisciplines.getValue() < mController.getMaxCreationValue(), true);
 				break;
 			case FREE_POINTS :
-				mDisciplines.updateValues(mDisciplines.getValue() + mDisciplines.getTempPoints() < mController.getMaxCreationValue(), true);
+				mDisciplines.updateValues(true, true);
 				break;
 			case NORMAL :
 				mDisciplines.updateValues(true, false);

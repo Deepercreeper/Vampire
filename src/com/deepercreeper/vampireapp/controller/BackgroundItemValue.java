@@ -10,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.TableRow;
 import android.widget.TextView;
+import com.deepercreeper.vampireapp.controller.ValueController.PointHandler;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 /**
@@ -20,6 +21,8 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
 public class BackgroundItemValue implements ItemValue<BackgroundItem>
 {
 	private CreationMode					mMode;
+	
+	private PointHandler					mPoints;
 	
 	private final BackgroundItem			mItem;
 	
@@ -54,11 +57,14 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	 *            The parent value group.
 	 * @param aMode
 	 *            The current creation mode.
+	 * @param aPoints
+	 *            The points handler.
 	 */
 	public BackgroundItemValue(final BackgroundItem aItem, final Context aContext, final UpdateAction aAction, final BackgroundItemValueGroup aGroup,
-			final CreationMode aMode)
+			final CreationMode aMode, final PointHandler aPoints)
 	{
 		mMode = aMode;
+		mPoints = aPoints;
 		mIncreaseButton = new ImageButton(aContext);
 		mDecreaseButton = new ImageButton(aContext);
 		mItem = aItem;
@@ -66,6 +72,12 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 		mAction = aAction;
 		mGroup = aGroup;
 		mValue = mItem.getStartValue();
+	}
+	
+	@Override
+	public void setPoints(final PointHandler aPoints)
+	{
+		mPoints = aPoints;
 	}
 	
 	@Override
@@ -208,7 +220,7 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 			case CREATION :
 				return canIncrease() && mValue < getItem().getMaxStartValue();
 			case FREE_POINTS :
-				return canIncrease() && mValue + mTempPoints < getItem().getMaxStartValue();
+				return canIncrease() && mValue + mTempPoints < getItem().getMaxStartValue() && mPoints.getPoints() >= mItem.getFreePointsCost();
 			case NORMAL :
 				return canIncrease();
 		}
@@ -219,6 +231,7 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	public void resetTempPoints()
 	{
 		mTempPoints = 0;
+		refreshValue();
 	}
 	
 	@Override
@@ -250,6 +263,7 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 			if (mMode == CreationMode.FREE_POINTS)
 			{
 				mTempPoints++ ;
+				mPoints.decrease(getItem().getFreePointsCost());
 			}
 			else
 			{
@@ -272,6 +286,7 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 			if (mMode == CreationMode.FREE_POINTS)
 			{
 				mTempPoints-- ;
+				mPoints.increase(getItem().getFreePointsCost());
 			}
 			else
 			{

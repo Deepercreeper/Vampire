@@ -18,7 +18,7 @@ public class DisciplineItem implements Item
 	private static final String							SUB_PREFIX			= ">", PARENT_PREFIX = "#", NAME_DELIM = ":", ABILITIES_DELIM = ";",
 			SUB_ITEMS_DELIM = ",";
 	
-	private static final int							MAX_VALUE			= 6, MAX_START_VALUE = 3, START_VALUE = 0;
+	private static final int							MAX_VALUE			= 6, MAX_START_VALUE = 3, START_VALUE = 0, FREE_POINTS_COST = 7;
 	
 	/**
 	 * The number of sub disciplines a parent discipline can contain.
@@ -52,6 +52,12 @@ public class DisciplineItem implements Item
 		mSubItems.put(aSubItem.getName(), aSubItem);
 		mSubItemNames.add(aSubItem);
 		Collections.sort(mSubItemNames);
+	}
+	
+	@Override
+	public int getFreePointsCost()
+	{
+		return FREE_POINTS_COST;
 	}
 	
 	@Override

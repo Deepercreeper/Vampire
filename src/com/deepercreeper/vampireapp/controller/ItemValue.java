@@ -1,6 +1,7 @@
 package com.deepercreeper.vampireapp.controller;
 
 import android.widget.LinearLayout;
+import com.deepercreeper.vampireapp.controller.ValueController.PointHandler;
 
 /**
  * Each item can be instantiated. That creates an item value.<br>
@@ -44,6 +45,14 @@ public interface ItemValue <T extends Item>
 	 *            Whether this group represents the values inside a character creation.
 	 */
 	public void setCreationMode(CreationMode aMode);
+	
+	/**
+	 * Sets the current points handler.
+	 * 
+	 * @param aPoints
+	 *            The new points handler.
+	 */
+	public void setPoints(PointHandler aPoints);
 	
 	/**
 	 * If the value has special decrease properties this defines whether it is able to be decreased.

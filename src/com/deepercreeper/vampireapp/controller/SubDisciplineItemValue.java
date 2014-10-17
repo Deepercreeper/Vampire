@@ -14,6 +14,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.controller.SelectItemDialog.SelectionListener;
+import com.deepercreeper.vampireapp.controller.ValueController.PointHandler;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 /**
@@ -39,9 +40,10 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	 * @param aMode
 	 *            The current creation mode.
 	 */
-	public SubDisciplineItemValue(final SubDisciplineItem aItem, final Context aContext, final UpdateAction aAction, final CreationMode aMode)
+	public SubDisciplineItemValue(final SubDisciplineItem aItem, final Context aContext, final UpdateAction aAction, final CreationMode aMode,
+			final PointHandler aPoints)
 	{
-		super(aItem, aContext, aAction, aMode);
+		super(aItem, aContext, aAction, aMode, aPoints);
 	}
 	
 	@Override
@@ -118,7 +120,8 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 						@Override
 						public void select(final SubDisciplineItem aItem)
 						{
-							final SubDisciplineItemValue value = new SubDisciplineItemValue(aItem, getContext(), getAction(), getCreationMode());
+							final SubDisciplineItemValue value = new SubDisciplineItemValue(aItem, getContext(), getAction(), getCreationMode(),
+									mPoints);
 							mParent.setSubValue(aValueIx, value);
 							value.initRow(aRow, aValueIx);
 						}
@@ -196,6 +199,13 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	}
 	
 	@Override
+	public void resetTempPoints()
+	{
+		mTempPoints = 0;
+		refreshValue();
+	}
+	
+	@Override
 	protected void init()
 	{
 		// The widgets are generated dynamically
@@ -245,8 +255,9 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 		switch (aMode)
 		{
 			case CREATION :
-			case FREE_POINTS :
 				return canIncreaseValue();
+			case FREE_POINTS :
+				return canIncreaseValue() && mPoints.getPoints() >= getItem().getFreePointsCost();
 			case NORMAL :
 				return canIncrease();
 		}

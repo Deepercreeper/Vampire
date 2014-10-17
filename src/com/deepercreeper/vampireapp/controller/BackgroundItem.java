@@ -8,7 +8,7 @@ package com.deepercreeper.vampireapp.controller;
  */
 public class BackgroundItem implements Item
 {
-	private static final int	MAX_VALUE		= 5, MAX_START_VALUE = 5, START_VALUE = 0;
+	private static final int	MAX_VALUE		= 5, MAX_START_VALUE = 5, START_VALUE = 0, FREE_POINTS_COST = 1;
 	
 	/**
 	 * The number of backgrounds that can be set for one character.
@@ -23,6 +23,12 @@ public class BackgroundItem implements Item
 	{
 		mName = aName;
 		mDescription = createDescription();
+	}
+	
+	@Override
+	public int getFreePointsCost()
+	{
+		return FREE_POINTS_COST;
 	}
 	
 	private String createDescription()

@@ -10,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.TableRow;
 import android.widget.TextView;
+import com.deepercreeper.vampireapp.controller.ValueController.PointHandler;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 /**
@@ -20,6 +21,8 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
 public class SimpleItemValue implements ItemValue<SimpleItem>
 {
 	private CreationMode		mMode;
+	
+	private PointHandler		mPoints;
 	
 	private final SimpleItem	mItem;
 	
@@ -50,10 +53,14 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 	 *            The update action.
 	 * @param aMode
 	 *            The current creation mode.
+	 * @param aPoints
+	 *            The points handler.
 	 */
-	public SimpleItemValue(final SimpleItem aItem, final Context aContext, final UpdateAction aAction, final CreationMode aMode)
+	public SimpleItemValue(final SimpleItem aItem, final Context aContext, final UpdateAction aAction, final CreationMode aMode,
+			final PointHandler aPoints)
 	{
 		mMode = aMode;
+		mPoints = aPoints;
 		mItem = aItem;
 		mContext = aContext;
 		mAction = aAction;
@@ -63,6 +70,12 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 		mDecreaseButton = new ImageButton(mContext);
 		mValue = mItem.getStartValue();
 		init();
+	}
+	
+	@Override
+	public void setPoints(final PointHandler aPoints)
+	{
+		mPoints = aPoints;
 	}
 	
 	@Override
@@ -194,6 +207,7 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 	public void resetTempPoints()
 	{
 		mTempPoints = 0;
+		refreshValue();
 	}
 	
 	@Override
@@ -204,7 +218,7 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 			case CREATION :
 				return canIncrease() && mValue < getItem().getMaxStartValue();
 			case FREE_POINTS :
-				return canIncrease() && mValue + mTempPoints < getItem().getMaxStartValue();
+				return canIncrease() && mValue + mTempPoints < getItem().getMaxStartValue() && mPoints.getPoints() >= getItem().getFreePointsCost();
 			case NORMAL :
 				return canIncrease();
 		}
@@ -234,6 +248,7 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 			if (mMode == CreationMode.FREE_POINTS)
 			{
 				mTempPoints++ ;
+				mPoints.decrease(getItem().getFreePointsCost());
 			}
 			else
 			{
@@ -250,6 +265,7 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 			if (mMode == CreationMode.FREE_POINTS)
 			{
 				mTempPoints-- ;
+				mPoints.increase(getItem().getFreePointsCost());
 			}
 			else
 			{

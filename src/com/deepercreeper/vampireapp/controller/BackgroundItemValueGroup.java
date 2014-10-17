@@ -15,6 +15,7 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.controller.ItemValue.UpdateAction;
 import com.deepercreeper.vampireapp.controller.SelectItemDialog.SelectionListener;
+import com.deepercreeper.vampireapp.controller.ValueController.PointHandler;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 /**
@@ -25,6 +26,8 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
 public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>, VariableValueGroup<BackgroundItem, BackgroundItemValue>
 {
 	private CreationMode										mMode;
+	
+	private PointHandler										mPoints;
 	
 	private final Context										mContext;
 	
@@ -55,9 +58,10 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 	 *            Whether this is inside creation mode.
 	 */
 	public BackgroundItemValueGroup(final BackgroundItemGroup aGroup, final BackgroundValueController aController, final Context aContext,
-			final CreationMode aMode)
+			final CreationMode aMode, final PointHandler aPoints)
 	{
 		mController = aController;
+		mPoints = aPoints;
 		mGroup = aGroup;
 		mContext = aContext;
 		mMode = aMode;
@@ -69,6 +73,25 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 				mController.updateValues();
 			}
 		};
+	}
+	
+	@Override
+	public void setPoints(final PointHandler aPoints)
+	{
+		mPoints = aPoints;
+		for (final BackgroundItemValue value : mValuesList)
+		{
+			value.setPoints(mPoints);
+		}
+	}
+	
+	@Override
+	public void resetTempPoints()
+	{
+		for (final BackgroundItemValue value : mValuesList)
+		{
+			value.resetTempPoints();
+		}
 	}
 	
 	@Override
@@ -133,7 +156,7 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 	private void setValue(final BackgroundItemValue aOldValue, final BackgroundItem aNewItem)
 	{
 		final int oldIndex = mValuesList.indexOf(aOldValue);
-		final BackgroundItemValue newValue = new BackgroundItemValue(aNewItem, mContext, mAction, this, mMode);
+		final BackgroundItemValue newValue = new BackgroundItemValue(aNewItem, mContext, mAction, this, mMode, mPoints);
 		mValuesList.set(oldIndex, newValue);
 		mValues.remove(aOldValue.getItem());
 		mValues.put(aNewItem, newValue);
@@ -146,7 +169,7 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 	@Override
 	public void addItem(final BackgroundItem aItem)
 	{
-		addValue(new BackgroundItemValue(aItem, mContext, mAction, this, mMode));
+		addValue(new BackgroundItemValue(aItem, mContext, mAction, this, mMode, mPoints));
 		resize();
 	}
 	

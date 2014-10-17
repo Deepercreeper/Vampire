@@ -2,6 +2,7 @@ package com.deepercreeper.vampireapp.controller;
 
 import java.util.List;
 import android.view.ViewGroup;
+import com.deepercreeper.vampireapp.controller.ValueController.PointHandler;
 
 /**
  * Item values are controlled by groups. This is used to handle several items.
@@ -15,6 +16,11 @@ public interface ItemValueGroup <T extends Item>
 	 * @return the parent controller of this group.
 	 */
 	public ValueController<T> getController();
+	
+	/**
+	 * Removes all temporary points from all values.
+	 */
+	public void resetTempPoints();
 	
 	/**
 	 * @return the item group of this value group.
@@ -68,6 +74,14 @@ public interface ItemValueGroup <T extends Item>
 	 *            Whether this group represents the values inside a character creation.
 	 */
 	public void setCreationMode(CreationMode aMode);
+	
+	/**
+	 * Sets the current points handler.
+	 * 
+	 * @param aPoints
+	 *            The new points handler.
+	 */
+	public void setPoints(PointHandler aPoints);
 	
 	/**
 	 * Updates all values and whether they can be increased and decreased.

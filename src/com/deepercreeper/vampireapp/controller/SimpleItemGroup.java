@@ -59,9 +59,14 @@ public class SimpleItemGroup implements ItemGroup<SimpleItem>
 	 *            The character creation start value for all values inside this group.
 	 * @param aMaxStartValue
 	 *            The maximum character creation value for all values inside this group.
+	 * @param aMaxValue
+	 *            The maximum value for all values inside this group.
+	 * @param aFreePointsCost
+	 *            The number of experience of free points needed to spend for increasing values of this group.
 	 * @return the created simple item group.
 	 */
-	public static SimpleItemGroup create(final String aData, final int aStartValue, final int aMaxStartValue)
+	public static SimpleItemGroup create(final String aData, final int aStartValue, final int aMaxStartValue, final int aMaxValue,
+			final int aFreePointsCost)
 	{
 		final String[] data = aData.split(NAME_DELIM);
 		final SimpleItemGroup group = new SimpleItemGroup(data[0]);
@@ -69,7 +74,7 @@ public class SimpleItemGroup implements ItemGroup<SimpleItem>
 		{
 			for (final String item : data[1].split(ITEMS_DELIM))
 			{
-				group.addItem(SimpleItem.create(item, aStartValue, aMaxStartValue));
+				group.addItem(SimpleItem.create(item, aStartValue, aMaxStartValue, aMaxValue, aFreePointsCost));
 			}
 		}
 		return group;

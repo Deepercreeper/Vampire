@@ -44,6 +44,12 @@ public class PropertyItem implements Item
 		return mNegative;
 	}
 	
+	@Override
+	public int getFreePointsCost()
+	{
+		return -1;
+	}
+	
 	/**
 	 * Properties have a specified set of possible values that can be set.<br>
 	 * They all have a unique id which is used to increase and decrease the property value.

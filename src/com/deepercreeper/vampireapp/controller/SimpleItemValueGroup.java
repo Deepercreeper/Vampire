@@ -10,6 +10,7 @@ import android.widget.Space;
 import android.widget.TableRow;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.controller.ItemValue.UpdateAction;
+import com.deepercreeper.vampireapp.controller.ValueController.PointHandler;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 /**
@@ -20,6 +21,8 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
 public class SimpleItemValueGroup implements ItemValueGroup<SimpleItem>
 {
 	private CreationMode								mMode;
+	
+	private PointHandler								mPoints;
 	
 	private final Context								mContext;
 	
@@ -46,9 +49,10 @@ public class SimpleItemValueGroup implements ItemValueGroup<SimpleItem>
 	 *            Whether this value group is inside the creation mode.
 	 */
 	public SimpleItemValueGroup(final SimpleItemGroup aGroup, final SimpleValueController aController, final Context aContext,
-			final CreationMode aMode)
+			final CreationMode aMode, final PointHandler aPoints)
 	{
 		mController = aController;
+		mPoints = aPoints;
 		mMode = aMode;
 		mGroup = aGroup;
 		mContext = aContext;
@@ -62,7 +66,17 @@ public class SimpleItemValueGroup implements ItemValueGroup<SimpleItem>
 		};
 		for (final SimpleItem item : mGroup.getItems())
 		{
-			addValue(new SimpleItemValue(item, mContext, mAction, mMode));
+			addValue(new SimpleItemValue(item, mContext, mAction, mMode, mPoints));
+		}
+	}
+	
+	@Override
+	public void setPoints(final PointHandler aPoints)
+	{
+		mPoints = aPoints;
+		for (final SimpleItemValue value : mValuesList)
+		{
+			value.setPoints(mPoints);
 		}
 	}
 	
@@ -79,6 +93,15 @@ public class SimpleItemValueGroup implements ItemValueGroup<SimpleItem>
 	public SimpleValueController getController()
 	{
 		return mController;
+	}
+	
+	@Override
+	public void resetTempPoints()
+	{
+		for (final SimpleItemValue value : mValuesList)
+		{
+			value.resetTempPoints();
+		}
 	}
 	
 	@Override

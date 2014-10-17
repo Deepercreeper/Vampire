@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.controller.ItemValue.UpdateAction;
+import com.deepercreeper.vampireapp.controller.ValueController.PointHandler;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 /**
@@ -19,6 +20,8 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
 public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>, VariableValueGroup<DisciplineItem, DisciplineItemValue>
 {
 	private CreationMode										mMode;
+	
+	private PointHandler										mPoints;
 	
 	private final Context										mContext;
 	
@@ -49,9 +52,10 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	 *            Whether this group is inside creation mode.
 	 */
 	public DisciplineItemValueGroup(final DisciplineItemGroup aGroup, final DisciplineValueController aController, final Context aContext,
-			final CreationMode aMode)
+			final CreationMode aMode, final PointHandler aPoints)
 	{
 		mController = aController;
+		mPoints = aPoints;
 		mContext = aContext;
 		mGroup = aGroup;
 		mMode = aMode;
@@ -63,6 +67,25 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 				mController.updateValues();
 			}
 		};
+	}
+	
+	@Override
+	public void setPoints(final PointHandler aPoints)
+	{
+		mPoints = aPoints;
+		for (final DisciplineItemValue value : mValuesList)
+		{
+			value.setPoints(mPoints);
+		}
+	}
+	
+	@Override
+	public void resetTempPoints()
+	{
+		for (final DisciplineItemValue value : mValuesList)
+		{
+			value.resetTempPoints();
+		}
 	}
 	
 	@Override
@@ -178,7 +201,7 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	@Override
 	public void addItem(final DisciplineItem aItem)
 	{
-		addValue(new DisciplineItemValue(aItem, mContext, mAction, mMode));
+		addValue(new DisciplineItemValue(aItem, mContext, mAction, mMode, mPoints));
 	}
 	
 	@Override

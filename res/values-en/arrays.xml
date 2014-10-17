@@ -7,7 +7,7 @@
         <item>Mental:Cognition,Intelligence,Intellect</item>
     </string-array>
     
-    <string-array name="abilitie_values">
+    <string-array name="ability_values">
         <item>Talents:Attention,Excuses,Ducking,Theft,Intimidation,Empathy,Leadership,Hand to hand,Acting,Sportiness</item>
         <item>Skills:Archery,Etiquette,Crafting,Stealth,Herbalism,Music,Melee,Riding,Zoology,Survival</item>
         <item>Knowledge:Academic knowledge,Folklore,Legislation,Linguistics,Medicine,Inquiring,Science,Occultism,Politics,Management</item>

@@ -16,6 +16,11 @@ public interface Item extends Comparable<Item>
 	public String getDescription();
 	
 	/**
+	 * @return the number of free points that have to be spent for increasing a value of this item.
+	 */
+	public int getFreePointsCost();
+	
+	/**
 	 * Each item has a specific maximum start value,<br>
 	 * which can be reached when creating a new character.
 	 * 

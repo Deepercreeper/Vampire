@@ -18,6 +18,8 @@ public class BackgroundValueController implements ValueController<BackgroundItem
 {
 	private CreationMode					mMode;
 	
+	private PointHandler					mPoints;
+	
 	private final Context					mContext;
 	
 	private Button							mShowPanel;
@@ -37,13 +39,24 @@ public class BackgroundValueController implements ValueController<BackgroundItem
 	 *            The context.
 	 * @param aMode
 	 *            Whether this controller is in the creation mode.
+	 * @param aPoints
+	 *            The caller for free or experience points.
 	 */
-	public BackgroundValueController(final BackgroundController aController, final Context aContext, final CreationMode aMode)
+	public BackgroundValueController(final BackgroundController aController, final Context aContext, final CreationMode aMode,
+			final PointHandler aPoints)
 	{
 		mMode = aMode;
+		mPoints = aPoints;
 		mController = aController;
 		mContext = aContext;
-		mBackgrounds = new BackgroundItemValueGroup(mController.getBackgrounds(), this, aContext, mMode);
+		mBackgrounds = new BackgroundItemValueGroup(mController.getBackgrounds(), this, aContext, mMode, mPoints);
+	}
+	
+	@Override
+	public void setPoints(final com.deepercreeper.vampireapp.controller.ValueController.PointHandler aPoints)
+	{
+		mPoints = aPoints;
+		mBackgrounds.setPoints(mPoints);
 	}
 	
 	@Override
@@ -57,6 +70,12 @@ public class BackgroundValueController implements ValueController<BackgroundItem
 	{
 		mBackgrounds.addItem(aItem);
 		resize();
+	}
+	
+	@Override
+	public void resetTempPoints()
+	{
+		mBackgrounds.resetTempPoints();
 	}
 	
 	@Override
@@ -115,7 +134,7 @@ public class BackgroundValueController implements ValueController<BackgroundItem
 				mBackgrounds.updateValues(mBackgrounds.getValue() < mController.getMaxCreationValue(), true);
 				break;
 			case FREE_POINTS :
-				mBackgrounds.updateValues(mBackgrounds.getValue() + mBackgrounds.getTempPoints() < mController.getMaxCreationValue(), true);
+				mBackgrounds.updateValues(true, true);
 				break;
 			case NORMAL :
 				mBackgrounds.updateValues(true, false);
@@ -142,6 +161,7 @@ public class BackgroundValueController implements ValueController<BackgroundItem
 		
 		mShowPanel.setLayoutParams(ViewUtil.instance().getWrapHeight());
 		mShowPanel.setText(R.string.backgrounds);
+		mShowPanel.setEnabled(mMode != CreationMode.FREE_POINTS || !mBackgrounds.getValuesList().isEmpty());
 		mShowPanel.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
 		mShowPanel.setOnClickListener(new OnClickListener()
 		{

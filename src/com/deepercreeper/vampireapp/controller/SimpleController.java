@@ -43,17 +43,17 @@ public class SimpleController implements Controller<SimpleItem>
 		mVirtueCreationValue = aResources.getInteger(R.integer.virtue_max_creation_value);
 		for (final String attributesGroup : aResources.getStringArray(R.array.attribute_values))
 		{
-			final SimpleItemGroup group = SimpleItemGroup.create(attributesGroup, 1, 4);
+			final SimpleItemGroup group = SimpleItemGroup.create(attributesGroup, 1, 4, 6, 5);
 			mAttributes.put(group.getName(), group);
 			mAttributeGroups.add(group);
 		}
 		for (final String abilitiesGroup : aResources.getStringArray(R.array.ability_values))
 		{
-			final SimpleItemGroup group = SimpleItemGroup.create(abilitiesGroup, 0, 3);
+			final SimpleItemGroup group = SimpleItemGroup.create(abilitiesGroup, 0, 3, 6, 2);
 			mAbilities.put(group.getName(), group);
 			mAbilityGroups.add(group);
 		}
-		mVirtues = SimpleItemGroup.create(aResources.getString(R.string.virtue_values), 1, 4);
+		mVirtues = SimpleItemGroup.create(aResources.getString(R.string.virtue_values), 1, 5, 5, 2);
 	}
 	
 	/**

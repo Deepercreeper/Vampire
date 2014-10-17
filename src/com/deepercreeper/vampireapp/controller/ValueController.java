@@ -12,12 +12,53 @@ import android.widget.LinearLayout;
 public interface ValueController <T extends Item>
 {
 	/**
+	 * Used to call the number of points from the parent.
+	 * 
+	 * @author Vincent
+	 */
+	public static interface PointHandler
+	{
+		
+		/**
+		 * @return the current number of free or experience points from the parent.
+		 */
+		public int getPoints();
+		
+		/**
+		 * Decreases the current available points by {@code aValue} points.
+		 * 
+		 * @param aValue
+		 *            The points to add.
+		 */
+		public void decrease(int aValue);
+		
+		/**
+		 * Increases the current available points by {@code aValue} points.
+		 * 
+		 * @param aValue
+		 *            The points to subtract.
+		 */
+		public void increase(int aValue);
+	}
+	
+	/**
+	 * @param aPoints
+	 *            The new point listener.
+	 */
+	public void setPoints(PointHandler aPoints);
+	
+	/**
 	 * Enables or disabled the value groups for changing anything.
 	 * 
 	 * @param aEnabled
 	 *            Whether the groups should be enabled or not.
 	 */
 	public void setEnabled(boolean aEnabled);
+	
+	/**
+	 * Removes all temporary points from all values.
+	 */
+	public void resetTempPoints();
 	
 	/**
 	 * Removes all widgets from their parent container.

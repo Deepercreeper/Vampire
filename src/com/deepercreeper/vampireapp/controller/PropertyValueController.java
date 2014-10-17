@@ -47,9 +47,21 @@ public class PropertyValueController implements ValueController<PropertyItem>, V
 	}
 	
 	@Override
+	public void setPoints(final com.deepercreeper.vampireapp.controller.ValueController.PointHandler aPoints)
+	{
+		return;
+	}
+	
+	@Override
 	public void release()
 	{
 		mProperties.release();
+	}
+	
+	@Override
+	public void resetTempPoints()
+	{
+		return;
 	}
 	
 	@Override

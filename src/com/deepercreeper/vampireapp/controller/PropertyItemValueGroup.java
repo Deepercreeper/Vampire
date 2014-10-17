@@ -14,6 +14,7 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.controller.ItemValue.UpdateAction;
 import com.deepercreeper.vampireapp.controller.SelectItemDialog.SelectionListener;
+import com.deepercreeper.vampireapp.controller.ValueController.PointHandler;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 /**
@@ -68,6 +69,18 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 				mController.updateValues();
 			}
 		};
+	}
+	
+	@Override
+	public void setPoints(final PointHandler aPoints)
+	{
+		return;
+	}
+	
+	@Override
+	public void resetTempPoints()
+	{
+		return;
 	}
 	
 	@Override

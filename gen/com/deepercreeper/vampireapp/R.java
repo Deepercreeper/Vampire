@@ -9,11 +9,10 @@ package com.deepercreeper.vampireapp;
 
 public final class R {
     public static final class array {
-        public static final int abilitie_values=0x7f040008;
-        public static final int abilities_max_creation_values=0x7f04000a;
+        public static final int abilities_max_creation_values=0x7f040009;
         public static final int ability_values=0x7f040001;
         public static final int attribute_values=0x7f040000;
-        public static final int attributes_max_creation_values=0x7f040009;
+        public static final int attributes_max_creation_values=0x7f040008;
         public static final int backgrounds=0x7f040006;
         public static final int clan=0x7f040003;
         public static final int clan_generations=0x7f040004;
@@ -38,7 +37,7 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f0a0019;
+        public static final int action_settings=0x7f0a001a;
         public static final int back_button=0x7f0a0010;
         public static final int backgrounds_panel=0x7f0a000e;
         public static final int behavior_label=0x7f0a0008;
@@ -61,8 +60,9 @@ public final class R {
         public static final int nature_spinner=0x7f0a0004;
         public static final int next_button=0x7f0a0011;
         public static final int properties_panel=0x7f0a000f;
+        public static final int reset_temp_points_button=0x7f0a0018;
         public static final int show_creation_button=0x7f0a0017;
-        public static final int show_descriptions_button=0x7f0a0018;
+        public static final int show_descriptions_button=0x7f0a0019;
         public static final int simple_items_panel=0x7f0a000c;
     }
     public static final class integer {
@@ -102,6 +102,7 @@ public final class R {
         public static final int nature_text=0x7f050006;
         public static final int next=0x7f050016;
         public static final int properties=0x7f050011;
+        public static final int reset=0x7f050018;
         public static final int virtue_values=0x7f050000;
         public static final int virtues=0x7f050015;
     }

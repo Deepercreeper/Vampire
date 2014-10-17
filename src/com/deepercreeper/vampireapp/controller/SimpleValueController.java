@@ -22,6 +22,8 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class SimpleValueController implements ValueController<SimpleItem>
 {
+	private PointHandler								mPoints;
+	
 	private CreationMode								mMode;
 	
 	private final Context								mContext;
@@ -65,25 +67,57 @@ public class SimpleValueController implements ValueController<SimpleItem>
 	 *            The context.
 	 * @param aMode
 	 *            Whether this controller is inside the creation mode.
+	 * @param aPoints
+	 *            The caller for free or experience points.
 	 */
-	public SimpleValueController(final SimpleController aController, final Context aContext, final CreationMode aMode)
+	public SimpleValueController(final SimpleController aController, final Context aContext, final CreationMode aMode, final PointHandler aPoints)
 	{
 		mMode = aMode;
+		mPoints = aPoints;
 		mController = aController;
 		mContext = aContext;
 		for (final SimpleItemGroup group : mController.getAttributes())
 		{
-			final SimpleItemValueGroup valueGroup = new SimpleItemValueGroup(group, this, mContext, mMode);
+			final SimpleItemValueGroup valueGroup = new SimpleItemValueGroup(group, this, mContext, mMode, mPoints);
 			mAttributes.put(group.getName(), valueGroup);
 			mAttributesList.add(valueGroup);
 		}
 		for (final SimpleItemGroup group : mController.getAbilities())
 		{
-			final SimpleItemValueGroup valueGroup = new SimpleItemValueGroup(group, this, mContext, mMode);
+			final SimpleItemValueGroup valueGroup = new SimpleItemValueGroup(group, this, mContext, mMode, mPoints);
 			mAbilities.put(group.getName(), valueGroup);
 			mAbilitiesList.add(valueGroup);
 		}
-		mVirtues = new SimpleItemValueGroup(mController.getVirtues(), this, mContext, mMode);
+		mVirtues = new SimpleItemValueGroup(mController.getVirtues(), this, mContext, mMode, mPoints);
+	}
+	
+	@Override
+	public void setPoints(final com.deepercreeper.vampireapp.controller.ValueController.PointHandler aPoints)
+	{
+		mPoints = aPoints;
+		for (final SimpleItemValueGroup group : mAttributesList)
+		{
+			group.setPoints(mPoints);
+		}
+		for (final SimpleItemValueGroup group : mAbilitiesList)
+		{
+			group.setPoints(mPoints);
+		}
+		mVirtues.setPoints(mPoints);
+	}
+	
+	@Override
+	public void resetTempPoints()
+	{
+		for (final SimpleItemValueGroup group : mAttributesList)
+		{
+			group.resetTempPoints();
+		}
+		for (final SimpleItemValueGroup group : mAbilitiesList)
+		{
+			group.resetTempPoints();
+		}
+		mVirtues.resetTempPoints();
 	}
 	
 	@Override
