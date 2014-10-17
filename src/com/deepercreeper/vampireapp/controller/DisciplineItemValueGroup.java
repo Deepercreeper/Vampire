@@ -19,7 +19,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>, VariableValueGroup<DisciplineItem, DisciplineItemValue>
 {
-	private CreationMode										mMode;
+	private Mode										mMode;
 	
 	private PointHandler										mPoints;
 	
@@ -50,9 +50,11 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	 *            The context.
 	 * @param aMode
 	 *            Whether this group is inside creation mode.
+	 * @param aPoints
+	 *            The caller for free or experience points.
 	 */
 	public DisciplineItemValueGroup(final DisciplineItemGroup aGroup, final DisciplineValueController aController, final Context aContext,
-			final CreationMode aMode, final PointHandler aPoints)
+			final Mode aMode, final PointHandler aPoints)
 	{
 		mController = aController;
 		mPoints = aPoints;
@@ -64,7 +66,7 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 			@Override
 			public void update()
 			{
-				mController.updateValues();
+				mController.updateValues(mMode == Mode.FREE_POINTS);
 			}
 		};
 	}
@@ -226,15 +228,15 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	}
 	
 	@Override
-	public CreationMode getCreationMode()
+	public Mode getCreationMode()
 	{
 		return mMode;
 	}
 	
 	@Override
-	public void setCreationMode(final CreationMode aMode)
+	public void setCreationMode(final Mode aMode)
 	{
-		final boolean resetTempPoints = mMode == CreationMode.FREE_POINTS && aMode == CreationMode.CREATION;
+		final boolean resetTempPoints = mMode == Mode.FREE_POINTS && aMode == Mode.CREATION;
 		mMode = aMode;
 		for (final DisciplineItemValue value : mValuesList)
 		{
@@ -266,6 +268,6 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 			value.refreshValue();
 		}
 		aLayout.addView(mDisciplinesTable);
-		mController.updateValues();
+		mController.updateValues(false);
 	}
 }

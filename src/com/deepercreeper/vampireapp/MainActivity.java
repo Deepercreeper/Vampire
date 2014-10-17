@@ -6,16 +6,17 @@ import java.util.HashMap;
 import java.util.List;
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.KeyEvent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnKeyListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.NumberPicker.OnValueChangeListener;
@@ -24,7 +25,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.deepercreeper.vampireapp.controller.BackgroundController;
-import com.deepercreeper.vampireapp.controller.CreationMode;
+import com.deepercreeper.vampireapp.controller.Mode;
 import com.deepercreeper.vampireapp.controller.DisciplineController;
 import com.deepercreeper.vampireapp.controller.PropertyController;
 import com.deepercreeper.vampireapp.controller.SimpleController;
@@ -187,7 +188,7 @@ public class MainActivity extends Activity
 		release();
 		mCreator = aCreator;
 		setContentView(R.layout.create_character);
-		mCreator.setCreationMode(CreationMode.CREATION);
+		mCreator.setCreationMode(Mode.CREATION);
 		mState = State.CREATION;
 		createCharacter();
 	}
@@ -196,25 +197,47 @@ public class MainActivity extends Activity
 	{
 		final TextView nameView = (TextView) findViewById(R.id.char_name_text);
 		nameView.setText(mCreator.getName());
-		nameView.setOnKeyListener(new OnKeyListener()
+		nameView.addTextChangedListener(new TextWatcher()
 		{
 			@Override
-			public boolean onKey(final View aV, final int aKeyCode, final KeyEvent aEvent)
+			public void onTextChanged(final CharSequence aS, final int aStart, final int aBefore, final int aCount)
 			{
-				mCreator.setName(nameView.getEditableText().toString());
-				return false;
+				return;
+			}
+			
+			@Override
+			public void beforeTextChanged(final CharSequence aS, final int aStart, final int aCount, final int aAfter)
+			{
+				return;
+			}
+			
+			@Override
+			public void afterTextChanged(final Editable aS)
+			{
+				mCreator.setName(nameView.getText().toString());
 			}
 		});
 		
 		final TextView conceptView = (TextView) findViewById(R.id.concept_text);
 		conceptView.setText(mCreator.getConcept());
-		conceptView.setOnKeyListener(new OnKeyListener()
+		conceptView.addTextChangedListener(new TextWatcher()
 		{
 			@Override
-			public boolean onKey(final View aV, final int aKeyCode, final KeyEvent aEvent)
+			public void onTextChanged(final CharSequence aS, final int aStart, final int aBefore, final int aCount)
 			{
-				mCreator.setConcept(conceptView.getEditableText().toString());
-				return false;
+				return;
+			}
+			
+			@Override
+			public void beforeTextChanged(final CharSequence aS, final int aStart, final int aCount, final int aAfter)
+			{
+				return;
+			}
+			
+			@Override
+			public void afterTextChanged(final Editable aS)
+			{
+				mCreator.setConcept(conceptView.getText().toString());
 			}
 		});
 		
@@ -338,12 +361,13 @@ public class MainActivity extends Activity
 		release();
 		setContentView(R.layout.free_points_view);
 		mState = State.FREE_POINTS;
-		mCreator.setCreationMode(CreationMode.FREE_POINTS);
+		mCreator.setCreationMode(Mode.FREE_POINTS);
 		
 		final ProgressBar pointsBar = (ProgressBar) findViewById(R.id.free_points_bar);
 		pointsBar.setMax(CharCreator.START_FREE_POINTS);
 		
 		setFreePoints(mCreator.getFreePoints());
+		setVolitionPoints(mCreator.getVolitionPoints());
 		
 		final Button showDescriptions = (Button) findViewById(R.id.show_descriptions_button);
 		showDescriptions.setOnClickListener(new OnClickListener()
@@ -364,12 +388,33 @@ public class MainActivity extends Activity
 		final LinearLayout backgroundsPanel = (LinearLayout) findViewById(R.id.free_points_backgrounds_panel);
 		mCreator.getBackgrounds().initLayout(backgroundsPanel);
 		
+		final ImageButton decreaseVolition = (ImageButton) findViewById(R.id.decrease_volition);
+		decreaseVolition.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				mCreator.decreaseVolitionPoints();
+			}
+		});
+		
+		final ImageButton increaseVolition = (ImageButton) findViewById(R.id.increase_volition);
+		increaseVolition.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				mCreator.increaseVolitionPoints();
+			}
+		});
+		
 		final Button showCreation = (Button) findViewById(R.id.show_creation_button);
 		showCreation.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(final View aV)
 			{
+				mCreator.resetFreePoints();
 				initCreateCharacter(mCreator);
 			}
 		});
@@ -384,6 +429,17 @@ public class MainActivity extends Activity
 				setFreePoints(mCreator.getFreePoints());
 			}
 		});
+	}
+	
+	public void setVolitionChangeEnabled(final boolean aCanIncrease, final boolean aCanDecrease)
+	{
+		((ImageButton) findViewById(R.id.decrease_volition)).setEnabled(aCanDecrease);
+		((ImageButton) findViewById(R.id.increase_volition)).setEnabled(aCanIncrease);
+	}
+	
+	public void setVolitionPoints(final int aValue)
+	{
+		((TextView) findViewById(R.id.volition_value)).setText("" + aValue);
 	}
 	
 	public void setFreePoints(final int aValue)

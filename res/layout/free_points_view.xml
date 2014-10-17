@@ -11,7 +11,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin" >
-        
+
         <TextView
             android:id="@+id/free_points_text"
             android:layout_width="match_parent"
@@ -24,8 +24,7 @@
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-			android:layout_below="@id/free_points_text"
-		/>
+            android:layout_below="@id/free_points_text" />
 
         <LinearLayout
             android:id="@+id/free_points_simple_items_panel"
@@ -47,32 +46,66 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/free_points_disciplines_panel"
             android:orientation="vertical" />
-        
+
+        <TextView
+            android:id="@+id/volition_label"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_below="@id/free_points_backgrounds_panel"
+            android:gravity="center_vertical"
+            android:text="@string/volition_points"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <ImageButton
+            android:id="@+id/decrease_volition"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_below="@id/free_points_backgrounds_panel"
+            android:layout_toRightOf="@id/volition_label"
+            android:contentDescription="@string/volition_points"
+            android:src="@android:drawable/ic_media_previous" />
+
+        <ImageButton
+            android:id="@+id/increase_volition"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/free_points_backgrounds_panel"
+            android:contentDescription="@string/volition_points"
+            android:src="@android:drawable/ic_media_next" />
+
+        <TextView
+            android:id="@+id/volition_value"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_below="@id/free_points_backgrounds_panel"
+            android:layout_toLeftOf="@id/increase_volition"
+            android:layout_toRightOf="@id/decrease_volition"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
         <Button
             android:id="@+id/show_creation_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/free_points_backgrounds_panel"
+            android:layout_below="@id/volition_label"
             android:text="@string/back" />
-        
-        <Button 
+
+        <Button
             android:id="@+id/reset_temp_points_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/free_points_backgrounds_panel"
+            android:layout_below="@id/volition_label"
             android:layout_toRightOf="@id/show_creation_button"
-            android:text="@string/reset"
-            />
-        
-        <Button 
+            android:text="@string/reset" />
+
+        <Button
             android:id="@+id/show_descriptions_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/free_points_backgrounds_panel"
+            android:layout_below="@id/volition_label"
             android:layout_toRightOf="@id/reset_temp_points_button"
-            android:text="@string/next"
-            />
-
+            android:text="@string/next" />
     </RelativeLayout>
 
 </ScrollView>

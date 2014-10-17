@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.Clan;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
+import com.deepercreeper.vampireapp.controller.ItemValue.UpdateAction;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 /**
@@ -19,7 +20,9 @@ public class DisciplineValueController implements ValueController<DisciplineItem
 {
 	private PointHandler					mPoints;
 	
-	private CreationMode					mMode;
+	private final UpdateAction				mUpdateOthers;
+	
+	private Mode					mMode;
 	
 	private final Context					mContext;
 	
@@ -44,12 +47,15 @@ public class DisciplineValueController implements ValueController<DisciplineItem
 	 *            Whether this controller is inside the creation mode.
 	 * @param aPoints
 	 *            The caller for free or experience points.
+	 * @param aUpdateOthers
+	 *            The update others action.
 	 */
-	public DisciplineValueController(final DisciplineController aController, final Context aContext, final CreationMode aMode,
-			final PointHandler aPoints)
+	public DisciplineValueController(final DisciplineController aController, final Context aContext, final Mode aMode,
+			final PointHandler aPoints, final UpdateAction aUpdateOthers)
 	{
 		mMode = aMode;
 		mPoints = aPoints;
+		mUpdateOthers = aUpdateOthers;
 		mContext = aContext;
 		mController = aController;
 		mDisciplines = new DisciplineItemValueGroup(mController.getDisciplines(), this, mContext, mMode, mPoints);
@@ -135,20 +141,20 @@ public class DisciplineValueController implements ValueController<DisciplineItem
 	}
 	
 	@Override
-	public void setCreationMode(final CreationMode aMode)
+	public void setCreationMode(final Mode aMode)
 	{
 		mMode = aMode;
 		mDisciplines.setCreationMode(mMode);
 	}
 	
 	@Override
-	public CreationMode getCreationMode()
+	public Mode getCreationMode()
 	{
 		return mMode;
 	}
 	
 	@Override
-	public void updateValues()
+	public void updateValues(final boolean aUpdateOthers)
 	{
 		switch (mMode)
 		{
@@ -161,6 +167,10 @@ public class DisciplineValueController implements ValueController<DisciplineItem
 			case NORMAL :
 				mDisciplines.updateValues(true, false);
 				break;
+		}
+		if (aUpdateOthers)
+		{
+			mUpdateOthers.update();
 		}
 	}
 	

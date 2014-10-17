@@ -2,9 +2,10 @@ package com.deepercreeper.vampireapp;
 
 import com.deepercreeper.vampireapp.controller.BackgroundController;
 import com.deepercreeper.vampireapp.controller.BackgroundValueController;
-import com.deepercreeper.vampireapp.controller.CreationMode;
+import com.deepercreeper.vampireapp.controller.Mode;
 import com.deepercreeper.vampireapp.controller.DisciplineController;
 import com.deepercreeper.vampireapp.controller.DisciplineValueController;
+import com.deepercreeper.vampireapp.controller.ItemValue.UpdateAction;
 import com.deepercreeper.vampireapp.controller.PropertyController;
 import com.deepercreeper.vampireapp.controller.PropertyValueController;
 import com.deepercreeper.vampireapp.controller.SimpleController;
@@ -13,11 +14,16 @@ import com.deepercreeper.vampireapp.controller.ValueController.PointHandler;
 
 public class CharCreator
 {
-	public static final int					MIN_GENERATION	= 8, DEFAULT_GENERATION = 12, MAX_GENERATION = 12, START_FREE_POINTS = 20;
+	public static final int					MIN_GENERATION			= 8, DEFAULT_GENERATION = 12, MAX_GENERATION = 12, START_FREE_POINTS = 15,
+			MAX_VOLITION_POINTS = 20, VOLITION_POINTS_COST = 2;
 	
-	private String							mName			= "";
+	private static final int				START_VOLITION_POINTS	= 10;
 	
-	private String							mConcept		= "";
+	private final MainActivity				mActivity;
+	
+	private String							mName					= "";
+	
+	private String							mConcept				= "";
 	
 	private String							mNature;
 	
@@ -25,9 +31,11 @@ public class CharCreator
 	
 	private Clan							mClan;
 	
-	private int								mGeneration		= DEFAULT_GENERATION;
+	private int								mGeneration				= DEFAULT_GENERATION;
 	
-	private int								mFreePoints		= START_FREE_POINTS;
+	private int								mFreePoints				= START_FREE_POINTS;
+	
+	private int								mVolitionPoints			= START_VOLITION_POINTS;
 	
 	private final DisciplineValueController	mDisciplines;
 	
@@ -37,10 +45,11 @@ public class CharCreator
 	
 	private final SimpleValueController		mSimpleValues;
 	
-	public CharCreator(final MainActivity aContext, final DisciplineController aDisciplines, final PropertyController aProperties,
+	public CharCreator(final MainActivity aActivity, final DisciplineController aDisciplines, final PropertyController aProperties,
 			final BackgroundController aBackgrounds, final SimpleController aSimpleItems, final String aNature, final String aBehavior,
 			final Clan aClan)
 	{
+		mActivity = aActivity;
 		final PointHandler points = new PointHandler()
 		{
 			@Override
@@ -53,35 +62,113 @@ public class CharCreator
 			public void increase(final int aValue)
 			{
 				mFreePoints += aValue;
-				aContext.setFreePoints(mFreePoints);
+				mActivity.setFreePoints(mFreePoints);
 			}
 			
 			@Override
 			public void decrease(final int aValue)
 			{
 				mFreePoints -= aValue;
-				aContext.setFreePoints(mFreePoints);
+				mActivity.setFreePoints(mFreePoints);
 			}
 		};
-		mDisciplines = new DisciplineValueController(aDisciplines, aContext, CreationMode.CREATION, points);
-		mProperties = new PropertyValueController(aProperties, aContext, CreationMode.CREATION);
-		mBackgrounds = new BackgroundValueController(aBackgrounds, aContext, CreationMode.CREATION, points);
-		mSimpleValues = new SimpleValueController(aSimpleItems, aContext, CreationMode.CREATION, points);
+		final UpdateAction updateDisciplineOthers = new UpdateAction()
+		{
+			@Override
+			public void update()
+			{
+				mSimpleValues.updateValues(false);
+				mBackgrounds.updateValues(false);
+				updateVolition();
+			}
+		};
+		final UpdateAction updateSimpleOthers = new UpdateAction()
+		{
+			@Override
+			public void update()
+			{
+				mDisciplines.updateValues(false);
+				mBackgrounds.updateValues(false);
+				updateVolition();
+			}
+		};
+		final UpdateAction updateBackgroundOthers = new UpdateAction()
+		{
+			@Override
+			public void update()
+			{
+				mDisciplines.updateValues(false);
+				mSimpleValues.updateValues(false);
+				updateVolition();
+			}
+		};
+		mDisciplines = new DisciplineValueController(aDisciplines, mActivity, Mode.CREATION, points, updateDisciplineOthers);
+		mProperties = new PropertyValueController(aProperties, mActivity, Mode.CREATION);
+		mBackgrounds = new BackgroundValueController(aBackgrounds, mActivity, Mode.CREATION, points, updateBackgroundOthers);
+		mSimpleValues = new SimpleValueController(aSimpleItems, mActivity, Mode.CREATION, points, updateSimpleOthers);
 		mNature = aNature;
 		mBehavior = aBehavior;
 		setClan(aClan, true);
 	}
 	
+	public void updateFreePointsValues()
+	{
+		mDisciplines.updateValues(false);
+		mSimpleValues.updateValues(false);
+		mBackgrounds.updateValues(false);
+		updateVolition();
+	}
+	
+	private void updateVolition()
+	{
+		mActivity.setVolitionChangeEnabled(mVolitionPoints < MAX_VOLITION_POINTS && mFreePoints >= VOLITION_POINTS_COST,
+				mVolitionPoints > START_VOLITION_POINTS);
+	}
+	
+	public int getVolitionPoints()
+	{
+		return mVolitionPoints;
+	}
+	
+	public void increaseVolitionPoints()
+	{
+		if (mVolitionPoints < MAX_VOLITION_POINTS && mFreePoints >= VOLITION_POINTS_COST)
+		{
+			mVolitionPoints++ ;
+			mFreePoints -= VOLITION_POINTS_COST;
+			updateFreePointsValues();
+			mActivity.setVolitionPoints(mVolitionPoints);
+			mActivity.setFreePoints(mFreePoints);
+		}
+	}
+	
+	public void decreaseVolitionPoints()
+	{
+		if (mVolitionPoints > START_VOLITION_POINTS)
+		{
+			mVolitionPoints-- ;
+			mFreePoints += VOLITION_POINTS_COST;
+			updateFreePointsValues();
+			mActivity.setVolitionPoints(mVolitionPoints);
+			mActivity.setFreePoints(mFreePoints);
+		}
+	}
+	
 	public void resetFreePoints()
 	{
 		mDisciplines.resetTempPoints();
-		mProperties.resetTempPoints();
 		mBackgrounds.resetTempPoints();
 		mSimpleValues.resetTempPoints();
 		mFreePoints = START_FREE_POINTS;
+		mVolitionPoints = START_VOLITION_POINTS;
+		mDisciplines.updateValues(false);
+		mBackgrounds.updateValues(false);
+		mSimpleValues.updateValues(false);
+		mActivity.setVolitionPoints(mVolitionPoints);
+		updateVolition();
 	}
 	
-	public void setCreationMode(final CreationMode aMode)
+	public void setCreationMode(final Mode aMode)
 	{
 		mDisciplines.setCreationMode(aMode);
 		mProperties.setCreationMode(aMode);

@@ -37,7 +37,7 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f0a001a;
+        public static final int action_settings=0x7f0a001e;
         public static final int back_button=0x7f0a0010;
         public static final int backgrounds_panel=0x7f0a000e;
         public static final int behavior_label=0x7f0a0008;
@@ -47,6 +47,7 @@ public final class R {
         public static final int clan_spinner=0x7f0a000b;
         public static final int concept_text=0x7f0a0003;
         public static final int createCharacterButton=0x7f0a0001;
+        public static final int decrease_volition=0x7f0a0018;
         public static final int disciplines_panel=0x7f0a000d;
         public static final int free_points_backgrounds_panel=0x7f0a0016;
         public static final int free_points_bar=0x7f0a0013;
@@ -55,15 +56,18 @@ public final class R {
         public static final int free_points_text=0x7f0a0012;
         public static final int generation_label=0x7f0a000a;
         public static final int generation_picker=0x7f0a0006;
+        public static final int increase_volition=0x7f0a0019;
         public static final int listView1=0x7f0a0000;
         public static final int nature_label=0x7f0a0005;
         public static final int nature_spinner=0x7f0a0004;
         public static final int next_button=0x7f0a0011;
         public static final int properties_panel=0x7f0a000f;
-        public static final int reset_temp_points_button=0x7f0a0018;
-        public static final int show_creation_button=0x7f0a0017;
-        public static final int show_descriptions_button=0x7f0a0019;
+        public static final int reset_temp_points_button=0x7f0a001c;
+        public static final int show_creation_button=0x7f0a001b;
+        public static final int show_descriptions_button=0x7f0a001d;
         public static final int simple_items_panel=0x7f0a000c;
+        public static final int volition_label=0x7f0a0017;
+        public static final int volition_value=0x7f0a001a;
     }
     public static final class integer {
         public static final int background_max_creation_value=0x7f070001;
@@ -105,6 +109,7 @@ public final class R {
         public static final int reset=0x7f050018;
         public static final int virtue_values=0x7f050000;
         public static final int virtues=0x7f050015;
+        public static final int volition_points=0x7f050019;
     }
     public static final class style {
         /** 

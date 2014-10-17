@@ -20,7 +20,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class PropertyItemValue implements ItemValue<PropertyItem>
 {
-	private CreationMode		mMode;
+	private Mode		mMode;
 	
 	private final PropertyItem	mItem;
 	
@@ -50,7 +50,7 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 	 * @param aMode
 	 *            The current creation mode.
 	 */
-	public PropertyItemValue(final PropertyItem aItem, final Context aContext, final UpdateAction aAction, final CreationMode aMode)
+	public PropertyItemValue(final PropertyItem aItem, final Context aContext, final UpdateAction aAction, final Mode aMode)
 	{
 		mMode = aMode;
 		mItem = aItem;
@@ -77,13 +77,13 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 	}
 	
 	@Override
-	public CreationMode getCreationMode()
+	public Mode getCreationMode()
 	{
 		return mMode;
 	}
 	
 	@Override
-	public void setCreationMode(final CreationMode aMode)
+	public void setCreationMode(final Mode aMode)
 	{
 		mMode = aMode;
 	}
@@ -206,7 +206,7 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 	}
 	
 	@Override
-	public boolean canIncrease(final CreationMode aMode)
+	public boolean canIncrease(final Mode aMode)
 	{
 		switch (aMode)
 		{
@@ -227,7 +227,7 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 	}
 	
 	@Override
-	public boolean canDecrease(final CreationMode aMode)
+	public boolean canDecrease(final Mode aMode)
 	{
 		switch (aMode)
 		{

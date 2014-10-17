@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
+import com.deepercreeper.vampireapp.controller.ItemValue.UpdateAction;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 /**
@@ -16,7 +17,9 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class BackgroundValueController implements ValueController<BackgroundItem>, VariableValueGroup<BackgroundItem, BackgroundItemValue>
 {
-	private CreationMode					mMode;
+	private Mode					mMode;
+	
+	private final UpdateAction				mUpdateOthers;
 	
 	private PointHandler					mPoints;
 	
@@ -41,12 +44,15 @@ public class BackgroundValueController implements ValueController<BackgroundItem
 	 *            Whether this controller is in the creation mode.
 	 * @param aPoints
 	 *            The caller for free or experience points.
+	 * @param aUpdateOthers
+	 *            The update others action.
 	 */
-	public BackgroundValueController(final BackgroundController aController, final Context aContext, final CreationMode aMode,
-			final PointHandler aPoints)
+	public BackgroundValueController(final BackgroundController aController, final Context aContext, final Mode aMode,
+			final PointHandler aPoints, final UpdateAction aUpdateOthers)
 	{
 		mMode = aMode;
 		mPoints = aPoints;
+		mUpdateOthers = aUpdateOthers;
 		mController = aController;
 		mContext = aContext;
 		mBackgrounds = new BackgroundItemValueGroup(mController.getBackgrounds(), this, aContext, mMode, mPoints);
@@ -113,20 +119,20 @@ public class BackgroundValueController implements ValueController<BackgroundItem
 	}
 	
 	@Override
-	public CreationMode getCreationMode()
+	public Mode getCreationMode()
 	{
 		return mMode;
 	}
 	
 	@Override
-	public void setCreationMode(final CreationMode aMode)
+	public void setCreationMode(final Mode aMode)
 	{
 		mMode = aMode;
 		mBackgrounds.setCreationMode(mMode);
 	}
 	
 	@Override
-	public void updateValues()
+	public void updateValues(final boolean aUpdateOthers)
 	{
 		switch (mMode)
 		{
@@ -139,6 +145,10 @@ public class BackgroundValueController implements ValueController<BackgroundItem
 			case NORMAL :
 				mBackgrounds.updateValues(true, false);
 				break;
+		}
+		if (aUpdateOthers)
+		{
+			mUpdateOthers.update();
 		}
 	}
 	
@@ -161,7 +171,7 @@ public class BackgroundValueController implements ValueController<BackgroundItem
 		
 		mShowPanel.setLayoutParams(ViewUtil.instance().getWrapHeight());
 		mShowPanel.setText(R.string.backgrounds);
-		mShowPanel.setEnabled(mMode != CreationMode.FREE_POINTS || !mBackgrounds.getValuesList().isEmpty());
+		mShowPanel.setEnabled(mMode != Mode.FREE_POINTS || !mBackgrounds.getValuesList().isEmpty());
 		mShowPanel.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
 		mShowPanel.setOnClickListener(new OnClickListener()
 		{

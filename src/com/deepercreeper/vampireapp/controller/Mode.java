@@ -6,7 +6,7 @@ package com.deepercreeper.vampireapp.controller;
  * 
  * @author Vincent
  */
-public enum CreationMode
+public enum Mode
 {
 	/**
 	 * This is the first creation mode. Here are the start points and other main options registered.

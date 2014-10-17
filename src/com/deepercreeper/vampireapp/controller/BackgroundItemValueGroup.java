@@ -25,7 +25,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>, VariableValueGroup<BackgroundItem, BackgroundItemValue>
 {
-	private CreationMode										mMode;
+	private Mode										mMode;
 	
 	private PointHandler										mPoints;
 	
@@ -56,9 +56,11 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 	 *            The context.
 	 * @param aMode
 	 *            Whether this is inside creation mode.
+	 * @param aPoints
+	 *            The caller for free or experience points.
 	 */
 	public BackgroundItemValueGroup(final BackgroundItemGroup aGroup, final BackgroundValueController aController, final Context aContext,
-			final CreationMode aMode, final PointHandler aPoints)
+			final Mode aMode, final PointHandler aPoints)
 	{
 		mController = aController;
 		mPoints = aPoints;
@@ -70,7 +72,7 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 			@Override
 			public void update()
 			{
-				mController.updateValues();
+				mController.updateValues(mMode == Mode.FREE_POINTS);
 			}
 		};
 	}
@@ -241,15 +243,15 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 	}
 	
 	@Override
-	public CreationMode getCreationMode()
+	public Mode getCreationMode()
 	{
 		return mMode;
 	}
 	
 	@Override
-	public void setCreationMode(final CreationMode aMode)
+	public void setCreationMode(final Mode aMode)
 	{
-		final boolean resetTempPoints = mMode == CreationMode.FREE_POINTS && aMode == CreationMode.CREATION;
+		final boolean resetTempPoints = mMode == Mode.FREE_POINTS && aMode == Mode.CREATION;
 		mMode = aMode;
 		for (final BackgroundItemValue value : mValuesList)
 		{
@@ -271,7 +273,7 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 		
 		final LinearLayout titleRow = new LinearLayout(mContext);
 		titleRow.setLayoutParams(ViewUtil.instance().getWrapHeight());
-		if (mMode == CreationMode.CREATION)
+		if (mMode == Mode.CREATION)
 		{
 			final Button addBackground = new Button(mContext);
 			addBackground.setLayoutParams(ViewUtil.instance().getWrapHeight());
@@ -320,6 +322,6 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 			value.refreshValue();
 		}
 		aLayout.addView(mBackgroundsTable);
-		mController.updateValues();
+		mController.updateValues(false);
 	}
 }

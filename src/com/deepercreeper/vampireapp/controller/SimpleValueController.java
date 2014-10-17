@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
+import com.deepercreeper.vampireapp.controller.ItemValue.UpdateAction;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 /**
@@ -24,7 +25,9 @@ public class SimpleValueController implements ValueController<SimpleItem>
 {
 	private PointHandler								mPoints;
 	
-	private CreationMode								mMode;
+	private final UpdateAction							mUpdateOthers;
+	
+	private Mode								mMode;
 	
 	private final Context								mContext;
 	
@@ -69,11 +72,15 @@ public class SimpleValueController implements ValueController<SimpleItem>
 	 *            Whether this controller is inside the creation mode.
 	 * @param aPoints
 	 *            The caller for free or experience points.
+	 * @param aUpdateOthers
+	 *            The update others action.
 	 */
-	public SimpleValueController(final SimpleController aController, final Context aContext, final CreationMode aMode, final PointHandler aPoints)
+	public SimpleValueController(final SimpleController aController, final Context aContext, final Mode aMode, final PointHandler aPoints,
+			final UpdateAction aUpdateOthers)
 	{
 		mMode = aMode;
 		mPoints = aPoints;
+		mUpdateOthers = aUpdateOthers;
 		mController = aController;
 		mContext = aContext;
 		for (final SimpleItemGroup group : mController.getAttributes())
@@ -169,7 +176,7 @@ public class SimpleValueController implements ValueController<SimpleItem>
 	}
 	
 	@Override
-	public void setCreationMode(final CreationMode aMode)
+	public void setCreationMode(final Mode aMode)
 	{
 		mMode = aMode;
 		for (final SimpleItemValueGroup valueGroup : mAttributesList)
@@ -184,7 +191,7 @@ public class SimpleValueController implements ValueController<SimpleItem>
 	}
 	
 	@Override
-	public CreationMode getCreationMode()
+	public Mode getCreationMode()
 	{
 		return mMode;
 	}
@@ -222,7 +229,7 @@ public class SimpleValueController implements ValueController<SimpleItem>
 							valueGroup.initLayout(attributes);
 						}
 						mInitializedAttributes = true;
-						updateValues();
+						updateValues(false);
 					}
 					attributes.startAnimation(new ResizeAnimation(attributes, attributes.getWidth(), ViewUtil.calcHeight(attributes)));
 					mShowAttributesPanel.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
@@ -261,7 +268,7 @@ public class SimpleValueController implements ValueController<SimpleItem>
 							valueGroup.initLayout(abilities);
 						}
 						mInitializedAbilities = true;
-						updateValues();
+						updateValues(false);
 					}
 					abilities.startAnimation(new ResizeAnimation(abilities, abilities.getWidth(), ViewUtil.calcHeight(abilities)));
 					mShowAbilitiesPanel.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
@@ -297,7 +304,7 @@ public class SimpleValueController implements ValueController<SimpleItem>
 					{
 						mVirtues.initLayout(virtues);
 						mInitializedVirtues = true;
-						updateValues();
+						updateValues(false);
 					}
 					virtues.startAnimation(new ResizeAnimation(virtues, virtues.getWidth(), ViewUtil.calcHeight(virtues)));
 					mShowVirtuesPanel.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
@@ -391,7 +398,7 @@ public class SimpleValueController implements ValueController<SimpleItem>
 	}
 	
 	@Override
-	public void updateValues()
+	public void updateValues(final boolean aUpdateOthers)
 	{
 		switch (mMode)
 		{
@@ -404,6 +411,10 @@ public class SimpleValueController implements ValueController<SimpleItem>
 			case NORMAL :
 				updateNormal();
 				break;
+		}
+		if (aUpdateOthers)
+		{
+			mUpdateOthers.update();
 		}
 	}
 	

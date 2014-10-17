@@ -39,8 +39,10 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	 *            The update action.
 	 * @param aMode
 	 *            The current creation mode.
+	 * @param aPoints
+	 *            The caller for free or experience points.
 	 */
-	public SubDisciplineItemValue(final SubDisciplineItem aItem, final Context aContext, final UpdateAction aAction, final CreationMode aMode,
+	public SubDisciplineItemValue(final SubDisciplineItem aItem, final Context aContext, final UpdateAction aAction, final Mode aMode,
 			final PointHandler aPoints)
 	{
 		super(aItem, aContext, aAction, aMode, aPoints);
@@ -97,7 +99,7 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 			mEditButton = new ImageButton(context);
 			mEditButton.setLayoutParams(ViewUtil.instance().getButtonSize());
 			mEditButton.setContentDescription("Edit");
-			mEditButton.setEnabled(getCreationMode() == CreationMode.CREATION);
+			mEditButton.setEnabled(getCreationMode() == Mode.CREATION);
 			mEditButton.setImageResource(android.R.drawable.ic_menu_edit);
 			mEditButton.setOnClickListener(new OnClickListener()
 			{
@@ -212,7 +214,7 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	}
 	
 	@Override
-	public boolean canDecrease(final CreationMode aMode)
+	public boolean canDecrease(final Mode aMode)
 	{
 		switch (aMode)
 		{
@@ -250,7 +252,7 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	}
 	
 	@Override
-	public boolean canIncrease(final CreationMode aMode)
+	public boolean canIncrease(final Mode aMode)
 	{
 		switch (aMode)
 		{
@@ -282,10 +284,10 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	}
 	
 	@Override
-	public void setCreationMode(final CreationMode aMode)
+	public void setCreationMode(final Mode aMode)
 	{
 		mMode = aMode;
-		mEditButton.setEnabled(getCreationMode() == CreationMode.CREATION);
+		mEditButton.setEnabled(getCreationMode() == Mode.CREATION);
 	}
 	
 	@Override

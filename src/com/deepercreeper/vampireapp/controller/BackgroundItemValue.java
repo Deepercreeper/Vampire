@@ -20,7 +20,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class BackgroundItemValue implements ItemValue<BackgroundItem>
 {
-	private CreationMode					mMode;
+	private Mode					mMode;
 	
 	private PointHandler					mPoints;
 	
@@ -61,7 +61,7 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	 *            The points handler.
 	 */
 	public BackgroundItemValue(final BackgroundItem aItem, final Context aContext, final UpdateAction aAction, final BackgroundItemValueGroup aGroup,
-			final CreationMode aMode, final PointHandler aPoints)
+			final Mode aMode, final PointHandler aPoints)
 	{
 		mMode = aMode;
 		mPoints = aPoints;
@@ -95,13 +95,13 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	}
 	
 	@Override
-	public void setCreationMode(final CreationMode aMode)
+	public void setCreationMode(final Mode aMode)
 	{
 		mMode = aMode;
 	}
 	
 	@Override
-	public CreationMode getCreationMode()
+	public Mode getCreationMode()
 	{
 		return mMode;
 	}
@@ -128,7 +128,7 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 		valueName.setText(mItem.getName());
 		mContainer.addView(valueName);
 		
-		if (mMode == CreationMode.CREATION)
+		if (mMode == Mode.CREATION)
 		{
 			final ImageButton edit = new ImageButton(mContext);
 			edit.setLayoutParams(ViewUtil.instance().getRowButtonSize());
@@ -213,7 +213,7 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	}
 	
 	@Override
-	public boolean canIncrease(final CreationMode aMode)
+	public boolean canIncrease(final Mode aMode)
 	{
 		switch (aMode)
 		{
@@ -235,7 +235,7 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	}
 	
 	@Override
-	public boolean canDecrease(final CreationMode aMode)
+	public boolean canDecrease(final Mode aMode)
 	{
 		switch (aMode)
 		{
@@ -260,7 +260,7 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	{
 		if (canIncrease())
 		{
-			if (mMode == CreationMode.FREE_POINTS)
+			if (mMode == Mode.FREE_POINTS)
 			{
 				mTempPoints++ ;
 				mPoints.decrease(getItem().getFreePointsCost());
@@ -283,7 +283,7 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	{
 		if (canDecrease())
 		{
-			if (mMode == CreationMode.FREE_POINTS)
+			if (mMode == Mode.FREE_POINTS)
 			{
 				mTempPoints-- ;
 				mPoints.increase(getItem().getFreePointsCost());

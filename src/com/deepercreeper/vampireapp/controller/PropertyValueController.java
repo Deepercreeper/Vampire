@@ -16,7 +16,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class PropertyValueController implements ValueController<PropertyItem>, VariableValueGroup<PropertyItem, PropertyItemValue>
 {
-	private CreationMode					mMode;
+	private Mode					mMode;
 	
 	private final Context					mContext;
 	
@@ -38,7 +38,7 @@ public class PropertyValueController implements ValueController<PropertyItem>, V
 	 * @param aMode
 	 *            Whether this controller is inside the creation mode.
 	 */
-	public PropertyValueController(final PropertyController aController, final Context aContext, final CreationMode aMode)
+	public PropertyValueController(final PropertyController aController, final Context aContext, final Mode aMode)
 	{
 		mMode = aMode;
 		mController = aController;
@@ -106,13 +106,13 @@ public class PropertyValueController implements ValueController<PropertyItem>, V
 	}
 	
 	@Override
-	public CreationMode getCreationMode()
+	public Mode getCreationMode()
 	{
 		return mMode;
 	}
 	
 	@Override
-	public void setCreationMode(final CreationMode aMode)
+	public void setCreationMode(final Mode aMode)
 	{
 		mMode = aMode;
 		mProperties.setCreationMode(mMode);
@@ -170,7 +170,7 @@ public class PropertyValueController implements ValueController<PropertyItem>, V
 	}
 	
 	@Override
-	public void updateValues()
+	public void updateValues(final boolean aUpdateOthers)
 	{
 		switch (mMode)
 		{

@@ -27,7 +27,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class DisciplineItemValue implements ItemValue<DisciplineItem>
 {
-	protected CreationMode						mMode;
+	protected Mode						mMode;
 	
 	protected PointHandler						mPoints;
 	
@@ -64,8 +64,10 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 	 *            The update action.
 	 * @param aMode
 	 *            The current creation mode.
+	 * @param aPoints
+	 *            The caller for free or experience points.
 	 */
-	public DisciplineItemValue(final DisciplineItem aItem, final Context aContext, final UpdateAction aAction, final CreationMode aMode,
+	public DisciplineItemValue(final DisciplineItem aItem, final Context aContext, final UpdateAction aAction, final Mode aMode,
 			final PointHandler aPoints)
 	{
 		mMode = aMode;
@@ -113,14 +115,14 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 	}
 	
 	@Override
-	public void setCreationMode(final CreationMode aMode)
+	public void setCreationMode(final Mode aMode)
 	{
 		mMode = aMode;
 		if (mItem.isParentItem())
 		{
 			for (final ImageButton editButton : mEditButtons)
 			{
-				editButton.setEnabled(mMode == CreationMode.CREATION);
+				editButton.setEnabled(mMode == Mode.CREATION);
 			}
 			for (final SubDisciplineItemValue subValue : mSubValues)
 			{
@@ -130,7 +132,7 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 	}
 	
 	@Override
-	public CreationMode getCreationMode()
+	public Mode getCreationMode()
 	{
 		return mMode;
 	}
@@ -330,7 +332,7 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 							mContext, action);
 				}
 			});
-			edit.setEnabled(mMode == CreationMode.CREATION);
+			edit.setEnabled(mMode == Mode.CREATION);
 			mEditButtons.add(edit);
 			numberAndName.addView(edit);
 		}
@@ -403,7 +405,7 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 	}
 	
 	@Override
-	public boolean canIncrease(final CreationMode aMode)
+	public boolean canIncrease(final Mode aMode)
 	{
 		switch (aMode)
 		{
@@ -418,7 +420,7 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 	}
 	
 	@Override
-	public boolean canDecrease(final CreationMode aMode)
+	public boolean canDecrease(final Mode aMode)
 	{
 		switch (aMode)
 		{
@@ -519,7 +521,7 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 	{
 		if (canIncrease())
 		{
-			if (mMode == CreationMode.FREE_POINTS)
+			if (mMode == Mode.FREE_POINTS)
 			{
 				mTempPoints++ ;
 				mPoints.decrease(getItem().getFreePointsCost());
@@ -536,7 +538,7 @@ public class DisciplineItemValue implements ItemValue<DisciplineItem>
 	{
 		if (canDecrease())
 		{
-			if (mMode == CreationMode.FREE_POINTS)
+			if (mMode == Mode.FREE_POINTS)
 			{
 				mTempPoints-- ;
 				mPoints.increase(getItem().getFreePointsCost());
