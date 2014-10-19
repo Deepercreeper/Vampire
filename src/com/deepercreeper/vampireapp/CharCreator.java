@@ -2,10 +2,10 @@ package com.deepercreeper.vampireapp;
 
 import com.deepercreeper.vampireapp.controller.BackgroundController;
 import com.deepercreeper.vampireapp.controller.BackgroundValueController;
-import com.deepercreeper.vampireapp.controller.Mode;
 import com.deepercreeper.vampireapp.controller.DisciplineController;
 import com.deepercreeper.vampireapp.controller.DisciplineValueController;
 import com.deepercreeper.vampireapp.controller.ItemValue.UpdateAction;
+import com.deepercreeper.vampireapp.controller.Mode;
 import com.deepercreeper.vampireapp.controller.PropertyController;
 import com.deepercreeper.vampireapp.controller.PropertyValueController;
 import com.deepercreeper.vampireapp.controller.SimpleController;
@@ -14,28 +14,32 @@ import com.deepercreeper.vampireapp.controller.ValueController.PointHandler;
 
 public class CharCreator
 {
-	public static final int					MIN_GENERATION			= 8, DEFAULT_GENERATION = 12, MAX_GENERATION = 12, START_FREE_POINTS = 15,
-			MAX_VOLITION_POINTS = 20, VOLITION_POINTS_COST = 2;
+	public static final int					MIN_GENERATION		= 8, MAX_GENERATION = 12, START_FREE_POINTS = 15;
 	
-	private static final int				START_VOLITION_POINTS	= 10;
+	private static final int				MAX_VOLITION_POINTS	= 20, MAX_PATH_POINTS = 10, DEFAULT_GENERATION = 12, START_VOLITION_POINTS = 5,
+			START_PATH_POINTS = 5, VOLITION_POINTS_COST = 2, PATH_POINTS_COST = 1;
 	
 	private final MainActivity				mActivity;
 	
-	private String							mName					= "";
+	private String							mName				= "";
 	
-	private String							mConcept				= "";
+	private String							mConcept			= "";
 	
 	private String							mNature;
 	
 	private String							mBehavior;
 	
+	private String							mPath				= null;
+	
 	private Clan							mClan;
 	
-	private int								mGeneration				= DEFAULT_GENERATION;
+	private int								mPathPoints			= START_PATH_POINTS;
 	
-	private int								mFreePoints				= START_FREE_POINTS;
+	private int								mGeneration			= DEFAULT_GENERATION;
 	
-	private int								mVolitionPoints			= START_VOLITION_POINTS;
+	private int								mFreePoints			= START_FREE_POINTS;
+	
+	private int								mVolitionPoints		= START_VOLITION_POINTS;
 	
 	private final DisciplineValueController	mDisciplines;
 	
@@ -80,6 +84,7 @@ public class CharCreator
 				mSimpleValues.updateValues(false);
 				mBackgrounds.updateValues(false);
 				updateVolition();
+				updatePath();
 			}
 		};
 		final UpdateAction updateSimpleOthers = new UpdateAction()
@@ -90,6 +95,7 @@ public class CharCreator
 				mDisciplines.updateValues(false);
 				mBackgrounds.updateValues(false);
 				updateVolition();
+				updatePath();
 			}
 		};
 		final UpdateAction updateBackgroundOthers = new UpdateAction()
@@ -100,6 +106,7 @@ public class CharCreator
 				mDisciplines.updateValues(false);
 				mSimpleValues.updateValues(false);
 				updateVolition();
+				updatePath();
 			}
 		};
 		mDisciplines = new DisciplineValueController(aDisciplines, mActivity, Mode.CREATION, points, updateDisciplineOthers);
@@ -111,12 +118,46 @@ public class CharCreator
 		setClan(aClan, true);
 	}
 	
+	public int getPathPoints()
+	{
+		return mPathPoints;
+	}
+	
+	public void setPath(final String aPath)
+	{
+		mPath = aPath;
+		if (mPath == null)
+		{
+			resetPath(true);
+		}
+		updatePath();
+	}
+	
+	public void resetPath(final boolean aAddFreePoints)
+	{
+		if (aAddFreePoints)
+		{
+			mFreePoints += (mPathPoints - START_PATH_POINTS) * PATH_POINTS_COST;
+			updateFreePointsValues();
+		}
+		mPathPoints = START_PATH_POINTS;
+		mActivity.setPathPoints(mPathPoints);
+		updatePath();
+		mActivity.setFreePoints(mFreePoints);
+	}
+	
+	public String getPath()
+	{
+		return mPath;
+	}
+	
 	public void updateFreePointsValues()
 	{
 		mDisciplines.updateValues(false);
 		mSimpleValues.updateValues(false);
 		mBackgrounds.updateValues(false);
 		updateVolition();
+		updatePath();
 	}
 	
 	private void updateVolition()
@@ -128,6 +169,36 @@ public class CharCreator
 	public int getVolitionPoints()
 	{
 		return mVolitionPoints;
+	}
+	
+	private void updatePath()
+	{
+		mActivity.setPathChangeEnabled(mPathPoints < MAX_PATH_POINTS && mFreePoints >= PATH_POINTS_COST, mPathPoints > START_PATH_POINTS,
+				mPath != null);
+	}
+	
+	public void increasePathPoints()
+	{
+		if (mPathPoints < MAX_PATH_POINTS && mFreePoints >= PATH_POINTS_COST)
+		{
+			mPathPoints++ ;
+			mFreePoints -= PATH_POINTS_COST;
+			updateFreePointsValues();
+			mActivity.setPathPoints(mPathPoints);
+			mActivity.setFreePoints(mFreePoints);
+		}
+	}
+	
+	public void decreasePathPoints()
+	{
+		if (mPathPoints > START_PATH_POINTS)
+		{
+			mPathPoints-- ;
+			mFreePoints += PATH_POINTS_COST;
+			updateFreePointsValues();
+			mActivity.setPathPoints(mPathPoints);
+			mActivity.setFreePoints(mFreePoints);
+		}
 	}
 	
 	public void increaseVolitionPoints()
@@ -161,6 +232,7 @@ public class CharCreator
 		mSimpleValues.resetTempPoints();
 		mFreePoints = START_FREE_POINTS;
 		mVolitionPoints = START_VOLITION_POINTS;
+		resetPath(false);
 		mDisciplines.updateValues(false);
 		mBackgrounds.updateValues(false);
 		mSimpleValues.updateValues(false);

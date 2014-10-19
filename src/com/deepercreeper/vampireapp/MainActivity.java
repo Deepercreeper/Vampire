@@ -16,6 +16,9 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
@@ -25,8 +28,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.deepercreeper.vampireapp.controller.BackgroundController;
-import com.deepercreeper.vampireapp.controller.Mode;
 import com.deepercreeper.vampireapp.controller.DisciplineController;
+import com.deepercreeper.vampireapp.controller.Mode;
 import com.deepercreeper.vampireapp.controller.PropertyController;
 import com.deepercreeper.vampireapp.controller.SimpleController;
 import com.deepercreeper.vampireapp.util.ViewUtil;
@@ -49,6 +52,8 @@ public class MainActivity extends Activity
 	private BackgroundController			mBackgrounds;
 	
 	private State							mState;
+	
+	private final List<String>				mPaths				= new ArrayList<String>();
 	
 	private final HashMap<String, Clan>		mClans				= new HashMap<String, Clan>();
 	
@@ -180,6 +185,15 @@ public class MainActivity extends Activity
 				mNatureAndBehavior.add(natureAndBehavior);
 			}
 			Collections.sort(mNatureAndBehavior);
+		}
+		
+		// Initialize paths
+		{
+			for (final String path : getResources().getStringArray(R.array.paths))
+			{
+				mPaths.add(path);
+			}
+			Collections.sort(mPaths);
 		}
 	}
 	
@@ -366,8 +380,18 @@ public class MainActivity extends Activity
 		final ProgressBar pointsBar = (ProgressBar) findViewById(R.id.free_points_bar);
 		pointsBar.setMax(CharCreator.START_FREE_POINTS);
 		
+		mCreator.resetPath(false);
 		setFreePoints(mCreator.getFreePoints());
 		setVolitionPoints(mCreator.getVolitionPoints());
+		setPathPoints(mCreator.getPathPoints());
+		
+		final String currentPath = mCreator.getPath();
+		int pathPos = 0;
+		if (currentPath != null)
+		{
+			pathPos = mPaths.indexOf(currentPath);
+		}
+		((Spinner) findViewById(R.id.path_spinner)).setSelection(pathPos);
 		
 		final Button showDescriptions = (Button) findViewById(R.id.show_descriptions_button);
 		showDescriptions.setOnClickListener(new OnClickListener()
@@ -408,6 +432,44 @@ public class MainActivity extends Activity
 			}
 		});
 		
+		final CheckBox enablePath = (CheckBox) findViewById(R.id.enable_path_checkbox);
+		enablePath.setOnCheckedChangeListener(new OnCheckedChangeListener()
+		{
+			@Override
+			public void onCheckedChanged(final CompoundButton aButtonView, final boolean aIsChecked)
+			{
+				if (aIsChecked)
+				{
+					mCreator.setPath(((Spinner) findViewById(R.id.path_spinner)).getSelectedItem().toString());
+				}
+				else
+				{
+					mCreator.setPath(null);
+				}
+				((Spinner) findViewById(R.id.path_spinner)).setEnabled(aIsChecked);
+			}
+		});
+		
+		final ImageButton increasePath = (ImageButton) findViewById(R.id.increase_path);
+		increasePath.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aArg0)
+			{
+				mCreator.increasePathPoints();
+			}
+		});
+		
+		final ImageButton decreasePath = (ImageButton) findViewById(R.id.decrease_path);
+		decreasePath.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aArg0)
+			{
+				mCreator.decreasePathPoints();
+			}
+		});
+		
 		final Button showCreation = (Button) findViewById(R.id.show_creation_button);
 		showCreation.setOnClickListener(new OnClickListener()
 		{
@@ -431,6 +493,13 @@ public class MainActivity extends Activity
 		});
 	}
 	
+	public void setPathChangeEnabled(final boolean aCanIncrease, final boolean aCanDecrease, final boolean aCanChange)
+	{
+		((ImageButton) findViewById(R.id.decrease_path)).setEnabled(aCanDecrease && aCanChange);
+		((ImageButton) findViewById(R.id.increase_path)).setEnabled(aCanIncrease && aCanChange);
+		((Spinner) findViewById(R.id.path_spinner)).setEnabled(aCanChange);
+	}
+	
 	public void setVolitionChangeEnabled(final boolean aCanIncrease, final boolean aCanDecrease)
 	{
 		((ImageButton) findViewById(R.id.decrease_volition)).setEnabled(aCanDecrease);
@@ -440,6 +509,11 @@ public class MainActivity extends Activity
 	public void setVolitionPoints(final int aValue)
 	{
 		((TextView) findViewById(R.id.volition_value)).setText("" + aValue);
+	}
+	
+	public void setPathPoints(final int aValue)
+	{
+		((TextView) findViewById(R.id.path_value)).setText("" + aValue);
 	}
 	
 	public void setFreePoints(final int aValue)

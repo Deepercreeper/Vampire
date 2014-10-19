@@ -183,4 +183,15 @@
         <item>-Anemia:4</item>
         <item>-Muteness:4</item>
     </string-array>
+    
+    <string-array name = "paths">
+        <item>Path of blood</item>
+        <item>Path of heaven</item>
+        <item>Path of humanity</item>
+        <item>Path of paradox</item>
+        <item>Path of chivalry</item>
+        <item>Path of devil</item>
+        <item>Path of animal</item>
+        <item>Path of thyphon</item>
+    </string-array>
 </resources>
