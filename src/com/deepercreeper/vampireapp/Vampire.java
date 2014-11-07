@@ -332,6 +332,7 @@ public class Vampire
 		});
 		
 		final CheckBox enablePath = (CheckBox) mActivity.getView(R.id.enable_path_checkbox);
+		enablePath.setChecked(mCharCreator.hasPath());
 		enablePath.setOnCheckedChangeListener(new OnCheckedChangeListener()
 		{
 			@Override

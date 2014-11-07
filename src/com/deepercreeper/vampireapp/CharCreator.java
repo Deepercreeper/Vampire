@@ -119,6 +119,11 @@ public class CharCreator
 		mVampire.setPathPoints(mPathPoints);
 	}
 	
+	public boolean hasPath()
+	{
+		return mPath != null;
+	}
+	
 	public String getPath()
 	{
 		return mPath;
