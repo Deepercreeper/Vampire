@@ -13,7 +13,7 @@ import java.util.Set;
  * 
  * @author Vincent
  */
-public class DisciplineItem implements Item
+public class DisciplineItem extends ItemImpl
 {
 	private static final String							SUB_PREFIX			= ">", PARENT_PREFIX = "#", NAME_DELIM = ":", ABILITIES_DELIM = ";",
 			SUB_ITEMS_DELIM = ",";
@@ -25,10 +25,6 @@ public class DisciplineItem implements Item
 	 */
 	public static final int								MAX_SUB_DISCIPLINES	= 2;
 	
-	private final String								mName;
-	
-	private final String								mDescription;
-	
 	private final HashMap<String, SubDisciplineItem>	mSubItems			= new HashMap<String, SubDisciplineItem>();
 	
 	private final List<SubDisciplineItem>				mSubItemNames		= new ArrayList<SubDisciplineItem>();
@@ -37,8 +33,7 @@ public class DisciplineItem implements Item
 	
 	protected DisciplineItem(final String aName)
 	{
-		mName = aName;
-		mDescription = createDescription();
+		super(aName);
 	}
 	
 	/**
@@ -61,12 +56,6 @@ public class DisciplineItem implements Item
 	}
 	
 	@Override
-	public int compareTo(final Item aAnother)
-	{
-		return getName().compareTo(mName);
-	}
-	
-	@Override
 	public boolean equals(final Object aO)
 	{
 		if (aO instanceof DisciplineItem)
@@ -86,12 +75,6 @@ public class DisciplineItem implements Item
 	}
 	
 	@Override
-	public String getDescription()
-	{
-		return mDescription;
-	}
-	
-	@Override
 	public int getMaxStartValue()
 	{
 		return MAX_START_VALUE;
@@ -101,12 +84,6 @@ public class DisciplineItem implements Item
 	public int getMaxValue()
 	{
 		return MAX_VALUE;
-	}
-	
-	@Override
-	public String getName()
-	{
-		return mName;
 	}
 	
 	@Override
@@ -149,12 +126,6 @@ public class DisciplineItem implements Item
 		return mSubItemNames;
 	}
 	
-	@Override
-	public int hashCode()
-	{
-		return mName.hashCode();
-	}
-	
 	/**
 	 * @return whether this is a parent discipline and contains sub disciplines or not.
 	 */
@@ -174,10 +145,11 @@ public class DisciplineItem implements Item
 		mSubItems.put(aName, null);
 	}
 	
-	private String createDescription()
+	@Override
+	protected String createDescription()
 	{
 		// TODO Implement
-		return mName;
+		return getName();
 	}
 	
 	/**

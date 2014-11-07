@@ -18,14 +18,8 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  * 
  * @author Vincent
  */
-public class PropertyItemValue implements ItemValue<PropertyItem>
+public class PropertyItemValue extends ItemValueImpl<PropertyItem>
 {
-	private CharMode		mMode;
-	
-	private final PropertyItem	mItem;
-	
-	private final Context		mContext;
-	
 	private final ImageButton	mIncreaseButton;
 	
 	private final ImageButton	mDecreaseButton;
@@ -33,8 +27,6 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 	private final RadioButton[]	mValueDisplay;
 	
 	private final TableRow		mContainer;
-	
-	private final UpdateAction	mAction;
 	
 	private int					mValueId;
 	
@@ -47,19 +39,19 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 	 *            The context.
 	 * @param aAction
 	 *            The update action.
+	 * @param aGroup
+	 *            The parent group.
 	 * @param aMode
 	 *            The current creation mode.
 	 */
-	public PropertyItemValue(final PropertyItem aItem, final Context aContext, final UpdateAction aAction, final CharMode aMode)
+	public PropertyItemValue(final PropertyItem aItem, final Context aContext, final UpdateAction aAction, final PropertyItemValueGroup aGroup,
+			final CharMode aMode)
 	{
-		mMode = aMode;
-		mItem = aItem;
+		super(aItem, aContext, aAction, aGroup, aMode, null);
 		mIncreaseButton = new ImageButton(aContext);
 		mDecreaseButton = new ImageButton(aContext);
 		mContainer = new TableRow(aContext);
 		mValueDisplay = new RadioButton[getItem().getValue(getItem().getMaxValue())];
-		mContext = aContext;
-		mAction = aAction;
 		mValueId = aItem.getStartValue();
 		init();
 	}
@@ -76,23 +68,11 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 		ViewUtil.release(mContainer, false);
 	}
 	
-	@Override
-	public CharMode getCreationMode()
-	{
-		return mMode;
-	}
-	
-	@Override
-	public void setCreationMode(final CharMode aMode)
-	{
-		mMode = aMode;
-	}
-	
 	private void init()
 	{
 		mContainer.setLayoutParams(ViewUtil.instance().getWrapAll());
 		
-		final TextView valueName = new TextView(mContext);
+		final TextView valueName = new TextView(getContext());
 		valueName.setLayoutParams(ViewUtil.instance().getRowNameShort());
 		valueName.setGravity(Gravity.CENTER_VERTICAL);
 		valueName.setEllipsize(TruncateAt.END);
@@ -100,7 +80,7 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 		valueName.setText(getItem().getName());
 		mContainer.addView(valueName);
 		
-		final GridLayout spinnerGrid = new GridLayout(mContext);
+		final GridLayout spinnerGrid = new GridLayout(getContext());
 		spinnerGrid.setLayoutParams(ViewUtil.instance().getRowWrapAll());
 		{
 			mDecreaseButton.setLayoutParams(ViewUtil.instance().getButtonSize());
@@ -113,14 +93,14 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 				{
 					decrease();
 					refreshValue();
-					mAction.update();
+					getUpdateAction().update();
 				}
 			});
 			spinnerGrid.addView(mDecreaseButton);
 			
 			for (int i = 0; i < mValueDisplay.length; i++ )
 			{
-				final RadioButton valuePoint = new RadioButton(mContext);
+				final RadioButton valuePoint = new RadioButton(getContext());
 				valuePoint.setLayoutParams(ViewUtil.instance().getValueSize());
 				valuePoint.setClickable(false);
 				spinnerGrid.addView(valuePoint);
@@ -137,7 +117,7 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 				{
 					increase();
 					refreshValue();
-					mAction.update();
+					getUpdateAction().update();
 				}
 			});
 			spinnerGrid.addView(mIncreaseButton);
@@ -163,12 +143,6 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 	public TableRow getContainer()
 	{
 		return mContainer;
-	}
-	
-	@Override
-	public PropertyItem getItem()
-	{
-		return mItem;
 	}
 	
 	@Override

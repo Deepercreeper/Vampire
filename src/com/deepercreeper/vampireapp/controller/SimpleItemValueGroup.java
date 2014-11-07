@@ -20,7 +20,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class SimpleItemValueGroup implements ItemValueGroup<SimpleItem>
 {
-	private CharMode								mMode;
+	private CharMode									mMode;
 	
 	private PointHandler								mPoints;
 	
@@ -50,8 +50,8 @@ public class SimpleItemValueGroup implements ItemValueGroup<SimpleItem>
 	 * @param aPoints
 	 *            The caller for free or experience points.
 	 */
-	public SimpleItemValueGroup(final SimpleItemGroup aGroup, final SimpleValueController aController, final Context aContext,
-			final CharMode aMode, final PointHandler aPoints)
+	public SimpleItemValueGroup(final SimpleItemGroup aGroup, final SimpleValueController aController, final Context aContext, final CharMode aMode,
+			final PointHandler aPoints)
 	{
 		mController = aController;
 		mPoints = aPoints;
@@ -68,7 +68,7 @@ public class SimpleItemValueGroup implements ItemValueGroup<SimpleItem>
 		};
 		for (final SimpleItem item : mGroup.getItems())
 		{
-			addValue(new SimpleItemValue(item, mContext, mAction, mMode, mPoints));
+			addValue(new SimpleItemValue(item, mContext, mAction, this, mMode, mPoints));
 		}
 	}
 	

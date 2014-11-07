@@ -19,7 +19,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>, VariableValueGroup<DisciplineItem, DisciplineItemValue>
 {
-	private CharMode										mMode;
+	private CharMode											mMode;
 	
 	private PointHandler										mPoints;
 	
@@ -203,7 +203,7 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	@Override
 	public void addItem(final DisciplineItem aItem)
 	{
-		addValue(new DisciplineItemValue(aItem, mContext, mAction, mMode, mPoints));
+		addValue(new DisciplineItemValue(aItem, mContext, mAction, this, mMode, mPoints));
 	}
 	
 	@Override

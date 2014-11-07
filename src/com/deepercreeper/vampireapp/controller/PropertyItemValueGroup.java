@@ -24,7 +24,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, VariableValueGroup<PropertyItem, PropertyItemValue>
 {
-	private CharMode									mMode;
+	private CharMode										mMode;
 	
 	private final Context									mContext;
 	
@@ -152,7 +152,7 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 	@Override
 	public void addItem(final PropertyItem aItem)
 	{
-		addValue(new PropertyItemValue(aItem, mContext, mAction, mMode));
+		addValue(new PropertyItemValue(aItem, mContext, mAction, this, mMode));
 		resize();
 	}
 	

@@ -18,19 +18,11 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  * 
  * @author Vincent
  */
-public class SimpleItemValue implements ItemValue<SimpleItem>
+public class SimpleItemValue extends ItemValueImpl<SimpleItem>
 {
-	private CharMode		mMode;
-	
-	private PointHandler		mPoints;
-	
-	private final SimpleItem	mItem;
-	
 	private int					mValue;
 	
 	private int					mTempPoints;
-	
-	private final Context		mContext;
 	
 	private final ImageButton	mIncreaseButton;
 	
@@ -39,8 +31,6 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 	private final RadioButton[]	mValueDisplay;
 	
 	private final TableRow		mContainer;
-	
-	private final UpdateAction	mAction;
 	
 	/**
 	 * Creates a new simple item value.
@@ -56,38 +46,16 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 	 * @param aPoints
 	 *            The points handler.
 	 */
-	public SimpleItemValue(final SimpleItem aItem, final Context aContext, final UpdateAction aAction, final CharMode aMode,
-			final PointHandler aPoints)
+	public SimpleItemValue(final SimpleItem aItem, final Context aContext, final UpdateAction aAction, final SimpleItemValueGroup aGroup,
+			final CharMode aMode, final PointHandler aPoints)
 	{
-		mMode = aMode;
-		mPoints = aPoints;
-		mItem = aItem;
-		mContext = aContext;
-		mAction = aAction;
-		mValueDisplay = new RadioButton[mItem.getMaxValue()];
-		mContainer = new TableRow(mContext);
-		mIncreaseButton = new ImageButton(mContext);
-		mDecreaseButton = new ImageButton(mContext);
-		mValue = mItem.getStartValue();
+		super(aItem, aContext, aAction, aGroup, aMode, aPoints);
+		mValueDisplay = new RadioButton[getItem().getMaxValue()];
+		mContainer = new TableRow(getContext());
+		mIncreaseButton = new ImageButton(getContext());
+		mDecreaseButton = new ImageButton(getContext());
+		mValue = getItem().getStartValue();
 		init();
-	}
-	
-	@Override
-	public void setPoints(final PointHandler aPoints)
-	{
-		mPoints = aPoints;
-	}
-	
-	@Override
-	public void setCreationMode(final CharMode aMode)
-	{
-		mMode = aMode;
-	}
-	
-	@Override
-	public CharMode getCreationMode()
-	{
-		return mMode;
 	}
 	
 	@Override
@@ -106,7 +74,7 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 	{
 		mContainer.setLayoutParams(ViewUtil.instance().getTableWrapAll());
 		
-		final TextView valueName = new TextView(mContext);
+		final TextView valueName = new TextView(getContext());
 		valueName.setLayoutParams(ViewUtil.instance().getRowNameLong());
 		valueName.setText(getItem().getName());
 		valueName.setGravity(Gravity.CENTER_VERTICAL);
@@ -114,7 +82,7 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 		valueName.setEllipsize(TruncateAt.END);
 		mContainer.addView(valueName);
 		
-		final GridLayout spinnerGrid = new GridLayout(mContext);
+		final GridLayout spinnerGrid = new GridLayout(getContext());
 		spinnerGrid.setLayoutParams(ViewUtil.instance().getRowWrapAll());
 		{
 			mDecreaseButton.setLayoutParams(ViewUtil.instance().getButtonSize());
@@ -127,14 +95,14 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 				{
 					decrease();
 					refreshValue();
-					mAction.update();
+					getUpdateAction().update();
 				}
 			});
 			spinnerGrid.addView(mDecreaseButton);
 			
 			for (int i = 0; i < mValueDisplay.length; i++ )
 			{
-				final RadioButton valuePoint = new RadioButton(mContext);
+				final RadioButton valuePoint = new RadioButton(getContext());
 				valuePoint.setLayoutParams(ViewUtil.instance().getValueSize());
 				valuePoint.setClickable(false);
 				spinnerGrid.addView(valuePoint);
@@ -151,7 +119,7 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 				{
 					increase();
 					refreshValue();
-					mAction.update();
+					getUpdateAction().update();
 				}
 			});
 			spinnerGrid.addView(mIncreaseButton);
@@ -218,7 +186,7 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 			case MAIN :
 				return canIncrease() && mValue < getItem().getMaxStartValue();
 			case POINTS :
-				return canIncrease() && mPoints.getPoints() >= getItem().getFreePointsCost();
+				return canIncrease() && getPoints().getPoints() >= getItem().getFreePointsCost();
 			case NORMAL :
 				return canIncrease();
 		}
@@ -245,10 +213,10 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 	{
 		if (canIncrease())
 		{
-			if (mMode == CharMode.POINTS)
+			if (getCreationMode() == CharMode.POINTS)
 			{
 				mTempPoints++ ;
-				mPoints.decrease(getItem().getFreePointsCost());
+				getPoints().decrease(getItem().getFreePointsCost());
 			}
 			else
 			{
@@ -262,21 +230,15 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 	{
 		if (canDecrease())
 		{
-			if (mMode == CharMode.POINTS)
+			if (getCreationMode() == CharMode.POINTS)
 			{
 				mTempPoints-- ;
-				mPoints.increase(getItem().getFreePointsCost());
+				getPoints().increase(getItem().getFreePointsCost());
 			}
 			else
 			{
 				mValue-- ;
 			}
 		}
-	}
-	
-	@Override
-	public SimpleItem getItem()
-	{
-		return mItem;
 	}
 }

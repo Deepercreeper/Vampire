@@ -6,15 +6,11 @@ package com.deepercreeper.vampireapp.controller;
  * 
  * @author Vincent
  */
-public class PropertyItem implements Item
+public class PropertyItem extends ItemImpl
 {
 	private static final String	NAME_DELIM	= ":", NEGATIVE_PREFIX = "-", VALUE_DELIM = ",";
 	
 	private static final int	START_VALUE	= 0;
-	
-	private final String		mName;
-	
-	private final String		mDescription;
 	
 	private int[]				mValues;
 	
@@ -22,9 +18,8 @@ public class PropertyItem implements Item
 	
 	private PropertyItem(final String aName, final boolean aNegative)
 	{
-		mName = aName;
+		super(aName);
 		mNegative = aNegative;
-		mDescription = createDescription();
 	}
 	
 	private void setValues(final int[] aValues)
@@ -89,39 +84,16 @@ public class PropertyItem implements Item
 	}
 	
 	@Override
-	public int compareTo(final Item aAnother)
-	{
-		return getName().compareTo(aAnother.getName());
-	}
-	
-	@Override
 	public int getStartValue()
 	{
 		return START_VALUE;
 	}
 	
 	@Override
-	public String getName()
-	{
-		return mName;
-	}
-	
-	@Override
-	public String getDescription()
-	{
-		return mDescription;
-	}
-	
-	private final String createDescription()
+	protected final String createDescription()
 	{
 		// TODO Implement
-		return mName;
-	}
-	
-	@Override
-	public int hashCode()
-	{
-		return mName.hashCode();
+		return getName();
 	}
 	
 	@Override

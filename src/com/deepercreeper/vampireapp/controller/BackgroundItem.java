@@ -6,7 +6,7 @@ package com.deepercreeper.vampireapp.controller;
  * 
  * @author Vincent
  */
-public class BackgroundItem implements Item
+public class BackgroundItem extends ItemImpl
 {
 	private static final int	MAX_VALUE		= 5, MAX_START_VALUE = 5, START_VALUE = 0, FREE_POINTS_COST = 1;
 	
@@ -15,32 +15,15 @@ public class BackgroundItem implements Item
 	 */
 	public static final int		MAX_BACKGROUNDS	= 5;
 	
-	private final String		mName;
-	
-	private final String		mDescription;
-	
 	private BackgroundItem(final String aName)
 	{
-		mName = aName;
-		mDescription = createDescription();
+		super(aName);
 	}
 	
 	@Override
 	public int getFreePointsCost()
 	{
 		return FREE_POINTS_COST;
-	}
-	
-	private String createDescription()
-	{
-		// TODO Implement
-		return mName;
-	}
-	
-	@Override
-	public String getName()
-	{
-		return mName;
 	}
 	
 	@Override
@@ -62,21 +45,9 @@ public class BackgroundItem implements Item
 	}
 	
 	@Override
-	public String getDescription()
-	{
-		return mDescription;
-	}
-	
-	@Override
 	public int compareTo(final Item aAnother)
 	{
 		return getName().compareTo(aAnother.getName());
-	}
-	
-	@Override
-	public int hashCode()
-	{
-		return mName.hashCode();
 	}
 	
 	@Override
@@ -100,5 +71,12 @@ public class BackgroundItem implements Item
 	public static BackgroundItem create(final String aData)
 	{
 		return new BackgroundItem(aData);
+	}
+	
+	@Override
+	protected String createDescription()
+	{
+		// TODO Implement
+		return getName();
 	}
 }

@@ -37,15 +37,17 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	 *            The context.
 	 * @param aAction
 	 *            The update action.
+	 * @param aGroup
+	 *            The parent group.
 	 * @param aMode
 	 *            The current creation mode.
 	 * @param aPoints
 	 *            The caller for free or experience points.
 	 */
-	public SubDisciplineItemValue(final SubDisciplineItem aItem, final Context aContext, final UpdateAction aAction, final CharMode aMode,
-			final PointHandler aPoints)
+	public SubDisciplineItemValue(final SubDisciplineItem aItem, final Context aContext, final UpdateAction aAction,
+			final DisciplineItemValueGroup aGroup, final CharMode aMode, final PointHandler aPoints)
 	{
-		super(aItem, aContext, aAction, aMode, aPoints);
+		super(aItem, aContext, aAction, aGroup, aMode, aPoints);
 	}
 	
 	@Override
@@ -122,8 +124,8 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 						@Override
 						public void select(final SubDisciplineItem aItem)
 						{
-							final SubDisciplineItemValue value = new SubDisciplineItemValue(aItem, getContext(), getAction(), getCreationMode(),
-									mPoints);
+							final SubDisciplineItemValue value = new SubDisciplineItemValue(aItem, getContext(), getUpdateAction(), getGroup(),
+									getCreationMode(), getPoints());
 							mParent.setSubValue(aValueIx, value);
 							value.initRow(aRow, aValueIx);
 						}
@@ -165,7 +167,7 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 				{
 					decrease();
 					refreshValue();
-					getAction().update();
+					getUpdateAction().update();
 				}
 			});
 			spinnerGrid.addView(decrease);
@@ -189,13 +191,13 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 				{
 					increase();
 					refreshValue();
-					getAction().update();
+					getUpdateAction().update();
 				}
 			});
 			spinnerGrid.addView(increase);
 			
 			refreshValue();
-			getAction().update();
+			getUpdateAction().update();
 		}
 		aRow.addView(spinnerGrid);
 	}
@@ -259,7 +261,7 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 			case MAIN :
 				return canIncreaseValue();
 			case POINTS :
-				return canIncreaseValue() && mPoints.getPoints() >= getItem().getFreePointsCost();
+				return canIncreaseValue() && getPoints().getPoints() >= getItem().getFreePointsCost();
 			case NORMAL :
 				return canIncrease();
 		}
@@ -278,15 +280,9 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	}
 	
 	@Override
-	public int hashCode()
-	{
-		return getItem().hashCode();
-	}
-	
-	@Override
 	public void setCreationMode(final CharMode aMode)
 	{
-		mMode = aMode;
+		setCreationMode(aMode);
 		mEditButton.setEnabled(getCreationMode() == CharMode.MAIN);
 	}
 	

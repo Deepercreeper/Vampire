@@ -6,28 +6,23 @@ package com.deepercreeper.vampireapp.controller;
  * 
  * @author Vincent
  */
-public class SimpleItem implements Item
+public class SimpleItem extends ItemImpl
 {
-	private final String	mName;
+	private final int	mMaxValue;
 	
-	private final int		mMaxValue;
+	private final int	mFreePointsCost;
 	
-	private final int		mFreePointsCost;
+	private final int	mStartValue;
 	
-	private final int		mStartValue;
-	
-	private final int		mMaxStartValue;
-	
-	private final String	mDescription;
+	private final int	mMaxStartValue;
 	
 	private SimpleItem(final String aName, final int aStartValue, final int aMaxStartValue, final int aMaxValue, final int aFreePointsCost)
 	{
-		mName = aName;
+		super(aName);
 		mFreePointsCost = aFreePointsCost;
 		mMaxValue = aMaxValue;
 		mStartValue = aStartValue;
 		mMaxStartValue = aMaxStartValue;
-		mDescription = createDescription();
 	}
 	
 	@Override
@@ -54,34 +49,11 @@ public class SimpleItem implements Item
 		return mStartValue;
 	}
 	
-	private String createDescription()
+	@Override
+	protected String createDescription()
 	{
 		// TODO Implement
-		return mName;
-	}
-	
-	@Override
-	public final String getDescription()
-	{
-		return mDescription;
-	}
-	
-	@Override
-	public String getName()
-	{
-		return mName;
-	}
-	
-	@Override
-	public int compareTo(final Item aAnother)
-	{
-		return getName().compareTo(aAnother.getName());
-	}
-	
-	@Override
-	public int hashCode()
-	{
-		return mName.hashCode();
+		return getName();
 	}
 	
 	@Override

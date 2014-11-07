@@ -185,4 +185,10 @@ public class Ability implements Comparable<Ability>
 		}
 		return ability;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "<" + getName() + ":" + ">";
+	}
 }

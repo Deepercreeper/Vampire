@@ -18,31 +18,19 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  * 
  * @author Vincent
  */
-public class BackgroundItemValue implements ItemValue<BackgroundItem>
+public class BackgroundItemValue extends ItemValueImpl<BackgroundItem>
 {
-	private CharMode					mMode;
+	private final ImageButton	mIncreaseButton;
 	
-	private PointHandler					mPoints;
+	private final ImageButton	mDecreaseButton;
 	
-	private final BackgroundItem			mItem;
+	private RadioButton[]		mValueDisplay;
 	
-	private final Context					mContext;
+	private TableRow			mContainer;
 	
-	private final BackgroundItemValueGroup	mGroup;
+	private int					mValue;
 	
-	private final ImageButton				mIncreaseButton;
-	
-	private final ImageButton				mDecreaseButton;
-	
-	private RadioButton[]					mValueDisplay;
-	
-	private TableRow						mContainer;
-	
-	private final UpdateAction				mAction;
-	
-	private int								mValue;
-	
-	private int								mTempPoints;
+	private int					mTempPoints;
 	
 	/**
 	 * Creates a new background value.
@@ -63,21 +51,16 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	public BackgroundItemValue(final BackgroundItem aItem, final Context aContext, final UpdateAction aAction, final BackgroundItemValueGroup aGroup,
 			final CharMode aMode, final PointHandler aPoints)
 	{
-		mMode = aMode;
-		mPoints = aPoints;
+		super(aItem, aContext, aAction, aGroup, aMode, aPoints);
 		mIncreaseButton = new ImageButton(aContext);
 		mDecreaseButton = new ImageButton(aContext);
-		mItem = aItem;
-		mContext = aContext;
-		mAction = aAction;
-		mGroup = aGroup;
-		mValue = mItem.getStartValue();
+		mValue = getItem().getStartValue();
 	}
 	
 	@Override
-	public void setPoints(final PointHandler aPoints)
+	protected BackgroundItemValueGroup getGroup()
 	{
-		mPoints = aPoints;
+		return (BackgroundItemValueGroup) super.getGroup();
 	}
 	
 	@Override
@@ -94,18 +77,6 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 		ViewUtil.release(mContainer, true);
 	}
 	
-	@Override
-	public void setCreationMode(final CharMode aMode)
-	{
-		mMode = aMode;
-	}
-	
-	@Override
-	public CharMode getCreationMode()
-	{
-		return mMode;
-	}
-	
 	/**
 	 * Initializes a table row so that all needed widgets are added to handle this value.
 	 * 
@@ -120,17 +91,17 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 		
 		aRow.removeAllViews();
 		
-		final TextView valueName = new TextView(mContext);
+		final TextView valueName = new TextView(getContext());
 		valueName.setLayoutParams(ViewUtil.instance().getRowNameShort());
 		valueName.setGravity(Gravity.CENTER_VERTICAL);
 		valueName.setEllipsize(TruncateAt.END);
 		valueName.setSingleLine();
-		valueName.setText(mItem.getName());
+		valueName.setText(getItem().getName());
 		mContainer.addView(valueName);
 		
-		if (mMode == CharMode.MAIN)
+		if (getCreationMode() == CharMode.MAIN)
 		{
-			final ImageButton edit = new ImageButton(mContext);
+			final ImageButton edit = new ImageButton(getContext());
 			edit.setLayoutParams(ViewUtil.instance().getRowButtonSize());
 			edit.setContentDescription("Edit");
 			edit.setImageResource(android.R.drawable.ic_menu_edit);
@@ -139,16 +110,16 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 				@Override
 				public void onClick(final View aV)
 				{
-					mGroup.editValue(BackgroundItemValue.this);
+					getGroup().editValue(BackgroundItemValue.this);
 				}
 			});
 			mContainer.addView(edit);
 		}
 		
-		final GridLayout spinnerGrid = new GridLayout(mContext);
+		final GridLayout spinnerGrid = new GridLayout(getContext());
 		spinnerGrid.setLayoutParams(ViewUtil.instance().getRowWrapAll());
 		{
-			mValueDisplay = new RadioButton[mItem.getMaxValue()];
+			mValueDisplay = new RadioButton[getItem().getMaxValue()];
 			
 			mDecreaseButton.setLayoutParams(ViewUtil.instance().getButtonSize());
 			mDecreaseButton.setContentDescription("Decrease");
@@ -160,14 +131,14 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 				{
 					decrease();
 					refreshValue();
-					mAction.update();
+					getUpdateAction().update();
 				}
 			});
 			spinnerGrid.addView(mDecreaseButton);
 			
 			for (int i = 0; i < mValueDisplay.length; i++ )
 			{
-				final RadioButton valuePoint = new RadioButton(mContext);
+				final RadioButton valuePoint = new RadioButton(getContext());
 				valuePoint.setLayoutParams(ViewUtil.instance().getValueSize());
 				valuePoint.setClickable(false);
 				spinnerGrid.addView(valuePoint);
@@ -184,7 +155,7 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 				{
 					increase();
 					refreshValue();
-					mAction.update();
+					getUpdateAction().update();
 				}
 			});
 			spinnerGrid.addView(mIncreaseButton);
@@ -220,7 +191,8 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 			case MAIN :
 				return canIncrease() && mValue < getItem().getMaxStartValue();
 			case POINTS :
-				return canIncrease() && mValue + mTempPoints < getItem().getMaxStartValue() && mPoints.getPoints() >= mItem.getFreePointsCost();
+				return canIncrease() && mValue + mTempPoints < getItem().getMaxStartValue()
+						&& getPoints().getPoints() >= getItem().getFreePointsCost();
 			case NORMAL :
 				return canIncrease();
 		}
@@ -260,10 +232,10 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	{
 		if (canIncrease())
 		{
-			if (mMode == CharMode.POINTS)
+			if (getCreationMode() == CharMode.POINTS)
 			{
 				mTempPoints++ ;
-				mPoints.decrease(getItem().getFreePointsCost());
+				getPoints().decrease(getItem().getFreePointsCost());
 			}
 			else
 			{
@@ -283,10 +255,10 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	{
 		if (canDecrease())
 		{
-			if (mMode == CharMode.POINTS)
+			if (getCreationMode() == CharMode.POINTS)
 			{
 				mTempPoints-- ;
-				mPoints.increase(getItem().getFreePointsCost());
+				getPoints().increase(getItem().getFreePointsCost());
 			}
 			else
 			{
@@ -299,12 +271,6 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	public int getValue()
 	{
 		return mValue + mTempPoints;
-	}
-	
-	@Override
-	public BackgroundItem getItem()
-	{
-		return mItem;
 	}
 	
 	@Override

@@ -77,7 +77,8 @@ public class SubDisciplineItem extends DisciplineItem
 		return mDescription;
 	}
 	
-	private String createDescription()
+	@Override
+	protected String createDescription()
 	{
 		// TODO Implement
 		return getName();

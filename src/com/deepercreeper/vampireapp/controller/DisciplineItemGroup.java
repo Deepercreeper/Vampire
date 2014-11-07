@@ -1,67 +1,31 @@
 package com.deepercreeper.vampireapp.controller;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-
 /**
  * A group of discipline items.
  * 
  * @author Vincent
  */
-public class DisciplineItemGroup implements ItemGroup<DisciplineItem>
+public class DisciplineItemGroup extends ItemGroupImpl<DisciplineItem>
 {
-	private final String							mName;
-	
-	private final List<DisciplineItem>				mItems		= new ArrayList<DisciplineItem>();
-	
-	private final HashMap<String, DisciplineItem>	mItemNames	= new HashMap<String, DisciplineItem>();
-	
 	private DisciplineItemGroup(final String aName)
 	{
-		mName = aName;
-	}
-	
-	@Override
-	public List<DisciplineItem> getItems()
-	{
-		return mItems;
-	}
-	
-	private void addItem(final DisciplineItem aItem)
-	{
-		mItems.add(aItem);
-		mItemNames.put(aItem.getName(), aItem);
-		Collections.sort(mItems);
+		super(aName);
 	}
 	
 	private void initParents()
 	{
-		for (final DisciplineItem parent : mItems)
+		for (final DisciplineItem parent : getItems())
 		{
 			if (parent.isParentItem())
 			{
 				for (final String subItemName : parent.getSubItemNames())
 				{
-					final SubDisciplineItem subItem = (SubDisciplineItem) mItemNames.get(subItemName);
+					final SubDisciplineItem subItem = (SubDisciplineItem) getItem(subItemName);
 					parent.addSubItem(subItem);
 					subItem.setParent(parent);
 				}
 			}
 		}
-	}
-	
-	@Override
-	public DisciplineItem getItem(final String aName)
-	{
-		return mItemNames.get(aName);
-	}
-	
-	@Override
-	public String getName()
-	{
-		return mName;
 	}
 	
 	/**
