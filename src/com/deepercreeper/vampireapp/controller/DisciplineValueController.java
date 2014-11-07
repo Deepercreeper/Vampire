@@ -22,7 +22,7 @@ public class DisciplineValueController implements ValueController<DisciplineItem
 	
 	private final UpdateAction				mUpdateOthers;
 	
-	private Mode					mMode;
+	private CharMode						mMode;
 	
 	private final Context					mContext;
 	
@@ -50,7 +50,7 @@ public class DisciplineValueController implements ValueController<DisciplineItem
 	 * @param aUpdateOthers
 	 *            The update others action.
 	 */
-	public DisciplineValueController(final DisciplineController aController, final Context aContext, final Mode aMode,
+	public DisciplineValueController(final DisciplineController aController, final Context aContext, final CharMode aMode,
 			final PointHandler aPoints, final UpdateAction aUpdateOthers)
 	{
 		mMode = aMode;
@@ -141,14 +141,14 @@ public class DisciplineValueController implements ValueController<DisciplineItem
 	}
 	
 	@Override
-	public void setCreationMode(final Mode aMode)
+	public void setCreationMode(final CharMode aMode)
 	{
 		mMode = aMode;
 		mDisciplines.setCreationMode(mMode);
 	}
 	
 	@Override
-	public Mode getCreationMode()
+	public CharMode getCreationMode()
 	{
 		return mMode;
 	}
@@ -156,21 +156,24 @@ public class DisciplineValueController implements ValueController<DisciplineItem
 	@Override
 	public void updateValues(final boolean aUpdateOthers)
 	{
-		switch (mMode)
-		{
-			case CREATION :
-				mDisciplines.updateValues(mDisciplines.getValue() < mController.getMaxCreationValue(), true);
-				break;
-			case FREE_POINTS :
-				mDisciplines.updateValues(true, true);
-				break;
-			case NORMAL :
-				mDisciplines.updateValues(true, false);
-				break;
-		}
 		if (aUpdateOthers)
 		{
 			mUpdateOthers.update();
+		}
+		else
+		{
+			switch (mMode)
+			{
+				case MAIN :
+					mDisciplines.updateValues(mDisciplines.getValue() < mController.getMaxCreationValue(), true);
+					break;
+				case POINTS :
+					mDisciplines.updateValues(true, true);
+					break;
+				case NORMAL :
+					mDisciplines.updateValues(true, false);
+					break;
+			}
 		}
 	}
 	

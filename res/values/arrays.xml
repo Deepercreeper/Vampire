@@ -34,10 +34,10 @@
         <item>Verteidiger</item>
         <item>Zelebrant</item>
     </string-array>
-    <string-array name="clan">
+    <string-array name="clans">
         <item>Assamiten:Geschwindigkeit,Quietus,Verdunkelung</item>
         <item>Brujah:Geschwindigkeit,Präsenz,Stärke</item>
-        <item>Caitiff</item>
+        <item>Caitiff:;13</item>
         <item>Gangrel:Gestaltwandel,Seelenstärke,Tierhaftigkeit</item>
         <item>Jünger des Seth:Präsenz,Serpentis,Verdunkelung</item>
         <item>Kappadozianer:Auspex,Mortis,Seelenstärke</item>
@@ -49,9 +49,6 @@
         <item>Tremere:Auspex,Beherrschung,Thaumaturgie</item>
         <item>Tzimisce:Auspex,Fleischformen,Tierhaftigkeit</item>
         <item>Ventrue:Beherrschung,Präsenz,Seelenstärke</item>
-    </string-array>
-    <string-array name="clan_generations">
-        <item>Caitiff:13</item>
     </string-array>
     <string-array name="disciplines">
         <item>Auspex:Geschärfte Sinne,1;Seelenschau,2,Wahrnehmung#Empathie;Geistige Berührung,3,Wahrnehmung#Empathie;Geraubte Geheimnisse,4,Intelligenz#Ausflüchte;Animawandeln,5,Wahrnehmung#Okkultismus;Weitsicht,6,Wahrnehmung#Empathie</item>

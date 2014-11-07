@@ -20,7 +20,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class SimpleItemValue implements ItemValue<SimpleItem>
 {
-	private Mode		mMode;
+	private CharMode		mMode;
 	
 	private PointHandler		mPoints;
 	
@@ -56,7 +56,7 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 	 * @param aPoints
 	 *            The points handler.
 	 */
-	public SimpleItemValue(final SimpleItem aItem, final Context aContext, final UpdateAction aAction, final Mode aMode,
+	public SimpleItemValue(final SimpleItem aItem, final Context aContext, final UpdateAction aAction, final CharMode aMode,
 			final PointHandler aPoints)
 	{
 		mMode = aMode;
@@ -79,13 +79,13 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 	}
 	
 	@Override
-	public void setCreationMode(final Mode aMode)
+	public void setCreationMode(final CharMode aMode)
 	{
 		mMode = aMode;
 	}
 	
 	@Override
-	public Mode getCreationMode()
+	public CharMode getCreationMode()
 	{
 		return mMode;
 	}
@@ -211,13 +211,13 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 	}
 	
 	@Override
-	public boolean canIncrease(final Mode aMode)
+	public boolean canIncrease(final CharMode aMode)
 	{
 		switch (aMode)
 		{
-			case CREATION :
+			case MAIN :
 				return canIncrease() && mValue < getItem().getMaxStartValue();
-			case FREE_POINTS :
+			case POINTS :
 				return canIncrease() && mPoints.getPoints() >= getItem().getFreePointsCost();
 			case NORMAL :
 				return canIncrease();
@@ -226,13 +226,13 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 	}
 	
 	@Override
-	public boolean canDecrease(final Mode aMode)
+	public boolean canDecrease(final CharMode aMode)
 	{
 		switch (aMode)
 		{
-			case CREATION :
+			case MAIN :
 				return canDecrease();
-			case FREE_POINTS :
+			case POINTS :
 				return mTempPoints > 0;
 			case NORMAL :
 				return false;
@@ -245,7 +245,7 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 	{
 		if (canIncrease())
 		{
-			if (mMode == Mode.FREE_POINTS)
+			if (mMode == CharMode.POINTS)
 			{
 				mTempPoints++ ;
 				mPoints.decrease(getItem().getFreePointsCost());
@@ -262,7 +262,7 @@ public class SimpleItemValue implements ItemValue<SimpleItem>
 	{
 		if (canDecrease())
 		{
-			if (mMode == Mode.FREE_POINTS)
+			if (mMode == CharMode.POINTS)
 			{
 				mTempPoints-- ;
 				mPoints.increase(getItem().getFreePointsCost());

@@ -17,7 +17,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class BackgroundValueController implements ValueController<BackgroundItem>, VariableValueGroup<BackgroundItem, BackgroundItemValue>
 {
-	private Mode					mMode;
+	private CharMode						mMode;
 	
 	private final UpdateAction				mUpdateOthers;
 	
@@ -47,7 +47,7 @@ public class BackgroundValueController implements ValueController<BackgroundItem
 	 * @param aUpdateOthers
 	 *            The update others action.
 	 */
-	public BackgroundValueController(final BackgroundController aController, final Context aContext, final Mode aMode,
+	public BackgroundValueController(final BackgroundController aController, final Context aContext, final CharMode aMode,
 			final PointHandler aPoints, final UpdateAction aUpdateOthers)
 	{
 		mMode = aMode;
@@ -119,13 +119,13 @@ public class BackgroundValueController implements ValueController<BackgroundItem
 	}
 	
 	@Override
-	public Mode getCreationMode()
+	public CharMode getCreationMode()
 	{
 		return mMode;
 	}
 	
 	@Override
-	public void setCreationMode(final Mode aMode)
+	public void setCreationMode(final CharMode aMode)
 	{
 		mMode = aMode;
 		mBackgrounds.setCreationMode(mMode);
@@ -134,21 +134,24 @@ public class BackgroundValueController implements ValueController<BackgroundItem
 	@Override
 	public void updateValues(final boolean aUpdateOthers)
 	{
-		switch (mMode)
-		{
-			case CREATION :
-				mBackgrounds.updateValues(mBackgrounds.getValue() < mController.getMaxCreationValue(), true);
-				break;
-			case FREE_POINTS :
-				mBackgrounds.updateValues(true, true);
-				break;
-			case NORMAL :
-				mBackgrounds.updateValues(true, false);
-				break;
-		}
 		if (aUpdateOthers)
 		{
 			mUpdateOthers.update();
+		}
+		else
+		{
+			switch (mMode)
+			{
+				case MAIN :
+					mBackgrounds.updateValues(mBackgrounds.getValue() < mController.getMaxCreationValue(), true);
+					break;
+				case POINTS :
+					mBackgrounds.updateValues(true, true);
+					break;
+				case NORMAL :
+					mBackgrounds.updateValues(true, false);
+					break;
+			}
 		}
 	}
 	
@@ -171,7 +174,7 @@ public class BackgroundValueController implements ValueController<BackgroundItem
 		
 		mShowPanel.setLayoutParams(ViewUtil.instance().getWrapHeight());
 		mShowPanel.setText(R.string.backgrounds);
-		mShowPanel.setEnabled(mMode != Mode.FREE_POINTS || !mBackgrounds.getValuesList().isEmpty());
+		mShowPanel.setEnabled(mMode != CharMode.POINTS || !mBackgrounds.getValuesList().isEmpty());
 		mShowPanel.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
 		mShowPanel.setOnClickListener(new OnClickListener()
 		{

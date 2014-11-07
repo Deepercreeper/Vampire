@@ -6,17 +6,17 @@ package com.deepercreeper.vampireapp.controller;
  * 
  * @author Vincent
  */
-public enum Mode
+public enum CharMode
 {
 	/**
 	 * This is the first creation mode. Here are the start points and other main options registered.
 	 */
-	CREATION,
+	MAIN,
 	
 	/**
 	 * Here are the bonus points set, that can be given to each character.
 	 */
-	FREE_POINTS,
+	POINTS,
 	
 	/**
 	 * This is the normal game mode. At this time the user needs experience points to increase anything.

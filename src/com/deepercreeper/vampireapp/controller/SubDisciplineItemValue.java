@@ -42,7 +42,7 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	 * @param aPoints
 	 *            The caller for free or experience points.
 	 */
-	public SubDisciplineItemValue(final SubDisciplineItem aItem, final Context aContext, final UpdateAction aAction, final Mode aMode,
+	public SubDisciplineItemValue(final SubDisciplineItem aItem, final Context aContext, final UpdateAction aAction, final CharMode aMode,
 			final PointHandler aPoints)
 	{
 		super(aItem, aContext, aAction, aMode, aPoints);
@@ -99,7 +99,7 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 			mEditButton = new ImageButton(context);
 			mEditButton.setLayoutParams(ViewUtil.instance().getButtonSize());
 			mEditButton.setContentDescription("Edit");
-			mEditButton.setEnabled(getCreationMode() == Mode.CREATION);
+			mEditButton.setEnabled(getCreationMode() == CharMode.MAIN);
 			mEditButton.setImageResource(android.R.drawable.ic_menu_edit);
 			mEditButton.setOnClickListener(new OnClickListener()
 			{
@@ -214,13 +214,13 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	}
 	
 	@Override
-	public boolean canDecrease(final Mode aMode)
+	public boolean canDecrease(final CharMode aMode)
 	{
 		switch (aMode)
 		{
-			case CREATION :
+			case MAIN :
 				return canDecreaseCreation();
-			case FREE_POINTS :
+			case POINTS :
 				return getTempPoints() > 0;
 			case NORMAL :
 				return false;
@@ -252,13 +252,13 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	}
 	
 	@Override
-	public boolean canIncrease(final Mode aMode)
+	public boolean canIncrease(final CharMode aMode)
 	{
 		switch (aMode)
 		{
-			case CREATION :
+			case MAIN :
 				return canIncreaseValue();
-			case FREE_POINTS :
+			case POINTS :
 				return canIncreaseValue() && mPoints.getPoints() >= getItem().getFreePointsCost();
 			case NORMAL :
 				return canIncrease();
@@ -284,10 +284,10 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	}
 	
 	@Override
-	public void setCreationMode(final Mode aMode)
+	public void setCreationMode(final CharMode aMode)
 	{
 		mMode = aMode;
-		mEditButton.setEnabled(getCreationMode() == Mode.CREATION);
+		mEditButton.setEnabled(getCreationMode() == CharMode.MAIN);
 	}
 	
 	@Override

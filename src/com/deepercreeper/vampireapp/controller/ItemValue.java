@@ -36,7 +36,7 @@ public interface ItemValue <T extends Item>
 	/**
 	 * @return whether this group is in creation mode.
 	 */
-	public Mode getCreationMode();
+	public CharMode getCreationMode();
 	
 	/**
 	 * Sets whether this group is in creation mode.
@@ -44,7 +44,7 @@ public interface ItemValue <T extends Item>
 	 * @param aMode
 	 *            Whether this group represents the values inside a character creation.
 	 */
-	public void setCreationMode(Mode aMode);
+	public void setCreationMode(CharMode aMode);
 	
 	/**
 	 * Sets the current points handler.
@@ -61,7 +61,7 @@ public interface ItemValue <T extends Item>
 	 *            Whether the value is used when a character is created.
 	 * @return whether this value is able to be decreased.
 	 */
-	public boolean canDecrease(Mode aMode);
+	public boolean canDecrease(CharMode aMode);
 	
 	/**
 	 * @return whether this value can be increased.
@@ -75,7 +75,7 @@ public interface ItemValue <T extends Item>
 	 *            Whether the value is used when a character is created.
 	 * @return whether this value is able to be increased.
 	 */
-	public boolean canIncrease(Mode aMode);
+	public boolean canIncrease(CharMode aMode);
 	
 	/**
 	 * Increases this value if possible.

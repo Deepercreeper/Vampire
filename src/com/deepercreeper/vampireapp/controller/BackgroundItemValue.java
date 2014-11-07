@@ -20,7 +20,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class BackgroundItemValue implements ItemValue<BackgroundItem>
 {
-	private Mode					mMode;
+	private CharMode					mMode;
 	
 	private PointHandler					mPoints;
 	
@@ -61,7 +61,7 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	 *            The points handler.
 	 */
 	public BackgroundItemValue(final BackgroundItem aItem, final Context aContext, final UpdateAction aAction, final BackgroundItemValueGroup aGroup,
-			final Mode aMode, final PointHandler aPoints)
+			final CharMode aMode, final PointHandler aPoints)
 	{
 		mMode = aMode;
 		mPoints = aPoints;
@@ -95,13 +95,13 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	}
 	
 	@Override
-	public void setCreationMode(final Mode aMode)
+	public void setCreationMode(final CharMode aMode)
 	{
 		mMode = aMode;
 	}
 	
 	@Override
-	public Mode getCreationMode()
+	public CharMode getCreationMode()
 	{
 		return mMode;
 	}
@@ -128,7 +128,7 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 		valueName.setText(mItem.getName());
 		mContainer.addView(valueName);
 		
-		if (mMode == Mode.CREATION)
+		if (mMode == CharMode.MAIN)
 		{
 			final ImageButton edit = new ImageButton(mContext);
 			edit.setLayoutParams(ViewUtil.instance().getRowButtonSize());
@@ -213,13 +213,13 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	}
 	
 	@Override
-	public boolean canIncrease(final Mode aMode)
+	public boolean canIncrease(final CharMode aMode)
 	{
 		switch (aMode)
 		{
-			case CREATION :
+			case MAIN :
 				return canIncrease() && mValue < getItem().getMaxStartValue();
-			case FREE_POINTS :
+			case POINTS :
 				return canIncrease() && mValue + mTempPoints < getItem().getMaxStartValue() && mPoints.getPoints() >= mItem.getFreePointsCost();
 			case NORMAL :
 				return canIncrease();
@@ -235,13 +235,13 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	}
 	
 	@Override
-	public boolean canDecrease(final Mode aMode)
+	public boolean canDecrease(final CharMode aMode)
 	{
 		switch (aMode)
 		{
-			case CREATION :
+			case MAIN :
 				return canDecrease();
-			case FREE_POINTS :
+			case POINTS :
 				return mTempPoints > 0;
 			case NORMAL :
 				return false;
@@ -260,7 +260,7 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	{
 		if (canIncrease())
 		{
-			if (mMode == Mode.FREE_POINTS)
+			if (mMode == CharMode.POINTS)
 			{
 				mTempPoints++ ;
 				mPoints.decrease(getItem().getFreePointsCost());
@@ -283,7 +283,7 @@ public class BackgroundItemValue implements ItemValue<BackgroundItem>
 	{
 		if (canDecrease())
 		{
-			if (mMode == Mode.FREE_POINTS)
+			if (mMode == CharMode.POINTS)
 			{
 				mTempPoints-- ;
 				mPoints.increase(getItem().getFreePointsCost());

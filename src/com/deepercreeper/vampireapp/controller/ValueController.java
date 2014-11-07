@@ -89,7 +89,7 @@ public interface ValueController <T extends Item>
 	/**
 	 * @return whether this controller is in the creation mode.
 	 */
-	public Mode getCreationMode();
+	public CharMode getCreationMode();
 	
 	/**
 	 * Sets whether this controller is in the creation mode.
@@ -97,7 +97,7 @@ public interface ValueController <T extends Item>
 	 * @param aMode
 	 *            Whether creation mode or not.
 	 */
-	public void setCreationMode(Mode aMode);
+	public void setCreationMode(CharMode aMode);
 	
 	/**
 	 * Updates all value groups.

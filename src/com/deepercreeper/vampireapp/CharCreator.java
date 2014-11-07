@@ -1,11 +1,12 @@
 package com.deepercreeper.vampireapp;
 
+import android.widget.Toast;
 import com.deepercreeper.vampireapp.controller.BackgroundController;
 import com.deepercreeper.vampireapp.controller.BackgroundValueController;
+import com.deepercreeper.vampireapp.controller.CharMode;
 import com.deepercreeper.vampireapp.controller.DisciplineController;
 import com.deepercreeper.vampireapp.controller.DisciplineValueController;
 import com.deepercreeper.vampireapp.controller.ItemValue.UpdateAction;
-import com.deepercreeper.vampireapp.controller.Mode;
 import com.deepercreeper.vampireapp.controller.PropertyController;
 import com.deepercreeper.vampireapp.controller.PropertyValueController;
 import com.deepercreeper.vampireapp.controller.SimpleController;
@@ -19,7 +20,7 @@ public class CharCreator
 	private static final int				MAX_VOLITION_POINTS	= 20, MAX_PATH_POINTS = 10, DEFAULT_GENERATION = 12, START_VOLITION_POINTS = 5,
 			START_PATH_POINTS = 5, VOLITION_POINTS_COST = 2, PATH_POINTS_COST = 1;
 	
-	private final MainActivity				mActivity;
+	private final Vampire					mVampire;
 	
 	private String							mName				= "";
 	
@@ -49,11 +50,11 @@ public class CharCreator
 	
 	private final SimpleValueController		mSimpleValues;
 	
-	public CharCreator(final MainActivity aActivity, final DisciplineController aDisciplines, final PropertyController aProperties,
+	public CharCreator(final Vampire aVampire, final DisciplineController aDisciplines, final PropertyController aProperties,
 			final BackgroundController aBackgrounds, final SimpleController aSimpleItems, final String aNature, final String aBehavior,
 			final Clan aClan)
 	{
-		mActivity = aActivity;
+		mVampire = aVampire;
 		final PointHandler points = new PointHandler()
 		{
 			@Override
@@ -66,56 +67,31 @@ public class CharCreator
 			public void increase(final int aValue)
 			{
 				mFreePoints += aValue;
-				mActivity.setFreePoints(mFreePoints);
+				mVampire.setFreePoints(mFreePoints);
 			}
 			
 			@Override
 			public void decrease(final int aValue)
 			{
 				mFreePoints -= aValue;
-				mActivity.setFreePoints(mFreePoints);
+				mVampire.setFreePoints(mFreePoints);
 			}
 		};
-		final UpdateAction updateDisciplineOthers = new UpdateAction()
+		final UpdateAction updateOthers = new UpdateAction()
 		{
 			@Override
 			public void update()
 			{
-				mSimpleValues.updateValues(false);
-				mBackgrounds.updateValues(false);
-				updateVolition();
-				updatePath();
+				freePointsChanged();
 			}
 		};
-		final UpdateAction updateSimpleOthers = new UpdateAction()
-		{
-			@Override
-			public void update()
-			{
-				mDisciplines.updateValues(false);
-				mBackgrounds.updateValues(false);
-				updateVolition();
-				updatePath();
-			}
-		};
-		final UpdateAction updateBackgroundOthers = new UpdateAction()
-		{
-			@Override
-			public void update()
-			{
-				mDisciplines.updateValues(false);
-				mSimpleValues.updateValues(false);
-				updateVolition();
-				updatePath();
-			}
-		};
-		mDisciplines = new DisciplineValueController(aDisciplines, mActivity, Mode.CREATION, points, updateDisciplineOthers);
-		mProperties = new PropertyValueController(aProperties, mActivity, Mode.CREATION);
-		mBackgrounds = new BackgroundValueController(aBackgrounds, mActivity, Mode.CREATION, points, updateBackgroundOthers);
-		mSimpleValues = new SimpleValueController(aSimpleItems, mActivity, Mode.CREATION, points, updateSimpleOthers);
+		mDisciplines = new DisciplineValueController(aDisciplines, mVampire.getContext(), CharMode.MAIN, points, updateOthers);
+		mProperties = new PropertyValueController(aProperties, mVampire.getContext(), CharMode.MAIN);
+		mBackgrounds = new BackgroundValueController(aBackgrounds, mVampire.getContext(), CharMode.MAIN, points, updateOthers);
+		mSimpleValues = new SimpleValueController(aSimpleItems, mVampire.getContext(), CharMode.MAIN, points, updateOthers);
 		mNature = aNature;
 		mBehavior = aBehavior;
-		setClan(aClan, true);
+		setClan(aClan);
 	}
 	
 	public int getPathPoints()
@@ -128,22 +104,19 @@ public class CharCreator
 		mPath = aPath;
 		if (mPath == null)
 		{
-			resetPath(true);
+			resetPath();
 		}
-		updatePath();
+		updatePathEnabled();
 	}
 	
-	public void resetPath(final boolean aAddFreePoints)
+	public void resetPath()
 	{
-		if (aAddFreePoints)
-		{
-			mFreePoints += (mPathPoints - START_PATH_POINTS) * PATH_POINTS_COST;
-			updateFreePointsValues();
-		}
+		mFreePoints += (mPathPoints - START_PATH_POINTS) * PATH_POINTS_COST;
+		freePointsChanged();
+		
 		mPathPoints = START_PATH_POINTS;
-		mActivity.setPathPoints(mPathPoints);
-		updatePath();
-		mActivity.setFreePoints(mFreePoints);
+		updatePathEnabled();
+		mVampire.setPathPoints(mPathPoints);
 	}
 	
 	public String getPath()
@@ -151,18 +124,19 @@ public class CharCreator
 		return mPath;
 	}
 	
-	public void updateFreePointsValues()
+	private void freePointsChanged()
 	{
 		mDisciplines.updateValues(false);
 		mSimpleValues.updateValues(false);
 		mBackgrounds.updateValues(false);
-		updateVolition();
-		updatePath();
+		updateVolitionEnabled();
+		updatePathEnabled();
+		mVampire.setFreePoints(mFreePoints);
 	}
 	
-	private void updateVolition()
+	private void updateVolitionEnabled()
 	{
-		mActivity.setVolitionChangeEnabled(mVolitionPoints < MAX_VOLITION_POINTS && mFreePoints >= VOLITION_POINTS_COST,
+		mVampire.setVolitionEnabled(mVolitionPoints < MAX_VOLITION_POINTS && mFreePoints >= VOLITION_POINTS_COST,
 				mVolitionPoints > START_VOLITION_POINTS);
 	}
 	
@@ -171,10 +145,9 @@ public class CharCreator
 		return mVolitionPoints;
 	}
 	
-	private void updatePath()
+	private void updatePathEnabled()
 	{
-		mActivity.setPathChangeEnabled(mPathPoints < MAX_PATH_POINTS && mFreePoints >= PATH_POINTS_COST, mPathPoints > START_PATH_POINTS,
-				mPath != null);
+		mVampire.setPathEnabled(mPath != null, mPathPoints < MAX_PATH_POINTS && mFreePoints >= PATH_POINTS_COST, mPathPoints > START_PATH_POINTS);
 	}
 	
 	public void increasePathPoints()
@@ -183,9 +156,8 @@ public class CharCreator
 		{
 			mPathPoints++ ;
 			mFreePoints -= PATH_POINTS_COST;
-			updateFreePointsValues();
-			mActivity.setPathPoints(mPathPoints);
-			mActivity.setFreePoints(mFreePoints);
+			freePointsChanged();
+			mVampire.setPathPoints(mPathPoints);
 		}
 	}
 	
@@ -195,9 +167,8 @@ public class CharCreator
 		{
 			mPathPoints-- ;
 			mFreePoints += PATH_POINTS_COST;
-			updateFreePointsValues();
-			mActivity.setPathPoints(mPathPoints);
-			mActivity.setFreePoints(mFreePoints);
+			freePointsChanged();
+			mVampire.setPathPoints(mPathPoints);
 		}
 	}
 	
@@ -207,9 +178,8 @@ public class CharCreator
 		{
 			mVolitionPoints++ ;
 			mFreePoints -= VOLITION_POINTS_COST;
-			updateFreePointsValues();
-			mActivity.setVolitionPoints(mVolitionPoints);
-			mActivity.setFreePoints(mFreePoints);
+			freePointsChanged();
+			mVampire.setVolitionPoints(mVolitionPoints);
 		}
 	}
 	
@@ -219,9 +189,8 @@ public class CharCreator
 		{
 			mVolitionPoints-- ;
 			mFreePoints += VOLITION_POINTS_COST;
-			updateFreePointsValues();
-			mActivity.setVolitionPoints(mVolitionPoints);
-			mActivity.setFreePoints(mFreePoints);
+			freePointsChanged();
+			mVampire.setVolitionPoints(mVolitionPoints);
 		}
 	}
 	
@@ -230,17 +199,19 @@ public class CharCreator
 		mDisciplines.resetTempPoints();
 		mBackgrounds.resetTempPoints();
 		mSimpleValues.resetTempPoints();
+		
+		resetPath();
+		
 		mFreePoints = START_FREE_POINTS;
 		mVolitionPoints = START_VOLITION_POINTS;
-		resetPath(false);
-		mDisciplines.updateValues(false);
-		mBackgrounds.updateValues(false);
-		mSimpleValues.updateValues(false);
-		mActivity.setVolitionPoints(mVolitionPoints);
-		updateVolition();
+		mPathPoints = START_PATH_POINTS;
+		
+		freePointsChanged();
+		mVampire.setVolitionPoints(mVolitionPoints);
+		mVampire.setPathPoints(mPathPoints);
 	}
 	
-	public void setCreationMode(final Mode aMode)
+	public void setCreationMode(final CharMode aMode)
 	{
 		mDisciplines.setCreationMode(aMode);
 		mProperties.setCreationMode(aMode);
@@ -258,7 +229,7 @@ public class CharCreator
 		return mFreePoints;
 	}
 	
-	public void release()
+	public void releaseViews()
 	{
 		mDisciplines.release();
 		mProperties.release();
@@ -306,22 +277,16 @@ public class CharCreator
 		mBehavior = aBehavior;
 	}
 	
-	public void setClan(final Clan aClan, final boolean aForceSet)
+	public void setClan(final Clan aClan)
 	{
-		if (aForceSet || !aClan.equals(mClan))
+		if ( !aClan.equals(mClan))
 		{
 			mClan = aClan;
 			mDisciplines.close();
 			mDisciplines.changeClan(aClan);
+			Toast.makeText(mVampire.getContext(), mClan.getDescription(), Toast.LENGTH_LONG).show();
 		}
-		if (aClan.getDisciplines().isEmpty())
-		{
-			mDisciplines.setEnabled(false);
-		}
-		else
-		{
-			mDisciplines.setEnabled(true);
-		}
+		mDisciplines.setEnabled( !mClan.getDisciplines().isEmpty());
 	}
 	
 	public void setGeneration(final int aGeneration)

@@ -24,7 +24,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, VariableValueGroup<PropertyItem, PropertyItemValue>
 {
-	private Mode									mMode;
+	private CharMode									mMode;
 	
 	private final Context									mContext;
 	
@@ -55,7 +55,7 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 	 *            Whether this group is inside creation mode.
 	 */
 	public PropertyItemValueGroup(final PropertyItemGroup aGroup, final PropertyValueController aController, final Context aContext,
-			final Mode aMode)
+			final CharMode aMode)
 	{
 		mController = aController;
 		mContext = aContext;
@@ -192,15 +192,15 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 	}
 	
 	@Override
-	public Mode getCreationMode()
+	public CharMode getCreationMode()
 	{
 		return mMode;
 	}
 	
 	@Override
-	public void setCreationMode(final Mode aMode)
+	public void setCreationMode(final CharMode aMode)
 	{
-		final boolean resetTempPoints = mMode == Mode.FREE_POINTS && aMode == Mode.CREATION;
+		final boolean resetTempPoints = mMode == CharMode.POINTS && aMode == CharMode.MAIN;
 		mMode = aMode;
 		for (final PropertyItemValue value : mValuesList)
 		{

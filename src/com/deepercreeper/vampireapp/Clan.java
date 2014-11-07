@@ -5,11 +5,11 @@ import com.deepercreeper.vampireapp.controller.DisciplineItem;
 
 public class Clan
 {
-	public static final String				CLAN_DISCIPLIN_DELIM	= ",";
-	
 	private final String					mName;
 	
-	private final HashSet<DisciplineItem>	mDisciplines			= new HashSet<DisciplineItem>();
+	private final HashSet<DisciplineItem>	mDisciplines	= new HashSet<DisciplineItem>();
+	
+	private int								mGeneration		= -1;
 	
 	public Clan(final String aName)
 	{
@@ -19,6 +19,21 @@ public class Clan
 	public void addDiscipline(final DisciplineItem aDiscipline)
 	{
 		mDisciplines.add(aDiscipline);
+	}
+	
+	public void setGeneration(final int aGeneration)
+	{
+		mGeneration = aGeneration;
+	}
+	
+	public boolean hasGeneration()
+	{
+		return mGeneration != -1;
+	}
+	
+	public int getGeneration()
+	{
+		return mGeneration;
 	}
 	
 	public String getName()

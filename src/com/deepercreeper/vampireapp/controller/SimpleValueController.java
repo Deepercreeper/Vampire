@@ -27,7 +27,7 @@ public class SimpleValueController implements ValueController<SimpleItem>
 	
 	private final UpdateAction							mUpdateOthers;
 	
-	private Mode								mMode;
+	private CharMode									mMode;
 	
 	private final Context								mContext;
 	
@@ -75,7 +75,7 @@ public class SimpleValueController implements ValueController<SimpleItem>
 	 * @param aUpdateOthers
 	 *            The update others action.
 	 */
-	public SimpleValueController(final SimpleController aController, final Context aContext, final Mode aMode, final PointHandler aPoints,
+	public SimpleValueController(final SimpleController aController, final Context aContext, final CharMode aMode, final PointHandler aPoints,
 			final UpdateAction aUpdateOthers)
 	{
 		mMode = aMode;
@@ -176,7 +176,7 @@ public class SimpleValueController implements ValueController<SimpleItem>
 	}
 	
 	@Override
-	public void setCreationMode(final Mode aMode)
+	public void setCreationMode(final CharMode aMode)
 	{
 		mMode = aMode;
 		for (final SimpleItemValueGroup valueGroup : mAttributesList)
@@ -191,7 +191,7 @@ public class SimpleValueController implements ValueController<SimpleItem>
 	}
 	
 	@Override
-	public Mode getCreationMode()
+	public CharMode getCreationMode()
 	{
 		return mMode;
 	}
@@ -400,21 +400,24 @@ public class SimpleValueController implements ValueController<SimpleItem>
 	@Override
 	public void updateValues(final boolean aUpdateOthers)
 	{
-		switch (mMode)
-		{
-			case CREATION :
-				updateCreation();
-				break;
-			case FREE_POINTS :
-				updateFreePoints();
-				break;
-			case NORMAL :
-				updateNormal();
-				break;
-		}
 		if (aUpdateOthers)
 		{
 			mUpdateOthers.update();
+		}
+		else
+		{
+			switch (mMode)
+			{
+				case MAIN :
+					updateCreation();
+					break;
+				case POINTS :
+					updateFreePoints();
+					break;
+				case NORMAL :
+					updateNormal();
+					break;
+			}
 		}
 	}
 	

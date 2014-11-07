@@ -65,7 +65,7 @@ public interface ItemValueGroup <T extends Item>
 	/**
 	 * @return whether this group is in creation mode.
 	 */
-	public Mode getCreationMode();
+	public CharMode getCreationMode();
 	
 	/**
 	 * Sets whether this group is in creation mode.
@@ -73,7 +73,7 @@ public interface ItemValueGroup <T extends Item>
 	 * @param aMode
 	 *            Whether this group represents the values inside a character creation.
 	 */
-	public void setCreationMode(Mode aMode);
+	public void setCreationMode(CharMode aMode);
 	
 	/**
 	 * Sets the current points handler.

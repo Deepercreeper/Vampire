@@ -20,7 +20,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class PropertyItemValue implements ItemValue<PropertyItem>
 {
-	private Mode		mMode;
+	private CharMode		mMode;
 	
 	private final PropertyItem	mItem;
 	
@@ -50,7 +50,7 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 	 * @param aMode
 	 *            The current creation mode.
 	 */
-	public PropertyItemValue(final PropertyItem aItem, final Context aContext, final UpdateAction aAction, final Mode aMode)
+	public PropertyItemValue(final PropertyItem aItem, final Context aContext, final UpdateAction aAction, final CharMode aMode)
 	{
 		mMode = aMode;
 		mItem = aItem;
@@ -77,13 +77,13 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 	}
 	
 	@Override
-	public Mode getCreationMode()
+	public CharMode getCreationMode()
 	{
 		return mMode;
 	}
 	
 	@Override
-	public void setCreationMode(final Mode aMode)
+	public void setCreationMode(final CharMode aMode)
 	{
 		mMode = aMode;
 	}
@@ -206,13 +206,13 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 	}
 	
 	@Override
-	public boolean canIncrease(final Mode aMode)
+	public boolean canIncrease(final CharMode aMode)
 	{
 		switch (aMode)
 		{
-			case CREATION :
+			case MAIN :
 				return canIncrease() && mValueId < getItem().getMaxStartValue();
-			case FREE_POINTS :
+			case POINTS :
 				return false;
 			case NORMAL :
 				return false;
@@ -227,13 +227,13 @@ public class PropertyItemValue implements ItemValue<PropertyItem>
 	}
 	
 	@Override
-	public boolean canDecrease(final Mode aMode)
+	public boolean canDecrease(final CharMode aMode)
 	{
 		switch (aMode)
 		{
-			case CREATION :
+			case MAIN :
 				return canDecrease();
-			case FREE_POINTS :
+			case POINTS :
 				return false;
 			case NORMAL :
 				return false;
