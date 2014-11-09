@@ -16,7 +16,6 @@ import com.deepercreeper.vampireapp.controller.CharMode;
 import com.deepercreeper.vampireapp.controller.SelectItemDialog;
 import com.deepercreeper.vampireapp.controller.SelectItemDialog.SelectionListener;
 import com.deepercreeper.vampireapp.controller.implementations.VariableValueGroupImpl;
-import com.deepercreeper.vampireapp.controller.interfaces.ValueController;
 import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
@@ -64,13 +63,13 @@ public class PropertyItemValueGroup extends VariableValueGroupImpl<PropertyItem,
 	@Override
 	public List<PropertyItemValue> getValuesList()
 	{
-		return (List<PropertyItemValue>) super.getValuesList();
+		return super.getValuesList();
 	}
 	
 	@Override
 	public HashMap<PropertyItem, PropertyItemValue> getValues()
 	{
-		return (HashMap<PropertyItem, PropertyItemValue>) super.getValues();
+		return super.getValues();
 	}
 	
 	@Override

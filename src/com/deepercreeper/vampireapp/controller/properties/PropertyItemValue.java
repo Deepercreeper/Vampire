@@ -12,9 +12,6 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.controller.CharMode;
 import com.deepercreeper.vampireapp.controller.implementations.ItemValueImpl;
-import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
-import com.deepercreeper.vampireapp.controller.interfaces.ValueController;
-import com.deepercreeper.vampireapp.controller.interfaces.ItemValue.UpdateAction;
 import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
@@ -23,7 +20,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  * 
  * @author Vincent
  */
-public class PropertyItemValue extends ItemValueImpl<PropertyItem>
+public class PropertyItemValue extends ItemValueImpl<PropertyItem, PropertyItemValue>
 {
 	private final ImageButton	mIncreaseButton;
 	

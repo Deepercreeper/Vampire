@@ -4,9 +4,16 @@ import android.content.Context;
 import com.deepercreeper.vampireapp.controller.CharMode;
 import com.deepercreeper.vampireapp.controller.interfaces.Controller;
 import com.deepercreeper.vampireapp.controller.interfaces.Item;
-import com.deepercreeper.vampireapp.controller.interfaces.ValueController;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue.UpdateAction;
+import com.deepercreeper.vampireapp.controller.interfaces.ValueController;
 
+/**
+ * An implementation for value controllers. Each value controller should implement this class.
+ * 
+ * @author Vincent
+ * @param <T>
+ *            The item type.
+ */
 public abstract class ValueControllerImpl <T extends Item> implements ValueController<T>
 {
 	private CharMode			mMode;
@@ -19,6 +26,20 @@ public abstract class ValueControllerImpl <T extends Item> implements ValueContr
 	
 	private final Controller<T>	mController;
 	
+	/**
+	 * Creates a new value controller.
+	 * 
+	 * @param aController
+	 *            The controller type.
+	 * @param aContext
+	 *            The context.
+	 * @param aMode
+	 *            The creation mode.
+	 * @param aPoints
+	 *            The point handler.
+	 * @param aAction
+	 *            The update action.
+	 */
 	public ValueControllerImpl(final Controller<T> aController, final Context aContext, final CharMode aMode, final PointHandler aPoints,
 			final UpdateAction aAction)
 	{

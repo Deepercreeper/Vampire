@@ -2,12 +2,23 @@ package com.deepercreeper.vampireapp.controller.implementations;
 
 import com.deepercreeper.vampireapp.controller.interfaces.Item;
 
+/**
+ * An implementation of items. Each item should extend this abstract class.
+ * 
+ * @author Vincent
+ */
 public abstract class ItemImpl implements Item
 {
 	private final String	mName;
 	
 	private final String	mDescription;
 	
+	/**
+	 * Creates a new item.
+	 * 
+	 * @param aName
+	 *            The item name.
+	 */
 	public ItemImpl(final String aName)
 	{
 		mName = aName;

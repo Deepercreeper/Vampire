@@ -9,7 +9,6 @@ import android.widget.TableLayout;
 import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.controller.CharMode;
 import com.deepercreeper.vampireapp.controller.implementations.VariableValueGroupImpl;
-import com.deepercreeper.vampireapp.controller.interfaces.ValueController;
 import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
@@ -54,13 +53,13 @@ public class DisciplineItemValueGroup extends VariableValueGroupImpl<DisciplineI
 	@Override
 	public List<DisciplineItemValue> getValuesList()
 	{
-		return (List<DisciplineItemValue>) super.getValuesList();
+		return super.getValuesList();
 	}
 	
 	@Override
 	public HashMap<DisciplineItem, DisciplineItemValue> getValues()
 	{
-		return (HashMap<DisciplineItem, DisciplineItemValue>) super.getValues();
+		return super.getValues();
 	}
 	
 	@Override

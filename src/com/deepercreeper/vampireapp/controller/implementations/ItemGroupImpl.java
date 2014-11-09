@@ -7,6 +7,13 @@ import java.util.List;
 import com.deepercreeper.vampireapp.controller.interfaces.Item;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemGroup;
 
+/**
+ * An implementation of item groups. Each item group should extend this class.
+ * 
+ * @author Vincent
+ * @param <T>
+ *            The item type.
+ */
 public abstract class ItemGroupImpl <T extends Item> implements ItemGroup<T>
 {
 	private final String				mName;
@@ -15,6 +22,12 @@ public abstract class ItemGroupImpl <T extends Item> implements ItemGroup<T>
 	
 	private final HashMap<String, T>	mItemNames	= new HashMap<String, T>();
 	
+	/**
+	 * Creates a new item group.
+	 * 
+	 * @param aName
+	 *            The group name.
+	 */
 	public ItemGroupImpl(final String aName)
 	{
 		mName = aName;

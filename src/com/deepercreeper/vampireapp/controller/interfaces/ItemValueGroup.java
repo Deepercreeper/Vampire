@@ -13,8 +13,11 @@ import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointH
  * 
  * @author Vincent
  * @param <T>
+ *            The item type.
+ * @param <S>
+ *            The value type.
  */
-public interface ItemValueGroup <T extends Item>
+public interface ItemValueGroup <T extends Item, S extends ItemValue<T>>
 {
 	/**
 	 * @return the parent controller of this group.
@@ -46,7 +49,7 @@ public interface ItemValueGroup <T extends Item>
 	 *            The name of the value item.
 	 * @return the value with the given name.
 	 */
-	public ItemValue<T> getValue(String aName);
+	public S getValue(String aName);
 	
 	/**
 	 * Removes all widgets from their parent containers.
@@ -56,7 +59,7 @@ public interface ItemValueGroup <T extends Item>
 	/**
 	 * @return a list of all value items.
 	 */
-	public List<? extends ItemValue<T>> getValuesList();
+	public List<S> getValuesList();
 	
 	/**
 	 * Initializes this value group into the given layout.
@@ -97,11 +100,23 @@ public interface ItemValueGroup <T extends Item>
 	 */
 	public void updateValues(boolean aCanIncrease, boolean aCanDecrease);
 	
-	public HashMap<T, ? extends ItemValue<T>> getValues();
+	/**
+	 * @return a map from all items to all values.
+	 */
+	public HashMap<T, S> getValues();
 	
+	/**
+	 * @return the context of this value group.
+	 */
 	public Context getContext();
 	
+	/**
+	 * @return the point handler of this value group.
+	 */
 	public PointHandler getPoints();
 	
+	/**
+	 * @return the update action of this value group.
+	 */
 	public UpdateAction getUpdateAction();
 }

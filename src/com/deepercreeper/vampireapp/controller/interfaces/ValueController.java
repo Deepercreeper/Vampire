@@ -1,8 +1,8 @@
 package com.deepercreeper.vampireapp.controller.interfaces;
 
-import com.deepercreeper.vampireapp.controller.CharMode;
 import android.content.Context;
 import android.widget.LinearLayout;
+import com.deepercreeper.vampireapp.controller.CharMode;
 
 /**
  * A controller that handles value groups.
@@ -108,7 +108,13 @@ public interface ValueController <T extends Item>
 	 */
 	public void updateValues(boolean aUpdateOthers);
 	
+	/**
+	 * @return the point handler of this value controller.
+	 */
 	public PointHandler getPoints();
 	
+	/**
+	 * @return the context of this value controller.
+	 */
 	public Context getContext();
 }

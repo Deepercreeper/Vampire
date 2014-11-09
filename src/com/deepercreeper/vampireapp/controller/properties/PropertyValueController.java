@@ -9,8 +9,6 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.controller.CharMode;
 import com.deepercreeper.vampireapp.controller.implementations.VariableValueControllerImpl;
-import com.deepercreeper.vampireapp.controller.interfaces.ValueController;
-import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 /**

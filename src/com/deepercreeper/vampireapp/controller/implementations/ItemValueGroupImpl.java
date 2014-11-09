@@ -8,29 +8,52 @@ import com.deepercreeper.vampireapp.controller.CharMode;
 import com.deepercreeper.vampireapp.controller.interfaces.Item;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
+import com.deepercreeper.vampireapp.controller.interfaces.ItemValue.UpdateAction;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValueGroup;
 import com.deepercreeper.vampireapp.controller.interfaces.ValueController;
-import com.deepercreeper.vampireapp.controller.interfaces.ItemValue.UpdateAction;
 import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
 
-public abstract class ItemValueGroupImpl <T extends Item> implements ItemValueGroup<T>
+/**
+ * A implementation of value groups. Each value group should extend this class.
+ * 
+ * @author Vincent
+ * @param <T>
+ *            The item type.
+ * @param <S>
+ *            The value type.
+ */
+public abstract class ItemValueGroupImpl <T extends Item, S extends ItemValue<T>> implements ItemValueGroup<T, S>
 {
-	private CharMode						mMode;
+	private CharMode					mMode;
 	
-	private PointHandler					mPoints;
+	private PointHandler				mPoints;
 	
-	private final Context					mContext;
+	private final Context				mContext;
 	
-	private final ValueController<T>		mController;
+	private final ValueController<T>	mController;
 	
-	private final ItemGroup<T>				mGroup;
+	private final ItemGroup<T>			mGroup;
 	
-	private final List<ItemValue<T>>		mValuesList	= new ArrayList<ItemValue<T>>();
+	private final List<S>				mValuesList	= new ArrayList<S>();
 	
-	private final HashMap<T, ItemValue<T>>	mValues		= new HashMap<T, ItemValue<T>>();
+	private final HashMap<T, S>			mValues		= new HashMap<T, S>();
 	
-	private final UpdateAction				mUpdateAction;
+	private final UpdateAction			mUpdateAction;
 	
+	/**
+	 * Creates a new value group.
+	 * 
+	 * @param aGroup
+	 *            The item group type.
+	 * @param aController
+	 *            The parent controller.
+	 * @param aContext
+	 *            The context.
+	 * @param aMode
+	 *            The creation mode.
+	 * @param aPoints
+	 *            The point handler.
+	 */
 	public ItemValueGroupImpl(final ItemGroup<T> aGroup, final ValueController<T> aController, final Context aContext, final CharMode aMode,
 			final PointHandler aPoints)
 	{
@@ -71,7 +94,7 @@ public abstract class ItemValueGroupImpl <T extends Item> implements ItemValueGr
 	}
 	
 	@Override
-	public HashMap<T, ? extends ItemValue<T>> getValues()
+	public HashMap<T, S> getValues()
 	{
 		return mValues;
 	}
@@ -99,7 +122,7 @@ public abstract class ItemValueGroupImpl <T extends Item> implements ItemValueGr
 	}
 	
 	@Override
-	public ItemValue<T> getValue(final String aName)
+	public S getValue(final String aName)
 	{
 		return mValues.get(getGroup().getItem(aName));
 	}
@@ -114,7 +137,7 @@ public abstract class ItemValueGroupImpl <T extends Item> implements ItemValueGr
 	}
 	
 	@Override
-	public List<? extends ItemValue<T>> getValuesList()
+	public List<S> getValuesList()
 	{
 		return mValuesList;
 	}

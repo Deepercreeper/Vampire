@@ -144,9 +144,18 @@ public interface ItemValue <T extends Item>
 	 */
 	public int getValue();
 	
+	/**
+	 * @return the update action of this value.
+	 */
 	public UpdateAction getUpdateAction();
 	
+	/**
+	 * @return the current point handler of this value.
+	 */
 	public PointHandler getPoints();
 	
+	/**
+	 * @return the context of this value.
+	 */
 	public Context getContext();
 }

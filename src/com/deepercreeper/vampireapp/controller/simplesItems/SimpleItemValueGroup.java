@@ -10,7 +10,6 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.controller.CharMode;
 import com.deepercreeper.vampireapp.controller.implementations.ItemValueGroupImpl;
-import com.deepercreeper.vampireapp.controller.interfaces.ValueController;
 import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
@@ -19,7 +18,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  * 
  * @author Vincent
  */
-public class SimpleItemValueGroup extends ItemValueGroupImpl<SimpleItem>
+public class SimpleItemValueGroup extends ItemValueGroupImpl<SimpleItem, SimpleItemValue>
 {
 	/**
 	 * Creates a new item value group.
@@ -48,13 +47,13 @@ public class SimpleItemValueGroup extends ItemValueGroupImpl<SimpleItem>
 	@Override
 	public HashMap<SimpleItem, SimpleItemValue> getValues()
 	{
-		return (HashMap<SimpleItem, SimpleItemValue>) super.getValues();
+		return super.getValues();
 	}
 	
 	@Override
 	public List<SimpleItemValue> getValuesList()
 	{
-		return (List<SimpleItemValue>) super.getValuesList();
+		return super.getValuesList();
 	}
 	
 	private void addValue(final SimpleItemValue aValue)

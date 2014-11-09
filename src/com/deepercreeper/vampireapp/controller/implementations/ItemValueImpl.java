@@ -7,21 +7,46 @@ import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValueGroup;
 import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
 
-public abstract class ItemValueImpl <T extends Item> implements ItemValue<T>
+/**
+ * An implementation for item values. Each item value should extend this class.
+ * 
+ * @author Vincent
+ * @param <T>
+ *            The item type.
+ * @param <S>
+ *            The value type.
+ */
+public abstract class ItemValueImpl <T extends Item, S extends ItemValue<T>> implements ItemValue<T>
 {
-	private CharMode				mMode;
+	private CharMode					mMode;
 	
-	private final T					mItem;
+	private final T						mItem;
 	
-	private final Context			mContext;
+	private final Context				mContext;
 	
-	private final UpdateAction		mUpdateAction;
+	private final UpdateAction			mUpdateAction;
 	
-	private final ItemValueGroup<T>	mGroup;
+	private final ItemValueGroup<T, S>	mGroup;
 	
-	private PointHandler			mPoints;
+	private PointHandler				mPoints;
 	
-	public ItemValueImpl(final T aItem, final Context aContext, final UpdateAction aUpdateAction, final ItemValueGroup<T> aGroup,
+	/**
+	 * Creates a new item value.
+	 * 
+	 * @param aItem
+	 *            The item type.
+	 * @param aContext
+	 *            The context.
+	 * @param aUpdateAction
+	 *            The update action.
+	 * @param aGroup
+	 *            The parent group.
+	 * @param aMode
+	 *            The creation mode.
+	 * @param aPoints
+	 *            The point handler.
+	 */
+	public ItemValueImpl(final T aItem, final Context aContext, final UpdateAction aUpdateAction, final ItemValueGroup<T, S> aGroup,
 			final CharMode aMode, final PointHandler aPoints)
 	{
 		mItem = aItem;
@@ -44,7 +69,7 @@ public abstract class ItemValueImpl <T extends Item> implements ItemValue<T>
 		return mUpdateAction;
 	}
 	
-	protected ItemValueGroup<T> getGroup()
+	protected ItemValueGroup<T, S> getGroup()
 	{
 		return mGroup;
 	}

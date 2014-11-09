@@ -17,7 +17,6 @@ import com.deepercreeper.vampireapp.controller.CharMode;
 import com.deepercreeper.vampireapp.controller.SelectItemDialog;
 import com.deepercreeper.vampireapp.controller.SelectItemDialog.SelectionListener;
 import com.deepercreeper.vampireapp.controller.implementations.VariableValueGroupImpl;
-import com.deepercreeper.vampireapp.controller.interfaces.ValueController;
 import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
@@ -55,13 +54,13 @@ public class BackgroundItemValueGroup extends VariableValueGroupImpl<BackgroundI
 	@Override
 	public HashMap<BackgroundItem, BackgroundItemValue> getValues()
 	{
-		return (HashMap<BackgroundItem, BackgroundItemValue>) super.getValues();
+		return super.getValues();
 	}
 	
 	@Override
 	public List<BackgroundItemValue> getValuesList()
 	{
-		return (List<BackgroundItemValue>) super.getValuesList();
+		return super.getValuesList();
 	}
 	
 	/**
