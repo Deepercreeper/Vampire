@@ -1,7 +1,7 @@
 package com.deepercreeper.vampireapp;
 
 import java.util.HashSet;
-import com.deepercreeper.vampireapp.controller.DisciplineItem;
+import com.deepercreeper.vampireapp.controller.disciplines.DisciplineItem;
 
 public class Clan
 {

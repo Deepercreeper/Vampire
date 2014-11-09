@@ -1,17 +1,17 @@
 package com.deepercreeper.vampireapp;
 
 import android.widget.Toast;
-import com.deepercreeper.vampireapp.controller.BackgroundController;
-import com.deepercreeper.vampireapp.controller.BackgroundValueController;
 import com.deepercreeper.vampireapp.controller.CharMode;
-import com.deepercreeper.vampireapp.controller.DisciplineController;
-import com.deepercreeper.vampireapp.controller.DisciplineValueController;
-import com.deepercreeper.vampireapp.controller.ItemValue.UpdateAction;
-import com.deepercreeper.vampireapp.controller.PropertyController;
-import com.deepercreeper.vampireapp.controller.PropertyValueController;
-import com.deepercreeper.vampireapp.controller.SimpleController;
-import com.deepercreeper.vampireapp.controller.SimpleValueController;
-import com.deepercreeper.vampireapp.controller.ValueController.PointHandler;
+import com.deepercreeper.vampireapp.controller.backgrounds.BackgroundController;
+import com.deepercreeper.vampireapp.controller.backgrounds.BackgroundValueController;
+import com.deepercreeper.vampireapp.controller.disciplines.DisciplineController;
+import com.deepercreeper.vampireapp.controller.disciplines.DisciplineValueController;
+import com.deepercreeper.vampireapp.controller.interfaces.ItemValue.UpdateAction;
+import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
+import com.deepercreeper.vampireapp.controller.properties.PropertyController;
+import com.deepercreeper.vampireapp.controller.properties.PropertyValueController;
+import com.deepercreeper.vampireapp.controller.simplesItems.SimpleController;
+import com.deepercreeper.vampireapp.controller.simplesItems.SimpleValueController;
 
 public class CharCreator
 {

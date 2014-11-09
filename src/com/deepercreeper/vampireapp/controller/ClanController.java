@@ -7,6 +7,7 @@ import java.util.List;
 import android.content.res.Resources;
 import com.deepercreeper.vampireapp.Clan;
 import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.controller.disciplines.DisciplineController;
 
 public class ClanController
 {

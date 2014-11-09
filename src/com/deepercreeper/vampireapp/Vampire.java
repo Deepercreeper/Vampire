@@ -19,14 +19,14 @@ import android.widget.NumberPicker.OnValueChangeListener;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import com.deepercreeper.vampireapp.controller.BackgroundController;
 import com.deepercreeper.vampireapp.controller.CharMode;
 import com.deepercreeper.vampireapp.controller.ClanController;
-import com.deepercreeper.vampireapp.controller.DisciplineController;
 import com.deepercreeper.vampireapp.controller.NatureController;
 import com.deepercreeper.vampireapp.controller.PathController;
-import com.deepercreeper.vampireapp.controller.PropertyController;
-import com.deepercreeper.vampireapp.controller.SimpleController;
+import com.deepercreeper.vampireapp.controller.backgrounds.BackgroundController;
+import com.deepercreeper.vampireapp.controller.disciplines.DisciplineController;
+import com.deepercreeper.vampireapp.controller.properties.PropertyController;
+import com.deepercreeper.vampireapp.controller.simplesItems.SimpleController;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 public class Vampire
