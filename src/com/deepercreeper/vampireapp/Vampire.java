@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.deepercreeper.vampireapp.controller.CharMode;
 import com.deepercreeper.vampireapp.controller.ClanController;
 import com.deepercreeper.vampireapp.controller.NatureController;
+import com.deepercreeper.vampireapp.controller.Path;
 import com.deepercreeper.vampireapp.controller.PathController;
 import com.deepercreeper.vampireapp.controller.backgrounds.BackgroundController;
 import com.deepercreeper.vampireapp.controller.disciplines.DisciplineController;
@@ -187,7 +188,7 @@ public class Vampire
 		});
 		
 		final Spinner natureSpinner = (Spinner) mActivity.getView(R.id.nature_spinner);
-		natureSpinner.setAdapter(new ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_dropdown_item, mNatures.getNatures()));
+		natureSpinner.setAdapter(new ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_dropdown_item, mNatures.getNames()));
 		natureSpinner.setOnItemSelectedListener(new OnItemSelectedListener()
 		{
 			@Override
@@ -205,7 +206,7 @@ public class Vampire
 		natureSpinner.setSelection(mNatures.indexOf(mCharCreator.getNature()));
 		
 		final Spinner behaviorSpinner = (Spinner) mActivity.getView(R.id.behavior_spinner);
-		behaviorSpinner.setAdapter(new ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_dropdown_item, mNatures.getNatures()));
+		behaviorSpinner.setAdapter(new ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_dropdown_item, mNatures.getNames()));
 		behaviorSpinner.setOnItemSelectedListener(new OnItemSelectedListener()
 		{
 			@Override
@@ -236,7 +237,7 @@ public class Vampire
 		});
 		
 		final Spinner clanSpinner = (Spinner) mActivity.getView(R.id.clan_spinner);
-		clanSpinner.setAdapter(new ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_dropdown_item, mClans.getClanNames()));
+		clanSpinner.setAdapter(new ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_dropdown_item, mClans.getNames()));
 		clanSpinner.setOnItemSelectedListener(new OnItemSelectedListener()
 		{
 			@Override
@@ -340,7 +341,7 @@ public class Vampire
 			{
 				if (aIsChecked)
 				{
-					mCharCreator.setPath(((Spinner) mActivity.getView(R.id.path_spinner)).getSelectedItem().toString());
+					mCharCreator.setPath(mPaths.get(((Spinner) mActivity.getView(R.id.path_spinner)).getSelectedItem().toString()));
 				}
 				else
 				{
@@ -437,7 +438,7 @@ public class Vampire
 		((TextView) mActivity.getView(R.id.path_value)).setText("" + aValue);
 	}
 	
-	private void setPath(final String aPath)
+	private void setPath(final Path aPath)
 	{
 		int pathPos = 0;
 		if (aPath != null)

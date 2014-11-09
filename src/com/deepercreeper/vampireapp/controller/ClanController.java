@@ -1,24 +1,33 @@
 package com.deepercreeper.vampireapp.controller;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import android.content.res.Resources;
 import com.deepercreeper.vampireapp.Clan;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.controller.disciplines.DisciplineController;
+import com.deepercreeper.vampireapp.controller.implementations.ListControllerImpl;
 
-public class ClanController
+/**
+ * A controller for all clans. Used to handle the creation and initialization of them.<br>
+ * 
+ * @author Vincent
+ */
+public class ClanController extends ListControllerImpl<Clan>
 {
-	private static final String			NAME_DELIM	= ":", DISCIPLINES_DELIM = ";", CLAN_DISCIPLIN_DELIM = ",";
+	private static final String	NAME_DELIM	= ":", DISCIPLINES_DELIM = ";", CLAN_DISCIPLIN_DELIM = ",";
 	
-	private final HashMap<String, Clan>	mClans		= new HashMap<String, Clan>();
-	
-	private final List<String>			mClanNames	= new ArrayList<String>();
-	
+	/**
+	 * Creates a new clan controller out of the given resources.
+	 * 
+	 * @param aResources
+	 *            The resources.
+	 * @param aDisciplines
+	 *            The discipline controller.
+	 */
 	public ClanController(final Resources aResources, final DisciplineController aDisciplines)
 	{
+		final List<Clan> clans = new ArrayList<Clan>();
 		for (final String line : aResources.getStringArray(R.array.clans))
 		{
 			final String[] clanData = line.split(NAME_DELIM);
@@ -35,34 +44,8 @@ public class ClanController
 					clan.setGeneration(Integer.parseInt(clanDisciplines[1]));
 				}
 			}
-			mClans.put(clanData[0], clan);
-			mClanNames.add(clanData[0]);
+			clans.add(clan);
 		}
-		Collections.sort(mClanNames);
-	}
-	
-	public int indexOf(final Clan aClan)
-	{
-		return mClanNames.indexOf(aClan.getName());
-	}
-	
-	public Clan get(final int aPos)
-	{
-		return mClans.get(mClanNames.get(aPos));
-	}
-	
-	public Clan getFirst()
-	{
-		return mClans.get(mClanNames.get(0));
-	}
-	
-	public Clan getClan(final String aName)
-	{
-		return mClans.get(aName);
-	}
-	
-	public List<String> getClanNames()
-	{
-		return mClanNames;
+		init(clans);
 	}
 }

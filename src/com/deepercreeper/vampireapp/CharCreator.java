@@ -2,6 +2,8 @@ package com.deepercreeper.vampireapp;
 
 import android.widget.Toast;
 import com.deepercreeper.vampireapp.controller.CharMode;
+import com.deepercreeper.vampireapp.controller.Nature;
+import com.deepercreeper.vampireapp.controller.Path;
 import com.deepercreeper.vampireapp.controller.backgrounds.BackgroundController;
 import com.deepercreeper.vampireapp.controller.backgrounds.BackgroundValueController;
 import com.deepercreeper.vampireapp.controller.disciplines.DisciplineController;
@@ -26,11 +28,11 @@ public class CharCreator
 	
 	private String							mConcept			= "";
 	
-	private String							mNature;
+	private Nature							mNature;
 	
-	private String							mBehavior;
+	private Nature							mBehavior;
 	
-	private String							mPath				= null;
+	private Path							mPath				= null;
 	
 	private Clan							mClan;
 	
@@ -51,7 +53,7 @@ public class CharCreator
 	private final SimpleValueController		mSimpleValues;
 	
 	public CharCreator(final Vampire aVampire, final DisciplineController aDisciplines, final PropertyController aProperties,
-			final BackgroundController aBackgrounds, final SimpleController aSimpleItems, final String aNature, final String aBehavior,
+			final BackgroundController aBackgrounds, final SimpleController aSimpleItems, final Nature aNature, final Nature aBehavior,
 			final Clan aClan)
 	{
 		mVampire = aVampire;
@@ -99,7 +101,7 @@ public class CharCreator
 		return mPathPoints;
 	}
 	
-	public void setPath(final String aPath)
+	public void setPath(final Path aPath)
 	{
 		mPath = aPath;
 		if (mPath == null)
@@ -124,7 +126,7 @@ public class CharCreator
 		return mPath != null;
 	}
 	
-	public String getPath()
+	public Path getPath()
 	{
 		return mPath;
 	}
@@ -272,12 +274,12 @@ public class CharCreator
 		mConcept = aConcept;
 	}
 	
-	public void setNature(final String aNature)
+	public void setNature(final Nature aNature)
 	{
 		mNature = aNature;
 	}
 	
-	public void setBehavior(final String aBehavior)
+	public void setBehavior(final Nature aBehavior)
 	{
 		mBehavior = aBehavior;
 	}
@@ -309,12 +311,12 @@ public class CharCreator
 		return mConcept;
 	}
 	
-	public String getNature()
+	public Nature getNature()
 	{
 		return mNature;
 	}
 	
-	public String getBehavior()
+	public Nature getBehavior()
 	{
 		return mBehavior;
 	}

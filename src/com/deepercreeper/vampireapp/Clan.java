@@ -2,18 +2,17 @@ package com.deepercreeper.vampireapp;
 
 import java.util.HashSet;
 import com.deepercreeper.vampireapp.controller.disciplines.DisciplineItem;
+import com.deepercreeper.vampireapp.controller.implementations.Named;
 
-public class Clan
+public class Clan extends Named
 {
-	private final String					mName;
-	
 	private final HashSet<DisciplineItem>	mDisciplines	= new HashSet<DisciplineItem>();
 	
 	private int								mGeneration		= -1;
 	
 	public Clan(final String aName)
 	{
-		mName = aName;
+		super(aName);
 	}
 	
 	public void addDiscipline(final DisciplineItem aDiscipline)
@@ -36,11 +35,6 @@ public class Clan
 		return mGeneration;
 	}
 	
-	public String getName()
-	{
-		return mName;
-	}
-	
 	public HashSet<DisciplineItem> getDisciplines()
 	{
 		return mDisciplines;
@@ -51,11 +45,11 @@ public class Clan
 		final StringBuilder descr = new StringBuilder();
 		if (getDisciplines().isEmpty())
 		{
-			descr.append(mName);
+			descr.append(getName());
 		}
 		else
 		{
-			descr.append(mName + ": ");
+			descr.append(getName() + ": ");
 			boolean first = true;
 			for (final DisciplineItem discipline : getDisciplines())
 			{
@@ -79,7 +73,7 @@ public class Clan
 		if (aO instanceof Clan)
 		{
 			final Clan c = (Clan) aO;
-			return mName.equals(c.mName);
+			return getName().equals(c.getName());
 		}
 		return false;
 	}
@@ -87,6 +81,6 @@ public class Clan
 	@Override
 	public String toString()
 	{
-		return mName + " " + mDisciplines;
+		return getName() + " " + mDisciplines;
 	}
 }
