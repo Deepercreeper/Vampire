@@ -1,7 +1,10 @@
 package com.deepercreeper.vampireapp.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import android.content.Context;
 import android.view.ViewGroup;
+import com.deepercreeper.vampireapp.controller.ItemValue.UpdateAction;
 import com.deepercreeper.vampireapp.controller.ValueController.PointHandler;
 
 /**
@@ -92,4 +95,12 @@ public interface ItemValueGroup <T extends Item>
 	 *            Whether values can be decreased.
 	 */
 	public void updateValues(boolean aCanIncrease, boolean aCanDecrease);
+	
+	public HashMap<T, ? extends ItemValue<T>> getValues();
+	
+	public Context getContext();
+	
+	public PointHandler getPoints();
+	
+	public UpdateAction getUpdateAction();
 }

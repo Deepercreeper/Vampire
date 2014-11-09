@@ -13,7 +13,6 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
-import com.deepercreeper.vampireapp.controller.ItemValue.UpdateAction;
 import com.deepercreeper.vampireapp.controller.SelectItemDialog.SelectionListener;
 import com.deepercreeper.vampireapp.controller.ValueController.PointHandler;
 import com.deepercreeper.vampireapp.util.ViewUtil;
@@ -23,27 +22,11 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  * 
  * @author Vincent
  */
-public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>, VariableValueGroup<BackgroundItem, BackgroundItemValue>
+public class BackgroundItemValueGroup extends ItemValueGroupImpl<BackgroundItem> implements VariableValueGroup<BackgroundItem, BackgroundItemValue>
 {
-	private CharMode										mMode;
+	private LinearLayout	mBackgroundsPanel;
 	
-	private PointHandler										mPoints;
-	
-	private final Context										mContext;
-	
-	private LinearLayout										mBackgroundsPanel;
-	
-	private TableLayout											mBackgroundsTable;
-	
-	private final BackgroundValueController						mController;
-	
-	private final BackgroundItemGroup							mGroup;
-	
-	private final List<BackgroundItemValue>						mValuesList	= new ArrayList<BackgroundItemValue>();
-	
-	private final HashMap<BackgroundItem, BackgroundItemValue>	mValues		= new HashMap<BackgroundItem, BackgroundItemValue>();
-	
-	private final UpdateAction									mAction;
+	private TableLayout		mBackgroundsTable;
 	
 	/**
 	 * Creates a new background value group.
@@ -62,47 +45,19 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 	public BackgroundItemValueGroup(final BackgroundItemGroup aGroup, final BackgroundValueController aController, final Context aContext,
 			final CharMode aMode, final PointHandler aPoints)
 	{
-		mController = aController;
-		mPoints = aPoints;
-		mGroup = aGroup;
-		mContext = aContext;
-		mMode = aMode;
-		mAction = new UpdateAction()
-		{
-			@Override
-			public void update()
-			{
-				mController.updateValues(mMode == CharMode.POINTS);
-			}
-		};
+		super(aGroup, aController, aContext, aMode, aPoints);
 	}
 	
 	@Override
-	public void setPoints(final PointHandler aPoints)
+	public HashMap<BackgroundItem, BackgroundItemValue> getValues()
 	{
-		mPoints = aPoints;
-		for (final BackgroundItemValue value : mValuesList)
-		{
-			value.setPoints(mPoints);
-		}
+		return (HashMap<BackgroundItem, BackgroundItemValue>) super.getValues();
 	}
 	
 	@Override
-	public void resetTempPoints()
+	public List<BackgroundItemValue> getValuesList()
 	{
-		for (final BackgroundItemValue value : mValuesList)
-		{
-			value.resetTempPoints();
-		}
-	}
-	
-	@Override
-	public void release()
-	{
-		for (final BackgroundItemValue value : mValuesList)
-		{
-			value.release();
-		}
+		return (List<BackgroundItemValue>) super.getValuesList();
 	}
 	
 	/**
@@ -118,8 +73,8 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 			return;
 		}
 		final List<BackgroundItem> items = new ArrayList<BackgroundItem>();
-		items.addAll(mGroup.getItems());
-		for (final BackgroundItemValue value : mValuesList)
+		items.addAll(getGroup().getItems());
+		for (final BackgroundItemValue value : getValuesList())
 		{
 			items.remove(value.getItem());
 		}
@@ -133,35 +88,30 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 			}
 		};
 		
-		SelectItemDialog.<BackgroundItem> showSelectionDialog(items, mContext.getResources().getString(R.string.edit_background), mContext, action);
-	}
-	
-	@Override
-	public BackgroundValueController getController()
-	{
-		return mController;
+		SelectItemDialog.<BackgroundItem> showSelectionDialog(items, getContext().getResources().getString(R.string.edit_background), getContext(),
+				action);
 	}
 	
 	private void addValue(final BackgroundItemValue aValue)
 	{
-		mValuesList.add(aValue);
-		mValues.put(aValue.getItem(), aValue);
+		getValuesList().add(aValue);
+		getValues().put(aValue.getItem(), aValue);
 		if (mBackgroundsTable != null)
 		{
-			final TableRow row = new TableRow(mContext);
+			final TableRow row = new TableRow(getContext());
 			aValue.initRow(row);
 			mBackgroundsTable.addView(row);
 		}
-		mAction.update();
+		getUpdateAction().update();
 	}
 	
 	private void setValue(final BackgroundItemValue aOldValue, final BackgroundItem aNewItem)
 	{
-		final int oldIndex = mValuesList.indexOf(aOldValue);
-		final BackgroundItemValue newValue = new BackgroundItemValue(aNewItem, mContext, mAction, this, mMode, mPoints);
-		mValuesList.set(oldIndex, newValue);
-		mValues.remove(aOldValue.getItem());
-		mValues.put(aNewItem, newValue);
+		final int oldIndex = getValuesList().indexOf(aOldValue);
+		final BackgroundItemValue newValue = new BackgroundItemValue(aNewItem, getContext(), getUpdateAction(), this, getCreationMode(), getPoints());
+		getValuesList().set(oldIndex, newValue);
+		getValues().remove(aOldValue.getItem());
+		getValues().put(aNewItem, newValue);
 		if (mBackgroundsTable != null)
 		{
 			newValue.initRow(aOldValue.getContainer());
@@ -171,7 +121,7 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 	@Override
 	public void addItem(final BackgroundItem aItem)
 	{
-		addValue(new BackgroundItemValue(aItem, mContext, mAction, this, mMode, mPoints));
+		addValue(new BackgroundItemValue(aItem, getContext(), getUpdateAction(), this, getCreationMode(), getPoints()));
 		resize();
 	}
 	
@@ -188,98 +138,27 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 	@Override
 	public void clear()
 	{
-		mValuesList.clear();
-		mValues.clear();
-	}
-	
-	@Override
-	public int getValue()
-	{
-		int value = 0;
-		for (final BackgroundItemValue valueItem : mValuesList)
-		{
-			value += valueItem.getValue();
-		}
-		return value;
-	}
-	
-	@Override
-	public int getTempPoints()
-	{
-		int value = 0;
-		for (final BackgroundItemValue valueItem : mValuesList)
-		{
-			value += valueItem.getTempPoints();
-		}
-		return value;
-	}
-	
-	@Override
-	public void updateValues(final boolean aCanIncrease, final boolean aCanDecrease)
-	{
-		for (final BackgroundItemValue value : mValuesList)
-		{
-			value.setIncreasable(aCanIncrease && value.canIncrease(mMode));
-			value.setDecreasable(aCanDecrease && value.canDecrease(mMode));
-		}
-	}
-	
-	@Override
-	public ItemGroup<BackgroundItem> getGroup()
-	{
-		return mGroup;
-	}
-	
-	@Override
-	public List<BackgroundItemValue> getValuesList()
-	{
-		return mValuesList;
-	}
-	
-	@Override
-	public BackgroundItemValue getValue(final String aName)
-	{
-		return mValues.get(getGroup().getItem(aName));
-	}
-	
-	@Override
-	public CharMode getCreationMode()
-	{
-		return mMode;
-	}
-	
-	@Override
-	public void setCreationMode(final CharMode aMode)
-	{
-		final boolean resetTempPoints = mMode == CharMode.POINTS && aMode == CharMode.MAIN;
-		mMode = aMode;
-		for (final BackgroundItemValue value : mValuesList)
-		{
-			value.setCreationMode(mMode);
-			if (resetTempPoints)
-			{
-				value.resetTempPoints();
-			}
-		}
+		getValuesList().clear();
+		getValues().clear();
 	}
 	
 	@Override
 	public void initLayout(final ViewGroup aLayout)
 	{
 		mBackgroundsPanel = (LinearLayout) aLayout;
-		mBackgroundsTable = new TableLayout(mContext);
+		mBackgroundsTable = new TableLayout(getContext());
 		
 		mBackgroundsTable.setLayoutParams(ViewUtil.instance().getWrapHeight());
 		
-		final LinearLayout titleRow = new LinearLayout(mContext);
+		final LinearLayout titleRow = new LinearLayout(getContext());
 		titleRow.setLayoutParams(ViewUtil.instance().getWrapHeight());
-		if (mMode == CharMode.MAIN)
+		if (getCreationMode() == CharMode.MAIN)
 		{
-			final Button addBackground = new Button(mContext);
+			final Button addBackground = new Button(getContext());
 			addBackground.setLayoutParams(ViewUtil.instance().getWrapHeight());
 			addBackground.setTextSize(14);
-			addBackground.setText(mContext.getResources().getString(R.string.add_background));
-			addBackground.setEnabled(mValuesList.size() < BackgroundItem.MAX_BACKGROUNDS);
+			addBackground.setText(getContext().getResources().getString(R.string.add_background));
+			addBackground.setEnabled(getValuesList().size() < BackgroundItem.MAX_BACKGROUNDS);
 			addBackground.setOnClickListener(new OnClickListener()
 			{
 				@Override
@@ -290,8 +169,8 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 						return;
 					}
 					final List<BackgroundItem> items = new ArrayList<BackgroundItem>();
-					items.addAll(mGroup.getItems());
-					for (final BackgroundItemValue value : mValuesList)
+					items.addAll(getGroup().getItems());
+					for (final BackgroundItemValue value : getValuesList())
 					{
 						items.remove(value.getItem());
 					}
@@ -302,26 +181,26 @@ public class BackgroundItemValueGroup implements ItemValueGroup<BackgroundItem>,
 						public void select(final BackgroundItem aItem)
 						{
 							addItem(aItem);
-							addBackground.setEnabled(mValuesList.size() < BackgroundItem.MAX_BACKGROUNDS);
+							addBackground.setEnabled(getValuesList().size() < BackgroundItem.MAX_BACKGROUNDS);
 						}
 					};
 					
-					SelectItemDialog.<BackgroundItem> showSelectionDialog(items, mContext.getResources().getString(R.string.add_background),
-							mContext, action);
+					SelectItemDialog.<BackgroundItem> showSelectionDialog(items, getContext().getResources().getString(R.string.add_background),
+							getContext(), action);
 				}
 			});
 			titleRow.addView(addBackground);
 		}
 		mBackgroundsTable.addView(titleRow);
 		
-		for (final BackgroundItemValue value : mValuesList)
+		for (final BackgroundItemValue value : getValuesList())
 		{
-			final TableRow row = new TableRow(mContext);
+			final TableRow row = new TableRow(getContext());
 			value.initRow(row);
 			mBackgroundsTable.addView(row);
 			value.refreshValue();
 		}
 		aLayout.addView(mBackgroundsTable);
-		mController.updateValues(false);
+		getController().updateValues(false);
 	}
 }

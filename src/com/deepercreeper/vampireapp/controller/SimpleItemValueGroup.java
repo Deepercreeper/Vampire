@@ -1,6 +1,5 @@
 package com.deepercreeper.vampireapp.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import android.content.Context;
@@ -9,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.Space;
 import android.widget.TableRow;
 import android.widget.TextView;
-import com.deepercreeper.vampireapp.controller.ItemValue.UpdateAction;
 import com.deepercreeper.vampireapp.controller.ValueController.PointHandler;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
@@ -18,24 +16,8 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  * 
  * @author Vincent
  */
-public class SimpleItemValueGroup implements ItemValueGroup<SimpleItem>
+public class SimpleItemValueGroup extends ItemValueGroupImpl<SimpleItem>
 {
-	private CharMode									mMode;
-	
-	private PointHandler								mPoints;
-	
-	private final Context								mContext;
-	
-	private final UpdateAction							mAction;
-	
-	private final SimpleValueController					mController;
-	
-	private final SimpleItemGroup						mGroup;
-	
-	private final List<SimpleItemValue>					mValuesList	= new ArrayList<SimpleItemValue>();
-	
-	private final HashMap<SimpleItem, SimpleItemValue>	mValues		= new HashMap<SimpleItem, SimpleItemValue>();
-	
 	/**
 	 * Creates a new item value group.
 	 * 
@@ -53,134 +35,29 @@ public class SimpleItemValueGroup implements ItemValueGroup<SimpleItem>
 	public SimpleItemValueGroup(final SimpleItemGroup aGroup, final SimpleValueController aController, final Context aContext, final CharMode aMode,
 			final PointHandler aPoints)
 	{
-		mController = aController;
-		mPoints = aPoints;
-		mMode = aMode;
-		mGroup = aGroup;
-		mContext = aContext;
-		mAction = new UpdateAction()
+		super(aGroup, aController, aContext, aMode, aPoints);
+		for (final SimpleItem item : getGroup().getItems())
 		{
-			@Override
-			public void update()
-			{
-				mController.updateValues(mMode == CharMode.POINTS);
-			}
-		};
-		for (final SimpleItem item : mGroup.getItems())
-		{
-			addValue(new SimpleItemValue(item, mContext, mAction, this, mMode, mPoints));
+			addValue(new SimpleItemValue(item, getContext(), getUpdateAction(), this, getCreationMode(), getPoints()));
 		}
 	}
 	
 	@Override
-	public void setPoints(final PointHandler aPoints)
+	public HashMap<SimpleItem, SimpleItemValue> getValues()
 	{
-		mPoints = aPoints;
-		for (final SimpleItemValue value : mValuesList)
-		{
-			value.setPoints(mPoints);
-		}
-	}
-	
-	@Override
-	public void release()
-	{
-		for (final SimpleItemValue value : mValuesList)
-		{
-			value.release();
-		}
-	}
-	
-	@Override
-	public SimpleValueController getController()
-	{
-		return mController;
-	}
-	
-	@Override
-	public void resetTempPoints()
-	{
-		for (final SimpleItemValue value : mValuesList)
-		{
-			value.resetTempPoints();
-		}
-	}
-	
-	@Override
-	public int getValue()
-	{
-		int value = 0;
-		for (final SimpleItemValue itemValue : mValuesList)
-		{
-			value += itemValue.getValue();
-		}
-		return value;
-	}
-	
-	@Override
-	public int getTempPoints()
-	{
-		int value = 0;
-		for (final SimpleItemValue itemValue : mValuesList)
-		{
-			value += itemValue.getTempPoints();
-		}
-		return value;
-	}
-	
-	private void addValue(final SimpleItemValue aValue)
-	{
-		mValuesList.add(aValue);
-		mValues.put(aValue.getItem(), aValue);
-	}
-	
-	@Override
-	public SimpleItemGroup getGroup()
-	{
-		return mGroup;
+		return (HashMap<SimpleItem, SimpleItemValue>) super.getValues();
 	}
 	
 	@Override
 	public List<SimpleItemValue> getValuesList()
 	{
-		return mValuesList;
+		return (List<SimpleItemValue>) super.getValuesList();
 	}
 	
-	@Override
-	public SimpleItemValue getValue(final String aName)
+	private void addValue(final SimpleItemValue aValue)
 	{
-		return mValues.get(getGroup().getItem(aName));
-	}
-	
-	@Override
-	public CharMode getCreationMode()
-	{
-		return mMode;
-	}
-	
-	@Override
-	public void setCreationMode(final CharMode aMode)
-	{
-		final boolean resetTempPoints = mMode == CharMode.POINTS && aMode == CharMode.MAIN;
-		mMode = aMode;
-		for (final SimpleItemValue value : mValuesList)
-		{
-			value.setCreationMode(mMode);
-			if (resetTempPoints)
-			{
-				value.resetTempPoints();
-			}
-		}
-	}
-	
-	@Override
-	public void updateValues(final boolean aCanIncrease, final boolean aCanDecrease)
-	{
-		for (final SimpleItemValue value : mValuesList)
-		{
-			value.setIncreasable(aCanIncrease && value.canIncrease(mMode));
-			value.setDecreasable(aCanDecrease && value.canDecrease(mMode));
-		}
+		getValuesList().add(aValue);
+		getValues().put(aValue.getItem(), aValue);
 	}
 	
 	@Override
@@ -195,13 +72,13 @@ public class SimpleItemValueGroup implements ItemValueGroup<SimpleItem>
 			
 			final TextView title = new TextView(context);
 			title.setLayoutParams(ViewUtil.instance().getRowWrapAll());
-			title.setText(mGroup.getName());
+			title.setText(getGroup().getName());
 			title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
 			titleRow.addView(title);
 		}
 		aLayout.addView(titleRow);
 		
-		for (final SimpleItemValue value : mValuesList)
+		for (final SimpleItemValue value : getValuesList())
 		{
 			aLayout.addView(value.getContainer());
 			value.refreshValue();

@@ -1,6 +1,5 @@
 package com.deepercreeper.vampireapp.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import android.content.Context;
@@ -8,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import com.deepercreeper.vampireapp.ResizeAnimation;
-import com.deepercreeper.vampireapp.controller.ItemValue.UpdateAction;
 import com.deepercreeper.vampireapp.controller.ValueController.PointHandler;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
@@ -17,27 +15,11 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  * 
  * @author Vincent
  */
-public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>, VariableValueGroup<DisciplineItem, DisciplineItemValue>
+public class DisciplineItemValueGroup extends ItemValueGroupImpl<DisciplineItem> implements VariableValueGroup<DisciplineItem, DisciplineItemValue>
 {
-	private CharMode											mMode;
+	private LinearLayout	mDisciplinesPanel;
 	
-	private PointHandler										mPoints;
-	
-	private final Context										mContext;
-	
-	private LinearLayout										mDisciplinesPanel;
-	
-	private TableLayout											mDisciplinesTable;
-	
-	private final DisciplineValueController						mController;
-	
-	private final DisciplineItemGroup							mGroup;
-	
-	private final UpdateAction									mAction;
-	
-	private final List<DisciplineItemValue>						mValuesList	= new ArrayList<DisciplineItemValue>();
-	
-	private final HashMap<DisciplineItem, DisciplineItemValue>	mValues		= new HashMap<DisciplineItem, DisciplineItemValue>();
+	private TableLayout		mDisciplinesTable;
 	
 	/**
 	 * Creates a discipline item value group.
@@ -56,78 +38,32 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	public DisciplineItemValueGroup(final DisciplineItemGroup aGroup, final DisciplineValueController aController, final Context aContext,
 			final CharMode aMode, final PointHandler aPoints)
 	{
-		mController = aController;
-		mPoints = aPoints;
-		mContext = aContext;
-		mGroup = aGroup;
-		mMode = aMode;
-		mAction = new UpdateAction()
-		{
-			@Override
-			public void update()
-			{
-				mController.updateValues(mMode == CharMode.POINTS);
-			}
-		};
-	}
-	
-	@Override
-	public void setPoints(final PointHandler aPoints)
-	{
-		mPoints = aPoints;
-		for (final DisciplineItemValue value : mValuesList)
-		{
-			value.setPoints(mPoints);
-		}
-	}
-	
-	@Override
-	public void resetTempPoints()
-	{
-		for (final DisciplineItemValue value : mValuesList)
-		{
-			value.resetTempPoints();
-		}
+		super(aGroup, aController, aContext, aMode, aPoints);
 	}
 	
 	@Override
 	public void release()
 	{
 		ViewUtil.release(mDisciplinesTable, true);
-		for (final DisciplineItemValue value : mValuesList)
-		{
-			value.release();
-		}
-	}
-	
-	@Override
-	public DisciplineValueController getController()
-	{
-		return mController;
-	}
-	
-	@Override
-	public DisciplineItemGroup getGroup()
-	{
-		return mGroup;
+		super.release();
 	}
 	
 	@Override
 	public List<DisciplineItemValue> getValuesList()
 	{
-		return mValuesList;
+		return (List<DisciplineItemValue>) super.getValuesList();
 	}
 	
 	@Override
-	public DisciplineItemValue getValue(final String aName)
+	public HashMap<DisciplineItem, DisciplineItemValue> getValues()
 	{
-		return mValues.get(getGroup().getItem(aName));
+		return (HashMap<DisciplineItem, DisciplineItemValue>) super.getValues();
 	}
 	
 	@Override
 	public void updateValues(final boolean aCanIncrease, final boolean aCanDecrease)
 	{
-		for (final DisciplineItemValue value : mValuesList)
+		for (final DisciplineItemValue value : getValuesList())
 		{
 			if (value.getItem().isParentItem())
 			{
@@ -135,15 +71,15 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 				{
 					if (subValue != null)
 					{
-						subValue.setIncreasable(aCanIncrease && subValue.canIncrease(mMode));
-						subValue.setDecreasable(aCanDecrease && subValue.canDecrease(mMode));
+						subValue.setIncreasable(aCanIncrease && subValue.canIncrease(getCreationMode()));
+						subValue.setDecreasable(aCanDecrease && subValue.canDecrease(getCreationMode()));
 					}
 				}
 			}
 			else
 			{
-				value.setIncreasable(aCanIncrease && value.canIncrease(mMode));
-				value.setDecreasable(aCanDecrease && value.canDecrease(mMode));
+				value.setIncreasable(aCanIncrease && value.canIncrease(getCreationMode()));
+				value.setDecreasable(aCanDecrease && value.canDecrease(getCreationMode()));
 			}
 		}
 	}
@@ -152,7 +88,7 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	public int getValue()
 	{
 		int value = 0;
-		for (final DisciplineItemValue valueItem : mValuesList)
+		for (final DisciplineItemValue valueItem : getValuesList())
 		{
 			if (valueItem.getItem().isParentItem())
 			{
@@ -173,7 +109,7 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	public int getTempPoints()
 	{
 		int value = 0;
-		for (final DisciplineItemValue valueItem : mValuesList)
+		for (final DisciplineItemValue valueItem : getValuesList())
 		{
 			if (valueItem.getItem().isParentItem())
 			{
@@ -192,8 +128,8 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	
 	private void addValue(final DisciplineItemValue aValue)
 	{
-		mValuesList.add(aValue);
-		mValues.put(aValue.getItem(), aValue);
+		getValuesList().add(aValue);
+		getValues().put(aValue.getItem(), aValue);
 		if (mDisciplinesTable != null)
 		{
 			mDisciplinesTable.addView(aValue.getContainer());
@@ -203,7 +139,7 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	@Override
 	public void addItem(final DisciplineItem aItem)
 	{
-		addValue(new DisciplineItemValue(aItem, mContext, mAction, this, mMode, mPoints));
+		addValue(new DisciplineItemValue(aItem, getContext(), getUpdateAction(), this, getCreationMode(), getPoints()));
 	}
 	
 	@Override
@@ -219,32 +155,11 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 	@Override
 	public void clear()
 	{
-		mValuesList.clear();
-		mValues.clear();
+		getValuesList().clear();
+		getValues().clear();
 		if (mDisciplinesTable != null)
 		{
 			mDisciplinesTable.removeAllViews();
-		}
-	}
-	
-	@Override
-	public CharMode getCreationMode()
-	{
-		return mMode;
-	}
-	
-	@Override
-	public void setCreationMode(final CharMode aMode)
-	{
-		final boolean resetTempPoints = mMode == CharMode.POINTS && aMode == CharMode.MAIN;
-		mMode = aMode;
-		for (final DisciplineItemValue value : mValuesList)
-		{
-			value.setCreationMode(mMode);
-			if (resetTempPoints)
-			{
-				value.resetTempPoints();
-			}
 		}
 	}
 	
@@ -257,7 +172,7 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 		
 		mDisciplinesTable.setLayoutParams(ViewUtil.instance().getWrapHeight());
 		
-		for (final DisciplineItemValue value : mValuesList)
+		for (final DisciplineItemValue value : getValuesList())
 		{
 			final ViewGroup container = value.getContainer();
 			if (container.getParent() != null)
@@ -268,6 +183,6 @@ public class DisciplineItemValueGroup implements ItemValueGroup<DisciplineItem>,
 			value.refreshValue();
 		}
 		aLayout.addView(mDisciplinesTable);
-		mController.updateValues(false);
+		getController().updateValues(false);
 	}
 }

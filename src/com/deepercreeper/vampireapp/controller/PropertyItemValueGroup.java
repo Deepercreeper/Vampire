@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
-import com.deepercreeper.vampireapp.controller.ItemValue.UpdateAction;
 import com.deepercreeper.vampireapp.controller.SelectItemDialog.SelectionListener;
 import com.deepercreeper.vampireapp.controller.ValueController.PointHandler;
 import com.deepercreeper.vampireapp.util.ViewUtil;
@@ -22,25 +21,11 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  * 
  * @author Vincent
  */
-public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, VariableValueGroup<PropertyItem, PropertyItemValue>
+public class PropertyItemValueGroup extends ItemValueGroupImpl<PropertyItem> implements VariableValueGroup<PropertyItem, PropertyItemValue>
 {
-	private CharMode										mMode;
+	private LinearLayout	mPropertiesPanel;
 	
-	private final Context									mContext;
-	
-	private LinearLayout									mPropertiesPanel;
-	
-	private TableLayout										mPropertiesTable;
-	
-	private final UpdateAction								mAction;
-	
-	private final PropertyValueController					mController;
-	
-	private final PropertyItemGroup							mGroup;
-	
-	private final List<PropertyItemValue>					mValuesList	= new ArrayList<PropertyItemValue>();
-	
-	private final HashMap<PropertyItem, PropertyItemValue>	mValues		= new HashMap<PropertyItem, PropertyItemValue>();
+	private TableLayout		mPropertiesTable;
 	
 	/**
 	 * Creates a new property value group.
@@ -57,18 +42,7 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 	public PropertyItemValueGroup(final PropertyItemGroup aGroup, final PropertyValueController aController, final Context aContext,
 			final CharMode aMode)
 	{
-		mController = aController;
-		mContext = aContext;
-		mGroup = aGroup;
-		mMode = aMode;
-		mAction = new UpdateAction()
-		{
-			@Override
-			public void update()
-			{
-				mController.updateValues(false);
-			}
-		};
+		super(aGroup, aController, aContext, aMode, null);
 	}
 	
 	@Override
@@ -84,25 +58,22 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 	}
 	
 	@Override
-	public void release()
+	public List<PropertyItemValue> getValuesList()
 	{
-		for (final PropertyItemValue value : mValuesList)
-		{
-			value.release();
-		}
+		return (List<PropertyItemValue>) super.getValuesList();
 	}
 	
 	@Override
-	public PropertyValueController getController()
+	public HashMap<PropertyItem, PropertyItemValue> getValues()
 	{
-		return mController;
+		return (HashMap<PropertyItem, PropertyItemValue>) super.getValues();
 	}
 	
 	@Override
 	public int getValue()
 	{
 		int value = 0;
-		for (final PropertyItemValue valueItem : mValuesList)
+		for (final PropertyItemValue valueItem : getValuesList())
 		{
 			value += valueItem.getFinalValue();
 		}
@@ -119,10 +90,10 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 	public void updateValues(final boolean aCanIncrease, final boolean aCanDecrease)
 	{
 		final int value = getValue();
-		for (final PropertyItemValue valueItem : mValuesList)
+		for (final PropertyItemValue valueItem : getValuesList())
 		{
-			boolean canIncrease = aCanIncrease && valueItem.canIncrease(mMode);
-			boolean canDecrease = aCanDecrease && valueItem.canDecrease(mMode);
+			boolean canIncrease = aCanIncrease && valueItem.canIncrease(getCreationMode());
+			boolean canDecrease = aCanDecrease && valueItem.canDecrease(getCreationMode());
 			if (canIncrease)
 			{
 				final int increasedValue = value - valueItem.getFinalValue() + valueItem.getItem().getFinalValue(valueItem.getValueId() + 1);
@@ -140,19 +111,19 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 	
 	private void addValue(final PropertyItemValue aValue)
 	{
-		mValuesList.add(aValue);
-		mValues.put(aValue.getItem(), aValue);
+		getValuesList().add(aValue);
+		getValues().put(aValue.getItem(), aValue);
 		if (mPropertiesTable != null)
 		{
 			mPropertiesTable.addView(aValue.getContainer());
 		}
-		mAction.update();
+		getUpdateAction().update();
 	}
 	
 	@Override
 	public void addItem(final PropertyItem aItem)
 	{
-		addValue(new PropertyItemValue(aItem, mContext, mAction, this, mMode));
+		addValue(new PropertyItemValue(aItem, getContext(), getUpdateAction(), this, getCreationMode()));
 		resize();
 	}
 	
@@ -169,64 +140,25 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 	@Override
 	public void clear()
 	{
-		mValuesList.clear();
-		mValues.clear();
-	}
-	
-	@Override
-	public PropertyItemValue getValue(final String aName)
-	{
-		return mValues.get(getGroup().getItem(aName));
-	}
-	
-	@Override
-	public List<PropertyItemValue> getValuesList()
-	{
-		return mValuesList;
-	}
-	
-	@Override
-	public PropertyItemGroup getGroup()
-	{
-		return mGroup;
-	}
-	
-	@Override
-	public CharMode getCreationMode()
-	{
-		return mMode;
-	}
-	
-	@Override
-	public void setCreationMode(final CharMode aMode)
-	{
-		final boolean resetTempPoints = mMode == CharMode.POINTS && aMode == CharMode.MAIN;
-		mMode = aMode;
-		for (final PropertyItemValue value : mValuesList)
-		{
-			value.setCreationMode(mMode);
-			if (resetTempPoints)
-			{
-				value.resetTempPoints();
-			}
-		}
+		getValuesList().clear();
+		getValues().clear();
 	}
 	
 	@Override
 	public void initLayout(final ViewGroup aLayout)
 	{
 		mPropertiesPanel = (LinearLayout) aLayout;
-		mPropertiesTable = new TableLayout(mContext);
+		mPropertiesTable = new TableLayout(getContext());
 		
 		mPropertiesTable.setLayoutParams(ViewUtil.instance().getWrapHeight());
 		
-		final LinearLayout titleRow = new LinearLayout(mContext);
+		final LinearLayout titleRow = new LinearLayout(getContext());
 		titleRow.setLayoutParams(ViewUtil.instance().getWrapHeight());
 		{
-			final Button addProperty = new Button(mContext);
+			final Button addProperty = new Button(getContext());
 			addProperty.setLayoutParams(ViewUtil.instance().getWrapHeight());
 			addProperty.setTextSize(14);
-			addProperty.setText(mContext.getResources().getString(R.string.add_property));
+			addProperty.setText(getContext().getResources().getString(R.string.add_property));
 			addProperty.setOnClickListener(new OnClickListener()
 			{
 				@Override
@@ -237,8 +169,8 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 						return;
 					}
 					final List<PropertyItem> items = new ArrayList<PropertyItem>();
-					items.addAll(mGroup.getItems());
-					for (final PropertyItemValue value : mValuesList)
+					items.addAll(getGroup().getItems());
+					for (final PropertyItemValue value : getValuesList())
 					{
 						items.remove(value.getItem());
 					}
@@ -252,20 +184,20 @@ public class PropertyItemValueGroup implements ItemValueGroup<PropertyItem>, Var
 						}
 					};
 					
-					SelectItemDialog.<PropertyItem> showSelectionDialog(items, mContext.getResources().getString(R.string.add_property), mContext,
-							action);
+					SelectItemDialog.<PropertyItem> showSelectionDialog(items, getContext().getResources().getString(R.string.add_property),
+							getContext(), action);
 				}
 			});
 			titleRow.addView(addProperty);
 		}
 		mPropertiesTable.addView(titleRow);
 		
-		for (final PropertyItemValue value : mValuesList)
+		for (final PropertyItemValue value : getValuesList())
 		{
 			mPropertiesTable.addView(value.getContainer());
 			value.refreshValue();
 		}
 		aLayout.addView(mPropertiesTable);
-		mController.updateValues(false);
+		getController().updateValues(false);
 	}
 }

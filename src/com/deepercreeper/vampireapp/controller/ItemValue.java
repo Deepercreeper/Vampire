@@ -1,5 +1,6 @@
 package com.deepercreeper.vampireapp.controller;
 
+import android.content.Context;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.controller.ValueController.PointHandler;
 
@@ -141,4 +142,10 @@ public interface ItemValue <T extends Item>
 	 * @return the current item value.
 	 */
 	public int getValue();
+	
+	public UpdateAction getUpdateAction();
+	
+	public PointHandler getPoints();
+	
+	public Context getContext();
 }

@@ -28,12 +28,14 @@ public abstract class ItemValueImpl <T extends Item> implements ItemValue<T>
 		mPoints = aPoints;
 	}
 	
-	protected PointHandler getPoints()
+	@Override
+	public PointHandler getPoints()
 	{
 		return mPoints;
 	}
 	
-	protected UpdateAction getUpdateAction()
+	@Override
+	public UpdateAction getUpdateAction()
 	{
 		return mUpdateAction;
 	}
@@ -61,7 +63,8 @@ public abstract class ItemValueImpl <T extends Item> implements ItemValue<T>
 		mPoints = aPoints;
 	}
 	
-	protected Context getContext()
+	@Override
+	public Context getContext()
 	{
 		return mContext;
 	}
