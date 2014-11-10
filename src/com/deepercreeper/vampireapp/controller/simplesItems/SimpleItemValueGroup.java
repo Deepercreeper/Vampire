@@ -56,12 +56,6 @@ public class SimpleItemValueGroup extends ItemValueGroupImpl<SimpleItem, SimpleI
 		return super.getValuesList();
 	}
 	
-	private void addValue(final SimpleItemValue aValue)
-	{
-		getValuesList().add(aValue);
-		getValues().put(aValue.getItem(), aValue);
-	}
-	
 	@Override
 	public void initLayout(final ViewGroup aLayout)
 	{
@@ -85,5 +79,11 @@ public class SimpleItemValueGroup extends ItemValueGroupImpl<SimpleItem, SimpleI
 			aLayout.addView(value.getContainer());
 			value.refreshValue();
 		}
+	}
+	
+	private void addValue(final SimpleItemValue aValue)
+	{
+		getValuesList().add(aValue);
+		getValues().put(aValue.getItem(), aValue);
 	}
 }

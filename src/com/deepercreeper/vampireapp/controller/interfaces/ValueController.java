@@ -21,17 +21,17 @@ public interface ValueController <T extends Item>
 	public static interface PointHandler
 	{
 		/**
-		 * @return the current number of free or experience points from the parent.
-		 */
-		public int getPoints();
-		
-		/**
 		 * Decreases the current available points by {@code aValue} points.
 		 * 
 		 * @param aValue
 		 *            The points to add.
 		 */
 		public void decrease(int aValue);
+		
+		/**
+		 * @return the current number of free or experience points from the parent.
+		 */
+		public int getPoints();
 		
 		/**
 		 * Increases the current available points by {@code aValue} points.
@@ -43,38 +43,29 @@ public interface ValueController <T extends Item>
 	}
 	
 	/**
-	 * @param aPoints
-	 *            The new point listener.
-	 */
-	public void setPoints(PointHandler aPoints);
-	
-	/**
-	 * Enables or disabled the value groups for changing anything.
-	 * 
-	 * @param aEnabled
-	 *            Whether the groups should be enabled or not.
-	 */
-	public void setEnabled(boolean aEnabled);
-	
-	/**
-	 * Removes all temporary points from all values.
-	 */
-	public void resetTempPoints();
-	
-	/**
-	 * Removes all widgets from their parent container.
-	 */
-	public void release();
-	
-	/**
 	 * Closes the widget container. Maybe for refilling with new values.
 	 */
 	public void close();
 	
 	/**
+	 * @return the context of this value controller.
+	 */
+	public Context getContext();
+	
+	/**
 	 * @return the controller.
 	 */
 	public Controller<T> getController();
+	
+	/**
+	 * @return whether this controller is in the creation mode.
+	 */
+	public CharMode getCreationMode();
+	
+	/**
+	 * @return the point handler of this value controller.
+	 */
+	public PointHandler getPoints();
 	
 	/**
 	 * The given layout is a container for a drop down button and a linear layout<br>
@@ -88,9 +79,14 @@ public interface ValueController <T extends Item>
 	public void initLayout(LinearLayout aLayout);
 	
 	/**
-	 * @return whether this controller is in the creation mode.
+	 * Removes all widgets from their parent container.
 	 */
-	public CharMode getCreationMode();
+	public void release();
+	
+	/**
+	 * Removes all temporary points from all values.
+	 */
+	public void resetTempPoints();
 	
 	/**
 	 * Sets whether this controller is in the creation mode.
@@ -101,20 +97,24 @@ public interface ValueController <T extends Item>
 	public void setCreationMode(CharMode aMode);
 	
 	/**
+	 * Enables or disabled the value groups for changing anything.
+	 * 
+	 * @param aEnabled
+	 *            Whether the groups should be enabled or not.
+	 */
+	public void setEnabled(boolean aEnabled);
+	
+	/**
+	 * @param aPoints
+	 *            The new point listener.
+	 */
+	public void setPoints(PointHandler aPoints);
+	
+	/**
 	 * Updates all value groups.
 	 * 
 	 * @param aUpdateOthers
 	 *            Whether all other controllers should also be updated.
 	 */
 	public void updateValues(boolean aUpdateOthers);
-	
-	/**
-	 * @return the point handler of this value controller.
-	 */
-	public PointHandler getPoints();
-	
-	/**
-	 * @return the context of this value controller.
-	 */
-	public Context getContext();
 }

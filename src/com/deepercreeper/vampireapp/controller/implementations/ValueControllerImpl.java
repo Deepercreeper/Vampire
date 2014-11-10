@@ -51,21 +51,9 @@ public abstract class ValueControllerImpl <T extends Item> implements ValueContr
 	}
 	
 	@Override
-	public void setPoints(final PointHandler aPoints)
-	{
-		mPoints = aPoints;
-	}
-	
-	@Override
 	public Context getContext()
 	{
 		return mContext;
-	}
-	
-	@Override
-	public PointHandler getPoints()
-	{
-		return mPoints;
 	}
 	
 	@Override
@@ -81,9 +69,21 @@ public abstract class ValueControllerImpl <T extends Item> implements ValueContr
 	}
 	
 	@Override
+	public PointHandler getPoints()
+	{
+		return mPoints;
+	}
+	
+	@Override
 	public void setCreationMode(final CharMode aMode)
 	{
 		mMode = aMode;
+	}
+	
+	@Override
+	public void setPoints(final PointHandler aPoints)
+	{
+		mPoints = aPoints;
 	}
 	
 	@Override

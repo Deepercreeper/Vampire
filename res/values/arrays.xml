@@ -9,7 +9,7 @@
     <string-array name="ability_values">
         <item>Talente:Aufmerksamkeit,Ausflüchte,Ausweichen,Diebstahl,Einschüchtern,Empathie,Führungsqualitäten,Handgemenge,Schauspielerei,Sportlichkeit</item>
         <item>Fertigkeiten:Bogenschießen,Etikette,Handwerk,Heimlichkeit,Kräuterkunde,Musik,Nahkampf,Reiten,Tierkunde,Überleben</item>
-        <item>Kenntnisse:Akademisches Wissen,Folklore,Gesetzeskenntnis,Linguistik,Medizin,Nachforschungen,Naturwissenschaften,Okkultismus,Politik,Verwaltung</item>
+        <item>Kenntnisse:Akademisches Wissen,Folklore,Gesetzeskenntnis,#Linguistik,Medizin,Nachforschungen,Naturwissenschaften,Okkultismus,Politik,Verwaltung</item>
     </string-array>
 
     <string name="virtue_values">Tugenden:Gewissen/Überzeugung,Selbstbeherrschung/Instinkt,Mut</string>
@@ -77,18 +77,18 @@
         <item>Verdunkelung:Schattenmantel,1;Unsichtbare Gegenwart,2;Maske der tausend Gesichter,3,Manipulation#Schauspielerei;Verschwinden vor dem geistigen Auge,4,Charisma#Heimlichkeit;Schutzmantel für die Versammelten,5,Heimlichkeit;Seelenmaske,6</item>
     </string-array>
     <string-array name="backgrounds">
-        <item>Einfluss</item>
-        <item>Gefolgsleute</item>
-        <item>Generation</item>
-        <item>Herde</item>
-        <item>Kontakte</item>
-        <item>Mentor</item>
+        <item>#Einfluss</item>
+        <item>#Gefolgsleute</item>
+        <item>#Generation</item>
+        <item>#Herde</item>
+        <item>#Kontakte</item>
+        <item>#Mentor</item>
         <item>Resourcen</item>
         <item>Status</item>
-        <item>Verbündete</item>
+        <item>#Verbündete</item>
     </string-array>
     <string-array name="properties">
-        <item>Bestimmung:1</item>
+        <item>#Bestimmung:1</item>
         <item>Gesunder Menschenverstand:1</item>
         <item>Konzentration:1</item>
         <item>Sternendeuter:1</item>
@@ -97,7 +97,7 @@
         <item>Ruhe:3</item>
         <item>Eiserner Wille:4</item>
         <item>Selbstsicherheit:5</item>
-        <item>Hervorragende Sinne:1,2,3,4,5</item>
+        <item>#Hervorragende Sinne:1,2,3,4,5</item>
         <item>Beidhändigkeit:1</item>
         <item>Essen:1</item>
         <item>Sprachtalent:2</item>
@@ -110,13 +110,13 @@
         <item>Glück:4</item>
         <item>Wahrer Glaube:7</item>
         <item>Beistand:1,2,3</item>
-        <item>Besonderes Geschenk:1,2,3</item>
+        <item>#Besonderes Geschenk:1,2,3</item>
         <item>Guter Ruf:2</item>
-        <item>Marionette:3</item>
+        <item>#Marionette:3</item>
         <item>Adliger:1,2,3</item>
         <item>Kirchlicher Rang:1,2,3</item>
-        <item>Gutshaus:2</item>
-        <item>Kontrolle über eine Institution:2,3,4,5</item>
+        <item>#Gutshaus:2</item>
+        <item>#Kontrolle über eine Institution:2,3,4,5</item>
         <item>Spionagenetz:2</item>
         <item>Schlangenmensch:1</item>
         <item>Gute Durchblutung:2</item>
@@ -124,16 +124,16 @@
         <item>Wirksame Verdauung:3</item>
         <item>Riesenwuchs:4</item>
         <item>-Alpträume:1</item>
-        <item>-Beuteeinschränkung:1</item>
-        <item>-Intoleranz/Hass:1,2,3</item>
-        <item>-Phobie:1,3</item>
+        <item>#-Beuteeinschränkung:1</item>
+        <item>#-Intoleranz/Hass:1,2,3</item>
+        <item>#-Phobie:1,3</item>
         <item>-Selbstüberschätzung:1</item>
-        <item>-Zwangsvorstellungen:1</item>
+        <item>#-Zwangsvorstellungen:1</item>
         <item>-Minderwertigkeitskomplexe:2</item>
-        <item>-Ortsgebunden:2</item>
-        <item>-Rache:2</item>
+        <item>#-Ortsgebunden:2</item>
+        <item>#-Rache:2</item>
         <item>-Sensibilität:2</item>
-        <item>-Besessenheit:3</item>
+        <item>#-Besessenheit:3</item>
         <item>-Tiefer Schlaf:1</item>
         <item>-Amnesie:2</item>
         <item>-Verwirrt:2</item>
@@ -155,7 +155,7 @@
         <item>-Dunkles Schicksal:5</item>
         <item>-Ablehnung des Erzeugers:1</item>
         <item>-Berüchtigter Erzeuger:1</item>
-        <item>-Feind:1,2,3,4,5</item>
+        <item>#-Feind:1,2,3,4,5</item>
         <item>-Berüchtigt:3</item>
         <item>-Bürger zweiter Klasse:2</item>
         <item>-Totgeglaubt:2</item>
@@ -163,14 +163,14 @@
         <item>-Gejagt:4</item>
         <item>-Klein:1</item>
         <item>-Schwaches Blut:1</item>
-        <item>-Entstellt:2</item>
+        <item>#-Entstellt:2</item>
         <item>-Selektive Verdauung:2</item>
-        <item>-Dauerhafte Wunde:3</item>
+        <item>#-Dauerhafte Wunde:3</item>
         <item>-Einarmig:3</item>
         <item>-Kind:3</item>
         <item>-Lähmung:3</item>
         <item>-Leprakranker:3</item>
-        <item>-Missbildung:3</item>
+        <item>#-Missbildung:3</item>
         <item>-Anämie:4</item>
         <item>-Stummheit:4</item>
     </string-array>

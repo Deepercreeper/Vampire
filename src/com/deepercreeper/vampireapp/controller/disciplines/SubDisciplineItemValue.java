@@ -53,20 +53,56 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	}
 	
 	@Override
-	public void release()
+	public boolean canDecrease(final CharMode aMode)
 	{
-		return;
+		switch (aMode)
+		{
+			case MAIN :
+				return canDecreaseCreation();
+			case POINTS :
+				return getTempPoints() > 0;
+			case NORMAL :
+				return false;
+		}
+		return false;
 	}
 	
-	/**
-	 * Sets the parent discipline value.
-	 * 
-	 * @param aParent
-	 *            The new parent discipline.
-	 */
-	public void setParent(final DisciplineItemValue aParent)
+	@Override
+	public boolean canIncrease(final CharMode aMode)
 	{
-		mParent = aParent;
+		switch (aMode)
+		{
+			case MAIN :
+				return canIncreaseValue();
+			case POINTS :
+				return canIncreaseValue() && getPoints().getPoints() >= getItem().getFreePointsCost();
+			case NORMAL :
+				return canIncrease();
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean equals(final Object aO)
+	{
+		if (aO instanceof SubDisciplineItemValue)
+		{
+			final SubDisciplineItemValue value = (SubDisciplineItemValue) aO;
+			return getItem().equals(value.getItem());
+		}
+		return false;
+	}
+	
+	@Override
+	public TableRow getContainer()
+	{
+		return null;
+	}
+	
+	@Override
+	public SubDisciplineItem getItem()
+	{
+		return (SubDisciplineItem) super.getItem();
 	}
 	
 	/**
@@ -205,6 +241,12 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	}
 	
 	@Override
+	public void release()
+	{
+		return;
+	}
+	
+	@Override
 	public void resetTempPoints()
 	{
 		mTempPoints = 0;
@@ -212,24 +254,27 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	}
 	
 	@Override
-	protected void init()
+	public void setCreationMode(final CharMode aMode)
 	{
-		// The widgets are generated dynamically
+		super.setCreationMode(aMode);
+		mEditButton.setEnabled(getCreationMode() == CharMode.MAIN);
+	}
+	
+	/**
+	 * Sets the parent discipline value.
+	 * 
+	 * @param aParent
+	 *            The new parent discipline.
+	 */
+	public void setParent(final DisciplineItemValue aParent)
+	{
+		mParent = aParent;
 	}
 	
 	@Override
-	public boolean canDecrease(final CharMode aMode)
+	protected void init()
 	{
-		switch (aMode)
-		{
-			case MAIN :
-				return canDecreaseCreation();
-			case POINTS :
-				return getTempPoints() > 0;
-			case NORMAL :
-				return false;
-		}
-		return false;
+		// The widgets are generated dynamically
 	}
 	
 	private boolean canDecreaseCreation()
@@ -255,21 +300,6 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 		return canDecrease();
 	}
 	
-	@Override
-	public boolean canIncrease(final CharMode aMode)
-	{
-		switch (aMode)
-		{
-			case MAIN :
-				return canIncreaseValue();
-			case POINTS :
-				return canIncreaseValue() && getPoints().getPoints() >= getItem().getFreePointsCost();
-			case NORMAL :
-				return canIncrease();
-		}
-		return false;
-	}
-	
 	private boolean canIncreaseValue()
 	{
 		final DisciplineItemValue parentValue = getParent();
@@ -279,35 +309,5 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 			return canIncrease();
 		}
 		return false;
-	}
-	
-	@Override
-	public void setCreationMode(final CharMode aMode)
-	{
-		super.setCreationMode(aMode);
-		mEditButton.setEnabled(getCreationMode() == CharMode.MAIN);
-	}
-	
-	@Override
-	public boolean equals(final Object aO)
-	{
-		if (aO instanceof SubDisciplineItemValue)
-		{
-			final SubDisciplineItemValue value = (SubDisciplineItemValue) aO;
-			return getItem().equals(value.getItem());
-		}
-		return false;
-	}
-	
-	@Override
-	public SubDisciplineItem getItem()
-	{
-		return (SubDisciplineItem) super.getItem();
-	}
-	
-	@Override
-	public TableRow getContainer()
-	{
-		return null;
 	}
 }

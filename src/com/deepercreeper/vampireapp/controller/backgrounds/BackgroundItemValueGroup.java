@@ -52,15 +52,10 @@ public class BackgroundItemValueGroup extends VariableValueGroupImpl<BackgroundI
 	}
 	
 	@Override
-	public HashMap<BackgroundItem, BackgroundItemValue> getValues()
+	public void addItem(final BackgroundItem aItem)
 	{
-		return super.getValues();
-	}
-	
-	@Override
-	public List<BackgroundItemValue> getValuesList()
-	{
-		return super.getValuesList();
+		addValue(new BackgroundItemValue(aItem, getContext(), getUpdateAction(), this, getCreationMode(), getPoints()));
+		resize();
 	}
 	
 	/**
@@ -95,47 +90,16 @@ public class BackgroundItemValueGroup extends VariableValueGroupImpl<BackgroundI
 				action);
 	}
 	
-	private void addValue(final BackgroundItemValue aValue)
+	@Override
+	public HashMap<BackgroundItem, BackgroundItemValue> getValues()
 	{
-		getValuesList().add(aValue);
-		getValues().put(aValue.getItem(), aValue);
-		if (mBackgroundsTable != null)
-		{
-			final TableRow row = new TableRow(getContext());
-			aValue.initRow(row);
-			mBackgroundsTable.addView(row);
-		}
-		getUpdateAction().update();
-	}
-	
-	private void setValue(final BackgroundItemValue aOldValue, final BackgroundItem aNewItem)
-	{
-		final int oldIndex = getValuesList().indexOf(aOldValue);
-		final BackgroundItemValue newValue = new BackgroundItemValue(aNewItem, getContext(), getUpdateAction(), this, getCreationMode(), getPoints());
-		getValuesList().set(oldIndex, newValue);
-		getValues().remove(aOldValue.getItem());
-		getValues().put(aNewItem, newValue);
-		if (mBackgroundsTable != null)
-		{
-			newValue.initRow(aOldValue.getContainer());
-		}
+		return super.getValues();
 	}
 	
 	@Override
-	public void addItem(final BackgroundItem aItem)
+	public List<BackgroundItemValue> getValuesList()
 	{
-		addValue(new BackgroundItemValue(aItem, getContext(), getUpdateAction(), this, getCreationMode(), getPoints()));
-		resize();
-	}
-	
-	@Override
-	public void resize()
-	{
-		if (mBackgroundsPanel != null)
-		{
-			mBackgroundsPanel.startAnimation(new ResizeAnimation(mBackgroundsPanel, mBackgroundsPanel.getWidth(), ViewUtil
-					.calcHeight(mBackgroundsPanel)));
-		}
+		return super.getValuesList();
 	}
 	
 	@Override
@@ -198,5 +162,41 @@ public class BackgroundItemValueGroup extends VariableValueGroupImpl<BackgroundI
 		}
 		aLayout.addView(mBackgroundsTable);
 		getController().updateValues(false);
+	}
+	
+	@Override
+	public void resize()
+	{
+		if (mBackgroundsPanel != null)
+		{
+			mBackgroundsPanel.startAnimation(new ResizeAnimation(mBackgroundsPanel, mBackgroundsPanel.getWidth(), ViewUtil
+					.calcHeight(mBackgroundsPanel)));
+		}
+	}
+	
+	private void addValue(final BackgroundItemValue aValue)
+	{
+		getValuesList().add(aValue);
+		getValues().put(aValue.getItem(), aValue);
+		if (mBackgroundsTable != null)
+		{
+			final TableRow row = new TableRow(getContext());
+			aValue.initRow(row);
+			mBackgroundsTable.addView(row);
+		}
+		getUpdateAction().update();
+	}
+	
+	private void setValue(final BackgroundItemValue aOldValue, final BackgroundItem aNewItem)
+	{
+		final int oldIndex = getValuesList().indexOf(aOldValue);
+		final BackgroundItemValue newValue = new BackgroundItemValue(aNewItem, getContext(), getUpdateAction(), this, getCreationMode(), getPoints());
+		getValuesList().set(oldIndex, newValue);
+		getValues().remove(aOldValue.getItem());
+		getValues().put(aNewItem, newValue);
+		if (mBackgroundsTable != null)
+		{
+			newValue.initRow(aOldValue.getContainer());
+		}
 	}
 }

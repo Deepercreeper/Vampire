@@ -13,13 +13,6 @@ import com.deepercreeper.vampireapp.controller.implementations.Named;
 public interface ListController <T extends Named>
 {
 	/**
-	 * @param aValue
-	 *            The value whose index should be returned.
-	 * @return the index of the given value.
-	 */
-	public int indexOf(T aValue);
-	
-	/**
 	 * @param aPos
 	 *            The position of the value that should be returned.
 	 * @return the value at the given position.
@@ -39,12 +32,19 @@ public interface ListController <T extends Named>
 	public T getFirst();
 	
 	/**
+	 * @return a list of all value names.
+	 */
+	public List<String> getNames();
+	
+	/**
 	 * @return a list of all values.
 	 */
 	public List<T> getValues();
 	
 	/**
-	 * @return a list of all value names.
+	 * @param aValue
+	 *            The value whose index should be returned.
+	 * @return the index of the given value.
 	 */
-	public List<String> getNames();
+	public int indexOf(T aValue);
 }

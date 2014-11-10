@@ -8,12 +8,12 @@ package com.deepercreeper.vampireapp.controller.interfaces;
 public interface Item extends Comparable<Item>
 {
 	/**
-	 * Each item has to have a description.<br>
+	 * Each item has to have a display name.<br>
 	 * It is displayed when the user touches any item name.
 	 * 
-	 * @return the item description.
+	 * @return the item display name.
 	 */
-	public String getDescription();
+	public String getDisplayName();
 	
 	/**
 	 * @return the number of free points that have to be spent for increasing a value of this item.
@@ -46,4 +46,9 @@ public interface Item extends Comparable<Item>
 	 * @return the item start value.
 	 */
 	public int getStartValue();
+	
+	/**
+	 * @return whether this item needs a description that has to be given by creating a character.
+	 */
+	public boolean needsDescription();
 }

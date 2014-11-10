@@ -74,22 +74,169 @@ public class DisciplineItemValue extends ItemValueImpl<DisciplineItem, Disciplin
 	}
 	
 	@Override
-	public void setPoints(final PointHandler aPoints)
+	public boolean canDecrease()
 	{
-		super.setPoints(aPoints);
-		if (getItem().isParentItem())
+		return getValue() > getItem().getStartValue();
+	}
+	
+	@Override
+	public boolean canDecrease(final CharMode aMode)
+	{
+		switch (aMode)
 		{
-			for (final SubDisciplineItemValue subValue : mSubValues)
+			case MAIN :
+				return canDecrease();
+			case POINTS :
+				return mTempPoints > 0;
+			case NORMAL :
+				return false;
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean canIncrease()
+	{
+		return getValue() < getItem().getMaxValue();
+	}
+	
+	@Override
+	public boolean canIncrease(final CharMode aMode)
+	{
+		switch (aMode)
+		{
+			case MAIN :
+				return canIncrease() && mValue < getItem().getMaxStartValue();
+			case POINTS :
+				return canIncrease() && getPoints().getPoints() >= getItem().getFreePointsCost();
+			case NORMAL :
+				return canIncrease();
+		}
+		return false;
+	}
+	
+	@Override
+	public void decrease()
+	{
+		if (canDecrease())
+		{
+			if (getCreationMode() == CharMode.POINTS)
 			{
-				subValue.setPoints(getPoints());
+				mTempPoints-- ;
+				getPoints().increase(getItem().getFreePointsCost());
+			}
+			else
+			{
+				mValue-- ;
 			}
 		}
+	}
+	
+	@Override
+	public LinearLayout getContainer()
+	{
+		return mContainer;
+	}
+	
+	/**
+	 * Returns the sub discipline value at the given position.
+	 * 
+	 * @param aPos
+	 *            The sub discipline position.
+	 * @return the sub discipline value at the given position.
+	 */
+	public SubDisciplineItemValue getSubValue(final int aPos)
+	{
+		if (aPos >= mSubValues.size())
+		{
+			return null;
+		}
+		return mSubValues.get(aPos);
+	}
+	
+	/**
+	 * Returns the index of the given sub discipline value.
+	 * 
+	 * @param aSubValue
+	 *            The sub value.
+	 * @return the sub discipline value index.
+	 */
+	public int getSubValueIndex(final SubDisciplineItemValue aSubValue)
+	{
+		for (int i = 0; i < mSubValues.size(); i++ )
+		{
+			if (aSubValue.equals(mSubValues.get(i)))
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	/**
+	 * @return a list of all sub discipline item values.
+	 */
+	public List<SubDisciplineItemValue> getSubValues()
+	{
+		return mSubValues;
 	}
 	
 	@Override
 	public int getTempPoints()
 	{
 		return mTempPoints;
+	}
+	
+	@Override
+	public int getValue()
+	{
+		return mValue + mTempPoints;
+	}
+	
+	/**
+	 * This returns whether this discipline has a sub discipline value at the<br>
+	 * given position if this is a parent discipline.
+	 * 
+	 * @param aPos
+	 *            The sub discipline position.
+	 * @return {@code false} if the sub discipline at the given position is {@code null} or not.
+	 */
+	public boolean hasSubDiscipline(final int aPos)
+	{
+		return mSubValues.size() > aPos && mSubValues.get(aPos) != null;
+	}
+	
+	@Override
+	public void increase()
+	{
+		if (canIncrease())
+		{
+			if (getCreationMode() == CharMode.POINTS)
+			{
+				mTempPoints++ ;
+				getPoints().decrease(getItem().getFreePointsCost());
+			}
+			else
+			{
+				mValue++ ;
+			}
+		}
+	}
+	
+	@Override
+	public void refreshValue()
+	{
+		if (getItem().isParentItem())
+		{
+			for (final SubDisciplineItemValue subValue : mSubValues)
+			{
+				subValue.refreshValue();
+			}
+		}
+		else
+		{
+			ViewUtil.applyValue(getValue(), mValueDisplay);
+		}
 	}
 	
 	@Override
@@ -103,6 +250,23 @@ public class DisciplineItemValue extends ItemValueImpl<DisciplineItem, Disciplin
 			}
 		}
 		ViewUtil.release(mContainer, false);
+	}
+	
+	@Override
+	public void resetTempPoints()
+	{
+		if (getItem().isParentItem())
+		{
+			for (final SubDisciplineItemValue subValue : mSubValues)
+			{
+				subValue.resetTempPoints();
+			}
+		}
+		else
+		{
+			mTempPoints = 0;
+			refreshValue();
+		}
 	}
 	
 	@Override
@@ -122,6 +286,68 @@ public class DisciplineItemValue extends ItemValueImpl<DisciplineItem, Disciplin
 		}
 	}
 	
+	@Override
+	public void setDecreasable(final boolean aEnabled)
+	{
+		mDecreaseButton.setEnabled(aEnabled);
+	}
+	
+	@Override
+	public void setIncreasable(final boolean aEnabled)
+	{
+		mIncreaseButton.setEnabled(aEnabled);
+	}
+	
+	@Override
+	public void setPoints(final PointHandler aPoints)
+	{
+		super.setPoints(aPoints);
+		if (getItem().isParentItem())
+		{
+			for (final SubDisciplineItemValue subValue : mSubValues)
+			{
+				subValue.setPoints(getPoints());
+			}
+		}
+	}
+	
+	/**
+	 * Sets the sub discipline item value at the given position.
+	 * 
+	 * @param aPos
+	 *            The sub discipline value position.
+	 * @param aSubValue
+	 *            The sub discipline value to set.
+	 */
+	public void setSubValue(final int aPos, final SubDisciplineItemValue aSubValue)
+	{
+		if (mSubValues.size() <= aPos)
+		{
+			mSubValues.add(aPos, aSubValue);
+		}
+		else
+		{
+			mSubValues.set(aPos, aSubValue);
+		}
+		aSubValue.setParent(this);
+	}
+	
+	protected ImageButton getDecreaseButton()
+	{
+		return mDecreaseButton;
+	}
+	
+	@Override
+	protected DisciplineItemValueGroup getGroup()
+	{
+		return (DisciplineItemValueGroup) super.getGroup();
+	}
+	
+	protected ImageButton getIncreaseButton()
+	{
+		return mIncreaseButton;
+	}
+	
 	protected void init()
 	{
 		if (getItem().isParentItem())
@@ -134,40 +360,9 @@ public class DisciplineItemValue extends ItemValueImpl<DisciplineItem, Disciplin
 		}
 	}
 	
-	private void initParentDiscipline()
+	protected void setDecreaseButton(final ImageButton aDecreaseButton)
 	{
-		mContainer.setLayoutParams(ViewUtil.instance().getTableWrapAll());
-		
-		mEditButtons.clear();
-		
-		final TableLayout table = new TableLayout(getContext());
-		table.setLayoutParams(ViewUtil.instance().getWrapHeight());
-		
-		final LinearLayout parentRow = new LinearLayout(getContext());
-		parentRow.setLayoutParams(ViewUtil.instance().getTableWrapAll());
-		{
-			final TextView parentName = new TextView(getContext());
-			parentName.setLayoutParams(ViewUtil.instance().getWrapAll());
-			parentName.setText(getItem().getName() + ":");
-			parentRow.addView(parentName);
-		}
-		table.addView(parentRow);
-		
-		for (int i = 0; i < DisciplineItem.MAX_SUB_DISCIPLINES; i++ )
-		{
-			if (hasSubDiscipline(i))
-			{
-				final TableRow subRow = new TableRow(getContext());
-				subRow.setLayoutParams(ViewUtil.instance().getTableWrapAll());
-				mSubValues.get(i).initRow(subRow, i);
-			}
-			else
-			{
-				table.addView(createSubDisciplineRow(i));
-			}
-		}
-		
-		mContainer.addView(table);
+		mDecreaseButton = aDecreaseButton;
 	}
 	
 	protected void setIncreaseButton(final ImageButton aIncreaseButton)
@@ -175,19 +370,63 @@ public class DisciplineItemValue extends ItemValueImpl<DisciplineItem, Disciplin
 		mIncreaseButton = aIncreaseButton;
 	}
 	
-	protected void setDecreaseButton(final ImageButton aDecreaseButton)
+	private TableRow createSubDisciplineRow(final int aValueIx)
 	{
-		mDecreaseButton = aDecreaseButton;
-	}
-	
-	protected ImageButton getIncreaseButton()
-	{
-		return mIncreaseButton;
-	}
-	
-	protected ImageButton getDecreaseButton()
-	{
-		return mDecreaseButton;
+		final TableRow subRow = new TableRow(getContext());
+		subRow.setLayoutParams(ViewUtil.instance().getTableWrapAll());
+		
+		final GridLayout numberAndName = new GridLayout(getContext());
+		numberAndName.setLayoutParams(ViewUtil.instance().getRowWrapAll());
+		{
+			final TextView number = new TextView(getContext());
+			number.setLayoutParams(ViewUtil.instance().getNumberSize());
+			number.setText((aValueIx + 1) + ".");
+			number.setEllipsize(TruncateAt.END);
+			number.setGravity(Gravity.CENTER_VERTICAL);
+			number.setSingleLine();
+			numberAndName.addView(number);
+			
+			final ImageButton edit = new ImageButton(getContext());
+			edit.setLayoutParams(ViewUtil.instance().getButtonSize());
+			edit.setContentDescription("Edit");
+			edit.setImageResource(android.R.drawable.ic_menu_add);
+			edit.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					if (SelectItemDialog.isDialogOpen())
+					{
+						return;
+					}
+					final List<SubDisciplineItem> items = new ArrayList<SubDisciplineItem>();
+					items.addAll(getItem().getSubItems());
+					for (final SubDisciplineItemValue value : getSubValues())
+					{
+						items.remove(value.getItem());
+					}
+					
+					final SelectionListener<SubDisciplineItem> action = new SelectionListener<SubDisciplineItem>()
+					{
+						@Override
+						public void select(final SubDisciplineItem aItem)
+						{
+							final SubDisciplineItemValue value = new SubDisciplineItemValue(aItem, getContext(), getUpdateAction(), getGroup(),
+									getCreationMode(), getPoints());
+							setSubValue(aValueIx, value);
+							value.initRow(subRow, aValueIx);
+						}
+					};
+					SelectItemDialog.<SubDisciplineItem> showSelectionDialog(items, getContext().getResources().getString(R.string.edit_discipline),
+							getContext(), action);
+				}
+			});
+			edit.setEnabled(getCreationMode() == CharMode.MAIN);
+			mEditButtons.add(edit);
+			numberAndName.addView(edit);
+		}
+		subRow.addView(numberAndName);
+		return subRow;
 	}
 	
 	private void initDiscipline()
@@ -251,278 +490,39 @@ public class DisciplineItemValue extends ItemValueImpl<DisciplineItem, Disciplin
 		mContainer.addView(spinnerGrid);
 	}
 	
-	@Override
-	public void refreshValue()
+	private void initParentDiscipline()
 	{
-		if (getItem().isParentItem())
-		{
-			for (final SubDisciplineItemValue subValue : mSubValues)
-			{
-				subValue.refreshValue();
-			}
-		}
-		else
-		{
-			ViewUtil.applyValue(getValue(), mValueDisplay);
-		}
-	}
-	
-	private TableRow createSubDisciplineRow(final int aValueIx)
-	{
-		final TableRow subRow = new TableRow(getContext());
-		subRow.setLayoutParams(ViewUtil.instance().getTableWrapAll());
+		mContainer.setLayoutParams(ViewUtil.instance().getTableWrapAll());
 		
-		final GridLayout numberAndName = new GridLayout(getContext());
-		numberAndName.setLayoutParams(ViewUtil.instance().getRowWrapAll());
+		mEditButtons.clear();
+		
+		final TableLayout table = new TableLayout(getContext());
+		table.setLayoutParams(ViewUtil.instance().getWrapHeight());
+		
+		final LinearLayout parentRow = new LinearLayout(getContext());
+		parentRow.setLayoutParams(ViewUtil.instance().getTableWrapAll());
 		{
-			final TextView number = new TextView(getContext());
-			number.setLayoutParams(ViewUtil.instance().getNumberSize());
-			number.setText((aValueIx + 1) + ".");
-			number.setEllipsize(TruncateAt.END);
-			number.setGravity(Gravity.CENTER_VERTICAL);
-			number.setSingleLine();
-			numberAndName.addView(number);
-			
-			final ImageButton edit = new ImageButton(getContext());
-			edit.setLayoutParams(ViewUtil.instance().getButtonSize());
-			edit.setContentDescription("Edit");
-			edit.setImageResource(android.R.drawable.ic_menu_add);
-			edit.setOnClickListener(new OnClickListener()
+			final TextView parentName = new TextView(getContext());
+			parentName.setLayoutParams(ViewUtil.instance().getWrapAll());
+			parentName.setText(getItem().getName() + ":");
+			parentRow.addView(parentName);
+		}
+		table.addView(parentRow);
+		
+		for (int i = 0; i < DisciplineItem.MAX_SUB_DISCIPLINES; i++ )
+		{
+			if (hasSubDiscipline(i))
 			{
-				@Override
-				public void onClick(final View aV)
-				{
-					if (SelectItemDialog.isDialogOpen())
-					{
-						return;
-					}
-					final List<SubDisciplineItem> items = new ArrayList<SubDisciplineItem>();
-					items.addAll(getItem().getSubItems());
-					for (final SubDisciplineItemValue value : getSubValues())
-					{
-						items.remove(value.getItem());
-					}
-					
-					final SelectionListener<SubDisciplineItem> action = new SelectionListener<SubDisciplineItem>()
-					{
-						@Override
-						public void select(final SubDisciplineItem aItem)
-						{
-							final SubDisciplineItemValue value = new SubDisciplineItemValue(aItem, getContext(), getUpdateAction(), getGroup(),
-									getCreationMode(), getPoints());
-							setSubValue(aValueIx, value);
-							value.initRow(subRow, aValueIx);
-						}
-					};
-					SelectItemDialog.<SubDisciplineItem> showSelectionDialog(items, getContext().getResources().getString(R.string.edit_discipline),
-							getContext(), action);
-				}
-			});
-			edit.setEnabled(getCreationMode() == CharMode.MAIN);
-			mEditButtons.add(edit);
-			numberAndName.addView(edit);
-		}
-		subRow.addView(numberAndName);
-		return subRow;
-	}
-	
-	/**
-	 * Returns the index of the given sub discipline value.
-	 * 
-	 * @param aSubValue
-	 *            The sub value.
-	 * @return the sub discipline value index.
-	 */
-	public int getSubValueIndex(final SubDisciplineItemValue aSubValue)
-	{
-		for (int i = 0; i < mSubValues.size(); i++ )
-		{
-			if (aSubValue.equals(mSubValues.get(i)))
-			{
-				return i;
-			}
-		}
-		return -1;
-	}
-	
-	@Override
-	public LinearLayout getContainer()
-	{
-		return mContainer;
-	}
-	
-	@Override
-	public void setDecreasable(final boolean aEnabled)
-	{
-		mDecreaseButton.setEnabled(aEnabled);
-	}
-	
-	@Override
-	public void setIncreasable(final boolean aEnabled)
-	{
-		mIncreaseButton.setEnabled(aEnabled);
-	}
-	
-	@Override
-	public void resetTempPoints()
-	{
-		if (getItem().isParentItem())
-		{
-			for (final SubDisciplineItemValue subValue : mSubValues)
-			{
-				subValue.resetTempPoints();
-			}
-		}
-		else
-		{
-			mTempPoints = 0;
-			refreshValue();
-		}
-	}
-	
-	@Override
-	public boolean canIncrease(final CharMode aMode)
-	{
-		switch (aMode)
-		{
-			case MAIN :
-				return canIncrease() && mValue < getItem().getMaxStartValue();
-			case POINTS :
-				return canIncrease() && getPoints().getPoints() >= getItem().getFreePointsCost();
-			case NORMAL :
-				return canIncrease();
-		}
-		return false;
-	}
-	
-	@Override
-	public boolean canDecrease(final CharMode aMode)
-	{
-		switch (aMode)
-		{
-			case MAIN :
-				return canDecrease();
-			case POINTS :
-				return mTempPoints > 0;
-			case NORMAL :
-				return false;
-		}
-		return false;
-	}
-	
-	@Override
-	public boolean canIncrease()
-	{
-		return getValue() < getItem().getMaxValue();
-	}
-	
-	@Override
-	public boolean canDecrease()
-	{
-		return getValue() > getItem().getStartValue();
-	}
-	
-	/**
-	 * Returns the sub discipline value at the given position.
-	 * 
-	 * @param aPos
-	 *            The sub discipline position.
-	 * @return the sub discipline value at the given position.
-	 */
-	public SubDisciplineItemValue getSubValue(final int aPos)
-	{
-		if (aPos >= mSubValues.size())
-		{
-			return null;
-		}
-		return mSubValues.get(aPos);
-	}
-	
-	/**
-	 * Sets the sub discipline item value at the given position.
-	 * 
-	 * @param aPos
-	 *            The sub discipline value position.
-	 * @param aSubValue
-	 *            The sub discipline value to set.
-	 */
-	public void setSubValue(final int aPos, final SubDisciplineItemValue aSubValue)
-	{
-		if (mSubValues.size() <= aPos)
-		{
-			mSubValues.add(aPos, aSubValue);
-		}
-		else
-		{
-			mSubValues.set(aPos, aSubValue);
-		}
-		aSubValue.setParent(this);
-	}
-	
-	/**
-	 * This returns whether this discipline has a sub discipline value at the<br>
-	 * given position if this is a parent discipline.
-	 * 
-	 * @param aPos
-	 *            The sub discipline position.
-	 * @return {@code false} if the sub discipline at the given position is {@code null} or not.
-	 */
-	public boolean hasSubDiscipline(final int aPos)
-	{
-		return mSubValues.size() > aPos && mSubValues.get(aPos) != null;
-	}
-	
-	/**
-	 * @return a list of all sub discipline item values.
-	 */
-	public List<SubDisciplineItemValue> getSubValues()
-	{
-		return mSubValues;
-	}
-	
-	@Override
-	public int getValue()
-	{
-		return mValue + mTempPoints;
-	}
-	
-	@Override
-	public void increase()
-	{
-		if (canIncrease())
-		{
-			if (getCreationMode() == CharMode.POINTS)
-			{
-				mTempPoints++ ;
-				getPoints().decrease(getItem().getFreePointsCost());
+				final TableRow subRow = new TableRow(getContext());
+				subRow.setLayoutParams(ViewUtil.instance().getTableWrapAll());
+				mSubValues.get(i).initRow(subRow, i);
 			}
 			else
 			{
-				mValue++ ;
+				table.addView(createSubDisciplineRow(i));
 			}
 		}
-	}
-	
-	@Override
-	protected DisciplineItemValueGroup getGroup()
-	{
-		return (DisciplineItemValueGroup) super.getGroup();
-	}
-	
-	@Override
-	public void decrease()
-	{
-		if (canDecrease())
-		{
-			if (getCreationMode() == CharMode.POINTS)
-			{
-				mTempPoints-- ;
-				getPoints().increase(getItem().getFreePointsCost());
-			}
-			else
-			{
-				mValue-- ;
-			}
-		}
+		
+		mContainer.addView(table);
 	}
 }

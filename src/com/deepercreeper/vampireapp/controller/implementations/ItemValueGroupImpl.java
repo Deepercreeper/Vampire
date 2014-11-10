@@ -73,18 +73,21 @@ public abstract class ItemValueGroupImpl <T extends Item, S extends ItemValue<T>
 	}
 	
 	@Override
+	public Context getContext()
+	{
+		return mContext;
+	}
+	
+	@Override
 	public ValueController<T> getController()
 	{
 		return mController;
 	}
 	
 	@Override
-	public void resetTempPoints()
+	public CharMode getCreationMode()
 	{
-		for (final ItemValue<T> value : mValuesList)
-		{
-			value.resetTempPoints();
-		}
+		return mMode;
 	}
 	
 	@Override
@@ -94,20 +97,9 @@ public abstract class ItemValueGroupImpl <T extends Item, S extends ItemValue<T>
 	}
 	
 	@Override
-	public HashMap<T, S> getValues()
+	public PointHandler getPoints()
 	{
-		return mValues;
-	}
-	
-	@Override
-	public int getValue()
-	{
-		int value = 0;
-		for (final ItemValue<T> valueItem : mValuesList)
-		{
-			value += valueItem.getValue();
-		}
-		return value;
+		return mPoints;
 	}
 	
 	@Override
@@ -122,9 +114,38 @@ public abstract class ItemValueGroupImpl <T extends Item, S extends ItemValue<T>
 	}
 	
 	@Override
+	public UpdateAction getUpdateAction()
+	{
+		return mUpdateAction;
+	}
+	
+	@Override
+	public int getValue()
+	{
+		int value = 0;
+		for (final ItemValue<T> valueItem : mValuesList)
+		{
+			value += valueItem.getValue();
+		}
+		return value;
+	}
+	
+	@Override
 	public S getValue(final String aName)
 	{
 		return mValues.get(getGroup().getItem(aName));
+	}
+	
+	@Override
+	public HashMap<T, S> getValues()
+	{
+		return mValues;
+	}
+	
+	@Override
+	public List<S> getValuesList()
+	{
+		return mValuesList;
 	}
 	
 	@Override
@@ -137,15 +158,12 @@ public abstract class ItemValueGroupImpl <T extends Item, S extends ItemValue<T>
 	}
 	
 	@Override
-	public List<S> getValuesList()
+	public void resetTempPoints()
 	{
-		return mValuesList;
-	}
-	
-	@Override
-	public CharMode getCreationMode()
-	{
-		return mMode;
+		for (final ItemValue<T> value : mValuesList)
+		{
+			value.resetTempPoints();
+		}
 	}
 	
 	@Override
@@ -181,23 +199,5 @@ public abstract class ItemValueGroupImpl <T extends Item, S extends ItemValue<T>
 			value.setIncreasable(aCanIncrease && value.canIncrease(mMode));
 			value.setDecreasable(aCanDecrease && value.canDecrease(mMode));
 		}
-	}
-	
-	@Override
-	public PointHandler getPoints()
-	{
-		return mPoints;
-	}
-	
-	@Override
-	public UpdateAction getUpdateAction()
-	{
-		return mUpdateAction;
-	}
-	
-	@Override
-	public Context getContext()
-	{
-		return mContext;
 	}
 }

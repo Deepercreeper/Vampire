@@ -45,17 +45,17 @@ public class ResizeAnimation extends Animation
 	}
 	
 	@Override
+	public boolean willChangeBounds()
+	{
+		return true;
+	}
+	
+	@Override
 	protected void applyTransformation(final float aInterpolatedTime, final Transformation aTransformation)
 	{
 		final LayoutParams p = mView.getLayoutParams();
 		p.height = (int) (mStartHeight + (mDestinationHeight - mStartHeight) * aInterpolatedTime);
 		p.width = (int) (mStartWidth + (mDestinationWidth - mStartWidth) * aInterpolatedTime);
 		mView.requestLayout();
-	}
-	
-	@Override
-	public boolean willChangeBounds()
-	{
-		return true;
 	}
 }

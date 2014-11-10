@@ -20,12 +20,12 @@ public interface VariableValueGroup <T extends Item, S extends ItemValue<T>>
 	public void addItem(T aItem);
 	
 	/**
-	 * Resizes the widget container of this group.
-	 */
-	public void resize();
-	
-	/**
 	 * Removes all values and resets the widgets.
 	 */
 	public void clear();
+	
+	/**
+	 * Resizes the widget container of this group.
+	 */
+	public void resize();
 }

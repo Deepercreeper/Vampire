@@ -20,24 +20,15 @@ public class Clan extends Named
 		mDisciplines.add(aDiscipline);
 	}
 	
-	public void setGeneration(final int aGeneration)
+	@Override
+	public boolean equals(final Object aO)
 	{
-		mGeneration = aGeneration;
-	}
-	
-	public boolean hasGeneration()
-	{
-		return mGeneration != -1;
-	}
-	
-	public int getGeneration()
-	{
-		return mGeneration;
-	}
-	
-	public HashSet<DisciplineItem> getDisciplines()
-	{
-		return mDisciplines;
+		if (aO instanceof Clan)
+		{
+			final Clan c = (Clan) aO;
+			return getName().equals(c.getName());
+		}
+		return false;
 	}
 	
 	public String getDescription()
@@ -67,15 +58,24 @@ public class Clan extends Named
 		return descr.toString();
 	}
 	
-	@Override
-	public boolean equals(final Object aO)
+	public HashSet<DisciplineItem> getDisciplines()
 	{
-		if (aO instanceof Clan)
-		{
-			final Clan c = (Clan) aO;
-			return getName().equals(c.getName());
-		}
-		return false;
+		return mDisciplines;
+	}
+	
+	public int getGeneration()
+	{
+		return mGeneration;
+	}
+	
+	public boolean hasGeneration()
+	{
+		return mGeneration != -1;
+	}
+	
+	public void setGeneration(final int aGeneration)
+	{
+		mGeneration = aGeneration;
 	}
 	
 	@Override

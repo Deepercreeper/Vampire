@@ -60,9 +60,69 @@ public class BackgroundItemValue extends ItemValueImpl<BackgroundItem, Backgroun
 	}
 	
 	@Override
-	protected BackgroundItemValueGroup getGroup()
+	public boolean canDecrease()
 	{
-		return (BackgroundItemValueGroup) super.getGroup();
+		return getValue() > getItem().getStartValue();
+	}
+	
+	@Override
+	public boolean canDecrease(final CharMode aMode)
+	{
+		switch (aMode)
+		{
+			case MAIN :
+				return canDecrease();
+			case POINTS :
+				return mTempPoints > 0;
+			case NORMAL :
+				return false;
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean canIncrease()
+	{
+		return getValue() < getItem().getMaxValue();
+	}
+	
+	@Override
+	public boolean canIncrease(final CharMode aMode)
+	{
+		switch (aMode)
+		{
+			case MAIN :
+				return canIncrease() && mValue < getItem().getMaxStartValue();
+			case POINTS :
+				return canIncrease() && mValue + mTempPoints < getItem().getMaxStartValue()
+						&& getPoints().getPoints() >= getItem().getFreePointsCost();
+			case NORMAL :
+				return canIncrease();
+		}
+		return false;
+	}
+	
+	@Override
+	public void decrease()
+	{
+		if (canDecrease())
+		{
+			if (getCreationMode() == CharMode.POINTS)
+			{
+				mTempPoints-- ;
+				getPoints().increase(getItem().getFreePointsCost());
+			}
+			else
+			{
+				mValue-- ;
+			}
+		}
+	}
+	
+	@Override
+	public TableRow getContainer()
+	{
+		return mContainer;
 	}
 	
 	@Override
@@ -72,11 +132,26 @@ public class BackgroundItemValue extends ItemValueImpl<BackgroundItem, Backgroun
 	}
 	
 	@Override
-	public void release()
+	public int getValue()
 	{
-		ViewUtil.release(mIncreaseButton, false);
-		ViewUtil.release(mDecreaseButton, false);
-		ViewUtil.release(mContainer, true);
+		return mValue + mTempPoints;
+	}
+	
+	@Override
+	public void increase()
+	{
+		if (canIncrease())
+		{
+			if (getCreationMode() == CharMode.POINTS)
+			{
+				mTempPoints++ ;
+				getPoints().decrease(getItem().getFreePointsCost());
+			}
+			else
+			{
+				mValue++ ;
+			}
+		}
 	}
 	
 	/**
@@ -168,9 +243,24 @@ public class BackgroundItemValue extends ItemValueImpl<BackgroundItem, Backgroun
 	}
 	
 	@Override
-	public TableRow getContainer()
+	public void refreshValue()
 	{
-		return mContainer;
+		ViewUtil.applyValue(getValue(), mValueDisplay);
+	}
+	
+	@Override
+	public void release()
+	{
+		ViewUtil.release(mIncreaseButton, false);
+		ViewUtil.release(mDecreaseButton, false);
+		ViewUtil.release(mContainer, true);
+	}
+	
+	@Override
+	public void resetTempPoints()
+	{
+		mTempPoints = 0;
+		refreshValue();
 	}
 	
 	@Override
@@ -186,98 +276,8 @@ public class BackgroundItemValue extends ItemValueImpl<BackgroundItem, Backgroun
 	}
 	
 	@Override
-	public boolean canIncrease(final CharMode aMode)
+	protected BackgroundItemValueGroup getGroup()
 	{
-		switch (aMode)
-		{
-			case MAIN :
-				return canIncrease() && mValue < getItem().getMaxStartValue();
-			case POINTS :
-				return canIncrease() && mValue + mTempPoints < getItem().getMaxStartValue()
-						&& getPoints().getPoints() >= getItem().getFreePointsCost();
-			case NORMAL :
-				return canIncrease();
-		}
-		return false;
-	}
-	
-	@Override
-	public void resetTempPoints()
-	{
-		mTempPoints = 0;
-		refreshValue();
-	}
-	
-	@Override
-	public boolean canDecrease(final CharMode aMode)
-	{
-		switch (aMode)
-		{
-			case MAIN :
-				return canDecrease();
-			case POINTS :
-				return mTempPoints > 0;
-			case NORMAL :
-				return false;
-		}
-		return false;
-	}
-	
-	@Override
-	public boolean canIncrease()
-	{
-		return getValue() < getItem().getMaxValue();
-	}
-	
-	@Override
-	public void increase()
-	{
-		if (canIncrease())
-		{
-			if (getCreationMode() == CharMode.POINTS)
-			{
-				mTempPoints++ ;
-				getPoints().decrease(getItem().getFreePointsCost());
-			}
-			else
-			{
-				mValue++ ;
-			}
-		}
-	}
-	
-	@Override
-	public boolean canDecrease()
-	{
-		return getValue() > getItem().getStartValue();
-	}
-	
-	@Override
-	public void decrease()
-	{
-		if (canDecrease())
-		{
-			if (getCreationMode() == CharMode.POINTS)
-			{
-				mTempPoints-- ;
-				getPoints().increase(getItem().getFreePointsCost());
-			}
-			else
-			{
-				mValue-- ;
-			}
-		}
-	}
-	
-	@Override
-	public int getValue()
-	{
-		return mValue + mTempPoints;
-	}
-	
-	@Override
-	public void refreshValue()
-	{
-		ViewUtil.applyValue(getValue(), mValueDisplay);
+		return (BackgroundItemValueGroup) super.getGroup();
 	}
 }

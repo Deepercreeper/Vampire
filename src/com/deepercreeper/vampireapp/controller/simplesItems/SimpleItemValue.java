@@ -63,15 +63,128 @@ public class SimpleItemValue extends ItemValueImpl<SimpleItem, SimpleItemValue>
 	}
 	
 	@Override
+	public boolean canDecrease()
+	{
+		return getValue() > getItem().getStartValue();
+	}
+	
+	@Override
+	public boolean canDecrease(final CharMode aMode)
+	{
+		switch (aMode)
+		{
+			case MAIN :
+				return canDecrease();
+			case POINTS :
+				return mTempPoints > 0;
+			case NORMAL :
+				return false;
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean canIncrease()
+	{
+		return getValue() < getItem().getMaxValue();
+	}
+	
+	@Override
+	public boolean canIncrease(final CharMode aMode)
+	{
+		switch (aMode)
+		{
+			case MAIN :
+				return canIncrease() && mValue < getItem().getMaxStartValue();
+			case POINTS :
+				return canIncrease() && getPoints().getPoints() >= getItem().getFreePointsCost();
+			case NORMAL :
+				return canIncrease();
+		}
+		return false;
+	}
+	
+	@Override
+	public void decrease()
+	{
+		if (canDecrease())
+		{
+			if (getCreationMode() == CharMode.POINTS)
+			{
+				mTempPoints-- ;
+				getPoints().increase(getItem().getFreePointsCost());
+			}
+			else
+			{
+				mValue-- ;
+			}
+		}
+	}
+	
+	@Override
+	public TableRow getContainer()
+	{
+		return mContainer;
+	}
+	
+	@Override
 	public int getTempPoints()
 	{
 		return mTempPoints;
 	}
 	
 	@Override
+	public int getValue()
+	{
+		return mValue + mTempPoints;
+	}
+	
+	@Override
+	public void increase()
+	{
+		if (canIncrease())
+		{
+			if (getCreationMode() == CharMode.POINTS)
+			{
+				mTempPoints++ ;
+				getPoints().decrease(getItem().getFreePointsCost());
+			}
+			else
+			{
+				mValue++ ;
+			}
+		}
+	}
+	
+	@Override
+	public void refreshValue()
+	{
+		ViewUtil.applyValue(getValue(), mValueDisplay);
+	}
+	
+	@Override
 	public void release()
 	{
 		ViewUtil.release(mContainer, false);
+	}
+	
+	@Override
+	public void resetTempPoints()
+	{
+		mTempPoints = 0;
+		refreshValue();
+	}
+	
+	@Override
+	public void setDecreasable(final boolean aEnabled)
+	{
+		mDecreaseButton.setEnabled(aEnabled);
+	}
+	
+	@Override
+	public void setIncreasable(final boolean aEnabled)
+	{
+		mIncreaseButton.setEnabled(aEnabled);
 	}
 	
 	private void init()
@@ -131,118 +244,5 @@ public class SimpleItemValue extends ItemValueImpl<SimpleItem, SimpleItemValue>
 			refreshValue();
 		}
 		mContainer.addView(spinnerGrid);
-	}
-	
-	@Override
-	public void setIncreasable(final boolean aEnabled)
-	{
-		mIncreaseButton.setEnabled(aEnabled);
-	}
-	
-	@Override
-	public void setDecreasable(final boolean aEnabled)
-	{
-		mDecreaseButton.setEnabled(aEnabled);
-	}
-	
-	@Override
-	public TableRow getContainer()
-	{
-		return mContainer;
-	}
-	
-	@Override
-	public void refreshValue()
-	{
-		ViewUtil.applyValue(getValue(), mValueDisplay);
-	}
-	
-	@Override
-	public int getValue()
-	{
-		return mValue + mTempPoints;
-	}
-	
-	@Override
-	public boolean canIncrease()
-	{
-		return getValue() < getItem().getMaxValue();
-	}
-	
-	@Override
-	public boolean canDecrease()
-	{
-		return getValue() > getItem().getStartValue();
-	}
-	
-	@Override
-	public void resetTempPoints()
-	{
-		mTempPoints = 0;
-		refreshValue();
-	}
-	
-	@Override
-	public boolean canIncrease(final CharMode aMode)
-	{
-		switch (aMode)
-		{
-			case MAIN :
-				return canIncrease() && mValue < getItem().getMaxStartValue();
-			case POINTS :
-				return canIncrease() && getPoints().getPoints() >= getItem().getFreePointsCost();
-			case NORMAL :
-				return canIncrease();
-		}
-		return false;
-	}
-	
-	@Override
-	public boolean canDecrease(final CharMode aMode)
-	{
-		switch (aMode)
-		{
-			case MAIN :
-				return canDecrease();
-			case POINTS :
-				return mTempPoints > 0;
-			case NORMAL :
-				return false;
-		}
-		return false;
-	}
-	
-	@Override
-	public void increase()
-	{
-		if (canIncrease())
-		{
-			if (getCreationMode() == CharMode.POINTS)
-			{
-				mTempPoints++ ;
-				getPoints().decrease(getItem().getFreePointsCost());
-			}
-			else
-			{
-				mValue++ ;
-			}
-		}
-	}
-	
-	@Override
-	public void decrease()
-	{
-		if (canDecrease())
-		{
-			if (getCreationMode() == CharMode.POINTS)
-			{
-				mTempPoints-- ;
-				getPoints().increase(getItem().getFreePointsCost());
-			}
-			else
-			{
-				mValue-- ;
-			}
-		}
 	}
 }

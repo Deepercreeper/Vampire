@@ -11,16 +11,35 @@ import com.deepercreeper.vampireapp.controller.interfaces.Item;
  */
 public class BackgroundItem extends ItemImpl
 {
-	private static final int	MAX_VALUE		= 5, MAX_START_VALUE = 5, START_VALUE = 0, FREE_POINTS_COST = 1;
+	private static final int	MAX_VALUE			= 5, MAX_START_VALUE = 5, START_VALUE = 0, FREE_POINTS_COST = 1;
+	
+	private static final String	DESCRIPTION_PREFIX	= "#";
 	
 	/**
 	 * The number of backgrounds that can be set for one character.
 	 */
-	public static final int		MAX_BACKGROUNDS	= 5;
+	public static final int		MAX_BACKGROUNDS		= 5;
 	
-	private BackgroundItem(final String aName)
+	private BackgroundItem(final String aName, final boolean aNeedsDescription)
 	{
-		super(aName);
+		super(aName, aNeedsDescription);
+	}
+	
+	@Override
+	public int compareTo(final Item aAnother)
+	{
+		return getName().compareTo(aAnother.getName());
+	}
+	
+	@Override
+	public boolean equals(final Object aO)
+	{
+		if (aO instanceof BackgroundItem)
+		{
+			final BackgroundItem item = (BackgroundItem) aO;
+			return getName().equals(item.getName());
+		}
+		return false;
 	}
 	
 	@Override
@@ -48,20 +67,10 @@ public class BackgroundItem extends ItemImpl
 	}
 	
 	@Override
-	public int compareTo(final Item aAnother)
+	protected String createDisplayName()
 	{
-		return getName().compareTo(aAnother.getName());
-	}
-	
-	@Override
-	public boolean equals(final Object aO)
-	{
-		if (aO instanceof BackgroundItem)
-		{
-			final BackgroundItem item = (BackgroundItem) aO;
-			return getName().equals(item.getName());
-		}
-		return false;
+		// TODO Implement
+		return getName();
 	}
 	
 	/**
@@ -73,13 +82,10 @@ public class BackgroundItem extends ItemImpl
 	 */
 	public static BackgroundItem create(final String aData)
 	{
-		return new BackgroundItem(aData);
-	}
-	
-	@Override
-	protected String createDescription()
-	{
-		// TODO Implement
-		return getName();
+		if (aData.startsWith(DESCRIPTION_PREFIX))
+		{
+			return new BackgroundItem(aData.substring(1), true);
+		}
+		return new BackgroundItem(aData, false);
 	}
 }

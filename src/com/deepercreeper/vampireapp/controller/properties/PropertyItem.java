@@ -10,7 +10,7 @@ import com.deepercreeper.vampireapp.controller.implementations.ItemImpl;
  */
 public class PropertyItem extends ItemImpl
 {
-	private static final String	NAME_DELIM	= ":", NEGATIVE_PREFIX = "-", VALUE_DELIM = ",";
+	private static final String	NAME_DELIM	= ":", NEGATIVE_PREFIX = "-", VALUE_DELIM = ",", DESCRIPTION_PREFIX = "#";
 	
 	private static final int	START_VALUE	= 0;
 	
@@ -18,46 +18,21 @@ public class PropertyItem extends ItemImpl
 	
 	private final boolean		mNegative;
 	
-	private PropertyItem(final String aName, final boolean aNegative)
+	private PropertyItem(final String aName, final boolean aNegative, final boolean aNeedsDescription)
 	{
-		super(aName);
+		super(aName, aNeedsDescription);
 		mNegative = aNegative;
 	}
 	
-	private void setValues(final int[] aValues)
-	{
-		mValues = aValues;
-	}
-	
-	/**
-	 * Some properties are positive, some negative.<br>
-	 * When a character is created the sum of values from the negative properties<br>
-	 * has to be at least as large as the sum of values from the positive properties.
-	 * 
-	 * @return {@code true} if this is a negative property and {@code false} if positive.
-	 */
-	public boolean isNegative()
-	{
-		return mNegative;
-	}
-	
 	@Override
-	public int getFreePointsCost()
+	public boolean equals(final Object aO)
 	{
-		return -1;
-	}
-	
-	/**
-	 * Properties have a specified set of possible values that can be set.<br>
-	 * They all have a unique id which is used to increase and decrease the property value.
-	 * 
-	 * @param aValueId
-	 *            The id of the corresponding value.
-	 * @return the value with the given id.
-	 */
-	public int getValue(final int aValueId)
-	{
-		return mValues[aValueId];
+		if (aO instanceof PropertyItem)
+		{
+			final PropertyItem item = (PropertyItem) aO;
+			return getName().equals(item.getName());
+		}
+		return false;
 	}
 	
 	/**
@@ -71,6 +46,12 @@ public class PropertyItem extends ItemImpl
 	public int getFinalValue(final int aValueId)
 	{
 		return mValues[aValueId] * (mNegative ? -1 : 1);
+	}
+	
+	@Override
+	public int getFreePointsCost()
+	{
+		return -1;
 	}
 	
 	@Override
@@ -91,22 +72,41 @@ public class PropertyItem extends ItemImpl
 		return START_VALUE;
 	}
 	
+	/**
+	 * Properties have a specified set of possible values that can be set.<br>
+	 * They all have a unique id which is used to increase and decrease the property value.
+	 * 
+	 * @param aValueId
+	 *            The id of the corresponding value.
+	 * @return the value with the given id.
+	 */
+	public int getValue(final int aValueId)
+	{
+		return mValues[aValueId];
+	}
+	
+	/**
+	 * Some properties are positive, some negative.<br>
+	 * When a character is created the sum of values from the negative properties<br>
+	 * has to be at least as large as the sum of values from the positive properties.
+	 * 
+	 * @return {@code true} if this is a negative property and {@code false} if positive.
+	 */
+	public boolean isNegative()
+	{
+		return mNegative;
+	}
+	
 	@Override
-	protected final String createDescription()
+	protected final String createDisplayName()
 	{
 		// TODO Implement
 		return getName();
 	}
 	
-	@Override
-	public boolean equals(final Object aO)
+	private void setValues(final int[] aValues)
 	{
-		if (aO instanceof PropertyItem)
-		{
-			final PropertyItem item = (PropertyItem) aO;
-			return getName().equals(item.getName());
-		}
-		return false;
+		mValues = aValues;
 	}
 	
 	/**
@@ -119,16 +119,23 @@ public class PropertyItem extends ItemImpl
 	public static PropertyItem create(final String aData)
 	{
 		PropertyItem item;
+		String dataValue = aData;
+		boolean needsDescription = false;
 		String[] data;
-		if (aData.startsWith(NEGATIVE_PREFIX))
+		if (dataValue.startsWith(DESCRIPTION_PREFIX))
 		{
-			data = aData.substring(1).split(NAME_DELIM);
-			item = new PropertyItem(data[0], true);
+			needsDescription = true;
+			dataValue = dataValue.substring(1);
+		}
+		if (dataValue.startsWith(NEGATIVE_PREFIX))
+		{
+			data = dataValue.substring(1).split(NAME_DELIM);
+			item = new PropertyItem(data[0], true, needsDescription);
 		}
 		else
 		{
-			data = aData.split(NAME_DELIM);
-			item = new PropertyItem(data[0], false);
+			data = dataValue.split(NAME_DELIM);
+			item = new PropertyItem(data[0], false, needsDescription);
 		}
 		final String[] valueData = data[1].split(VALUE_DELIM);
 		final int[] values = new int[valueData.length + 1];

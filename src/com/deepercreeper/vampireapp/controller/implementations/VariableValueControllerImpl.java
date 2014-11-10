@@ -20,7 +20,6 @@ import com.deepercreeper.vampireapp.controller.interfaces.VariableValueGroup;
 public abstract class VariableValueControllerImpl <T extends Item, S extends ItemValue<T>> extends ValueControllerImpl<T> implements
 		VariableValueGroup<T, S>
 {
-	
 	/**
 	 * Creates a new variable value controller.
 	 * 

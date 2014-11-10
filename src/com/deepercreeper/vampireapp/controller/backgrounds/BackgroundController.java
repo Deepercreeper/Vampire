@@ -28,18 +28,18 @@ public class BackgroundController implements Controller<BackgroundItem>
 	}
 	
 	/**
-	 * @return the maximum creation value for all item values.
-	 */
-	public int getMaxCreationValue()
-	{
-		return mMaxCreationValue;
-	}
-	
-	/**
 	 * @return the background item group.
 	 */
 	public BackgroundItemGroup getBackgrounds()
 	{
 		return mBackgrounds;
+	}
+	
+	/**
+	 * @return the maximum creation value for all item values.
+	 */
+	public int getMaxCreationValue()
+	{
+		return mMaxCreationValue;
 	}
 }

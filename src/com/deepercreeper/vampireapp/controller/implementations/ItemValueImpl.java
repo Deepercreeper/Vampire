@@ -58,6 +58,24 @@ public abstract class ItemValueImpl <T extends Item, S extends ItemValue<T>> imp
 	}
 	
 	@Override
+	public Context getContext()
+	{
+		return mContext;
+	}
+	
+	@Override
+	public CharMode getCreationMode()
+	{
+		return mMode;
+	}
+	
+	@Override
+	public T getItem()
+	{
+		return mItem;
+	}
+	
+	@Override
 	public PointHandler getPoints()
 	{
 		return mPoints;
@@ -67,17 +85,6 @@ public abstract class ItemValueImpl <T extends Item, S extends ItemValue<T>> imp
 	public UpdateAction getUpdateAction()
 	{
 		return mUpdateAction;
-	}
-	
-	protected ItemValueGroup<T, S> getGroup()
-	{
-		return mGroup;
-	}
-	
-	@Override
-	public CharMode getCreationMode()
-	{
-		return mMode;
 	}
 	
 	@Override
@@ -92,15 +99,8 @@ public abstract class ItemValueImpl <T extends Item, S extends ItemValue<T>> imp
 		mPoints = aPoints;
 	}
 	
-	@Override
-	public Context getContext()
+	protected ItemValueGroup<T, S> getGroup()
 	{
-		return mContext;
-	}
-	
-	@Override
-	public T getItem()
-	{
-		return mItem;
+		return mGroup;
 	}
 }

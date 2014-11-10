@@ -41,30 +41,6 @@ public class PropertyValueController extends VariableValueControllerImpl<Propert
 	}
 	
 	@Override
-	public PropertyController getController()
-	{
-		return (PropertyController) super.getController();
-	}
-	
-	@Override
-	public void setPoints(final PointHandler aPoints)
-	{
-		return;
-	}
-	
-	@Override
-	public void release()
-	{
-		mProperties.release();
-	}
-	
-	@Override
-	public void resetTempPoints()
-	{
-		return;
-	}
-	
-	@Override
 	public void addItem(final PropertyItem aItem)
 	{
 		mProperties.addItem(aItem);
@@ -72,12 +48,10 @@ public class PropertyValueController extends VariableValueControllerImpl<Propert
 	}
 	
 	@Override
-	public void resize()
+	public void clear()
 	{
-		if ( !mPropertiesOpen)
-		{
-			mProperties.resize();
-		}
+		mProperties.clear();
+		super.clear();
 	}
 	
 	@Override
@@ -90,26 +64,9 @@ public class PropertyValueController extends VariableValueControllerImpl<Propert
 	}
 	
 	@Override
-	public void clear()
+	public PropertyController getController()
 	{
-		mProperties.clear();
-		super.clear();
-	}
-	
-	@Override
-	public void setEnabled(final boolean aEnabled)
-	{
-		if (mShowPanel != null)
-		{
-			mShowPanel.setEnabled(aEnabled);
-		}
-	}
-	
-	@Override
-	public void setCreationMode(final CharMode aMode)
-	{
-		super.setCreationMode(aMode);
-		mProperties.setCreationMode(aMode);
+		return (PropertyController) super.getController();
 	}
 	
 	@Override
@@ -158,6 +115,55 @@ public class PropertyValueController extends VariableValueControllerImpl<Propert
 	}
 	
 	@Override
+	public void release()
+	{
+		mProperties.release();
+	}
+	
+	@Override
+	public void resetTempPoints()
+	{
+		return;
+	}
+	
+	@Override
+	public void resize()
+	{
+		if ( !mPropertiesOpen)
+		{
+			mProperties.resize();
+		}
+	}
+	
+	@Override
+	public void setCreationMode(final CharMode aMode)
+	{
+		super.setCreationMode(aMode);
+		mProperties.setCreationMode(aMode);
+	}
+	
+	@Override
+	public void setEnabled(final boolean aEnabled)
+	{
+		if (mShowPanel != null)
+		{
+			mShowPanel.setEnabled(aEnabled);
+		}
+	}
+	
+	@Override
+	public void setPoints(final PointHandler aPoints)
+	{
+		return;
+	}
+	
+	@Override
+	public void updateValues(final boolean aUpdateOthers)
+	{
+		updateValues();
+	}
+	
+	@Override
 	protected void updateValues()
 	{
 		switch (getCreationMode())
@@ -172,11 +178,5 @@ public class PropertyValueController extends VariableValueControllerImpl<Propert
 				mProperties.updateValues(false, false);
 				break;
 		}
-	}
-	
-	@Override
-	public void updateValues(final boolean aUpdateOthers)
-	{
-		updateValues();
 	}
 }

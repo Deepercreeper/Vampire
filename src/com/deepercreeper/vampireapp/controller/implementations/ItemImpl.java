@@ -11,18 +11,23 @@ public abstract class ItemImpl implements Item
 {
 	private final String	mName;
 	
-	private final String	mDescription;
+	private final String	mDisplayName;
+	
+	private final boolean	mNeedsDescription;
 	
 	/**
 	 * Creates a new item.
 	 * 
 	 * @param aName
 	 *            The item name.
+	 * @param aNeedsDescription
+	 *            Whether this item needs a description given after creating a character.
 	 */
-	public ItemImpl(final String aName)
+	public ItemImpl(final String aName, final boolean aNeedsDescription)
 	{
 		mName = aName;
-		mDescription = createDescription();
+		mNeedsDescription = aNeedsDescription;
+		mDisplayName = createDisplayName();
 	}
 	
 	@Override
@@ -32,9 +37,9 @@ public abstract class ItemImpl implements Item
 	}
 	
 	@Override
-	public String getDescription()
+	public String getDisplayName()
 	{
-		return mDescription;
+		return mDisplayName;
 	}
 	
 	@Override
@@ -49,5 +54,11 @@ public abstract class ItemImpl implements Item
 		return getName().hashCode();
 	}
 	
-	protected abstract String createDescription();
+	@Override
+	public boolean needsDescription()
+	{
+		return mNeedsDescription;
+	}
+	
+	protected abstract String createDisplayName();
 }

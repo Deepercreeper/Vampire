@@ -115,6 +115,12 @@ public class Ability implements Comparable<Ability>
 		return mVolition;
 	}
 	
+	@Override
+	public String toString()
+	{
+		return "<" + getName() + ":" + ">";
+	}
+	
 	private void addCost(final String aCost, final List<Integer> aNumberData)
 	{
 		if (aCost.equals(VOLITION))
@@ -184,11 +190,5 @@ public class Ability implements Comparable<Ability>
 			}
 		}
 		return ability;
-	}
-	
-	@Override
-	public String toString()
-	{
-		return "<" + getName() + ":" + ">";
 	}
 }

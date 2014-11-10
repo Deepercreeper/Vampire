@@ -20,8 +20,6 @@ import android.os.Bundle;
  */
 public class SelectItemDialog <T extends Item> extends DialogFragment
 {
-	private static boolean	sDialogOpen	= false;
-	
 	/**
 	 * A listener that is invoked when a selection was made.
 	 * 
@@ -39,6 +37,8 @@ public class SelectItemDialog <T extends Item> extends DialogFragment
 		 */
 		public void select(S aItem);
 	}
+	
+	private static boolean	sDialogOpen	= false;
 	
 	private final HashMap<String, T>	mItems	= new HashMap<String, T>();
 	
@@ -70,6 +70,36 @@ public class SelectItemDialog <T extends Item> extends DialogFragment
 		}
 	}
 	
+	@Override
+	public Dialog onCreateDialog(final Bundle aSavedInstanceState)
+	{
+		final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+		builder.setTitle(mTitle).setItems(mNames, new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(final DialogInterface dialog, final int which)
+			{
+				mAction.select(mItems.get(mNames[which]));
+			}
+		});
+		return builder.create();
+	}
+	
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		sDialogOpen = false;
+	}
+	
+	/**
+	 * @return whether any dialog is open at this time.
+	 */
+	public static boolean isDialogOpen()
+	{
+		return sDialogOpen;
+	}
+	
 	/**
 	 * Shows an item selection dialog that invokes the selection listener when any item was selected.<br>
 	 * Only one dialog can be shown at one time.
@@ -91,35 +121,5 @@ public class SelectItemDialog <T extends Item> extends DialogFragment
 			return;
 		}
 		new SelectItemDialog<S>(aItems, aTitle, aContext, aAction).show(((Activity) aContext).getFragmentManager(), aTitle);
-	}
-	
-	/**
-	 * @return whether any dialog is open at this time.
-	 */
-	public static boolean isDialogOpen()
-	{
-		return sDialogOpen;
-	}
-	
-	@Override
-	public void onDestroy()
-	{
-		super.onDestroy();
-		sDialogOpen = false;
-	}
-	
-	@Override
-	public Dialog onCreateDialog(final Bundle aSavedInstanceState)
-	{
-		final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-		builder.setTitle(mTitle).setItems(mNames, new DialogInterface.OnClickListener()
-		{
-			@Override
-			public void onClick(final DialogInterface dialog, final int which)
-			{
-				mAction.select(mItems.get(mNames[which]));
-			}
-		});
-		return builder.create();
 	}
 }

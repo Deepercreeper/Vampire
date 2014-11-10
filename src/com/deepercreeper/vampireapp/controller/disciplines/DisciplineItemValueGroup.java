@@ -44,10 +44,67 @@ public class DisciplineItemValueGroup extends VariableValueGroupImpl<DisciplineI
 	}
 	
 	@Override
-	public void release()
+	public void addItem(final DisciplineItem aItem)
 	{
-		ViewUtil.release(mDisciplinesTable, true);
-		super.release();
+		addValue(new DisciplineItemValue(aItem, getContext(), getUpdateAction(), this, getCreationMode(), getPoints()));
+	}
+	
+	@Override
+	public void clear()
+	{
+		super.clear();
+		if (mDisciplinesTable != null)
+		{
+			mDisciplinesTable.removeAllViews();
+		}
+	}
+	
+	@Override
+	public int getTempPoints()
+	{
+		int value = 0;
+		for (final DisciplineItemValue valueItem : getValuesList())
+		{
+			if (valueItem.getItem().isParentItem())
+			{
+				for (final SubDisciplineItemValue subValue : valueItem.getSubValues())
+				{
+					value += subValue.getTempPoints();
+				}
+			}
+			else
+			{
+				value += valueItem.getTempPoints();
+			}
+		}
+		return value;
+	}
+	
+	@Override
+	public int getValue()
+	{
+		int value = 0;
+		for (final DisciplineItemValue valueItem : getValuesList())
+		{
+			if (valueItem.getItem().isParentItem())
+			{
+				for (final SubDisciplineItemValue subValue : valueItem.getSubValues())
+				{
+					value += subValue.getValue();
+				}
+			}
+			else
+			{
+				value += valueItem.getValue();
+			}
+		}
+		return value;
+	}
+	
+	@Override
+	public HashMap<DisciplineItem, DisciplineItemValue> getValues()
+	{
+		return super.getValues();
 	}
 	
 	@Override
@@ -57,9 +114,43 @@ public class DisciplineItemValueGroup extends VariableValueGroupImpl<DisciplineI
 	}
 	
 	@Override
-	public HashMap<DisciplineItem, DisciplineItemValue> getValues()
+	public void initLayout(final ViewGroup aLayout)
 	{
-		return super.getValues();
+		mDisciplinesPanel = (LinearLayout) aLayout;
+		final Context context = aLayout.getContext();
+		mDisciplinesTable = new TableLayout(context);
+		
+		mDisciplinesTable.setLayoutParams(ViewUtil.instance().getWrapHeight());
+		
+		for (final DisciplineItemValue value : getValuesList())
+		{
+			final ViewGroup container = value.getContainer();
+			if (container.getParent() != null)
+			{
+				ViewUtil.release(container, false);
+			}
+			mDisciplinesTable.addView(value.getContainer());
+			value.refreshValue();
+		}
+		aLayout.addView(mDisciplinesTable);
+		getController().updateValues(false);
+	}
+	
+	@Override
+	public void release()
+	{
+		ViewUtil.release(mDisciplinesTable, true);
+		super.release();
+	}
+	
+	@Override
+	public void resize()
+	{
+		if (mDisciplinesPanel != null)
+		{
+			mDisciplinesPanel.startAnimation(new ResizeAnimation(mDisciplinesPanel, mDisciplinesPanel.getWidth(), ViewUtil
+					.calcHeight(mDisciplinesPanel)));
+		}
 	}
 	
 	@Override
@@ -86,48 +177,6 @@ public class DisciplineItemValueGroup extends VariableValueGroupImpl<DisciplineI
 		}
 	}
 	
-	@Override
-	public int getValue()
-	{
-		int value = 0;
-		for (final DisciplineItemValue valueItem : getValuesList())
-		{
-			if (valueItem.getItem().isParentItem())
-			{
-				for (final SubDisciplineItemValue subValue : valueItem.getSubValues())
-				{
-					value += subValue.getValue();
-				}
-			}
-			else
-			{
-				value += valueItem.getValue();
-			}
-		}
-		return value;
-	}
-	
-	@Override
-	public int getTempPoints()
-	{
-		int value = 0;
-		for (final DisciplineItemValue valueItem : getValuesList())
-		{
-			if (valueItem.getItem().isParentItem())
-			{
-				for (final SubDisciplineItemValue subValue : valueItem.getSubValues())
-				{
-					value += subValue.getTempPoints();
-				}
-			}
-			else
-			{
-				value += valueItem.getTempPoints();
-			}
-		}
-		return value;
-	}
-	
 	private void addValue(final DisciplineItemValue aValue)
 	{
 		getValuesList().add(aValue);
@@ -136,54 +185,5 @@ public class DisciplineItemValueGroup extends VariableValueGroupImpl<DisciplineI
 		{
 			mDisciplinesTable.addView(aValue.getContainer());
 		}
-	}
-	
-	@Override
-	public void addItem(final DisciplineItem aItem)
-	{
-		addValue(new DisciplineItemValue(aItem, getContext(), getUpdateAction(), this, getCreationMode(), getPoints()));
-	}
-	
-	@Override
-	public void resize()
-	{
-		if (mDisciplinesPanel != null)
-		{
-			mDisciplinesPanel.startAnimation(new ResizeAnimation(mDisciplinesPanel, mDisciplinesPanel.getWidth(), ViewUtil
-					.calcHeight(mDisciplinesPanel)));
-		}
-	}
-	
-	@Override
-	public void clear()
-	{
-		super.clear();
-		if (mDisciplinesTable != null)
-		{
-			mDisciplinesTable.removeAllViews();
-		}
-	}
-	
-	@Override
-	public void initLayout(final ViewGroup aLayout)
-	{
-		mDisciplinesPanel = (LinearLayout) aLayout;
-		final Context context = aLayout.getContext();
-		mDisciplinesTable = new TableLayout(context);
-		
-		mDisciplinesTable.setLayoutParams(ViewUtil.instance().getWrapHeight());
-		
-		for (final DisciplineItemValue value : getValuesList())
-		{
-			final ViewGroup container = value.getContainer();
-			if (container.getParent() != null)
-			{
-				ViewUtil.release(container, false);
-			}
-			mDisciplinesTable.addView(value.getContainer());
-			value.refreshValue();
-		}
-		aLayout.addView(mDisciplinesTable);
-		getController().updateValues(false);
 	}
 }

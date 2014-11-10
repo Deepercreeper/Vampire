@@ -20,14 +20,19 @@ import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointH
 public interface ItemValueGroup <T extends Item, S extends ItemValue<T>>
 {
 	/**
+	 * @return the context of this value group.
+	 */
+	public Context getContext();
+	
+	/**
 	 * @return the parent controller of this group.
 	 */
 	public ValueController<T> getController();
 	
 	/**
-	 * Removes all temporary points from all values.
+	 * @return whether this group is in creation mode.
 	 */
-	public void resetTempPoints();
+	public CharMode getCreationMode();
 	
 	/**
 	 * @return the item group of this value group.
@@ -35,14 +40,24 @@ public interface ItemValueGroup <T extends Item, S extends ItemValue<T>>
 	public ItemGroup<T> getGroup();
 	
 	/**
-	 * @return the sum of all values inside this value group.
+	 * @return the point handler of this value group.
 	 */
-	public int getValue();
+	public PointHandler getPoints();
 	
 	/**
 	 * @return the sum of all temporary points inside this value group.
 	 */
 	public int getTempPoints();
+	
+	/**
+	 * @return the update action of this value group.
+	 */
+	public UpdateAction getUpdateAction();
+	
+	/**
+	 * @return the sum of all values inside this value group.
+	 */
+	public int getValue();
 	
 	/**
 	 * @param aName
@@ -52,9 +67,9 @@ public interface ItemValueGroup <T extends Item, S extends ItemValue<T>>
 	public S getValue(String aName);
 	
 	/**
-	 * Removes all widgets from their parent containers.
+	 * @return a map from all items to all values.
 	 */
-	public void release();
+	public HashMap<T, S> getValues();
 	
 	/**
 	 * @return a list of all value items.
@@ -70,9 +85,14 @@ public interface ItemValueGroup <T extends Item, S extends ItemValue<T>>
 	public void initLayout(ViewGroup aLayout);
 	
 	/**
-	 * @return whether this group is in creation mode.
+	 * Removes all widgets from their parent containers.
 	 */
-	public CharMode getCreationMode();
+	public void release();
+	
+	/**
+	 * Removes all temporary points from all values.
+	 */
+	public void resetTempPoints();
 	
 	/**
 	 * Sets whether this group is in creation mode.
@@ -99,24 +119,4 @@ public interface ItemValueGroup <T extends Item, S extends ItemValue<T>>
 	 *            Whether values can be decreased.
 	 */
 	public void updateValues(boolean aCanIncrease, boolean aCanDecrease);
-	
-	/**
-	 * @return a map from all items to all values.
-	 */
-	public HashMap<T, S> getValues();
-	
-	/**
-	 * @return the context of this value group.
-	 */
-	public Context getContext();
-	
-	/**
-	 * @return the point handler of this value group.
-	 */
-	public PointHandler getPoints();
-	
-	/**
-	 * @return the update action of this value group.
-	 */
-	public UpdateAction getUpdateAction();
 }

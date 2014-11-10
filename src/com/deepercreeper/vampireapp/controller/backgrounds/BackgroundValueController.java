@@ -47,25 +47,6 @@ public class BackgroundValueController extends VariableValueControllerImpl<Backg
 	}
 	
 	@Override
-	public BackgroundController getController()
-	{
-		return (BackgroundController) super.getController();
-	}
-	
-	@Override
-	public void setPoints(final PointHandler aPoints)
-	{
-		super.setPoints(aPoints);
-		mBackgrounds.setPoints(aPoints);
-	}
-	
-	@Override
-	public void release()
-	{
-		mBackgrounds.release();
-	}
-	
-	@Override
 	public void addItem(final BackgroundItem aItem)
 	{
 		mBackgrounds.addItem(aItem);
@@ -73,18 +54,10 @@ public class BackgroundValueController extends VariableValueControllerImpl<Backg
 	}
 	
 	@Override
-	public void resetTempPoints()
+	public void clear()
 	{
-		mBackgrounds.resetTempPoints();
-	}
-	
-	@Override
-	public void resize()
-	{
-		if ( !mBackgroundsOpen)
-		{
-			mBackgrounds.resize();
-		}
+		mBackgrounds.clear();
+		super.clear();
 	}
 	
 	@Override
@@ -97,43 +70,9 @@ public class BackgroundValueController extends VariableValueControllerImpl<Backg
 	}
 	
 	@Override
-	public void clear()
+	public BackgroundController getController()
 	{
-		mBackgrounds.clear();
-		super.clear();
-	}
-	
-	@Override
-	public void setEnabled(final boolean aEnabled)
-	{
-		if (mShowPanel != null)
-		{
-			mShowPanel.setEnabled(aEnabled);
-		}
-	}
-	
-	@Override
-	public void setCreationMode(final CharMode aMode)
-	{
-		super.setCreationMode(aMode);
-		mBackgrounds.setCreationMode(aMode);
-	}
-	
-	@Override
-	protected void updateValues()
-	{
-		switch (getCreationMode())
-		{
-			case MAIN :
-				mBackgrounds.updateValues(mBackgrounds.getValue() < getController().getMaxCreationValue(), true);
-				break;
-			case POINTS :
-				mBackgrounds.updateValues(true, true);
-				break;
-			case NORMAL :
-				mBackgrounds.updateValues(true, false);
-				break;
-		}
+		return (BackgroundController) super.getController();
 	}
 	
 	@Override
@@ -179,5 +118,66 @@ public class BackgroundValueController extends VariableValueControllerImpl<Backg
 		
 		aLayout.addView(mShowPanel);
 		aLayout.addView(backgrounds);
+	}
+	
+	@Override
+	public void release()
+	{
+		mBackgrounds.release();
+	}
+	
+	@Override
+	public void resetTempPoints()
+	{
+		mBackgrounds.resetTempPoints();
+	}
+	
+	@Override
+	public void resize()
+	{
+		if ( !mBackgroundsOpen)
+		{
+			mBackgrounds.resize();
+		}
+	}
+	
+	@Override
+	public void setCreationMode(final CharMode aMode)
+	{
+		super.setCreationMode(aMode);
+		mBackgrounds.setCreationMode(aMode);
+	}
+	
+	@Override
+	public void setEnabled(final boolean aEnabled)
+	{
+		if (mShowPanel != null)
+		{
+			mShowPanel.setEnabled(aEnabled);
+		}
+	}
+	
+	@Override
+	public void setPoints(final PointHandler aPoints)
+	{
+		super.setPoints(aPoints);
+		mBackgrounds.setPoints(aPoints);
+	}
+	
+	@Override
+	protected void updateValues()
+	{
+		switch (getCreationMode())
+		{
+			case MAIN :
+				mBackgrounds.updateValues(mBackgrounds.getValue() < getController().getMaxCreationValue(), true);
+				break;
+			case POINTS :
+				mBackgrounds.updateValues(true, true);
+				break;
+			case NORMAL :
+				mBackgrounds.updateValues(true, false);
+				break;
+		}
 	}
 }

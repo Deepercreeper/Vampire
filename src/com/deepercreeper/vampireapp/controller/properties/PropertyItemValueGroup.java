@@ -49,27 +49,16 @@ public class PropertyItemValueGroup extends VariableValueGroupImpl<PropertyItem,
 	}
 	
 	@Override
-	public void setPoints(final PointHandler aPoints)
+	public void addItem(final PropertyItem aItem)
 	{
-		return;
+		addValue(new PropertyItemValue(aItem, getContext(), getUpdateAction(), this, getCreationMode()));
+		resize();
 	}
 	
 	@Override
-	public void resetTempPoints()
+	public int getTempPoints()
 	{
-		return;
-	}
-	
-	@Override
-	public List<PropertyItemValue> getValuesList()
-	{
-		return super.getValuesList();
-	}
-	
-	@Override
-	public HashMap<PropertyItem, PropertyItemValue> getValues()
-	{
-		return super.getValues();
+		return 0;
 	}
 	
 	@Override
@@ -84,60 +73,15 @@ public class PropertyItemValueGroup extends VariableValueGroupImpl<PropertyItem,
 	}
 	
 	@Override
-	public int getTempPoints()
+	public HashMap<PropertyItem, PropertyItemValue> getValues()
 	{
-		return 0;
+		return super.getValues();
 	}
 	
 	@Override
-	public void updateValues(final boolean aCanIncrease, final boolean aCanDecrease)
+	public List<PropertyItemValue> getValuesList()
 	{
-		final int value = getValue();
-		for (final PropertyItemValue valueItem : getValuesList())
-		{
-			boolean canIncrease = aCanIncrease && valueItem.canIncrease(getCreationMode());
-			boolean canDecrease = aCanDecrease && valueItem.canDecrease(getCreationMode());
-			if (canIncrease)
-			{
-				final int increasedValue = value - valueItem.getFinalValue() + valueItem.getItem().getFinalValue(valueItem.getValueId() + 1);
-				canIncrease = increasedValue <= 0;
-			}
-			if (canDecrease)
-			{
-				final int decreasedValue = value - valueItem.getFinalValue() + valueItem.getItem().getFinalValue(valueItem.getValueId() - 1);
-				canDecrease = decreasedValue <= 0;
-			}
-			valueItem.setIncreasable(canIncrease);
-			valueItem.setDecreasable(canDecrease);
-		}
-	}
-	
-	private void addValue(final PropertyItemValue aValue)
-	{
-		getValuesList().add(aValue);
-		getValues().put(aValue.getItem(), aValue);
-		if (mPropertiesTable != null)
-		{
-			mPropertiesTable.addView(aValue.getContainer());
-		}
-		getUpdateAction().update();
-	}
-	
-	@Override
-	public void addItem(final PropertyItem aItem)
-	{
-		addValue(new PropertyItemValue(aItem, getContext(), getUpdateAction(), this, getCreationMode()));
-		resize();
-	}
-	
-	@Override
-	public void resize()
-	{
-		if (mPropertiesPanel != null)
-		{
-			mPropertiesPanel
-					.startAnimation(new ResizeAnimation(mPropertiesPanel, mPropertiesPanel.getWidth(), ViewUtil.calcHeight(mPropertiesPanel)));
-		}
+		return super.getValuesList();
 	}
 	
 	@Override
@@ -195,5 +139,61 @@ public class PropertyItemValueGroup extends VariableValueGroupImpl<PropertyItem,
 		}
 		aLayout.addView(mPropertiesTable);
 		getController().updateValues(false);
+	}
+	
+	@Override
+	public void resetTempPoints()
+	{
+		return;
+	}
+	
+	@Override
+	public void resize()
+	{
+		if (mPropertiesPanel != null)
+		{
+			mPropertiesPanel
+					.startAnimation(new ResizeAnimation(mPropertiesPanel, mPropertiesPanel.getWidth(), ViewUtil.calcHeight(mPropertiesPanel)));
+		}
+	}
+	
+	@Override
+	public void setPoints(final PointHandler aPoints)
+	{
+		return;
+	}
+	
+	@Override
+	public void updateValues(final boolean aCanIncrease, final boolean aCanDecrease)
+	{
+		final int value = getValue();
+		for (final PropertyItemValue valueItem : getValuesList())
+		{
+			boolean canIncrease = aCanIncrease && valueItem.canIncrease(getCreationMode());
+			boolean canDecrease = aCanDecrease && valueItem.canDecrease(getCreationMode());
+			if (canIncrease)
+			{
+				final int increasedValue = value - valueItem.getFinalValue() + valueItem.getItem().getFinalValue(valueItem.getValueId() + 1);
+				canIncrease = increasedValue <= 0;
+			}
+			if (canDecrease)
+			{
+				final int decreasedValue = value - valueItem.getFinalValue() + valueItem.getItem().getFinalValue(valueItem.getValueId() - 1);
+				canDecrease = decreasedValue <= 0;
+			}
+			valueItem.setIncreasable(canIncrease);
+			valueItem.setDecreasable(canDecrease);
+		}
+	}
+	
+	private void addValue(final PropertyItemValue aValue)
+	{
+		getValuesList().add(aValue);
+		getValues().put(aValue.getItem(), aValue);
+		if (mPropertiesTable != null)
+		{
+			mPropertiesTable.addView(aValue.getContainer());
+		}
+		getUpdateAction().update();
 	}
 }

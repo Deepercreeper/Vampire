@@ -73,25 +73,6 @@ public class Vampire
 		setState(State.MAIN);
 	}
 	
-	public void setState(final State aState)
-	{
-		mState = aState;
-		switch (mState)
-		{
-			case MAIN :
-				initMain();
-				break;
-			case CREATE_CHAR_1 :
-				initCreateChar1();
-				break;
-			case CREATE_CHAR_2 :
-				initCreateChar2();
-				break;
-			case CREATE_CHAR_3 :
-				break;
-		}
-	}
-	
 	public void back()
 	{
 		switch (mState)
@@ -111,19 +92,58 @@ public class Vampire
 		}
 	}
 	
-	private void initMain()
+	public Context getContext()
 	{
-		mCharCreator = null;
-		mActivity.setContentView(R.layout.activity_main);
-		final Button createChar = (Button) mActivity.getView(R.id.createCharacterButton);
-		createChar.setOnClickListener(new OnClickListener()
+		return mActivity;
+	}
+	
+	public void setFreePoints(final int aValue)
+	{
+		((TextView) mActivity.getView(R.id.free_points_text)).setText("" + aValue);
+		((ProgressBar) mActivity.getView(R.id.free_points_bar)).setProgress(aValue);
+		((Button) mActivity.getView(R.id.show_descriptions_button)).setEnabled(aValue == 0);
+	}
+	
+	public void setPathEnabled(final boolean aEnabled, final boolean aCanIncrease, final boolean aCanDecrease)
+	{
+		((ImageButton) mActivity.getView(R.id.decrease_path)).setEnabled(aCanDecrease && aEnabled);
+		((ImageButton) mActivity.getView(R.id.increase_path)).setEnabled(aCanIncrease && aEnabled);
+		((Spinner) mActivity.getView(R.id.path_spinner)).setEnabled(aEnabled);
+	}
+	
+	public void setPathPoints(final int aValue)
+	{
+		((TextView) mActivity.getView(R.id.path_value)).setText("" + aValue);
+	}
+	
+	public void setState(final State aState)
+	{
+		mState = aState;
+		switch (mState)
 		{
-			@Override
-			public void onClick(final View aV)
-			{
-				setState(State.CREATE_CHAR_1);
-			}
-		});
+			case MAIN :
+				initMain();
+				break;
+			case CREATE_CHAR_1 :
+				initCreateChar1();
+				break;
+			case CREATE_CHAR_2 :
+				initCreateChar2();
+				break;
+			case CREATE_CHAR_3 :
+				break;
+		}
+	}
+	
+	public void setVolitionEnabled(final boolean aCanIncrease, final boolean aCanDecrease)
+	{
+		((ImageButton) mActivity.getView(R.id.increase_volition)).setEnabled(aCanIncrease);
+		((ImageButton) mActivity.getView(R.id.decrease_volition)).setEnabled(aCanDecrease);
+	}
+	
+	public void setVolitionPoints(final int aValue)
+	{
+		((TextView) mActivity.getView(R.id.volition_value)).setText("" + aValue);
 	}
 	
 	private void initCreateChar1()
@@ -146,9 +166,9 @@ public class Vampire
 		nameTextView.addTextChangedListener(new TextWatcher()
 		{
 			@Override
-			public void onTextChanged(final CharSequence aS, final int aStart, final int aBefore, final int aCount)
+			public void afterTextChanged(final Editable aS)
 			{
-				return;
+				mCharCreator.setName(nameTextView.getText().toString());
 			}
 			
 			@Override
@@ -158,9 +178,9 @@ public class Vampire
 			}
 			
 			@Override
-			public void afterTextChanged(final Editable aS)
+			public void onTextChanged(final CharSequence aS, final int aStart, final int aBefore, final int aCount)
 			{
-				mCharCreator.setName(nameTextView.getText().toString());
+				return;
 			}
 		});
 		
@@ -169,9 +189,9 @@ public class Vampire
 		conceptTextView.addTextChangedListener(new TextWatcher()
 		{
 			@Override
-			public void onTextChanged(final CharSequence aS, final int aStart, final int aBefore, final int aCount)
+			public void afterTextChanged(final Editable aS)
 			{
-				return;
+				mCharCreator.setConcept(conceptTextView.getText().toString());
 			}
 			
 			@Override
@@ -181,9 +201,9 @@ public class Vampire
 			}
 			
 			@Override
-			public void afterTextChanged(final Editable aS)
+			public void onTextChanged(final CharSequence aS, final int aStart, final int aBefore, final int aCount)
 			{
-				mCharCreator.setConcept(conceptTextView.getText().toString());
+				return;
 			}
 		});
 		
@@ -403,49 +423,19 @@ public class Vampire
 		});
 	}
 	
-	public void setVolitionEnabled(final boolean aCanIncrease, final boolean aCanDecrease)
+	private void initMain()
 	{
-		((ImageButton) mActivity.getView(R.id.increase_volition)).setEnabled(aCanIncrease);
-		((ImageButton) mActivity.getView(R.id.decrease_volition)).setEnabled(aCanDecrease);
-	}
-	
-	public void setPathEnabled(final boolean aEnabled, final boolean aCanIncrease, final boolean aCanDecrease)
-	{
-		((ImageButton) mActivity.getView(R.id.decrease_path)).setEnabled(aCanDecrease && aEnabled);
-		((ImageButton) mActivity.getView(R.id.increase_path)).setEnabled(aCanIncrease && aEnabled);
-		((Spinner) mActivity.getView(R.id.path_spinner)).setEnabled(aEnabled);
-	}
-	
-	public void setFreePoints(final int aValue)
-	{
-		((TextView) mActivity.getView(R.id.free_points_text)).setText("" + aValue);
-		((ProgressBar) mActivity.getView(R.id.free_points_bar)).setProgress(aValue);
-		((Button) mActivity.getView(R.id.show_descriptions_button)).setEnabled(aValue == 0);
-	}
-	
-	public Context getContext()
-	{
-		return mActivity;
-	}
-	
-	public void setVolitionPoints(final int aValue)
-	{
-		((TextView) mActivity.getView(R.id.volition_value)).setText("" + aValue);
-	}
-	
-	public void setPathPoints(final int aValue)
-	{
-		((TextView) mActivity.getView(R.id.path_value)).setText("" + aValue);
-	}
-	
-	private void setPath(final Path aPath)
-	{
-		int pathPos = 0;
-		if (aPath != null)
+		mCharCreator = null;
+		mActivity.setContentView(R.layout.activity_main);
+		final Button createChar = (Button) mActivity.getView(R.id.createCharacterButton);
+		createChar.setOnClickListener(new OnClickListener()
 		{
-			pathPos = mPaths.indexOf(aPath);
-		}
-		((Spinner) mActivity.getView(R.id.path_spinner)).setSelection(pathPos);
+			@Override
+			public void onClick(final View aV)
+			{
+				setState(State.CREATE_CHAR_1);
+			}
+		});
 	}
 	
 	private void setClan(final int aClan)
@@ -465,5 +455,15 @@ public class Vampire
 			generationPicker.setMaxValue(CharCreator.MAX_GENERATION);
 			generationPicker.setMinValue(CharCreator.MIN_GENERATION);
 		}
+	}
+	
+	private void setPath(final Path aPath)
+	{
+		int pathPos = 0;
+		if (aPath != null)
+		{
+			pathPos = mPaths.indexOf(aPath);
+		}
+		((Spinner) mActivity.getView(R.id.path_spinner)).setSelection(pathPos);
 	}
 }

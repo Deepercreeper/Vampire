@@ -50,16 +50,10 @@ public class DisciplineValueController extends VariableValueControllerImpl<Disci
 	}
 	
 	@Override
-	public DisciplineController getController()
+	public void addItem(final DisciplineItem aItem)
 	{
-		return (DisciplineController) super.getController();
-	}
-	
-	@Override
-	public void setPoints(final PointHandler aPoints)
-	{
-		setPoints(aPoints);
-		mDisciplines.setPoints(aPoints);
+		mDisciplines.addItem(aItem);
+		resize();
 	}
 	
 	/**
@@ -78,22 +72,9 @@ public class DisciplineValueController extends VariableValueControllerImpl<Disci
 	}
 	
 	@Override
-	public void resetTempPoints()
+	public void clear()
 	{
-		mDisciplines.resetTempPoints();
-	}
-	
-	@Override
-	public void release()
-	{
-		mDisciplines.release();
-	}
-	
-	@Override
-	public void addItem(final DisciplineItem aItem)
-	{
-		mDisciplines.addItem(aItem);
-		resize();
+		mDisciplines.clear();
 	}
 	
 	@Override
@@ -111,51 +92,9 @@ public class DisciplineValueController extends VariableValueControllerImpl<Disci
 	}
 	
 	@Override
-	public void clear()
+	public DisciplineController getController()
 	{
-		mDisciplines.clear();
-	}
-	
-	@Override
-	public void resize()
-	{
-		if ( !mDisciplinesOpen)
-		{
-			mDisciplines.resize();
-		}
-	}
-	
-	@Override
-	public void setEnabled(final boolean aEnabled)
-	{
-		if (mShowPanel != null)
-		{
-			mShowPanel.setEnabled(aEnabled);
-		}
-	}
-	
-	@Override
-	public void setCreationMode(final CharMode aMode)
-	{
-		super.setCreationMode(aMode);
-		mDisciplines.setCreationMode(aMode);
-	}
-	
-	@Override
-	protected void updateValues()
-	{
-		switch (getCreationMode())
-		{
-			case MAIN :
-				mDisciplines.updateValues(mDisciplines.getValue() < getController().getMaxCreationValue(), true);
-				break;
-			case POINTS :
-				mDisciplines.updateValues(true, true);
-				break;
-			case NORMAL :
-				mDisciplines.updateValues(true, false);
-				break;
-		}
+		return (DisciplineController) super.getController();
 	}
 	
 	@Override
@@ -202,5 +141,66 @@ public class DisciplineValueController extends VariableValueControllerImpl<Disci
 		
 		aLayout.addView(mShowPanel);
 		aLayout.addView(mDisciplinesPanel);
+	}
+	
+	@Override
+	public void release()
+	{
+		mDisciplines.release();
+	}
+	
+	@Override
+	public void resetTempPoints()
+	{
+		mDisciplines.resetTempPoints();
+	}
+	
+	@Override
+	public void resize()
+	{
+		if ( !mDisciplinesOpen)
+		{
+			mDisciplines.resize();
+		}
+	}
+	
+	@Override
+	public void setCreationMode(final CharMode aMode)
+	{
+		super.setCreationMode(aMode);
+		mDisciplines.setCreationMode(aMode);
+	}
+	
+	@Override
+	public void setEnabled(final boolean aEnabled)
+	{
+		if (mShowPanel != null)
+		{
+			mShowPanel.setEnabled(aEnabled);
+		}
+	}
+	
+	@Override
+	public void setPoints(final PointHandler aPoints)
+	{
+		setPoints(aPoints);
+		mDisciplines.setPoints(aPoints);
+	}
+	
+	@Override
+	protected void updateValues()
+	{
+		switch (getCreationMode())
+		{
+			case MAIN :
+				mDisciplines.updateValues(mDisciplines.getValue() < getController().getMaxCreationValue(), true);
+				break;
+			case POINTS :
+				mDisciplines.updateValues(true, true);
+				break;
+			case NORMAL :
+				mDisciplines.updateValues(true, false);
+				break;
+		}
 	}
 }

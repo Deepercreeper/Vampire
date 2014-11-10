@@ -59,15 +59,133 @@ public class PropertyItemValue extends ItemValueImpl<PropertyItem, PropertyItemV
 	}
 	
 	@Override
+	public boolean canDecrease()
+	{
+		return mValueId > getItem().getStartValue();
+	}
+	
+	@Override
+	public boolean canDecrease(final CharMode aMode)
+	{
+		switch (aMode)
+		{
+			case MAIN :
+				return canDecrease();
+			case POINTS :
+				return false;
+			case NORMAL :
+				return false;
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean canIncrease()
+	{
+		return mValueId < getItem().getMaxValue();
+	}
+	
+	@Override
+	public boolean canIncrease(final CharMode aMode)
+	{
+		switch (aMode)
+		{
+			case MAIN :
+				return canIncrease() && mValueId < getItem().getMaxStartValue();
+			case POINTS :
+				return false;
+			case NORMAL :
+				return false;
+		}
+		return false;
+	}
+	
+	@Override
+	public void decrease()
+	{
+		if (canDecrease())
+		{
+			mValueId-- ;
+		}
+	}
+	
+	@Override
+	public TableRow getContainer()
+	{
+		return mContainer;
+	}
+	
+	/**
+	 * @return the current value specified in {@link PropertyItem#getFinalValue(int)}.
+	 */
+	public int getFinalValue()
+	{
+		return getItem().getFinalValue(mValueId);
+	}
+	
+	@Override
 	public int getTempPoints()
 	{
 		return 0;
 	}
 	
 	@Override
+	public int getValue()
+	{
+		return getItem().getValue(mValueId);
+	}
+	
+	/**
+	 * @return the current value id.
+	 */
+	public int getValueId()
+	{
+		return mValueId;
+	}
+	
+	@Override
+	public void increase()
+	{
+		if (canIncrease())
+		{
+			mValueId++ ;
+		}
+	}
+	
+	@Override
+	public void refreshValue()
+	{
+		ViewUtil.applyValue(getValue(), mValueDisplay);
+	}
+	
+	@Override
 	public void release()
 	{
 		ViewUtil.release(mContainer, false);
+	}
+	
+	@Override
+	public void resetTempPoints()
+	{
+		return;
+	}
+	
+	@Override
+	public void setDecreasable(final boolean aEnabled)
+	{
+		mDecreaseButton.setEnabled(aEnabled);
+	}
+	
+	@Override
+	public void setIncreasable(final boolean aEnabled)
+	{
+		mIncreaseButton.setEnabled(aEnabled);
+	}
+	
+	@Override
+	public void setPoints(final PointHandler aPoints)
+	{
+		return;
 	}
 	
 	private void init()
@@ -127,123 +245,5 @@ public class PropertyItemValue extends ItemValueImpl<PropertyItem, PropertyItemV
 			refreshValue();
 		}
 		mContainer.addView(spinnerGrid);
-	}
-	
-	@Override
-	public void setPoints(final PointHandler aPoints)
-	{
-		return;
-	}
-	
-	@Override
-	public void refreshValue()
-	{
-		ViewUtil.applyValue(getValue(), mValueDisplay);
-	}
-	
-	@Override
-	public TableRow getContainer()
-	{
-		return mContainer;
-	}
-	
-	@Override
-	public int getValue()
-	{
-		return getItem().getValue(mValueId);
-	}
-	
-	/**
-	 * @return the current value specified in {@link PropertyItem#getFinalValue(int)}.
-	 */
-	public int getFinalValue()
-	{
-		return getItem().getFinalValue(mValueId);
-	}
-	
-	/**
-	 * @return the current value id.
-	 */
-	public int getValueId()
-	{
-		return mValueId;
-	}
-	
-	@Override
-	public boolean canIncrease()
-	{
-		return mValueId < getItem().getMaxValue();
-	}
-	
-	@Override
-	public boolean canDecrease()
-	{
-		return mValueId > getItem().getStartValue();
-	}
-	
-	@Override
-	public boolean canIncrease(final CharMode aMode)
-	{
-		switch (aMode)
-		{
-			case MAIN :
-				return canIncrease() && mValueId < getItem().getMaxStartValue();
-			case POINTS :
-				return false;
-			case NORMAL :
-				return false;
-		}
-		return false;
-	}
-	
-	@Override
-	public void resetTempPoints()
-	{
-		return;
-	}
-	
-	@Override
-	public boolean canDecrease(final CharMode aMode)
-	{
-		switch (aMode)
-		{
-			case MAIN :
-				return canDecrease();
-			case POINTS :
-				return false;
-			case NORMAL :
-				return false;
-		}
-		return false;
-	}
-	
-	@Override
-	public void increase()
-	{
-		if (canIncrease())
-		{
-			mValueId++ ;
-		}
-	}
-	
-	@Override
-	public void decrease()
-	{
-		if (canDecrease())
-		{
-			mValueId-- ;
-		}
-	}
-	
-	@Override
-	public void setIncreasable(final boolean aEnabled)
-	{
-		mIncreaseButton.setEnabled(aEnabled);
-	}
-	
-	@Override
-	public void setDecreasable(final boolean aEnabled)
-	{
-		mDecreaseButton.setEnabled(aEnabled);
 	}
 }

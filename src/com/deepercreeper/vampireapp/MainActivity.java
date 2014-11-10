@@ -10,12 +10,9 @@ public class MainActivity extends Activity
 {
 	private Vampire	mVampire;
 	
-	@Override
-	protected void onCreate(final Bundle savedInstanceState)
+	public View getView(final int aId)
 	{
-		super.onCreate(savedInstanceState);
-		mVampire = new Vampire(this);
-		loadChars();
+		return findViewById(aId);
 	}
 	
 	@Override
@@ -46,13 +43,16 @@ public class MainActivity extends Activity
 		return super.onOptionsItemSelected(item);
 	}
 	
+	@Override
+	protected void onCreate(final Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		mVampire = new Vampire(this);
+		loadChars();
+	}
+	
 	private void loadChars()
 	{
 		// final SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-	}
-	
-	public View getView(final int aId)
-	{
-		return findViewById(aId);
 	}
 }

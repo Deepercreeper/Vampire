@@ -36,27 +36,6 @@ public interface ItemValue <T extends Item>
 	public boolean canDecrease();
 	
 	/**
-	 * @return whether this group is in creation mode.
-	 */
-	public CharMode getCreationMode();
-	
-	/**
-	 * Sets whether this group is in creation mode.
-	 * 
-	 * @param aMode
-	 *            Whether this group represents the values inside a character creation.
-	 */
-	public void setCreationMode(CharMode aMode);
-	
-	/**
-	 * Sets the current points handler.
-	 * 
-	 * @param aPoints
-	 *            The new points handler.
-	 */
-	public void setPoints(PointHandler aPoints);
-	
-	/**
 	 * If the value has special decrease properties this defines whether it is able to be decreased.
 	 * 
 	 * @param aMode
@@ -80,22 +59,81 @@ public interface ItemValue <T extends Item>
 	public boolean canIncrease(CharMode aMode);
 	
 	/**
-	 * Increases this value if possible.
-	 */
-	public void increase();
-	
-	/**
 	 * Decreases this value if possible.
 	 */
 	public void decrease();
 	
 	/**
-	 * Enables or disabled the increase button.
+	 * Each value has a specified widget that contains some buttons and text views to handle its value.
 	 * 
-	 * @param aEnabled
-	 *            Whether the increase button should be enabled.
+	 * @return the value container.
 	 */
-	public void setIncreasable(boolean aEnabled);
+	public LinearLayout getContainer();
+	
+	/**
+	 * @return the context of this value.
+	 */
+	public Context getContext();
+	
+	/**
+	 * @return whether this group is in creation mode.
+	 */
+	public CharMode getCreationMode();
+	
+	/**
+	 * @return the item that defines the type of this value.
+	 */
+	public T getItem();
+	
+	/**
+	 * @return the current point handler of this value.
+	 */
+	public PointHandler getPoints();
+	
+	/**
+	 * Free bonus points are handled as temporary points. They need to be saved separately.
+	 * 
+	 * @return the number of temporary points.
+	 */
+	public int getTempPoints();
+	
+	/**
+	 * @return the update action of this value.
+	 */
+	public UpdateAction getUpdateAction();
+	
+	/**
+	 * @return the current item value.
+	 */
+	public int getValue();
+	
+	/**
+	 * Increases this value if possible.
+	 */
+	public void increase();
+	
+	/**
+	 * Applies the value to the value display again.
+	 */
+	public void refreshValue();
+	
+	/**
+	 * Removes all widgets from their parent containers.
+	 */
+	public void release();
+	
+	/**
+	 * Removes all temporary points.
+	 */
+	public void resetTempPoints();
+	
+	/**
+	 * Sets whether this group is in creation mode.
+	 * 
+	 * @param aMode
+	 *            Whether this group represents the values inside a character creation.
+	 */
+	public void setCreationMode(CharMode aMode);
 	
 	/**
 	 * Enables or disabled the decrease button.
@@ -106,56 +144,18 @@ public interface ItemValue <T extends Item>
 	public void setDecreasable(boolean aEnabled);
 	
 	/**
-	 * Removes all temporary points.
-	 */
-	public void resetTempPoints();
-	
-	/**
-	 * Free bonus points are handled as temporary points. They need to be saved separately.
+	 * Enables or disabled the increase button.
 	 * 
-	 * @return the number of temporary points.
+	 * @param aEnabled
+	 *            Whether the increase button should be enabled.
 	 */
-	public int getTempPoints();
+	public void setIncreasable(boolean aEnabled);
 	
 	/**
-	 * Removes all widgets from their parent containers.
-	 */
-	public void release();
-	
-	/**
-	 * Each value has a specified widget that contains some buttons and text views to handle its value.
+	 * Sets the current points handler.
 	 * 
-	 * @return the value container.
+	 * @param aPoints
+	 *            The new points handler.
 	 */
-	public LinearLayout getContainer();
-	
-	/**
-	 * @return the item that defines the type of this value.
-	 */
-	public T getItem();
-	
-	/**
-	 * Applies the value to the value display again.
-	 */
-	public void refreshValue();
-	
-	/**
-	 * @return the current item value.
-	 */
-	public int getValue();
-	
-	/**
-	 * @return the update action of this value.
-	 */
-	public UpdateAction getUpdateAction();
-	
-	/**
-	 * @return the current point handler of this value.
-	 */
-	public PointHandler getPoints();
-	
-	/**
-	 * @return the context of this value.
-	 */
-	public Context getContext();
+	public void setPoints(PointHandler aPoints);
 }

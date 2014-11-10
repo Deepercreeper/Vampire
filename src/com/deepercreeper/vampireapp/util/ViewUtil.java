@@ -43,25 +43,6 @@ public class ViewUtil
 	
 	private final LayoutParams				mWrapAll		= new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 	
-	/**
-	 * Initializes the layout parameters by instantiating the utility.
-	 * 
-	 * @param aContext
-	 *            The context.
-	 */
-	public static void init(final Context aContext)
-	{
-		INSTANCE = new ViewUtil(aContext);
-	}
-	
-	/**
-	 * @return the current view utility instance.
-	 */
-	public static ViewUtil instance()
-	{
-		return INSTANCE;
-	}
-	
 	private ViewUtil(final Context aContext)
 	{
 		mRowNameShort = new TableRow.LayoutParams(calcPx(82, aContext), LayoutParams.MATCH_PARENT);
@@ -74,28 +55,11 @@ public class ViewUtil
 	}
 	
 	/**
-	 * Removes a view from its parent view. Optionally removes all child views.
-	 * 
-	 * @param aView
-	 *            The view to release.
-	 * @param aChildren
-	 *            Whether the children of the given view should be removed too.
+	 * @return layout parameters for buttons.
 	 */
-	public static void release(final View aView, final boolean aChildren)
+	public LayoutParams getButtonSize()
 	{
-		if (aView == null)
-		{
-			return;
-		}
-		if (aChildren && aView instanceof ViewGroup)
-		{
-			((ViewGroup) aView).removeAllViews();
-		}
-		final ViewParent parent = aView.getParent();
-		if (parent instanceof ViewGroup)
-		{
-			((ViewGroup) parent).removeAllViews();
-		}
+		return mButtonSize;
 	}
 	
 	/**
@@ -107,27 +71,19 @@ public class ViewUtil
 	}
 	
 	/**
-	 * @return layout parameters for table row buttons.
-	 */
-	public TableRow.LayoutParams getRowButtonSize()
-	{
-		return mRowButtonSize;
-	}
-	
-	/**
-	 * @return layout parameters for buttons.
-	 */
-	public LayoutParams getButtonSize()
-	{
-		return mButtonSize;
-	}
-	
-	/**
 	 * @return layout parameters for number text views.
 	 */
 	public LayoutParams getNumberSize()
 	{
 		return mNumberSize;
+	}
+	
+	/**
+	 * @return layout parameters for table row buttons.
+	 */
+	public TableRow.LayoutParams getRowButtonSize()
+	{
+		return mRowButtonSize;
 	}
 	
 	/**
@@ -139,14 +95,6 @@ public class ViewUtil
 	}
 	
 	/**
-	 * @return layout parameters for wrap all views.
-	 */
-	public LayoutParams getWrapAll()
-	{
-		return mWrapAll;
-	}
-	
-	/**
 	 * @return layout parameters for short table row name text views.
 	 */
 	public TableRow.LayoutParams getRowNameShort()
@@ -155,11 +103,35 @@ public class ViewUtil
 	}
 	
 	/**
+	 * @return layout parameters for table row wrap all views.
+	 */
+	public TableRow.LayoutParams getRowWrapAll()
+	{
+		return mRowWrapAll;
+	}
+	
+	/**
+	 * @return layout parameters for table wrap all views.
+	 */
+	public TableLayout.LayoutParams getTableWrapAll()
+	{
+		return mTableWrapAll;
+	}
+	
+	/**
 	 * @return layout parameters for value views.
 	 */
 	public LayoutParams getValueSize()
 	{
 		return mValueSize;
+	}
+	
+	/**
+	 * @return layout parameters for wrap all views.
+	 */
+	public LayoutParams getWrapAll()
+	{
+		return mWrapAll;
 	}
 	
 	/**
@@ -179,19 +151,19 @@ public class ViewUtil
 	}
 	
 	/**
-	 * @return layout parameters for table row wrap all views.
+	 * Applies the given value to the array of radio buttons to display it.
+	 * 
+	 * @param aValue
+	 *            The value do display.
+	 * @param aValueDisplay
+	 *            The radio button array.
 	 */
-	public TableRow.LayoutParams getRowWrapAll()
+	public static void applyValue(final int aValue, final RadioButton[] aValueDisplay)
 	{
-		return mRowWrapAll;
-	}
-	
-	/**
-	 * @return layout parameters for table wrap all views.
-	 */
-	public TableLayout.LayoutParams getTableWrapAll()
-	{
-		return mTableWrapAll;
+		for (int i = 0; i < aValueDisplay.length; i++ )
+		{
+			aValueDisplay[i].setChecked(i < aValue);
+		}
 	}
 	
 	/**
@@ -222,18 +194,46 @@ public class ViewUtil
 	}
 	
 	/**
-	 * Applies the given value to the array of radio buttons to display it.
+	 * Initializes the layout parameters by instantiating the utility.
 	 * 
-	 * @param aValue
-	 *            The value do display.
-	 * @param aValueDisplay
-	 *            The radio button array.
+	 * @param aContext
+	 *            The context.
 	 */
-	public static void applyValue(final int aValue, final RadioButton[] aValueDisplay)
+	public static void init(final Context aContext)
 	{
-		for (int i = 0; i < aValueDisplay.length; i++ )
+		INSTANCE = new ViewUtil(aContext);
+	}
+	
+	/**
+	 * @return the current view utility instance.
+	 */
+	public static ViewUtil instance()
+	{
+		return INSTANCE;
+	}
+	
+	/**
+	 * Removes a view from its parent view. Optionally removes all child views.
+	 * 
+	 * @param aView
+	 *            The view to release.
+	 * @param aChildren
+	 *            Whether the children of the given view should be removed too.
+	 */
+	public static void release(final View aView, final boolean aChildren)
+	{
+		if (aView == null)
 		{
-			aValueDisplay[i].setChecked(i < aValue);
+			return;
+		}
+		if (aChildren && aView instanceof ViewGroup)
+		{
+			((ViewGroup) aView).removeAllViews();
+		}
+		final ViewParent parent = aView.getParent();
+		if (parent instanceof ViewGroup)
+		{
+			((ViewGroup) parent).removeAllViews();
 		}
 	}
 }

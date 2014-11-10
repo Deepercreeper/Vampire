@@ -19,7 +19,6 @@ public class DisciplineItem extends ItemImpl
 {
 	private static final String							SUB_PREFIX			= ">", PARENT_PREFIX = "#", NAME_DELIM = ":", ABILITIES_DELIM = ";",
 			SUB_ITEMS_DELIM = ",";
-	
 	private static final int							MAX_VALUE			= 6, MAX_START_VALUE = 3, START_VALUE = 0, FREE_POINTS_COST = 7;
 	
 	/**
@@ -35,7 +34,7 @@ public class DisciplineItem extends ItemImpl
 	
 	protected DisciplineItem(final String aName)
 	{
-		super(aName);
+		super(aName, false);
 	}
 	
 	/**
@@ -49,12 +48,6 @@ public class DisciplineItem extends ItemImpl
 		mSubItems.put(aSubItem.getName(), aSubItem);
 		mSubItemNames.add(aSubItem);
 		Collections.sort(mSubItemNames);
-	}
-	
-	@Override
-	public int getFreePointsCost()
-	{
-		return FREE_POINTS_COST;
 	}
 	
 	@Override
@@ -74,6 +67,12 @@ public class DisciplineItem extends ItemImpl
 	public List<Ability> getAbilities()
 	{
 		return mAbilities;
+	}
+	
+	@Override
+	public int getFreePointsCost()
+	{
+		return FREE_POINTS_COST;
 	}
 	
 	@Override
@@ -136,6 +135,13 @@ public class DisciplineItem extends ItemImpl
 		return !mSubItems.isEmpty();
 	}
 	
+	@Override
+	protected String createDisplayName()
+	{
+		// TODO Implement
+		return getName();
+	}
+	
 	private void addAbility(final Ability aAbility)
 	{
 		mAbilities.add(aAbility);
@@ -145,13 +151,6 @@ public class DisciplineItem extends ItemImpl
 	private void addSubItemName(final String aName)
 	{
 		mSubItems.put(aName, null);
-	}
-	
-	@Override
-	protected String createDescription()
-	{
-		// TODO Implement
-		return getName();
 	}
 	
 	/**

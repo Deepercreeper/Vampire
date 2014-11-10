@@ -58,11 +58,11 @@ public class SimpleController implements Controller<SimpleItem>
 	}
 	
 	/**
-	 * @return the maximum creation values for the attributes.
+	 * @return a list of all ability item groups.
 	 */
-	public int[] getAttributeCreationValues()
+	public List<SimpleItemGroup> getAbilities()
 	{
-		return mAttributeCreationValues;
+		return mAbilityGroups;
 	}
 	
 	/**
@@ -74,19 +74,11 @@ public class SimpleController implements Controller<SimpleItem>
 	}
 	
 	/**
-	 * @return the maximum creation values for the virtues.
+	 * @return the maximum creation values for the attributes.
 	 */
-	public int getVirtueCreationValue()
+	public int[] getAttributeCreationValues()
 	{
-		return mVirtueCreationValue;
-	}
-	
-	/**
-	 * @return a list of all ability item groups.
-	 */
-	public List<SimpleItemGroup> getAbilities()
-	{
-		return mAbilityGroups;
+		return mAttributeCreationValues;
 	}
 	
 	/**
@@ -95,6 +87,14 @@ public class SimpleController implements Controller<SimpleItem>
 	public List<SimpleItemGroup> getAttributes()
 	{
 		return mAttributeGroups;
+	}
+	
+	/**
+	 * @return the maximum creation values for the virtues.
+	 */
+	public int getVirtueCreationValue()
+	{
+		return mVirtueCreationValue;
 	}
 	
 	/**

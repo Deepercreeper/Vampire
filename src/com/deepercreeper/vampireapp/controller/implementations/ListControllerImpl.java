@@ -13,33 +13,13 @@ import com.deepercreeper.vampireapp.controller.interfaces.ListController;
  * @param <T>
  *            The list element type.
  */
-public class ListControllerImpl <T extends Named> implements ListController<T>
+public abstract class ListControllerImpl <T extends Named> implements ListController<T>
 {
 	private final HashMap<String, T>	mValues		= new HashMap<String, T>();
 	
 	private final List<String>			mNames		= new ArrayList<String>();
 	
 	private final List<T>				mValuesList	= new ArrayList<T>();
-	
-	protected final void init(final List<T> aValues)
-	{
-		mValuesList.clear();
-		mNames.clear();
-		mValues.clear();
-		mValuesList.addAll(aValues);
-		Collections.sort(mValuesList);
-		for (final T value : mValuesList)
-		{
-			mNames.add(value.getName());
-			mValues.put(value.getName(), value);
-		}
-	}
-	
-	@Override
-	public int indexOf(final T aValue)
-	{
-		return mNames.indexOf(aValue.getName());
-	}
 	
 	@Override
 	public T get(final int aPos)
@@ -69,5 +49,25 @@ public class ListControllerImpl <T extends Named> implements ListController<T>
 	public List<T> getValues()
 	{
 		return mValuesList;
+	}
+	
+	@Override
+	public int indexOf(final T aValue)
+	{
+		return mNames.indexOf(aValue.getName());
+	}
+	
+	protected final void init(final List<T> aValues)
+	{
+		mValuesList.clear();
+		mNames.clear();
+		mValues.clear();
+		mValuesList.addAll(aValues);
+		Collections.sort(mValuesList);
+		for (final T value : mValuesList)
+		{
+			mNames.add(value.getName());
+			mValues.put(value.getName(), value);
+		}
 	}
 }

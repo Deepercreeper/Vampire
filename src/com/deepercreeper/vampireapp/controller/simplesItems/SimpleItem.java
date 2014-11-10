@@ -10,21 +10,35 @@ import com.deepercreeper.vampireapp.controller.implementations.ItemImpl;
  */
 public class SimpleItem extends ItemImpl
 {
-	private final int	mMaxValue;
+	private static final String	DESCRIPTION_PREFIX	= "#";
 	
-	private final int	mFreePointsCost;
+	private final int			mMaxValue;
 	
-	private final int	mStartValue;
+	private final int			mFreePointsCost;
 	
-	private final int	mMaxStartValue;
+	private final int			mStartValue;
 	
-	private SimpleItem(final String aName, final int aStartValue, final int aMaxStartValue, final int aMaxValue, final int aFreePointsCost)
+	private final int			mMaxStartValue;
+	
+	private SimpleItem(final String aName, final int aStartValue, final int aMaxStartValue, final int aMaxValue, final int aFreePointsCost,
+			final boolean aNeedsDescription)
 	{
-		super(aName);
+		super(aName, aNeedsDescription);
 		mFreePointsCost = aFreePointsCost;
 		mMaxValue = aMaxValue;
 		mStartValue = aStartValue;
 		mMaxStartValue = aMaxStartValue;
+	}
+	
+	@Override
+	public boolean equals(final Object aO)
+	{
+		if (aO instanceof SimpleItem)
+		{
+			final SimpleItem item = (SimpleItem) aO;
+			return getName().equals(item.getName());
+		}
+		return false;
 	}
 	
 	@Override
@@ -52,21 +66,10 @@ public class SimpleItem extends ItemImpl
 	}
 	
 	@Override
-	protected String createDescription()
+	protected String createDisplayName()
 	{
 		// TODO Implement
 		return getName();
-	}
-	
-	@Override
-	public boolean equals(final Object aO)
-	{
-		if (aO instanceof SimpleItem)
-		{
-			final SimpleItem item = (SimpleItem) aO;
-			return getName().equals(item.getName());
-		}
-		return false;
 	}
 	
 	/**
@@ -87,6 +90,10 @@ public class SimpleItem extends ItemImpl
 	public static SimpleItem create(final String aData, final int aStartValue, final int aMaxStartValue, final int aMaxValue,
 			final int aFreePointsCost)
 	{
-		return new SimpleItem(aData, aStartValue, aMaxStartValue, aMaxValue, aFreePointsCost);
+		if (aData.startsWith(DESCRIPTION_PREFIX))
+		{
+			return new SimpleItem(aData.substring(1), aStartValue, aMaxStartValue, aMaxValue, aFreePointsCost, true);
+		}
+		return new SimpleItem(aData, aStartValue, aMaxStartValue, aMaxValue, aFreePointsCost, false);
 	}
 }

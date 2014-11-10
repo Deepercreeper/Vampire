@@ -33,38 +33,7 @@ public class SubDisciplineItem extends DisciplineItem
 	private SubDisciplineItem(final String aName)
 	{
 		super(aName);
-		mDescription = createDescription();
-	}
-	
-	/**
-	 * Sets the parent discipline for this sub discipline.
-	 * 
-	 * @param aParent
-	 *            The parent discipline.
-	 */
-	public void setParent(final DisciplineItem aParent)
-	{
-		mParent = aParent;
-	}
-	
-	@Override
-	public List<Ability> getAbilities()
-	{
-		return mAbilities;
-	}
-	
-	private void addAbility(final Ability aAbility)
-	{
-		mAbilities.add(aAbility);
-		Collections.sort(mAbilities);
-	}
-	
-	/**
-	 * @return the parent discipline if set already.
-	 */
-	public DisciplineItem getParent()
-	{
-		return mParent;
+		mDescription = createDisplayName();
 	}
 	
 	@Override
@@ -74,16 +43,26 @@ public class SubDisciplineItem extends DisciplineItem
 	}
 	
 	@Override
-	public String getDescription()
+	public boolean equals(final Object aO)
 	{
-		return mDescription;
+		if (aO instanceof SubDisciplineItem)
+		{
+			final SubDisciplineItem item = (SubDisciplineItem) aO;
+			return getName().equals(item.getName());
+		}
+		return false;
 	}
 	
 	@Override
-	protected String createDescription()
+	public List<Ability> getAbilities()
 	{
-		// TODO Implement
-		return getName();
+		return mAbilities;
+	}
+	
+	@Override
+	public String getDisplayName()
+	{
+		return mDescription;
 	}
 	
 	@Override
@@ -98,21 +77,42 @@ public class SubDisciplineItem extends DisciplineItem
 		return MAX_VALUE;
 	}
 	
+	/**
+	 * @return the parent discipline if set already.
+	 */
+	public DisciplineItem getParent()
+	{
+		return mParent;
+	}
+	
 	@Override
 	public int getStartValue()
 	{
 		return START_VALUE;
 	}
 	
-	@Override
-	public boolean equals(final Object aO)
+	/**
+	 * Sets the parent discipline for this sub discipline.
+	 * 
+	 * @param aParent
+	 *            The parent discipline.
+	 */
+	public void setParent(final DisciplineItem aParent)
 	{
-		if (aO instanceof SubDisciplineItem)
-		{
-			final SubDisciplineItem item = (SubDisciplineItem) aO;
-			return getName().equals(item.getName());
-		}
-		return false;
+		mParent = aParent;
+	}
+	
+	@Override
+	protected String createDisplayName()
+	{
+		// TODO Implement
+		return getName();
+	}
+	
+	private void addAbility(final Ability aAbility)
+	{
+		mAbilities.add(aAbility);
+		Collections.sort(mAbilities);
 	}
 	
 	/**

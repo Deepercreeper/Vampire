@@ -27,18 +27,18 @@ public class DisciplineController implements Controller<DisciplineItem>
 	}
 	
 	/**
-	 * @return the maximum creation value for all item values.
-	 */
-	public int getMaxCreationValue()
-	{
-		return mMaxCreationValue;
-	}
-	
-	/**
 	 * @return the discipline item group.
 	 */
 	public DisciplineItemGroup getDisciplines()
 	{
 		return mDisciplines;
+	}
+	
+	/**
+	 * @return the maximum creation value for all item values.
+	 */
+	public int getMaxCreationValue()
+	{
+		return mMaxCreationValue;
 	}
 }

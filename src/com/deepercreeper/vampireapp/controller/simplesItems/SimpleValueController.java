@@ -87,49 +87,6 @@ public class SimpleValueController extends ValueControllerImpl<SimpleItem>
 	}
 	
 	@Override
-	public void setPoints(final PointHandler aPoints)
-	{
-		super.setPoints(aPoints);
-		for (final SimpleItemValueGroup group : mAttributesList)
-		{
-			group.setPoints(getPoints());
-		}
-		for (final SimpleItemValueGroup group : mAbilitiesList)
-		{
-			group.setPoints(getPoints());
-		}
-		mVirtues.setPoints(getPoints());
-	}
-	
-	@Override
-	public void resetTempPoints()
-	{
-		for (final SimpleItemValueGroup group : mAttributesList)
-		{
-			group.resetTempPoints();
-		}
-		for (final SimpleItemValueGroup group : mAbilitiesList)
-		{
-			group.resetTempPoints();
-		}
-		mVirtues.resetTempPoints();
-	}
-	
-	@Override
-	public void release()
-	{
-		for (final SimpleItemValueGroup group : mAttributesList)
-		{
-			group.release();
-		}
-		for (final SimpleItemValueGroup group : mAbilitiesList)
-		{
-			group.release();
-		}
-		mVirtues.release();
-	}
-	
-	@Override
 	public void close()
 	{
 		if (mAttributesOpen)
@@ -147,35 +104,9 @@ public class SimpleValueController extends ValueControllerImpl<SimpleItem>
 	}
 	
 	@Override
-	public void setEnabled(final boolean aEnabled)
+	public SimpleController getController()
 	{
-		if (mShowAttributesPanel != null)
-		{
-			mShowAttributesPanel.setEnabled(aEnabled);
-		}
-		if (mShowAbilitiesPanel != null)
-		{
-			mShowAbilitiesPanel.setEnabled(aEnabled);
-		}
-		if (mShowVirtuesPanel != null)
-		{
-			mShowVirtuesPanel.setEnabled(aEnabled);
-		}
-	}
-	
-	@Override
-	public void setCreationMode(final CharMode aMode)
-	{
-		super.setCreationMode(aMode);
-		for (final SimpleItemValueGroup valueGroup : mAttributesList)
-		{
-			valueGroup.setCreationMode(aMode);
-		}
-		for (final SimpleItemValueGroup valueGroup : mAbilitiesList)
-		{
-			valueGroup.setCreationMode(aMode);
-		}
-		mVirtues.setCreationMode(aMode);
+		return (SimpleController) super.getController();
 	}
 	
 	@Override
@@ -303,6 +234,130 @@ public class SimpleValueController extends ValueControllerImpl<SimpleItem>
 		aLayout.addView(virtues);
 	}
 	
+	@Override
+	public void release()
+	{
+		for (final SimpleItemValueGroup group : mAttributesList)
+		{
+			group.release();
+		}
+		for (final SimpleItemValueGroup group : mAbilitiesList)
+		{
+			group.release();
+		}
+		mVirtues.release();
+	}
+	
+	@Override
+	public void resetTempPoints()
+	{
+		for (final SimpleItemValueGroup group : mAttributesList)
+		{
+			group.resetTempPoints();
+		}
+		for (final SimpleItemValueGroup group : mAbilitiesList)
+		{
+			group.resetTempPoints();
+		}
+		mVirtues.resetTempPoints();
+	}
+	
+	@Override
+	public void setCreationMode(final CharMode aMode)
+	{
+		super.setCreationMode(aMode);
+		for (final SimpleItemValueGroup valueGroup : mAttributesList)
+		{
+			valueGroup.setCreationMode(aMode);
+		}
+		for (final SimpleItemValueGroup valueGroup : mAbilitiesList)
+		{
+			valueGroup.setCreationMode(aMode);
+		}
+		mVirtues.setCreationMode(aMode);
+	}
+	
+	@Override
+	public void setEnabled(final boolean aEnabled)
+	{
+		if (mShowAttributesPanel != null)
+		{
+			mShowAttributesPanel.setEnabled(aEnabled);
+		}
+		if (mShowAbilitiesPanel != null)
+		{
+			mShowAbilitiesPanel.setEnabled(aEnabled);
+		}
+		if (mShowVirtuesPanel != null)
+		{
+			mShowVirtuesPanel.setEnabled(aEnabled);
+		}
+	}
+	
+	@Override
+	public void setPoints(final PointHandler aPoints)
+	{
+		super.setPoints(aPoints);
+		for (final SimpleItemValueGroup group : mAttributesList)
+		{
+			group.setPoints(getPoints());
+		}
+		for (final SimpleItemValueGroup group : mAbilitiesList)
+		{
+			group.setPoints(getPoints());
+		}
+		mVirtues.setPoints(getPoints());
+	}
+	
+	@Override
+	protected void updateValues()
+	{
+		switch (getCreationMode())
+		{
+			case MAIN :
+				updateCreation();
+				break;
+			case POINTS :
+				updateFreePoints();
+				break;
+			case NORMAL :
+				updateNormal();
+				break;
+		}
+	}
+	
+	private boolean canIncreaseCreation(final SimpleItemValueGroup aGroup, final List<SimpleItemValueGroup> aGroups, final int[] aMaxValues)
+	{
+		final int value = aGroup.getValue();
+		final HashSet<Integer> values = new HashSet<Integer>();
+		for (final SimpleItemValueGroup group : aGroups)
+		{
+			if (group != aGroup)
+			{
+				values.add(group.getValue());
+			}
+		}
+		
+		boolean maxDone = false, midDone = false;
+		if (Collections.max(values) > aMaxValues[1])
+		{
+			maxDone = true;
+		}
+		if (Collections.min(values) > aMaxValues[0])
+		{
+			midDone = true;
+		}
+		if (value == aMaxValues[0] && midDone)
+		{
+			return false;
+		}
+		if (value == aMaxValues[1] && maxDone)
+		{
+			return false;
+		}
+		return value < aMaxValues[2];
+	}
+	
 	private void updateCreation()
 	{
 		int[] maxValues;
@@ -377,60 +432,5 @@ public class SimpleValueController extends ValueControllerImpl<SimpleItem>
 		{
 			mVirtues.updateValues(true, false);
 		}
-	}
-	
-	@Override
-	protected void updateValues()
-	{
-		switch (getCreationMode())
-		{
-			case MAIN :
-				updateCreation();
-				break;
-			case POINTS :
-				updateFreePoints();
-				break;
-			case NORMAL :
-				updateNormal();
-				break;
-		}
-	}
-	
-	private boolean canIncreaseCreation(final SimpleItemValueGroup aGroup, final List<SimpleItemValueGroup> aGroups, final int[] aMaxValues)
-	{
-		final int value = aGroup.getValue();
-		final HashSet<Integer> values = new HashSet<Integer>();
-		for (final SimpleItemValueGroup group : aGroups)
-		{
-			if (group != aGroup)
-			{
-				values.add(group.getValue());
-			}
-		}
-		
-		boolean maxDone = false, midDone = false;
-		if (Collections.max(values) > aMaxValues[1])
-		{
-			maxDone = true;
-		}
-		if (Collections.min(values) > aMaxValues[0])
-		{
-			midDone = true;
-		}
-		if (value == aMaxValues[0] && midDone)
-		{
-			return false;
-		}
-		if (value == aMaxValues[1] && maxDone)
-		{
-			return false;
-		}
-		return value < aMaxValues[2];
-	}
-	
-	@Override
-	public SimpleController getController()
-	{
-		return (SimpleController) super.getController();
 	}
 }
