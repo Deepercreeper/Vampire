@@ -91,6 +91,20 @@ public abstract class ItemValueGroupImpl <T extends Item, S extends ItemValue<T>
 	}
 	
 	@Override
+	public List<S> getDescriptionValues()
+	{
+		final List<S> list = new ArrayList<S>();
+		for (final S value : mValuesList)
+		{
+			if (value.getItem().needsDescription() && value.getValue() > 0)
+			{
+				list.add(value);
+			}
+		}
+		return list;
+	}
+	
+	@Override
 	public ItemGroup<T> getGroup()
 	{
 		return mGroup;

@@ -38,41 +38,44 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f0a0024;
-        public static final int back_button=0x7f0a0010;
+        public static final int action_settings=0x7f0a0027;
+        public static final int back_to_1_button=0x7f0a0021;
+        public static final int back_to_2_button=0x7f0a0025;
+        public static final int back_to_main_button=0x7f0a0010;
+        public static final int backgrounds_2_panel=0x7f0a0016;
         public static final int backgrounds_panel=0x7f0a000e;
         public static final int behavior_label=0x7f0a0008;
         public static final int behavior_spinner=0x7f0a0007;
         public static final int char_name_text=0x7f0a0002;
+        public static final int characters_list=0x7f0a0001;
         public static final int clan_label=0x7f0a0009;
         public static final int clan_spinner=0x7f0a000b;
         public static final int concept_text=0x7f0a0003;
-        public static final int createCharacterButton=0x7f0a0001;
-        public static final int decrease_path=0x7f0a001e;
-        public static final int decrease_volition=0x7f0a0019;
+        public static final int create_character_button=0x7f0a0000;
+        public static final int decrease_path_button=0x7f0a001e;
+        public static final int decrease_volition_button=0x7f0a0019;
+        public static final int description_values_panel=0x7f0a0024;
+        public static final int disciplines_2_panel=0x7f0a0015;
         public static final int disciplines_panel=0x7f0a000d;
         public static final int enable_path_checkbox=0x7f0a001c;
-        public static final int free_points_backgrounds_panel=0x7f0a0016;
         public static final int free_points_bar=0x7f0a0013;
-        public static final int free_points_disciplines_panel=0x7f0a0015;
-        public static final int free_points_simple_items_panel=0x7f0a0014;
         public static final int free_points_text=0x7f0a0012;
         public static final int generation_label=0x7f0a000a;
         public static final int generation_picker=0x7f0a0006;
-        public static final int increase_path=0x7f0a0020;
-        public static final int increase_volition=0x7f0a001b;
-        public static final int listView1=0x7f0a0000;
+        public static final int increase_path_button=0x7f0a0020;
+        public static final int increase_volition_button=0x7f0a001b;
         public static final int nature_label=0x7f0a0005;
         public static final int nature_spinner=0x7f0a0004;
-        public static final int next_button=0x7f0a0011;
+        public static final int next_to_2_button=0x7f0a0011;
+        public static final int next_to_3_button=0x7f0a0023;
+        public static final int next_to_4_button=0x7f0a0026;
         public static final int path_spinner=0x7f0a001d;
         public static final int path_value=0x7f0a001f;
         public static final int properties_panel=0x7f0a000f;
         public static final int reset_temp_points_button=0x7f0a0022;
-        public static final int show_creation_button=0x7f0a0021;
-        public static final int show_descriptions_button=0x7f0a0023;
+        public static final int simple_items_2_panel=0x7f0a0014;
         public static final int simple_items_panel=0x7f0a000c;
-        public static final int volition_and_path_spinner=0x7f0a0017;
+        public static final int volition_and_path_table=0x7f0a0017;
         public static final int volition_label=0x7f0a0018;
         public static final int volition_value=0x7f0a001a;
     }
@@ -84,8 +87,9 @@ public final class R {
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
-        public static final int create_character=0x7f030001;
-        public static final int free_points_view=0x7f030002;
+        public static final int create_char_1=0x7f030001;
+        public static final int create_char_2=0x7f030002;
+        public static final int create_char_3=0x7f030003;
     }
     public static final class menu {
         public static final int main=0x7f090000;

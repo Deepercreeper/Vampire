@@ -35,6 +35,11 @@ public interface ItemValueGroup <T extends Item, S extends ItemValue<T>>
 	public CharMode getCreationMode();
 	
 	/**
+	 * @return a list of all values, that need a description and have more than 0 as value.
+	 */
+	public List<S> getDescriptionValues();
+	
+	/**
 	 * @return the item group of this value group.
 	 */
 	public ItemGroup<T> getGroup();

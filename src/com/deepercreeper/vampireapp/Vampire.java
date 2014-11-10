@@ -26,6 +26,7 @@ import com.deepercreeper.vampireapp.controller.Path;
 import com.deepercreeper.vampireapp.controller.PathController;
 import com.deepercreeper.vampireapp.controller.backgrounds.BackgroundController;
 import com.deepercreeper.vampireapp.controller.disciplines.DisciplineController;
+import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
 import com.deepercreeper.vampireapp.controller.properties.PropertyController;
 import com.deepercreeper.vampireapp.controller.simplesItems.SimpleController;
 import com.deepercreeper.vampireapp.util.ViewUtil;
@@ -101,13 +102,13 @@ public class Vampire
 	{
 		((TextView) mActivity.getView(R.id.free_points_text)).setText("" + aValue);
 		((ProgressBar) mActivity.getView(R.id.free_points_bar)).setProgress(aValue);
-		((Button) mActivity.getView(R.id.show_descriptions_button)).setEnabled(aValue == 0);
+		((Button) mActivity.getView(R.id.next_to_3_button)).setEnabled(aValue == 0);
 	}
 	
 	public void setPathEnabled(final boolean aEnabled, final boolean aCanIncrease, final boolean aCanDecrease)
 	{
-		((ImageButton) mActivity.getView(R.id.decrease_path)).setEnabled(aCanDecrease && aEnabled);
-		((ImageButton) mActivity.getView(R.id.increase_path)).setEnabled(aCanIncrease && aEnabled);
+		((ImageButton) mActivity.getView(R.id.decrease_path_button)).setEnabled(aCanDecrease && aEnabled);
+		((ImageButton) mActivity.getView(R.id.increase_path_button)).setEnabled(aCanIncrease && aEnabled);
 		((Spinner) mActivity.getView(R.id.path_spinner)).setEnabled(aEnabled);
 	}
 	
@@ -131,14 +132,15 @@ public class Vampire
 				initCreateChar2();
 				break;
 			case CREATE_CHAR_3 :
+				initCreateChar3();
 				break;
 		}
 	}
 	
 	public void setVolitionEnabled(final boolean aCanIncrease, final boolean aCanDecrease)
 	{
-		((ImageButton) mActivity.getView(R.id.increase_volition)).setEnabled(aCanIncrease);
-		((ImageButton) mActivity.getView(R.id.decrease_volition)).setEnabled(aCanDecrease);
+		((ImageButton) mActivity.getView(R.id.increase_volition_button)).setEnabled(aCanIncrease);
+		((ImageButton) mActivity.getView(R.id.decrease_volition_button)).setEnabled(aCanDecrease);
 	}
 	
 	public void setVolitionPoints(final int aValue)
@@ -148,7 +150,7 @@ public class Vampire
 	
 	private void initCreateChar1()
 	{
-		mActivity.setContentView(R.layout.create_character);
+		mActivity.setContentView(R.layout.create_char_1);
 		if (mCharCreator == null)
 		{
 			mCharCreator = new CharCreator(this, mDisciplines, mProperties, mBackgrounds, mSimpleItems, mNatures.getFirst(), mNatures.getFirst(),
@@ -286,7 +288,7 @@ public class Vampire
 		final LinearLayout propertiesPanel = (LinearLayout) mActivity.getView(R.id.properties_panel);
 		mCharCreator.getProperties().initLayout(propertiesPanel);
 		
-		final Button nextButton = (Button) mActivity.getView(R.id.next_button);
+		final Button nextButton = (Button) mActivity.getView(R.id.next_to_2_button);
 		nextButton.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -296,7 +298,7 @@ public class Vampire
 			}
 		});
 		
-		final Button backButton = (Button) mActivity.getView(R.id.back_button);
+		final Button backButton = (Button) mActivity.getView(R.id.back_to_main_button);
 		backButton.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -309,7 +311,7 @@ public class Vampire
 	
 	private void initCreateChar2()
 	{
-		mActivity.setContentView(R.layout.free_points_view);
+		mActivity.setContentView(R.layout.create_char_2);
 		mCharCreator.releaseViews();
 		mCharCreator.setCreationMode(CharMode.POINTS);
 		
@@ -323,16 +325,16 @@ public class Vampire
 		final ProgressBar pointsBar = (ProgressBar) mActivity.getView(R.id.free_points_bar);
 		pointsBar.setMax(CharCreator.START_FREE_POINTS);
 		
-		final LinearLayout simpleItemsPanel = (LinearLayout) mActivity.getView(R.id.free_points_simple_items_panel);
+		final LinearLayout simpleItemsPanel = (LinearLayout) mActivity.getView(R.id.simple_items_2_panel);
 		mCharCreator.getSimpleValues().initLayout(simpleItemsPanel);
 		
-		final LinearLayout disciplinesPanel = (LinearLayout) mActivity.getView(R.id.free_points_disciplines_panel);
+		final LinearLayout disciplinesPanel = (LinearLayout) mActivity.getView(R.id.disciplines_2_panel);
 		mCharCreator.getDisciplines().initLayout(disciplinesPanel);
 		
-		final LinearLayout backgroundsPanel = (LinearLayout) mActivity.getView(R.id.free_points_backgrounds_panel);
+		final LinearLayout backgroundsPanel = (LinearLayout) mActivity.getView(R.id.backgrounds_2_panel);
 		mCharCreator.getBackgrounds().initLayout(backgroundsPanel);
 		
-		final ImageButton increaseVolition = (ImageButton) mActivity.getView(R.id.increase_volition);
+		final ImageButton increaseVolition = (ImageButton) mActivity.getView(R.id.increase_volition_button);
 		increaseVolition.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -342,7 +344,7 @@ public class Vampire
 			}
 		});
 		
-		final ImageButton decreaseVolition = (ImageButton) mActivity.getView(R.id.decrease_volition);
+		final ImageButton decreaseVolition = (ImageButton) mActivity.getView(R.id.decrease_volition_button);
 		decreaseVolition.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -371,7 +373,7 @@ public class Vampire
 			}
 		});
 		
-		final ImageButton increasePath = (ImageButton) mActivity.getView(R.id.increase_path);
+		final ImageButton increasePath = (ImageButton) mActivity.getView(R.id.increase_path_button);
 		increasePath.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -381,7 +383,7 @@ public class Vampire
 			}
 		});
 		
-		final ImageButton decreasePath = (ImageButton) mActivity.getView(R.id.decrease_path);
+		final ImageButton decreasePath = (ImageButton) mActivity.getView(R.id.decrease_path_button);
 		decreasePath.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -401,8 +403,8 @@ public class Vampire
 			}
 		});
 		
-		final Button showCreation = (Button) mActivity.getView(R.id.show_creation_button);
-		showCreation.setOnClickListener(new OnClickListener()
+		final Button backButton = (Button) mActivity.getView(R.id.back_to_1_button);
+		backButton.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(final View aV)
@@ -412,13 +414,49 @@ public class Vampire
 			}
 		});
 		
-		final Button showDescriptions = (Button) mActivity.getView(R.id.show_descriptions_button);
-		showDescriptions.setOnClickListener(new OnClickListener()
+		final Button nextButton = (Button) mActivity.getView(R.id.next_to_3_button);
+		nextButton.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(final View aV)
 			{
-				// TODO Go to the description step.
+				setState(State.CREATE_CHAR_3);
+			}
+		});
+	}
+	
+	private void initCreateChar3()
+	{
+		mActivity.setContentView(R.layout.create_char_3);
+		mCharCreator.releaseViews();
+		mCharCreator.setCreationMode(CharMode.DESCRIPTIONS);
+		
+		final LinearLayout descriptionsPanel = (LinearLayout) mActivity.getView(R.id.description_values_panel);
+		for (final ItemValue<?> value : mCharCreator.getDescriptionValues())
+		{
+			final TextView name = new TextView(mActivity);
+			name.setLayoutParams(ViewUtil.instance().getWrapAll());
+			name.setText(value.getItem().getName());
+			descriptionsPanel.addView(name);
+		}
+		
+		final Button backButton = (Button) mActivity.getView(R.id.back_to_2_button);
+		backButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				back();
+			}
+		});
+		
+		final Button nextButton = (Button) mActivity.getView(R.id.next_to_4_button);
+		nextButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				// TODO Go to the next step.
 			}
 		});
 	}
@@ -427,7 +465,7 @@ public class Vampire
 	{
 		mCharCreator = null;
 		mActivity.setContentView(R.layout.activity_main);
-		final Button createChar = (Button) mActivity.getView(R.id.createCharacterButton);
+		final Button createChar = (Button) mActivity.getView(R.id.create_character_button);
 		createChar.setOnClickListener(new OnClickListener()
 		{
 			@Override

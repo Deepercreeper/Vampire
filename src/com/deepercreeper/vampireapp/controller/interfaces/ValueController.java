@@ -1,5 +1,6 @@
 package com.deepercreeper.vampireapp.controller.interfaces;
 
+import java.util.List;
 import android.content.Context;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.controller.CharMode;
@@ -61,6 +62,11 @@ public interface ValueController <T extends Item>
 	 * @return whether this controller is in the creation mode.
 	 */
 	public CharMode getCreationMode();
+	
+	/**
+	 * @return a list of all values, that need a description and have more than 0 as value.
+	 */
+	public List<ItemValue<T>> getDescriptionValues();
 	
 	/**
 	 * @return the point handler of this value controller.

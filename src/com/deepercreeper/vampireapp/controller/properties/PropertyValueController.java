@@ -1,5 +1,7 @@
 package com.deepercreeper.vampireapp.controller.properties;
 
+import java.util.ArrayList;
+import java.util.List;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -9,6 +11,7 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.controller.CharMode;
 import com.deepercreeper.vampireapp.controller.implementations.VariableValueControllerImpl;
+import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 /**
@@ -67,6 +70,14 @@ public class PropertyValueController extends VariableValueControllerImpl<Propert
 	public PropertyController getController()
 	{
 		return (PropertyController) super.getController();
+	}
+	
+	@Override
+	public List<ItemValue<PropertyItem>> getDescriptionValues()
+	{
+		final List<ItemValue<PropertyItem>> list = new ArrayList<ItemValue<PropertyItem>>();
+		list.addAll(mProperties.getDescriptionValues());
+		return list;
 	}
 	
 	@Override

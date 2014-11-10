@@ -1,5 +1,6 @@
 package com.deepercreeper.vampireapp.controller.disciplines;
 
+import java.util.List;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -10,6 +11,7 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.controller.CharMode;
 import com.deepercreeper.vampireapp.controller.implementations.VariableValueControllerImpl;
+import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue.UpdateAction;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
@@ -95,6 +97,12 @@ public class DisciplineValueController extends VariableValueControllerImpl<Disci
 	public DisciplineController getController()
 	{
 		return (DisciplineController) super.getController();
+	}
+	
+	@Override
+	public List<ItemValue<DisciplineItem>> getDescriptionValues()
+	{
+		return null;
 	}
 	
 	@Override

@@ -15,6 +15,7 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.controller.CharMode;
 import com.deepercreeper.vampireapp.controller.implementations.ValueControllerImpl;
+import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue.UpdateAction;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
@@ -107,6 +108,22 @@ public class SimpleValueController extends ValueControllerImpl<SimpleItem>
 	public SimpleController getController()
 	{
 		return (SimpleController) super.getController();
+	}
+	
+	@Override
+	public List<ItemValue<SimpleItem>> getDescriptionValues()
+	{
+		final List<ItemValue<SimpleItem>> list = new ArrayList<ItemValue<SimpleItem>>();
+		for (final SimpleItemValueGroup group : mAttributesList)
+		{
+			list.addAll(group.getDescriptionValues());
+		}
+		for (final SimpleItemValueGroup group : mAbilitiesList)
+		{
+			list.addAll(group.getDescriptionValues());
+		}
+		list.addAll(mVirtues.getDescriptionValues());
+		return list;
 	}
 	
 	@Override

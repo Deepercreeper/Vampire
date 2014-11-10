@@ -27,31 +27,31 @@
             android:layout_below="@id/free_points_text" />
 
         <LinearLayout
-            android:id="@+id/free_points_simple_items_panel"
+            android:id="@+id/simple_items_2_panel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/free_points_bar"
             android:orientation="vertical" />
 
         <LinearLayout
-            android:id="@+id/free_points_disciplines_panel"
+            android:id="@+id/disciplines_2_panel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/free_points_simple_items_panel"
+            android:layout_below="@+id/simple_items_2_panel"
             android:orientation="vertical" />
 
         <LinearLayout
-            android:id="@+id/free_points_backgrounds_panel"
+            android:id="@+id/backgrounds_2_panel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/free_points_disciplines_panel"
+            android:layout_below="@+id/disciplines_2_panel"
             android:orientation="vertical" />
 
         <TableLayout
-            android:id="@+id/volition_and_path_spinner"
+            android:id="@+id/volition_and_path_table"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/free_points_backgrounds_panel" >
+            android:layout_below="@id/backgrounds_2_panel" >
 
             <TableRow
                 android:layout_width="match_parent"
@@ -68,7 +68,7 @@
                 <Space />
 
                 <ImageButton
-                    android:id="@+id/decrease_volition"
+                    android:id="@+id/decrease_volition_button"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:contentDescription="@string/volition_points"
@@ -82,7 +82,7 @@
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <ImageButton
-                    android:id="@+id/increase_volition"
+                    android:id="@+id/increase_volition_button"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:contentDescription="@string/volition_points"
@@ -93,19 +93,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
-                <CheckBox 
+                <CheckBox
                     android:id="@+id/enable_path_checkbox"
-                    android:text="@string/path_points"
-                     />
+                    android:text="@string/path_points" />
 
                 <Spinner
                     android:id="@+id/path_spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:entries="@array/paths" />
-                
+
                 <ImageButton
-                    android:id="@+id/decrease_path"
+                    android:id="@+id/decrease_path_button"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:contentDescription="@string/path_points"
@@ -119,7 +118,7 @@
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <ImageButton
-                    android:id="@+id/increase_path"
+                    android:id="@+id/increase_path_button"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:contentDescription="@string/path_points"
@@ -128,25 +127,25 @@
         </TableLayout>
 
         <Button
-            android:id="@+id/show_creation_button"
+            android:id="@+id/back_to_1_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/volition_and_path_spinner"
+            android:layout_below="@id/volition_and_path_table"
             android:text="@string/back" />
 
         <Button
             android:id="@+id/reset_temp_points_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/volition_and_path_spinner"
-            android:layout_toRightOf="@id/show_creation_button"
+            android:layout_below="@id/volition_and_path_table"
+            android:layout_toRightOf="@id/back_to_1_button"
             android:text="@string/reset" />
 
         <Button
-            android:id="@+id/show_descriptions_button"
+            android:id="@+id/next_to_3_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/volition_and_path_spinner"
+            android:layout_below="@id/volition_and_path_table"
             android:layout_toRightOf="@id/reset_temp_points_button"
             android:text="@string/next" />
     </RelativeLayout>

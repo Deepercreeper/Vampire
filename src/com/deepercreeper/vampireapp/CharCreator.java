@@ -1,5 +1,7 @@
 package com.deepercreeper.vampireapp;
 
+import java.util.ArrayList;
+import java.util.List;
 import android.widget.Toast;
 import com.deepercreeper.vampireapp.controller.CharMode;
 import com.deepercreeper.vampireapp.controller.Nature;
@@ -8,6 +10,7 @@ import com.deepercreeper.vampireapp.controller.backgrounds.BackgroundController;
 import com.deepercreeper.vampireapp.controller.backgrounds.BackgroundValueController;
 import com.deepercreeper.vampireapp.controller.disciplines.DisciplineController;
 import com.deepercreeper.vampireapp.controller.disciplines.DisciplineValueController;
+import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue.UpdateAction;
 import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
 import com.deepercreeper.vampireapp.controller.properties.PropertyController;
@@ -122,6 +125,15 @@ public class CharCreator
 	public BackgroundValueController getBackgrounds()
 	{
 		return mBackgrounds;
+	}
+	
+	public List<ItemValue<?>> getDescriptionValues()
+	{
+		final List<ItemValue<?>> list = new ArrayList<ItemValue<?>>();
+		list.addAll(mProperties.getDescriptionValues());
+		list.addAll(mBackgrounds.getDescriptionValues());
+		list.addAll(mSimpleValues.getDescriptionValues());
+		return list;
 	}
 	
 	public Nature getBehavior()

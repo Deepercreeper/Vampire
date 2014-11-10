@@ -1,5 +1,7 @@
 package com.deepercreeper.vampireapp.controller.backgrounds;
 
+import java.util.ArrayList;
+import java.util.List;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -9,6 +11,7 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.controller.CharMode;
 import com.deepercreeper.vampireapp.controller.implementations.VariableValueControllerImpl;
+import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue.UpdateAction;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
@@ -73,6 +76,14 @@ public class BackgroundValueController extends VariableValueControllerImpl<Backg
 	public BackgroundController getController()
 	{
 		return (BackgroundController) super.getController();
+	}
+	
+	@Override
+	public List<ItemValue<BackgroundItem>> getDescriptionValues()
+	{
+		final List<ItemValue<BackgroundItem>> list = new ArrayList<ItemValue<BackgroundItem>>();
+		list.addAll(mBackgrounds.getDescriptionValues());
+		return list;
 	}
 	
 	@Override
