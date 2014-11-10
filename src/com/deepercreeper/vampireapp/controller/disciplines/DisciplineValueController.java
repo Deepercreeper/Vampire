@@ -137,7 +137,7 @@ public class DisciplineValueController extends VariableValueControllerImpl<Disci
 	@Override
 	public void setCreationMode(final CharMode aMode)
 	{
-		setCreationMode(aMode);
+		super.setCreationMode(aMode);
 		mDisciplines.setCreationMode(aMode);
 	}
 	

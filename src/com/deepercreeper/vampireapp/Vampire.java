@@ -97,13 +97,13 @@ public class Vampire
 		switch (mState)
 		{
 			case CREATE_CHAR_1 :
-				initMain();
+				setState(State.MAIN);
 				break;
 			case CREATE_CHAR_2 :
-				initCreateChar1();
+				setState(State.CREATE_CHAR_1);
 				break;
 			case CREATE_CHAR_3 :
-				initCreateChar2();
+				setState(State.CREATE_CHAR_2);
 				break;
 			case MAIN :
 				mActivity.finish();
@@ -282,7 +282,7 @@ public class Vampire
 			@Override
 			public void onClick(final View aV)
 			{
-				setState(State.MAIN);
+				back();
 			}
 		});
 	}
@@ -388,7 +388,7 @@ public class Vampire
 			public void onClick(final View aV)
 			{
 				mCharCreator.resetFreePoints();
-				setState(State.CREATE_CHAR_1);
+				back();
 			}
 		});
 		
