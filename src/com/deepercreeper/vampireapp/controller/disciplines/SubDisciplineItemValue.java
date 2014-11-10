@@ -284,7 +284,7 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	@Override
 	public void setCreationMode(final CharMode aMode)
 	{
-		setCreationMode(aMode);
+		super.setCreationMode(aMode);
 		mEditButton.setEnabled(getCreationMode() == CharMode.MAIN);
 	}
 	
