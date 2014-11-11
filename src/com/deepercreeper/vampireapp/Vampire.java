@@ -3,6 +3,7 @@ package com.deepercreeper.vampireapp;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -12,12 +13,15 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.NumberPicker.OnValueChangeListener;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.controller.CharMode;
 import com.deepercreeper.vampireapp.controller.ClanController;
@@ -431,13 +435,29 @@ public class Vampire
 		mCharCreator.releaseViews();
 		mCharCreator.setCreationMode(CharMode.DESCRIPTIONS);
 		
-		final LinearLayout descriptionsPanel = (LinearLayout) mActivity.getView(R.id.description_values_panel);
+		final TableLayout descriptionsPanel = (TableLayout) mActivity.getView(R.id.description_values_panel);
 		for (final ItemValue<?> value : mCharCreator.getDescriptionValues())
 		{
+			final TableRow row = new TableRow(mActivity);
+			row.setLayoutParams(ViewUtil.instance().getTableWrapHeight());
+			
 			final TextView name = new TextView(mActivity);
-			name.setLayoutParams(ViewUtil.instance().getWrapAll());
-			name.setText(value.getItem().getName());
-			descriptionsPanel.addView(name);
+			name.setLayoutParams(ViewUtil.instance().getRowNameShort());
+			name.setGravity(Gravity.CENTER_VERTICAL);
+			name.setSingleLine();
+			name.setText(value.getItem().getName() + ":");
+			
+			row.addView(name);
+			
+			final EditText description = new EditText(mActivity);
+			description.setLayoutParams(ViewUtil.instance().getRowTextSize());
+			description.setHint(R.string.description);
+			description.setEms(10);
+			description.setSingleLine();
+			
+			row.addView(description);
+			
+			descriptionsPanel.addView(row);
 		}
 		
 		final Button backButton = (Button) mActivity.getView(R.id.back_to_2_button);

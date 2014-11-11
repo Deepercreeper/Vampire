@@ -19,9 +19,13 @@ public class ViewUtil
 {
 	private static ViewUtil					INSTANCE;
 	
-	private final TableLayout.LayoutParams	mTableWrapAll	= new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+	private final TableLayout.LayoutParams	mTableWrapAll		= new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 	
-	private final TableRow.LayoutParams		mRowWrapAll		= new TableRow.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+	private final TableLayout.LayoutParams	mTableWrapHeight	= new TableLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+	
+	private final TableRow.LayoutParams		mRowWrapAll			= new TableRow.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+	
+	private final TableRow.LayoutParams		mRowTextSize;
 	
 	private final TableRow.LayoutParams		mRowNameShort;
 	
@@ -29,9 +33,9 @@ public class ViewUtil
 	
 	private final TableRow.LayoutParams		mRowButtonSize;
 	
-	private final LayoutParams				mWrapHeight		= new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+	private final LayoutParams				mWrapHeight			= new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 	
-	private final LayoutParams				mZeroHeight		= new LayoutParams(LayoutParams.MATCH_PARENT, 0);
+	private final LayoutParams				mZeroHeight			= new LayoutParams(LayoutParams.MATCH_PARENT, 0);
 	
 	private final LayoutParams				mButtonSize;
 	
@@ -41,7 +45,7 @@ public class ViewUtil
 	
 	private final LayoutParams				mNumberSize;
 	
-	private final LayoutParams				mWrapAll		= new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+	private final LayoutParams				mWrapAll			= new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 	
 	private ViewUtil(final Context aContext)
 	{
@@ -52,6 +56,7 @@ public class ViewUtil
 		mValueSize = new LayoutParams(calcPx(25, aContext), LayoutParams.WRAP_CONTENT);
 		mNumberSize = new LayoutParams(LayoutParams.WRAP_CONTENT, calcPx(30, aContext));
 		mNameSizeShort = new LayoutParams(calcPx(82, aContext), calcPx(30, aContext));
+		mRowTextSize = new TableRow.LayoutParams(calcPx(247, aContext), LayoutParams.WRAP_CONTENT);
 	}
 	
 	/**
@@ -111,11 +116,27 @@ public class ViewUtil
 	}
 	
 	/**
+	 * @return layout parameters for table row text views.
+	 */
+	public TableRow.LayoutParams getRowTextSize()
+	{
+		return mRowTextSize;
+	}
+	
+	/**
 	 * @return layout parameters for table wrap all views.
 	 */
 	public TableLayout.LayoutParams getTableWrapAll()
 	{
 		return mTableWrapAll;
+	}
+	
+	/**
+	 * @return layout parameters for table wrap height views.
+	 */
+	public TableLayout.LayoutParams getTableWrapHeight()
+	{
+		return mTableWrapHeight;
 	}
 	
 	/**

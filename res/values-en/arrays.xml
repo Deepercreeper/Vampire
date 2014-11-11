@@ -87,7 +87,7 @@
     <string-array name="backgrounds">
         <item>#Influence</item>
         <item>#Minions</item>
-        <item>#Generation</item>
+        <item>Generation</item>
         <item>#Drove</item>
         <item>#Contacts</item>
         <item>#Mentor</item>

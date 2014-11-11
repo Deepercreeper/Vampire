@@ -108,6 +108,7 @@ public final class R {
         public static final int clan_text=0x7f050008;
         public static final int concept=0x7f050005;
         public static final int context_settings=0x7f050003;
+        public static final int description=0x7f05001b;
         public static final int discipline=0x7f05000d;
         public static final int disciplines=0x7f05000c;
         public static final int edit_background=0x7f050010;

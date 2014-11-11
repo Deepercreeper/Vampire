@@ -51,6 +51,12 @@ public abstract class ItemGroupImpl <T extends Item> implements ItemGroup<T>
 		return mName;
 	}
 	
+	@Override
+	public String toString()
+	{
+		return getName() + ": " + getItems().toString();
+	}
+	
 	protected void addItem(final T aItem)
 	{
 		mItems.add(aItem);

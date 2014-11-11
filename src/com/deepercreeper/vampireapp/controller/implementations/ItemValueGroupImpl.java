@@ -206,6 +206,12 @@ public abstract class ItemValueGroupImpl <T extends Item, S extends ItemValue<T>
 	}
 	
 	@Override
+	public String toString()
+	{
+		return getGroup().getName() + ": " + getValuesList().toString();
+	}
+	
+	@Override
 	public void updateValues(final boolean aCanIncrease, final boolean aCanDecrease)
 	{
 		for (final ItemValue<T> value : mValuesList)

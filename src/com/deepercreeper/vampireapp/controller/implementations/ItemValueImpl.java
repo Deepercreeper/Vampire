@@ -99,6 +99,12 @@ public abstract class ItemValueImpl <T extends Item, S extends ItemValue<T>> imp
 		mPoints = aPoints;
 	}
 	
+	@Override
+	public String toString()
+	{
+		return "<" + getItem().getName() + ", " + getValue() + ">";
+	}
+	
 	protected ItemValueGroup<T, S> getGroup()
 	{
 		return mGroup;

@@ -60,5 +60,11 @@ public abstract class ItemImpl implements Item
 		return mNeedsDescription;
 	}
 	
+	@Override
+	public String toString()
+	{
+		return getName();
+	}
+	
 	protected abstract String createDisplayName();
 }
