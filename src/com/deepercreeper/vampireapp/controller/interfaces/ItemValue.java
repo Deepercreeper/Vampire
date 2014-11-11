@@ -81,6 +81,11 @@ public interface ItemValue <T extends Item>
 	public CharMode getCreationMode();
 	
 	/**
+	 * @return the user defined description for this value.
+	 */
+	public String getDescription();
+	
+	/**
 	 * @return the item that defines the type of this value.
 	 */
 	public T getItem();
@@ -142,6 +147,13 @@ public interface ItemValue <T extends Item>
 	 *            Whether the decrease button should be enabled.
 	 */
 	public void setDecreasable(boolean aEnabled);
+	
+	/**
+	 * Sets the user defined description for this value.
+	 * 
+	 * @param aDescription
+	 */
+	public void setDescription(String aDescription);
 	
 	/**
 	 * Enables or disabled the increase button.

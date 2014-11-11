@@ -454,7 +454,27 @@ public class Vampire
 			description.setHint(R.string.description);
 			description.setEms(10);
 			description.setSingleLine();
-			
+			description.addTextChangedListener(new TextWatcher()
+			{
+				
+				@Override
+				public void onTextChanged(final CharSequence aS, final int aStart, final int aBefore, final int aCount)
+				{
+					return;
+				}
+				
+				@Override
+				public void beforeTextChanged(final CharSequence aS, final int aStart, final int aCount, final int aAfter)
+				{
+					return;
+				}
+				
+				@Override
+				public void afterTextChanged(final Editable aS)
+				{
+					value.setDescription(description.getText().toString());
+				}
+			});
 			row.addView(description);
 			
 			descriptionsPanel.addView(row);

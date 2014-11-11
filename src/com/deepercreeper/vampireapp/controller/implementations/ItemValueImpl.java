@@ -30,6 +30,8 @@ public abstract class ItemValueImpl <T extends Item, S extends ItemValue<T>> imp
 	
 	private PointHandler				mPoints;
 	
+	private String						mDescription;
+	
 	/**
 	 * Creates a new item value.
 	 * 
@@ -70,6 +72,12 @@ public abstract class ItemValueImpl <T extends Item, S extends ItemValue<T>> imp
 	}
 	
 	@Override
+	public String getDescription()
+	{
+		return mDescription;
+	}
+	
+	@Override
 	public T getItem()
 	{
 		return mItem;
@@ -91,6 +99,12 @@ public abstract class ItemValueImpl <T extends Item, S extends ItemValue<T>> imp
 	public void setCreationMode(final CharMode aMode)
 	{
 		mMode = aMode;
+	}
+	
+	@Override
+	public void setDescription(final String aDescription)
+	{
+		mDescription = aDescription;
 	}
 	
 	@Override
