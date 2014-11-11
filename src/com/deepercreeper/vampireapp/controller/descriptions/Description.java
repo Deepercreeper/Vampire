@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.controller;
+package com.deepercreeper.vampireapp.controller.descriptions;
 
 import com.deepercreeper.vampireapp.controller.implementations.Named;
 

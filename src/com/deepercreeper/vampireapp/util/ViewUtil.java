@@ -25,11 +25,15 @@ public class ViewUtil
 	
 	private final TableRow.LayoutParams		mRowWrapAll			= new TableRow.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 	
+	private final TableRow.LayoutParams		mRowMatchAll		= new TableRow.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+	
 	private final TableRow.LayoutParams		mRowTextSize;
 	
 	private final TableRow.LayoutParams		mRowNameShort;
 	
 	private final TableRow.LayoutParams		mRowNameLong;
+	
+	private final TableRow.LayoutParams		mRowNameVeryLong;
 	
 	private final TableRow.LayoutParams		mRowButtonSize;
 	
@@ -51,6 +55,7 @@ public class ViewUtil
 	{
 		mRowNameShort = new TableRow.LayoutParams(calcPx(82, aContext), LayoutParams.MATCH_PARENT);
 		mRowNameLong = new TableRow.LayoutParams(calcPx(120, aContext), LayoutParams.MATCH_PARENT);
+		mRowNameVeryLong = new TableRow.LayoutParams(calcPx(300, aContext), LayoutParams.MATCH_PARENT);
 		mButtonSize = new LayoutParams(calcPx(30, aContext), calcPx(30, aContext));
 		mRowButtonSize = new TableRow.LayoutParams(calcPx(30, aContext), calcPx(30, aContext));
 		mValueSize = new LayoutParams(calcPx(25, aContext), LayoutParams.WRAP_CONTENT);
@@ -100,11 +105,27 @@ public class ViewUtil
 	}
 	
 	/**
+	 * @return layout parameters for long table row name text views.
+	 */
+	public TableRow.LayoutParams getRowNameVeryLong()
+	{
+		return mRowNameVeryLong;
+	}
+	
+	/**
 	 * @return layout parameters for short table row name text views.
 	 */
 	public TableRow.LayoutParams getRowNameShort()
 	{
 		return mRowNameShort;
+	}
+	
+	/**
+	 * @return layout parameters for table row text views.
+	 */
+	public TableRow.LayoutParams getRowTextSize()
+	{
+		return mRowTextSize;
 	}
 	
 	/**
@@ -116,11 +137,11 @@ public class ViewUtil
 	}
 	
 	/**
-	 * @return layout parameters for table row text views.
+	 * @return layout parameters for table row match all views.
 	 */
-	public TableRow.LayoutParams getRowTextSize()
+	public TableRow.LayoutParams getRowMatchAll()
 	{
-		return mRowTextSize;
+		return mRowMatchAll;
 	}
 	
 	/**

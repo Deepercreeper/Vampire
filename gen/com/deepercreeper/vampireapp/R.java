@@ -39,10 +39,11 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f0a002a;
+        public static final int action_settings=0x7f0a002c;
+        public static final int add_insanity_button=0x7f0a0028;
         public static final int additional_info_label=0x7f0a0026;
         public static final int back_to_1_button=0x7f0a0023;
-        public static final int back_to_2_button=0x7f0a0028;
+        public static final int back_to_2_button=0x7f0a002a;
         public static final int back_to_main_button=0x7f0a0011;
         public static final int backgrounds_2_panel=0x7f0a0018;
         public static final int backgrounds_panel=0x7f0a000f;
@@ -68,11 +69,12 @@ public final class R {
         public static final int generation_picker=0x7f0a0007;
         public static final int increase_path_button=0x7f0a0022;
         public static final int increase_volition_button=0x7f0a001d;
+        public static final int insanities_panel=0x7f0a0029;
         public static final int nature_label=0x7f0a0006;
         public static final int nature_spinner=0x7f0a0005;
         public static final int next_to_2_button=0x7f0a0012;
         public static final int next_to_3_button=0x7f0a0025;
-        public static final int next_to_4_button=0x7f0a0029;
+        public static final int next_to_4_button=0x7f0a002b;
         public static final int path_spinner=0x7f0a001f;
         public static final int path_value=0x7f0a0021;
         public static final int properties_panel=0x7f0a0010;
@@ -101,6 +103,8 @@ public final class R {
     public static final class string {
         public static final int abilities=0x7f05000b;
         public static final int add_background=0x7f05000f;
+        public static final int add_insanity=0x7f05001f;
+        public static final int add_insanity_message=0x7f050020;
         public static final int add_property=0x7f050012;
         public static final int additional_info=0x7f05001c;
         public static final int app_name=0x7f050001;

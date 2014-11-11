@@ -2,8 +2,6 @@ package com.deepercreeper.vampireapp.controller.descriptions;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.deepercreeper.vampireapp.controller.Description;
-import com.deepercreeper.vampireapp.controller.DescriptionController;
 import com.deepercreeper.vampireapp.controller.implementations.ListControllerImpl;
 
 public class DescriptionValueController extends ListControllerImpl<DescriptionValue>

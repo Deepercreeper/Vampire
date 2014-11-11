@@ -1,6 +1,5 @@
 package com.deepercreeper.vampireapp.controller.descriptions;
 
-import com.deepercreeper.vampireapp.controller.Description;
 import com.deepercreeper.vampireapp.controller.implementations.Named;
 
 public class DescriptionValue extends Named

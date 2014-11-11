@@ -2,13 +2,15 @@ package com.deepercreeper.vampireapp;
 
 import java.util.ArrayList;
 import java.util.List;
+import android.widget.TableLayout;
 import android.widget.Toast;
 import com.deepercreeper.vampireapp.controller.CharMode;
-import com.deepercreeper.vampireapp.controller.DescriptionController;
+import com.deepercreeper.vampireapp.controller.InsanityController;
 import com.deepercreeper.vampireapp.controller.Nature;
 import com.deepercreeper.vampireapp.controller.Path;
 import com.deepercreeper.vampireapp.controller.backgrounds.BackgroundController;
 import com.deepercreeper.vampireapp.controller.backgrounds.BackgroundValueController;
+import com.deepercreeper.vampireapp.controller.descriptions.DescriptionController;
 import com.deepercreeper.vampireapp.controller.descriptions.DescriptionValueController;
 import com.deepercreeper.vampireapp.controller.disciplines.DisciplineController;
 import com.deepercreeper.vampireapp.controller.disciplines.DisciplineValueController;
@@ -60,6 +62,8 @@ public class CharCreator
 	
 	private final DescriptionValueController	mDescriptions;
 	
+	private final InsanityController			mInsanities;
+	
 	public CharCreator(final Vampire aVampire, final DisciplineController aDisciplines, final PropertyController aProperties,
 			final BackgroundController aBackgrounds, final SimpleController aSimpleItems, final Nature aNature, final Nature aBehavior,
 			final Clan aClan, final DescriptionController aDescriptions)
@@ -100,6 +104,7 @@ public class CharCreator
 		mBackgrounds = new BackgroundValueController(aBackgrounds, mVampire.getContext(), CharMode.MAIN, points, updateOthers);
 		mSimpleValues = new SimpleValueController(aSimpleItems, mVampire.getContext(), CharMode.MAIN, points, updateOthers);
 		mDescriptions = new DescriptionValueController(aDescriptions);
+		mInsanities = new InsanityController(mVampire.getContext());
 		mNature = aNature;
 		mBehavior = aBehavior;
 		setClan(aClan);
@@ -108,6 +113,32 @@ public class CharCreator
 	public void clearDescriptions()
 	{
 		mDescriptions.clear();
+		mInsanities.clear();
+	}
+	
+	public void addInsanity(final String aInsanity)
+	{
+		mInsanities.addInsanity(aInsanity);
+	}
+	
+	public void removeInsanity(final String aInsanity)
+	{
+		mInsanities.remove(aInsanity);
+	}
+	
+	public void initInsanities(final TableLayout aTable)
+	{
+		mInsanities.init(aTable);
+	}
+	
+	public void releaseInsanities()
+	{
+		mInsanities.release();
+	}
+	
+	public List<String> getInsanities()
+	{
+		return mInsanities.getInsanities();
 	}
 	
 	public DescriptionValueController getDescriptions()

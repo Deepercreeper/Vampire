@@ -26,11 +26,13 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.controller.CharMode;
 import com.deepercreeper.vampireapp.controller.ClanController;
-import com.deepercreeper.vampireapp.controller.DescriptionController;
+import com.deepercreeper.vampireapp.controller.CreateStringDialog;
+import com.deepercreeper.vampireapp.controller.CreateStringDialog.CreationListener;
 import com.deepercreeper.vampireapp.controller.NatureController;
 import com.deepercreeper.vampireapp.controller.Path;
 import com.deepercreeper.vampireapp.controller.PathController;
 import com.deepercreeper.vampireapp.controller.backgrounds.BackgroundController;
+import com.deepercreeper.vampireapp.controller.descriptions.DescriptionController;
 import com.deepercreeper.vampireapp.controller.descriptions.DescriptionValue;
 import com.deepercreeper.vampireapp.controller.disciplines.DisciplineController;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
@@ -532,6 +534,28 @@ public class Vampire
 			descriptionsPanel.addView(row);
 		}
 		
+		final TableLayout insanitiesTable = (TableLayout) mActivity.getView(R.id.insanities_panel);
+		mCharCreator.initInsanities(insanitiesTable);
+		
+		final Button addInsanity = (Button) mActivity.getView(R.id.add_insanity_button);
+		addInsanity.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				final CreationListener listener = new CreationListener()
+				{
+					@Override
+					public void create(final String aString)
+					{
+						mCharCreator.addInsanity(aString);
+					}
+				};
+				CreateStringDialog.showCreateStringDialog(mActivity.getString(R.string.add_insanity),
+						mActivity.getString(R.string.add_insanity_message), mActivity, listener);
+			}
+		});
+		
 		final Button backButton = (Button) mActivity.getView(R.id.back_to_2_button);
 		backButton.setOnClickListener(new OnClickListener()
 		{
@@ -539,6 +563,7 @@ public class Vampire
 			public void onClick(final View aV)
 			{
 				mCharCreator.clearDescriptions();
+				mCharCreator.releaseInsanities();
 				back();
 			}
 		});

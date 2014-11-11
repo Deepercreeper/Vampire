@@ -28,18 +28,34 @@
             android:layout_below="@id/additional_info_label"
             android:orientation="vertical" />
 
+        <Button 
+            android:id="@+id/add_insanity_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/description_values_panel"
+            android:text="@string/add_insanity"
+            />
+        
+        <TableLayout
+            android:id="@+id/insanities_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/add_insanity_button"
+			android:orientation="vertical" 
+            />
+        
         <Button
             android:id="@+id/back_to_2_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/description_values_panel"
+            android:layout_below="@id/insanities_panel"
             android:text="@string/back" />
 
         <Button
             android:id="@+id/next_to_4_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/description_values_panel"
+            android:layout_below="@id/insanities_panel"
             android:layout_toRightOf="@id/back_to_2_button"
             android:text="@string/next" />
     </RelativeLayout>
