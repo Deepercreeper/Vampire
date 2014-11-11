@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import android.widget.Toast;
 import com.deepercreeper.vampireapp.controller.CharMode;
+import com.deepercreeper.vampireapp.controller.DescriptionController;
 import com.deepercreeper.vampireapp.controller.Nature;
 import com.deepercreeper.vampireapp.controller.Path;
 import com.deepercreeper.vampireapp.controller.backgrounds.BackgroundController;
 import com.deepercreeper.vampireapp.controller.backgrounds.BackgroundValueController;
+import com.deepercreeper.vampireapp.controller.descriptions.DescriptionValueController;
 import com.deepercreeper.vampireapp.controller.disciplines.DisciplineController;
 import com.deepercreeper.vampireapp.controller.disciplines.DisciplineValueController;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
@@ -20,45 +22,47 @@ import com.deepercreeper.vampireapp.controller.simplesItems.SimpleValueControlle
 
 public class CharCreator
 {
-	public static final int					MIN_GENERATION	= 8, MAX_GENERATION = 12, START_FREE_POINTS = 15;
+	public static final int						MIN_GENERATION	= 8, MAX_GENERATION = 12, START_FREE_POINTS = 15;
 	
-	private static final int				MAX_VOLITION_POINTS	= 20, MAX_PATH_POINTS = 10, DEFAULT_GENERATION = 12, START_VOLITION_POINTS = 5;
+	private static final int					MAX_VOLITION_POINTS	= 20, MAX_PATH_POINTS = 10, DEFAULT_GENERATION = 12, START_VOLITION_POINTS = 5;
 	
-	private static final int				START_PATH_POINTS	= 5, VOLITION_POINTS_COST = 2, PATH_POINTS_COST = 1;
+	private static final int					START_PATH_POINTS	= 5, VOLITION_POINTS_COST = 2, PATH_POINTS_COST = 1;
 	
-	private final Vampire					mVampire;
+	private final Vampire						mVampire;
 	
-	private String							mName				= "";
+	private String								mName				= "";
 	
-	private String							mConcept			= "";
+	private String								mConcept			= "";
 	
-	private Nature							mNature;
+	private Nature								mNature;
 	
-	private Nature							mBehavior;
+	private Nature								mBehavior;
 	
-	private Path							mPath				= null;
+	private Path								mPath				= null;
 	
-	private Clan							mClan;
+	private Clan								mClan;
 	
-	private int								mPathPoints			= START_PATH_POINTS;
+	private int									mPathPoints			= START_PATH_POINTS;
 	
-	private int								mGeneration			= DEFAULT_GENERATION;
+	private int									mGeneration			= DEFAULT_GENERATION;
 	
-	private int								mFreePoints			= START_FREE_POINTS;
+	private int									mFreePoints			= START_FREE_POINTS;
 	
-	private int								mVolitionPoints		= START_VOLITION_POINTS;
+	private int									mVolitionPoints		= START_VOLITION_POINTS;
 	
-	private final DisciplineValueController	mDisciplines;
+	private final DisciplineValueController		mDisciplines;
 	
-	private final PropertyValueController	mProperties;
+	private final PropertyValueController		mProperties;
 	
-	private final BackgroundValueController	mBackgrounds;
+	private final BackgroundValueController		mBackgrounds;
 	
-	private final SimpleValueController		mSimpleValues;
+	private final SimpleValueController			mSimpleValues;
+	
+	private final DescriptionValueController	mDescriptions;
 	
 	public CharCreator(final Vampire aVampire, final DisciplineController aDisciplines, final PropertyController aProperties,
 			final BackgroundController aBackgrounds, final SimpleController aSimpleItems, final Nature aNature, final Nature aBehavior,
-			final Clan aClan)
+			final Clan aClan, final DescriptionController aDescriptions)
 	{
 		mVampire = aVampire;
 		final PointHandler points = new PointHandler()
@@ -95,9 +99,20 @@ public class CharCreator
 		mProperties = new PropertyValueController(aProperties, mVampire.getContext(), CharMode.MAIN);
 		mBackgrounds = new BackgroundValueController(aBackgrounds, mVampire.getContext(), CharMode.MAIN, points, updateOthers);
 		mSimpleValues = new SimpleValueController(aSimpleItems, mVampire.getContext(), CharMode.MAIN, points, updateOthers);
+		mDescriptions = new DescriptionValueController(aDescriptions);
 		mNature = aNature;
 		mBehavior = aBehavior;
 		setClan(aClan);
+	}
+	
+	public void clearDescriptions()
+	{
+		mDescriptions.clear();
+	}
+	
+	public DescriptionValueController getDescriptions()
+	{
+		return mDescriptions;
 	}
 	
 	public void decreasePathPoints()

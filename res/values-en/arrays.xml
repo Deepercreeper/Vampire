@@ -194,4 +194,19 @@
         <item>Path of animal</item>
         <item>Path of thyphon</item>
     </string-array>
+    
+    <string-array name="description_fields">
+        <item>Prelude</item>
+        <item>Further process</item>
+        <item>Age</item>
+        <item>Looks like</item>
+        <item>Date of birth</item>
+        <item>Date of death</item>
+        <item>Hair color</item>
+        <item>Nationality</item>
+        <item>Height</item>
+        <item>Weight</item>
+        <item>Gender</item>
+        <item>Description</item>        
+    </string-array>
 </resources>

@@ -184,5 +184,19 @@
         <item>Pfad des Tiers</item>
         <item>Pfad des Typhon</item>
     </string-array>
+    <string-array name="description_fields">
+        <item>Präludium</item>
+        <item>Weiterer Verlauf</item>
+        <item>Alter</item>
+        <item>Siehtaus wie</item>
+        <item>Geburtsdatum</item>
+        <item>Todesdatum</item>
+        <item>Haarfarbe</item>
+        <item>Nationalität</item>
+        <item>Größe</item>
+        <item>Gewicht</item>
+        <item>Geschlecht</item>
+        <item>Beschreibung</item>
+    </string-array>
 
 </resources>

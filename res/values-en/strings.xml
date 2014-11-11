@@ -28,4 +28,7 @@
 	<string name="volition_points">Volition:</string>
 	<string name="path_points">Path:</string>
 	<string name="description">Description</string>
+	<string name="additional_info">Additional information</string>
+	<string name="basic_info">Basic information</string>
+	<string name="free_points_info">Free bonus points</string>
 </resources>

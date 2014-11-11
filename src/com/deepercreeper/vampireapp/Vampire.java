@@ -2,6 +2,7 @@ package com.deepercreeper.vampireapp;
 
 import android.content.Context;
 import android.text.Editable;
+import android.text.TextUtils.TruncateAt;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
@@ -25,10 +26,12 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.controller.CharMode;
 import com.deepercreeper.vampireapp.controller.ClanController;
+import com.deepercreeper.vampireapp.controller.DescriptionController;
 import com.deepercreeper.vampireapp.controller.NatureController;
 import com.deepercreeper.vampireapp.controller.Path;
 import com.deepercreeper.vampireapp.controller.PathController;
 import com.deepercreeper.vampireapp.controller.backgrounds.BackgroundController;
+import com.deepercreeper.vampireapp.controller.descriptions.DescriptionValue;
 import com.deepercreeper.vampireapp.controller.disciplines.DisciplineController;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
 import com.deepercreeper.vampireapp.controller.properties.PropertyController;
@@ -58,6 +61,8 @@ public class Vampire
 	
 	private final PathController		mPaths;
 	
+	private final DescriptionController	mDescriptions;
+	
 	private CharCreator					mCharCreator;
 	
 	private State						mState;
@@ -72,6 +77,7 @@ public class Vampire
 		mClans = new ClanController(mActivity.getResources(), mDisciplines);
 		mPaths = new PathController(mActivity.getResources());
 		mNatures = new NatureController(mActivity.getResources());
+		mDescriptions = new DescriptionController(mActivity.getResources());
 		
 		ViewUtil.init(mActivity);
 		
@@ -158,7 +164,7 @@ public class Vampire
 		if (mCharCreator == null)
 		{
 			mCharCreator = new CharCreator(this, mDisciplines, mProperties, mBackgrounds, mSimpleItems, mNatures.getFirst(), mNatures.getFirst(),
-					mClans.getFirst());
+					mClans.getFirst(), mDescriptions);
 		}
 		else
 		{
@@ -444,6 +450,7 @@ public class Vampire
 			final TextView name = new TextView(mActivity);
 			name.setLayoutParams(ViewUtil.instance().getRowNameShort());
 			name.setGravity(Gravity.CENTER_VERTICAL);
+			name.setEllipsize(TruncateAt.END);
 			name.setSingleLine();
 			name.setText(value.getItem().getName() + ":");
 			
@@ -480,12 +487,58 @@ public class Vampire
 			descriptionsPanel.addView(row);
 		}
 		
+		for (final DescriptionValue description : mCharCreator.getDescriptions().getValues())
+		{
+			final TableRow row = new TableRow(mActivity);
+			row.setLayoutParams(ViewUtil.instance().getTableWrapHeight());
+			
+			final TextView name = new TextView(mActivity);
+			name.setLayoutParams(ViewUtil.instance().getRowNameShort());
+			name.setGravity(Gravity.CENTER_VERTICAL);
+			name.setSingleLine();
+			name.setEllipsize(TruncateAt.END);
+			name.setText(description.getName() + ":");
+			
+			row.addView(name);
+			
+			final EditText value = new EditText(mActivity);
+			value.setLayoutParams(ViewUtil.instance().getRowTextSize());
+			value.setHint(R.string.description);
+			value.setEms(10);
+			value.setSingleLine();
+			value.addTextChangedListener(new TextWatcher()
+			{
+				
+				@Override
+				public void onTextChanged(final CharSequence aS, final int aStart, final int aBefore, final int aCount)
+				{
+					return;
+				}
+				
+				@Override
+				public void beforeTextChanged(final CharSequence aS, final int aStart, final int aCount, final int aAfter)
+				{
+					return;
+				}
+				
+				@Override
+				public void afterTextChanged(final Editable aS)
+				{
+					description.setValue(value.getText().toString());
+				}
+			});
+			row.addView(value);
+			
+			descriptionsPanel.addView(row);
+		}
+		
 		final Button backButton = (Button) mActivity.getView(R.id.back_to_2_button);
 		backButton.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(final View aV)
 			{
+				mCharCreator.clearDescriptions();
 				back();
 			}
 		});
