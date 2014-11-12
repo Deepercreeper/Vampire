@@ -14,6 +14,7 @@ import android.widget.TableLayout;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.controller.CharMode;
+import com.deepercreeper.vampireapp.controller.Restriction;
 import com.deepercreeper.vampireapp.controller.implementations.ValueControllerImpl;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue.UpdateAction;
@@ -102,6 +103,40 @@ public class SimpleValueController extends ValueControllerImpl<SimpleItem>
 		{
 			mShowVirtuesPanel.callOnClick();
 		}
+	}
+	
+	@Override
+	public void addRestriction(final Restriction aRestriction)
+	{
+		final String key = aRestriction.getKey();
+		SimpleItemValueGroup valueGroup = null;
+		for (final SimpleItemValueGroup group : mAttributesList)
+		{
+			if (group.hasValue(key))
+			{
+				valueGroup = group;
+				break;
+			}
+		}
+		if (valueGroup == null)
+		{
+			for (final SimpleItemValueGroup group : mAbilitiesList)
+			{
+				if (group.hasValue(key))
+				{
+					valueGroup = group;
+					break;
+				}
+			}
+		}
+		if (valueGroup == null)
+		{
+			if (mVirtues.hasValue(key))
+			{
+				valueGroup = mVirtues;
+			}
+		}
+		valueGroup.getValue(key).addRestriction(aRestriction);
 	}
 	
 	@Override

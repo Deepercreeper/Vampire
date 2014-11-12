@@ -54,14 +54,40 @@ public class PropertyItemValue extends ItemValueImpl<PropertyItem, PropertyItemV
 		mDecreaseButton = new ImageButton(aContext);
 		mContainer = new TableRow(aContext);
 		mValueDisplay = new RadioButton[getItem().getValue(getItem().getMaxValue())];
-		mValueId = aItem.getStartValue();
+		mValueId = getItem().getStartValue();
 		init();
+	}
+	
+	@Override
+	protected void updateRestrictions()
+	{
+		final int minValue = getMinValue();
+		final int maxValue = getMaxValue();
+		
+		if (minValue > mValueId)
+		{
+			mValueId = minValue;
+		}
+		if (maxValue < mValueId)
+		{
+			mValueId = maxValue;
+		}
+		refreshValue();
+		getUpdateAction().update();
+	}
+	
+	@Override
+	protected void resetRestrictions()
+	{
+		mValueId = getItem().getStartValue();
+		refreshValue();
+		getUpdateAction().update();
 	}
 	
 	@Override
 	public boolean canDecrease()
 	{
-		return mValueId > getItem().getStartValue();
+		return mValueId > getItem().getStartValue() && mValueId > getMinValue();
 	}
 	
 	@Override
@@ -82,7 +108,7 @@ public class PropertyItemValue extends ItemValueImpl<PropertyItem, PropertyItemV
 	@Override
 	public boolean canIncrease()
 	{
-		return mValueId < getItem().getMaxValue();
+		return mValueId < getItem().getMaxValue() && mValueId < getMaxValue();
 	}
 	
 	@Override

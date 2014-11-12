@@ -31,6 +31,7 @@ import com.deepercreeper.vampireapp.controller.CreateStringDialog.CreationListen
 import com.deepercreeper.vampireapp.controller.NatureController;
 import com.deepercreeper.vampireapp.controller.Path;
 import com.deepercreeper.vampireapp.controller.PathController;
+import com.deepercreeper.vampireapp.controller.Restriction;
 import com.deepercreeper.vampireapp.controller.backgrounds.BackgroundController;
 import com.deepercreeper.vampireapp.controller.descriptions.DescriptionController;
 import com.deepercreeper.vampireapp.controller.descriptions.DescriptionValue;
@@ -158,6 +159,11 @@ public class Vampire
 	public void setVolitionPoints(final int aValue)
 	{
 		((TextView) mActivity.getView(R.id.volition_value)).setText("" + aValue);
+	}
+	
+	public void addGenerationRestriction(final Restriction aRestriction)
+	{
+		// TODO Add generation restriction
 	}
 	
 	private void initCreateChar1()

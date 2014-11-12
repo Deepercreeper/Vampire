@@ -1,7 +1,10 @@
 package com.deepercreeper.vampireapp.controller.implementations;
 
+import java.util.HashSet;
+import java.util.Set;
 import android.content.Context;
 import com.deepercreeper.vampireapp.controller.CharMode;
+import com.deepercreeper.vampireapp.controller.Restriction;
 import com.deepercreeper.vampireapp.controller.interfaces.Item;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValueGroup;
@@ -32,6 +35,8 @@ public abstract class ItemValueImpl <T extends Item, S extends ItemValue<T>> imp
 	
 	private String						mDescription;
 	
+	private final Set<Restriction>		mRestrictions	= new HashSet<Restriction>();
+	
 	/**
 	 * Creates a new item value.
 	 * 
@@ -57,6 +62,79 @@ public abstract class ItemValueImpl <T extends Item, S extends ItemValue<T>> imp
 		mGroup = aGroup;
 		mMode = aMode;
 		mPoints = aPoints;
+	}
+	
+	@Override
+	public boolean hasRestrictions()
+	{
+		return !mRestrictions.isEmpty();
+	}
+	
+	@Override
+	public boolean canDecrease()
+	{
+		return getValue() > getItem().getStartValue() && getValue() > getMinValue();
+	}
+	
+	@Override
+	public boolean canIncrease()
+	{
+		return getValue() < getItem().getMaxValue() && getValue() < getMaxValue();
+	}
+	
+	@Override
+	public int getMinValue()
+	{
+		int minValue = -1;
+		for (final Restriction restriction : mRestrictions)
+		{
+			if (restriction.getMinValue() > minValue)
+			{
+				minValue = restriction.getMinValue();
+			}
+		}
+		return minValue;
+	}
+	
+	@Override
+	public int getMaxValue()
+	{
+		int maxValue = Integer.MAX_VALUE;
+		for (final Restriction restriction : mRestrictions)
+		{
+			if (restriction.getMaxValue() < maxValue)
+			{
+				maxValue = restriction.getMaxValue();
+			}
+		}
+		return maxValue;
+	}
+	
+	@Override
+	public void addRestriction(final Restriction aRestriction)
+	{
+		mRestrictions.add(aRestriction);
+		aRestriction.addParent(this);
+		updateRestrictions();
+		getUpdateAction().update();
+	}
+	
+	protected abstract void updateRestrictions();
+	
+	protected abstract void resetRestrictions();
+	
+	@Override
+	public Set<Restriction> getRestrictions()
+	{
+		return mRestrictions;
+	}
+	
+	@Override
+	public void removeRestriction(final Restriction aRestriction)
+	{
+		mRestrictions.remove(aRestriction);
+		resetRestrictions();
+		getUpdateAction().update();
 	}
 	
 	@Override

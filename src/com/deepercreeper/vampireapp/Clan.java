@@ -1,6 +1,8 @@
 package com.deepercreeper.vampireapp;
 
 import java.util.HashSet;
+import java.util.Set;
+import com.deepercreeper.vampireapp.controller.Restriction;
 import com.deepercreeper.vampireapp.controller.disciplines.DisciplineItem;
 import com.deepercreeper.vampireapp.controller.implementations.Named;
 
@@ -8,11 +10,23 @@ public class Clan extends Named
 {
 	private final HashSet<DisciplineItem>	mDisciplines	= new HashSet<DisciplineItem>();
 	
+	private final HashSet<Restriction>		mRestrictions	= new HashSet<Restriction>();
+	
 	private int								mGeneration		= -1;
 	
 	public Clan(final String aName)
 	{
 		super(aName);
+	}
+	
+	public void addRestriction(final Restriction aRestriction)
+	{
+		mRestrictions.add(aRestriction);
+	}
+	
+	public Set<Restriction> getRestrictions()
+	{
+		return mRestrictions;
 	}
 	
 	public void addDiscipline(final DisciplineItem aDiscipline)

@@ -76,6 +76,8 @@ public interface ItemValueGroup <T extends Item, S extends ItemValue<T>>
 	 */
 	public HashMap<T, S> getValues();
 	
+	public boolean hasValue(String aValue);
+	
 	/**
 	 * @return a list of all value items.
 	 */

@@ -43,7 +43,7 @@
         <item>Kappadozianer:Auspex,Mortis,Seelenstärke</item>
         <item>Lasombra:Beherrschung,Schattenspiele,Stärke</item>
         <item>Malkavianer:Auspex,Irrsinn,Verdunkelung</item>
-        <item>Nosferatu:Stärke,Tierhaftigkeit,Verdunkelung</item>
+        <item>Nosferatu:Stärke,Tierhaftigkeit,Verdunkelung;;Simple@Erscheinungsbild=0</item>
         <item>Ravnos:Shimären,Seelenstärke,Tierhaftigkeit</item>
         <item>Toriador:Auspex,Geschwindigkeit,Präsenz</item>
         <item>Tremere:Auspex,Beherrschung,Thaumaturgie</item>

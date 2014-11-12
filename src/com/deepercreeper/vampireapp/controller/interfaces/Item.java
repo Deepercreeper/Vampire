@@ -1,5 +1,6 @@
 package com.deepercreeper.vampireapp.controller.interfaces;
 
+
 /**
  * There are several items that define character property types.
  * 

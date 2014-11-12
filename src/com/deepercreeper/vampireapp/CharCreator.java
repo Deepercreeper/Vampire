@@ -8,6 +8,7 @@ import com.deepercreeper.vampireapp.controller.CharMode;
 import com.deepercreeper.vampireapp.controller.InsanityController;
 import com.deepercreeper.vampireapp.controller.Nature;
 import com.deepercreeper.vampireapp.controller.Path;
+import com.deepercreeper.vampireapp.controller.Restriction;
 import com.deepercreeper.vampireapp.controller.backgrounds.BackgroundController;
 import com.deepercreeper.vampireapp.controller.backgrounds.BackgroundValueController;
 import com.deepercreeper.vampireapp.controller.descriptions.DescriptionController;
@@ -318,12 +319,68 @@ public class CharCreator
 	{
 		if ( !aClan.equals(mClan))
 		{
+			if (mClan != null)
+			{
+				removeRestrictions();
+			}
 			mClan = aClan;
 			mDisciplines.close();
 			mDisciplines.changeClan(aClan);
+			addRestrictions();
 			Toast.makeText(mVampire.getContext(), mClan.getDescription(), Toast.LENGTH_LONG).show();
 		}
 		mDisciplines.setEnabled( !mClan.getDisciplines().isEmpty());
+	}
+	
+	private void removeRestrictions()
+	{
+		for (final Restriction restriction : mClan.getRestrictions())
+		{
+			restriction.clear();
+		}
+	}
+	
+	private void addRestrictions()
+	{
+		for (final Restriction restriction : mClan.getRestrictions())
+		{
+			if (restriction.hasGroup())
+			{
+				final String group = restriction.getGroup();
+				if (group.equals(Restriction.SIMPLE))
+				{
+					mSimpleValues.addRestriction(restriction);
+				}
+				else if (group.equals(Restriction.BACKGROUND))
+				{
+					mBackgrounds.addRestriction(restriction);
+				}
+				else if (group.equals(Restriction.DISCIPLINE))
+				{
+					mDisciplines.addRestriction(restriction);
+				}
+				else if (group.equals(Restriction.PROPERTY))
+				{
+					mProperties.addRestriction(restriction);
+				}
+			}
+			else if (restriction.equals(Restriction.INSANITY))
+			{
+				// TODO Restrict the number of insanities
+			}
+			else if (restriction.equals(Restriction.VOLITION))
+			{
+				// TODO Restrict the number of volition points
+			}
+			else if (restriction.equals(Restriction.PATH))
+			{
+				// TODO Restrict the number of path points
+			}
+			else if (restriction.equals(Restriction.GENERATION))
+			{
+				mVampire.addGenerationRestriction(restriction);
+			}
+		}
 	}
 	
 	public void setConcept(final String aConcept)

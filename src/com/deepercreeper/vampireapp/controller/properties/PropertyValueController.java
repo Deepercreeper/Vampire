@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.controller.CharMode;
+import com.deepercreeper.vampireapp.controller.Restriction;
 import com.deepercreeper.vampireapp.controller.implementations.VariableValueControllerImpl;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
 import com.deepercreeper.vampireapp.util.ViewUtil;
@@ -64,6 +65,12 @@ public class PropertyValueController extends VariableValueControllerImpl<Propert
 		{
 			mShowPanel.callOnClick();
 		}
+	}
+	
+	@Override
+	public void addRestriction(final Restriction aRestriction)
+	{
+		mProperties.getValue(aRestriction.getKey()).addRestriction(aRestriction);
 	}
 	
 	@Override

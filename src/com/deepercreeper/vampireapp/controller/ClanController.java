@@ -15,7 +15,7 @@ import com.deepercreeper.vampireapp.controller.implementations.ListControllerImp
  */
 public class ClanController extends ListControllerImpl<Clan>
 {
-	private static final String	NAME_DELIM	= ":", DISCIPLINES_DELIM = ";", CLAN_DISCIPLIN_DELIM = ",";
+	private static final String	NAME_DELIM	= ":", GENERATION_DELIM = ";", CLAN_DISCIPLIN_DELIM = ",";
 	
 	/**
 	 * Creates a new clan controller out of the given resources.
@@ -34,14 +34,24 @@ public class ClanController extends ListControllerImpl<Clan>
 			final Clan clan = new Clan(clanData[0]);
 			if (clanData.length > 1)
 			{
-				final String[] clanDisciplines = clanData[1].split(DISCIPLINES_DELIM);
+				final String[] clanDisciplines = clanData[1].split(GENERATION_DELIM);
 				for (final String clanDiscipline : clanDisciplines[0].split(CLAN_DISCIPLIN_DELIM))
 				{
 					clan.addDiscipline(aDisciplines.getDisciplines().getItem(clanDiscipline));
 				}
 				if (clanDisciplines.length > 1)
 				{
-					clan.setGeneration(Integer.parseInt(clanDisciplines[1]));
+					if ( !clanDisciplines[1].isEmpty())
+					{
+						clan.setGeneration(Integer.parseInt(clanDisciplines[1]));
+					}
+					if (clanDisciplines.length > 2)
+					{
+						for (final String restrictionData : clanDisciplines[2].split(Restriction.RESTRICTIONS_DELIM))
+						{
+							clan.addRestriction(Restriction.create(restrictionData));
+						}
+					}
 				}
 			}
 			clans.add(clan);

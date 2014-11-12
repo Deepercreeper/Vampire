@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.controller.CharMode;
+import com.deepercreeper.vampireapp.controller.Restriction;
 import com.deepercreeper.vampireapp.controller.implementations.VariableValueControllerImpl;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue.UpdateAction;
@@ -50,9 +51,16 @@ public class BackgroundValueController extends VariableValueControllerImpl<Backg
 	}
 	
 	@Override
+	public void addRestriction(final Restriction aRestriction)
+	{
+		mBackgrounds.getValue(aRestriction.getKey()).addRestriction(aRestriction);
+	}
+	
+	@Override
 	public void addItem(final BackgroundItem aItem)
 	{
 		mBackgrounds.addItem(aItem);
+		// TODO Add restrictions to the new value
 		resize();
 	}
 	

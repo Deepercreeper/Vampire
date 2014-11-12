@@ -134,6 +134,19 @@ public abstract class ItemValueGroupImpl <T extends Item, S extends ItemValue<T>
 	}
 	
 	@Override
+	public boolean hasValue(final String aValue)
+	{
+		for (final S value : mValuesList)
+		{
+			if (value.getItem().getName().equals(aValue))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	@Override
 	public int getValue()
 	{
 		int value = 0;

@@ -10,6 +10,7 @@ import com.deepercreeper.vampireapp.Clan;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.controller.CharMode;
+import com.deepercreeper.vampireapp.controller.Restriction;
 import com.deepercreeper.vampireapp.controller.implementations.VariableValueControllerImpl;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue.UpdateAction;
@@ -49,6 +50,12 @@ public class DisciplineValueController extends VariableValueControllerImpl<Disci
 	{
 		super(aController, aContext, aMode, aPoints, aUpdateOthers);
 		mDisciplines = new DisciplineItemValueGroup(getController().getDisciplines(), this, getContext(), getCreationMode(), getPoints());
+	}
+	
+	@Override
+	public void addRestriction(final Restriction aRestriction)
+	{
+		mDisciplines.getValue(aRestriction.getKey()).addRestriction(aRestriction);
 	}
 	
 	@Override

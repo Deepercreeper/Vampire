@@ -45,7 +45,7 @@
         <item>Cappadozians:Auspex,Mortis,Fortitude</item>
         <item>Lasombra:Domination,Shadow play,Strength</item>
         <item>Malkavians:Auspex,Insanity,Obscuration</item>
-        <item>Nosferatu:Strength,Animality,Obscuration</item>
+        <item>Nosferatu:Strength,Animality,Obscuration;;Simple@Appearance=0</item>
         <item>Ravnos:Chimeras,Fortitude,Animality</item>
         <item>Toriador:Auspex,Speed,Presence</item>
         <item>Tremere:Auspex,Domination,Thaumaturgy</item>

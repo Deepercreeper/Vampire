@@ -4,6 +4,7 @@ import java.util.List;
 import android.content.Context;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.controller.CharMode;
+import com.deepercreeper.vampireapp.controller.Restriction;
 
 /**
  * A controller that handles value groups.
@@ -83,6 +84,8 @@ public interface ValueController <T extends Item>
 	 *            The layout to put the content into.
 	 */
 	public void initLayout(LinearLayout aLayout);
+	
+	public void addRestriction(Restriction aRestriction);
 	
 	/**
 	 * Removes all widgets from their parent container.

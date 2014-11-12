@@ -63,12 +63,6 @@ public class SimpleItemValue extends ItemValueImpl<SimpleItem, SimpleItemValue>
 	}
 	
 	@Override
-	public boolean canDecrease()
-	{
-		return getValue() > getItem().getStartValue();
-	}
-	
-	@Override
 	public boolean canDecrease(final CharMode aMode)
 	{
 		switch (aMode)
@@ -84,12 +78,6 @@ public class SimpleItemValue extends ItemValueImpl<SimpleItem, SimpleItemValue>
 	}
 	
 	@Override
-	public boolean canIncrease()
-	{
-		return getValue() < getItem().getMaxValue();
-	}
-	
-	@Override
 	public boolean canIncrease(final CharMode aMode)
 	{
 		switch (aMode)
@@ -102,6 +90,32 @@ public class SimpleItemValue extends ItemValueImpl<SimpleItem, SimpleItemValue>
 				return canIncrease();
 		}
 		return false;
+	}
+	
+	@Override
+	protected void updateRestrictions()
+	{
+		final int minValue = getMinValue();
+		final int maxValue = getMaxValue();
+		
+		if (minValue > mValue)
+		{
+			mValue = minValue;
+		}
+		if (maxValue < mValue)
+		{
+			mValue = maxValue;
+		}
+		refreshValue();
+		getUpdateAction().update();
+	}
+	
+	@Override
+	protected void resetRestrictions()
+	{
+		mValue = getItem().getStartValue();
+		refreshValue();
+		getUpdateAction().update();
 	}
 	
 	@Override
