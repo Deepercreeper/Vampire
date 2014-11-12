@@ -37,13 +37,13 @@
     <string-array name="clans">
         <item>Assamiten:Geschwindigkeit,Quietus,Verdunkelung</item>
         <item>Brujah:Geschwindigkeit,Präsenz,Stärke</item>
-        <item>Caitiff:;13</item>
+        <item>Caitiff:;Generation=13</item>
         <item>Gangrel:Gestaltwandel,Seelenstärke,Tierhaftigkeit</item>
         <item>Jünger des Seth:Präsenz,Serpentis,Verdunkelung</item>
         <item>Kappadozianer:Auspex,Mortis,Seelenstärke</item>
         <item>Lasombra:Beherrschung,Schattenspiele,Stärke</item>
         <item>Malkavianer:Auspex,Irrsinn,Verdunkelung</item>
-        <item>Nosferatu:Stärke,Tierhaftigkeit,Verdunkelung;;Simple@Erscheinungsbild=0</item>
+        <item>Nosferatu:Stärke,Tierhaftigkeit,Verdunkelung;Simple@Erscheinungsbild=0</item>
         <item>Ravnos:Shimären,Seelenstärke,Tierhaftigkeit</item>
         <item>Toriador:Auspex,Geschwindigkeit,Präsenz</item>
         <item>Tremere:Auspex,Beherrschung,Thaumaturgie</item>

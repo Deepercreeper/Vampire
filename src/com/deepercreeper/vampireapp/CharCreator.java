@@ -47,7 +47,7 @@ public class CharCreator
 	
 	private int									mPathPoints			= START_PATH_POINTS;
 	
-	private int									mGeneration			= DEFAULT_GENERATION;
+	private final GenerationController			mGeneration;
 	
 	private int									mFreePoints			= START_FREE_POINTS;
 	
@@ -106,6 +106,7 @@ public class CharCreator
 		mSimpleValues = new SimpleValueController(aSimpleItems, mVampire.getContext(), CharMode.MAIN, points, updateOthers);
 		mDescriptions = new DescriptionValueController(aDescriptions);
 		mInsanities = new InsanityController(mVampire.getContext());
+		mGeneration = new GenerationController(mVampire.getContext(), this);
 		mNature = aNature;
 		mBehavior = aBehavior;
 		setClan(aClan);
@@ -208,7 +209,7 @@ public class CharCreator
 		return mFreePoints;
 	}
 	
-	public int getGeneration()
+	public GenerationController getGeneration()
 	{
 		return mGeneration;
 	}
@@ -344,6 +345,7 @@ public class CharCreator
 	{
 		for (final Restriction restriction : mClan.getRestrictions())
 		{
+			final String key = restriction.getKey();
 			if (restriction.hasGroup())
 			{
 				final String group = restriction.getGroup();
@@ -364,21 +366,21 @@ public class CharCreator
 					mProperties.addRestriction(restriction);
 				}
 			}
-			else if (restriction.equals(Restriction.INSANITY))
+			else if (key.equals(Restriction.INSANITY))
 			{
 				// TODO Restrict the number of insanities
 			}
-			else if (restriction.equals(Restriction.VOLITION))
+			else if (key.equals(Restriction.VOLITION))
 			{
 				// TODO Restrict the number of volition points
 			}
-			else if (restriction.equals(Restriction.PATH))
+			else if (key.equals(Restriction.PATH))
 			{
 				// TODO Restrict the number of path points
 			}
-			else if (restriction.equals(Restriction.GENERATION))
+			else if (key.equals(Restriction.GENERATION))
 			{
-				mVampire.addGenerationRestriction(restriction);
+				mGeneration.addRestriction(restriction);
 			}
 		}
 	}
@@ -399,11 +401,6 @@ public class CharCreator
 	public void setFreePoints(final int aFreePoints)
 	{
 		mFreePoints = aFreePoints;
-	}
-	
-	public void setGeneration(final int aGeneration)
-	{
-		mGeneration = aGeneration;
 	}
 	
 	public void setName(final String aName)

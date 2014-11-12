@@ -35,22 +35,18 @@ public class ClanController extends ListControllerImpl<Clan>
 			if (clanData.length > 1)
 			{
 				final String[] clanDisciplines = clanData[1].split(GENERATION_DELIM);
-				for (final String clanDiscipline : clanDisciplines[0].split(CLAN_DISCIPLIN_DELIM))
+				if ( !clanDisciplines[0].isEmpty())
 				{
-					clan.addDiscipline(aDisciplines.getDisciplines().getItem(clanDiscipline));
+					for (final String clanDiscipline : clanDisciplines[0].split(CLAN_DISCIPLIN_DELIM))
+					{
+						clan.addDiscipline(aDisciplines.getDisciplines().getItem(clanDiscipline));
+					}
 				}
 				if (clanDisciplines.length > 1)
 				{
-					if ( !clanDisciplines[1].isEmpty())
+					for (final String restrictionData : clanDisciplines[1].split(Restriction.RESTRICTIONS_DELIM))
 					{
-						clan.setGeneration(Integer.parseInt(clanDisciplines[1]));
-					}
-					if (clanDisciplines.length > 2)
-					{
-						for (final String restrictionData : clanDisciplines[2].split(Restriction.RESTRICTIONS_DELIM))
-						{
-							clan.addRestriction(Restriction.create(restrictionData));
-						}
+						clan.addRestriction(Restriction.create(restrictionData));
 					}
 				}
 			}

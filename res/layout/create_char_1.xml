@@ -37,36 +37,12 @@
             android:id="@+id/concept_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/char_name_text"
+            android:layout_below="@id/char_name_text"
             android:ems="10"
             android:hint="@string/concept"
             android:inputType="textPersonName" />
 
-        <Spinner
-            android:id="@+id/nature_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/nature_label"
-            android:layout_alignLeft="@+id/generation_picker"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/nature_label"
-            android:layout_below="@+id/concept_text"
-            android:layout_toRightOf="@+id/nature_label"
-            android:entries="@array/nature_and_behavior" />
-
-        <Spinner
-            android:id="@+id/behavior_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/behavior_label"
-            android:layout_alignLeft="@+id/generation_picker"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/behavior_label"
-            android:layout_below="@+id/nature_spinner"
-            android:layout_toRightOf="@+id/behavior_label"
-            android:entries="@array/nature_and_behavior" />
-
-        <TextView
+         <TextView
             android:id="@+id/behavior_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -83,7 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/concept_text"
+            android:layout_below="@id/concept_text"
             android:gravity="center_vertical"
             android:paddingBottom="12sp"
             android:paddingTop="10sp"
@@ -101,59 +77,82 @@
             android:paddingTop="10sp"
             android:text="@string/clan_text"
             android:textSize="20sp" />
+        
+        <Spinner
+            android:id="@+id/nature_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/nature_label"
+            android:layout_alignLeft="@+id/generation_panel"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@id/nature_label"
+            android:layout_below="@id/concept_text"
+            android:layout_toRightOf="@id/nature_label"
+            android:entries="@array/nature_and_behavior" />
+
+        <Spinner
+            android:id="@+id/behavior_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/behavior_label"
+            android:layout_alignLeft="@+id/generation_panel"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@id/behavior_label"
+            android:layout_below="@id/nature_spinner"
+            android:layout_toRightOf="@id/behavior_label"
+            android:entries="@array/nature_and_behavior" />
+
+        <Spinner
+            android:id="@+id/clan_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/clan_label"
+            android:layout_alignParentRight="true"
+            android:layout_alignLeft="@id/generation_panel"
+            android:layout_alignTop="@id/clan_label"
+            android:layout_below="@id/behavior_spinner"
+            android:layout_toRightOf="@id/clan_label" />
 
         <TextView
             android:id="@+id/generation_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/clan_spinner"
+            android:layout_below="@id/clan_spinner"
             android:gravity="center_vertical"
             android:paddingBottom="70sp"
             android:paddingTop="70sp"
             android:text="@string/generation_text"
             android:textSize="20sp" />
 
-        <Spinner
-            android:id="@+id/clan_spinner"
-            android:layout_width="wrap_content"
+        <LinearLayout 
+            android:id="@+id/generation_panel"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/clan_label"
-            android:layout_alignLeft="@+id/generation_picker"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/clan_label"
-            android:layout_below="@+id/behavior_spinner"
-            android:layout_toRightOf="@+id/clan_label" />
-
-        <NumberPicker
-            android:id="@+id/generation_picker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/generation_label"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/generation_label"
-            android:layout_below="@+id/clan_spinner"
-            android:layout_toRightOf="@+id/generation_label" />
+            android:layout_below="@id/clan_spinner"
+            android:layout_toRightOf="@id/generation_label"
+            android:orientation="vertical"
+            />
 
         <LinearLayout
             android:id="@+id/simple_items_panel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/generation_picker"
+            android:layout_below="@id/generation_panel"
             android:orientation="vertical" />
 
         <LinearLayout
             android:id="@+id/disciplines_panel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/simple_items_panel"
+            android:layout_below="@id/simple_items_panel"
             android:orientation="vertical" />
 
         <LinearLayout
             android:id="@+id/backgrounds_panel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/disciplines_panel"
+            android:layout_below="@id/disciplines_panel"
             android:orientation="vertical" />
 
         <LinearLayout

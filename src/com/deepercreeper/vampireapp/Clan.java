@@ -12,8 +12,6 @@ public class Clan extends Named
 	
 	private final HashSet<Restriction>		mRestrictions	= new HashSet<Restriction>();
 	
-	private int								mGeneration		= -1;
-	
 	public Clan(final String aName)
 	{
 		super(aName);
@@ -75,21 +73,6 @@ public class Clan extends Named
 	public HashSet<DisciplineItem> getDisciplines()
 	{
 		return mDisciplines;
-	}
-	
-	public int getGeneration()
-	{
-		return mGeneration;
-	}
-	
-	public boolean hasGeneration()
-	{
-		return mGeneration != -1;
-	}
-	
-	public void setGeneration(final int aGeneration)
-	{
-		mGeneration = aGeneration;
 	}
 	
 	@Override

@@ -17,8 +17,6 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.NumberPicker;
-import android.widget.NumberPicker.OnValueChangeListener;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TableLayout;
@@ -31,7 +29,6 @@ import com.deepercreeper.vampireapp.controller.CreateStringDialog.CreationListen
 import com.deepercreeper.vampireapp.controller.NatureController;
 import com.deepercreeper.vampireapp.controller.Path;
 import com.deepercreeper.vampireapp.controller.PathController;
-import com.deepercreeper.vampireapp.controller.Restriction;
 import com.deepercreeper.vampireapp.controller.backgrounds.BackgroundController;
 import com.deepercreeper.vampireapp.controller.descriptions.DescriptionController;
 import com.deepercreeper.vampireapp.controller.descriptions.DescriptionValue;
@@ -161,11 +158,6 @@ public class Vampire
 		((TextView) mActivity.getView(R.id.volition_value)).setText("" + aValue);
 	}
 	
-	public void addGenerationRestriction(final Restriction aRestriction)
-	{
-		// TODO Add generation restriction
-	}
-	
 	private void initCreateChar1()
 	{
 		mActivity.setContentView(R.layout.create_char_1);
@@ -180,6 +172,7 @@ public class Vampire
 		}
 		
 		mCharCreator.setCreationMode(CharMode.MAIN);
+		mCharCreator.getGeneration().release();
 		
 		final TextView nameTextView = (TextView) mActivity.getView(R.id.char_name_text);
 		nameTextView.setText(mCharCreator.getName());
@@ -263,18 +256,8 @@ public class Vampire
 		});
 		behaviorSpinner.setSelection(mNatures.indexOf(mCharCreator.getBehavior()));
 		
-		final NumberPicker generationPicker = (NumberPicker) mActivity.getView(R.id.generation_picker);
-		generationPicker.setMinValue(CharCreator.MIN_GENERATION);
-		generationPicker.setMaxValue(CharCreator.MAX_GENERATION);
-		generationPicker.setValue(mCharCreator.getGeneration());
-		generationPicker.setOnValueChangedListener(new OnValueChangeListener()
-		{
-			@Override
-			public void onValueChange(final NumberPicker aPicker, final int aOldVal, final int aNewVal)
-			{
-				mCharCreator.setGeneration(aNewVal);
-			}
-		});
+		final LinearLayout generationPanel = (LinearLayout) mActivity.getView(R.id.generation_panel);
+		mCharCreator.getGeneration().init(generationPanel);
 		
 		final Spinner clanSpinner = (Spinner) mActivity.getView(R.id.clan_spinner);
 		clanSpinner.setAdapter(new ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_dropdown_item, mClans.getNames()));
@@ -603,20 +586,6 @@ public class Vampire
 	private void setClan(final int aClan)
 	{
 		mCharCreator.setClan(mClans.get(aClan));
-		
-		// Reload generations
-		final NumberPicker generationPicker = (NumberPicker) mActivity.getView(R.id.generation_picker);
-		if (mCharCreator.getClan().hasGeneration())
-		{
-			final int generation = mCharCreator.getClan().getGeneration();
-			generationPicker.setMinValue(generation);
-			generationPicker.setMaxValue(generation);
-		}
-		else
-		{
-			generationPicker.setMaxValue(CharCreator.MAX_GENERATION);
-			generationPicker.setMinValue(CharCreator.MIN_GENERATION);
-		}
 	}
 	
 	private void setPath(final Path aPath)
