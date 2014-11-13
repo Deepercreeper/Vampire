@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import android.content.Context;
 import android.view.ViewGroup;
-import com.deepercreeper.vampireapp.controller.CharMode;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue.UpdateAction;
 import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
+import com.deepercreeper.vampireapp.creation.CharMode;
 
 /**
  * Item values are controlled by groups. This is used to handle several items.

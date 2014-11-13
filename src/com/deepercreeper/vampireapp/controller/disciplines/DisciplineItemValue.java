@@ -16,11 +16,11 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.controller.CharMode;
 import com.deepercreeper.vampireapp.controller.dialog.SelectItemDialog;
 import com.deepercreeper.vampireapp.controller.dialog.SelectItemDialog.SelectionListener;
 import com.deepercreeper.vampireapp.controller.implementations.ItemValueImpl;
 import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
+import com.deepercreeper.vampireapp.creation.CharMode;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 /**

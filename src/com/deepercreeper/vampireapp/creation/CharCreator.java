@@ -1,10 +1,11 @@
-package com.deepercreeper.vampireapp;
+package com.deepercreeper.vampireapp.creation;
 
 import java.util.ArrayList;
 import java.util.List;
 import android.widget.TableLayout;
 import android.widget.Toast;
-import com.deepercreeper.vampireapp.controller.CharMode;
+import com.deepercreeper.vampireapp.Vampire;
+import com.deepercreeper.vampireapp.controller.GenerationController;
 import com.deepercreeper.vampireapp.controller.InsanityController;
 import com.deepercreeper.vampireapp.controller.backgrounds.BackgroundController;
 import com.deepercreeper.vampireapp.controller.backgrounds.BackgroundValueController;
@@ -536,7 +537,7 @@ public class CharCreator
 	 * @param aOk
 	 *            Whether the are OK.
 	 */
-	public void setInsanitiesOk(boolean aOk)
+	public void setInsanitiesOk(final boolean aOk)
 	{
 		mVampire.setInsanitiesOk(aOk);
 	}
@@ -605,9 +606,8 @@ public class CharCreator
 				}
 			}
 			else if (key.equals(RestrictionKey.INSANITY.getKey()))
-			{	
-				
-				// TODO Restrict the number of insanities
+			{
+				mInsanities.addRestriction(restriction);
 			}
 			else if (key.equals(RestrictionKey.VOLITION.getKey()))
 			{

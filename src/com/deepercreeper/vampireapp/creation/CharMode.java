@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.controller;
+package com.deepercreeper.vampireapp.creation;
 
 /**
  * The creation of a character has several states.<br>

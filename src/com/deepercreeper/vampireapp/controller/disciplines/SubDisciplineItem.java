@@ -3,7 +3,6 @@ package com.deepercreeper.vampireapp.controller.disciplines;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import com.deepercreeper.vampireapp.controller.Ability;
 import com.deepercreeper.vampireapp.controller.interfaces.Item;
 
 /**

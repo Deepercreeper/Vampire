@@ -12,12 +12,12 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.ResizeAnimation;
-import com.deepercreeper.vampireapp.controller.CharMode;
 import com.deepercreeper.vampireapp.controller.implementations.ValueControllerImpl;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue.UpdateAction;
 import com.deepercreeper.vampireapp.controller.restrictions.Restriction;
+import com.deepercreeper.vampireapp.creation.CharMode;
+import com.deepercreeper.vampireapp.util.ResizeAnimation;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 /**

@@ -13,9 +13,9 @@ import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import com.deepercreeper.vampireapp.CharCreator;
 import com.deepercreeper.vampireapp.controller.restrictions.Restriction;
 import com.deepercreeper.vampireapp.controller.restrictions.Restrictionable;
+import com.deepercreeper.vampireapp.creation.CharCreator;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 /**

@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.controller;
+package com.deepercreeper.vampireapp.controller.disciplines;
 
 import java.util.ArrayList;
 import java.util.HashSet;

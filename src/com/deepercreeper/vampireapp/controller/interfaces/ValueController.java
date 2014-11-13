@@ -3,8 +3,8 @@ package com.deepercreeper.vampireapp.controller.interfaces;
 import java.util.List;
 import android.content.Context;
 import android.widget.LinearLayout;
-import com.deepercreeper.vampireapp.controller.CharMode;
 import com.deepercreeper.vampireapp.controller.restrictions.Restriction;
+import com.deepercreeper.vampireapp.creation.CharMode;
 
 /**
  * A controller that handles value groups.

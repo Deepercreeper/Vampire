@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp;
+package com.deepercreeper.vampireapp.util;
 
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;

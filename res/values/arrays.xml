@@ -42,7 +42,7 @@
         <item>Jünger des Seth:Präsenz,Serpentis,Verdunkelung</item>
         <item>Kappadozianer:Auspex,Mortis,Seelenstärke</item>
         <item>Lasombra:Beherrschung,Schattenspiele,Stärke</item>
-        <item>Malkavianer:Auspex,Irrsinn,Verdunkelung;Insanities>0</item>
+        <item>Malkavianer:Auspex,Irrsinn,Verdunkelung;Insanity>0</item>
         <item>Nosferatu:Stärke,Tierhaftigkeit,Verdunkelung;Simple@Erscheinungsbild=0</item>
         <item>Ravnos:Shimären,Seelenstärke,Tierhaftigkeit</item>
         <item>Toriador:Auspex,Geschwindigkeit,Präsenz</item>

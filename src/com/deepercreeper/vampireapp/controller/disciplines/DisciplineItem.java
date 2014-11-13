@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import com.deepercreeper.vampireapp.controller.Ability;
 import com.deepercreeper.vampireapp.controller.implementations.ItemImpl;
 
 /**

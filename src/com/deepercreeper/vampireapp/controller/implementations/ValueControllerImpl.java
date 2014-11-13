@@ -1,11 +1,11 @@
 package com.deepercreeper.vampireapp.controller.implementations;
 
 import android.content.Context;
-import com.deepercreeper.vampireapp.controller.CharMode;
 import com.deepercreeper.vampireapp.controller.interfaces.Controller;
 import com.deepercreeper.vampireapp.controller.interfaces.Item;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue.UpdateAction;
 import com.deepercreeper.vampireapp.controller.interfaces.ValueController;
+import com.deepercreeper.vampireapp.creation.CharMode;
 
 /**
  * An implementation for value controllers. Each value controller should implement this class.

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import android.content.Context;
-import com.deepercreeper.vampireapp.controller.CharMode;
 import com.deepercreeper.vampireapp.controller.interfaces.Item;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
@@ -12,6 +11,7 @@ import com.deepercreeper.vampireapp.controller.interfaces.ItemValue.UpdateAction
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValueGroup;
 import com.deepercreeper.vampireapp.controller.interfaces.ValueController;
 import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
+import com.deepercreeper.vampireapp.creation.CharMode;
 
 /**
  * A implementation of value groups. Each value group should extend this class.

@@ -3,12 +3,12 @@ package com.deepercreeper.vampireapp.controller.implementations;
 import java.util.HashSet;
 import java.util.Set;
 import android.content.Context;
-import com.deepercreeper.vampireapp.controller.CharMode;
 import com.deepercreeper.vampireapp.controller.interfaces.Item;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValueGroup;
 import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
 import com.deepercreeper.vampireapp.controller.restrictions.Restriction;
+import com.deepercreeper.vampireapp.creation.CharMode;
 
 /**
  * An implementation for item values. Each item value should extend this class.

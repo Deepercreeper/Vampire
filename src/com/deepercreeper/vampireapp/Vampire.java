@@ -22,7 +22,6 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import com.deepercreeper.vampireapp.controller.CharMode;
 import com.deepercreeper.vampireapp.controller.backgrounds.BackgroundController;
 import com.deepercreeper.vampireapp.controller.descriptions.DescriptionController;
 import com.deepercreeper.vampireapp.controller.descriptions.DescriptionValue;
@@ -36,6 +35,8 @@ import com.deepercreeper.vampireapp.controller.lists.Path;
 import com.deepercreeper.vampireapp.controller.lists.PathController;
 import com.deepercreeper.vampireapp.controller.properties.PropertyController;
 import com.deepercreeper.vampireapp.controller.simplesItems.SimpleController;
+import com.deepercreeper.vampireapp.creation.CharCreator;
+import com.deepercreeper.vampireapp.creation.CharMode;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 /**
@@ -133,9 +134,12 @@ public class Vampire
 	 */
 	public void setFreePoints(final int aValue)
 	{
-		((TextView) mActivity.getView(R.id.free_points_text)).setText("" + aValue);
-		((ProgressBar) mActivity.getView(R.id.free_points_bar)).setProgress(aValue);
-		((Button) mActivity.getView(R.id.next_to_3_button)).setEnabled(aValue == 0);
+		if (mState == State.CREATE_CHAR_2)
+		{
+			((TextView) mActivity.getView(R.id.free_points_text)).setText("" + aValue);
+			((ProgressBar) mActivity.getView(R.id.free_points_bar)).setProgress(aValue);
+			((Button) mActivity.getView(R.id.next_to_3_button)).setEnabled(aValue == 0);
+		}
 	}
 	
 	/**
@@ -144,7 +148,7 @@ public class Vampire
 	 * @param aOk
 	 *            Whether the insanities are OK.
 	 */
-	public void setInsanitiesOk(boolean aOk)
+	public void setInsanitiesOk(final boolean aOk)
 	{
 		if (mState == State.CREATE_CHAR_3)
 		{
@@ -164,9 +168,12 @@ public class Vampire
 	 */
 	public void setPathEnabled(final boolean aEnabled, final boolean aCanIncrease, final boolean aCanDecrease)
 	{
-		((ImageButton) mActivity.getView(R.id.decrease_path_button)).setEnabled(aCanDecrease && aEnabled);
-		((ImageButton) mActivity.getView(R.id.increase_path_button)).setEnabled(aCanIncrease && aEnabled);
-		((Spinner) mActivity.getView(R.id.path_spinner)).setEnabled(aEnabled);
+		if (mState == State.CREATE_CHAR_2)
+		{
+			((ImageButton) mActivity.getView(R.id.decrease_path_button)).setEnabled(aCanDecrease && aEnabled);
+			((ImageButton) mActivity.getView(R.id.increase_path_button)).setEnabled(aCanIncrease && aEnabled);
+			((Spinner) mActivity.getView(R.id.path_spinner)).setEnabled(aEnabled);
+		}
 	}
 	
 	/**
@@ -177,7 +184,10 @@ public class Vampire
 	 */
 	public void setPathPoints(final int aValue)
 	{
-		((TextView) mActivity.getView(R.id.path_value)).setText("" + aValue);
+		if (mState == State.CREATE_CHAR_2)
+		{
+			((TextView) mActivity.getView(R.id.path_value)).setText("" + aValue);
+		}
 	}
 	
 	/**
@@ -215,8 +225,11 @@ public class Vampire
 	 */
 	public void setVolitionEnabled(final boolean aCanIncrease, final boolean aCanDecrease)
 	{
-		((ImageButton) mActivity.getView(R.id.increase_volition_button)).setEnabled(aCanIncrease);
-		((ImageButton) mActivity.getView(R.id.decrease_volition_button)).setEnabled(aCanDecrease);
+		if (mState == State.CREATE_CHAR_2)
+		{
+			((ImageButton) mActivity.getView(R.id.increase_volition_button)).setEnabled(aCanIncrease);
+			((ImageButton) mActivity.getView(R.id.decrease_volition_button)).setEnabled(aCanDecrease);
+		}
 	}
 	
 	/**
@@ -227,7 +240,10 @@ public class Vampire
 	 */
 	public void setVolitionPoints(final int aValue)
 	{
-		((TextView) mActivity.getView(R.id.volition_value)).setText("" + aValue);
+		if (mState == State.CREATE_CHAR_2)
+		{
+			((TextView) mActivity.getView(R.id.volition_value)).setText("" + aValue);
+		}
 	}
 	
 	private void initCreateChar1()
@@ -241,6 +257,7 @@ public class Vampire
 		else
 		{
 			mCharCreator.releaseViews();
+			mCharCreator.resetFreePoints();
 		}
 		
 		mCharCreator.setCreationMode(CharMode.MAIN);
@@ -482,7 +499,6 @@ public class Vampire
 			@Override
 			public void onClick(final View aV)
 			{
-				mCharCreator.resetFreePoints();
 				back();
 			}
 		});

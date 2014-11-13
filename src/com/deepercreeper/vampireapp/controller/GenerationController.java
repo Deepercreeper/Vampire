@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp;
+package com.deepercreeper.vampireapp.controller;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -8,6 +8,7 @@ import android.widget.NumberPicker;
 import android.widget.NumberPicker.OnValueChangeListener;
 import com.deepercreeper.vampireapp.controller.restrictions.Restriction;
 import com.deepercreeper.vampireapp.controller.restrictions.Restrictionable;
+import com.deepercreeper.vampireapp.creation.CharCreator;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 /**
