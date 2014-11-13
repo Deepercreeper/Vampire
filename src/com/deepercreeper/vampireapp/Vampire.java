@@ -191,12 +191,26 @@ public class Vampire
 		}
 	}
 	
+	/**
+	 * Sets whether the volition points can be increased or decreased.
+	 * 
+	 * @param aCanIncrease
+	 *            Whether increasing is possible.
+	 * @param aCanDecrease
+	 *            Whether decreasing is possible.
+	 */
 	public void setVolitionEnabled(final boolean aCanIncrease, final boolean aCanDecrease)
 	{
 		((ImageButton) mActivity.getView(R.id.increase_volition_button)).setEnabled(aCanIncrease);
 		((ImageButton) mActivity.getView(R.id.decrease_volition_button)).setEnabled(aCanDecrease);
 	}
 	
+	/**
+	 * Sets the number of volition points.
+	 * 
+	 * @param aValue
+	 *            The new value.
+	 */
 	public void setVolitionPoints(final int aValue)
 	{
 		((TextView) mActivity.getView(R.id.volition_value)).setText("" + aValue);
