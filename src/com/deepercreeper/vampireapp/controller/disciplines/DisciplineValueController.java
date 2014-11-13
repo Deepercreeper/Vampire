@@ -6,14 +6,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import com.deepercreeper.vampireapp.Clan;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.controller.CharMode;
-import com.deepercreeper.vampireapp.controller.Restriction;
 import com.deepercreeper.vampireapp.controller.implementations.VariableValueControllerImpl;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue.UpdateAction;
+import com.deepercreeper.vampireapp.controller.lists.Clan;
+import com.deepercreeper.vampireapp.controller.restrictions.Restriction;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 /**
@@ -45,8 +45,7 @@ public class DisciplineValueController extends VariableValueControllerImpl<Disci
 	 * @param aUpdateOthers
 	 *            The update others action.
 	 */
-	public DisciplineValueController(final DisciplineController aController, final Context aContext, final CharMode aMode,
-			final PointHandler aPoints, final UpdateAction aUpdateOthers)
+	public DisciplineValueController(final DisciplineController aController, final Context aContext, final CharMode aMode, final PointHandler aPoints, final UpdateAction aUpdateOthers)
 	{
 		super(aController, aContext, aMode, aPoints, aUpdateOthers);
 		mDisciplines = new DisciplineItemValueGroup(getController().getDisciplines(), this, getContext(), getCreationMode(), getPoints());
@@ -142,8 +141,7 @@ public class DisciplineValueController extends VariableValueControllerImpl<Disci
 						mDisciplines.initLayout(mDisciplinesPanel);
 						mInitialized = true;
 					}
-					mDisciplinesPanel.startAnimation(new ResizeAnimation(mDisciplinesPanel, mDisciplinesPanel.getWidth(), ViewUtil
-							.calcHeight(mDisciplinesPanel)));
+					mDisciplinesPanel.startAnimation(new ResizeAnimation(mDisciplinesPanel, mDisciplinesPanel.getWidth(), ViewUtil.calcHeight(mDisciplinesPanel)));
 					mShowPanel.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
 				}
 				else
@@ -213,8 +211,8 @@ public class DisciplineValueController extends VariableValueControllerImpl<Disci
 			case POINTS :
 				mDisciplines.updateValues(true, true);
 				break;
-			case NORMAL :
-				mDisciplines.updateValues(true, false);
+			case DESCRIPTIONS :
+				mDisciplines.updateValues(false, false);
 				break;
 		}
 	}

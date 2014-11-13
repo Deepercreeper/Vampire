@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.controller;
+package com.deepercreeper.vampireapp.controller.dialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -11,6 +11,11 @@ import android.os.Bundle;
 import android.widget.EditText;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
+/**
+ * Used for creating a string and returning it to the given listener.
+ * 
+ * @author vrl
+ */
 public class CreateStringDialog extends DialogFragment
 {
 	private static boolean			sDialogOpen	= false;
@@ -25,12 +30,23 @@ public class CreateStringDialog extends DialogFragment
 	
 	private final CreationListener	mListener;
 	
+	/**
+	 * A listener that is invoked when a string was created.
+	 * 
+	 * @author vrl
+	 */
 	public interface CreationListener
 	{
+		/**
+		 * Invoked when the given string was created.
+		 * 
+		 * @param aString
+		 *            The new created string.
+		 */
 		public void create(String aString);
 	}
 	
-	public CreateStringDialog(final String aTitle, final String aMessage, final Context aContext, final CreationListener aListener)
+	private CreateStringDialog(final String aTitle, final String aMessage, final Context aContext, final CreationListener aListener)
 	{
 		sDialogOpen = true;
 		mTitle = aTitle;
@@ -78,6 +94,19 @@ public class CreateStringDialog extends DialogFragment
 		return sDialogOpen;
 	}
 	
+	/**
+	 * Shows a create string dialog that returns the new created string to the listener.<br>
+	 * Only one dialog can be shown at one time.
+	 * 
+	 * @param aTitle
+	 *            The dialog title.
+	 * @param aMessage
+	 *            The dialog message.
+	 * @param aContext
+	 *            The context.
+	 * @param aListener
+	 *            The string creation listener.
+	 */
 	public static void showCreateStringDialog(final String aTitle, final String aMessage, final Context aContext, final CreationListener aListener)
 	{
 		if (sDialogOpen)

@@ -4,7 +4,7 @@ import java.util.List;
 import android.content.Context;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.controller.CharMode;
-import com.deepercreeper.vampireapp.controller.Restriction;
+import com.deepercreeper.vampireapp.controller.restrictions.Restriction;
 
 /**
  * A controller that handles value groups.
@@ -85,6 +85,12 @@ public interface ValueController <T extends Item>
 	 */
 	public void initLayout(LinearLayout aLayout);
 	
+	/**
+	 * Adds the given restriction to the value with the specified restriction key.
+	 * 
+	 * @param aRestriction
+	 *            The restriction, that has to be added.
+	 */
 	public void addRestriction(Restriction aRestriction);
 	
 	/**

@@ -6,10 +6,15 @@ import android.content.Context;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.NumberPicker.OnValueChangeListener;
-import com.deepercreeper.vampireapp.controller.Restriction;
-import com.deepercreeper.vampireapp.controller.Restrictionable;
+import com.deepercreeper.vampireapp.controller.restrictions.Restriction;
+import com.deepercreeper.vampireapp.controller.restrictions.Restrictionable;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
+/**
+ * A controller for the character generation.
+ * 
+ * @author vrl
+ */
 public class GenerationController implements Restrictionable
 {
 	private final NumberPicker		mPicker;
@@ -18,6 +23,14 @@ public class GenerationController implements Restrictionable
 	
 	private int						mGeneration;
 	
+	/**
+	 * Creates a new generation controller.
+	 * 
+	 * @param aContext
+	 *            The context.
+	 * @param aCreator
+	 *            The character creator.
+	 */
 	public GenerationController(final Context aContext, final CharCreator aCreator)
 	{
 		mPicker = new NumberPicker(aContext);
@@ -34,17 +47,29 @@ public class GenerationController implements Restrictionable
 		});
 	}
 	
+	/**
+	 * @return the current generation.
+	 */
 	public int getGeneration()
 	{
 		return mGeneration;
 	}
 	
+	/**
+	 * Adds the generation picker to the given layout.
+	 * 
+	 * @param aLayout
+	 *            The layout.
+	 */
 	public void init(final LinearLayout aLayout)
 	{
 		aLayout.removeAllViews();
 		aLayout.addView(mPicker);
 	}
 	
+	/**
+	 * Releases the picker.
+	 */
 	public void release()
 	{
 		ViewUtil.release(mPicker, false);
@@ -97,7 +122,7 @@ public class GenerationController implements Restrictionable
 	public boolean hasRestrictions()
 	{
 		return !mRestrictions.isEmpty();
-	};
+	}
 	
 	@Override
 	public void removeRestriction(final Restriction aRestriction)
@@ -105,5 +130,5 @@ public class GenerationController implements Restrictionable
 		mRestrictions.remove(aRestriction);
 		mPicker.setMinValue(getMinValue());
 		mPicker.setMaxValue(getMaxValue());
-	};
+	}
 }

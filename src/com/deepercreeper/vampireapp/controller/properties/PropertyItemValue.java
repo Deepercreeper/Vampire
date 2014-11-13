@@ -46,8 +46,7 @@ public class PropertyItemValue extends ItemValueImpl<PropertyItem, PropertyItemV
 	 * @param aMode
 	 *            The current creation mode.
 	 */
-	public PropertyItemValue(final PropertyItem aItem, final Context aContext, final UpdateAction aAction, final PropertyItemValueGroup aGroup,
-			final CharMode aMode)
+	public PropertyItemValue(final PropertyItem aItem, final Context aContext, final UpdateAction aAction, final PropertyItemValueGroup aGroup, final CharMode aMode)
 	{
 		super(aItem, aContext, aAction, aGroup, aMode, null);
 		mIncreaseButton = new ImageButton(aContext);
@@ -99,7 +98,7 @@ public class PropertyItemValue extends ItemValueImpl<PropertyItem, PropertyItemV
 				return canDecrease();
 			case POINTS :
 				return false;
-			case NORMAL :
+			case DESCRIPTIONS :
 				return false;
 		}
 		return false;
@@ -120,7 +119,7 @@ public class PropertyItemValue extends ItemValueImpl<PropertyItem, PropertyItemV
 				return canIncrease() && mValueId < getItem().getMaxStartValue();
 			case POINTS :
 				return false;
-			case NORMAL :
+			case DESCRIPTIONS :
 				return false;
 		}
 		return false;

@@ -19,11 +19,6 @@ public enum CharMode
 	POINTS,
 	
 	/**
-	 * This is the normal game mode. At this time the user needs experience points to increase anything.
-	 */
-	NORMAL,
-	
-	/**
 	 * Here are descriptions created. For items and character own descriptions.
 	 */
 	DESCRIPTIONS;

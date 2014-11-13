@@ -76,6 +76,11 @@ public interface ItemValueGroup <T extends Item, S extends ItemValue<T>>
 	 */
 	public HashMap<T, S> getValues();
 	
+	/**
+	 * @param aValue
+	 *            The value name.
+	 * @return whether this group contains a value with the given name.
+	 */
 	public boolean hasValue(String aValue);
 	
 	/**

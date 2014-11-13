@@ -14,10 +14,10 @@ import android.widget.TableLayout;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.controller.CharMode;
-import com.deepercreeper.vampireapp.controller.Restriction;
 import com.deepercreeper.vampireapp.controller.implementations.ValueControllerImpl;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue.UpdateAction;
+import com.deepercreeper.vampireapp.controller.restrictions.Restriction;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 /**
@@ -69,8 +69,7 @@ public class SimpleValueController extends ValueControllerImpl<SimpleItem>
 	 * @param aUpdateOthers
 	 *            The update others action.
 	 */
-	public SimpleValueController(final SimpleController aController, final Context aContext, final CharMode aMode, final PointHandler aPoints,
-			final UpdateAction aUpdateOthers)
+	public SimpleValueController(final SimpleController aController, final Context aContext, final CharMode aMode, final PointHandler aPoints, final UpdateAction aUpdateOthers)
 	{
 		super(aController, aContext, aMode, aPoints, aUpdateOthers);
 		for (final SimpleItemGroup group : getController().getAttributes())
@@ -372,8 +371,8 @@ public class SimpleValueController extends ValueControllerImpl<SimpleItem>
 			case POINTS :
 				updateFreePoints();
 				break;
-			case NORMAL :
-				updateNormal();
+			case DESCRIPTIONS :
+				updateDescription();
 				break;
 		}
 	}
@@ -399,14 +398,8 @@ public class SimpleValueController extends ValueControllerImpl<SimpleItem>
 		{
 			midDone = true;
 		}
-		if (value == aMaxValues[0] && midDone)
-		{
-			return false;
-		}
-		if (value == aMaxValues[1] && maxDone)
-		{
-			return false;
-		}
+		if (value == aMaxValues[0] && midDone) { return false; }
+		if (value == aMaxValues[1] && maxDone) { return false; }
 		return value < aMaxValues[2];
 	}
 	
@@ -462,13 +455,13 @@ public class SimpleValueController extends ValueControllerImpl<SimpleItem>
 		}
 	}
 	
-	private void updateNormal()
+	private void updateDescription()
 	{
 		if (mInitializedAttributes)
 		{
 			for (final SimpleItemValueGroup group : mAttributesList)
 			{
-				group.updateValues(true, false);
+				group.updateValues(false, false);
 			}
 		}
 		
@@ -476,13 +469,13 @@ public class SimpleValueController extends ValueControllerImpl<SimpleItem>
 		{
 			for (final SimpleItemValueGroup group : mAbilitiesList)
 			{
-				group.updateValues(true, false);
+				group.updateValues(false, false);
 			}
 		}
 		
 		if (mInitializedVirtues)
 		{
-			mVirtues.updateValues(true, false);
+			mVirtues.updateValues(false, false);
 		}
 	}
 }

@@ -10,10 +10,10 @@ import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.controller.CharMode;
-import com.deepercreeper.vampireapp.controller.Restriction;
 import com.deepercreeper.vampireapp.controller.implementations.VariableValueControllerImpl;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue.UpdateAction;
+import com.deepercreeper.vampireapp.controller.restrictions.Restriction;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 /**
@@ -43,8 +43,7 @@ public class BackgroundValueController extends VariableValueControllerImpl<Backg
 	 * @param aUpdateOthers
 	 *            The update others action.
 	 */
-	public BackgroundValueController(final BackgroundController aController, final Context aContext, final CharMode aMode,
-			final PointHandler aPoints, final UpdateAction aUpdateOthers)
+	public BackgroundValueController(final BackgroundController aController, final Context aContext, final CharMode aMode, final PointHandler aPoints, final UpdateAction aUpdateOthers)
 	{
 		super(aController, aContext, aMode, aPoints, aUpdateOthers);
 		mBackgrounds = new BackgroundItemValueGroup(getController().getBackgrounds(), this, aContext, getCreationMode(), getPoints());
@@ -194,8 +193,8 @@ public class BackgroundValueController extends VariableValueControllerImpl<Backg
 			case POINTS :
 				mBackgrounds.updateValues(true, true);
 				break;
-			case NORMAL :
-				mBackgrounds.updateValues(true, false);
+			case DESCRIPTIONS :
+				mBackgrounds.updateValues(false, false);
 				break;
 		}
 	}

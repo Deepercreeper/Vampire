@@ -23,21 +23,26 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.controller.CharMode;
-import com.deepercreeper.vampireapp.controller.ClanController;
-import com.deepercreeper.vampireapp.controller.CreateStringDialog;
-import com.deepercreeper.vampireapp.controller.CreateStringDialog.CreationListener;
-import com.deepercreeper.vampireapp.controller.NatureController;
-import com.deepercreeper.vampireapp.controller.Path;
-import com.deepercreeper.vampireapp.controller.PathController;
 import com.deepercreeper.vampireapp.controller.backgrounds.BackgroundController;
 import com.deepercreeper.vampireapp.controller.descriptions.DescriptionController;
 import com.deepercreeper.vampireapp.controller.descriptions.DescriptionValue;
+import com.deepercreeper.vampireapp.controller.dialog.CreateStringDialog;
+import com.deepercreeper.vampireapp.controller.dialog.CreateStringDialog.CreationListener;
 import com.deepercreeper.vampireapp.controller.disciplines.DisciplineController;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
+import com.deepercreeper.vampireapp.controller.lists.ClanController;
+import com.deepercreeper.vampireapp.controller.lists.NatureController;
+import com.deepercreeper.vampireapp.controller.lists.Path;
+import com.deepercreeper.vampireapp.controller.lists.PathController;
 import com.deepercreeper.vampireapp.controller.properties.PropertyController;
 import com.deepercreeper.vampireapp.controller.simplesItems.SimpleController;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
+/**
+ * This controls the whole vampire app and all of its actions.
+ * 
+ * @author vrl
+ */
 public class Vampire
 {
 	private enum State
@@ -67,6 +72,12 @@ public class Vampire
 	
 	private State						mState;
 	
+	/**
+	 * Creates a new vampire.
+	 * 
+	 * @param aActivity
+	 *            The parent activity.
+	 */
 	public Vampire(final MainActivity aActivity)
 	{
 		mActivity = aActivity;
@@ -84,6 +95,9 @@ public class Vampire
 		setState(State.MAIN);
 	}
 	
+	/**
+	 * Invoked when the back button is hit.
+	 */
 	public void back()
 	{
 		switch (mState)
@@ -103,11 +117,20 @@ public class Vampire
 		}
 	}
 	
+	/**
+	 * @return the current context.
+	 */
 	public Context getContext()
 	{
 		return mActivity;
 	}
 	
+	/**
+	 * Sets the number of currently free points.
+	 * 
+	 * @param aValue
+	 *            The new value.
+	 */
 	public void setFreePoints(final int aValue)
 	{
 		((TextView) mActivity.getView(R.id.free_points_text)).setText("" + aValue);
@@ -115,6 +138,16 @@ public class Vampire
 		((Button) mActivity.getView(R.id.next_to_3_button)).setEnabled(aValue == 0);
 	}
 	
+	/**
+	 * Enables or disables the path spinner and point controller.
+	 * 
+	 * @param aEnabled
+	 *            Whether a path is selected.
+	 * @param aCanIncrease
+	 *            Whether increasing is possible.
+	 * @param aCanDecrease
+	 *            Whether decreasing is possible.
+	 */
 	public void setPathEnabled(final boolean aEnabled, final boolean aCanIncrease, final boolean aCanDecrease)
 	{
 		((ImageButton) mActivity.getView(R.id.decrease_path_button)).setEnabled(aCanDecrease && aEnabled);
@@ -122,11 +155,22 @@ public class Vampire
 		((Spinner) mActivity.getView(R.id.path_spinner)).setEnabled(aEnabled);
 	}
 	
+	/**
+	 * Sets the number of free points spent for the path.
+	 * 
+	 * @param aValue
+	 *            The value;
+	 */
 	public void setPathPoints(final int aValue)
 	{
 		((TextView) mActivity.getView(R.id.path_value)).setText("" + aValue);
 	}
 	
+	/**
+	 * Sets the state of this vampire.
+	 * 
+	 * @param aState
+	 */
 	public void setState(final State aState)
 	{
 		mState = aState;

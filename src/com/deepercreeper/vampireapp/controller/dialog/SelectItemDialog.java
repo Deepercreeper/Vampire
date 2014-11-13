@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.controller;
+package com.deepercreeper.vampireapp.controller.dialog;
 
 import java.util.HashMap;
 import java.util.List;

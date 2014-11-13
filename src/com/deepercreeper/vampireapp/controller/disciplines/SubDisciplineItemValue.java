@@ -14,8 +14,8 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.controller.CharMode;
-import com.deepercreeper.vampireapp.controller.SelectItemDialog;
-import com.deepercreeper.vampireapp.controller.SelectItemDialog.SelectionListener;
+import com.deepercreeper.vampireapp.controller.dialog.SelectItemDialog;
+import com.deepercreeper.vampireapp.controller.dialog.SelectItemDialog.SelectionListener;
 import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
@@ -46,8 +46,8 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	 * @param aPoints
 	 *            The caller for free or experience points.
 	 */
-	public SubDisciplineItemValue(final SubDisciplineItem aItem, final Context aContext, final UpdateAction aAction,
-			final DisciplineItemValueGroup aGroup, final CharMode aMode, final PointHandler aPoints)
+	public SubDisciplineItemValue(final SubDisciplineItem aItem, final Context aContext, final UpdateAction aAction, final DisciplineItemValueGroup aGroup, final CharMode aMode,
+			final PointHandler aPoints)
 	{
 		super(aItem, aContext, aAction, aGroup, aMode, aPoints);
 	}
@@ -61,7 +61,7 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 				return canDecreaseCreation();
 			case POINTS :
 				return getTempPoints() > 0;
-			case NORMAL :
+			case DESCRIPTIONS :
 				return false;
 		}
 		return false;
@@ -76,7 +76,7 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 				return canIncreaseValue();
 			case POINTS :
 				return canIncreaseValue() && getPoints().getPoints() >= getItem().getFreePointsCost();
-			case NORMAL :
+			case DESCRIPTIONS :
 				return canIncrease();
 		}
 		return false;
@@ -146,10 +146,7 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 				@Override
 				public void onClick(final View aV)
 				{
-					if (SelectItemDialog.isDialogOpen())
-					{
-						return;
-					}
+					if (SelectItemDialog.isDialogOpen()) { return; }
 					final List<SubDisciplineItem> items = new ArrayList<SubDisciplineItem>();
 					items.addAll(mParent.getItem().getSubItems());
 					for (final SubDisciplineItemValue value : mParent.getSubValues())
@@ -162,15 +159,13 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 						@Override
 						public void select(final SubDisciplineItem aItem)
 						{
-							final SubDisciplineItemValue value = new SubDisciplineItemValue(aItem, getContext(), getUpdateAction(), getGroup(),
-									getCreationMode(), getPoints());
+							final SubDisciplineItemValue value = new SubDisciplineItemValue(aItem, getContext(), getUpdateAction(), getGroup(), getCreationMode(), getPoints());
 							mParent.setSubValue(aValueIx, value);
 							value.initRow(aRow, aValueIx);
 						}
 					};
 					
-					SelectItemDialog.<SubDisciplineItem> showSelectionDialog(items, context.getResources().getString(R.string.edit_discipline),
-							context, action);
+					SelectItemDialog.<SubDisciplineItem> showSelectionDialog(items, context.getResources().getString(R.string.edit_discipline), context, action);
 				}
 			});
 			numberAndName.addView(mEditButton);
@@ -289,10 +284,7 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 				{
 					if (parentValue.hasSubDiscipline(i))
 					{
-						if (parentValue.getSubValue(i).getValue() > 0)
-						{
-							return false;
-						}
+						if (parentValue.getSubValue(i).getValue() > 0) { return false; }
 					}
 				}
 			}
@@ -304,10 +296,7 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	{
 		final DisciplineItemValue parentValue = getParent();
 		final boolean firstSubItem = parentValue.getSubValueIndex(this) == 0;
-		if (firstSubItem || parentValue.getSubValue(0).getValue() >= SubDisciplineItem.MIN_FIRST_SUB_VALUE)
-		{
-			return canIncrease();
-		}
+		if (firstSubItem || parentValue.getSubValue(0).getValue() >= SubDisciplineItem.MIN_FIRST_SUB_VALUE) { return canIncrease(); }
 		return false;
 	}
 }

@@ -6,10 +6,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+/**
+ * The main activity is the start class for the vampire app.<br>
+ * This just handles inputs and passes them to the vampire.
+ * 
+ * @author vrl
+ */
 public class MainActivity extends Activity
 {
 	private Vampire	mVampire;
 	
+	/**
+	 * Finds the view with the given id.
+	 * 
+	 * @param aId
+	 *            The view id.
+	 * @return the view with the given id.
+	 */
 	public View getView(final int aId)
 	{
 		return findViewById(aId);

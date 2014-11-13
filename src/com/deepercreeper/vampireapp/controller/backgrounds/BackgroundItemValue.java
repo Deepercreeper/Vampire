@@ -50,8 +50,7 @@ public class BackgroundItemValue extends ItemValueImpl<BackgroundItem, Backgroun
 	 * @param aPoints
 	 *            The points handler.
 	 */
-	public BackgroundItemValue(final BackgroundItem aItem, final Context aContext, final UpdateAction aAction, final BackgroundItemValueGroup aGroup,
-			final CharMode aMode, final PointHandler aPoints)
+	public BackgroundItemValue(final BackgroundItem aItem, final Context aContext, final UpdateAction aAction, final BackgroundItemValueGroup aGroup, final CharMode aMode, final PointHandler aPoints)
 	{
 		super(aItem, aContext, aAction, aGroup, aMode, aPoints);
 		mIncreaseButton = new ImageButton(aContext);
@@ -68,7 +67,7 @@ public class BackgroundItemValue extends ItemValueImpl<BackgroundItem, Backgroun
 				return canDecrease();
 			case POINTS :
 				return mTempPoints > 0;
-			case NORMAL :
+			case DESCRIPTIONS :
 				return false;
 		}
 		return false;
@@ -82,10 +81,9 @@ public class BackgroundItemValue extends ItemValueImpl<BackgroundItem, Backgroun
 			case MAIN :
 				return canIncrease() && mValue < getItem().getMaxStartValue();
 			case POINTS :
-				return canIncrease() && mValue + mTempPoints < getItem().getMaxStartValue()
-						&& getPoints().getPoints() >= getItem().getFreePointsCost();
-			case NORMAL :
-				return canIncrease();
+				return canIncrease() && mValue + mTempPoints < getItem().getMaxStartValue() && getPoints().getPoints() >= getItem().getFreePointsCost();
+			case DESCRIPTIONS :
+				return false;
 		}
 		return false;
 	}

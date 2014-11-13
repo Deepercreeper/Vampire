@@ -10,9 +10,9 @@ import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.ResizeAnimation;
 import com.deepercreeper.vampireapp.controller.CharMode;
-import com.deepercreeper.vampireapp.controller.Restriction;
 import com.deepercreeper.vampireapp.controller.implementations.VariableValueControllerImpl;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
+import com.deepercreeper.vampireapp.controller.restrictions.Restriction;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 /**
@@ -192,7 +192,7 @@ public class PropertyValueController extends VariableValueControllerImpl<Propert
 			case POINTS :
 				mProperties.updateValues(false, false);
 				break;
-			case NORMAL :
+			case DESCRIPTIONS :
 				mProperties.updateValues(false, false);
 				break;
 		}

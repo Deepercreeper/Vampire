@@ -17,8 +17,8 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.controller.CharMode;
-import com.deepercreeper.vampireapp.controller.SelectItemDialog;
-import com.deepercreeper.vampireapp.controller.SelectItemDialog.SelectionListener;
+import com.deepercreeper.vampireapp.controller.dialog.SelectItemDialog;
+import com.deepercreeper.vampireapp.controller.dialog.SelectItemDialog.SelectionListener;
 import com.deepercreeper.vampireapp.controller.implementations.ItemValueImpl;
 import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
 import com.deepercreeper.vampireapp.util.ViewUtil;
@@ -62,8 +62,7 @@ public class DisciplineItemValue extends ItemValueImpl<DisciplineItem, Disciplin
 	 * @param aPoints
 	 *            The caller for free or experience points.
 	 */
-	public DisciplineItemValue(final DisciplineItem aItem, final Context aContext, final UpdateAction aAction, final DisciplineItemValueGroup aGroup,
-			final CharMode aMode, final PointHandler aPoints)
+	public DisciplineItemValue(final DisciplineItem aItem, final Context aContext, final UpdateAction aAction, final DisciplineItemValueGroup aGroup, final CharMode aMode, final PointHandler aPoints)
 	{
 		super(aItem, aContext, aAction, aGroup, aMode, aPoints);
 		mContainer = new LinearLayout(getContext());
@@ -82,7 +81,7 @@ public class DisciplineItemValue extends ItemValueImpl<DisciplineItem, Disciplin
 				return canDecrease();
 			case POINTS :
 				return mTempPoints > 0;
-			case NORMAL :
+			case DESCRIPTIONS :
 				return false;
 		}
 		return false;
@@ -97,8 +96,8 @@ public class DisciplineItemValue extends ItemValueImpl<DisciplineItem, Disciplin
 				return canIncrease() && mValue < getItem().getMaxStartValue();
 			case POINTS :
 				return canIncrease() && getPoints().getPoints() >= getItem().getFreePointsCost();
-			case NORMAL :
-				return canIncrease();
+			case DESCRIPTIONS :
+				return false;
 		}
 		return false;
 	}
@@ -161,10 +160,7 @@ public class DisciplineItemValue extends ItemValueImpl<DisciplineItem, Disciplin
 	 */
 	public SubDisciplineItemValue getSubValue(final int aPos)
 	{
-		if (aPos >= mSubValues.size())
-		{
-			return null;
-		}
+		if (aPos >= mSubValues.size()) { return null; }
 		return mSubValues.get(aPos);
 	}
 	
@@ -179,10 +175,7 @@ public class DisciplineItemValue extends ItemValueImpl<DisciplineItem, Disciplin
 	{
 		for (int i = 0; i < mSubValues.size(); i++ )
 		{
-			if (aSubValue.equals(mSubValues.get(i)))
-			{
-				return i;
-			}
+			if (aSubValue.equals(mSubValues.get(i))) { return i; }
 		}
 		return -1;
 	}
@@ -409,10 +402,7 @@ public class DisciplineItemValue extends ItemValueImpl<DisciplineItem, Disciplin
 				@Override
 				public void onClick(final View aV)
 				{
-					if (SelectItemDialog.isDialogOpen())
-					{
-						return;
-					}
+					if (SelectItemDialog.isDialogOpen()) { return; }
 					final List<SubDisciplineItem> items = new ArrayList<SubDisciplineItem>();
 					items.addAll(getItem().getSubItems());
 					for (final SubDisciplineItemValue value : getSubValues())
@@ -425,14 +415,12 @@ public class DisciplineItemValue extends ItemValueImpl<DisciplineItem, Disciplin
 						@Override
 						public void select(final SubDisciplineItem aItem)
 						{
-							final SubDisciplineItemValue value = new SubDisciplineItemValue(aItem, getContext(), getUpdateAction(), getGroup(),
-									getCreationMode(), getPoints());
+							final SubDisciplineItemValue value = new SubDisciplineItemValue(aItem, getContext(), getUpdateAction(), getGroup(), getCreationMode(), getPoints());
 							setSubValue(aValueIx, value);
 							value.initRow(subRow, aValueIx);
 						}
 					};
-					SelectItemDialog.<SubDisciplineItem> showSelectionDialog(items, getContext().getResources().getString(R.string.edit_discipline),
-							getContext(), action);
+					SelectItemDialog.<SubDisciplineItem> showSelectionDialog(items, getContext().getResources().getString(R.string.edit_discipline), getContext(), action);
 				}
 			});
 			edit.setEnabled(getCreationMode() == CharMode.MAIN);

@@ -13,6 +13,11 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
+/**
+ * The insanity controller handles the list of insanities and updates all UI views after changes.
+ * 
+ * @author vrl
+ */
 public class InsanityController
 {
 	private final List<String>	mInsanities	= new ArrayList<String>();
@@ -21,11 +26,23 @@ public class InsanityController
 	
 	private final Context		mContext;
 	
+	/**
+	 * Creates a new insanity controller.
+	 * 
+	 * @param aContext
+	 *            The context.
+	 */
 	public InsanityController(final Context aContext)
 	{
 		mContext = aContext;
 	}
 	
+	/**
+	 * Adds a new insanity to the list.
+	 * 
+	 * @param aInsanity
+	 *            The new insanity.
+	 */
 	public void addInsanity(final String aInsanity)
 	{
 		if ( !mInsanities.contains(aInsanity))
@@ -36,28 +53,49 @@ public class InsanityController
 		}
 	}
 	
+	/**
+	 * Removes all insanities and updates the UI.
+	 */
 	public void clear()
 	{
 		mTable.removeAllViews();
 		mInsanities.clear();
 	}
 	
+	/**
+	 * @return a list of all insanities.
+	 */
 	public List<String> getInsanities()
 	{
 		return mInsanities;
 	}
 	
+	/**
+	 * Uses the given table as UI container and adds insanity representing view to it.
+	 * 
+	 * @param aTable
+	 *            The table.
+	 */
 	public void init(final TableLayout aTable)
 	{
 		mTable = aTable;
 	}
 	
+	/**
+	 * Releases the current table.
+	 */
 	public void release()
 	{
 		clear();
 		mTable = null;
 	}
 	
+	/**
+	 * Removes the given insanity from the list.
+	 * 
+	 * @param aInsanity
+	 *            The insanity to remove.
+	 */
 	public void remove(final String aInsanity)
 	{
 		if (mInsanities.contains(aInsanity))

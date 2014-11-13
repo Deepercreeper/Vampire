@@ -3,8 +3,8 @@ package com.deepercreeper.vampireapp.controller.interfaces;
 import android.content.Context;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.controller.CharMode;
-import com.deepercreeper.vampireapp.controller.Restrictionable;
 import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
+import com.deepercreeper.vampireapp.controller.restrictions.Restrictionable;
 
 /**
  * Each item can be instantiated. That creates an item value.<br>

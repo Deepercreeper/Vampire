@@ -50,8 +50,7 @@ public class SimpleItemValue extends ItemValueImpl<SimpleItem, SimpleItemValue>
 	 * @param aPoints
 	 *            The points handler.
 	 */
-	public SimpleItemValue(final SimpleItem aItem, final Context aContext, final UpdateAction aAction, final SimpleItemValueGroup aGroup,
-			final CharMode aMode, final PointHandler aPoints)
+	public SimpleItemValue(final SimpleItem aItem, final Context aContext, final UpdateAction aAction, final SimpleItemValueGroup aGroup, final CharMode aMode, final PointHandler aPoints)
 	{
 		super(aItem, aContext, aAction, aGroup, aMode, aPoints);
 		mValueDisplay = new RadioButton[getItem().getMaxValue()];
@@ -71,7 +70,7 @@ public class SimpleItemValue extends ItemValueImpl<SimpleItem, SimpleItemValue>
 				return canDecrease();
 			case POINTS :
 				return mTempPoints > 0;
-			case NORMAL :
+			case DESCRIPTIONS :
 				return false;
 		}
 		return false;
@@ -86,8 +85,8 @@ public class SimpleItemValue extends ItemValueImpl<SimpleItem, SimpleItemValue>
 				return canIncrease() && mValue < getItem().getMaxStartValue();
 			case POINTS :
 				return canIncrease() && getPoints().getPoints() >= getItem().getFreePointsCost();
-			case NORMAL :
-				return canIncrease();
+			case DESCRIPTIONS :
+				return false;
 		}
 		return false;
 	}
