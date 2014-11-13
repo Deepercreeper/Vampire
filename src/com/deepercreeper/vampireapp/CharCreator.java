@@ -27,7 +27,7 @@ public class CharCreator
 {
 	public static final int						MIN_GENERATION	= 8, MAX_GENERATION = 12, START_FREE_POINTS = 15;
 	
-	private static final int					MAX_VOLITION_POINTS	= 20, MAX_PATH_POINTS = 10, DEFAULT_GENERATION = 12, START_VOLITION_POINTS = 5;
+	private static final int					MAX_VOLITION_POINTS	= 20, MAX_PATH_POINTS = 10, START_VOLITION_POINTS = 5;
 	
 	private static final int					START_PATH_POINTS	= 5, VOLITION_POINTS_COST = 2, PATH_POINTS_COST = 1;
 	
@@ -65,9 +65,8 @@ public class CharCreator
 	
 	private final InsanityController			mInsanities;
 	
-	public CharCreator(final Vampire aVampire, final DisciplineController aDisciplines, final PropertyController aProperties,
-			final BackgroundController aBackgrounds, final SimpleController aSimpleItems, final Nature aNature, final Nature aBehavior,
-			final Clan aClan, final DescriptionController aDescriptions)
+	public CharCreator(final Vampire aVampire, final DisciplineController aDisciplines, final PropertyController aProperties, final BackgroundController aBackgrounds,
+			final SimpleController aSimpleItems, final Nature aNature, final Nature aBehavior, final Clan aClan, final DescriptionController aDescriptions)
 	{
 		mVampire = aVampire;
 		final PointHandler points = new PointHandler()
@@ -440,7 +439,6 @@ public class CharCreator
 	
 	private void updateVolitionEnabled()
 	{
-		mVampire.setVolitionEnabled(mVolitionPoints < MAX_VOLITION_POINTS && mFreePoints >= VOLITION_POINTS_COST,
-				mVolitionPoints > START_VOLITION_POINTS);
+		mVampire.setVolitionEnabled(mVolitionPoints < MAX_VOLITION_POINTS && mFreePoints >= VOLITION_POINTS_COST, mVolitionPoints > START_VOLITION_POINTS);
 	}
 }
