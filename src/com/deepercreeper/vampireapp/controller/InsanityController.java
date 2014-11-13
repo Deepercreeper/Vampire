@@ -1,7 +1,9 @@
 package com.deepercreeper.vampireapp.controller;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import android.content.Context;
 import android.text.TextUtils.TruncateAt;
 import android.view.Gravity;
@@ -11,6 +13,9 @@ import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import com.deepercreeper.vampireapp.CharCreator;
+import com.deepercreeper.vampireapp.controller.restrictions.Restriction;
+import com.deepercreeper.vampireapp.controller.restrictions.Restrictionable;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 /**
@@ -18,23 +23,30 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  * 
  * @author vrl
  */
-public class InsanityController
+public class InsanityController implements Restrictionable
 {
-	private final List<String>	mInsanities	= new ArrayList<String>();
+	private final List<String>		mInsanities		= new ArrayList<String>();
 	
-	private TableLayout			mTable;
+	private TableLayout				mTable;
 	
-	private final Context		mContext;
+	private final Context			mContext;
+	
+	private final CharCreator		mCreator;
+	
+	private final Set<Restriction>	mRestrictions	= new HashSet<Restriction>();
 	
 	/**
 	 * Creates a new insanity controller.
 	 * 
 	 * @param aContext
 	 *            The context.
+	 * @param aCreator
+	 *            The character creator.
 	 */
-	public InsanityController(final Context aContext)
+	public InsanityController(final Context aContext, CharCreator aCreator)
 	{
 		mContext = aContext;
+		mCreator = aCreator;
 	}
 	
 	/**
@@ -50,6 +62,7 @@ public class InsanityController
 			mInsanities.add(aInsanity);
 			final int index = mInsanities.indexOf(aInsanity);
 			mTable.addView(createRow(index), index);
+			update();
 		}
 	}
 	
@@ -141,5 +154,73 @@ public class InsanityController
 	{
 		mInsanities.remove(aIndex);
 		mTable.removeViewAt(aIndex);
+		update();
+	}
+	
+	@Override
+	public void removeRestriction(Restriction aRestriction)
+	{
+		mRestrictions.remove(aRestriction);
+		update();
+	}
+	
+	@Override
+	public void addRestriction(Restriction aRestriction)
+	{
+		mRestrictions.add(aRestriction);
+		update();
+	}
+	
+	/**
+	 * @return whether the restrictions are hold currently.
+	 */
+	public boolean insanitiesOk()
+	{
+		return mInsanities.size() >= getMinValue() && mInsanities.size() <= getMaxValue();
+	}
+	
+	private void update()
+	{
+		mCreator.setInsanitiesOk(insanitiesOk());
+	}
+	
+	@Override
+	public Set<Restriction> getRestrictions()
+	{
+		return mRestrictions;
+	}
+	
+	@Override
+	public boolean hasRestrictions()
+	{
+		return !mRestrictions.isEmpty();
+	}
+	
+	@Override
+	public int getMinValue()
+	{
+		int minValue = -1;
+		for (final Restriction restriction : mRestrictions)
+		{
+			if (restriction.getMinValue() > minValue)
+			{
+				minValue = restriction.getMinValue();
+			}
+		}
+		return minValue;
+	}
+	
+	@Override
+	public int getMaxValue()
+	{
+		int maxValue = Integer.MAX_VALUE;
+		for (final Restriction restriction : mRestrictions)
+		{
+			if (restriction.getMaxValue() < maxValue)
+			{
+				maxValue = restriction.getMaxValue();
+			}
+		}
+		return maxValue;
 	}
 }

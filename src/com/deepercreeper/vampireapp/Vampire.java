@@ -139,6 +139,20 @@ public class Vampire
 	}
 	
 	/**
+	 * Sets whether the next button inside the third creation panel is enabled.
+	 * 
+	 * @param aOk
+	 *            Whether the insanities are OK.
+	 */
+	public void setInsanitiesOk(boolean aOk)
+	{
+		if (mState == State.CREATE_CHAR_3)
+		{
+			mActivity.getView(R.id.next_to_4_button).setEnabled(aOk);
+		}
+	}
+	
+	/**
 	 * Enables or disables the path spinner and point controller.
 	 * 
 	 * @param aEnabled
@@ -490,6 +504,8 @@ public class Vampire
 		mCharCreator.releaseViews();
 		mCharCreator.setCreationMode(CharMode.DESCRIPTIONS);
 		
+		setInsanitiesOk(mCharCreator.insanitiesOk());
+		
 		final TableLayout descriptionsPanel = (TableLayout) mActivity.getView(R.id.description_values_panel);
 		for (final ItemValue<?> value : mCharCreator.getDescriptionValues())
 		{
@@ -514,9 +530,9 @@ public class Vampire
 			{
 				
 				@Override
-				public void onTextChanged(final CharSequence aS, final int aStart, final int aBefore, final int aCount)
+				public void afterTextChanged(final Editable aS)
 				{
-					return;
+					value.setDescription(description.getText().toString());
 				}
 				
 				@Override
@@ -526,9 +542,9 @@ public class Vampire
 				}
 				
 				@Override
-				public void afterTextChanged(final Editable aS)
+				public void onTextChanged(final CharSequence aS, final int aStart, final int aBefore, final int aCount)
 				{
-					value.setDescription(description.getText().toString());
+					return;
 				}
 			});
 			row.addView(description);
@@ -559,9 +575,9 @@ public class Vampire
 			{
 				
 				@Override
-				public void onTextChanged(final CharSequence aS, final int aStart, final int aBefore, final int aCount)
+				public void afterTextChanged(final Editable aS)
 				{
-					return;
+					description.setValue(value.getText().toString());
 				}
 				
 				@Override
@@ -571,9 +587,9 @@ public class Vampire
 				}
 				
 				@Override
-				public void afterTextChanged(final Editable aS)
+				public void onTextChanged(final CharSequence aS, final int aStart, final int aBefore, final int aCount)
 				{
-					description.setValue(value.getText().toString());
+					return;
 				}
 			});
 			row.addView(value);

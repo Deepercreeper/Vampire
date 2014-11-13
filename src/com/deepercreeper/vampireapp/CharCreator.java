@@ -148,7 +148,7 @@ public class CharCreator
 		mBackgrounds = new BackgroundValueController(aBackgrounds, mVampire.getContext(), CharMode.MAIN, points, updateOthers);
 		mSimpleValues = new SimpleValueController(aSimpleItems, mVampire.getContext(), CharMode.MAIN, points, updateOthers);
 		mDescriptions = new DescriptionValueController(aDescriptions);
-		mInsanities = new InsanityController(mVampire.getContext());
+		mInsanities = new InsanityController(mVampire.getContext(), this);
 		mGeneration = new GenerationController(mVampire.getContext(), this);
 		mNature = aNature;
 		mBehavior = aBehavior;
@@ -391,6 +391,14 @@ public class CharCreator
 	}
 	
 	/**
+	 * @return whether the insanities are currently OK.
+	 */
+	public boolean insanitiesOk()
+	{
+		return mInsanities.insanitiesOk();
+	}
+	
+	/**
 	 * Releases the insanities table.
 	 */
 	public void releaseInsanities()
@@ -523,6 +531,17 @@ public class CharCreator
 	}
 	
 	/**
+	 * Sets whether the insanities are currently OK.
+	 * 
+	 * @param aOk
+	 *            Whether the are OK.
+	 */
+	public void setInsanitiesOk(boolean aOk)
+	{
+		mVampire.setInsanitiesOk(aOk);
+	}
+	
+	/**
 	 * Sets the current character name.
 	 * 
 	 * @param aName
@@ -586,7 +605,8 @@ public class CharCreator
 				}
 			}
 			else if (key.equals(RestrictionKey.INSANITY.getKey()))
-			{
+			{	
+				
 				// TODO Restrict the number of insanities
 			}
 			else if (key.equals(RestrictionKey.VOLITION.getKey()))
