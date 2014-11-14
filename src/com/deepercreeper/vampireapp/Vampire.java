@@ -32,7 +32,7 @@ import com.deepercreeper.vampireapp.controller.interfaces.ItemCreationValue;
 import com.deepercreeper.vampireapp.controller.lists.ClanController;
 import com.deepercreeper.vampireapp.controller.lists.NatureController;
 import com.deepercreeper.vampireapp.controller.lists.Path;
-import com.deepercreeper.vampireapp.controller.lists.PathController;
+import com.deepercreeper.vampireapp.controller.lists.PathCreationController;
 import com.deepercreeper.vampireapp.controller.properties.PropertyController;
 import com.deepercreeper.vampireapp.controller.simplesItems.SimpleController;
 import com.deepercreeper.vampireapp.creation.CharCreator;
@@ -65,7 +65,7 @@ public class Vampire
 	
 	private final ClanController		mClans;
 	
-	private final PathController		mPaths;
+	private final PathCreationController		mPaths;
 	
 	private final DescriptionController	mDescriptions;
 	
@@ -87,7 +87,7 @@ public class Vampire
 		mBackgrounds = new BackgroundController(mActivity.getResources());
 		mSimpleItems = new SimpleController(mActivity.getResources());
 		mClans = new ClanController(mActivity.getResources(), mDisciplines);
-		mPaths = new PathController(mActivity.getResources());
+		mPaths = new PathCreationController(mActivity.getResources());
 		mNatures = new NatureController(mActivity.getResources());
 		mDescriptions = new DescriptionController(mActivity.getResources());
 		

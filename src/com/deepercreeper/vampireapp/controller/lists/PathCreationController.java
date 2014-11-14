@@ -11,7 +11,7 @@ import com.deepercreeper.vampireapp.controller.implementations.ListControllerImp
  * 
  * @author vrl
  */
-public class PathController extends ListControllerImpl<Path>
+public class PathCreationController extends ListControllerImpl<Path>
 {
 	/**
 	 * Creates a new path controller.
@@ -19,7 +19,7 @@ public class PathController extends ListControllerImpl<Path>
 	 * @param aResources
 	 *            The resources.
 	 */
-	public PathController(final Resources aResources)
+	public PathCreationController(final Resources aResources)
 	{
 		final List<Path> paths = new ArrayList<Path>();
 		for (final String path : aResources.getStringArray(R.array.paths))

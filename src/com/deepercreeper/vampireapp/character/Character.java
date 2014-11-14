@@ -20,15 +20,21 @@ public class Character
 	
 	private final VolitionController			mVolition;
 	
+	private final ExperienceController			mEP;
+	
+	private final PathController				mPath;
+	
 	public Character(final CharCreator aCreator)
 	{
-		mGeneration = new GenerationValueController();
+		mGeneration = new GenerationValueController(aCreator.getGeneration().getGeneration());
 		mSimpleValues = new SimpleValueController();
 		mDisciplines = new DisciplineValueController();
 		mBackgrounds = new BackgroundValueController();
 		mProperties = new PropertyValueController();
-		mDescriptions = new DescriptionValueController();
+		mDescriptions = new DescriptionValueController(aCreator.getDescriptions());
 		mInsanities = new InsanityValueController();
-		mVolition = new VolitionController();
+		mVolition = new VolitionController(aCreator.getVolitionPoints());
+		mEP = new ExperienceController();
+		mPath = new PathController(aCreator.getPath(), aCreator.getPathPoints());
 	}
 }
