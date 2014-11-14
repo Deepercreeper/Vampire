@@ -13,7 +13,7 @@ import com.deepercreeper.vampireapp.creation.CharMode;
  * @param <T>
  *            The item type.
  */
-public interface ValueController <T extends Item>
+public interface CreationValueController <T extends Item>
 {
 	/**
 	 * Used to call the number of points from the parent.
@@ -67,7 +67,7 @@ public interface ValueController <T extends Item>
 	/**
 	 * @return a list of all values, that need a description and have more than 0 as value.
 	 */
-	public List<ItemValue<T>> getDescriptionValues();
+	public List<ItemCreationValue<T>> getDescriptionValues();
 	
 	/**
 	 * @return the point handler of this value controller.

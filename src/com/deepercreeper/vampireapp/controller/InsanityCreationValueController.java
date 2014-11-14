@@ -23,7 +23,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  * 
  * @author vrl
  */
-public class InsanityController implements Restrictionable
+public class InsanityCreationValueController implements Restrictionable
 {
 	private final List<String>		mInsanities		= new ArrayList<String>();
 	
@@ -43,7 +43,7 @@ public class InsanityController implements Restrictionable
 	 * @param aCreator
 	 *            The character creator.
 	 */
-	public InsanityController(final Context aContext, CharCreator aCreator)
+	public InsanityCreationValueController(final Context aContext, CharCreator aCreator)
 	{
 		mContext = aContext;
 		mCreator = aCreator;

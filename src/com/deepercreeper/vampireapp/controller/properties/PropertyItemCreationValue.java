@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.controller.simplesItems;
+package com.deepercreeper.vampireapp.controller.properties;
 
 import android.content.Context;
 import android.text.TextUtils.TruncateAt;
@@ -10,22 +10,18 @@ import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.TableRow;
 import android.widget.TextView;
-import com.deepercreeper.vampireapp.controller.implementations.ItemValueImpl;
-import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
+import com.deepercreeper.vampireapp.controller.implementations.ItemCreationValueImpl;
+import com.deepercreeper.vampireapp.controller.interfaces.CreationValueController.PointHandler;
 import com.deepercreeper.vampireapp.creation.CharMode;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 /**
- * The value instance of the simple item.
+ * The value instance of the property item.
  * 
  * @author Vincent
  */
-public class SimpleItemValue extends ItemValueImpl<SimpleItem, SimpleItemValue>
+public class PropertyItemCreationValue extends ItemCreationValueImpl<PropertyItem, PropertyItemCreationValue>
 {
-	private int					mValue;
-	
-	private int					mTempPoints;
-	
 	private final ImageButton	mIncreaseButton;
 	
 	private final ImageButton	mDecreaseButton;
@@ -34,8 +30,10 @@ public class SimpleItemValue extends ItemValueImpl<SimpleItem, SimpleItemValue>
 	
 	private final TableRow		mContainer;
 	
+	private int					mValueId;
+	
 	/**
-	 * Creates a new simple item value.
+	 * Creates a new property item value.
 	 * 
 	 * @param aItem
 	 *            The item type.
@@ -47,18 +45,48 @@ public class SimpleItemValue extends ItemValueImpl<SimpleItem, SimpleItemValue>
 	 *            The parent group.
 	 * @param aMode
 	 *            The current creation mode.
-	 * @param aPoints
-	 *            The points handler.
 	 */
-	public SimpleItemValue(final SimpleItem aItem, final Context aContext, final UpdateAction aAction, final SimpleItemValueGroup aGroup, final CharMode aMode, final PointHandler aPoints)
+	public PropertyItemCreationValue(final PropertyItem aItem, final Context aContext, final UpdateAction aAction, final PropertyItemCreationValueGroup aGroup, final CharMode aMode)
 	{
-		super(aItem, aContext, aAction, aGroup, aMode, aPoints);
-		mValueDisplay = new RadioButton[getItem().getMaxValue()];
-		mContainer = new TableRow(getContext());
-		mIncreaseButton = new ImageButton(getContext());
-		mDecreaseButton = new ImageButton(getContext());
-		mValue = getItem().getStartValue();
+		super(aItem, aContext, aAction, aGroup, aMode, null);
+		mIncreaseButton = new ImageButton(aContext);
+		mDecreaseButton = new ImageButton(aContext);
+		mContainer = new TableRow(aContext);
+		mValueDisplay = new RadioButton[getItem().getValue(getItem().getMaxValue())];
+		mValueId = getItem().getStartValue();
 		init();
+	}
+	
+	@Override
+	protected void updateRestrictions()
+	{
+		final int minValue = getMinValue();
+		final int maxValue = getMaxValue();
+		
+		if (minValue > mValueId)
+		{
+			mValueId = minValue;
+		}
+		if (maxValue < mValueId)
+		{
+			mValueId = maxValue;
+		}
+		refreshValue();
+		getUpdateAction().update();
+	}
+	
+	@Override
+	protected void resetRestrictions()
+	{
+		mValueId = getItem().getStartValue();
+		refreshValue();
+		getUpdateAction().update();
+	}
+	
+	@Override
+	public boolean canDecrease()
+	{
+		return mValueId > getItem().getStartValue() && mValueId > getMinValue();
 	}
 	
 	@Override
@@ -69,11 +97,17 @@ public class SimpleItemValue extends ItemValueImpl<SimpleItem, SimpleItemValue>
 			case MAIN :
 				return canDecrease();
 			case POINTS :
-				return mTempPoints > 0;
+				return false;
 			case DESCRIPTIONS :
 				return false;
 		}
 		return false;
+	}
+	
+	@Override
+	public boolean canIncrease()
+	{
+		return mValueId < getItem().getMaxValue() && mValueId < getMaxValue();
 	}
 	
 	@Override
@@ -82,9 +116,9 @@ public class SimpleItemValue extends ItemValueImpl<SimpleItem, SimpleItemValue>
 		switch (aMode)
 		{
 			case MAIN :
-				return canIncrease() && mValue < getItem().getMaxStartValue();
+				return canIncrease() && mValueId < getItem().getMaxStartValue();
 			case POINTS :
-				return canIncrease() && getPoints().getPoints() >= getItem().getFreePointsCost();
+				return false;
 			case DESCRIPTIONS :
 				return false;
 		}
@@ -92,45 +126,11 @@ public class SimpleItemValue extends ItemValueImpl<SimpleItem, SimpleItemValue>
 	}
 	
 	@Override
-	protected void updateRestrictions()
-	{
-		final int minValue = getMinValue();
-		final int maxValue = getMaxValue();
-		
-		if (minValue > mValue)
-		{
-			mValue = minValue;
-		}
-		if (maxValue < mValue)
-		{
-			mValue = maxValue;
-		}
-		refreshValue();
-		getUpdateAction().update();
-	}
-	
-	@Override
-	protected void resetRestrictions()
-	{
-		mValue = getItem().getStartValue();
-		refreshValue();
-		getUpdateAction().update();
-	}
-	
-	@Override
 	public void decrease()
 	{
 		if (canDecrease())
 		{
-			if (getCreationMode() == CharMode.POINTS)
-			{
-				mTempPoints-- ;
-				getPoints().increase(getItem().getFreePointsCost());
-			}
-			else
-			{
-				mValue-- ;
-			}
+			mValueId-- ;
 		}
 	}
 	
@@ -140,16 +140,32 @@ public class SimpleItemValue extends ItemValueImpl<SimpleItem, SimpleItemValue>
 		return mContainer;
 	}
 	
+	/**
+	 * @return the current value specified in {@link PropertyItem#getFinalValue(int)}.
+	 */
+	public int getFinalValue()
+	{
+		return getItem().getFinalValue(mValueId);
+	}
+	
 	@Override
 	public int getTempPoints()
 	{
-		return mTempPoints;
+		return 0;
 	}
 	
 	@Override
 	public int getValue()
 	{
-		return mValue + mTempPoints;
+		return getItem().getValue(mValueId);
+	}
+	
+	/**
+	 * @return the current value id.
+	 */
+	public int getValueId()
+	{
+		return mValueId;
 	}
 	
 	@Override
@@ -157,15 +173,7 @@ public class SimpleItemValue extends ItemValueImpl<SimpleItem, SimpleItemValue>
 	{
 		if (canIncrease())
 		{
-			if (getCreationMode() == CharMode.POINTS)
-			{
-				mTempPoints++ ;
-				getPoints().decrease(getItem().getFreePointsCost());
-			}
-			else
-			{
-				mValue++ ;
-			}
+			mValueId++ ;
 		}
 	}
 	
@@ -184,8 +192,7 @@ public class SimpleItemValue extends ItemValueImpl<SimpleItem, SimpleItemValue>
 	@Override
 	public void resetTempPoints()
 	{
-		mTempPoints = 0;
-		refreshValue();
+		return;
 	}
 	
 	@Override
@@ -200,16 +207,22 @@ public class SimpleItemValue extends ItemValueImpl<SimpleItem, SimpleItemValue>
 		mIncreaseButton.setEnabled(aEnabled);
 	}
 	
+	@Override
+	public void setPoints(final PointHandler aPoints)
+	{
+		return;
+	}
+	
 	private void init()
 	{
-		mContainer.setLayoutParams(ViewUtil.instance().getTableWrapAll());
+		mContainer.setLayoutParams(ViewUtil.instance().getWrapAll());
 		
 		final TextView valueName = new TextView(getContext());
-		valueName.setLayoutParams(ViewUtil.instance().getRowNameLong());
-		valueName.setText(getItem().getName());
+		valueName.setLayoutParams(ViewUtil.instance().getRowNameShort());
 		valueName.setGravity(Gravity.CENTER_VERTICAL);
-		valueName.setSingleLine();
 		valueName.setEllipsize(TruncateAt.END);
+		valueName.setSingleLine();
+		valueName.setText(getItem().getName());
 		mContainer.addView(valueName);
 		
 		final GridLayout spinnerGrid = new GridLayout(getContext());

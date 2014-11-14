@@ -3,10 +3,10 @@ package com.deepercreeper.vampireapp.controller.implementations;
 import android.content.Context;
 import com.deepercreeper.vampireapp.controller.interfaces.Item;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemGroup;
-import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
-import com.deepercreeper.vampireapp.controller.interfaces.ValueController;
-import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
-import com.deepercreeper.vampireapp.controller.interfaces.VariableValueGroup;
+import com.deepercreeper.vampireapp.controller.interfaces.ItemCreationValue;
+import com.deepercreeper.vampireapp.controller.interfaces.CreationValueController;
+import com.deepercreeper.vampireapp.controller.interfaces.CreationValueController.PointHandler;
+import com.deepercreeper.vampireapp.controller.interfaces.VariableCreationValueGroup;
 import com.deepercreeper.vampireapp.creation.CharMode;
 
 /**
@@ -18,8 +18,8 @@ import com.deepercreeper.vampireapp.creation.CharMode;
  * @param <S>
  *            The value type.
  */
-public abstract class VariableValueGroupImpl <T extends Item, S extends ItemValue<T>> extends ItemValueGroupImpl<T, S> implements
-		VariableValueGroup<T, S>
+public abstract class VariableCreationValueGroupImpl <T extends Item, S extends ItemCreationValue<T>> extends ItemCreationValueGroupImpl<T, S> implements
+		VariableCreationValueGroup<T, S>
 {
 	/**
 	 * Creates a new variable value group.
@@ -35,7 +35,7 @@ public abstract class VariableValueGroupImpl <T extends Item, S extends ItemValu
 	 * @param aPoints
 	 *            The point handler.
 	 */
-	public VariableValueGroupImpl(final ItemGroup<T> aGroup, final ValueController<T> aController, final Context aContext, final CharMode aMode,
+	public VariableCreationValueGroupImpl(final ItemGroup<T> aGroup, final CreationValueController<T> aController, final Context aContext, final CharMode aMode,
 			final PointHandler aPoints)
 	{
 		super(aGroup, aController, aContext, aMode, aPoints);

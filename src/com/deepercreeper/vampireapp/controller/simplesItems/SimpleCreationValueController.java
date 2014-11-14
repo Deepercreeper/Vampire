@@ -12,9 +12,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.controller.implementations.ValueControllerImpl;
-import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
-import com.deepercreeper.vampireapp.controller.interfaces.ItemValue.UpdateAction;
+import com.deepercreeper.vampireapp.controller.implementations.CreationValueControllerImpl;
+import com.deepercreeper.vampireapp.controller.interfaces.ItemCreationValue;
+import com.deepercreeper.vampireapp.controller.interfaces.ItemCreationValue.UpdateAction;
 import com.deepercreeper.vampireapp.controller.restrictions.Restriction;
 import com.deepercreeper.vampireapp.creation.CharMode;
 import com.deepercreeper.vampireapp.util.ResizeAnimation;
@@ -25,7 +25,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  * 
  * @author Vincent
  */
-public class SimpleValueController extends ValueControllerImpl<SimpleItem>
+public class SimpleCreationValueController extends CreationValueControllerImpl<SimpleItem>
 {
 	private Button										mShowAttributesPanel;
 	
@@ -45,15 +45,15 @@ public class SimpleValueController extends ValueControllerImpl<SimpleItem>
 	
 	private boolean										mInitializedVirtues		= false;
 	
-	private final HashMap<String, SimpleItemValueGroup>	mAttributes				= new HashMap<String, SimpleItemValueGroup>();
+	private final HashMap<String, SimpleItemCreationValueGroup>	mAttributes				= new HashMap<String, SimpleItemCreationValueGroup>();
 	
-	private final List<SimpleItemValueGroup>			mAttributesList			= new ArrayList<SimpleItemValueGroup>();
+	private final List<SimpleItemCreationValueGroup>			mAttributesList			= new ArrayList<SimpleItemCreationValueGroup>();
 	
-	private final HashMap<String, SimpleItemValueGroup>	mAbilities				= new HashMap<String, SimpleItemValueGroup>();
+	private final HashMap<String, SimpleItemCreationValueGroup>	mAbilities				= new HashMap<String, SimpleItemCreationValueGroup>();
 	
-	private final List<SimpleItemValueGroup>			mAbilitiesList			= new ArrayList<SimpleItemValueGroup>();
+	private final List<SimpleItemCreationValueGroup>			mAbilitiesList			= new ArrayList<SimpleItemCreationValueGroup>();
 	
-	private final SimpleItemValueGroup					mVirtues;
+	private final SimpleItemCreationValueGroup					mVirtues;
 	
 	/**
 	 * Creates a new simple value controller.
@@ -69,22 +69,22 @@ public class SimpleValueController extends ValueControllerImpl<SimpleItem>
 	 * @param aUpdateOthers
 	 *            The update others action.
 	 */
-	public SimpleValueController(final SimpleController aController, final Context aContext, final CharMode aMode, final PointHandler aPoints, final UpdateAction aUpdateOthers)
+	public SimpleCreationValueController(final SimpleController aController, final Context aContext, final CharMode aMode, final PointHandler aPoints, final UpdateAction aUpdateOthers)
 	{
 		super(aController, aContext, aMode, aPoints, aUpdateOthers);
 		for (final SimpleItemGroup group : getController().getAttributes())
 		{
-			final SimpleItemValueGroup valueGroup = new SimpleItemValueGroup(group, this, getContext(), getCreationMode(), getPoints());
+			final SimpleItemCreationValueGroup valueGroup = new SimpleItemCreationValueGroup(group, this, getContext(), getCreationMode(), getPoints());
 			mAttributes.put(group.getName(), valueGroup);
 			mAttributesList.add(valueGroup);
 		}
 		for (final SimpleItemGroup group : getController().getAbilities())
 		{
-			final SimpleItemValueGroup valueGroup = new SimpleItemValueGroup(group, this, getContext(), getCreationMode(), getPoints());
+			final SimpleItemCreationValueGroup valueGroup = new SimpleItemCreationValueGroup(group, this, getContext(), getCreationMode(), getPoints());
 			mAbilities.put(group.getName(), valueGroup);
 			mAbilitiesList.add(valueGroup);
 		}
-		mVirtues = new SimpleItemValueGroup(getController().getVirtues(), this, getContext(), getCreationMode(), getPoints());
+		mVirtues = new SimpleItemCreationValueGroup(getController().getVirtues(), this, getContext(), getCreationMode(), getPoints());
 	}
 	
 	@Override
@@ -108,8 +108,8 @@ public class SimpleValueController extends ValueControllerImpl<SimpleItem>
 	public void addRestriction(final Restriction aRestriction)
 	{
 		final String key = aRestriction.getKey();
-		SimpleItemValueGroup valueGroup = null;
-		for (final SimpleItemValueGroup group : mAttributesList)
+		SimpleItemCreationValueGroup valueGroup = null;
+		for (final SimpleItemCreationValueGroup group : mAttributesList)
 		{
 			if (group.hasValue(key))
 			{
@@ -119,7 +119,7 @@ public class SimpleValueController extends ValueControllerImpl<SimpleItem>
 		}
 		if (valueGroup == null)
 		{
-			for (final SimpleItemValueGroup group : mAbilitiesList)
+			for (final SimpleItemCreationValueGroup group : mAbilitiesList)
 			{
 				if (group.hasValue(key))
 				{
@@ -145,14 +145,14 @@ public class SimpleValueController extends ValueControllerImpl<SimpleItem>
 	}
 	
 	@Override
-	public List<ItemValue<SimpleItem>> getDescriptionValues()
+	public List<ItemCreationValue<SimpleItem>> getDescriptionValues()
 	{
-		final List<ItemValue<SimpleItem>> list = new ArrayList<ItemValue<SimpleItem>>();
-		for (final SimpleItemValueGroup group : mAttributesList)
+		final List<ItemCreationValue<SimpleItem>> list = new ArrayList<ItemCreationValue<SimpleItem>>();
+		for (final SimpleItemCreationValueGroup group : mAttributesList)
 		{
 			list.addAll(group.getDescriptionValues());
 		}
-		for (final SimpleItemValueGroup group : mAbilitiesList)
+		for (final SimpleItemCreationValueGroup group : mAbilitiesList)
 		{
 			list.addAll(group.getDescriptionValues());
 		}
@@ -188,7 +188,7 @@ public class SimpleValueController extends ValueControllerImpl<SimpleItem>
 				{
 					if ( !mInitializedAttributes)
 					{
-						for (final SimpleItemValueGroup valueGroup : mAttributesList)
+						for (final SimpleItemCreationValueGroup valueGroup : mAttributesList)
 						{
 							valueGroup.initLayout(attributes);
 						}
@@ -227,7 +227,7 @@ public class SimpleValueController extends ValueControllerImpl<SimpleItem>
 				{
 					if ( !mInitializedAbilities)
 					{
-						for (final SimpleItemValueGroup valueGroup : mAbilitiesList)
+						for (final SimpleItemCreationValueGroup valueGroup : mAbilitiesList)
 						{
 							valueGroup.initLayout(abilities);
 						}
@@ -288,11 +288,11 @@ public class SimpleValueController extends ValueControllerImpl<SimpleItem>
 	@Override
 	public void release()
 	{
-		for (final SimpleItemValueGroup group : mAttributesList)
+		for (final SimpleItemCreationValueGroup group : mAttributesList)
 		{
 			group.release();
 		}
-		for (final SimpleItemValueGroup group : mAbilitiesList)
+		for (final SimpleItemCreationValueGroup group : mAbilitiesList)
 		{
 			group.release();
 		}
@@ -302,11 +302,11 @@ public class SimpleValueController extends ValueControllerImpl<SimpleItem>
 	@Override
 	public void resetTempPoints()
 	{
-		for (final SimpleItemValueGroup group : mAttributesList)
+		for (final SimpleItemCreationValueGroup group : mAttributesList)
 		{
 			group.resetTempPoints();
 		}
-		for (final SimpleItemValueGroup group : mAbilitiesList)
+		for (final SimpleItemCreationValueGroup group : mAbilitiesList)
 		{
 			group.resetTempPoints();
 		}
@@ -317,11 +317,11 @@ public class SimpleValueController extends ValueControllerImpl<SimpleItem>
 	public void setCreationMode(final CharMode aMode)
 	{
 		super.setCreationMode(aMode);
-		for (final SimpleItemValueGroup valueGroup : mAttributesList)
+		for (final SimpleItemCreationValueGroup valueGroup : mAttributesList)
 		{
 			valueGroup.setCreationMode(aMode);
 		}
-		for (final SimpleItemValueGroup valueGroup : mAbilitiesList)
+		for (final SimpleItemCreationValueGroup valueGroup : mAbilitiesList)
 		{
 			valueGroup.setCreationMode(aMode);
 		}
@@ -349,11 +349,11 @@ public class SimpleValueController extends ValueControllerImpl<SimpleItem>
 	public void setPoints(final PointHandler aPoints)
 	{
 		super.setPoints(aPoints);
-		for (final SimpleItemValueGroup group : mAttributesList)
+		for (final SimpleItemCreationValueGroup group : mAttributesList)
 		{
 			group.setPoints(getPoints());
 		}
-		for (final SimpleItemValueGroup group : mAbilitiesList)
+		for (final SimpleItemCreationValueGroup group : mAbilitiesList)
 		{
 			group.setPoints(getPoints());
 		}
@@ -377,11 +377,11 @@ public class SimpleValueController extends ValueControllerImpl<SimpleItem>
 		}
 	}
 	
-	private boolean canIncreaseCreation(final SimpleItemValueGroup aGroup, final List<SimpleItemValueGroup> aGroups, final int[] aMaxValues)
+	private boolean canIncreaseCreation(final SimpleItemCreationValueGroup aGroup, final List<SimpleItemCreationValueGroup> aGroups, final int[] aMaxValues)
 	{
 		final int value = aGroup.getValue();
 		final HashSet<Integer> values = new HashSet<Integer>();
-		for (final SimpleItemValueGroup group : aGroups)
+		for (final SimpleItemCreationValueGroup group : aGroups)
 		{
 			if (group != aGroup)
 			{
@@ -410,7 +410,7 @@ public class SimpleValueController extends ValueControllerImpl<SimpleItem>
 		if (mInitializedAttributes)
 		{
 			maxValues = getController().getAttributeCreationValues();
-			for (final SimpleItemValueGroup group : mAttributesList)
+			for (final SimpleItemCreationValueGroup group : mAttributesList)
 			{
 				group.updateValues(canIncreaseCreation(group, mAttributesList, maxValues), true);
 			}
@@ -419,7 +419,7 @@ public class SimpleValueController extends ValueControllerImpl<SimpleItem>
 		if (mInitializedAbilities)
 		{
 			maxValues = getController().getAbilityCreationValues();
-			for (final SimpleItemValueGroup group : mAbilitiesList)
+			for (final SimpleItemCreationValueGroup group : mAbilitiesList)
 			{
 				group.updateValues(canIncreaseCreation(group, mAbilitiesList, maxValues), true);
 			}
@@ -435,7 +435,7 @@ public class SimpleValueController extends ValueControllerImpl<SimpleItem>
 	{
 		if (mInitializedAttributes)
 		{
-			for (final SimpleItemValueGroup group : mAttributesList)
+			for (final SimpleItemCreationValueGroup group : mAttributesList)
 			{
 				group.updateValues(true, true);
 			}
@@ -443,7 +443,7 @@ public class SimpleValueController extends ValueControllerImpl<SimpleItem>
 		
 		if (mInitializedAbilities)
 		{
-			for (final SimpleItemValueGroup group : mAbilitiesList)
+			for (final SimpleItemCreationValueGroup group : mAbilitiesList)
 			{
 				group.updateValues(true, true);
 			}
@@ -459,7 +459,7 @@ public class SimpleValueController extends ValueControllerImpl<SimpleItem>
 	{
 		if (mInitializedAttributes)
 		{
-			for (final SimpleItemValueGroup group : mAttributesList)
+			for (final SimpleItemCreationValueGroup group : mAttributesList)
 			{
 				group.updateValues(false, false);
 			}
@@ -467,7 +467,7 @@ public class SimpleValueController extends ValueControllerImpl<SimpleItem>
 		
 		if (mInitializedAbilities)
 		{
-			for (final SimpleItemValueGroup group : mAbilitiesList)
+			for (final SimpleItemCreationValueGroup group : mAbilitiesList)
 			{
 				group.updateValues(false, false);
 			}

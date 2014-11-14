@@ -14,8 +14,8 @@ import android.widget.TableRow;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.controller.dialog.SelectItemDialog;
 import com.deepercreeper.vampireapp.controller.dialog.SelectItemDialog.SelectionListener;
-import com.deepercreeper.vampireapp.controller.implementations.VariableValueGroupImpl;
-import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
+import com.deepercreeper.vampireapp.controller.implementations.VariableCreationValueGroupImpl;
+import com.deepercreeper.vampireapp.controller.interfaces.CreationValueController.PointHandler;
 import com.deepercreeper.vampireapp.creation.CharMode;
 import com.deepercreeper.vampireapp.util.ResizeAnimation;
 import com.deepercreeper.vampireapp.util.ViewUtil;
@@ -25,7 +25,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  * 
  * @author Vincent
  */
-public class BackgroundItemValueGroup extends VariableValueGroupImpl<BackgroundItem, BackgroundItemValue>
+public class BackgroundItemCreationValueGroup extends VariableCreationValueGroupImpl<BackgroundItem, BackgroundItemCreationValue>
 {
 	private LinearLayout	mBackgroundsPanel;
 	
@@ -45,7 +45,7 @@ public class BackgroundItemValueGroup extends VariableValueGroupImpl<BackgroundI
 	 * @param aPoints
 	 *            The caller for free or experience points.
 	 */
-	public BackgroundItemValueGroup(final BackgroundItemGroup aGroup, final BackgroundValueController aController, final Context aContext,
+	public BackgroundItemCreationValueGroup(final BackgroundItemGroup aGroup, final BackgroundCreationValueController aController, final Context aContext,
 			final CharMode aMode, final PointHandler aPoints)
 	{
 		super(aGroup, aController, aContext, aMode, aPoints);
@@ -54,7 +54,7 @@ public class BackgroundItemValueGroup extends VariableValueGroupImpl<BackgroundI
 	@Override
 	public void addItem(final BackgroundItem aItem)
 	{
-		addValue(new BackgroundItemValue(aItem, getContext(), getUpdateAction(), this, getCreationMode(), getPoints()));
+		addValue(new BackgroundItemCreationValue(aItem, getContext(), getUpdateAction(), this, getCreationMode(), getPoints()));
 		resize();
 	}
 	
@@ -64,7 +64,7 @@ public class BackgroundItemValueGroup extends VariableValueGroupImpl<BackgroundI
 	 * @param aValue
 	 *            The value to edit.
 	 */
-	public void editValue(final BackgroundItemValue aValue)
+	public void editValue(final BackgroundItemCreationValue aValue)
 	{
 		if (SelectItemDialog.isDialogOpen())
 		{
@@ -72,7 +72,7 @@ public class BackgroundItemValueGroup extends VariableValueGroupImpl<BackgroundI
 		}
 		final List<BackgroundItem> items = new ArrayList<BackgroundItem>();
 		items.addAll(getGroup().getItems());
-		for (final BackgroundItemValue value : getValuesList())
+		for (final BackgroundItemCreationValue value : getValuesList())
 		{
 			items.remove(value.getItem());
 		}
@@ -91,13 +91,13 @@ public class BackgroundItemValueGroup extends VariableValueGroupImpl<BackgroundI
 	}
 	
 	@Override
-	public HashMap<BackgroundItem, BackgroundItemValue> getValues()
+	public HashMap<BackgroundItem, BackgroundItemCreationValue> getValues()
 	{
 		return super.getValues();
 	}
 	
 	@Override
-	public List<BackgroundItemValue> getValuesList()
+	public List<BackgroundItemCreationValue> getValuesList()
 	{
 		return super.getValuesList();
 	}
@@ -130,7 +130,7 @@ public class BackgroundItemValueGroup extends VariableValueGroupImpl<BackgroundI
 					}
 					final List<BackgroundItem> items = new ArrayList<BackgroundItem>();
 					items.addAll(getGroup().getItems());
-					for (final BackgroundItemValue value : getValuesList())
+					for (final BackgroundItemCreationValue value : getValuesList())
 					{
 						items.remove(value.getItem());
 					}
@@ -153,7 +153,7 @@ public class BackgroundItemValueGroup extends VariableValueGroupImpl<BackgroundI
 		}
 		mBackgroundsTable.addView(titleRow);
 		
-		for (final BackgroundItemValue value : getValuesList())
+		for (final BackgroundItemCreationValue value : getValuesList())
 		{
 			final TableRow row = new TableRow(getContext());
 			value.initRow(row);
@@ -174,7 +174,7 @@ public class BackgroundItemValueGroup extends VariableValueGroupImpl<BackgroundI
 		}
 	}
 	
-	private void addValue(final BackgroundItemValue aValue)
+	private void addValue(final BackgroundItemCreationValue aValue)
 	{
 		getValuesList().add(aValue);
 		getValues().put(aValue.getItem(), aValue);
@@ -187,10 +187,10 @@ public class BackgroundItemValueGroup extends VariableValueGroupImpl<BackgroundI
 		getUpdateAction().update();
 	}
 	
-	private void setValue(final BackgroundItemValue aOldValue, final BackgroundItem aNewItem)
+	private void setValue(final BackgroundItemCreationValue aOldValue, final BackgroundItem aNewItem)
 	{
 		final int oldIndex = getValuesList().indexOf(aOldValue);
-		final BackgroundItemValue newValue = new BackgroundItemValue(aNewItem, getContext(), getUpdateAction(), this, getCreationMode(), getPoints());
+		final BackgroundItemCreationValue newValue = new BackgroundItemCreationValue(aNewItem, getContext(), getUpdateAction(), this, getCreationMode(), getPoints());
 		getValuesList().set(oldIndex, newValue);
 		getValues().remove(aOldValue.getItem());
 		getValues().put(aNewItem, newValue);

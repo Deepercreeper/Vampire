@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.controller.dialog.SelectItemDialog;
 import com.deepercreeper.vampireapp.controller.dialog.SelectItemDialog.SelectionListener;
-import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
+import com.deepercreeper.vampireapp.controller.interfaces.CreationValueController.PointHandler;
 import com.deepercreeper.vampireapp.creation.CharMode;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
@@ -24,9 +24,9 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  * 
  * @author Vincent
  */
-public class SubDisciplineItemValue extends DisciplineItemValue
+public class SubDisciplineItemCreationValue extends DisciplineItemCreationValue
 {
-	private DisciplineItemValue	mParent;
+	private DisciplineItemCreationValue	mParent;
 	
 	private ImageButton			mEditButton;
 	
@@ -46,7 +46,7 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	 * @param aPoints
 	 *            The caller for free or experience points.
 	 */
-	public SubDisciplineItemValue(final SubDisciplineItem aItem, final Context aContext, final UpdateAction aAction, final DisciplineItemValueGroup aGroup, final CharMode aMode,
+	public SubDisciplineItemCreationValue(final SubDisciplineItem aItem, final Context aContext, final UpdateAction aAction, final DisciplineItemCreationValueGroup aGroup, final CharMode aMode,
 			final PointHandler aPoints)
 	{
 		super(aItem, aContext, aAction, aGroup, aMode, aPoints);
@@ -85,9 +85,9 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	@Override
 	public boolean equals(final Object aO)
 	{
-		if (aO instanceof SubDisciplineItemValue)
+		if (aO instanceof SubDisciplineItemCreationValue)
 		{
-			final SubDisciplineItemValue value = (SubDisciplineItemValue) aO;
+			final SubDisciplineItemCreationValue value = (SubDisciplineItemCreationValue) aO;
 			return getItem().equals(value.getItem());
 		}
 		return false;
@@ -108,7 +108,7 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	/**
 	 * @return the parent discipline item value.
 	 */
-	public DisciplineItemValue getParent()
+	public DisciplineItemCreationValue getParent()
 	{
 		return mParent;
 	}
@@ -149,7 +149,7 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 					if (SelectItemDialog.isDialogOpen()) { return; }
 					final List<SubDisciplineItem> items = new ArrayList<SubDisciplineItem>();
 					items.addAll(mParent.getItem().getSubItems());
-					for (final SubDisciplineItemValue value : mParent.getSubValues())
+					for (final SubDisciplineItemCreationValue value : mParent.getSubValues())
 					{
 						items.remove(value.getItem());
 					}
@@ -159,7 +159,7 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 						@Override
 						public void select(final SubDisciplineItem aItem)
 						{
-							final SubDisciplineItemValue value = new SubDisciplineItemValue(aItem, getContext(), getUpdateAction(), getGroup(), getCreationMode(), getPoints());
+							final SubDisciplineItemCreationValue value = new SubDisciplineItemCreationValue(aItem, getContext(), getUpdateAction(), getGroup(), getCreationMode(), getPoints());
 							mParent.setSubValue(aValueIx, value);
 							value.initRow(aRow, aValueIx);
 						}
@@ -261,7 +261,7 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	 * @param aParent
 	 *            The new parent discipline.
 	 */
-	public void setParent(final DisciplineItemValue aParent)
+	public void setParent(final DisciplineItemCreationValue aParent)
 	{
 		mParent = aParent;
 	}
@@ -274,7 +274,7 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	
 	private boolean canDecreaseCreation()
 	{
-		final DisciplineItemValue parentValue = getParent();
+		final DisciplineItemCreationValue parentValue = getParent();
 		final boolean firstSubItem = parentValue.getSubValueIndex(this) == 0;
 		if (firstSubItem)
 		{
@@ -294,7 +294,7 @@ public class SubDisciplineItemValue extends DisciplineItemValue
 	
 	private boolean canIncreaseValue()
 	{
-		final DisciplineItemValue parentValue = getParent();
+		final DisciplineItemCreationValue parentValue = getParent();
 		final boolean firstSubItem = parentValue.getSubValueIndex(this) == 0;
 		if (firstSubItem || parentValue.getSubValue(0).getValue() >= SubDisciplineItem.MIN_FIRST_SUB_VALUE) { return canIncrease(); }
 		return false;

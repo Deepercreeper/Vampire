@@ -18,8 +18,8 @@ import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.controller.dialog.SelectItemDialog;
 import com.deepercreeper.vampireapp.controller.dialog.SelectItemDialog.SelectionListener;
-import com.deepercreeper.vampireapp.controller.implementations.ItemValueImpl;
-import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
+import com.deepercreeper.vampireapp.controller.implementations.ItemCreationValueImpl;
+import com.deepercreeper.vampireapp.controller.interfaces.CreationValueController.PointHandler;
 import com.deepercreeper.vampireapp.creation.CharMode;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
@@ -28,7 +28,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  * 
  * @author Vincent
  */
-public class DisciplineItemValue extends ItemValueImpl<DisciplineItem, DisciplineItemValue>
+public class DisciplineItemCreationValue extends ItemCreationValueImpl<DisciplineItem, DisciplineItemCreationValue>
 {
 	private int									mValue;
 	
@@ -44,7 +44,7 @@ public class DisciplineItemValue extends ItemValueImpl<DisciplineItem, Disciplin
 	
 	private final HashSet<ImageButton>			mEditButtons	= new HashSet<ImageButton>();
 	
-	private final List<SubDisciplineItemValue>	mSubValues		= new ArrayList<SubDisciplineItemValue>();
+	private final List<SubDisciplineItemCreationValue>	mSubValues		= new ArrayList<SubDisciplineItemCreationValue>();
 	
 	/**
 	 * Creates a new discipline item value.
@@ -62,7 +62,7 @@ public class DisciplineItemValue extends ItemValueImpl<DisciplineItem, Disciplin
 	 * @param aPoints
 	 *            The caller for free or experience points.
 	 */
-	public DisciplineItemValue(final DisciplineItem aItem, final Context aContext, final UpdateAction aAction, final DisciplineItemValueGroup aGroup, final CharMode aMode, final PointHandler aPoints)
+	public DisciplineItemCreationValue(final DisciplineItem aItem, final Context aContext, final UpdateAction aAction, final DisciplineItemCreationValueGroup aGroup, final CharMode aMode, final PointHandler aPoints)
 	{
 		super(aItem, aContext, aAction, aGroup, aMode, aPoints);
 		mContainer = new LinearLayout(getContext());
@@ -158,7 +158,7 @@ public class DisciplineItemValue extends ItemValueImpl<DisciplineItem, Disciplin
 	 *            The sub discipline position.
 	 * @return the sub discipline value at the given position.
 	 */
-	public SubDisciplineItemValue getSubValue(final int aPos)
+	public SubDisciplineItemCreationValue getSubValue(final int aPos)
 	{
 		if (aPos >= mSubValues.size()) { return null; }
 		return mSubValues.get(aPos);
@@ -171,7 +171,7 @@ public class DisciplineItemValue extends ItemValueImpl<DisciplineItem, Disciplin
 	 *            The sub value.
 	 * @return the sub discipline value index.
 	 */
-	public int getSubValueIndex(final SubDisciplineItemValue aSubValue)
+	public int getSubValueIndex(final SubDisciplineItemCreationValue aSubValue)
 	{
 		for (int i = 0; i < mSubValues.size(); i++ )
 		{
@@ -183,7 +183,7 @@ public class DisciplineItemValue extends ItemValueImpl<DisciplineItem, Disciplin
 	/**
 	 * @return a list of all sub discipline item values.
 	 */
-	public List<SubDisciplineItemValue> getSubValues()
+	public List<SubDisciplineItemCreationValue> getSubValues()
 	{
 		return mSubValues;
 	}
@@ -235,7 +235,7 @@ public class DisciplineItemValue extends ItemValueImpl<DisciplineItem, Disciplin
 	{
 		if (getItem().isParentItem())
 		{
-			for (final SubDisciplineItemValue subValue : mSubValues)
+			for (final SubDisciplineItemCreationValue subValue : mSubValues)
 			{
 				subValue.refreshValue();
 			}
@@ -251,7 +251,7 @@ public class DisciplineItemValue extends ItemValueImpl<DisciplineItem, Disciplin
 	{
 		if (getItem().isParentItem())
 		{
-			for (final SubDisciplineItemValue subValue : mSubValues)
+			for (final SubDisciplineItemCreationValue subValue : mSubValues)
 			{
 				subValue.release();
 			}
@@ -264,7 +264,7 @@ public class DisciplineItemValue extends ItemValueImpl<DisciplineItem, Disciplin
 	{
 		if (getItem().isParentItem())
 		{
-			for (final SubDisciplineItemValue subValue : mSubValues)
+			for (final SubDisciplineItemCreationValue subValue : mSubValues)
 			{
 				subValue.resetTempPoints();
 			}
@@ -286,7 +286,7 @@ public class DisciplineItemValue extends ItemValueImpl<DisciplineItem, Disciplin
 			{
 				editButton.setEnabled(getCreationMode() == CharMode.MAIN);
 			}
-			for (final SubDisciplineItemValue subValue : mSubValues)
+			for (final SubDisciplineItemCreationValue subValue : mSubValues)
 			{
 				subValue.setCreationMode(getCreationMode());
 			}
@@ -311,7 +311,7 @@ public class DisciplineItemValue extends ItemValueImpl<DisciplineItem, Disciplin
 		super.setPoints(aPoints);
 		if (getItem().isParentItem())
 		{
-			for (final SubDisciplineItemValue subValue : mSubValues)
+			for (final SubDisciplineItemCreationValue subValue : mSubValues)
 			{
 				subValue.setPoints(getPoints());
 			}
@@ -326,7 +326,7 @@ public class DisciplineItemValue extends ItemValueImpl<DisciplineItem, Disciplin
 	 * @param aSubValue
 	 *            The sub discipline value to set.
 	 */
-	public void setSubValue(final int aPos, final SubDisciplineItemValue aSubValue)
+	public void setSubValue(final int aPos, final SubDisciplineItemCreationValue aSubValue)
 	{
 		if (mSubValues.size() <= aPos)
 		{
@@ -345,9 +345,9 @@ public class DisciplineItemValue extends ItemValueImpl<DisciplineItem, Disciplin
 	}
 	
 	@Override
-	protected DisciplineItemValueGroup getGroup()
+	protected DisciplineItemCreationValueGroup getGroup()
 	{
-		return (DisciplineItemValueGroup) super.getGroup();
+		return (DisciplineItemCreationValueGroup) super.getGroup();
 	}
 	
 	protected ImageButton getIncreaseButton()
@@ -405,7 +405,7 @@ public class DisciplineItemValue extends ItemValueImpl<DisciplineItem, Disciplin
 					if (SelectItemDialog.isDialogOpen()) { return; }
 					final List<SubDisciplineItem> items = new ArrayList<SubDisciplineItem>();
 					items.addAll(getItem().getSubItems());
-					for (final SubDisciplineItemValue value : getSubValues())
+					for (final SubDisciplineItemCreationValue value : getSubValues())
 					{
 						items.remove(value.getItem());
 					}
@@ -415,7 +415,7 @@ public class DisciplineItemValue extends ItemValueImpl<DisciplineItem, Disciplin
 						@Override
 						public void select(final SubDisciplineItem aItem)
 						{
-							final SubDisciplineItemValue value = new SubDisciplineItemValue(aItem, getContext(), getUpdateAction(), getGroup(), getCreationMode(), getPoints());
+							final SubDisciplineItemCreationValue value = new SubDisciplineItemCreationValue(aItem, getContext(), getUpdateAction(), getGroup(), getCreationMode(), getPoints());
 							setSubValue(aValueIx, value);
 							value.initRow(subRow, aValueIx);
 						}

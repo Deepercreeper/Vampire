@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import android.content.Context;
 import android.view.ViewGroup;
-import com.deepercreeper.vampireapp.controller.interfaces.ItemValue.UpdateAction;
-import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
+import com.deepercreeper.vampireapp.controller.interfaces.ItemCreationValue.UpdateAction;
+import com.deepercreeper.vampireapp.controller.interfaces.CreationValueController.PointHandler;
 import com.deepercreeper.vampireapp.creation.CharMode;
 
 /**
@@ -17,7 +17,7 @@ import com.deepercreeper.vampireapp.creation.CharMode;
  * @param <S>
  *            The value type.
  */
-public interface ItemValueGroup <T extends Item, S extends ItemValue<T>>
+public interface ItemCreationValueGroup <T extends Item, S extends ItemCreationValue<T>>
 {
 	/**
 	 * @return the context of this value group.
@@ -27,7 +27,7 @@ public interface ItemValueGroup <T extends Item, S extends ItemValue<T>>
 	/**
 	 * @return the parent controller of this group.
 	 */
-	public ValueController<T> getController();
+	public CreationValueController<T> getController();
 	
 	/**
 	 * @return whether this group is in creation mode.

@@ -9,7 +9,7 @@ import com.deepercreeper.vampireapp.controller.implementations.ListControllerImp
  * 
  * @author vrl
  */
-public class DescriptionValueController extends ListControllerImpl<DescriptionValue>
+public class DescriptionCreationValueController extends ListControllerImpl<DescriptionCreationValue>
 {
 	private final DescriptionController	mController;
 	
@@ -19,13 +19,13 @@ public class DescriptionValueController extends ListControllerImpl<DescriptionVa
 	 * @param aController
 	 *            The description controller.
 	 */
-	public DescriptionValueController(final DescriptionController aController)
+	public DescriptionCreationValueController(final DescriptionController aController)
 	{
 		mController = aController;
-		final List<DescriptionValue> values = new ArrayList<DescriptionValue>();
+		final List<DescriptionCreationValue> values = new ArrayList<DescriptionCreationValue>();
 		for (final Description description : mController.getValues())
 		{
-			values.add(new DescriptionValue(description));
+			values.add(new DescriptionCreationValue(description));
 		}
 		init(values);
 	}
@@ -35,7 +35,7 @@ public class DescriptionValueController extends ListControllerImpl<DescriptionVa
 	 */
 	public void clear()
 	{
-		for (final DescriptionValue value : getValues())
+		for (final DescriptionCreationValue value : getValues())
 		{
 			value.clear();
 		}

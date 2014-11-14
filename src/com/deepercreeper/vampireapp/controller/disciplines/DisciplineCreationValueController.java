@@ -7,9 +7,9 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.controller.implementations.VariableValueControllerImpl;
-import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
-import com.deepercreeper.vampireapp.controller.interfaces.ItemValue.UpdateAction;
+import com.deepercreeper.vampireapp.controller.implementations.VariableCreationValueControllerImpl;
+import com.deepercreeper.vampireapp.controller.interfaces.ItemCreationValue;
+import com.deepercreeper.vampireapp.controller.interfaces.ItemCreationValue.UpdateAction;
 import com.deepercreeper.vampireapp.controller.lists.Clan;
 import com.deepercreeper.vampireapp.controller.restrictions.Restriction;
 import com.deepercreeper.vampireapp.creation.CharMode;
@@ -21,7 +21,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  * 
  * @author Vincent
  */
-public class DisciplineValueController extends VariableValueControllerImpl<DisciplineItem, DisciplineItemValue>
+public class DisciplineCreationValueController extends VariableCreationValueControllerImpl<DisciplineItem, DisciplineItemCreationValue>
 {
 	private Button							mShowPanel;
 	
@@ -29,7 +29,7 @@ public class DisciplineValueController extends VariableValueControllerImpl<Disci
 	
 	private boolean							mDisciplinesOpen;
 	
-	private final DisciplineItemValueGroup	mDisciplines;
+	private final DisciplineItemCreationValueGroup	mDisciplines;
 	
 	/**
 	 * Creates a new discipline value group.
@@ -45,10 +45,10 @@ public class DisciplineValueController extends VariableValueControllerImpl<Disci
 	 * @param aUpdateOthers
 	 *            The update others action.
 	 */
-	public DisciplineValueController(final DisciplineController aController, final Context aContext, final CharMode aMode, final PointHandler aPoints, final UpdateAction aUpdateOthers)
+	public DisciplineCreationValueController(final DisciplineController aController, final Context aContext, final CharMode aMode, final PointHandler aPoints, final UpdateAction aUpdateOthers)
 	{
 		super(aController, aContext, aMode, aPoints, aUpdateOthers);
-		mDisciplines = new DisciplineItemValueGroup(getController().getDisciplines(), this, getContext(), getCreationMode(), getPoints());
+		mDisciplines = new DisciplineItemCreationValueGroup(getController().getDisciplines(), this, getContext(), getCreationMode(), getPoints());
 	}
 	
 	@Override
@@ -106,7 +106,7 @@ public class DisciplineValueController extends VariableValueControllerImpl<Disci
 	}
 	
 	@Override
-	public List<ItemValue<DisciplineItem>> getDescriptionValues()
+	public List<ItemCreationValue<DisciplineItem>> getDescriptionValues()
 	{
 		return null;
 	}

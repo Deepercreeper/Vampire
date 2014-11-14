@@ -4,9 +4,9 @@ import java.util.HashSet;
 import java.util.Set;
 import android.content.Context;
 import com.deepercreeper.vampireapp.controller.interfaces.Item;
-import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
-import com.deepercreeper.vampireapp.controller.interfaces.ItemValueGroup;
-import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
+import com.deepercreeper.vampireapp.controller.interfaces.ItemCreationValue;
+import com.deepercreeper.vampireapp.controller.interfaces.ItemCreationValueGroup;
+import com.deepercreeper.vampireapp.controller.interfaces.CreationValueController.PointHandler;
 import com.deepercreeper.vampireapp.controller.restrictions.Restriction;
 import com.deepercreeper.vampireapp.creation.CharMode;
 
@@ -19,7 +19,7 @@ import com.deepercreeper.vampireapp.creation.CharMode;
  * @param <S>
  *            The value type.
  */
-public abstract class ItemValueImpl <T extends Item, S extends ItemValue<T>> implements ItemValue<T>
+public abstract class ItemCreationValueImpl <T extends Item, S extends ItemCreationValue<T>> implements ItemCreationValue<T>
 {
 	private CharMode					mMode;
 	
@@ -29,7 +29,7 @@ public abstract class ItemValueImpl <T extends Item, S extends ItemValue<T>> imp
 	
 	private final UpdateAction			mUpdateAction;
 	
-	private final ItemValueGroup<T, S>	mGroup;
+	private final ItemCreationValueGroup<T, S>	mGroup;
 	
 	private PointHandler				mPoints;
 	
@@ -53,7 +53,7 @@ public abstract class ItemValueImpl <T extends Item, S extends ItemValue<T>> imp
 	 * @param aPoints
 	 *            The point handler.
 	 */
-	public ItemValueImpl(final T aItem, final Context aContext, final UpdateAction aUpdateAction, final ItemValueGroup<T, S> aGroup,
+	public ItemCreationValueImpl(final T aItem, final Context aContext, final UpdateAction aUpdateAction, final ItemCreationValueGroup<T, S> aGroup,
 			final CharMode aMode, final PointHandler aPoints)
 	{
 		mItem = aItem;
@@ -197,7 +197,7 @@ public abstract class ItemValueImpl <T extends Item, S extends ItemValue<T>> imp
 		return "<" + getItem().getName() + ", " + getValue() + ">";
 	}
 	
-	protected ItemValueGroup<T, S> getGroup()
+	protected ItemCreationValueGroup<T, S> getGroup()
 	{
 		return mGroup;
 	}

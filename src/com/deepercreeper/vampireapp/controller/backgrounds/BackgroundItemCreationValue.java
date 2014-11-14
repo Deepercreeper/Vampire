@@ -10,8 +10,8 @@ import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.TableRow;
 import android.widget.TextView;
-import com.deepercreeper.vampireapp.controller.implementations.ItemValueImpl;
-import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
+import com.deepercreeper.vampireapp.controller.implementations.ItemCreationValueImpl;
+import com.deepercreeper.vampireapp.controller.interfaces.CreationValueController.PointHandler;
 import com.deepercreeper.vampireapp.creation.CharMode;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
@@ -20,7 +20,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  * 
  * @author Vincent
  */
-public class BackgroundItemValue extends ItemValueImpl<BackgroundItem, BackgroundItemValue>
+public class BackgroundItemCreationValue extends ItemCreationValueImpl<BackgroundItem, BackgroundItemCreationValue>
 {
 	private final ImageButton	mIncreaseButton;
 	
@@ -50,7 +50,7 @@ public class BackgroundItemValue extends ItemValueImpl<BackgroundItem, Backgroun
 	 * @param aPoints
 	 *            The points handler.
 	 */
-	public BackgroundItemValue(final BackgroundItem aItem, final Context aContext, final UpdateAction aAction, final BackgroundItemValueGroup aGroup, final CharMode aMode, final PointHandler aPoints)
+	public BackgroundItemCreationValue(final BackgroundItem aItem, final Context aContext, final UpdateAction aAction, final BackgroundItemCreationValueGroup aGroup, final CharMode aMode, final PointHandler aPoints)
 	{
 		super(aItem, aContext, aAction, aGroup, aMode, aPoints);
 		mIncreaseButton = new ImageButton(aContext);
@@ -199,7 +199,7 @@ public class BackgroundItemValue extends ItemValueImpl<BackgroundItem, Backgroun
 				@Override
 				public void onClick(final View aV)
 				{
-					getGroup().editValue(BackgroundItemValue.this);
+					getGroup().editValue(BackgroundItemCreationValue.this);
 				}
 			});
 			mContainer.addView(edit);
@@ -288,8 +288,8 @@ public class BackgroundItemValue extends ItemValueImpl<BackgroundItem, Backgroun
 	}
 	
 	@Override
-	protected BackgroundItemValueGroup getGroup()
+	protected BackgroundItemCreationValueGroup getGroup()
 	{
-		return (BackgroundItemValueGroup) super.getGroup();
+		return (BackgroundItemCreationValueGroup) super.getGroup();
 	}
 }

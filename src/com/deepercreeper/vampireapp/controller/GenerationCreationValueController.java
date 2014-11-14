@@ -16,7 +16,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  * 
  * @author vrl
  */
-public class GenerationController implements Restrictionable
+public class GenerationCreationValueController implements Restrictionable
 {
 	private final NumberPicker		mPicker;
 	
@@ -32,7 +32,7 @@ public class GenerationController implements Restrictionable
 	 * @param aCreator
 	 *            The character creator.
 	 */
-	public GenerationController(final Context aContext, final CharCreator aCreator)
+	public GenerationCreationValueController(final Context aContext, final CharCreator aCreator)
 	{
 		mPicker = new NumberPicker(aContext);
 		mPicker.setLayoutParams(ViewUtil.instance().getWrapHeight());

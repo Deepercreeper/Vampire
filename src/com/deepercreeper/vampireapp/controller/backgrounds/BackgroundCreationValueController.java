@@ -8,9 +8,9 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.controller.implementations.VariableValueControllerImpl;
-import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
-import com.deepercreeper.vampireapp.controller.interfaces.ItemValue.UpdateAction;
+import com.deepercreeper.vampireapp.controller.implementations.VariableCreationValueControllerImpl;
+import com.deepercreeper.vampireapp.controller.interfaces.ItemCreationValue;
+import com.deepercreeper.vampireapp.controller.interfaces.ItemCreationValue.UpdateAction;
 import com.deepercreeper.vampireapp.controller.restrictions.Restriction;
 import com.deepercreeper.vampireapp.creation.CharMode;
 import com.deepercreeper.vampireapp.util.ResizeAnimation;
@@ -21,13 +21,13 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  * 
  * @author Vincent
  */
-public class BackgroundValueController extends VariableValueControllerImpl<BackgroundItem, BackgroundItemValue>
+public class BackgroundCreationValueController extends VariableCreationValueControllerImpl<BackgroundItem, BackgroundItemCreationValue>
 {
 	private Button							mShowPanel;
 	
 	private boolean							mBackgroundsOpen;
 	
-	private final BackgroundItemValueGroup	mBackgrounds;
+	private final BackgroundItemCreationValueGroup	mBackgrounds;
 	
 	/**
 	 * Creates a new background value controller.
@@ -43,10 +43,10 @@ public class BackgroundValueController extends VariableValueControllerImpl<Backg
 	 * @param aUpdateOthers
 	 *            The update others action.
 	 */
-	public BackgroundValueController(final BackgroundController aController, final Context aContext, final CharMode aMode, final PointHandler aPoints, final UpdateAction aUpdateOthers)
+	public BackgroundCreationValueController(final BackgroundController aController, final Context aContext, final CharMode aMode, final PointHandler aPoints, final UpdateAction aUpdateOthers)
 	{
 		super(aController, aContext, aMode, aPoints, aUpdateOthers);
-		mBackgrounds = new BackgroundItemValueGroup(getController().getBackgrounds(), this, aContext, getCreationMode(), getPoints());
+		mBackgrounds = new BackgroundItemCreationValueGroup(getController().getBackgrounds(), this, aContext, getCreationMode(), getPoints());
 	}
 	
 	@Override
@@ -86,9 +86,9 @@ public class BackgroundValueController extends VariableValueControllerImpl<Backg
 	}
 	
 	@Override
-	public List<ItemValue<BackgroundItem>> getDescriptionValues()
+	public List<ItemCreationValue<BackgroundItem>> getDescriptionValues()
 	{
-		final List<ItemValue<BackgroundItem>> list = new ArrayList<ItemValue<BackgroundItem>>();
+		final List<ItemCreationValue<BackgroundItem>> list = new ArrayList<ItemCreationValue<BackgroundItem>>();
 		list.addAll(mBackgrounds.getDescriptionValues());
 		return list;
 	}

@@ -8,7 +8,7 @@ import com.deepercreeper.vampireapp.controller.implementations.Named;
  * 
  * @author vrl
  */
-public class DescriptionValue extends Named
+public class DescriptionCreationValue extends Named
 {
 	private final Description	mItem;
 	
@@ -20,7 +20,7 @@ public class DescriptionValue extends Named
 	 * @param aItem
 	 *            The description type.
 	 */
-	public DescriptionValue(final Description aItem)
+	public DescriptionCreationValue(final Description aItem)
 	{
 		super(aItem.getName());
 		mItem = aItem;

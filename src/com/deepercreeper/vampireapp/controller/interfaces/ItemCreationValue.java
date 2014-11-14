@@ -2,7 +2,7 @@ package com.deepercreeper.vampireapp.controller.interfaces;
 
 import android.content.Context;
 import android.widget.LinearLayout;
-import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
+import com.deepercreeper.vampireapp.controller.interfaces.CreationValueController.PointHandler;
 import com.deepercreeper.vampireapp.controller.restrictions.Restrictionable;
 import com.deepercreeper.vampireapp.creation.CharMode;
 
@@ -14,7 +14,7 @@ import com.deepercreeper.vampireapp.creation.CharMode;
  * @param <T>
  *            The parent item type.
  */
-public interface ItemValue <T extends Item> extends Restrictionable
+public interface ItemCreationValue <T extends Item> extends Restrictionable
 {
 	/**
 	 * When a value is changed, added, removed or updated,<br>

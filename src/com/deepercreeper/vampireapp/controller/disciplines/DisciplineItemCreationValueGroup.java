@@ -6,8 +6,8 @@ import android.content.Context;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
-import com.deepercreeper.vampireapp.controller.implementations.VariableValueGroupImpl;
-import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
+import com.deepercreeper.vampireapp.controller.implementations.VariableCreationValueGroupImpl;
+import com.deepercreeper.vampireapp.controller.interfaces.CreationValueController.PointHandler;
 import com.deepercreeper.vampireapp.creation.CharMode;
 import com.deepercreeper.vampireapp.util.ResizeAnimation;
 import com.deepercreeper.vampireapp.util.ViewUtil;
@@ -17,7 +17,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  * 
  * @author Vincent
  */
-public class DisciplineItemValueGroup extends VariableValueGroupImpl<DisciplineItem, DisciplineItemValue>
+public class DisciplineItemCreationValueGroup extends VariableCreationValueGroupImpl<DisciplineItem, DisciplineItemCreationValue>
 {
 	private LinearLayout	mDisciplinesPanel;
 	
@@ -37,7 +37,7 @@ public class DisciplineItemValueGroup extends VariableValueGroupImpl<DisciplineI
 	 * @param aPoints
 	 *            The caller for free or experience points.
 	 */
-	public DisciplineItemValueGroup(final DisciplineItemGroup aGroup, final DisciplineValueController aController, final Context aContext,
+	public DisciplineItemCreationValueGroup(final DisciplineItemGroup aGroup, final DisciplineCreationValueController aController, final Context aContext,
 			final CharMode aMode, final PointHandler aPoints)
 	{
 		super(aGroup, aController, aContext, aMode, aPoints);
@@ -46,7 +46,7 @@ public class DisciplineItemValueGroup extends VariableValueGroupImpl<DisciplineI
 	@Override
 	public void addItem(final DisciplineItem aItem)
 	{
-		addValue(new DisciplineItemValue(aItem, getContext(), getUpdateAction(), this, getCreationMode(), getPoints()));
+		addValue(new DisciplineItemCreationValue(aItem, getContext(), getUpdateAction(), this, getCreationMode(), getPoints()));
 	}
 	
 	@Override
@@ -63,11 +63,11 @@ public class DisciplineItemValueGroup extends VariableValueGroupImpl<DisciplineI
 	public int getTempPoints()
 	{
 		int value = 0;
-		for (final DisciplineItemValue valueItem : getValuesList())
+		for (final DisciplineItemCreationValue valueItem : getValuesList())
 		{
 			if (valueItem.getItem().isParentItem())
 			{
-				for (final SubDisciplineItemValue subValue : valueItem.getSubValues())
+				for (final SubDisciplineItemCreationValue subValue : valueItem.getSubValues())
 				{
 					value += subValue.getTempPoints();
 				}
@@ -84,11 +84,11 @@ public class DisciplineItemValueGroup extends VariableValueGroupImpl<DisciplineI
 	public int getValue()
 	{
 		int value = 0;
-		for (final DisciplineItemValue valueItem : getValuesList())
+		for (final DisciplineItemCreationValue valueItem : getValuesList())
 		{
 			if (valueItem.getItem().isParentItem())
 			{
-				for (final SubDisciplineItemValue subValue : valueItem.getSubValues())
+				for (final SubDisciplineItemCreationValue subValue : valueItem.getSubValues())
 				{
 					value += subValue.getValue();
 				}
@@ -102,13 +102,13 @@ public class DisciplineItemValueGroup extends VariableValueGroupImpl<DisciplineI
 	}
 	
 	@Override
-	public HashMap<DisciplineItem, DisciplineItemValue> getValues()
+	public HashMap<DisciplineItem, DisciplineItemCreationValue> getValues()
 	{
 		return super.getValues();
 	}
 	
 	@Override
-	public List<DisciplineItemValue> getValuesList()
+	public List<DisciplineItemCreationValue> getValuesList()
 	{
 		return super.getValuesList();
 	}
@@ -122,7 +122,7 @@ public class DisciplineItemValueGroup extends VariableValueGroupImpl<DisciplineI
 		
 		mDisciplinesTable.setLayoutParams(ViewUtil.instance().getWrapHeight());
 		
-		for (final DisciplineItemValue value : getValuesList())
+		for (final DisciplineItemCreationValue value : getValuesList())
 		{
 			final ViewGroup container = value.getContainer();
 			if (container.getParent() != null)
@@ -156,11 +156,11 @@ public class DisciplineItemValueGroup extends VariableValueGroupImpl<DisciplineI
 	@Override
 	public void updateValues(final boolean aCanIncrease, final boolean aCanDecrease)
 	{
-		for (final DisciplineItemValue value : getValuesList())
+		for (final DisciplineItemCreationValue value : getValuesList())
 		{
 			if (value.getItem().isParentItem())
 			{
-				for (final SubDisciplineItemValue subValue : value.getSubValues())
+				for (final SubDisciplineItemCreationValue subValue : value.getSubValues())
 				{
 					if (subValue != null)
 					{
@@ -177,7 +177,7 @@ public class DisciplineItemValueGroup extends VariableValueGroupImpl<DisciplineI
 		}
 	}
 	
-	private void addValue(final DisciplineItemValue aValue)
+	private void addValue(final DisciplineItemCreationValue aValue)
 	{
 		getValuesList().add(aValue);
 		getValues().put(aValue.getItem(), aValue);

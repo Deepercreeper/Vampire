@@ -5,26 +5,26 @@ import java.util.List;
 import android.widget.TableLayout;
 import android.widget.Toast;
 import com.deepercreeper.vampireapp.Vampire;
-import com.deepercreeper.vampireapp.controller.GenerationController;
-import com.deepercreeper.vampireapp.controller.InsanityController;
+import com.deepercreeper.vampireapp.controller.GenerationCreationValueController;
+import com.deepercreeper.vampireapp.controller.InsanityCreationValueController;
 import com.deepercreeper.vampireapp.controller.backgrounds.BackgroundController;
-import com.deepercreeper.vampireapp.controller.backgrounds.BackgroundValueController;
+import com.deepercreeper.vampireapp.controller.backgrounds.BackgroundCreationValueController;
 import com.deepercreeper.vampireapp.controller.descriptions.DescriptionController;
-import com.deepercreeper.vampireapp.controller.descriptions.DescriptionValueController;
+import com.deepercreeper.vampireapp.controller.descriptions.DescriptionCreationValueController;
 import com.deepercreeper.vampireapp.controller.disciplines.DisciplineController;
-import com.deepercreeper.vampireapp.controller.disciplines.DisciplineValueController;
-import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
-import com.deepercreeper.vampireapp.controller.interfaces.ItemValue.UpdateAction;
-import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
+import com.deepercreeper.vampireapp.controller.disciplines.DisciplineCreationValueController;
+import com.deepercreeper.vampireapp.controller.interfaces.ItemCreationValue;
+import com.deepercreeper.vampireapp.controller.interfaces.ItemCreationValue.UpdateAction;
+import com.deepercreeper.vampireapp.controller.interfaces.CreationValueController.PointHandler;
 import com.deepercreeper.vampireapp.controller.lists.Clan;
 import com.deepercreeper.vampireapp.controller.lists.Nature;
 import com.deepercreeper.vampireapp.controller.lists.Path;
 import com.deepercreeper.vampireapp.controller.properties.PropertyController;
-import com.deepercreeper.vampireapp.controller.properties.PropertyValueController;
+import com.deepercreeper.vampireapp.controller.properties.PropertyCreationValueController;
 import com.deepercreeper.vampireapp.controller.restrictions.Restriction;
 import com.deepercreeper.vampireapp.controller.restrictions.Restriction.RestrictionKey;
 import com.deepercreeper.vampireapp.controller.simplesItems.SimpleController;
-import com.deepercreeper.vampireapp.controller.simplesItems.SimpleValueController;
+import com.deepercreeper.vampireapp.controller.simplesItems.SimpleCreationValueController;
 
 /**
  * This class is used to create characters. It handles all values that need to be created<br>
@@ -69,23 +69,23 @@ public class CharCreator
 	
 	private int									mPathPoints			= START_PATH_POINTS;
 	
-	private final GenerationController			mGeneration;
+	private final GenerationCreationValueController			mGeneration;
 	
 	private int									mFreePoints			= START_FREE_POINTS;
 	
 	private int									mVolitionPoints		= START_VOLITION_POINTS;
 	
-	private final DisciplineValueController		mDisciplines;
+	private final DisciplineCreationValueController		mDisciplines;
 	
-	private final PropertyValueController		mProperties;
+	private final PropertyCreationValueController		mProperties;
 	
-	private final BackgroundValueController		mBackgrounds;
+	private final BackgroundCreationValueController		mBackgrounds;
 	
-	private final SimpleValueController			mSimpleValues;
+	private final SimpleCreationValueController			mSimpleValues;
 	
-	private final DescriptionValueController	mDescriptions;
+	private final DescriptionCreationValueController	mDescriptions;
 	
-	private final InsanityController			mInsanities;
+	private final InsanityCreationValueController			mInsanities;
 	
 	/**
 	 * Creates a new character creator and initializes all values for the first time.
@@ -144,13 +144,13 @@ public class CharCreator
 				freePointsChanged();
 			}
 		};
-		mDisciplines = new DisciplineValueController(aDisciplines, mVampire.getContext(), CharMode.MAIN, points, updateOthers);
-		mProperties = new PropertyValueController(aProperties, mVampire.getContext(), CharMode.MAIN);
-		mBackgrounds = new BackgroundValueController(aBackgrounds, mVampire.getContext(), CharMode.MAIN, points, updateOthers);
-		mSimpleValues = new SimpleValueController(aSimpleItems, mVampire.getContext(), CharMode.MAIN, points, updateOthers);
-		mDescriptions = new DescriptionValueController(aDescriptions);
-		mInsanities = new InsanityController(mVampire.getContext(), this);
-		mGeneration = new GenerationController(mVampire.getContext(), this);
+		mDisciplines = new DisciplineCreationValueController(aDisciplines, mVampire.getContext(), CharMode.MAIN, points, updateOthers);
+		mProperties = new PropertyCreationValueController(aProperties, mVampire.getContext(), CharMode.MAIN);
+		mBackgrounds = new BackgroundCreationValueController(aBackgrounds, mVampire.getContext(), CharMode.MAIN, points, updateOthers);
+		mSimpleValues = new SimpleCreationValueController(aSimpleItems, mVampire.getContext(), CharMode.MAIN, points, updateOthers);
+		mDescriptions = new DescriptionCreationValueController(aDescriptions);
+		mInsanities = new InsanityCreationValueController(mVampire.getContext(), this);
+		mGeneration = new GenerationCreationValueController(mVampire.getContext(), this);
 		mNature = aNature;
 		mBehavior = aBehavior;
 		setClan(aClan);
@@ -207,7 +207,7 @@ public class CharCreator
 	/**
 	 * @return the backgrounds controller.
 	 */
-	public BackgroundValueController getBackgrounds()
+	public BackgroundCreationValueController getBackgrounds()
 	{
 		return mBackgrounds;
 	}
@@ -239,7 +239,7 @@ public class CharCreator
 	/**
 	 * @return the descriptions controller.
 	 */
-	public DescriptionValueController getDescriptions()
+	public DescriptionCreationValueController getDescriptions()
 	{
 		return mDescriptions;
 	}
@@ -247,9 +247,9 @@ public class CharCreator
 	/**
 	 * @return a list of all item values that currently need a description.
 	 */
-	public List<ItemValue<?>> getDescriptionValues()
+	public List<ItemCreationValue<?>> getDescriptionValues()
 	{
-		final List<ItemValue<?>> list = new ArrayList<ItemValue<?>>();
+		final List<ItemCreationValue<?>> list = new ArrayList<ItemCreationValue<?>>();
 		list.addAll(mProperties.getDescriptionValues());
 		list.addAll(mBackgrounds.getDescriptionValues());
 		list.addAll(mSimpleValues.getDescriptionValues());
@@ -259,7 +259,7 @@ public class CharCreator
 	/**
 	 * @return the disciplines controller.
 	 */
-	public DisciplineValueController getDisciplines()
+	public DisciplineCreationValueController getDisciplines()
 	{
 		return mDisciplines;
 	}
@@ -275,7 +275,7 @@ public class CharCreator
 	/**
 	 * @return the generation controller.
 	 */
-	public GenerationController getGeneration()
+	public GenerationCreationValueController getGeneration()
 	{
 		return mGeneration;
 	}
@@ -323,7 +323,7 @@ public class CharCreator
 	/**
 	 * @return the property controller.
 	 */
-	public PropertyValueController getProperties()
+	public PropertyCreationValueController getProperties()
 	{
 		return mProperties;
 	}
@@ -331,7 +331,7 @@ public class CharCreator
 	/**
 	 * @return the simple value controller.
 	 */
-	public SimpleValueController getSimpleValues()
+	public SimpleCreationValueController getSimpleValues()
 	{
 		return mSimpleValues;
 	}

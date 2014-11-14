@@ -9,7 +9,7 @@ package com.deepercreeper.vampireapp.controller.interfaces;
  * @param <S>
  *            The item value type.
  */
-public interface VariableValueGroup <T extends Item, S extends ItemValue<T>>
+public interface VariableCreationValueGroup <T extends Item, S extends ItemCreationValue<T>>
 {
 	/**
 	 * Adds a value of the given item type to this group.

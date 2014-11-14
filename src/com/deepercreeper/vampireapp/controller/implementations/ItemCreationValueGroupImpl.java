@@ -6,11 +6,11 @@ import java.util.List;
 import android.content.Context;
 import com.deepercreeper.vampireapp.controller.interfaces.Item;
 import com.deepercreeper.vampireapp.controller.interfaces.ItemGroup;
-import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
-import com.deepercreeper.vampireapp.controller.interfaces.ItemValue.UpdateAction;
-import com.deepercreeper.vampireapp.controller.interfaces.ItemValueGroup;
-import com.deepercreeper.vampireapp.controller.interfaces.ValueController;
-import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
+import com.deepercreeper.vampireapp.controller.interfaces.ItemCreationValue;
+import com.deepercreeper.vampireapp.controller.interfaces.ItemCreationValue.UpdateAction;
+import com.deepercreeper.vampireapp.controller.interfaces.ItemCreationValueGroup;
+import com.deepercreeper.vampireapp.controller.interfaces.CreationValueController;
+import com.deepercreeper.vampireapp.controller.interfaces.CreationValueController.PointHandler;
 import com.deepercreeper.vampireapp.creation.CharMode;
 
 /**
@@ -22,7 +22,7 @@ import com.deepercreeper.vampireapp.creation.CharMode;
  * @param <S>
  *            The value type.
  */
-public abstract class ItemValueGroupImpl <T extends Item, S extends ItemValue<T>> implements ItemValueGroup<T, S>
+public abstract class ItemCreationValueGroupImpl <T extends Item, S extends ItemCreationValue<T>> implements ItemCreationValueGroup<T, S>
 {
 	private CharMode					mMode;
 	
@@ -30,7 +30,7 @@ public abstract class ItemValueGroupImpl <T extends Item, S extends ItemValue<T>
 	
 	private final Context				mContext;
 	
-	private final ValueController<T>	mController;
+	private final CreationValueController<T>	mController;
 	
 	private final ItemGroup<T>			mGroup;
 	
@@ -54,7 +54,7 @@ public abstract class ItemValueGroupImpl <T extends Item, S extends ItemValue<T>
 	 * @param aPoints
 	 *            The point handler.
 	 */
-	public ItemValueGroupImpl(final ItemGroup<T> aGroup, final ValueController<T> aController, final Context aContext, final CharMode aMode,
+	public ItemCreationValueGroupImpl(final ItemGroup<T> aGroup, final CreationValueController<T> aController, final Context aContext, final CharMode aMode,
 			final PointHandler aPoints)
 	{
 		mGroup = aGroup;
@@ -79,7 +79,7 @@ public abstract class ItemValueGroupImpl <T extends Item, S extends ItemValue<T>
 	}
 	
 	@Override
-	public ValueController<T> getController()
+	public CreationValueController<T> getController()
 	{
 		return mController;
 	}
@@ -120,7 +120,7 @@ public abstract class ItemValueGroupImpl <T extends Item, S extends ItemValue<T>
 	public int getTempPoints()
 	{
 		int value = 0;
-		for (final ItemValue<T> valueItem : mValuesList)
+		for (final ItemCreationValue<T> valueItem : mValuesList)
 		{
 			value += valueItem.getTempPoints();
 		}
@@ -150,7 +150,7 @@ public abstract class ItemValueGroupImpl <T extends Item, S extends ItemValue<T>
 	public int getValue()
 	{
 		int value = 0;
-		for (final ItemValue<T> valueItem : mValuesList)
+		for (final ItemCreationValue<T> valueItem : mValuesList)
 		{
 			value += valueItem.getValue();
 		}
@@ -178,7 +178,7 @@ public abstract class ItemValueGroupImpl <T extends Item, S extends ItemValue<T>
 	@Override
 	public void release()
 	{
-		for (final ItemValue<T> value : mValuesList)
+		for (final ItemCreationValue<T> value : mValuesList)
 		{
 			value.release();
 		}
@@ -187,7 +187,7 @@ public abstract class ItemValueGroupImpl <T extends Item, S extends ItemValue<T>
 	@Override
 	public void resetTempPoints()
 	{
-		for (final ItemValue<T> value : mValuesList)
+		for (final ItemCreationValue<T> value : mValuesList)
 		{
 			value.resetTempPoints();
 		}
@@ -198,7 +198,7 @@ public abstract class ItemValueGroupImpl <T extends Item, S extends ItemValue<T>
 	{
 		final boolean resetTempPoints = mMode == CharMode.POINTS && aMode == CharMode.MAIN;
 		mMode = aMode;
-		for (final ItemValue<T> value : mValuesList)
+		for (final ItemCreationValue<T> value : mValuesList)
 		{
 			value.setCreationMode(mMode);
 			if (resetTempPoints)
@@ -212,7 +212,7 @@ public abstract class ItemValueGroupImpl <T extends Item, S extends ItemValue<T>
 	public void setPoints(final PointHandler aPoints)
 	{
 		mPoints = aPoints;
-		for (final ItemValue<T> value : mValuesList)
+		for (final ItemCreationValue<T> value : mValuesList)
 		{
 			value.setPoints(mPoints);
 		}
@@ -227,7 +227,7 @@ public abstract class ItemValueGroupImpl <T extends Item, S extends ItemValue<T>
 	@Override
 	public void updateValues(final boolean aCanIncrease, final boolean aCanDecrease)
 	{
-		for (final ItemValue<T> value : mValuesList)
+		for (final ItemCreationValue<T> value : mValuesList)
 		{
 			value.setIncreasable(aCanIncrease && value.canIncrease(mMode));
 			value.setDecreasable(aCanDecrease && value.canDecrease(mMode));

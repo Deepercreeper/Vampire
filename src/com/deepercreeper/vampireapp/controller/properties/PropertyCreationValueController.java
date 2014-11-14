@@ -8,8 +8,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.controller.implementations.VariableValueControllerImpl;
-import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
+import com.deepercreeper.vampireapp.controller.implementations.VariableCreationValueControllerImpl;
+import com.deepercreeper.vampireapp.controller.interfaces.ItemCreationValue;
 import com.deepercreeper.vampireapp.controller.restrictions.Restriction;
 import com.deepercreeper.vampireapp.creation.CharMode;
 import com.deepercreeper.vampireapp.util.ResizeAnimation;
@@ -20,13 +20,13 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  * 
  * @author Vincent
  */
-public class PropertyValueController extends VariableValueControllerImpl<PropertyItem, PropertyItemValue>
+public class PropertyCreationValueController extends VariableCreationValueControllerImpl<PropertyItem, PropertyItemCreationValue>
 {
 	private Button							mShowPanel;
 	
 	private boolean							mPropertiesOpen;
 	
-	private final PropertyItemValueGroup	mProperties;
+	private final PropertyItemCreationValueGroup	mProperties;
 	
 	/**
 	 * Creates a new property value controller.
@@ -38,10 +38,10 @@ public class PropertyValueController extends VariableValueControllerImpl<Propert
 	 * @param aMode
 	 *            Whether this controller is inside the creation mode.
 	 */
-	public PropertyValueController(final PropertyController aController, final Context aContext, final CharMode aMode)
+	public PropertyCreationValueController(final PropertyController aController, final Context aContext, final CharMode aMode)
 	{
 		super(aController, aContext, aMode, null, null);
-		mProperties = new PropertyItemValueGroup(getController().getProperties(), this, getContext(), getCreationMode());
+		mProperties = new PropertyItemCreationValueGroup(getController().getProperties(), this, getContext(), getCreationMode());
 	}
 	
 	@Override
@@ -80,9 +80,9 @@ public class PropertyValueController extends VariableValueControllerImpl<Propert
 	}
 	
 	@Override
-	public List<ItemValue<PropertyItem>> getDescriptionValues()
+	public List<ItemCreationValue<PropertyItem>> getDescriptionValues()
 	{
-		final List<ItemValue<PropertyItem>> list = new ArrayList<ItemValue<PropertyItem>>();
+		final List<ItemCreationValue<PropertyItem>> list = new ArrayList<ItemCreationValue<PropertyItem>>();
 		list.addAll(mProperties.getDescriptionValues());
 		return list;
 	}

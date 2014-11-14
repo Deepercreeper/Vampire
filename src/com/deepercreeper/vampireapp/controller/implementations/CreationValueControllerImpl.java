@@ -3,8 +3,8 @@ package com.deepercreeper.vampireapp.controller.implementations;
 import android.content.Context;
 import com.deepercreeper.vampireapp.controller.interfaces.Controller;
 import com.deepercreeper.vampireapp.controller.interfaces.Item;
-import com.deepercreeper.vampireapp.controller.interfaces.ItemValue.UpdateAction;
-import com.deepercreeper.vampireapp.controller.interfaces.ValueController;
+import com.deepercreeper.vampireapp.controller.interfaces.ItemCreationValue.UpdateAction;
+import com.deepercreeper.vampireapp.controller.interfaces.CreationValueController;
 import com.deepercreeper.vampireapp.creation.CharMode;
 
 /**
@@ -14,7 +14,7 @@ import com.deepercreeper.vampireapp.creation.CharMode;
  * @param <T>
  *            The item type.
  */
-public abstract class ValueControllerImpl <T extends Item> implements ValueController<T>
+public abstract class CreationValueControllerImpl <T extends Item> implements CreationValueController<T>
 {
 	private CharMode			mMode;
 	
@@ -40,7 +40,7 @@ public abstract class ValueControllerImpl <T extends Item> implements ValueContr
 	 * @param aAction
 	 *            The update action.
 	 */
-	public ValueControllerImpl(final Controller<T> aController, final Context aContext, final CharMode aMode, final PointHandler aPoints,
+	public CreationValueControllerImpl(final Controller<T> aController, final Context aContext, final CharMode aMode, final PointHandler aPoints,
 			final UpdateAction aAction)
 	{
 		mController = aController;

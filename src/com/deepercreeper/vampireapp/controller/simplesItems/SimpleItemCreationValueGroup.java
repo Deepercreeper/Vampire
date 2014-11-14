@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.Space;
 import android.widget.TableRow;
 import android.widget.TextView;
-import com.deepercreeper.vampireapp.controller.implementations.ItemValueGroupImpl;
-import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
+import com.deepercreeper.vampireapp.controller.implementations.ItemCreationValueGroupImpl;
+import com.deepercreeper.vampireapp.controller.interfaces.CreationValueController.PointHandler;
 import com.deepercreeper.vampireapp.creation.CharMode;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
@@ -18,7 +18,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  * 
  * @author Vincent
  */
-public class SimpleItemValueGroup extends ItemValueGroupImpl<SimpleItem, SimpleItemValue>
+public class SimpleItemCreationValueGroup extends ItemCreationValueGroupImpl<SimpleItem, SimpleItemCreationValue>
 {
 	/**
 	 * Creates a new item value group.
@@ -34,24 +34,24 @@ public class SimpleItemValueGroup extends ItemValueGroupImpl<SimpleItem, SimpleI
 	 * @param aPoints
 	 *            The caller for free or experience points.
 	 */
-	public SimpleItemValueGroup(final SimpleItemGroup aGroup, final SimpleValueController aController, final Context aContext, final CharMode aMode,
+	public SimpleItemCreationValueGroup(final SimpleItemGroup aGroup, final SimpleCreationValueController aController, final Context aContext, final CharMode aMode,
 			final PointHandler aPoints)
 	{
 		super(aGroup, aController, aContext, aMode, aPoints);
 		for (final SimpleItem item : getGroup().getItems())
 		{
-			addValue(new SimpleItemValue(item, getContext(), getUpdateAction(), this, getCreationMode(), getPoints()));
+			addValue(new SimpleItemCreationValue(item, getContext(), getUpdateAction(), this, getCreationMode(), getPoints()));
 		}
 	}
 	
 	@Override
-	public HashMap<SimpleItem, SimpleItemValue> getValues()
+	public HashMap<SimpleItem, SimpleItemCreationValue> getValues()
 	{
 		return super.getValues();
 	}
 	
 	@Override
-	public List<SimpleItemValue> getValuesList()
+	public List<SimpleItemCreationValue> getValuesList()
 	{
 		return super.getValuesList();
 	}
@@ -74,14 +74,14 @@ public class SimpleItemValueGroup extends ItemValueGroupImpl<SimpleItem, SimpleI
 		}
 		aLayout.addView(titleRow);
 		
-		for (final SimpleItemValue value : getValuesList())
+		for (final SimpleItemCreationValue value : getValuesList())
 		{
 			aLayout.addView(value.getContainer());
 			value.refreshValue();
 		}
 	}
 	
-	private void addValue(final SimpleItemValue aValue)
+	private void addValue(final SimpleItemCreationValue aValue)
 	{
 		getValuesList().add(aValue);
 		getValues().put(aValue.getItem(), aValue);

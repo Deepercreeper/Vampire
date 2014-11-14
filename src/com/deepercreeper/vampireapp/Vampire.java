@@ -24,11 +24,11 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.controller.backgrounds.BackgroundController;
 import com.deepercreeper.vampireapp.controller.descriptions.DescriptionController;
-import com.deepercreeper.vampireapp.controller.descriptions.DescriptionValue;
+import com.deepercreeper.vampireapp.controller.descriptions.DescriptionCreationValue;
 import com.deepercreeper.vampireapp.controller.dialog.CreateStringDialog;
 import com.deepercreeper.vampireapp.controller.dialog.CreateStringDialog.CreationListener;
 import com.deepercreeper.vampireapp.controller.disciplines.DisciplineController;
-import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
+import com.deepercreeper.vampireapp.controller.interfaces.ItemCreationValue;
 import com.deepercreeper.vampireapp.controller.lists.ClanController;
 import com.deepercreeper.vampireapp.controller.lists.NatureController;
 import com.deepercreeper.vampireapp.controller.lists.Path;
@@ -523,7 +523,7 @@ public class Vampire
 		setInsanitiesOk(mCharCreator.insanitiesOk());
 		
 		final TableLayout descriptionsPanel = (TableLayout) mActivity.getView(R.id.description_values_panel);
-		for (final ItemValue<?> value : mCharCreator.getDescriptionValues())
+		for (final ItemCreationValue<?> value : mCharCreator.getDescriptionValues())
 		{
 			final TableRow row = new TableRow(mActivity);
 			row.setLayoutParams(ViewUtil.instance().getTableWrapHeight());
@@ -568,7 +568,7 @@ public class Vampire
 			descriptionsPanel.addView(row);
 		}
 		
-		for (final DescriptionValue description : mCharCreator.getDescriptions().getValues())
+		for (final DescriptionCreationValue description : mCharCreator.getDescriptions().getValues())
 		{
 			final TableRow row = new TableRow(mActivity);
 			row.setLayoutParams(ViewUtil.instance().getTableWrapHeight());

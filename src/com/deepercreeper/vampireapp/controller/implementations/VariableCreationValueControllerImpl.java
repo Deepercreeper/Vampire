@@ -3,9 +3,9 @@ package com.deepercreeper.vampireapp.controller.implementations;
 import android.content.Context;
 import com.deepercreeper.vampireapp.controller.interfaces.Controller;
 import com.deepercreeper.vampireapp.controller.interfaces.Item;
-import com.deepercreeper.vampireapp.controller.interfaces.ItemValue;
-import com.deepercreeper.vampireapp.controller.interfaces.ItemValue.UpdateAction;
-import com.deepercreeper.vampireapp.controller.interfaces.VariableValueGroup;
+import com.deepercreeper.vampireapp.controller.interfaces.ItemCreationValue;
+import com.deepercreeper.vampireapp.controller.interfaces.ItemCreationValue.UpdateAction;
+import com.deepercreeper.vampireapp.controller.interfaces.VariableCreationValueGroup;
 import com.deepercreeper.vampireapp.creation.CharMode;
 
 /**
@@ -17,8 +17,8 @@ import com.deepercreeper.vampireapp.creation.CharMode;
  * @param <S>
  *            The value type.
  */
-public abstract class VariableValueControllerImpl <T extends Item, S extends ItemValue<T>> extends ValueControllerImpl<T> implements
-		VariableValueGroup<T, S>
+public abstract class VariableCreationValueControllerImpl <T extends Item, S extends ItemCreationValue<T>> extends CreationValueControllerImpl<T> implements
+		VariableCreationValueGroup<T, S>
 {
 	/**
 	 * Creates a new variable value controller.
@@ -34,7 +34,7 @@ public abstract class VariableValueControllerImpl <T extends Item, S extends Ite
 	 * @param aAction
 	 *            The update action.
 	 */
-	public VariableValueControllerImpl(final Controller<T> aController, final Context aContext, final CharMode aMode, final PointHandler aPoints,
+	public VariableCreationValueControllerImpl(final Controller<T> aController, final Context aContext, final CharMode aMode, final PointHandler aPoints,
 			final UpdateAction aAction)
 	{
 		super(aController, aContext, aMode, aPoints, aAction);

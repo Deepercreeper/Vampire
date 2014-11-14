@@ -13,8 +13,8 @@ import android.widget.TableLayout;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.controller.dialog.SelectItemDialog;
 import com.deepercreeper.vampireapp.controller.dialog.SelectItemDialog.SelectionListener;
-import com.deepercreeper.vampireapp.controller.implementations.VariableValueGroupImpl;
-import com.deepercreeper.vampireapp.controller.interfaces.ValueController.PointHandler;
+import com.deepercreeper.vampireapp.controller.implementations.VariableCreationValueGroupImpl;
+import com.deepercreeper.vampireapp.controller.interfaces.CreationValueController.PointHandler;
 import com.deepercreeper.vampireapp.creation.CharMode;
 import com.deepercreeper.vampireapp.util.ResizeAnimation;
 import com.deepercreeper.vampireapp.util.ViewUtil;
@@ -24,7 +24,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  * 
  * @author Vincent
  */
-public class PropertyItemValueGroup extends VariableValueGroupImpl<PropertyItem, PropertyItemValue>
+public class PropertyItemCreationValueGroup extends VariableCreationValueGroupImpl<PropertyItem, PropertyItemCreationValue>
 {
 	private LinearLayout	mPropertiesPanel;
 	
@@ -42,7 +42,7 @@ public class PropertyItemValueGroup extends VariableValueGroupImpl<PropertyItem,
 	 * @param aMode
 	 *            Whether this group is inside creation mode.
 	 */
-	public PropertyItemValueGroup(final PropertyItemGroup aGroup, final PropertyValueController aController, final Context aContext,
+	public PropertyItemCreationValueGroup(final PropertyItemGroup aGroup, final PropertyCreationValueController aController, final Context aContext,
 			final CharMode aMode)
 	{
 		super(aGroup, aController, aContext, aMode, null);
@@ -51,7 +51,7 @@ public class PropertyItemValueGroup extends VariableValueGroupImpl<PropertyItem,
 	@Override
 	public void addItem(final PropertyItem aItem)
 	{
-		addValue(new PropertyItemValue(aItem, getContext(), getUpdateAction(), this, getCreationMode()));
+		addValue(new PropertyItemCreationValue(aItem, getContext(), getUpdateAction(), this, getCreationMode()));
 		resize();
 	}
 	
@@ -65,7 +65,7 @@ public class PropertyItemValueGroup extends VariableValueGroupImpl<PropertyItem,
 	public int getValue()
 	{
 		int value = 0;
-		for (final PropertyItemValue valueItem : getValuesList())
+		for (final PropertyItemCreationValue valueItem : getValuesList())
 		{
 			value += valueItem.getFinalValue();
 		}
@@ -73,13 +73,13 @@ public class PropertyItemValueGroup extends VariableValueGroupImpl<PropertyItem,
 	}
 	
 	@Override
-	public HashMap<PropertyItem, PropertyItemValue> getValues()
+	public HashMap<PropertyItem, PropertyItemCreationValue> getValues()
 	{
 		return super.getValues();
 	}
 	
 	@Override
-	public List<PropertyItemValue> getValuesList()
+	public List<PropertyItemCreationValue> getValuesList()
 	{
 		return super.getValuesList();
 	}
@@ -110,7 +110,7 @@ public class PropertyItemValueGroup extends VariableValueGroupImpl<PropertyItem,
 					}
 					final List<PropertyItem> items = new ArrayList<PropertyItem>();
 					items.addAll(getGroup().getItems());
-					for (final PropertyItemValue value : getValuesList())
+					for (final PropertyItemCreationValue value : getValuesList())
 					{
 						items.remove(value.getItem());
 					}
@@ -132,7 +132,7 @@ public class PropertyItemValueGroup extends VariableValueGroupImpl<PropertyItem,
 		}
 		mPropertiesTable.addView(titleRow);
 		
-		for (final PropertyItemValue value : getValuesList())
+		for (final PropertyItemCreationValue value : getValuesList())
 		{
 			mPropertiesTable.addView(value.getContainer());
 			value.refreshValue();
@@ -167,7 +167,7 @@ public class PropertyItemValueGroup extends VariableValueGroupImpl<PropertyItem,
 	public void updateValues(final boolean aCanIncrease, final boolean aCanDecrease)
 	{
 		final int value = getValue();
-		for (final PropertyItemValue valueItem : getValuesList())
+		for (final PropertyItemCreationValue valueItem : getValuesList())
 		{
 			boolean canIncrease = aCanIncrease && valueItem.canIncrease(getCreationMode());
 			boolean canDecrease = aCanDecrease && valueItem.canDecrease(getCreationMode());
@@ -186,7 +186,7 @@ public class PropertyItemValueGroup extends VariableValueGroupImpl<PropertyItem,
 		}
 	}
 	
-	private void addValue(final PropertyItemValue aValue)
+	private void addValue(final PropertyItemCreationValue aValue)
 	{
 		getValuesList().add(aValue);
 		getValues().put(aValue.getItem(), aValue);
