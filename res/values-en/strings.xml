@@ -33,4 +33,7 @@
 	<string name="free_points_info">Free bonus points</string>
 	<string name="add_insanity">Add insanity</string>
 	<string name="add_insanity_message">Enter the name of a insanity:</string>
+	<string name="add">Add&#8230;</string>
+	<string name="edit_item">Edit </string>
+	<string name="add_item">Add Item</string>
 </resources>

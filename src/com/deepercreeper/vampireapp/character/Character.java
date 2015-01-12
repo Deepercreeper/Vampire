@@ -1,18 +1,18 @@
 package com.deepercreeper.vampireapp.character;
 
+import java.util.ArrayList;
+import java.util.List;
+import com.deepercreeper.vampireapp.controllers.GenerationValueController;
+import com.deepercreeper.vampireapp.controllers.InsanityValueController;
+import com.deepercreeper.vampireapp.controllers.descriptions.DescriptionValueController;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.instances.ItemControllerInstance;
 import com.deepercreeper.vampireapp.creation.CharCreator;
 
 public class Character
 {
 	private final GenerationValueController		mGeneration;
 	
-	private final SimpleValueController			mSimpleValues;
-	
-	private final DisciplineValueController		mDisciplines;
-	
-	private final BackgroundValueController		mBackgrounds;
-	
-	private final PropertyValueController		mProperties;
+	private final List<ItemControllerInstance>	mControllers;
 	
 	private final DescriptionValueController	mDescriptions;
 	
@@ -27,10 +27,7 @@ public class Character
 	public Character(final CharCreator aCreator)
 	{
 		mGeneration = new GenerationValueController(aCreator.getGeneration().getGeneration());
-		mSimpleValues = new SimpleValueController();
-		mDisciplines = new DisciplineValueController();
-		mBackgrounds = new BackgroundValueController();
-		mProperties = new PropertyValueController();
+		mControllers = new ArrayList<ItemControllerInstance>();
 		mDescriptions = new DescriptionValueController(aCreator.getDescriptions());
 		mInsanities = new InsanityValueController();
 		mVolition = new VolitionController(aCreator.getVolitionPoints());

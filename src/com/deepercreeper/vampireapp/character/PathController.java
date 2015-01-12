@@ -1,11 +1,9 @@
 package com.deepercreeper.vampireapp.character;
 
-import com.deepercreeper.vampireapp.controller.lists.Path;
+import com.deepercreeper.vampireapp.controllers.lists.Path;
 
 public class PathController
 {
-	public static int	EP_COST	= 10;
-	
 	private static final int	MIN_VALUE	= 0, MAX_VALUE = 10;
 	
 	private final Path			mPath;
@@ -26,6 +24,11 @@ public class PathController
 	public int getValue()
 	{
 		return mValue;
+	}
+	
+	public int getExperienceCost()
+	{
+		return getValue() * 2;
 	}
 	
 	public void increase()

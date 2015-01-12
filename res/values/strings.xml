@@ -33,4 +33,7 @@
 	<string name="free_points_info">Freie Zusatzpunkte</string>
 	<string name="add_insanity">Geistesstörung hinzufügen</string>
 	<string name="add_insanity_message">Geben sie den Namen einer Geistesstörung ein:</string>
+	<string name="add">Hinzufügen&#8230;</string>
+	<string name="edit_item">Bearbeiten von </string>
+	<string name="add_item">Item hinzufügen</string>
 </resources>

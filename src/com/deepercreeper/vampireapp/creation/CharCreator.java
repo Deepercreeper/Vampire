@@ -2,29 +2,23 @@ package com.deepercreeper.vampireapp.creation;
 
 import java.util.ArrayList;
 import java.util.List;
+import android.util.Log;
 import android.widget.TableLayout;
-import android.widget.Toast;
 import com.deepercreeper.vampireapp.Vampire;
-import com.deepercreeper.vampireapp.controller.GenerationCreationValueController;
-import com.deepercreeper.vampireapp.controller.InsanityCreationValueController;
-import com.deepercreeper.vampireapp.controller.backgrounds.BackgroundController;
-import com.deepercreeper.vampireapp.controller.backgrounds.BackgroundCreationValueController;
-import com.deepercreeper.vampireapp.controller.descriptions.DescriptionController;
-import com.deepercreeper.vampireapp.controller.descriptions.DescriptionCreationValueController;
-import com.deepercreeper.vampireapp.controller.disciplines.DisciplineController;
-import com.deepercreeper.vampireapp.controller.disciplines.DisciplineCreationValueController;
-import com.deepercreeper.vampireapp.controller.interfaces.ItemCreationValue;
-import com.deepercreeper.vampireapp.controller.interfaces.ItemCreationValue.UpdateAction;
-import com.deepercreeper.vampireapp.controller.interfaces.CreationValueController.PointHandler;
-import com.deepercreeper.vampireapp.controller.lists.Clan;
-import com.deepercreeper.vampireapp.controller.lists.Nature;
-import com.deepercreeper.vampireapp.controller.lists.Path;
-import com.deepercreeper.vampireapp.controller.properties.PropertyController;
-import com.deepercreeper.vampireapp.controller.properties.PropertyCreationValueController;
-import com.deepercreeper.vampireapp.controller.restrictions.Restriction;
-import com.deepercreeper.vampireapp.controller.restrictions.Restriction.RestrictionKey;
-import com.deepercreeper.vampireapp.controller.simplesItems.SimpleController;
-import com.deepercreeper.vampireapp.controller.simplesItems.SimpleCreationValueController;
+import com.deepercreeper.vampireapp.controllers.GenerationCreationValueController;
+import com.deepercreeper.vampireapp.controllers.InsanityCreationValueController;
+import com.deepercreeper.vampireapp.controllers.descriptions.DescriptionController;
+import com.deepercreeper.vampireapp.controllers.descriptions.DescriptionCreationValueController;
+import com.deepercreeper.vampireapp.controllers.dynamic.implementations.creations.ItemControllerCreationImpl;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.ItemController;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemControllerCreation;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemControllerCreation.PointHandler;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemCreation;
+import com.deepercreeper.vampireapp.controllers.lists.Clan;
+import com.deepercreeper.vampireapp.controllers.lists.Nature;
+import com.deepercreeper.vampireapp.controllers.lists.Path;
+import com.deepercreeper.vampireapp.controllers.restrictions.Restriction;
+import com.deepercreeper.vampireapp.controllers.restrictions.Restriction.RestrictionType;
 
 /**
  * This class is used to create characters. It handles all values that need to be created<br>
@@ -37,69 +31,55 @@ public class CharCreator
 	/**
 	 * The default minimum generation that is set, when creating a character.
 	 */
-	public static final int						MIN_GENERATION		= 8;
+	public static final int								MIN_GENERATION		= 8;
 	
 	/**
 	 * The default maximum generation that is set, when creating a character.
 	 */
-	public static final int						MAX_GENERATION		= 12;
+	public static final int								MAX_GENERATION		= 12;
 	
 	/**
 	 * The default number of free bonus points, a user can spend into his new created character.
 	 */
-	public static final int						START_FREE_POINTS	= 15;
+	public static final int								START_FREE_POINTS	= 15;
 	
-	private static final int					MAX_VOLITION_POINTS	= 20, MAX_PATH_POINTS = 10, START_VOLITION_POINTS = 5;
+	private static final int							MAX_VOLITION_POINTS	= 20, MAX_PATH_POINTS = 10, START_VOLITION_POINTS = 5;
 	
-	private static final int					START_PATH_POINTS	= 5, VOLITION_POINTS_COST = 2, PATH_POINTS_COST = 1;
+	private static final int							START_PATH_POINTS	= 5, VOLITION_POINTS_COST = 2, PATH_POINTS_COST = 1;
 	
-	private final Vampire						mVampire;
+	private final Vampire								mVampire;
 	
-	private String								mName				= "";
+	private String										mName				= "";
 	
-	private String								mConcept			= "";
+	private String										mConcept			= "";
 	
-	private Nature								mNature;
+	private Nature										mNature;
 	
-	private Nature								mBehavior;
+	private Nature										mBehavior;
 	
-	private Path								mPath				= null;
+	private Path										mPath				= null;
 	
-	private Clan								mClan;
+	private Clan										mClan;
 	
-	private int									mPathPoints			= START_PATH_POINTS;
+	private int											mPathPoints			= START_PATH_POINTS;
 	
-	private final GenerationCreationValueController			mGeneration;
+	private final GenerationCreationValueController		mGeneration;
 	
-	private int									mFreePoints			= START_FREE_POINTS;
+	private int											mFreePoints			= START_FREE_POINTS;
 	
-	private int									mVolitionPoints		= START_VOLITION_POINTS;
+	private int											mVolitionPoints		= START_VOLITION_POINTS;
 	
-	private final DisciplineCreationValueController		mDisciplines;
-	
-	private final PropertyCreationValueController		mProperties;
-	
-	private final BackgroundCreationValueController		mBackgrounds;
-	
-	private final SimpleCreationValueController			mSimpleValues;
+	private final List<ItemControllerCreation>			mControllers;
 	
 	private final DescriptionCreationValueController	mDescriptions;
 	
-	private final InsanityCreationValueController			mInsanities;
+	private final InsanityCreationValueController		mInsanities;
 	
 	/**
 	 * Creates a new character creator and initializes all values for the first time.
 	 * 
 	 * @param aVampire
 	 *            The vampire application.
-	 * @param aDisciplines
-	 *            The disciplines.
-	 * @param aProperties
-	 *            The properties.
-	 * @param aBackgrounds
-	 *            The backgrounds.
-	 * @param aSimpleItems
-	 *            The simple items.
 	 * @param aNature
 	 *            The start nature.
 	 * @param aBehavior
@@ -109,8 +89,7 @@ public class CharCreator
 	 * @param aDescriptions
 	 *            The description fields.
 	 */
-	public CharCreator(final Vampire aVampire, final DisciplineController aDisciplines, final PropertyController aProperties,
-			final BackgroundController aBackgrounds, final SimpleController aSimpleItems, final Nature aNature, final Nature aBehavior,
+	public CharCreator(final Vampire aVampire, final List<ItemController> aControllers, final Nature aNature, final Nature aBehavior,
 			final Clan aClan, final DescriptionController aDescriptions)
 	{
 		mVampire = aVampire;
@@ -136,18 +115,11 @@ public class CharCreator
 				mVampire.setFreePoints(mFreePoints);
 			}
 		};
-		final UpdateAction updateOthers = new UpdateAction()
+		mControllers = new ArrayList<ItemControllerCreation>();
+		for (final ItemController controller : aControllers)
 		{
-			@Override
-			public void update()
-			{
-				freePointsChanged();
-			}
-		};
-		mDisciplines = new DisciplineCreationValueController(aDisciplines, mVampire.getContext(), CharMode.MAIN, points, updateOthers);
-		mProperties = new PropertyCreationValueController(aProperties, mVampire.getContext(), CharMode.MAIN);
-		mBackgrounds = new BackgroundCreationValueController(aBackgrounds, mVampire.getContext(), CharMode.MAIN, points, updateOthers);
-		mSimpleValues = new SimpleCreationValueController(aSimpleItems, mVampire.getContext(), CharMode.MAIN, points, updateOthers);
+			mControllers.add(new ItemControllerCreationImpl(controller, aVampire.getContext(), CreationMode.MAIN, points));
+		}
 		mDescriptions = new DescriptionCreationValueController(aDescriptions);
 		mInsanities = new InsanityCreationValueController(mVampire.getContext(), this);
 		mGeneration = new GenerationCreationValueController(mVampire.getContext(), this);
@@ -204,12 +176,9 @@ public class CharCreator
 		}
 	}
 	
-	/**
-	 * @return the backgrounds controller.
-	 */
-	public BackgroundCreationValueController getBackgrounds()
+	public List<ItemControllerCreation> getControllers()
 	{
-		return mBackgrounds;
+		return mControllers;
 	}
 	
 	/**
@@ -247,21 +216,14 @@ public class CharCreator
 	/**
 	 * @return a list of all item values that currently need a description.
 	 */
-	public List<ItemCreationValue<?>> getDescriptionValues()
+	public List<ItemCreation> getDescriptionValues()
 	{
-		final List<ItemCreationValue<?>> list = new ArrayList<ItemCreationValue<?>>();
-		list.addAll(mProperties.getDescriptionValues());
-		list.addAll(mBackgrounds.getDescriptionValues());
-		list.addAll(mSimpleValues.getDescriptionValues());
+		final List<ItemCreation> list = new ArrayList<ItemCreation>();
+		for (final ItemControllerCreation controller : mControllers)
+		{
+			list.addAll(controller.getDescriptionValues());
+		}
 		return list;
-	}
-	
-	/**
-	 * @return the disciplines controller.
-	 */
-	public DisciplineCreationValueController getDisciplines()
-	{
-		return mDisciplines;
 	}
 	
 	/**
@@ -318,22 +280,6 @@ public class CharCreator
 	public int getPathPoints()
 	{
 		return mPathPoints;
-	}
-	
-	/**
-	 * @return the property controller.
-	 */
-	public PropertyCreationValueController getProperties()
-	{
-		return mProperties;
-	}
-	
-	/**
-	 * @return the simple value controller.
-	 */
-	public SimpleCreationValueController getSimpleValues()
-	{
-		return mSimpleValues;
 	}
 	
 	/**
@@ -396,7 +342,7 @@ public class CharCreator
 	 */
 	public boolean insanitiesOk()
 	{
-		return mInsanities.insanitiesOk();
+		return mInsanities.isOk();
 	}
 	
 	/**
@@ -412,10 +358,10 @@ public class CharCreator
 	 */
 	public void releaseViews()
 	{
-		mDisciplines.release();
-		mProperties.release();
-		mBackgrounds.release();
-		mSimpleValues.release();
+		for (final ItemControllerCreation controller : mControllers)
+		{
+			controller.release();
+		}
 	}
 	
 	/**
@@ -433,9 +379,10 @@ public class CharCreator
 	 */
 	public void resetFreePoints()
 	{
-		mDisciplines.resetTempPoints();
-		mBackgrounds.resetTempPoints();
-		mSimpleValues.resetTempPoints();
+		for (final ItemControllerCreation controller : mControllers)
+		{
+			controller.resetTempPoints();
+		}
 		
 		resetPath();
 		
@@ -487,12 +434,9 @@ public class CharCreator
 				removeRestrictions();
 			}
 			mClan = aClan;
-			mDisciplines.close();
-			mDisciplines.changeClan(aClan);
 			addRestrictions();
-			Toast.makeText(mVampire.getContext(), mClan.getDescription(), Toast.LENGTH_LONG).show();
+			// Toast.makeText(mVampire.getContext(), mClan.getDescription(), Toast.LENGTH_LONG).show();
 		}
-		mDisciplines.setEnabled( !mClan.getDisciplines().isEmpty());
 	}
 	
 	/**
@@ -512,12 +456,12 @@ public class CharCreator
 	 * @param aMode
 	 *            The new creation mode.
 	 */
-	public void setCreationMode(final CharMode aMode)
+	public void setCreationMode(final CreationMode aMode)
 	{
-		mDisciplines.setCreationMode(aMode);
-		mProperties.setCreationMode(aMode);
-		mBackgrounds.setCreationMode(aMode);
-		mSimpleValues.setCreationMode(aMode);
+		for (final ItemControllerCreation controller : mControllers)
+		{
+			controller.setCreationMode(aMode);
+		}
 	}
 	
 	/**
@@ -584,40 +528,41 @@ public class CharCreator
 	{
 		for (final Restriction restriction : mClan.getRestrictions())
 		{
-			final String key = restriction.getKey();
-			if (restriction.hasGroup())
+			final RestrictionType type = restriction.getRestrictionType();
+			if (type.equals(RestrictionType.ITEM_VALUE) || type.equals(RestrictionType.ITEM_CHILDREN_COUNT)
+					|| type.equals(RestrictionType.ITEM_CHILD_VALUE_AT) || type.equals(RestrictionType.GROUP_CHILDREN)
+					|| type.equals(RestrictionType.GROUP_CHILDREN_COUNT))
 			{
-				final String group = restriction.getGroup();
-				if (group.equals(RestrictionKey.SIMPLE.getKey()))
+				final boolean item = type.equals(RestrictionType.ITEM_VALUE) || type.equals(RestrictionType.ITEM_CHILDREN_COUNT)
+						|| type.equals(RestrictionType.ITEM_CHILD_VALUE_AT);
+				final String itemName = restriction.getItemName();
+				boolean foundItem = false;
+				for (final ItemControllerCreation controller : mControllers)
 				{
-					mSimpleValues.addRestriction(restriction);
+					if (item && controller.hasItem(itemName) || !item && controller.hasGroup(itemName))
+					{
+						controller.addRestriction(restriction);
+						foundItem = true;
+					}
 				}
-				else if (group.equals(RestrictionKey.BACKGROUND.getKey()))
+				if ( !foundItem)
 				{
-					mBackgrounds.addRestriction(restriction);
-				}
-				else if (group.equals(RestrictionKey.DISCIPLINE.getKey()))
-				{
-					mDisciplines.addRestriction(restriction);
-				}
-				else if (group.equals(RestrictionKey.PROPERTY.getKey()))
-				{
-					mProperties.addRestriction(restriction);
+					Log.w("CharCreator", "Couldn't find the item of a restriction.");
 				}
 			}
-			else if (key.equals(RestrictionKey.INSANITY.getKey()))
+			else if (type.equals(RestrictionType.INSANITY))
 			{
 				mInsanities.addRestriction(restriction);
 			}
-			else if (key.equals(RestrictionKey.VOLITION.getKey()))
+			else if (type.equals(RestrictionType.VOLITION))
 			{
 				// TODO Restrict the number of volition points
 			}
-			else if (key.equals(RestrictionKey.PATH.getKey()))
+			else if (type.equals(RestrictionType.PATH))
 			{
 				// TODO Restrict the number of path points
 			}
-			else if (key.equals(RestrictionKey.GENERATION.getKey()))
+			else if (type.equals(RestrictionType.GENERATION))
 			{
 				mGeneration.addRestriction(restriction);
 			}
@@ -626,9 +571,10 @@ public class CharCreator
 	
 	private void freePointsChanged()
 	{
-		mDisciplines.updateValues(false);
-		mSimpleValues.updateValues(false);
-		mBackgrounds.updateValues(false);
+		for (final ItemControllerCreation controller : mControllers)
+		{
+			controller.updateGroups();
+		}
 		updateVolitionEnabled();
 		updatePathEnabled();
 		mVampire.setFreePoints(mFreePoints);

@@ -9,18 +9,16 @@ package com.deepercreeper.vampireapp;
 
 public final class R {
     public static final class array {
-        public static final int abilities_max_creation_values=0x7f04000b;
-        public static final int ability_values=0x7f040001;
-        public static final int attribute_values=0x7f040000;
-        public static final int attributes_max_creation_values=0x7f04000a;
-        public static final int backgrounds=0x7f040005;
-        public static final int clan_generations=0x7f040009;
-        public static final int clans=0x7f040003;
-        public static final int description_fields=0x7f040008;
-        public static final int disciplines=0x7f040004;
-        public static final int nature_and_behavior=0x7f040002;
-        public static final int paths=0x7f040007;
-        public static final int properties=0x7f040006;
+        public static final int ability_values=0x7f040005;
+        public static final int attribute_values=0x7f040004;
+        public static final int backgrounds=0x7f040008;
+        public static final int clan_generations=0x7f040007;
+        public static final int clans=0x7f040006;
+        public static final int description_fields=0x7f040003;
+        public static final int disciplines=0x7f040001;
+        public static final int nature_and_behavior=0x7f040000;
+        public static final int paths=0x7f040002;
+        public static final int properties=0x7f040009;
     }
     public static final class attr {
     }
@@ -39,57 +37,46 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f0a002c;
-        public static final int add_insanity_button=0x7f0a0028;
-        public static final int additional_info_label=0x7f0a0026;
-        public static final int back_to_1_button=0x7f0a0023;
-        public static final int back_to_2_button=0x7f0a002a;
-        public static final int back_to_main_button=0x7f0a0011;
-        public static final int backgrounds_2_panel=0x7f0a0018;
-        public static final int backgrounds_panel=0x7f0a000f;
-        public static final int basic_info_label=0x7f0a0002;
-        public static final int behavior_label=0x7f0a0005;
-        public static final int behavior_spinner=0x7f0a0009;
-        public static final int char_name_text=0x7f0a0003;
-        public static final int characters_list=0x7f0a0001;
-        public static final int clan_label=0x7f0a0008;
-        public static final int clan_spinner=0x7f0a000b;
-        public static final int concept_text=0x7f0a0004;
-        public static final int create_character_button=0x7f0a0000;
-        public static final int decrease_path_button=0x7f0a0020;
-        public static final int decrease_volition_button=0x7f0a001b;
-        public static final int description_values_panel=0x7f0a0027;
-        public static final int disciplines_2_panel=0x7f0a0017;
-        public static final int disciplines_panel=0x7f0a000e;
-        public static final int enable_path_checkbox=0x7f0a001e;
-        public static final int free_points_bar=0x7f0a0015;
-        public static final int free_points_info_label=0x7f0a0013;
-        public static final int free_points_text=0x7f0a0014;
-        public static final int generation_label=0x7f0a000c;
-        public static final int generation_panel=0x7f0a000a;
-        public static final int increase_path_button=0x7f0a0022;
-        public static final int increase_volition_button=0x7f0a001d;
-        public static final int insanities_panel=0x7f0a0029;
-        public static final int nature_label=0x7f0a0007;
-        public static final int nature_spinner=0x7f0a0006;
-        public static final int next_to_2_button=0x7f0a0012;
-        public static final int next_to_3_button=0x7f0a0025;
-        public static final int next_to_4_button=0x7f0a002b;
-        public static final int path_spinner=0x7f0a001f;
-        public static final int path_value=0x7f0a0021;
-        public static final int properties_panel=0x7f0a0010;
-        public static final int reset_temp_points_button=0x7f0a0024;
-        public static final int simple_items_2_panel=0x7f0a0016;
-        public static final int simple_items_panel=0x7f0a000d;
-        public static final int volition_and_path_table=0x7f0a0019;
-        public static final int volition_label=0x7f0a001a;
-        public static final int volition_value=0x7f0a001c;
-    }
-    public static final class integer {
-        public static final int background_max_creation_value=0x7f070001;
-        public static final int discipline_max_creation_value=0x7f070002;
-        public static final int free_points=0x7f070003;
-        public static final int virtue_max_creation_value=0x7f070000;
+        public static final int action_settings=0x7f090027;
+        public static final int add_insanity_button=0x7f090023;
+        public static final int additional_info_label=0x7f090021;
+        public static final int back_to_1_button=0x7f09001e;
+        public static final int back_to_2_button=0x7f090025;
+        public static final int back_to_main_button=0x7f09000e;
+        public static final int basic_info_label=0x7f090002;
+        public static final int behavior_label=0x7f090005;
+        public static final int behavior_spinner=0x7f090009;
+        public static final int char_name_text=0x7f090003;
+        public static final int characters_list=0x7f090001;
+        public static final int clan_label=0x7f090008;
+        public static final int clan_spinner=0x7f09000b;
+        public static final int concept_text=0x7f090004;
+        public static final int controllers_2_panel=0x7f090013;
+        public static final int controllers_panel=0x7f09000d;
+        public static final int create_character_button=0x7f090000;
+        public static final int decrease_path_button=0x7f09001b;
+        public static final int decrease_volition_button=0x7f090016;
+        public static final int description_values_panel=0x7f090022;
+        public static final int enable_path_checkbox=0x7f090019;
+        public static final int free_points_bar=0x7f090012;
+        public static final int free_points_info_label=0x7f090010;
+        public static final int free_points_text=0x7f090011;
+        public static final int generation_label=0x7f09000c;
+        public static final int generation_panel=0x7f09000a;
+        public static final int increase_path_button=0x7f09001d;
+        public static final int increase_volition_button=0x7f090018;
+        public static final int insanities_panel=0x7f090024;
+        public static final int nature_label=0x7f090007;
+        public static final int nature_spinner=0x7f090006;
+        public static final int next_to_2_button=0x7f09000f;
+        public static final int next_to_3_button=0x7f090020;
+        public static final int next_to_4_button=0x7f090026;
+        public static final int path_spinner=0x7f09001a;
+        public static final int path_value=0x7f09001c;
+        public static final int reset_temp_points_button=0x7f09001f;
+        public static final int volition_and_path_table=0x7f090014;
+        public static final int volition_label=0x7f090015;
+        public static final int volition_value=0x7f090017;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -98,13 +85,15 @@ public final class R {
         public static final int create_char_3=0x7f030003;
     }
     public static final class menu {
-        public static final int main=0x7f090000;
+        public static final int main=0x7f080000;
     }
     public static final class string {
         public static final int abilities=0x7f05000b;
+        public static final int add=0x7f050021;
         public static final int add_background=0x7f05000f;
         public static final int add_insanity=0x7f05001f;
         public static final int add_insanity_message=0x7f050020;
+        public static final int add_item=0x7f050023;
         public static final int add_property=0x7f050012;
         public static final int additional_info=0x7f05001c;
         public static final int app_name=0x7f050001;
@@ -123,6 +112,7 @@ public final class R {
         public static final int disciplines=0x7f05000c;
         public static final int edit_background=0x7f050010;
         public static final int edit_discipline=0x7f050014;
+        public static final int edit_item=0x7f050022;
         public static final int edit_property=0x7f050013;
         public static final int free_points_info=0x7f05001e;
         public static final int generation_text=0x7f050009;
@@ -157,10 +147,10 @@ public final class R {
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f080000;
+        public static final int AppBaseTheme=0x7f070000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f080001;
+        public static final int AppTheme=0x7f070001;
     }
 }

@@ -37,31 +37,17 @@
             android:layout_below="@id/free_points_text" />
 
         <LinearLayout
-            android:id="@+id/simple_items_2_panel"
+            android:id="@+id/controllers_2_panel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/free_points_bar"
-            android:orientation="vertical" />
-
-        <LinearLayout
-            android:id="@+id/disciplines_2_panel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/simple_items_2_panel"
-            android:orientation="vertical" />
-
-        <LinearLayout
-            android:id="@+id/backgrounds_2_panel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/disciplines_2_panel"
             android:orientation="vertical" />
 
         <TableLayout
             android:id="@+id/volition_and_path_table"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/backgrounds_2_panel" >
+            android:layout_below="@id/controllers_2_panel" >
 
             <TableRow
                 android:layout_width="match_parent"

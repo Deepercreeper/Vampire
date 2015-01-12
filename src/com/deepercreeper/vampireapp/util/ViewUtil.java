@@ -6,7 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewParent;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
@@ -17,179 +19,164 @@ import android.widget.TableRow;
  */
 public class ViewUtil
 {
-	private static ViewUtil					INSTANCE;
+	private static Context	sContext;
 	
-	private final TableLayout.LayoutParams	mTableWrapAll		= new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+	private static int		sId	= 1;
 	
-	private final TableLayout.LayoutParams	mTableWrapHeight	= new TableLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-	
-	private final TableRow.LayoutParams		mRowWrapAll			= new TableRow.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-	
-	private final TableRow.LayoutParams		mRowMatchAll		= new TableRow.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-	
-	private final TableRow.LayoutParams		mRowTextSize;
-	
-	private final TableRow.LayoutParams		mRowNameShort;
-	
-	private final TableRow.LayoutParams		mRowNameLong;
-	
-	private final TableRow.LayoutParams		mRowNameVeryLong;
-	
-	private final TableRow.LayoutParams		mRowButtonSize;
-	
-	private final LayoutParams				mWrapHeight			= new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-	
-	private final LayoutParams				mZeroHeight			= new LayoutParams(LayoutParams.MATCH_PARENT, 0);
-	
-	private final LayoutParams				mButtonSize;
-	
-	private final LayoutParams				mValueSize;
-	
-	private final LayoutParams				mNameSizeShort;
-	
-	private final LayoutParams				mNumberSize;
-	
-	private final LayoutParams				mWrapAll			= new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-	
-	private ViewUtil(final Context aContext)
+	public static void setContext(final Context aContext)
 	{
-		mRowNameShort = new TableRow.LayoutParams(calcPx(82, aContext), LayoutParams.MATCH_PARENT);
-		mRowNameLong = new TableRow.LayoutParams(calcPx(120, aContext), LayoutParams.MATCH_PARENT);
-		mRowNameVeryLong = new TableRow.LayoutParams(calcPx(300, aContext), LayoutParams.MATCH_PARENT);
-		mButtonSize = new LayoutParams(calcPx(30, aContext), calcPx(30, aContext));
-		mRowButtonSize = new TableRow.LayoutParams(calcPx(30, aContext), calcPx(30, aContext));
-		mValueSize = new LayoutParams(calcPx(25, aContext), LayoutParams.WRAP_CONTENT);
-		mNumberSize = new LayoutParams(LayoutParams.WRAP_CONTENT, calcPx(30, aContext));
-		mNameSizeShort = new LayoutParams(calcPx(82, aContext), calcPx(30, aContext));
-		mRowTextSize = new TableRow.LayoutParams(calcPx(247, aContext), LayoutParams.WRAP_CONTENT);
+		sContext = aContext;
+	}
+	
+	public static void generateId(final View aView)
+	{
+		aView.setId(sId++ );
 	}
 	
 	/**
 	 * @return layout parameters for buttons.
 	 */
-	public LayoutParams getButtonSize()
+	public static LinearLayout.LayoutParams getButtonSize()
 	{
-		return mButtonSize;
+		return new LinearLayout.LayoutParams(calcPx(30), calcPx(30));
+	}
+	
+	/**
+	 * @return layout parameters for relative buttons.
+	 */
+	public static RelativeLayout.LayoutParams getRelativeButtonSize()
+	{
+		return new RelativeLayout.LayoutParams(calcPx(30), calcPx(30));
 	}
 	
 	/**
 	 * @return layout parameters for short name text views.
 	 */
-	public LayoutParams getNameSizeShort()
+	public static LinearLayout.LayoutParams getNameSizeShort()
 	{
-		return mNameSizeShort;
+		return new LinearLayout.LayoutParams(calcPx(82), calcPx(30));
 	}
 	
 	/**
 	 * @return layout parameters for number text views.
 	 */
-	public LayoutParams getNumberSize()
+	public static LinearLayout.LayoutParams getNumberSize()
 	{
-		return mNumberSize;
+		return new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, calcPx(30));
 	}
 	
 	/**
 	 * @return layout parameters for table row buttons.
 	 */
-	public TableRow.LayoutParams getRowButtonSize()
+	public static TableRow.LayoutParams getRowButtonSize()
 	{
-		return mRowButtonSize;
+		return new TableRow.LayoutParams(calcPx(30), calcPx(30));
+	}
+	
+	public static RelativeLayout.LayoutParams getRelativeValueBarSize(final int aWidth)
+	{
+		return new RelativeLayout.LayoutParams(calcPx(aWidth), calcPx(30));
+	}
+	
+	public static RelativeLayout.LayoutParams getRelativeValueTextSize()
+	{
+		return new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, calcPx(30));
 	}
 	
 	/**
 	 * @return layout parameters for long table row name text views.
 	 */
-	public TableRow.LayoutParams getRowNameLong()
+	public static RelativeLayout.LayoutParams getRelativeNameLong()
 	{
-		return mRowNameLong;
+		return new RelativeLayout.LayoutParams(calcPx(80), calcPx(30));
 	}
 	
 	/**
 	 * @return layout parameters for long table row name text views.
 	 */
-	public TableRow.LayoutParams getRowNameVeryLong()
+	public static TableRow.LayoutParams getRowNameVeryLong()
 	{
-		return mRowNameVeryLong;
+		return new TableRow.LayoutParams(calcPx(300), LayoutParams.MATCH_PARENT);
 	}
 	
 	/**
 	 * @return layout parameters for short table row name text views.
 	 */
-	public TableRow.LayoutParams getRowNameShort()
+	public static TableRow.LayoutParams getRowNameShort()
 	{
-		return mRowNameShort;
+		return new TableRow.LayoutParams(calcPx(82), LayoutParams.MATCH_PARENT);
 	}
 	
 	/**
 	 * @return layout parameters for table row text views.
 	 */
-	public TableRow.LayoutParams getRowTextSize()
+	public static TableRow.LayoutParams getRowTextSize()
 	{
-		return mRowTextSize;
+		return new TableRow.LayoutParams(calcPx(247), LayoutParams.WRAP_CONTENT);
 	}
 	
 	/**
 	 * @return layout parameters for table row wrap all views.
 	 */
-	public TableRow.LayoutParams getRowWrapAll()
+	public static TableRow.LayoutParams getRowWrapAll()
 	{
-		return mRowWrapAll;
+		return new TableRow.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 	}
 	
 	/**
 	 * @return layout parameters for table row match all views.
 	 */
-	public TableRow.LayoutParams getRowMatchAll()
+	public static TableRow.LayoutParams getRowMatchAll()
 	{
-		return mRowMatchAll;
+		return new TableRow.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 	}
 	
 	/**
 	 * @return layout parameters for table wrap all views.
 	 */
-	public TableLayout.LayoutParams getTableWrapAll()
+	public static TableLayout.LayoutParams getTableWrapAll()
 	{
-		return mTableWrapAll;
+		return new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 	}
 	
 	/**
 	 * @return layout parameters for table wrap height views.
 	 */
-	public TableLayout.LayoutParams getTableWrapHeight()
+	public static TableLayout.LayoutParams getTableWrapHeight()
 	{
-		return mTableWrapHeight;
+		return new TableLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 	}
 	
 	/**
 	 * @return layout parameters for value views.
 	 */
-	public LayoutParams getValueSize()
+	public static LinearLayout.LayoutParams getValueSize()
 	{
-		return mValueSize;
+		return new LinearLayout.LayoutParams(calcPx(25), LayoutParams.WRAP_CONTENT);
 	}
 	
 	/**
 	 * @return layout parameters for wrap all views.
 	 */
-	public LayoutParams getWrapAll()
+	public static LinearLayout.LayoutParams getWrapAll()
 	{
-		return mWrapAll;
+		return new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 	}
 	
 	/**
 	 * @return layout parameters for wrap height views.
 	 */
-	public LayoutParams getWrapHeight()
+	public static LinearLayout.LayoutParams getWrapHeight()
 	{
-		return mWrapHeight;
+		return new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 	}
 	
 	/**
 	 * @return layout parameters for zero height views.
 	 */
-	public LayoutParams getZeroHeight()
+	public static LinearLayout.LayoutParams getZeroHeight()
 	{
-		return mZeroHeight;
+		return new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 0);
 	}
 	
 	/**
@@ -209,6 +196,24 @@ public class ViewUtil
 	}
 	
 	/**
+	 * Calculates the fetched width of the given layout in pixels.
+	 * 
+	 * @param aLayout
+	 *            The layout to measure.
+	 * @return the height of the given layout.
+	 */
+	public static int calcWidth(final ViewGroup aLayout)
+	{
+		final LayoutParams params = aLayout.getLayoutParams();
+		final int width = params.width;
+		params.width = LayoutParams.WRAP_CONTENT;
+		aLayout.measure(0, 0);
+		final int measuredWidth = aLayout.getMeasuredWidth();
+		params.width = width;
+		return measuredWidth;
+	}
+	
+	/**
 	 * Calculates the fetched height of the given layout in pixels.
 	 * 
 	 * @param aLayout
@@ -217,8 +222,13 @@ public class ViewUtil
 	 */
 	public static int calcHeight(final ViewGroup aLayout)
 	{
+		final LayoutParams params = aLayout.getLayoutParams();
+		final int height = params.height;
+		params.height = LayoutParams.WRAP_CONTENT;
 		aLayout.measure(0, 0);
-		return aLayout.getMeasuredHeight();
+		final int measuredHeight = aLayout.getMeasuredHeight();
+		params.height = height;
+		return measuredHeight;
 	}
 	
 	/**
@@ -226,32 +236,11 @@ public class ViewUtil
 	 * 
 	 * @param aDp
 	 *            The number of device independent pixels to transform.
-	 * @param aContext
-	 *            The context.
 	 * @return the number of pixels that corresponds to the given value.
 	 */
-	public static int calcPx(final int aDp, final Context aContext)
+	public static int calcPx(final int aDp)
 	{
-		return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, aDp, aContext.getResources().getDisplayMetrics()));
-	}
-	
-	/**
-	 * Initializes the layout parameters by instantiating the utility.
-	 * 
-	 * @param aContext
-	 *            The context.
-	 */
-	public static void init(final Context aContext)
-	{
-		INSTANCE = new ViewUtil(aContext);
-	}
-	
-	/**
-	 * @return the current view utility instance.
-	 */
-	public static ViewUtil instance()
-	{
-		return INSTANCE;
+		return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, aDp, sContext.getResources().getDisplayMetrics()));
 	}
 	
 	/**
@@ -259,23 +248,17 @@ public class ViewUtil
 	 * 
 	 * @param aView
 	 *            The view to release.
-	 * @param aChildren
-	 *            Whether the children of the given view should be removed too.
 	 */
-	public static void release(final View aView, final boolean aChildren)
+	public static void release(final View aView)
 	{
 		if (aView == null)
 		{
 			return;
 		}
-		if (aChildren && aView instanceof ViewGroup)
-		{
-			((ViewGroup) aView).removeAllViews();
-		}
 		final ViewParent parent = aView.getParent();
 		if (parent instanceof ViewGroup)
 		{
-			((ViewGroup) parent).removeAllViews();
+			((ViewGroup) parent).removeView(aView);
 		}
 	}
 }
