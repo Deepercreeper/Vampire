@@ -549,7 +549,8 @@ public class ItemGroupCreationImpl extends RestrictionableImpl implements ItemGr
 	{
 		if (isMutable())
 		{
-			mAddButton.setEnabled( !getAddableItems().isEmpty() && getItemsList().size() < getMaxValue(RestrictionType.GROUP_CHILDREN_COUNT));
+			mAddButton.setEnabled( !getAddableItems().isEmpty() && getItemsList().size() < getMaxValue(RestrictionType.GROUP_CHILDREN_COUNT)
+					&& getItemsList().size() < getItemGroup().getMaxItems());
 		}
 	}
 	

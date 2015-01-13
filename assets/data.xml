@@ -319,8 +319,8 @@
 
                 <group name="Hintergrund" />
             </group-option>
-            
-             <group-option
+
+            <group-option
                 name="Tugenden"
                 maxValues="10"
                 value="true" >
@@ -710,6 +710,44 @@
                 value="true" >
 
                 <group name="Eigenschaften" />
+            </group-option>
+        </controller>
+
+        <controller name="Pfad" >
+
+            <group
+                name="Pfad"
+                freePointsCost="2"
+                maxValue="10"
+                mutable="true"
+                startValue="5"
+                value="true" 
+                maxItems="1"
+                >
+
+                <item name="Pfad des Blutes"/>
+
+                <item name="Pfad des Himmels"/>
+
+                <item name="Pfad der Menschlichkeit"/>
+
+                <item name="Pfad des Paradoxen"/>
+
+                <item name="Pfad der Ritterlichkeit"/>
+
+                <item name="Pfad des Teufels"/>
+
+                <item name="Pfad des Tiers"/>
+
+                <item name="Pfad des Typhon"/>
+            </group>
+
+            <group-option
+                name="Pfad"
+                maxValues="5"
+                value="true" >
+
+                <group name="Pfad" />
             </group-option>
         </controller>
     </controllers>

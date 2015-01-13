@@ -39,6 +39,8 @@ public interface ItemGroup extends Comparable<ItemGroup>
 	
 	public int getMaxLowLevelValue();
 	
+	public int getMaxItems();
+	
 	public int getMaxValue();
 	
 	/**

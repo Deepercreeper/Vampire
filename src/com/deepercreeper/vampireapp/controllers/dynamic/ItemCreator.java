@@ -238,6 +238,11 @@ public class ItemCreator
 				int startValue = 0;
 				int maxLowLevelValue = 0;
 				int freePointsCost = 0;
+				int maxItems = Integer.MAX_VALUE;
+				if (child.hasAttribute("maxItems"))
+				{
+					maxItems = Integer.parseInt(child.getAttribute("maxItems"));
+				}
 				if (valueGroup)
 				{
 					try
@@ -266,7 +271,7 @@ public class ItemCreator
 					}
 					startValue = Integer.parseInt(child.getAttribute("startValue"));
 				}
-				final ItemGroup group = new ItemGroupImpl(name, mutable, maxLowLevelValue, startValue, maxValue, freePointsCost, valueGroup);
+				final ItemGroup group = new ItemGroupImpl(name, mutable, maxLowLevelValue, startValue, maxValue, freePointsCost, valueGroup, maxItems);
 				for (final Item item : createItems(child, group, null))
 				{
 					group.addItem(item);

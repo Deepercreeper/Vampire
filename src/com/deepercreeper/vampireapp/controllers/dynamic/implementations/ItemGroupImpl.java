@@ -29,6 +29,8 @@ public class ItemGroupImpl implements ItemGroup
 	
 	private final int					mMaxLowLevelValue;
 	
+	private final int					mMaxItems;
+	
 	private final int					mStartValue;
 	
 	private final int					mMaxValue;
@@ -44,7 +46,7 @@ public class ItemGroupImpl implements ItemGroup
 	 *            The group name.
 	 */
 	public ItemGroupImpl(final String aName, final boolean aMutable, final int aMaxLowLevelValue, final int aStartValue, final int aMaxValue,
-			final int aFreePointsCost, final boolean aValueGroup)
+			final int aFreePointsCost, final boolean aValueGroup, final int aMaxItems)
 	{
 		mName = aName;
 		mMutable = aMutable;
@@ -53,6 +55,7 @@ public class ItemGroupImpl implements ItemGroup
 		mMaxLowLevelValue = aMaxLowLevelValue;
 		mStartValue = aStartValue;
 		mMaxValue = aMaxValue;
+		mMaxItems = aMaxItems;
 	}
 	
 	@Override
@@ -109,6 +112,12 @@ public class ItemGroupImpl implements ItemGroup
 			return 0;
 		}
 		return mFreePointsCost;
+	}
+	
+	@Override
+	public int getMaxItems()
+	{
+		return mMaxItems;
 	}
 	
 	@Override
