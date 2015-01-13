@@ -18,11 +18,7 @@ public class Character
 	
 	private final InsanityValueController		mInsanities;
 	
-	private final VolitionController			mVolition;
-	
 	private final ExperienceController			mEP;
-	
-	private final PathController				mPath;
 	
 	public Character(final CharCreator aCreator)
 	{
@@ -30,8 +26,6 @@ public class Character
 		mControllers = new ArrayList<ItemControllerInstance>();
 		mDescriptions = new DescriptionValueController(aCreator.getDescriptions());
 		mInsanities = new InsanityValueController();
-		mVolition = new VolitionController(aCreator.getVolitionPoints());
 		mEP = new ExperienceController();
-		mPath = new PathController(aCreator.getPath(), aCreator.getPathPoints());
 	}
 }

@@ -9,16 +9,9 @@ package com.deepercreeper.vampireapp;
 
 public final class R {
     public static final class array {
-        public static final int ability_values=0x7f040005;
-        public static final int attribute_values=0x7f040004;
-        public static final int backgrounds=0x7f040008;
-        public static final int clan_generations=0x7f040007;
-        public static final int clans=0x7f040006;
-        public static final int description_fields=0x7f040003;
+        public static final int description_fields=0x7f040002;
         public static final int disciplines=0x7f040001;
         public static final int nature_and_behavior=0x7f040000;
-        public static final int paths=0x7f040002;
-        public static final int properties=0x7f040009;
     }
     public static final class attr {
     }
@@ -30,18 +23,18 @@ public final class R {
          would include 7" and 10" devices in landscape (~960dp and ~1280dp respectively).
     
          */
-        public static final int activity_horizontal_margin=0x7f060000;
-        public static final int activity_vertical_margin=0x7f060001;
+        public static final int activity_horizontal_margin=0x7f050000;
+        public static final int activity_vertical_margin=0x7f050001;
     }
     public static final class drawable {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f090027;
-        public static final int add_insanity_button=0x7f090023;
-        public static final int additional_info_label=0x7f090021;
-        public static final int back_to_1_button=0x7f09001e;
-        public static final int back_to_2_button=0x7f090025;
+        public static final int action_settings=0x7f09001d;
+        public static final int add_insanity_button=0x7f090019;
+        public static final int additional_info_label=0x7f090017;
+        public static final int back_to_1_button=0x7f090014;
+        public static final int back_to_2_button=0x7f09001b;
         public static final int back_to_main_button=0x7f09000e;
         public static final int basic_info_label=0x7f090002;
         public static final int behavior_label=0x7f090005;
@@ -54,29 +47,19 @@ public final class R {
         public static final int controllers_2_panel=0x7f090013;
         public static final int controllers_panel=0x7f09000d;
         public static final int create_character_button=0x7f090000;
-        public static final int decrease_path_button=0x7f09001b;
-        public static final int decrease_volition_button=0x7f090016;
-        public static final int description_values_panel=0x7f090022;
-        public static final int enable_path_checkbox=0x7f090019;
+        public static final int description_values_panel=0x7f090018;
         public static final int free_points_bar=0x7f090012;
         public static final int free_points_info_label=0x7f090010;
         public static final int free_points_text=0x7f090011;
         public static final int generation_label=0x7f09000c;
         public static final int generation_panel=0x7f09000a;
-        public static final int increase_path_button=0x7f09001d;
-        public static final int increase_volition_button=0x7f090018;
-        public static final int insanities_panel=0x7f090024;
+        public static final int insanities_panel=0x7f09001a;
         public static final int nature_label=0x7f090007;
         public static final int nature_spinner=0x7f090006;
         public static final int next_to_2_button=0x7f09000f;
-        public static final int next_to_3_button=0x7f090020;
-        public static final int next_to_4_button=0x7f090026;
-        public static final int path_spinner=0x7f09001a;
-        public static final int path_value=0x7f09001c;
-        public static final int reset_temp_points_button=0x7f09001f;
-        public static final int volition_and_path_table=0x7f090014;
-        public static final int volition_label=0x7f090015;
-        public static final int volition_value=0x7f090017;
+        public static final int next_to_3_button=0x7f090016;
+        public static final int next_to_4_button=0x7f09001c;
+        public static final int reset_temp_points_button=0x7f090015;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -88,42 +71,41 @@ public final class R {
         public static final int main=0x7f080000;
     }
     public static final class string {
-        public static final int abilities=0x7f05000b;
-        public static final int add=0x7f050021;
-        public static final int add_background=0x7f05000f;
-        public static final int add_insanity=0x7f05001f;
-        public static final int add_insanity_message=0x7f050020;
-        public static final int add_item=0x7f050023;
-        public static final int add_property=0x7f050012;
-        public static final int additional_info=0x7f05001c;
-        public static final int app_name=0x7f050001;
-        public static final int attributes=0x7f05000a;
-        public static final int back=0x7f050017;
-        public static final int backgrounds=0x7f05000e;
-        public static final int basic_info=0x7f05001d;
-        public static final int behavior_text=0x7f050007;
-        public static final int button_create_character=0x7f050002;
-        public static final int char_name=0x7f050004;
-        public static final int clan_text=0x7f050008;
-        public static final int concept=0x7f050005;
-        public static final int context_settings=0x7f050003;
-        public static final int description=0x7f05001b;
-        public static final int discipline=0x7f05000d;
-        public static final int disciplines=0x7f05000c;
-        public static final int edit_background=0x7f050010;
-        public static final int edit_discipline=0x7f050014;
-        public static final int edit_item=0x7f050022;
-        public static final int edit_property=0x7f050013;
-        public static final int free_points_info=0x7f05001e;
-        public static final int generation_text=0x7f050009;
-        public static final int nature_text=0x7f050006;
-        public static final int next=0x7f050016;
-        public static final int path_points=0x7f05001a;
-        public static final int properties=0x7f050011;
-        public static final int reset=0x7f050018;
-        public static final int virtue_values=0x7f050000;
-        public static final int virtues=0x7f050015;
-        public static final int volition_points=0x7f050019;
+        public static final int abilities=0x7f06000a;
+        public static final int add=0x7f060020;
+        public static final int add_background=0x7f06000e;
+        public static final int add_insanity=0x7f06001e;
+        public static final int add_insanity_message=0x7f06001f;
+        public static final int add_item=0x7f060022;
+        public static final int add_property=0x7f060011;
+        public static final int additional_info=0x7f06001b;
+        public static final int app_name=0x7f060000;
+        public static final int attributes=0x7f060009;
+        public static final int back=0x7f060016;
+        public static final int backgrounds=0x7f06000d;
+        public static final int basic_info=0x7f06001c;
+        public static final int behavior_text=0x7f060006;
+        public static final int button_create_character=0x7f060001;
+        public static final int char_name=0x7f060003;
+        public static final int clan_text=0x7f060007;
+        public static final int concept=0x7f060004;
+        public static final int context_settings=0x7f060002;
+        public static final int description=0x7f06001a;
+        public static final int discipline=0x7f06000c;
+        public static final int disciplines=0x7f06000b;
+        public static final int edit_background=0x7f06000f;
+        public static final int edit_discipline=0x7f060013;
+        public static final int edit_item=0x7f060021;
+        public static final int edit_property=0x7f060012;
+        public static final int free_points_info=0x7f06001d;
+        public static final int generation_text=0x7f060008;
+        public static final int nature_text=0x7f060005;
+        public static final int next=0x7f060015;
+        public static final int path_points=0x7f060019;
+        public static final int properties=0x7f060010;
+        public static final int reset=0x7f060017;
+        public static final int virtues=0x7f060014;
+        public static final int volition_points=0x7f060018;
     }
     public static final class style {
         /** 

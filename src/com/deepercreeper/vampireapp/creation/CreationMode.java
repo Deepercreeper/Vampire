@@ -138,7 +138,7 @@ public enum CreationMode
 		}
 	}
 	
-	public boolean canChangeGroup(final ItemGroupCreation aGroup)
+	public boolean canAddItem(final ItemGroupCreation aGroup)
 	{
 		if ( !aGroup.isMutable())
 		{

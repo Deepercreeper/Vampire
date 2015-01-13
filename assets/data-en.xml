@@ -1,0 +1,923 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data>
+
+    <controllers>
+
+        <controller name="Attributes" >
+
+            <group
+                name="Physically"
+                freePointsCost="5"
+                maxLowLevelValue="5"
+                maxValue="6"
+                mutable="false"
+                startValue="1"
+                value="true" >
+
+                <item name="Strength"/>
+
+                <item name="Dexterity"/>
+
+                <item name="Resistance"/>
+            </group>
+
+            <group
+                name="Social"
+                freePointsCost="5"
+                maxLowLevelValue="5"
+                maxValue="6"
+                mutable="false"
+                startValue="1"
+                value="true" >
+
+                <item name="Charisma"/>
+
+                <item name="Manipulation"/>
+
+                <item name="Appearance"/>
+            </group>
+
+            <group
+                name="Mental"
+                freePointsCost="5"
+                maxLowLevelValue="5"
+                maxValue="6"
+                mutable="false"
+                startValue="1"
+                value="true" >
+
+                <item name="Cognition"/>
+
+                <item name="Intelligence"/>
+
+                <item name="Intellect"/>
+            </group>
+
+            <group-option
+                name="Attributes"
+                maxValues="6,8,10"
+                value="true" >
+
+                <group name="Physically" />
+
+                <group name="Social" />
+
+                <group name="Mental" />
+            </group-option>
+        </controller>
+
+        <controller name="Abilities" >
+
+            <group
+                name="Talents"
+                freePointsCost="3"
+                maxLowLevelValue="5"
+                maxValue="6"
+                mutable="false"
+                startValue="0"
+                value="true" >
+
+                <item name="Attention"/>
+
+                <item name="Excuses"/>
+
+                <item name="Ducking"/>
+
+                <item name="Theft"/>
+
+                <item name="Intimidation"/>
+
+                <item name="Empathy"/>
+
+                <item name="Leadership"/>
+
+                <item name="Hand to hand"/>
+
+                <item name="Acting"/>
+
+                <item name="Sportiness"/>
+            </group>
+
+            <group
+                name="Skills"
+                freePointsCost="3"
+                maxLowLevelValue="5"
+                maxValue="6"
+                mutable="false"
+                startValue="0"
+                value="true" >
+
+                <item name="Archery"/>
+
+                <item name="Etiquette"/>
+
+                <item name="Crafting"/>
+
+                <item name="Stealth"/>
+
+                <item name="Herbalism"/>
+
+                <item name="Music"/>
+
+                <item name="Melee"/>
+
+                <item name="Riding"/>
+
+                <item name="Zoology"/>
+
+                <item name="Survival"/>
+            </group>
+
+            <group
+                name="Knowledge"
+                freePointsCost="3"
+                maxLowLevelValue="5"
+                maxValue="6"
+                mutable="false"
+                startValue="0"
+                value="true" >
+
+                <item name="Academic knowledge"/>
+
+                <item name="Folklore"/>
+
+                <item name="Legislation"/>
+
+                <item
+                    name="Linguistics"
+                    needsDescription="true"/>
+
+                <item name="Medicine"/>
+
+                <item name="Inquiring"/>
+
+                <item name="Science"/>
+
+                <item name="Occultism"/>
+
+                <item name="Politics"/>
+
+                <item name="Management"/>
+            </group>
+
+            <group-option
+                name="Abilities"
+                maxValues="5,9,13"
+                value="true" >
+
+                <group name="Talents" />
+
+                <group name="Skills" />
+
+                <group name="Knowledge" />
+            </group-option>
+        </controller>
+
+        <controller name="Benefits" >
+
+            <group
+                name="Disciplines"
+                freePointsCost="7"
+                maxLowLevelValue="5"
+                maxValue="6"
+                mutable="false"
+                startValue="0"
+                value="true" >
+
+                <item name="Auspex"/>
+
+                <item name="Speed"/>
+
+                <item name="Quietus"/>
+
+                <item name="Strength"/>
+
+                <item name="Animality"/>
+
+                <item name="Domination"/>
+
+                <item name="Fleshforming"/>
+
+                <item name="Gestalt-switch"/>
+
+                <item name="Mortis"/>
+
+                <item name="Presence"/>
+
+                <item name="Shadow play"/>
+
+                <item name="Chimeras"/>
+
+                <item name="Fortitude"/>
+
+                <item name="Serpentis"/>
+
+                <item name="Daimonion"/>
+
+                <item name="Insanity"/>
+
+                <item name="Obscuration"/>
+
+                <item
+                    name="Thaumaturgy"
+                    mutableParent="true"
+                    parent="true"
+                    valueItem="false">
+
+                    <item
+                        name="Rego Vitam"
+                        startValue="0"/>
+
+                    <item
+                        name="Creo Ignem"
+                        startValue="0"/>
+
+                    <item
+                        name="Rego Motum"
+                        startValue="0"/>
+
+                    <item
+                        name="Rego Tempestatem"
+                        startValue="0"/>
+
+                    <item
+                        name="Rego Aquam"
+                        startValue="0"/>
+
+                    <item
+                        name="Rego Elementum"
+                        startValue="0"/>
+                </item>
+            </group>
+
+            <group
+                name="Background"
+                freePointsCost="7"
+                maxLowLevelValue="5"
+                maxValue="5"
+                mutable="true"
+                startValue="0"
+                value="true" >
+
+                <item
+                    name="Influence"
+                    needsDescription="true"/>
+
+                <item
+                    name="Minions"
+                    needsDescription="true"/>
+
+                <item name="Generation"/>
+
+                <item
+                    name="Drove"
+                    needsDescription="true"/>
+
+                <item
+                    name="Mentor"
+                    needsDescription="true"/>
+
+                <item name="Contacts"/>
+
+                <item name="Resources"/>
+
+                <item name="Status"/>
+
+                <item
+                    name="Allies"
+                    needsDescription="true"/>
+            </group>
+
+            <group
+                name="Virtues"
+                freePointsCost="2"
+                maxLowLevelValue="5"
+                maxValue="5"
+                mutable="false"
+                startValue="1"
+                value="true" >
+
+                <item name="Conscience/Conviction"/>
+
+                <item name="Self-control/Instinct"/>
+
+                <item name="Courage"/>
+            </group>
+
+            <group-option
+                name="Disciplines"
+                maxValues="4"
+                value="true" >
+
+                <group name="Disciplines" />
+            </group-option>
+
+            <group-option
+                name="Background"
+                maxValues="5"
+                value="true" >
+
+                <group name="Background" />
+            </group-option>
+
+            <group-option
+                name="Virtues"
+                maxValues="10"
+                value="true" >
+
+                <group name="Virtues" />
+            </group-option>
+        </controller>
+
+        <controller name="Properties" >
+
+            <group
+                name="Properties"
+                mutable="true"
+                startValue="0"
+                value="true" >
+
+                <item
+                    name="Determination"
+                    needsDescription="true"
+                    values="0,1"/>
+
+                <item
+                    name="Common sense"
+                    values="0,1"/>
+
+                <item
+                    name="Concentration"
+                    values="0,1"/>
+
+                <item
+                    name="Astrologer"
+                    values="0,1"/>
+
+                <item
+                    name="Light sleep"
+                    values="0,2"/>
+
+                <item
+                    name="Eidetic memory"
+                    values="0,2"/>
+
+                <item
+                    name="Calm"
+                    values="0,3"/>
+
+                <item
+                    name="Iron will"
+                    values="0,4"/>
+
+                <item
+                    name="Self-assurance"
+                    values="0,5"/>
+
+                <item
+                    name="Outstanding senses"
+                    needsDescription="true"
+                    values="0,1,2,3,4,5"/>
+
+                <item
+                    name="Ambidexterity"
+                    values="0,1"/>
+
+                <item
+                    name="Eating"
+                    values="0,1"/>
+
+                <item
+                    name="Talented linguist"
+                    values="0,2"/>
+
+                <item
+                    name="Good pupil"
+                    values="0,5"/>
+
+                <item
+                    name="Jack of all trades, master of none"
+                    values="0,5"/>
+
+                <item
+                    name="True love"
+                    values="0,1"/>
+
+                <item
+                    name="Fairy affection"
+                    values="0,2"/>
+
+                <item
+                    name="Sixth sense"
+                    values="0,2"/>
+
+                <item
+                    name="Immune to blood ties"
+                    values="0,3"/>
+
+                <item
+                    name="Luck"
+                    values="0,4"/>
+
+                <item
+                    name="True faith"
+                    values="0,7"/>
+
+                <item
+                    name="Assistance"
+                    values="0,1,2,3"/>
+
+                <item
+                    name="Special present"
+                    needsDescription="true"
+                    values="0,1,2,3"/>
+
+                <item
+                    name="Good reputation"
+                    values="0,2"/>
+
+                <item
+                    name="Puppet"
+                    needsDescription="true"
+                    values="0,3"/>
+
+                <item
+                    name="Patrician"
+                    values="0,1,2,3"/>
+
+                <item
+                    name="Clerical degree"
+                    values="0,1,2,3"/>
+
+                <item
+                    name="Estate house"
+                    needsDescription="true"
+                    values="0,2"/>
+
+                <item
+                    name="Control over an institution"
+                    needsDescription="true"
+                    values="0,2,3,4,5"/>
+
+                <item
+                    name="Espionage network"
+                    values="0,2"/>
+
+                <item
+                    name="Contortionist"
+                    values="0,1"/>
+
+                <item
+                    name="Good circulation"
+                    values="0,2"/>
+
+                <item
+                    name="Offset heart"
+                    values="0,2"/>
+
+                <item
+                    name="Effective digestion"
+                    values="0,3"/>
+
+                <item
+                    name="Giantism"
+                    values="0,4"/>
+
+                <item
+                    name="Nightmares"
+                    values="0,-1"/>
+
+                <item
+                    name="Prey constraint"
+                    needsDescription="true"
+                    values="0,-1"/>
+
+                <item
+                    name="Intolerance/Hate"
+                    needsDescription="true"
+                    values="0,-1,-2,-3"/>
+
+                <item
+                    name="Phobia"
+                    needsDescription="true"
+                    values="0,-1,-3"/>
+
+                <item
+                    name="Hubris"
+                    values="0,-1"/>
+
+                <item
+                    name="Obsession"
+                    needsDescription="true"
+                    values="0,-1"/>
+
+                <item
+                    name="Inferiority complexes"
+                    values="0,-2"/>
+
+                <item
+                    name="Stationary"
+                    needsDescription="true"
+                    values="0,-2"/>
+
+                <item
+                    name="Revenge"
+                    needsDescription="true"
+                    values="0,-2"/>
+
+                <item
+                    name="Sensitivity"
+                    values="0,-2"/>
+
+                <item
+                    name="Possession"
+                    needsDescription="true"
+                    values="0,-3"/>
+
+                <item
+                    name="Deep sleep"
+                    values="0,-1"/>
+
+                <item
+                    name="Amnesia"
+                    values="0,-2"/>
+
+                <item
+                    name="Confused"
+                    values="0,-2"/>
+
+                <item
+                    name="Weak will"
+                    values="0,-2"/>
+
+                <item
+                    name="Preoccipied"
+                    values="0,-3"/>
+
+                <item
+                    name="Colorblindness"
+                    values="0,-1"/>
+
+                <item
+                    name="Deafness"
+                    values="0,-1"/>
+
+                <item
+                    name="Monocular vision"
+                    values="0,-2"/>
+
+                <item
+                    name="Bad sight"
+                    values="0,-2"/>
+
+                <item
+                    name="Numbness"
+                    values="0,-4"/>
+
+                <item
+                    name="Blindness"
+                    values="0,-5"/>
+
+                <item
+                    name="Untalented"
+                    values="0,-5"/>
+
+                <item
+                    name="Unable"
+                    values="0,-5"/>
+
+                <item
+                    name="Illiterate"
+                    values="0,-5"/>
+
+                <item
+                    name="Stigma of doom"
+                    values="0,-1"/>
+
+                <item
+                    name="Haunted by demons"
+                    values="0,-1,-2,-3,-4"/>
+
+                <item
+                    name="Disgusted by garlic"
+                    values="0,-2"/>
+
+                <item
+                    name="Spook"
+                    values="0,-3"/>
+
+                <item
+                    name="Dark destiny"
+                    values="0,-5"/>
+
+                <item
+                    name="Creator refusal"
+                    values="0,-1"/>
+
+                <item
+                    name="Infamous creator"
+                    values="0,-1"/>
+
+                <item
+                    name="Enemy"
+                    needsDescription="true"
+                    values="0,-1,-2,-3,-4,-5"/>
+
+                <item
+                    name="Infamous"
+                    values="0,-3"/>
+
+                <item
+                    name="Second-class citizen"
+                    values="0,-2"/>
+
+                <item
+                    name="Presumed dead"
+                    values="0,-2"/>
+
+                <item
+                    name="Ward"
+                    values="0,-3"/>
+
+                <item
+                    name="Haunted"
+                    values="0,-4"/>
+
+                <item
+                    name="Short"
+                    values="0,-1"/>
+
+                <item
+                    name="Weak blood"
+                    values="0,-1"/>
+
+                <item
+                    name="Distorted"
+                    needsDescription="true"
+                    values="0,-2"/>
+
+                <item
+                    name="Selective digestion"
+                    values="0,-2"/>
+
+                <item
+                    name="Permanent wound"
+                    needsDescription="true"
+                    values="0,-3"/>
+
+                <item
+                    name="One-armed"
+                    values="0,-3"/>
+
+                <item
+                    name="Child"
+                    values="0,-3"/>
+
+                <item
+                    name="Paralysis"
+                    values="0,-3"/>
+
+                <item
+                    name="Leper"
+                    values="0,-3"/>
+
+                <item
+                    name="Deformity"
+                    needsDescription="true"
+                    values="0,-3"/>
+
+                <item
+                    name="Anemia"
+                    values="0,-4"/>
+
+                <item
+                    name="Muteness"
+                    values="0,-4"/>
+            </group>
+
+            <group-option
+                name="Properties"
+                maxValues="0"
+                value="true" >
+
+                <group name="Properties" />
+            </group-option>
+        </controller>
+
+        <controller name="Path" >
+
+            <group
+                name="Path"
+                freePointsCost="2"
+                maxItems="1"
+                maxValue="10"
+                mutable="true"
+                startValue="5"
+                value="true" >
+
+                <item name="Path of blood"/>
+
+                <item name="Path of heaven"/>
+
+                <item name="Path of humanity"/>
+
+                <item name="Path of paradox"/>
+
+                <item name="Path of chivaldry"/>
+
+                <item name="Path of devil"/>
+
+                <item name="Path of animal"/>
+
+                <item name="Path of thyphon"/>
+            </group>
+
+            <group
+                name="Volition"
+                freePointsCost="2"
+                maxValue="20"
+                mutable="false"
+                startValue="10"
+                value="true" >
+
+                <item name="Volition"/>
+            </group>
+            
+            <group-option
+                name="Path"
+                maxValues="5"
+                value="true" >
+
+                <group name="Path" />
+            </group-option>
+            
+             <group-option
+                name="Volition"
+                maxValues="10"
+                value="true" >
+
+                <group name="Volition" />
+            </group-option>
+        </controller>
+    </controllers>
+
+    <clans>
+
+        <clan name="Assamites" >
+
+            <restriction
+                itemName="Disciplines"
+                items="Speed,Quietus,Obscuration"
+                type="GroupChildren" />
+        </clan>
+
+        <clan name="Nosferatu" >
+
+            <restriction
+                itemName="Disciplines"
+                items="Strenth,Animality,Obscuration"
+                type="GroupChildren" />
+
+            <restriction
+                itemName="Appearance"
+                range="=0"
+                type="ItemValue" />
+        </clan>
+
+        <clan name="Brujah" >
+
+            <restriction
+                itemName="Disciplines"
+                items="Speed,Presence,Strenth"
+                type="GroupChildren" />
+        </clan>
+
+        <clan name="Caitiff" >
+
+            <restriction
+                itemName="Disciplines"
+                items=""
+                type="GroupChildren" />
+
+            <restriction
+                range="=13"
+                type="Generation" />
+        </clan>
+
+        <clan name="Gangrel" >
+
+            <restriction
+                itemName="Disciplines"
+                items="Gestalt-switch,Fortitude,Animality"
+                type="GroupChildren" />
+        </clan>
+
+        <clan name="Followers of Seth" >
+
+            <restriction
+                itemName="Disciplines"
+                items="Presence,Serpentis,Obscuration"
+                type="GroupChildren" />
+        </clan>
+
+        <clan name="Cappadozians" >
+
+            <restriction
+                itemName="Disciplines"
+                items="Auspex,Mortis,Fortitude"
+                type="GroupChildren" />
+        </clan>
+
+        <clan name="Lasombra" >
+
+            <restriction
+                itemName="Disciplines"
+                items="Domination,Shadow play,Strenth"
+                type="GroupChildren" />
+        </clan>
+
+        <clan name="Malkavians" >
+
+            <restriction
+                itemName="Disciplines"
+                items="Auspex,Insanity,Obscuration"
+                type="GroupChildren" />
+
+            <restriction
+                range=">0"
+                type="Insanity" />
+        </clan>
+
+        <clan name="Ravnos" >
+
+            <restriction
+                itemName="Disciplines"
+                items="Chimera,Fortitude,Animality"
+                type="GroupChildren" />
+        </clan>
+
+        <clan name="Toriador" >
+
+            <restriction
+                itemName="Disciplines"
+                items="Auspex,Speed,Presence"
+                type="GroupChildren" />
+        </clan>
+
+        <clan name="Tzimisce" >
+
+            <restriction
+                itemName="Disciplines"
+                items="Auspex,Fleshforming,Animality"
+                type="GroupChildren" />
+        </clan>
+
+        <clan name="Ventrue" >
+
+            <restriction
+                itemName="Disciplines"
+                items="Domination,Presence,Fortitude"
+                type="GroupChildren" />
+        </clan>
+
+        <clan name="Tremere" >
+
+            <restriction
+                itemName="Disciplines"
+                items="Thaumaturgy,Auspex,Domination"
+                type="GroupChildren" />
+
+            <restriction
+                itemName="Thaumaturgy"
+                range="&lt;3"
+                type="ItemChildrenCount" />
+
+            <restriction
+                index="1"
+                itemName="Thaumaturgy"
+                range="=0"
+                type="ItemChildValueAt" >
+
+                <condition
+                    index="0"
+                    itemName="Thaumaturgy"
+                    query="ItemChildValueAt"
+                    range="&lt;2" />
+            </restriction>
+
+            <restriction
+                index="0"
+                itemName="Thaumaturgy"
+                range=">1"
+                type="ItemChildValueAt" >
+
+                <condition
+                    index="1"
+                    itemName="Thaumaturgy"
+                    query="ItemChildValueAt"
+                    range=">0" />
+            </restriction>
+        </clan>
+    </clans>
+
+</data>

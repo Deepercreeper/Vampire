@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -403,7 +404,8 @@ public class ItemCreator
 		{
 			final DocumentBuilderFactory DOMfactory = DocumentBuilderFactory.newInstance();
 			final DocumentBuilder DOMbuilder = DOMfactory.newDocumentBuilder();
-			doc = DOMbuilder.parse(aContext.getAssets().open("data.xml"));
+			final String postfix = "-" + Locale.getDefault().getLanguage();
+			doc = DOMbuilder.parse(aContext.getAssets().open("data" + postfix + ".xml"));
 		}
 		catch (final Exception e)
 		{

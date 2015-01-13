@@ -43,97 +43,18 @@
             android:layout_below="@+id/free_points_bar"
             android:orientation="vertical" />
 
-        <TableLayout
-            android:id="@+id/volition_and_path_table"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/controllers_2_panel" >
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-
-                <TextView
-                    android:id="@+id/volition_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/volition_points"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                <Space />
-
-                <ImageButton
-                    android:id="@+id/decrease_volition_button"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:contentDescription="@string/volition_points"
-                    android:src="@android:drawable/ic_media_previous" />
-
-                <TextView
-                    android:id="@+id/volition_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:gravity="center"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
-
-                <ImageButton
-                    android:id="@+id/increase_volition_button"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:contentDescription="@string/volition_points"
-                    android:src="@android:drawable/ic_media_next" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-
-                <CheckBox
-                    android:id="@+id/enable_path_checkbox"
-                    android:text="@string/path_points" />
-
-                <Spinner
-                    android:id="@+id/path_spinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/paths" />
-
-                <ImageButton
-                    android:id="@+id/decrease_path_button"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:contentDescription="@string/path_points"
-                    android:src="@android:drawable/ic_media_previous" />
-
-                <TextView
-                    android:id="@+id/path_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:gravity="center"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
-
-                <ImageButton
-                    android:id="@+id/increase_path_button"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:contentDescription="@string/path_points"
-                    android:src="@android:drawable/ic_media_next" />
-            </TableRow>
-        </TableLayout>
-
         <Button
             android:id="@+id/back_to_1_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/volition_and_path_table"
+            android:layout_below="@id/controllers_2_panel"
             android:text="@string/back" />
 
         <Button
             android:id="@+id/reset_temp_points_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/volition_and_path_table"
+            android:layout_below="@id/controllers_2_panel"
             android:layout_toRightOf="@id/back_to_1_button"
             android:text="@string/reset" />
 
@@ -141,7 +62,7 @@
             android:id="@+id/next_to_3_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/volition_and_path_table"
+            android:layout_below="@id/controllers_2_panel"
             android:layout_toRightOf="@id/reset_temp_points_button"
             android:text="@string/next" />
     </RelativeLayout>

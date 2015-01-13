@@ -12,11 +12,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -33,8 +29,6 @@ import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.Ite
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.controllers.lists.ClanController;
 import com.deepercreeper.vampireapp.controllers.lists.NatureController;
-import com.deepercreeper.vampireapp.controllers.lists.Path;
-import com.deepercreeper.vampireapp.controllers.lists.PathCreationController;
 import com.deepercreeper.vampireapp.creation.CharCreator;
 import com.deepercreeper.vampireapp.creation.CreationMode;
 import com.deepercreeper.vampireapp.util.ViewUtil;
@@ -51,21 +45,19 @@ public class Vampire
 		MAIN, CREATE_CHAR_1, CREATE_CHAR_2, CREATE_CHAR_3
 	}
 	
-	private final MainActivity				mActivity;
+	private final MainActivity			mActivity;
 	
-	private final List<ItemController>		mControllers;
+	private final List<ItemController>	mControllers;
 	
-	private final NatureController			mNatures;
+	private final NatureController		mNatures;
 	
-	private final ClanController			mClans;
+	private final ClanController		mClans;
 	
-	private final PathCreationController	mPaths;
+	private final DescriptionController	mDescriptions;
 	
-	private final DescriptionController		mDescriptions;
+	private CharCreator					mCharCreator;
 	
-	private CharCreator						mCharCreator;
-	
-	private State							mState;
+	private State						mState;
 	
 	/**
 	 * Creates a new vampire.
@@ -79,7 +71,6 @@ public class Vampire
 		ViewUtil.setContext(mActivity);
 		mControllers = ItemCreator.createItems(getContext());
 		mClans = ItemCreator.createClans(getContext());
-		mPaths = new PathCreationController(getContext().getResources());
 		mNatures = new NatureController(getContext().getResources());
 		mDescriptions = new DescriptionController(getContext().getResources());
 		
@@ -147,40 +138,6 @@ public class Vampire
 	}
 	
 	/**
-	 * Enables or disables the path spinner and point controller.
-	 * 
-	 * @param aEnabled
-	 *            Whether a path is selected.
-	 * @param aCanIncrease
-	 *            Whether increasing is possible.
-	 * @param aCanDecrease
-	 *            Whether decreasing is possible.
-	 */
-	public void setPathEnabled(final boolean aEnabled, final boolean aCanIncrease, final boolean aCanDecrease)
-	{
-		if (mState == State.CREATE_CHAR_2)
-		{
-			((ImageButton) mActivity.getView(R.id.decrease_path_button)).setEnabled(aCanDecrease && aEnabled);
-			((ImageButton) mActivity.getView(R.id.increase_path_button)).setEnabled(aCanIncrease && aEnabled);
-			((Spinner) mActivity.getView(R.id.path_spinner)).setEnabled(aEnabled);
-		}
-	}
-	
-	/**
-	 * Sets the number of free points spent for the path.
-	 * 
-	 * @param aValue
-	 *            The value;
-	 */
-	public void setPathPoints(final int aValue)
-	{
-		if (mState == State.CREATE_CHAR_2)
-		{
-			((TextView) mActivity.getView(R.id.path_value)).setText("" + aValue);
-		}
-	}
-	
-	/**
 	 * Sets the state of this vampire.
 	 * 
 	 * @param aState
@@ -202,37 +159,6 @@ public class Vampire
 			case CREATE_CHAR_3 :
 				initCreateChar3();
 				break;
-		}
-	}
-	
-	/**
-	 * Sets whether the volition points can be increased or decreased.
-	 * 
-	 * @param aCanIncrease
-	 *            Whether increasing is possible.
-	 * @param aCanDecrease
-	 *            Whether decreasing is possible.
-	 */
-	public void setVolitionEnabled(final boolean aCanIncrease, final boolean aCanDecrease)
-	{
-		if (mState == State.CREATE_CHAR_2)
-		{
-			((ImageButton) mActivity.getView(R.id.increase_volition_button)).setEnabled(aCanIncrease);
-			((ImageButton) mActivity.getView(R.id.decrease_volition_button)).setEnabled(aCanDecrease);
-		}
-	}
-	
-	/**
-	 * Sets the number of volition points.
-	 * 
-	 * @param aValue
-	 *            The new value.
-	 */
-	public void setVolitionPoints(final int aValue)
-	{
-		if (mState == State.CREATE_CHAR_2)
-		{
-			((TextView) mActivity.getView(R.id.volition_value)).setText("" + aValue);
 		}
 	}
 	
@@ -388,12 +314,7 @@ public class Vampire
 		mCharCreator.releaseViews();
 		mCharCreator.setCreationMode(CreationMode.POINTS);
 		
-		mCharCreator.resetPath();
-		
-		setVolitionPoints(mCharCreator.getVolitionPoints());
-		setPathPoints(mCharCreator.getPathPoints());
 		setFreePoints(mCharCreator.getFreePoints());
-		setPath(mCharCreator.getPath());
 		
 		final ProgressBar pointsBar = (ProgressBar) mActivity.getView(R.id.free_points_bar);
 		pointsBar.setMax(CharCreator.START_FREE_POINTS);
@@ -406,65 +327,6 @@ public class Vampire
 			controllersPanel.addView(controller.getContainer());
 			controller.updateGroups();
 		}
-		
-		final ImageButton increaseVolition = (ImageButton) mActivity.getView(R.id.increase_volition_button);
-		increaseVolition.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(final View aV)
-			{
-				mCharCreator.increaseVolitionPoints();
-			}
-		});
-		
-		final ImageButton decreaseVolition = (ImageButton) mActivity.getView(R.id.decrease_volition_button);
-		decreaseVolition.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(final View aV)
-			{
-				mCharCreator.decreaseVolitionPoints();
-			}
-		});
-		
-		final CheckBox enablePath = (CheckBox) mActivity.getView(R.id.enable_path_checkbox);
-		enablePath.setChecked(mCharCreator.hasPath());
-		enablePath.setOnCheckedChangeListener(new OnCheckedChangeListener()
-		{
-			@Override
-			public void onCheckedChanged(final CompoundButton aButtonView, final boolean aIsChecked)
-			{
-				if (aIsChecked)
-				{
-					mCharCreator.setPath(mPaths.get(((Spinner) mActivity.getView(R.id.path_spinner)).getSelectedItem().toString()));
-				}
-				else
-				{
-					mCharCreator.setPath(null);
-				}
-				((Spinner) mActivity.getView(R.id.path_spinner)).setEnabled(aIsChecked);
-			}
-		});
-		
-		final ImageButton increasePath = (ImageButton) mActivity.getView(R.id.increase_path_button);
-		increasePath.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(final View aArg0)
-			{
-				mCharCreator.increasePathPoints();
-			}
-		});
-		
-		final ImageButton decreasePath = (ImageButton) mActivity.getView(R.id.decrease_path_button);
-		decreasePath.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(final View aArg0)
-			{
-				mCharCreator.decreasePathPoints();
-			}
-		});
 		
 		final Button resetTempPoints = (Button) mActivity.getView(R.id.reset_temp_points_button);
 		resetTempPoints.setOnClickListener(new OnClickListener()
@@ -659,15 +521,5 @@ public class Vampire
 	private void setClan(final int aClan)
 	{
 		mCharCreator.setClan(mClans.get(aClan));
-	}
-	
-	private void setPath(final Path aPath)
-	{
-		int pathPos = 0;
-		if (aPath != null)
-		{
-			pathPos = mPaths.indexOf(aPath);
-		}
-		((Spinner) mActivity.getView(R.id.path_spinner)).setSelection(pathPos);
 	}
 }

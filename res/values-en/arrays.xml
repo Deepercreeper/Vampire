@@ -1,21 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string-array name="attribute_values">
-        <item>Physically:Strength,Dexterity,Resistance</item>
-        <item>Social:Charisma,Manipulation,Appearance</item>
-        <item>Mental:Cognition,Intelligence,Intellect</item>
-    </string-array>
-    
-    <string-array name="ability_values">
-        <item>Talents:Attention,Excuses,Ducking,Theft,Intimidation,Empathy,Leadership,Hand to hand,Acting,Sportiness</item>
-        <item>Skills:Archery,Etiquette,Crafting,Stealth,Herbalism,Music,Melee,Riding,Zoology,Survival</item>
-        <item>Knowledge:Academic knowledge,Folklore,Legislation,#Linguistics,Medicine,Inquiring,Science,Occultism,Politics,Management</item>
-    </string-array>
-    
-    <string name="virtue_values">Virtues:Conscience/Conviction,Self-control/Instinct,Courage</string>
-    
-    <string-array name="nature_and_behavior">
+    <string-array name="nature_and_behavior">
         <item>Autocrat</item>
         <item>Barbarian</item>
         <item>Ascetic</item>
@@ -35,28 +20,6 @@
         <item>Defender</item>
         <item>Celebrant</item>
     </string-array>
-    
-    <string-array name="clans">
-        <item>Assamites:Speed,Quietus,Obscuration</item>
-        <item>Brujah:Speed,Presence,Strength</item>
-        <item>Caitiff:;Generation=13</item>
-        <item>Gangrel:Gestalt-switch,Fortitude,Animality</item>
-        <item>Followers of Seth:Presence,Serpentis,Obscuration</item>
-        <item>Cappadozians:Auspex,Mortis,Fortitude</item>
-        <item>Lasombra:Domination,Shadow play,Strength</item>
-        <item>Malkavians:Auspex,Insanity,Obscuration;Insanity>0</item>
-        <item>Nosferatu:Strength,Animality,Obscuration;Simple@Appearance=0</item>
-        <item>Ravnos:Chimeras,Fortitude,Animality</item>
-        <item>Toriador:Auspex,Speed,Presence</item>
-        <item>Tremere:Auspex,Domination,Thaumaturgy</item>
-        <item>Tzimisce:Auspex,Fleshforming,Animality</item>
-        <item>Ventrue:Domination,Presence,Fortitude</item>
-    </string-array>
-    
-    <string-array name="clan_generations">
-        <item>Caitiff:13</item>
-    </string-array>
-    
     <string-array name="disciplines">
         <item>Auspex:Sharpened senses,1;Soul sight,2,Cognition#Empathy;Mental touch,3,Cognition#Empathy;Stolen secrets,4,Intelligence#Ducking;Anima altering,5,Cognition#Occultism;Foresight,6,Cognition#Empathy</item>
         <item>Domination:Obedience for the spoken word,1,Manipulation#Intimidation;Mussitation of wrong will,2,Manipulation#Leadership;Revelers recognition,3,Intellect#Ducking;Temptation of sweet whispering,4,Charisma#Leadership;Jar,5,VolitionPoints;Fealty,6,Charisma#Leadership</item>
@@ -83,118 +46,6 @@
         <item>Animality:Language of wilderness,1;Language of wilderness pleasure,1,Manipulation#Zoology;Noahs call,2,Charisma#Survival;Animal intimidation,3,Manipulation#Intimidation;Ride on the wild ghost,4,Charisma#Zoology;Animal expulsion,5,Manipulation#Zoology;Accelerated unity,6,Cognition#Zoology</item>
         <item>Obscuration:Shadow coat,1;Invisible presence,2;Mask of thousand faces,3,Manipulation#Acting;Disappearance in front of the mind\'s eye,4,Charisma#Stealth;Protective cloak for the convened,5,Stealth;Soulmask,6</item>
     </string-array>
-    
-    <string-array name="backgrounds">
-        <item>#Influence</item>
-        <item>#Minions</item>
-        <item>Generation</item>
-        <item>#Drove</item>
-        <item>#Contacts</item>
-        <item>#Mentor</item>
-        <item>Resources</item>
-        <item>Status</item>
-        <item>#Allies</item>
-    </string-array>
-
-    <string-array name="properties">
-        <item>#Determination:1</item>
-        <item>Common sense:1</item>
-        <item>Concentration:1</item>
-        <item>Astrologer:1</item>
-        <item>Light sleep:2</item>
-        <item>Eidetic memory:2</item>
-        <item>Calm:3</item>
-        <item>Iron will:4</item>
-        <item>Self-assurance:5</item>
-        <item>#Outstanding senses:1,2,3,4,5</item>
-        <item>Ambidexterity:1</item>
-        <item>Eating:1</item>
-        <item>Talented linguist:2</item>
-        <item>Good pupil:5</item>
-        <item>Jack of all trades, master of none:5</item>
-        <item>True love:1</item>
-        <item>Fairy affection:2</item>
-        <item>Sixth sense:2</item>
-        <item>Immune to blood ties:3</item>
-        <item>Luck:4</item>
-        <item>True faith:7</item>
-        <item>Assistance:1,2,3</item>
-        <item>#Special present:1,2,3</item>
-        <item>Good reputation:2</item>
-        <item>#Puppet:3</item>
-        <item>Patrician:1,2,3</item>
-        <item>Clerical degree:1,2,3</item>
-        <item>#Estate house:2</item>
-        <item>#Control over an institution:2,3,4,5</item>
-        <item>Espionage network:2</item>
-        <item>Contortionist:1</item>
-        <item>Good circulation:2</item>
-        <item>Offset heart:2</item>
-        <item>Effective digestion:3</item>
-        <item>Giantism:4</item>
-        <item>-Nightmares:1</item>
-        <item>#-Prey constraint:1</item>
-        <item>#-Intolerance/Hate:1,2,3</item>
-        <item>#-Phobia:1,3</item>
-        <item>-Hubris:1</item>
-        <item>#-Obsession:1</item>
-        <item>-Inferiority complexes:2</item>
-        <item>#-Stationary:2</item>
-        <item>#-Revenge:2</item>
-        <item>-Sensitivity:2</item>
-        <item>#-Possession:3</item>
-        <item>-Deep sleep:1</item>
-        <item>-Amnesia:2</item>
-        <item>-Confused:2</item>
-        <item>-Weak will:2</item>
-        <item>-Preoccipied:3</item>
-        <item>-Colorblindness:1</item>
-        <item>-Deafness:1</item>
-        <item>-Monocular vision:2</item>
-        <item>-Bad sight:2</item>
-        <item>-Numbness:4</item>
-        <item>-Blindness:5</item>
-        <item>-Untalented:5</item>
-        <item>-Unable:5</item>
-        <item>-Illiterate:5</item>
-        <item>-Stigma of doom:1</item>
-        <item>-Haunted by demons:1,2,3,4</item>
-        <item>-Disgusted by garlic:2</item>
-        <item>-Spook:3</item>
-        <item>-Dark destiny:5</item>
-        <item>-Creator refusal:1</item>
-        <item>-Infamous creator:1</item>
-        <item>#-Enemy:1,2,3,4,5</item>
-        <item>-Infamous:3</item>
-        <item>-Second-class citizen:2</item>
-        <item>-Presumed dead:2</item>
-        <item>-Ward:3</item>
-        <item>-Haunted:4</item>
-        <item>-Short:1</item>
-        <item>-Weak blood:1</item>
-        <item>#-Distorted:2</item>
-        <item>-Selective digestion:2</item>
-        <item>#-Permanent wound:3</item>
-        <item>-One-armed:3</item>
-        <item>-Child:3</item>
-        <item>-Paralysis:3</item>
-        <item>-Leper:3</item>
-        <item>#-Deformity:3</item>
-        <item>-Anemia:4</item>
-        <item>-Muteness:4</item>
-    </string-array>
-    
-    <string-array name = "paths">
-        <item>Path of blood</item>
-        <item>Path of heaven</item>
-        <item>Path of humanity</item>
-        <item>Path of paradox</item>
-        <item>Path of chivalry</item>
-        <item>Path of devil</item>
-        <item>Path of animal</item>
-        <item>Path of thyphon</item>
-    </string-array>
-    
     <string-array name="description_fields">
         <item>Prelude</item>
         <item>Further process</item>
@@ -207,6 +58,7 @@
         <item>Height</item>
         <item>Weight</item>
         <item>Gender</item>
-        <item>Description</item>        
+        <item>Description</item>
     </string-array>
+
 </resources>

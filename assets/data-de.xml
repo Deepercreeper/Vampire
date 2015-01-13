@@ -713,17 +713,16 @@
             </group-option>
         </controller>
 
-        <controller name="Pfad" >
+        <controller name="Sonstiges" >
 
             <group
                 name="Pfad"
-                freePointsCost="2"
+                freePointsCost="1"
+                maxItems="1"
                 maxValue="10"
                 mutable="true"
                 startValue="5"
-                value="true" 
-                maxItems="1"
-                >
+                value="true" >
 
                 <item name="Pfad des Blutes"/>
 
@@ -742,12 +741,31 @@
                 <item name="Pfad des Typhon"/>
             </group>
 
+            <group
+                name="Willenskraft"
+                freePointsCost="2"
+                maxValue="20"
+                mutable="false"
+                startValue="10"
+                value="true" >
+
+                <item name="Willenskraft"/>
+            </group>
+
             <group-option
                 name="Pfad"
                 maxValues="5"
                 value="true" >
 
                 <group name="Pfad" />
+            </group-option>
+
+            <group-option
+                name="Willenskraft"
+                maxValues="10"
+                value="true" >
+
+                <group name="Willenskraft" />
             </group-option>
         </controller>
     </controllers>

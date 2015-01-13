@@ -45,6 +45,8 @@ public interface ItemCreation extends Comparable<ItemCreation>, Restrictionable
 	
 	public ChangeAction getChangeTempPoints();
 	
+	public List<ItemCreation> getDescriptionItems();
+	
 	public ChangeAction getChangeValue();
 	
 	public ItemCreation getChildAt(int aIndex);

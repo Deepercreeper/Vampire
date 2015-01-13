@@ -131,30 +131,30 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 		
 		final boolean[] doneValues = new boolean[maxValues.size()];
 		
-		for (int i = groups.size() - 1; i >= 0; i-- )
+		for (int groupIndex = groups.size() - 1; groupIndex >= 0; groupIndex-- )
 		{
 			boolean doneAnything = false;
 			
-			final ItemGroupCreation group = groups.get(i);
-			int groupValue = groups.get(i).getValue();
+			final ItemGroupCreation group = groups.get(groupIndex);
+			int groupValue = groups.get(groupIndex).getValue();
 			if (group.equals(aGroup))
 			{
 				groupValue += aValue;
 			}
 			
-			for (int j = doneValues.length - 1; j >= 0; j-- )
+			for (int doneIndex = doneValues.length - 1; doneIndex >= 0; doneIndex-- )
 			{
-				if (doneValues[j])
+				if (doneValues[doneIndex])
 				{
 					continue;
 				}
 				
-				if (groupValue > maxValues.get(j))
+				if (groupValue > maxValues.get(doneIndex))
 				{
 					return false;
 				}
 				
-				doneValues[j] = true;
+				doneValues[doneIndex] = true;
 				doneAnything = true;
 				break;
 			}
@@ -322,10 +322,16 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 	@Override
 	public void updateGroups()
 	{
+		boolean hasAnyItem = false;
 		for (final ItemGroupCreation group : getGroupsList())
 		{
 			group.updateItems();
+			if ( !group.getItemsList().isEmpty() || group.getCreationMode().canAddItem(group))
+			{
+				hasAnyItem = true;
+			}
 		}
+		setEnabled(hasAnyItem);
 	}
 	
 	@Override

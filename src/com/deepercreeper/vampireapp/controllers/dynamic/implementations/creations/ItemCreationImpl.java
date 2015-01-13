@@ -337,6 +337,29 @@ public class ItemCreationImpl extends RestrictionableImpl implements ItemCreatio
 	}
 	
 	@Override
+	public List<ItemCreation> getDescriptionItems()
+	{
+		if ( !isParent())
+		{
+			Log.w(TAG, "Tried to get the description items of a non parent item.");
+			return null;
+		}
+		final List<ItemCreation> items = new ArrayList<ItemCreation>();
+		for (final ItemCreation child : getChildrenList())
+		{
+			if (child.needsDescription() && ( !child.isValueItem() || child.getValue() != 0))
+			{
+				items.add(child);
+			}
+			if (child.isParent())
+			{
+				items.addAll(child.getDescriptionItems());
+			}
+		}
+		return null;
+	}
+	
+	@Override
 	public boolean equals(final Object aO)
 	{
 		if (aO instanceof ItemCreation)

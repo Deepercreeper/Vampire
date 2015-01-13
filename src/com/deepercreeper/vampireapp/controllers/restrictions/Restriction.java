@@ -24,10 +24,6 @@ public interface Restriction
 		
 		public static final RestrictionType					INSANITY				= new RestrictionType("Insanity");
 		
-		public static final RestrictionType					VOLITION				= new RestrictionType("Volition");
-		
-		public static final RestrictionType					PATH					= new RestrictionType("Path");
-		
 		public static final RestrictionType					GENERATION				= new RestrictionType("Generation");
 		
 		private final String								mName;

@@ -16,7 +16,6 @@ import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.Ite
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.controllers.lists.Clan;
 import com.deepercreeper.vampireapp.controllers.lists.Nature;
-import com.deepercreeper.vampireapp.controllers.lists.Path;
 import com.deepercreeper.vampireapp.controllers.restrictions.Restriction;
 import com.deepercreeper.vampireapp.controllers.restrictions.Restriction.RestrictionType;
 
@@ -43,10 +42,6 @@ public class CharCreator
 	 */
 	public static final int								START_FREE_POINTS	= 15;
 	
-	private static final int							MAX_VOLITION_POINTS	= 20, MAX_PATH_POINTS = 10, START_VOLITION_POINTS = 5;
-	
-	private static final int							START_PATH_POINTS	= 5, VOLITION_POINTS_COST = 2, PATH_POINTS_COST = 1;
-	
 	private final Vampire								mVampire;
 	
 	private String										mName				= "";
@@ -57,17 +52,11 @@ public class CharCreator
 	
 	private Nature										mBehavior;
 	
-	private Path										mPath				= null;
-	
 	private Clan										mClan;
-	
-	private int											mPathPoints			= START_PATH_POINTS;
 	
 	private final GenerationCreationValueController		mGeneration;
 	
 	private int											mFreePoints			= START_FREE_POINTS;
-	
-	private int											mVolitionPoints		= START_VOLITION_POINTS;
 	
 	private final List<ItemControllerCreation>			mControllers;
 	
@@ -146,34 +135,6 @@ public class CharCreator
 	{
 		mDescriptions.clear();
 		mInsanities.clear();
-	}
-	
-	/**
-	 * Decreases the number of points currently spent for the path.
-	 */
-	public void decreasePathPoints()
-	{
-		if (mPathPoints > START_PATH_POINTS)
-		{
-			mPathPoints-- ;
-			mFreePoints += PATH_POINTS_COST;
-			freePointsChanged();
-			mVampire.setPathPoints(mPathPoints);
-		}
-	}
-	
-	/**
-	 * Decreases the number of points currently spent for the volition.
-	 */
-	public void decreaseVolitionPoints()
-	{
-		if (mVolitionPoints > START_VOLITION_POINTS)
-		{
-			mVolitionPoints-- ;
-			mFreePoints += VOLITION_POINTS_COST;
-			freePointsChanged();
-			mVampire.setVolitionPoints(mVolitionPoints);
-		}
 	}
 	
 	public List<ItemControllerCreation> getControllers()
@@ -267,66 +228,6 @@ public class CharCreator
 	}
 	
 	/**
-	 * @return the current path.
-	 */
-	public Path getPath()
-	{
-		return mPath;
-	}
-	
-	/**
-	 * @return the number of points currently spent for the path.
-	 */
-	public int getPathPoints()
-	{
-		return mPathPoints;
-	}
-	
-	/**
-	 * @return the number of points currently spent for the volition.
-	 */
-	public int getVolitionPoints()
-	{
-		return mVolitionPoints;
-	}
-	
-	/**
-	 * @return whether a path is selected at this time.
-	 */
-	public boolean hasPath()
-	{
-		return mPath != null;
-	}
-	
-	/**
-	 * Increases the number of points spent for the path.
-	 */
-	public void increasePathPoints()
-	{
-		if (mPathPoints < MAX_PATH_POINTS && mFreePoints >= PATH_POINTS_COST)
-		{
-			mPathPoints++ ;
-			mFreePoints -= PATH_POINTS_COST;
-			freePointsChanged();
-			mVampire.setPathPoints(mPathPoints);
-		}
-	}
-	
-	/**
-	 * Increases the number of points spent for the volition.
-	 */
-	public void increaseVolitionPoints()
-	{
-		if (mVolitionPoints < MAX_VOLITION_POINTS && mFreePoints >= VOLITION_POINTS_COST)
-		{
-			mVolitionPoints++ ;
-			mFreePoints -= VOLITION_POINTS_COST;
-			freePointsChanged();
-			mVampire.setVolitionPoints(mVolitionPoints);
-		}
-	}
-	
-	/**
 	 * Initializes the insanities table into the given one.
 	 * 
 	 * @param aTable
@@ -383,29 +284,8 @@ public class CharCreator
 		{
 			controller.resetTempPoints();
 		}
-		
-		resetPath();
-		
 		mFreePoints = START_FREE_POINTS;
-		mVolitionPoints = START_VOLITION_POINTS;
-		mPathPoints = START_PATH_POINTS;
-		
 		freePointsChanged();
-		mVampire.setVolitionPoints(mVolitionPoints);
-		mVampire.setPathPoints(mPathPoints);
-	}
-	
-	/**
-	 * Resets the path.
-	 */
-	public void resetPath()
-	{
-		mFreePoints += (mPathPoints - START_PATH_POINTS) * PATH_POINTS_COST;
-		freePointsChanged();
-		
-		mPathPoints = START_PATH_POINTS;
-		updatePathEnabled();
-		mVampire.setPathPoints(mPathPoints);
 	}
 	
 	/**
@@ -508,22 +388,6 @@ public class CharCreator
 		mNature = aNature;
 	}
 	
-	/**
-	 * Sets the current path.
-	 * 
-	 * @param aPath
-	 *            The new path.
-	 */
-	public void setPath(final Path aPath)
-	{
-		mPath = aPath;
-		if (mPath == null)
-		{
-			resetPath();
-		}
-		updatePathEnabled();
-	}
-	
 	private void addRestrictions()
 	{
 		for (final Restriction restriction : mClan.getRestrictions())
@@ -554,14 +418,6 @@ public class CharCreator
 			{
 				mInsanities.addRestriction(restriction);
 			}
-			else if (type.equals(RestrictionType.VOLITION))
-			{
-				// TODO Restrict the number of volition points
-			}
-			else if (type.equals(RestrictionType.PATH))
-			{
-				// TODO Restrict the number of path points
-			}
 			else if (type.equals(RestrictionType.GENERATION))
 			{
 				mGeneration.addRestriction(restriction);
@@ -575,8 +431,6 @@ public class CharCreator
 		{
 			controller.updateGroups();
 		}
-		updateVolitionEnabled();
-		updatePathEnabled();
 		mVampire.setFreePoints(mFreePoints);
 	}
 	
@@ -586,16 +440,5 @@ public class CharCreator
 		{
 			restriction.clear();
 		}
-	}
-	
-	private void updatePathEnabled()
-	{
-		mVampire.setPathEnabled(mPath != null, mPathPoints < MAX_PATH_POINTS && mFreePoints >= PATH_POINTS_COST, mPathPoints > START_PATH_POINTS);
-	}
-	
-	private void updateVolitionEnabled()
-	{
-		mVampire.setVolitionEnabled(mVolitionPoints < MAX_VOLITION_POINTS && mFreePoints >= VOLITION_POINTS_COST,
-				mVolitionPoints > START_VOLITION_POINTS);
 	}
 }

@@ -266,9 +266,13 @@ public class ItemGroupCreationImpl extends RestrictionableImpl implements ItemGr
 		final List<ItemCreation> items = new ArrayList<ItemCreation>();
 		for (final ItemCreation item : getItemsList())
 		{
-			if (item.needsDescription())
+			if (item.needsDescription() && ( !item.isValueItem() || item.getValue() != 0))
 			{
 				items.add(item);
+			}
+			if (item.isParent())
+			{
+				items.addAll(item.getDescriptionItems());
 			}
 		}
 		return items;
@@ -584,7 +588,7 @@ public class ItemGroupCreationImpl extends RestrictionableImpl implements ItemGr
 		}
 		getContainer().addView(mTitleText);
 		
-		if (getCreationMode().canChangeGroup(this))
+		if (getCreationMode().canAddItem(this))
 		{
 			mAddButton.setLayoutParams(ViewUtil.getWrapHeight());
 			if ( !mInitialized)
