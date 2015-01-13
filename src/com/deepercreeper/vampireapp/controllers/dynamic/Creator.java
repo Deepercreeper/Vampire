@@ -13,6 +13,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import android.content.Context;
+import com.deepercreeper.vampireapp.controllers.actions.Action;
+import com.deepercreeper.vampireapp.controllers.actions.Action.ActionType;
+import com.deepercreeper.vampireapp.controllers.actions.ActionImpl;
 import com.deepercreeper.vampireapp.controllers.dynamic.implementations.GroupOptionImpl;
 import com.deepercreeper.vampireapp.controllers.dynamic.implementations.ItemControllerImpl;
 import com.deepercreeper.vampireapp.controllers.dynamic.implementations.ItemGroupImpl;
@@ -30,10 +33,10 @@ import com.deepercreeper.vampireapp.controllers.restrictions.Restriction;
 import com.deepercreeper.vampireapp.controllers.restrictions.Restriction.RestrictionType;
 import com.deepercreeper.vampireapp.controllers.restrictions.RestrictionImpl;
 
-public class ItemCreator
+public class Creator
 {
 	private static final String	CONTROLLER	= "controller", GROUP = "group", GROUP_OPTION = "group-option", CLAN = "clan", CONDITION = "condition",
-			RESTRICTION = "restriction";
+			RESTRICTION = "restriction", ACTION = "action";
 	
 	public static ClanController createClans(final Context aContext)
 	{
@@ -328,9 +331,39 @@ public class ItemCreator
 			{
 				item.addChild(childItem);
 			}
+			for (final Action action : loadActions(child))
+			{
+				item.addAction(action);
+			}
 			itemsList.add(item);
 		}
 		return itemsList;
+	}
+	
+	private static Set<Action> loadActions(final Node aItem)
+	{
+		final Set<Action> actions = new HashSet<Action>();
+		final NodeList children = aItem.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++ )
+		{
+			if ( !(children.item(i) instanceof Element))
+			{
+				continue;
+			}
+			final Element child = (Element) children.item(i);
+			if (child.getTagName().equals(ACTION))
+			{
+				final ActionType type = Action.ActionType.get(child.getAttribute("type"));
+				int minLevel = 0;
+				
+				if (child.hasAttribute("minLevel"))
+				{
+					minLevel = Integer.parseInt(child.getAttribute("minLevel"));
+				}
+				actions.add(new ActionImpl(child.getAttribute("name"), type, minLevel));
+			}
+		}
+		return actions;
 	}
 	
 	private static int[] parseValues(final String aValues)

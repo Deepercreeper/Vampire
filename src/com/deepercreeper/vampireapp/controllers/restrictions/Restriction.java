@@ -74,7 +74,7 @@ public interface Restriction
 	
 	public void clear();
 	
-	public RestrictionType getRestrictionType();
+	public RestrictionType getType();
 	
 	public String getItemName();
 	

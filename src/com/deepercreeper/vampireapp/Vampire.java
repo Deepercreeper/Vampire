@@ -23,7 +23,7 @@ import com.deepercreeper.vampireapp.controllers.descriptions.DescriptionControll
 import com.deepercreeper.vampireapp.controllers.descriptions.DescriptionCreationValue;
 import com.deepercreeper.vampireapp.controllers.dialog.CreateStringDialog;
 import com.deepercreeper.vampireapp.controllers.dialog.CreateStringDialog.CreationListener;
-import com.deepercreeper.vampireapp.controllers.dynamic.ItemCreator;
+import com.deepercreeper.vampireapp.controllers.dynamic.Creator;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.ItemController;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemControllerCreation;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemCreation;
@@ -69,8 +69,8 @@ public class Vampire
 	{
 		mActivity = aActivity;
 		ViewUtil.setContext(mActivity);
-		mControllers = ItemCreator.createItems(getContext());
-		mClans = ItemCreator.createClans(getContext());
+		mControllers = Creator.createItems(getContext());
+		mClans = Creator.createClans(getContext());
 		mNatures = new NatureController(getContext().getResources());
 		mDescriptions = new DescriptionController(getContext().getResources());
 		

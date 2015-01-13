@@ -194,7 +194,13 @@
 
                 <item name="Beherrschung"/>
 
-                <item name="Auspex"/>
+                <item name="Auspex">
+
+                    <action
+                        name="Geschärfte Sinne"
+                        minLevel="1"
+                        type="Ability" />
+                </item>
 
                 <item name="Fleischformen"/>
 

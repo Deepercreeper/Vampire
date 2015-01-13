@@ -1,6 +1,7 @@
 package com.deepercreeper.vampireapp.controllers.dynamic.interfaces;
 
 import java.util.List;
+import com.deepercreeper.vampireapp.controllers.actions.Action;
 
 /**
  * There are several items that define character property types.
@@ -22,6 +23,14 @@ public interface Item extends Namable
 	 * @return the item display name.
 	 */
 	public String getDisplayName();
+	
+	public void addAction(Action aAction);
+	
+	public boolean hasActions();
+	
+	public Action getAction(String aName);
+	
+	public List<Action> getActionsList();
 	
 	public int getFreePointsCost();
 	

@@ -32,7 +32,7 @@ public abstract class RestrictionableImpl implements Restrictionable
 		{
 			for (final RestrictionType type : aTypes)
 			{
-				if (restriction.getRestrictionType().equals(type))
+				if (restriction.getType().equals(type))
 				{
 					if (restriction.isActive(mController))
 					{
@@ -53,7 +53,7 @@ public abstract class RestrictionableImpl implements Restrictionable
 		{
 			for (final RestrictionType type : aTypes)
 			{
-				if (restriction.getRestrictionType().equals(type))
+				if (restriction.getType().equals(type))
 				{
 					if (restriction.isActive(mController))
 					{
@@ -81,7 +81,7 @@ public abstract class RestrictionableImpl implements Restrictionable
 		}
 		for (final Restriction restriction : mRestrictions)
 		{
-			if (types.contains(restriction.getRestrictionType()))
+			if (types.contains(restriction.getType()))
 			{
 				restrictions.add(restriction);
 			}

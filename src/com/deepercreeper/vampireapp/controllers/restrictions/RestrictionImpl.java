@@ -140,7 +140,7 @@ public class RestrictionImpl implements Restriction
 	}
 	
 	@Override
-	public RestrictionType getRestrictionType()
+	public RestrictionType getType()
 	{
 		return mType;
 	}

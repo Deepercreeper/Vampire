@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.controllers.dialog.SelectItemDialog;
 import com.deepercreeper.vampireapp.controllers.dialog.SelectItemDialog.SelectionListener;
@@ -30,14 +31,14 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
 
 public class ItemCreationImpl extends RestrictionableImpl implements ItemCreation
 {
-	private static final String	TAG	= "ItemCreation";
-	
 	public interface ChangeAction
 	{
 		void decrease();
 		
 		void increase();
 	}
+	
+	private static final String				TAG					= "ItemCreation";
 	
 	private final ChangeAction				mChangeValue		= new ChangeAction()
 																{
@@ -172,6 +173,34 @@ public class ItemCreationImpl extends RestrictionableImpl implements ItemCreatio
 	}
 	
 	@Override
+	public void addChild()
+	{
+		if ( !isMutableParent())
+		{
+			Log.w(TAG, "Tried to add a child to a non mutable item.");
+			return;
+		}
+		if (SelectItemDialog.isDialogOpen())
+		{
+			return;
+		}
+		final List<Item> items = getAddableItems();
+		if (items.isEmpty() || getMaxValue(RestrictionType.ITEM_CHILDREN_COUNT) <= getChildrenList().size())
+		{
+			return;
+		}
+		final SelectionListener action = new SelectionListener()
+		{
+			@Override
+			public void select(final Item aChoosenItem)
+			{
+				addChild(aChoosenItem);
+			}
+		};
+		SelectItemDialog.showSelectionDialog(items, getContext().getString(R.string.add_item), getContext(), action);
+	}
+	
+	@Override
 	public void addChild(final Item aItem)
 	{
 		if ( !isMutableParent())
@@ -195,12 +224,6 @@ public class ItemCreationImpl extends RestrictionableImpl implements ItemCreatio
 		getItemGroup().getItemController().addItemName(item);
 		getItemGroup().getItemController().resize();
 		updateController();
-	}
-	
-	@Override
-	public void updateController()
-	{
-		getItemGroup().getItemController().updateGroups();
 	}
 	
 	@Override
@@ -361,29 +384,6 @@ public class ItemCreationImpl extends RestrictionableImpl implements ItemCreatio
 	}
 	
 	@Override
-	public List<ItemCreation> getDescriptionItems()
-	{
-		if ( !isParent())
-		{
-			Log.w(TAG, "Tried to get the description items of a non parent item.");
-			return null;
-		}
-		final List<ItemCreation> items = new ArrayList<ItemCreation>();
-		for (final ItemCreation child : getChildrenList())
-		{
-			if (child.needsDescription() && ( !child.isValueItem() || child.getValue() != 0))
-			{
-				items.add(child);
-			}
-			if (child.isParent())
-			{
-				items.addAll(child.getDescriptionItems());
-			}
-		}
-		return null;
-	}
-	
-	@Override
 	public boolean equals(final Object aO)
 	{
 		if (aO instanceof ItemCreation)
@@ -504,6 +504,29 @@ public class ItemCreationImpl extends RestrictionableImpl implements ItemCreatio
 	}
 	
 	@Override
+	public List<ItemCreation> getDescriptionItems()
+	{
+		if ( !isParent())
+		{
+			Log.w(TAG, "Tried to get the description items of a non parent item.");
+			return null;
+		}
+		final List<ItemCreation> items = new ArrayList<ItemCreation>();
+		for (final ItemCreation child : getChildrenList())
+		{
+			if (child.needsDescription() && ( !child.isValueItem() || child.getValue() != 0))
+			{
+				items.add(child);
+			}
+			if (child.isParent())
+			{
+				items.addAll(child.getDescriptionItems());
+			}
+		}
+		return null;
+	}
+	
+	@Override
 	public int getFreePointsCost()
 	{
 		if ( !isValueItem())
@@ -591,12 +614,6 @@ public class ItemCreationImpl extends RestrictionableImpl implements ItemCreatio
 	}
 	
 	@Override
-	public boolean hasChildAt(final int aIndex)
-	{
-		return getChildrenList().size() > aIndex;
-	}
-	
-	@Override
 	public boolean hasChild(final Item aItem)
 	{
 		if ( !isParent())
@@ -605,6 +622,12 @@ public class ItemCreationImpl extends RestrictionableImpl implements ItemCreatio
 			return false;
 		}
 		return mChildren.containsKey(aItem.getName());
+	}
+	
+	@Override
+	public boolean hasChildAt(final int aIndex)
+	{
+		return getChildrenList().size() > aIndex;
 	}
 	
 	@Override
@@ -636,6 +659,247 @@ public class ItemCreationImpl extends RestrictionableImpl implements ItemCreatio
 		getCreationMode().increaseItem(this);
 		refreshValue();
 		updateController();
+	}
+	
+	@Override
+	public int indexOfChild(final ItemCreation aItem)
+	{
+		return getChildrenList().indexOf(aItem);
+	}
+	
+	@Override
+	public void init()
+	{
+		if ( !mInitialized)
+		{
+			getContainer().setLayoutParams(ViewUtil.getWrapHeight());
+			getContainer().setOrientation(LinearLayout.VERTICAL);
+			
+			mRelativeContainer.setLayoutParams(ViewUtil.getWrapAll());
+		}
+		
+		RelativeLayout.LayoutParams params;
+		View leftView = null;
+		final boolean canEditItem = getCreationMode().canEditItem(this);
+		final boolean canAddChildren = getCreationMode().canAddChild(this, false);
+		
+		if (canEditItem)
+		{
+			params = ViewUtil.getRelativeButtonSize();
+			mEditButton.setLayoutParams(params);
+			if ( !mInitialized)
+			{
+				mEditButton.setContentDescription("Edit");
+				mEditButton.setImageResource(android.R.drawable.ic_menu_edit);
+				mEditButton.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(final View aV)
+					{
+						if (hasParentItem())
+						{
+							if (getCreationMode().canRemoveChild(ItemCreationImpl.this))
+							{
+								getParentItem().editChild(getItem());
+							}
+						}
+						else
+						{
+							if (getCreationMode().canRemoveItem(ItemCreationImpl.this))
+							{
+								getItemGroup().editItem(getItem());
+							}
+						}
+					}
+				});
+			}
+			mRelativeContainer.addView(mEditButton);
+			
+			params = ViewUtil.getRelativeButtonSize();
+			ViewUtil.generateId(mEditButton);
+			params.addRule(RelativeLayout.RIGHT_OF, mEditButton.getId());
+			mRemoveButton.setLayoutParams(params);
+			if ( !mInitialized)
+			{
+				mRemoveButton.setContentDescription("Remove");
+				mRemoveButton.setImageResource(android.R.drawable.ic_menu_delete);
+				mRemoveButton.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(final View aV)
+					{
+						if (hasParentItem())
+						{
+							if (getCreationMode().canRemoveChild(ItemCreationImpl.this))
+							{
+								getParentItem().removeChild(getItem());
+							}
+						}
+						else
+						{
+							if (getCreationMode().canRemoveItem(ItemCreationImpl.this))
+							{
+								getItemGroup().removeItem(getItem());
+							}
+						}
+					}
+				});
+			}
+			leftView = mRemoveButton;
+			mRelativeContainer.addView(mRemoveButton);
+			updateEditRemoveButtons();
+		}
+		
+		params = ViewUtil.getRelativeNameLong();
+		if (leftView != null)
+		{
+			ViewUtil.generateId(leftView);
+			params.addRule(RelativeLayout.RIGHT_OF, leftView.getId());
+		}
+		mNameText.setLayoutParams(params);
+		if ( !mInitialized)
+		{
+			mNameText.setText(getItem().getName());
+			mNameText.setClickable(true);
+			mNameText.setOnClickListener(new OnClickListener()
+			{
+				
+				@Override
+				public void onClick(final View aV)
+				{
+					Toast.makeText(getContext(), getItem().getDisplayName(), Toast.LENGTH_LONG).show();
+				}
+			});
+			mNameText.setGravity(Gravity.CENTER_VERTICAL);
+			mNameText.setSingleLine();
+			mNameText.setEllipsize(TruncateAt.END);
+		}
+		leftView = mNameText;
+		mRelativeContainer.addView(mNameText);
+		
+		if (isValueItem())
+		{
+			params = ViewUtil.getRelativeButtonSize();
+			if (leftView != null)
+			{
+				ViewUtil.generateId(leftView);
+				params.addRule(RelativeLayout.RIGHT_OF, leftView.getId());
+			}
+			mDecreaseButton.setLayoutParams(params);
+			if ( !mInitialized)
+			{
+				mDecreaseButton.setImageResource(android.R.drawable.ic_media_previous);
+				mDecreaseButton.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(final View aV)
+					{
+						decrease();
+					}
+				});
+			}
+			leftView = mDecreaseButton;
+			mRelativeContainer.addView(mDecreaseButton);
+			
+			params = ViewUtil.getRelativeValueTextSize();
+			if (leftView != null)
+			{
+				ViewUtil.generateId(leftView);
+				params.addRule(RelativeLayout.RIGHT_OF, leftView.getId());
+			}
+			mValueText.setLayoutParams(params);
+			if ( !mInitialized)
+			{
+				mValueText.setGravity(Gravity.CENTER_VERTICAL);
+				mValueText.setPadding(mValueText.getPaddingLeft(), mValueText.getPaddingTop(), ViewUtil.calcPx(5), mValueText.getPaddingBottom());
+				mValueText.setSingleLine();
+				mValueText.setEllipsize(TruncateAt.END);
+			}
+			leftView = mValueText;
+			mRelativeContainer.addView(mValueText);
+			
+			int additionalBarSize = 0;
+			if ( !canEditItem)
+			{
+				additionalBarSize += 60;
+			}
+			if ( !canAddChildren)
+			{
+				additionalBarSize += 30;
+			}
+			params = ViewUtil.getRelativeValueBarSize(80 + additionalBarSize);
+			if (leftView != null)
+			{
+				ViewUtil.generateId(leftView);
+				params.addRule(RelativeLayout.RIGHT_OF, leftView.getId());
+			}
+			mValueBar.setLayoutParams(params);
+			leftView = mValueBar;
+			mRelativeContainer.addView(mValueBar);
+			
+			params = ViewUtil.getRelativeButtonSize();
+			if (leftView != null)
+			{
+				ViewUtil.generateId(leftView);
+				params.addRule(RelativeLayout.RIGHT_OF, leftView.getId());
+			}
+			mIncreaseButton.setLayoutParams(params);
+			if ( !mInitialized)
+			{
+				mIncreaseButton.setImageResource(android.R.drawable.ic_media_next);
+				mIncreaseButton.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(final View aV)
+					{
+						increase();
+					}
+				});
+			}
+			leftView = mIncreaseButton;
+			mRelativeContainer.addView(mIncreaseButton);
+			
+			refreshValue();
+		}
+		
+		if (canAddChildren)
+		{
+			params = ViewUtil.getRelativeButtonSize();
+			if (leftView != null)
+			{
+				ViewUtil.generateId(leftView);
+				params.addRule(RelativeLayout.RIGHT_OF, leftView.getId());
+			}
+			mAddButton.setLayoutParams(params);
+			if ( !mInitialized)
+			{
+				mAddButton.setContentDescription("Add");
+				mAddButton.setImageResource(android.R.drawable.ic_menu_add);
+				mAddButton.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(final View aV)
+					{
+						addChild();
+					}
+				});
+			}
+			leftView = mAddButton;
+			mRelativeContainer.addView(mAddButton);
+		}
+		
+		getContainer().addView(mRelativeContainer);
+		
+		if (hasChildren())
+		{
+			for (final ItemCreation child : getChildrenList())
+			{
+				child.init();
+				getContainer().addView(child.getContainer());
+			}
+		}
+		updateAddButton();
+		mInitialized = true;
 	}
 	
 	@Override
@@ -812,25 +1076,6 @@ public class ItemCreationImpl extends RestrictionableImpl implements ItemCreatio
 	}
 	
 	@Override
-	public void updateButtons()
-	{
-		if (isValueItem())
-		{
-			setIncreasable();
-			setDecreasable();
-		}
-		updateEditRemoveButtons();
-		updateAddButton();
-		if (isParent())
-		{
-			for (final ItemCreation child : getChildrenList())
-			{
-				child.updateButtons();
-			}
-		}
-	}
-	
-	@Override
 	public void setIncreasable()
 	{
 		if ( !isValueItem())
@@ -855,31 +1100,34 @@ public class ItemCreationImpl extends RestrictionableImpl implements ItemCreatio
 	}
 	
 	@Override
-	public void addChild()
+	public String toString()
 	{
-		if ( !isMutableParent())
+		return getName() + ": " + getValue();
+	}
+	
+	@Override
+	public void updateButtons()
+	{
+		if (isValueItem())
 		{
-			Log.w(TAG, "Tried to add a child to a non mutable item.");
-			return;
+			setIncreasable();
+			setDecreasable();
 		}
-		if (SelectItemDialog.isDialogOpen())
+		updateEditRemoveButtons();
+		updateAddButton();
+		if (isParent())
 		{
-			return;
-		}
-		final List<Item> items = getAddableItems();
-		if (items.isEmpty() || getMaxValue(RestrictionType.ITEM_CHILDREN_COUNT) <= getChildrenList().size())
-		{
-			return;
-		}
-		final SelectionListener action = new SelectionListener()
-		{
-			@Override
-			public void select(final Item aChoosenItem)
+			for (final ItemCreation child : getChildrenList())
 			{
-				addChild(aChoosenItem);
+				child.updateButtons();
 			}
-		};
-		SelectItemDialog.showSelectionDialog(items, getContext().getString(R.string.add_item), getContext(), action);
+		}
+	}
+	
+	@Override
+	public void updateController()
+	{
+		getItemGroup().getItemController().updateGroups();
 	}
 	
 	@Override
@@ -919,25 +1167,6 @@ public class ItemCreationImpl extends RestrictionableImpl implements ItemCreatio
 		}
 	}
 	
-	@Override
-	public int indexOfChild(final ItemCreation aItem)
-	{
-		return getChildrenList().indexOf(aItem);
-	}
-	
-	private List<Item> getAddableItems()
-	{
-		final List<Item> children = new ArrayList<Item>();
-		for (final Item item : getItem().getChildrenList())
-		{
-			if ( !hasChild(item))
-			{
-				children.add(item);
-			}
-		}
-		return children;
-	}
-	
 	private void addChild(final ItemCreation aItem)
 	{
 		if ( !isParent())
@@ -955,229 +1184,17 @@ public class ItemCreationImpl extends RestrictionableImpl implements ItemCreatio
 		getContainer().addView(aItem.getContainer());
 	}
 	
-	@Override
-	public void init()
+	private List<Item> getAddableItems()
 	{
-		if ( !mInitialized)
+		final List<Item> children = new ArrayList<Item>();
+		for (final Item item : getItem().getChildrenList())
 		{
-			getContainer().setLayoutParams(ViewUtil.getWrapHeight());
-			getContainer().setOrientation(LinearLayout.VERTICAL);
-			
-			mRelativeContainer.setLayoutParams(ViewUtil.getWrapAll());
-		}
-		
-		RelativeLayout.LayoutParams params;
-		View leftView = null;
-		final boolean canEditItem = getCreationMode().canEditItem(this);
-		final boolean canAddChildren = getCreationMode().canAddChild(this, false);
-		
-		if (canEditItem)
-		{
-			params = ViewUtil.getRelativeButtonSize();
-			mEditButton.setLayoutParams(params);
-			if ( !mInitialized)
+			if ( !hasChild(item))
 			{
-				mEditButton.setContentDescription("Edit");
-				mEditButton.setImageResource(android.R.drawable.ic_menu_edit);
-				mEditButton.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(final View aV)
-					{
-						if (hasParentItem())
-						{
-							if (getCreationMode().canRemoveChild(ItemCreationImpl.this))
-							{
-								getParentItem().editChild(getItem());
-							}
-						}
-						else
-						{
-							if (getCreationMode().canRemoveItem(ItemCreationImpl.this))
-							{
-								getItemGroup().editItem(getItem());
-							}
-						}
-					}
-				});
-			}
-			mRelativeContainer.addView(mEditButton);
-			
-			params = ViewUtil.getRelativeButtonSize();
-			ViewUtil.generateId(mEditButton);
-			params.addRule(RelativeLayout.RIGHT_OF, mEditButton.getId());
-			mRemoveButton.setLayoutParams(params);
-			if ( !mInitialized)
-			{
-				mRemoveButton.setContentDescription("Remove");
-				mRemoveButton.setImageResource(android.R.drawable.ic_menu_delete);
-				mRemoveButton.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(final View aV)
-					{
-						if (hasParentItem())
-						{
-							if (getCreationMode().canRemoveChild(ItemCreationImpl.this))
-							{
-								getParentItem().removeChild(getItem());
-							}
-						}
-						else
-						{
-							if (getCreationMode().canRemoveItem(ItemCreationImpl.this))
-							{
-								getItemGroup().removeItem(getItem());
-							}
-						}
-					}
-				});
-			}
-			leftView = mRemoveButton;
-			mRelativeContainer.addView(mRemoveButton);
-			updateEditRemoveButtons();
-		}
-		
-		params = ViewUtil.getRelativeNameLong();
-		if (leftView != null)
-		{
-			ViewUtil.generateId(leftView);
-			params.addRule(RelativeLayout.RIGHT_OF, leftView.getId());
-		}
-		mNameText.setLayoutParams(params);
-		if ( !mInitialized)
-		{
-			mNameText.setText(getItem().getName());
-			mNameText.setGravity(Gravity.CENTER_VERTICAL);
-			mNameText.setSingleLine();
-			mNameText.setEllipsize(TruncateAt.END);
-		}
-		leftView = mNameText;
-		mRelativeContainer.addView(mNameText);
-		
-		if (isValueItem())
-		{
-			params = ViewUtil.getRelativeButtonSize();
-			if (leftView != null)
-			{
-				ViewUtil.generateId(leftView);
-				params.addRule(RelativeLayout.RIGHT_OF, leftView.getId());
-			}
-			mDecreaseButton.setLayoutParams(params);
-			if ( !mInitialized)
-			{
-				mDecreaseButton.setImageResource(android.R.drawable.ic_media_previous);
-				mDecreaseButton.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(final View aV)
-					{
-						decrease();
-					}
-				});
-			}
-			leftView = mDecreaseButton;
-			mRelativeContainer.addView(mDecreaseButton);
-			
-			params = ViewUtil.getRelativeValueTextSize();
-			if (leftView != null)
-			{
-				ViewUtil.generateId(leftView);
-				params.addRule(RelativeLayout.RIGHT_OF, leftView.getId());
-			}
-			mValueText.setLayoutParams(params);
-			if ( !mInitialized)
-			{
-				mValueText.setGravity(Gravity.CENTER_VERTICAL);
-				mValueText.setPadding(mValueText.getPaddingLeft(), mValueText.getPaddingTop(), ViewUtil.calcPx(5), mValueText.getPaddingBottom());
-				mValueText.setSingleLine();
-				mValueText.setEllipsize(TruncateAt.END);
-			}
-			leftView = mValueText;
-			mRelativeContainer.addView(mValueText);
-			
-			int additionalBarSize = 0;
-			if ( !canEditItem)
-			{
-				additionalBarSize += 60;
-			}
-			if ( !canAddChildren)
-			{
-				additionalBarSize += 30;
-			}
-			params = ViewUtil.getRelativeValueBarSize(80 + additionalBarSize);
-			if (leftView != null)
-			{
-				ViewUtil.generateId(leftView);
-				params.addRule(RelativeLayout.RIGHT_OF, leftView.getId());
-			}
-			mValueBar.setLayoutParams(params);
-			leftView = mValueBar;
-			mRelativeContainer.addView(mValueBar);
-			
-			params = ViewUtil.getRelativeButtonSize();
-			if (leftView != null)
-			{
-				ViewUtil.generateId(leftView);
-				params.addRule(RelativeLayout.RIGHT_OF, leftView.getId());
-			}
-			mIncreaseButton.setLayoutParams(params);
-			if ( !mInitialized)
-			{
-				mIncreaseButton.setImageResource(android.R.drawable.ic_media_next);
-				mIncreaseButton.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(final View aV)
-					{
-						increase();
-					}
-				});
-			}
-			leftView = mIncreaseButton;
-			mRelativeContainer.addView(mIncreaseButton);
-			
-			refreshValue();
-		}
-		
-		if (canAddChildren)
-		{
-			params = ViewUtil.getRelativeButtonSize();
-			if (leftView != null)
-			{
-				ViewUtil.generateId(leftView);
-				params.addRule(RelativeLayout.RIGHT_OF, leftView.getId());
-			}
-			mAddButton.setLayoutParams(params);
-			if ( !mInitialized)
-			{
-				mAddButton.setContentDescription("Add");
-				mAddButton.setImageResource(android.R.drawable.ic_menu_add);
-				mAddButton.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(final View aV)
-					{
-						addChild();
-					}
-				});
-			}
-			leftView = mAddButton;
-			mRelativeContainer.addView(mAddButton);
-		}
-		
-		getContainer().addView(mRelativeContainer);
-		
-		if (hasChildren())
-		{
-			for (final ItemCreation child : getChildrenList())
-			{
-				child.init();
-				getContainer().addView(child.getContainer());
+				children.add(item);
 			}
 		}
-		updateAddButton();
-		mInitialized = true;
+		return children;
 	}
 	
 	private void updateAddButton()
@@ -1204,11 +1221,5 @@ public class ItemCreationImpl extends RestrictionableImpl implements ItemCreatio
 			mEditButton.setEnabled(canEditRemove);
 			mRemoveButton.setEnabled(canEditRemove);
 		}
-	}
-	
-	@Override
-	public String toString()
-	{
-		return getName() + ": " + getValue();
 	}
 }

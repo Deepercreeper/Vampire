@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import android.util.Log;
+import com.deepercreeper.vampireapp.controllers.actions.Action;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.Item;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.Namable;
@@ -17,31 +18,33 @@ import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.Namable;
  */
 public class ItemImpl implements Item
 {
-	private static final String		TAG	= "Item";
+	private static final String			TAG				= "Item";
 	
-	private final ItemGroup			mItemGroup;
+	private final Map<String, Action>	mActions		= new HashMap<String, Action>();
 	
-	private final String			mName;
+	private final List<Action>			mActionsList	= new ArrayList<Action>();
 	
-	private final String			mDisplayName;
+	private final ItemGroup				mItemGroup;
 	
-	private final Item				mParentItem;
+	private final String				mName;
 	
-	private final boolean			mNeedsDescription;
+	private final Item					mParentItem;
 	
-	private final boolean			mParent;
+	private final boolean				mNeedsDescription;
 	
-	private final boolean			mMutableParent;
+	private final boolean				mParent;
 	
-	private final boolean			mValueItem;
+	private final boolean				mMutableParent;
 	
-	private final int				mStartValue;
+	private final boolean				mValueItem;
 	
-	private final int[]				mValues;
+	private final int					mStartValue;
 	
-	private final List<Item>		mChildrenList;
+	private final int[]					mValues;
 	
-	private final Map<String, Item>	mChildren;
+	private final List<Item>			mChildrenList;
+	
+	private final Map<String, Item>		mChildren;
 	
 	public ItemImpl(final String aName, final ItemGroup aGroup, final boolean aNeedsDescription, final boolean aParent, final boolean aMutableParent,
 			final int[] aValues, final int aStartValue, final Item aParentItem)
@@ -49,7 +52,6 @@ public class ItemImpl implements Item
 		mName = aName;
 		mItemGroup = aGroup;
 		mNeedsDescription = aNeedsDescription;
-		mDisplayName = createDisplayName();
 		mParent = aParent;
 		mMutableParent = aMutableParent;
 		mValues = aValues;
@@ -73,6 +75,32 @@ public class ItemImpl implements Item
 		{
 			mStartValue = aStartValue;
 		}
+	}
+	
+	@Override
+	public void addAction(final Action aAction)
+	{
+		mActionsList.add(aAction);
+		mActions.put(aAction.getName(), aAction);
+		Collections.sort(getActionsList());
+	}
+	
+	@Override
+	public List<Action> getActionsList()
+	{
+		return mActionsList;
+	}
+	
+	@Override
+	public Action getAction(final String aName)
+	{
+		return mActions.get(aName);
+	}
+	
+	@Override
+	public boolean hasActions()
+	{
+		return !getActionsList().isEmpty();
 	}
 	
 	@Override
@@ -130,7 +158,26 @@ public class ItemImpl implements Item
 	@Override
 	public String getDisplayName()
 	{
-		return mDisplayName;
+		String displayName = getName();
+		
+		if (hasActions())
+		{
+			displayName += ":";
+			boolean first = true;
+			for (final Action action : getActionsList())
+			{
+				if (first)
+				{
+					first = false;
+				}
+				else
+				{
+					displayName += ",";
+				}
+				displayName += " " + action.getName();
+			}
+		}
+		return displayName;
 	}
 	
 	@Override

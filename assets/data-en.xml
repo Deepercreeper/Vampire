@@ -184,11 +184,79 @@
                 startValue="0"
                 value="true" >
 
-                <item name="Auspex"/>
+                <item name="Auspex">
 
-                <item name="Speed"/>
+                    <action
+                        name="Sharpened senses"
+                        minLevel="1"
+                        type="Ability" />
 
-                <item name="Quietus"/>
+                    <action
+                        name="Soul sight"
+                        minLevel="2"
+                        type="Ability" />
+
+                    <action
+                        name="Mental touch"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="Stolen secrets"
+                        minLevel="4"
+                        type="Ability" />
+
+                    <action
+                        name="Anima altering"
+                        minLevel="5"
+                        type="Ability" />
+
+                    <action
+                        name="Foresight"
+                        minLevel="6"
+                        type="Ability" />
+                </item>
+
+                <item name="Speed">
+
+                    <action
+                        name="Speed"
+                        minLevel="1"
+                        type="Ability" />
+                </item>
+
+                <item name="Quietus">
+
+                    <action
+                        name="Silence of death"
+                        minLevel="1"
+                        type="Ability" />
+
+                    <action
+                        name="Weakness"
+                        minLevel="2"
+                        type="Ability" />
+
+                    <action
+                        name="Illness"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="Blood agony"
+                        minLevel="4"
+                        type="Ability" />
+
+                    <action
+                        name="Blood essence"
+                        minLevel="5"
+                        type="Ability" />
+
+                    <action
+                        name="Bloody sweat"
+                        minLevel="6"
+                        type="Ability" />
+                </item>
 
                 <item name="Strength"/>
 
@@ -742,7 +810,7 @@
 
                 <item name="Volition"/>
             </group>
-            
+
             <group-option
                 name="Path"
                 maxValues="5"
@@ -750,8 +818,8 @@
 
                 <group name="Path" />
             </group-option>
-            
-             <group-option
+
+            <group-option
                 name="Volition"
                 maxValues="10"
                 value="true" >
