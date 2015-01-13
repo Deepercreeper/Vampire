@@ -395,7 +395,7 @@ public class CharCreator
 			final RestrictionType type = restriction.getRestrictionType();
 			if (type.equals(RestrictionType.ITEM_VALUE) || type.equals(RestrictionType.ITEM_CHILDREN_COUNT)
 					|| type.equals(RestrictionType.ITEM_CHILD_VALUE_AT) || type.equals(RestrictionType.GROUP_CHILDREN)
-					|| type.equals(RestrictionType.GROUP_CHILDREN_COUNT))
+					|| type.equals(RestrictionType.GROUP_CHILDREN_COUNT) || type.equals(RestrictionType.GROUP_ITEM_VALUE_AT))
 			{
 				final boolean item = type.equals(RestrictionType.ITEM_VALUE) || type.equals(RestrictionType.ITEM_CHILDREN_COUNT)
 						|| type.equals(RestrictionType.ITEM_CHILD_VALUE_AT);

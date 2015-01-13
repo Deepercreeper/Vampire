@@ -71,6 +71,14 @@ public enum CreationMode
 				return false;
 			}
 		}
+		for (final Restriction restriction : group.getRestrictions(RestrictionType.GROUP_ITEM_VALUE_AT))
+		{
+			if (restriction.isActive(group.getItemController()) && restriction.getIndex() == group.indexOfItem(aItem)
+					&& aItem.getItem().getStartValue() < restriction.getMinimum())
+			{
+				return false;
+			}
+		}
 		return true;
 	}
 	

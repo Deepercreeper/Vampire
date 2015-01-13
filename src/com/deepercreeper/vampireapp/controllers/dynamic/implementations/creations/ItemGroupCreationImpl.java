@@ -279,6 +279,12 @@ public class ItemGroupCreationImpl extends RestrictionableImpl implements ItemGr
 	}
 	
 	@Override
+	public int indexOfItem(final ItemCreation aItem)
+	{
+		return getItemsList().indexOf(aItem);
+	}
+	
+	@Override
 	public ItemCreation getItem(final Item aItem)
 	{
 		return mItems.get(aItem);

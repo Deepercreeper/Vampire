@@ -229,6 +229,20 @@ public class ItemCreationImpl extends RestrictionableImpl implements ItemCreatio
 				}
 			}
 		}
+		else
+		{
+			for (final Restriction restriction : getItemGroup().getRestrictions(RestrictionType.GROUP_ITEM_VALUE_AT))
+			{
+				if (getItemGroup().indexOfItem(this) == restriction.getIndex())
+				{
+					if (restriction.isActive(getItemGroup().getItemController()) && restriction.getMinimum() >= getValue())
+					{
+						canDecreaseChild = false;
+						break;
+					}
+				}
+			}
+		}
 		
 		return getCreationMode().canDecreaseItem(this, canDecreaseItemValue && canDecreaseChild, canDecreaseItemTempPoints && canDecreaseChild);
 	}
@@ -258,10 +272,20 @@ public class ItemCreationImpl extends RestrictionableImpl implements ItemCreatio
 				}
 			}
 		}
-		
-		// TODO Add all old resource files to the new data file
-		
-		// TODO Implement the same thing for the group child value at restrictionType
+		else
+		{
+			for (final Restriction restriction : getItemGroup().getRestrictions(RestrictionType.GROUP_ITEM_VALUE_AT))
+			{
+				if (getItemGroup().indexOfItem(this) == restriction.getIndex())
+				{
+					if (restriction.isActive(getItemGroup().getItemController()) && restriction.getMaximum() <= getValue())
+					{
+						canIncreaseChild = false;
+						break;
+					}
+				}
+			}
+		}
 		
 		return getCreationMode().canIncreaseItem(this, canIncreaseItem && canIncreaseChild);
 	}

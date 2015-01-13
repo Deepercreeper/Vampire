@@ -22,6 +22,8 @@ public interface Restriction
 		
 		public static final RestrictionType					GROUP_CHILDREN_COUNT	= new RestrictionType("GroupChildrenCount");
 		
+		public static final RestrictionType					GROUP_ITEM_VALUE_AT		= new RestrictionType("GroupItemValueAt");
+		
 		public static final RestrictionType					INSANITY				= new RestrictionType("Insanity");
 		
 		public static final RestrictionType					GENERATION				= new RestrictionType("Generation");

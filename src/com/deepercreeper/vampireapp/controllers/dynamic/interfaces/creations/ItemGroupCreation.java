@@ -25,6 +25,8 @@ public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, Restri
 	
 	public void init();
 	
+	public int indexOfItem(ItemCreation aItem);
+	
 	/**
 	 * @return the context of this value group.
 	 */
