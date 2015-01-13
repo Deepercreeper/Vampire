@@ -5,11 +5,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import android.util.Log;
 import com.deepercreeper.vampireapp.controllers.actions.Action;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.Item;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.Namable;
+import com.deepercreeper.vampireapp.util.Log;
 
 /**
  * An implementation of items. Each item should extend this abstract class.

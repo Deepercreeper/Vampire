@@ -35,8 +35,8 @@ import com.deepercreeper.vampireapp.controllers.restrictions.RestrictionImpl;
 
 public class Creator
 {
-	private static final String	CONTROLLER	= "controller", GROUP = "group", GROUP_OPTION = "group-option", CLAN = "clan", CONDITION = "condition",
-			RESTRICTION = "restriction", ACTION = "action";
+	private static final String	CONTROLLER	= "controller", ITEM = "item", GROUP = "group", GROUP_OPTION = "group-option", CLAN = "clan",
+			CONDITION = "condition", RESTRICTION = "restriction", ACTION = "action";
 	
 	public static ClanController createClans(final Context aContext)
 	{
@@ -297,45 +297,48 @@ public class Creator
 				continue;
 			}
 			final Element child = (Element) (children.item(i));
-			final String name = child.getAttribute("name");
-			final boolean needsDescription = Boolean.parseBoolean(child.getAttribute("needsDescription"));
-			final boolean parent = Boolean.parseBoolean(child.getAttribute("parent"));
-			boolean valueItem = aParentGroup.isValueGroup();
-			int[] values = null;
-			int startValue = -1;
-			
-			if (child.hasAttribute("startValue"))
+			if (child.getTagName().equals(ITEM))
 			{
-				startValue = Integer.parseInt(child.getAttribute("startValue"));
-			}
-			if (child.hasAttribute("valueItem"))
-			{
-				valueItem = Boolean.parseBoolean(child.getAttribute("valueItem"));
-			}
-			if (valueItem)
-			{
-				if (child.hasAttribute("values"))
+				final String name = child.getAttribute("name");
+				final boolean needsDescription = Boolean.parseBoolean(child.getAttribute("needsDescription"));
+				final boolean parent = Boolean.parseBoolean(child.getAttribute("parent"));
+				boolean valueItem = aParentGroup.isValueGroup();
+				int[] values = null;
+				int startValue = -1;
+				
+				if (child.hasAttribute("startValue"))
 				{
-					values = parseValues(child.getAttribute("values"));
+					startValue = Integer.parseInt(child.getAttribute("startValue"));
 				}
-				else
+				if (child.hasAttribute("valueItem"))
 				{
-					values = aParentGroup.getDefaultValues();
+					valueItem = Boolean.parseBoolean(child.getAttribute("valueItem"));
 				}
+				if (valueItem)
+				{
+					if (child.hasAttribute("values"))
+					{
+						values = parseValues(child.getAttribute("values"));
+					}
+					else
+					{
+						values = aParentGroup.getDefaultValues();
+					}
+				}
+				
+				final Item item;
+				final boolean mutableParent = Boolean.parseBoolean(child.getAttribute("mutableParent"));
+				item = new ItemImpl(name, aParentGroup, needsDescription, parent, mutableParent, values, startValue, aParentItem);
+				for (final Item childItem : createItems(child, aParentGroup, item))
+				{
+					item.addChild(childItem);
+				}
+				for (final Action action : loadActions(child))
+				{
+					item.addAction(action);
+				}
+				itemsList.add(item);
 			}
-			
-			final Item item;
-			final boolean mutableParent = Boolean.parseBoolean(child.getAttribute("mutableParent"));
-			item = new ItemImpl(name, aParentGroup, needsDescription, parent, mutableParent, values, startValue, aParentItem);
-			for (final Item childItem : createItems(child, aParentGroup, item))
-			{
-				item.addChild(childItem);
-			}
-			for (final Action action : loadActions(child))
-			{
-				item.addAction(action);
-			}
-			itemsList.add(item);
 		}
 		return itemsList;
 	}
@@ -355,12 +358,32 @@ public class Creator
 			{
 				final ActionType type = Action.ActionType.get(child.getAttribute("type"));
 				int minLevel = 0;
+				int minDices = 0;
+				String[] dices = null;
+				String[] costDices = null;
+				String[] cost = null;
 				
+				if (child.hasAttribute("minDices"))
+				{
+					minDices = Integer.parseInt(child.getAttribute("minDices"));
+				}
+				if (child.hasAttribute("dices"))
+				{
+					dices = parseList(child.getAttribute("dices"));
+				}
+				if (child.hasAttribute("costDices"))
+				{
+					costDices = parseList(child.getAttribute("costDices"));
+				}
+				if (child.hasAttribute("costs"))
+				{
+					cost = parseList(child.getAttribute("cost"));
+				}
 				if (child.hasAttribute("minLevel"))
 				{
 					minLevel = Integer.parseInt(child.getAttribute("minLevel"));
 				}
-				actions.add(new ActionImpl(child.getAttribute("name"), type, minLevel));
+				actions.add(new ActionImpl(child.getAttribute("name"), type, minLevel, minDices, dices, costDices, cost));
 			}
 		}
 		return actions;

@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import android.content.Context;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -29,6 +28,7 @@ import com.deepercreeper.vampireapp.controllers.restrictions.Restriction;
 import com.deepercreeper.vampireapp.controllers.restrictions.Restriction.RestrictionType;
 import com.deepercreeper.vampireapp.controllers.restrictions.RestrictionableImpl;
 import com.deepercreeper.vampireapp.creation.CreationMode;
+import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 public class ItemGroupCreationImpl extends RestrictionableImpl implements ItemGroupCreation

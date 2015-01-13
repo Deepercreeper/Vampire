@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import android.content.Context;
 import android.text.TextUtils.TruncateAt;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,6 +26,7 @@ import com.deepercreeper.vampireapp.controllers.restrictions.Restriction;
 import com.deepercreeper.vampireapp.controllers.restrictions.Restriction.RestrictionType;
 import com.deepercreeper.vampireapp.controllers.restrictions.RestrictionableImpl;
 import com.deepercreeper.vampireapp.creation.CreationMode;
+import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 public class ItemCreationImpl extends RestrictionableImpl implements ItemCreation
@@ -523,7 +523,7 @@ public class ItemCreationImpl extends RestrictionableImpl implements ItemCreatio
 				items.addAll(child.getDescriptionItems());
 			}
 		}
-		return null;
+		return items;
 	}
 	
 	@Override
@@ -1135,26 +1135,30 @@ public class ItemCreationImpl extends RestrictionableImpl implements ItemCreatio
 	{
 		if (isValueItem() || isParent())
 		{
-			resetTempPoints();
-			if (hasRestrictions())
+			if (isValueItem())
 			{
-				if ( !isValueOk(getValue(), RestrictionType.ITEM_VALUE))
+				
+				resetTempPoints();
+				if (hasRestrictions())
 				{
-					while (mValueId < getMinValue(RestrictionType.ITEM_VALUE))
+					if ( !isValueOk(getValue(), RestrictionType.ITEM_VALUE))
 					{
-						increase();
-					}
-					while (mValueId > getMaxValue(RestrictionType.ITEM_VALUE))
-					{
-						decrease();
+						while (mValueId < getMinValue(RestrictionType.ITEM_VALUE))
+						{
+							increase();
+						}
+						while (mValueId > getMaxValue(RestrictionType.ITEM_VALUE))
+						{
+							decrease();
+						}
 					}
 				}
-			}
-			else
-			{
-				mValueId = getItem().getStartValue();
-				refreshValue();
-				updateController();
+				else
+				{
+					mValueId = getItem().getStartValue();
+					refreshValue();
+					updateController();
+				}
 			}
 			if (isParent())
 			{

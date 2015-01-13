@@ -200,29 +200,396 @@
                         name="Geschärfte Sinne"
                         minLevel="1"
                         type="Ability" />
+
+                    <action
+                        name="Seelenschau"
+                        minLevel="2"
+                        type="Ability" />
+
+                    <action
+                        name="Geistige Berührung"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="Geraubte Geheimnisse"
+                        minLevel="4"
+                        type="Ability" />
+
+                    <action
+                        name="Animawandeln"
+                        minLevel="5"
+                        type="Ability" />
+
+                    <action
+                        name="Weitsicht"
+                        minLevel="6"
+                        type="Ability" />
                 </item>
 
-                <item name="Fleischformen"/>
+                <item name="Fleischformen">
 
-                <item name="Gestaltwandel"/>
+                    <action
+                        name="Formbares Gesicht"
+                        minLevel="1"
+                        type="Ability" />
 
-                <item name="Mortis"/>
+                    <action
+                        name="Kneten des sterblichen Tons"
+                        minLevel="2"
+                        type="Ability" />
 
-                <item name="Präsenz"/>
+                    <action
+                        name="Zerreißen des Knochengerüsts"
+                        minLevel="3"
+                        type="Ability" />
 
-                <item name="Schattenspiele"/>
+                    <action
+                        name="Erwecken der Zulo-Gestalt"
+                        minLevel="4"
+                        type="Ability" />
 
-                <item name="Shimären"/>
+                    <action
+                        name="Emporsteigen der Blutflüssigkeit"
+                        minLevel="5"
+                        type="Ability" />
 
-                <item name="Seelenstärke"/>
+                    <action
+                        name="Raub-Chiropter"
+                        minLevel="6"
+                        type="Ability" />
+                </item>
 
-                <item name="Serpentis"/>
+                <item name="Gestaltwandel">
 
-                <item name="Daimonion"/>
+                    <action
+                        name="Zeuge der Dunkelheit"
+                        minLevel="1"
+                        type="Ability" />
 
-                <item name="Irrsinn"/>
+                    <action
+                        name="Klauen des Tiers"
+                        minLevel="2"
+                        type="Ability" />
 
-                <item name="Verdunkelung"/>
+                    <action
+                        name="Begraben in der Erde"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="Tiergestalt"
+                        minLevel="4"
+                        type="Ability" />
+
+                    <action
+                        name="Geisterleib"
+                        minLevel="5"
+                        type="Ability" />
+
+                    <action
+                        name="Gesegneter Schlaf"
+                        minLevel="6"
+                        type="Ability" />
+                </item>
+
+                <item name="Mortis">
+
+                    <action
+                        name="Totenmaske"
+                        minLevel="1"
+                        type="Ability" />
+
+                    <action
+                        name="Pesthauch"
+                        minLevel="2"
+                        type="Ability" />
+
+                    <action
+                        name="Erwecken"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="Geflüster des Todes"
+                        minLevel="4"
+                        type="Ability" />
+
+                    <action
+                        name="Schwarzer Tod"
+                        minLevel="5"
+                        type="Ability" />
+
+                    <action
+                        name="Vigor Mortis"
+                        minLevel="6"
+                        type="Ability" />
+                </item>
+
+                <item name="Präsenz">
+
+                    <action
+                        name="Ehrfurcht"
+                        minLevel="1"
+                        type="Ability" />
+
+                    <action
+                        name="Blick der Furcht"
+                        minLevel="2"
+                        type="Ability" />
+
+                    <action
+                        name="Entzücken"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="Herbeirufen"
+                        minLevel="4"
+                        type="Ability" />
+
+                    <action
+                        name="Majestät"
+                        minLevel="5"
+                        type="Ability" />
+
+                    <action
+                        name="Leidenschaft"
+                        minLevel="6"
+                        type="Ability" />
+                </item>
+
+                <item name="Schattenspiele">
+
+                    <action
+                        name="Schattenspiele"
+                        minLevel="1"
+                        type="Ability" />
+
+                    <action
+                        name="Notturno"
+                        minLevel="2"
+                        type="Ability" />
+
+                    <action
+                        name="Arme des Ahriman"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="Nachtschatten"
+                        minLevel="4"
+                        type="Ability" />
+
+                    <action
+                        name="Schattenkörper"
+                        minLevel="5"
+                        type="Ability" />
+
+                    <action
+                        name="Wanderung im Abgrund"
+                        minLevel="6"
+                        type="Ability" />
+                    
+                    <action
+                        name="Wanderung im Abgrund mit Person"
+                        minLevel="6"
+                        type="Ability" />
+                    
+                </item>
+
+                <item name="Shimären">
+
+                    <action
+                        name="Trugbild"
+                        minLevel="1"
+                        type="Ability" />
+
+                    <action
+                        name="Fata morgana"
+                        minLevel="1"
+                        type="Ability" />
+
+                    <action
+                        name="Erscheinung"
+                        minLevel="2"
+                        type="Ability" />
+
+                    <action
+                        name="Dauerhaftigkeit"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="Fürchterliche Realität"
+                        minLevel="4"
+                        type="Ability" />
+
+                    <action
+                        name="Fürchterlicher Realitäts Angriff"
+                        minLevel="5"
+                        type="Ability" />
+
+                    <action
+                        name="Massenhorror"
+                        minLevel="6"
+                        type="Ability" />
+
+                    <action
+                        name="Massenhorror Angriff"
+                        minLevel="6"
+                        type="Ability" />
+                </item>
+
+                <item name="Seelenstärke">
+
+                    <action
+                        name="Seelenstärke"
+                        minLevel="1"
+                        type="Ability" />
+                </item>
+
+                <item name="Serpentis">
+
+                    <action
+                        name="Schlangenaugen"
+                        minLevel="1"
+                        type="Ability" />
+
+                    <action
+                        name="Natterzunge"
+                        minLevel="2"
+                        type="Ability" />
+
+                    <action
+                        name="Bituminöses Fleisch"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="Kobragestalt"
+                        minLevel="4"
+                        type="Ability" />
+
+                    <action
+                        name="Betrug an Thoths Waage"
+                        minLevel="5"
+                        type="Ability" />
+
+                    <action
+                        name="Basiliskenodem"
+                        minLevel="6"
+                        type="Ability" />
+
+                    <action
+                        name="Basiliskenodem Angriff"
+                        minLevel="6"
+                        type="Ability" />
+                </item>
+
+                <item name="Daimonion">
+
+                    <action
+                        name="Sündengespür"
+                        minLevel="1"
+                        type="Ability" />
+
+                    <action
+                        name="Furcht vor der Hölle unter uns"
+                        minLevel="2"
+                        type="Ability" />
+
+                    <action
+                        name="Flammen der Unterwelt"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="Schaden der Flammen der Unterwelt"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="Psychomachie"
+                        minLevel="4"
+                        type="Ability" />
+
+                    <action
+                        name="Fluch"
+                        minLevel="5"
+                        type="Ability" />
+
+                    <action
+                        name="Ignorieren der Sengenden Flammen"
+                        minLevel="6"
+                        type="Ability" />
+                </item>
+
+                <item name="Irrsinn">
+
+                    <action
+                        name="Leidenschaft des Inkubus"
+                        minLevel="1"
+                        type="Ability" />
+
+                    <action
+                        name="Seelenspuk"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="Augen des Chaos"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="Konfusion"
+                        minLevel="4"
+                        type="Ability" />
+
+                    <action
+                        name="Heulender Wahnsinn"
+                        minLevel="5"
+                        type="Ability" />
+
+                    <action
+                        name="Kuss des Mondes"
+                        minLevel="6"
+                        type="Ability" />
+                </item>
+
+                <item name="Verdunkelung">
+
+                    <action
+                        name="Schattenmantel"
+                        minLevel="1"
+                        type="Ability" />
+
+                    <action
+                        name="Unsichtbare Gegenwart"
+                        minLevel="2"
+                        type="Ability" />
+
+                    <action
+                        name="Maske der tausend Gesichter"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="Verschwinden vor dem geistigen Auge"
+                        minLevel="4"
+                        type="Ability" />
+
+                    <action
+                        name="Schutzmantel für die Versammelten"
+                        minLevel="5"
+                        type="Ability" />
+
+                    <action
+                        name="Seelenmaske"
+                        minLevel="6"
+                        type="Ability" />
+                </item>
 
                 <item
                     name="Thaumaturgie"
@@ -232,27 +599,191 @@
 
                     <item
                         name="Rego Vitam"
-                        startValue="0"/>
+                        startValue="0">
+
+                        <action
+                            name="Ein Sinn für Blut"
+                            minLevel="1"
+                            type="Ability" />
+
+                        <action
+                            name="Blutige Extase"
+                            minLevel="2"
+                            type="Ability" />
+
+                        <action
+                            name="Blut der Macht"
+                            minLevel="3"
+                            type="Ability" />
+
+                        <action
+                            name="Vitae-Raub"
+                            minLevel="4"
+                            type="Ability" />
+
+                        <action
+                            name="Blutkessel"
+                            minLevel="5"
+                            type="Ability" />
+                    </item>
 
                     <item
                         name="Creo Ignem"
-                        startValue="0"/>
+                        startValue="0">
 
-                    <item
-                        name="Rego Motum"
-                        startValue="0"/>
+                        <action
+                            name="Ein Kerzenfeuer"
+                            minLevel="1"
+                            type="Ability" />
 
-                    <item
-                        name="Rego Tempestatem"
-                        startValue="0"/>
+                        <action
+                            name="Eine Hand voll Feuer"
+                            minLevel="2"
+                            type="Ability" />
 
-                    <item
-                        name="Rego Aquam"
-                        startValue="0"/>
+                        <action
+                            name="Lagerfeuer"
+                            minLevel="3"
+                            type="Ability" />
 
-                    <item
-                        name="Rego Elementum"
-                        startValue="0"/>
+                        <action
+                            name="Freudenfeuer"
+                            minLevel="4"
+                            type="Ability" />
+
+                        <action
+                            name="Feuerbrunst"
+                            minLevel="5"
+                            type="Ability" />
+                    </item>
+                </item>
+
+                <item
+                    name="Rego Motum"
+                    startValue="0">
+
+                    <action
+                        name="1 Pfund"
+                        minLevel="1"
+                        type="Ability" />
+
+                    <action
+                        name="10 Kilo"
+                        minLevel="2"
+                        type="Ability" />
+
+                    <action
+                        name="100 Kilo"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="250 Kilo"
+                        minLevel="4"
+                        type="Ability" />
+
+                    <action
+                        name="500 Kilo"
+                        minLevel="5"
+                        type="Ability" />
+                </item>
+
+                <item
+                    name="Rego Tempestatem"
+                    startValue="0">
+
+                    <action
+                        name="Nebel"
+                        minLevel="1"
+                        type="Ability" />
+
+                    <action
+                        name="Regen"
+                        minLevel="2"
+                        type="Ability" />
+
+                    <action
+                        name="Wind"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="Sturm"
+                        minLevel="4"
+                        type="Ability" />
+
+                    <action
+                        name="Blitzschlag"
+                        minLevel="5"
+                        type="Ability" />
+                </item>
+
+                <item
+                    name="Rego Aquam"
+                    startValue="0">
+
+                    <action
+                        name="Augen der See"
+                        minLevel="1"
+                        type="Ability" />
+
+                    <action
+                        name="Wassergefängnis"
+                        minLevel="2"
+                        type="Ability" />
+
+                    <action
+                        name="Austrocknen"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="Fließende Wand"
+                        minLevel="4"
+                        type="Ability" />
+
+                    <action
+                        name="Blut zu Wasser"
+                        minLevel="5"
+                        type="Ability" />
+                </item>
+
+                <item
+                    name="Rego Elementum"
+                    startValue="0">
+
+                    <action
+                        name="Elementare Stärke"
+                        minLevel="1"
+                        type="Ability" />
+
+                    <action
+                        name="Hölzerne Zungen"
+                        minLevel="2"
+                        type="Ability" />
+
+                    <action
+                        name="Unbewegtes beleben"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="Elementargestalt"
+                        minLevel="4"
+                        type="Ability" />
+
+                    <action
+                        name="Elementar beschwören"
+                        minLevel="5"
+                        type="Ability" />
+
+                    <action
+                        name="Elementar kontrollieren"
+                        minLevel="5"
+                        type="Ability" />
+                </item>
+
+                <item>
                 </item>
             </group>
 

@@ -2,7 +2,6 @@ package com.deepercreeper.vampireapp.creation;
 
 import java.util.ArrayList;
 import java.util.List;
-import android.util.Log;
 import android.widget.TableLayout;
 import com.deepercreeper.vampireapp.Vampire;
 import com.deepercreeper.vampireapp.controllers.GenerationCreationValueController;
@@ -18,6 +17,7 @@ import com.deepercreeper.vampireapp.controllers.lists.Clan;
 import com.deepercreeper.vampireapp.controllers.lists.Nature;
 import com.deepercreeper.vampireapp.controllers.restrictions.Restriction;
 import com.deepercreeper.vampireapp.controllers.restrictions.Restriction.RestrictionType;
+import com.deepercreeper.vampireapp.util.Log;
 
 /**
  * This class is used to create characters. It handles all values that need to be created<br>

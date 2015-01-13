@@ -1,8 +1,10 @@
 package com.deepercreeper.vampireapp.controllers.dynamic.interfaces.instances;
 
-import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.Item;
+import com.deepercreeper.vampireapp.controllers.actions.Action.ItemFinder;
 
-public interface ItemInstance <T extends Item>
-{	
+public interface ItemInstance
+{
+	public void initActions(ItemFinder aFinder);
 	
+	public int getValue();
 }

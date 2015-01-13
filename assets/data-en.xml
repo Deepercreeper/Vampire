@@ -193,26 +193,31 @@
 
                     <action
                         name="Soul sight"
+                        dices="Cognition,Empathy"
                         minLevel="2"
                         type="Ability" />
 
                     <action
                         name="Mental touch"
+                        dices="Cognition,Empathy"
                         minLevel="3"
                         type="Ability" />
 
                     <action
                         name="Stolen secrets"
+                        dices="Intelligence,Ducking"
                         minLevel="4"
                         type="Ability" />
 
                     <action
                         name="Anima altering"
+                        dices="Cognition,Occultism"
                         minLevel="5"
                         type="Ability" />
 
                     <action
                         name="Foresight"
+                        dices="Cognition,Empathy"
                         minLevel="6"
                         type="Ability" />
                 </item>
@@ -221,6 +226,7 @@
 
                     <action
                         name="Speed"
+                        cost="Blood points=1"
                         minLevel="1"
                         type="Ability" />
                 </item>
@@ -229,62 +235,551 @@
 
                     <action
                         name="Silence of death"
+                        cost="Blood points=1"
                         minLevel="1"
                         type="Ability" />
 
                     <action
                         name="Weakness"
+                        cost="Blood points=1"
+                        dices="Volition"
                         minLevel="2"
                         type="Ability" />
 
                     <action
                         name="Illness"
+                        cost="Blood points=3"
+                        dices="Volition"
                         minLevel="3"
                         type="Ability" />
 
                     <action
                         name="Blood agony"
+                        cost="Blood points=1"
                         minLevel="4"
                         type="Ability" />
 
                     <action
                         name="Blood essence"
+                        dices="Volition"
                         minLevel="5"
                         type="Ability" />
 
                     <action
                         name="Bloody sweat"
+                        dices="Volition"
                         minLevel="6"
                         type="Ability" />
                 </item>
 
-                <item name="Strength"/>
+                <item name="Force">
 
-                <item name="Animality"/>
+                    <action
+                        name="Force"
+                        minLevel="1"
+                        type="Ability" />
+                </item>
 
-                <item name="Domination"/>
+                <item name="Animality">
 
-                <item name="Fleshforming"/>
+                    <action
+                        name="Language of wilderness"
+                        minLevel="1"
+                        type="Ability" />
 
-                <item name="Gestalt-switch"/>
+                    <action
+                        name="Language of wilderness pleasure"
+                        dices="Manipulation,Zoology"
+                        minLevel="1"
+                        type="Ability" />
 
-                <item name="Mortis"/>
+                    <action
+                        name="Noahs call"
+                        dices="Charisma,Survival"
+                        minLevel="2"
+                        type="Ability" />
 
-                <item name="Presence"/>
+                    <action
+                        name="Animal intimidation"
+                        dices="Manipulation,Intimidation"
+                        minLevel="3"
+                        type="Ability" />
 
-                <item name="Shadow play"/>
+                    <action
+                        name="Ride on the wild ghost"
+                        dices="Charisma,Zoology"
+                        minLevel="4"
+                        type="Ability" />
 
-                <item name="Chimeras"/>
+                    <action
+                        name="Animal expulsion"
+                        dices="Manipulation,Zoology"
+                        minLevel="5"
+                        type="Ability" />
 
-                <item name="Fortitude"/>
+                    <action
+                        name="Accelerated unity"
+                        dices="Cognition,Zoology"
+                        minLevel="6"
+                        type="Ability" />
+                </item>
 
-                <item name="Serpentis"/>
+                <item name="Domination">
 
-                <item name="Daimonion"/>
+                    <action
+                        name="Obedience for the spoken word"
+                        dices="Manipulation,Intimidation"
+                        minLevel="1"
+                        type="Ability" />
 
-                <item name="Insanity"/>
+                    <action
+                        name="Mussitation of wrong will"
+                        dices="Manipulation,Leadership"
+                        minLevel="2"
+                        type="Ability" />
 
-                <item name="Obscuration"/>
+                    <action
+                        name="Revelers recognition"
+                        dices="Intellect,Ducking"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="Temptation of sweet whispering"
+                        dices="Charisma,Leadership"
+                        minLevel="4"
+                        type="Ability" />
+
+                    <action
+                        name="Jar"
+                        costDices="Volition"
+                        minLevel="5"
+                        type="Ability" />
+
+                    <action
+                        name="Fealthy"
+                        dices="Charisma,Leadership"
+                        minLevel="6"
+                        type="Ability" />
+                </item>
+
+                <item name="Fleshforming">
+
+                    <action
+                        name="Formable face"
+                        dices="Intelligence,Crafting"
+                        minLevel="1"
+                        type="Ability" />
+
+                    <action
+                        name="Pugging of mortal pug"
+                        dices="Dexterity,Crafting"
+                        minLevel="2"
+                        type="Ability" />
+
+                    <action
+                        name="Tearing the skeleton"
+                        dices="Strenth,Crafting"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="Awakening the Zulo frame"
+                        cost="Blood points=2"
+                        minLevel="4"
+                        type="Ability" />
+
+                    <action
+                        name="Rising the blood fluid"
+                        minLevel="5"
+                        type="Ability" />
+
+                    <action
+                        name="Robbery-Chiropter"
+                        cost="Blood points=3"
+                        minLevel="6"
+                        type="Ability" />
+                </item>
+
+                <item name="Gestalt-switch">
+
+                    <action
+                        name="Deponent of darkness"
+                        minLevel="1"
+                        type="Ability" />
+
+                    <action
+                        name="Claws of the animal"
+                        cost="Blood points=1"
+                        minLevel="2"
+                        type="Ability" />
+
+                    <action
+                        name="Burial in earth"
+                        cost="Blood points=1"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="Animal form"
+                        cost="Blood points=1"
+                        minLevel="4"
+                        type="Ability" />
+
+                    <action
+                        name="Ghost body"
+                        cost="Blood points=1"
+                        minLevel="5"
+                        type="Ability" />
+
+                    <action
+                        name="Blessed sleep"
+                        cost="Blood points=5"
+                        minLevel="6"
+                        type="Ability" />
+                </item>
+
+                <item name="Mortis">
+
+                    <action
+                        name="Deadmask"
+                        cost="Blood points=1"
+                        minLevel="1"
+                        type="Ability" />
+
+                    <action
+                        name="Blight"
+                        costDices="Volition"
+                        dices="Manipulation,Medicine"
+                        minLevel="2"
+                        type="Ability" />
+
+                    <action
+                        name="Awakening"
+                        cost="Volition=3"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="Whispering of death"
+                        minLevel="4"
+                        type="Ability" />
+
+                    <action
+                        name="Black death"
+                        dices="Resistance,Occultism"
+                        minLevel="5"
+                        type="Ability" />
+
+                    <action
+                        name="Vigor Mortis"
+                        cost="Blood points=3"
+                        minLevel="6"
+                        type="Ability" />
+                </item>
+
+                <item name="Presence">
+
+                    <action
+                        name="Veneration"
+                        dices="Charisma,Acting"
+                        minLevel="1"
+                        type="Ability" />
+
+                    <action
+                        name="Look of fear"
+                        dices="Charisma,Intimidation"
+                        minLevel="2"
+                        type="Ability" />
+
+                    <action
+                        name="Enrapturing"
+                        dices="Appearance,Empathy"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="Summoning"
+                        dices="Charisma,Ducking"
+                        minLevel="4"
+                        type="Ability" />
+
+                    <action
+                        name="Majesty"
+                        dices="Intimidation,Charisma"
+                        minLevel="5"
+                        type="Ability" />
+
+                    <action
+                        name="Passion"
+                        dices="Manipulation,Ducking"
+                        minLevel="6"
+                        type="Ability" />
+                </item>
+
+                <item name="Shadow play">
+
+                    <action
+                        name="Shadow play"
+                        cost="Blood points=1"
+                        minLevel="1"
+                        type="Ability" />
+
+                    <action
+                        name="Notturno"
+                        dices="Cognition,Occultism"
+                        minLevel="2"
+                        type="Ability" />
+
+                    <action
+                        name="Arms of Ahriman"
+                        dices="Manipulation,Occultism"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="Nightshadow"
+                        dices="Intellect,Occultism"
+                        minLevel="4"
+                        type="Ability" />
+
+                    <action
+                        name="Shadow body"
+                        cost="Blood points=3"
+                        minLevel="5"
+                        type="Ability" />
+
+                    <action
+                        name="Abyss ramble"
+                        dices="Intelligence,Stealth"
+                        minLevel="6"
+                        type="Ability" />
+
+                    <action
+                        name="Abyss ramble with other"
+                        dices="Intelligence,Hand to hand"
+                        minLevel="6"
+                        type="Ability" />
+                </item>
+
+                <item name="Chimeras">
+
+                    <action
+                        name="Illusion"
+                        cost="Volition=1"
+                        minLevel="1"
+                        type="Ability" />
+
+                    <action
+                        name="Fata morgana"
+                        cost="Volition=2"
+                        minLevel="1"
+                        type="Ability" />
+
+                    <action
+                        name="Phenomenon"
+                        cost="Blood points=1"
+                        minLevel="2"
+                        type="Ability" />
+
+                    <action
+                        name="Permanence"
+                        cost="Blood points=1"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="Horrible reality"
+                        cost="Volition=2"
+                        minLevel="4"
+                        type="Ability" />
+
+                    <action
+                        name="Horrible reality attack"
+                        dices="Manipulation,Ducking"
+                        minLevel="5"
+                        type="Ability" />
+
+                    <action
+                        name="Mass horror"
+                        cost="Volition=2"
+                        minLevel="6"
+                        type="Ability" />
+
+                    <action
+                        name="Mass horror attack"
+                        dices="Manipulation,Ducking"
+                        minLevel="6"
+                        type="Ability" />
+                </item>
+
+                <item name="Fortitude">
+
+                    <action
+                        name="Fortitude"
+                        minLevel="1"
+                        type="Ability" />
+                </item>
+
+                <item name="Serpentis">
+
+                    <action
+                        name="Snake eyes"
+                        minLevel="1"
+                        type="Ability" />
+
+                    <action
+                        name="Viper tongue"
+                        dices="Strength"
+                        minLevel="2"
+                        type="Ability" />
+
+                    <action
+                        name="Bituminous flesh"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="Cobra frame"
+                        cost="Blood points=1"
+                        minLevel="4"
+                        type="Ability" />
+
+                    <action
+                        name="Deception at Toths balance"
+                        minLevel="5"
+                        type="Ability" />
+
+                    <action
+                        name="Basilisk breath"
+                        cost="Blood points=1"
+                        minLevel="6"
+                        type="Ability" />
+
+                    <action
+                        name="Basilisk breath attack"
+                        dices="Dexterity,Hand to hand"
+                        minLevel="6"
+                        type="Ability" />
+                </item>
+
+                <item name="Daimonion">
+
+                    <action
+                        name="Sinnsence"
+                        dices="Cognition,Empathy"
+                        minLevel="1"
+                        type="Ability" />
+
+                    <action
+                        name="Fear of the hell below us"
+                        dices="Intellect,Intimidation"
+                        minLevel="2"
+                        type="Ability" />
+
+                    <action
+                        name="Flames of the underworld"
+                        dices="Occultism,Dexterity"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="Damage of flames of the underworld"
+                        costDices="Blood points"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="Psychomachy"
+                        minLevel="4"
+                        type="Ability" />
+
+                    <action
+                        name="Curse"
+                        dices="Intelligence,Occultism"
+                        minLevel="5"
+                        type="Ability" />
+
+                    <action
+                        name="Ignoring the blazing flames"
+                        minLevel="6"
+                        type="Ability" />
+                </item>
+
+                <item name="Insanity">
+
+                    <action
+                        name="Passion of the Incubus"
+                        dices="Charisma,Empathy"
+                        minLevel="1"
+                        type="Ability" />
+
+                    <action
+                        name="Soul spook"
+                        dices="Manipulation,Ducking"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="Eyes of chaos"
+                        dices="Cognition,Occultism"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="Confusion"
+                        dices="Manipulation,Intimidation"
+                        minLevel="4"
+                        type="Ability" />
+
+                    <action
+                        name="Howling insanity"
+                        dices="Manipulation,Intimidation"
+                        minLevel="5"
+                        type="Ability" />
+
+                    <action
+                        name="Moon kiss"
+                        dices="Manipulation,Empathy"
+                        minLevel="6"
+                        type="Ability" />
+                </item>
+
+                <item name="Obscuration">
+
+                    <action
+                        name="Shadow coat"
+                        minLevel="1"
+                        type="Ability" />
+
+                    <action
+                        name="Invisible presence"
+                        minLevel="2"
+                        type="Ability" />
+
+                    <action
+                        name="Mask of thousand faces"
+                        dices="Manipulation,Acting"
+                        minLevel="3"
+                        type="Ability" />
+
+                    <action
+                        name="Dissappearance in front of the mind&apos;s eye"
+                        dices="Charisma,Stealth"
+                        minLevel="4"
+                        type="Ability" />
+
+                    <action
+                        name="Protective cloak for the convened"
+                        dices="Stealth"
+                        minLevel="5"
+                        type="Ability" />
+
+                    <action
+                        name="Soulmask"
+                        minLevel="6"
+                        type="Ability" />
+                </item>
 
                 <item
                     name="Thaumaturgy"
@@ -294,27 +789,221 @@
 
                     <item
                         name="Rego Vitam"
-                        startValue="0"/>
+                        startValue="0">
+
+                        <action
+                            name="A sense for blood"
+                            dices="Volition"
+                            minLevel="1"
+                            type="Ability" />
+
+                        <action
+                            name="Bloody ecstasis"
+                            dices="Volition"
+                            minLevel="2"
+                            type="Ability" />
+
+                        <action
+                            name="Blood of might"
+                            dices="Volition"
+                            minLevel="3"
+                            type="Ability" />
+
+                        <action
+                            name="Vitae-robbery"
+                            dices="Volition"
+                            minLevel="4"
+                            type="Ability" />
+
+                        <action
+                            name="Blood bowl"
+                            dices="Volition"
+                            minLevel="5"
+                            type="Ability" />
+                    </item>
 
                     <item
                         name="Creo Ignem"
-                        startValue="0"/>
+                        startValue="0">
+
+                        <action
+                            name="Candle fire"
+                            dices="Volition"
+                            minLevel="1"
+                            type="Ability" />
+
+                        <action
+                            name="Hand full fire"
+                            dices="Volition"
+                            minLevel="2"
+                            type="Ability" />
+
+                        <action
+                            name="Campfire"
+                            dices="Volition"
+                            minLevel="3"
+                            type="Ability" />
+
+                        <action
+                            name="Bonfire"
+                            dices="Volition"
+                            minLevel="4"
+                            type="Ability" />
+
+                        <action
+                            name="Fireheat"
+                            dices="Volition"
+                            minLevel="5"
+                            type="Ability" />
+                    </item>
 
                     <item
                         name="Rego Motum"
-                        startValue="0"/>
+                        startValue="0">
+
+                        <action
+                            name="1 pound"
+                            dices="Volition"
+                            minLevel="1"
+                            type="Ability" />
+
+                        <action
+                            name="10 kilo"
+                            dices="Volition"
+                            minLevel="2"
+                            type="Ability" />
+
+                        <action
+                            name="100 kilo"
+                            dices="Volition"
+                            minLevel="3"
+                            type="Ability" />
+
+                        <action
+                            name="250 kilo"
+                            dices="Volition"
+                            minLevel="4"
+                            type="Ability" />
+
+                        <action
+                            name="500 kilo"
+                            dices="Volition"
+                            minLevel="5"
+                            type="Ability" />
+                    </item>
 
                     <item
                         name="Rego Tempestatem"
-                        startValue="0"/>
+                        startValue="0">
+
+                        <action
+                            name="Fog"
+                            dices="Volition"
+                            minLevel="1"
+                            type="Ability" />
+
+                        <action
+                            name="Rain"
+                            dices="Volition"
+                            minLevel="2"
+                            type="Ability" />
+
+                        <action
+                            name="Wind"
+                            dices="Volition"
+                            minLevel="3"
+                            type="Ability" />
+
+                        <action
+                            name="Storm"
+                            dices="Volition"
+                            minLevel="4"
+                            type="Ability" />
+
+                        <action
+                            name="Lightning"
+                            dices="Volition"
+                            minDices="10"
+                            minLevel="5"
+                            type="Ability" />
+                    </item>
 
                     <item
                         name="Rego Aquam"
-                        startValue="0"/>
+                        startValue="0">
+
+                        <action
+                            name="Eyes of sea"
+                            dices="Volition"
+                            minLevel="1"
+                            type="Ability" />
+
+                        <action
+                            name="Water prison"
+                            dices="Volition"
+                            minLevel="2"
+                            type="Ability" />
+
+                        <action
+                            name="Dehydration"
+                            dices="Volition"
+                            minLevel="3"
+                            type="Ability" />
+
+                        <action
+                            name="Floating wall"
+                            dices="Volition"
+                            minLevel="4"
+                            type="Ability" />
+
+                        <action
+                            name="Blood to water"
+                            dices="Volition"
+                            minLevel="5"
+                            type="Ability" />
+                    </item>
 
                     <item
                         name="Rego Elementum"
-                        startValue="0"/>
+                        startValue="0">
+
+                        <action
+                            name="Elementary strength"
+                            cost="Volition=2"
+                            dices="Volition"
+                            minLevel="1"
+                            type="Ability" />
+
+                        <action
+                            name="Wooden tongues"
+                            dices="Volition"
+                            minLevel="2"
+                            type="Ability" />
+
+                        <action
+                            name="Revive stationaries"
+                            cost="Volition=1"
+                            minLevel="3"
+                            type="Ability" />
+
+                        <action
+                            name="Elementary frame"
+                            dices="Volition"
+                            minLevel="4"
+                            type="Ability" />
+
+                        <action
+                            name="Elemental summoning"
+                            dices="Volition"
+                            minLevel="5"
+                            type="Ability" />
+
+                        <action
+                            name="Elemental control"
+                            dices="Intellect,Occultism"
+                            minLevel="5"
+                            type="Ability" />
+                    </item>
                 </item>
             </group>
 
@@ -772,7 +1461,7 @@
             </group-option>
         </controller>
 
-        <controller name="Path" >
+        <controller name="Other" >
 
             <group
                 name="Path"
@@ -811,6 +1500,16 @@
                 <item name="Volition"/>
             </group>
 
+            <group
+                name="Blood points"
+                maxValue="20"
+                mutable="false"
+                startValue="10"
+                value="true" >
+
+                <item name="Blood points"/>
+            </group>
+
             <group-option
                 name="Path"
                 maxValues="5"
@@ -825,6 +1524,14 @@
                 value="true" >
 
                 <group name="Volition" />
+            </group-option>
+
+            <group-option
+                name="Blood points"
+                maxValues="10"
+                value="true" >
+
+                <group name="Blood points" />
             </group-option>
         </controller>
     </controllers>
@@ -843,7 +1550,7 @@
 
             <restriction
                 itemName="Disciplines"
-                items="Strenth,Animality,Obscuration"
+                items="Force,Animality,Obscuration"
                 type="GroupChildren" />
 
             <restriction
@@ -900,7 +1607,7 @@
 
             <restriction
                 itemName="Disciplines"
-                items="Domination,Shadow play,Strenth"
+                items="Domination,Shadow play,Force"
                 type="GroupChildren" />
         </clan>
 
@@ -920,7 +1627,7 @@
 
             <restriction
                 itemName="Disciplines"
-                items="Chimera,Fortitude,Animality"
+                items="Chimeras,Fortitude,Animality"
                 type="GroupChildren" />
         </clan>
 
