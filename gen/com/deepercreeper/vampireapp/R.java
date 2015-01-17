@@ -9,8 +9,7 @@ package com.deepercreeper.vampireapp;
 
 public final class R {
     public static final class array {
-        public static final int description_fields=0x7f040002;
-        public static final int disciplines=0x7f040001;
+        public static final int description_fields=0x7f040001;
         public static final int nature_and_behavior=0x7f040000;
     }
     public static final class attr {

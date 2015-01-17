@@ -22,6 +22,8 @@ public interface Item extends Namable
 	 * 
 	 * @return the item display name.
 	 */
+	public String getDescription();
+	
 	public String getDisplayName();
 	
 	public void addAction(Action aAction);

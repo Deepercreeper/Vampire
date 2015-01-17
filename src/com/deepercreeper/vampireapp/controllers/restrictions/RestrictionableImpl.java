@@ -28,19 +28,13 @@ public abstract class RestrictionableImpl implements Restrictionable
 	public final int getMinValue(final RestrictionType... aTypes)
 	{
 		int minValue = Integer.MIN_VALUE;
-		for (final Restriction restriction : getRestrictions())
+		for (final Restriction restriction : getRestrictions(aTypes))
 		{
-			for (final RestrictionType type : aTypes)
+			if (restriction.isActive(mController))
 			{
-				if (restriction.getType().equals(type))
-				{
-					if (restriction.isActive(mController))
-					{
-						minValue = Math.max(minValue, restriction.getMinimum());
-					}
-					break;
-				}
+				minValue = Math.max(minValue, restriction.getMinimum());
 			}
+			break;
 		}
 		return minValue;
 	}
@@ -49,19 +43,13 @@ public abstract class RestrictionableImpl implements Restrictionable
 	public final int getMaxValue(final RestrictionType... aTypes)
 	{
 		int maxValue = Integer.MAX_VALUE;
-		for (final Restriction restriction : getRestrictions())
+		for (final Restriction restriction : getRestrictions(aTypes))
 		{
-			for (final RestrictionType type : aTypes)
+			if (restriction.isActive(mController))
 			{
-				if (restriction.getType().equals(type))
-				{
-					if (restriction.isActive(mController))
-					{
-						maxValue = Math.min(maxValue, restriction.getMaximum());
-					}
-					break;
-				}
+				maxValue = Math.min(maxValue, restriction.getMaximum());
 			}
+			break;
 		}
 		return maxValue;
 	}

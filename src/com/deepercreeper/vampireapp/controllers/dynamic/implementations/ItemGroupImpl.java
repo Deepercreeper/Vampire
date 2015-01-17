@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.Item;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.ItemGroup;
+import com.deepercreeper.vampireapp.util.LanguageUtil;
 import com.deepercreeper.vampireapp.util.Log;
 
 /**
@@ -104,6 +105,12 @@ public class ItemGroupImpl implements ItemGroup
 	}
 	
 	@Override
+	public String getDisplayName()
+	{
+		return LanguageUtil.instance().getValue(getName());
+	}
+	
+	@Override
 	public int getFreePointsCost()
 	{
 		if ( !isValueGroup())
@@ -192,6 +199,6 @@ public class ItemGroupImpl implements ItemGroup
 	@Override
 	public String toString()
 	{
-		return getName() + ": " + getItemsList().toString();
+		return getDisplayName() + ": " + getItemsList().toString();
 	}
 }

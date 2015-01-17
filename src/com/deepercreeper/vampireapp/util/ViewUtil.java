@@ -23,7 +23,7 @@ public class ViewUtil
 	
 	private static int		sId	= 1;
 	
-	public static void setContext(final Context aContext)
+	public static void init(final Context aContext)
 	{
 		sContext = aContext;
 	}

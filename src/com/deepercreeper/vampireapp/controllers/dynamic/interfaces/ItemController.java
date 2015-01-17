@@ -25,5 +25,7 @@ public interface ItemController
 	
 	public Item getItem(String aName);
 	
+	public String getDisplayName();
+	
 	public String getName();
 }

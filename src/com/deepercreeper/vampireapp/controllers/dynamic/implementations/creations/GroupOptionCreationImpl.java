@@ -368,7 +368,7 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 			getContainer().setOrientation(LinearLayout.VERTICAL);
 			
 			mGroupButton.setLayoutParams(ViewUtil.getWrapHeight());
-			mGroupButton.setText(getName());
+			mGroupButton.setText(getGroupOption().getDisplayName());
 		}
 		
 		if (mOpen)
@@ -412,6 +412,6 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 	@Override
 	public String toString()
 	{
-		return getName();
+		return getGroupOption().getDisplayName();
 	}
 }

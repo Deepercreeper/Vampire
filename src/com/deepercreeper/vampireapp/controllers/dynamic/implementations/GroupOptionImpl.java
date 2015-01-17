@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.GroupOption;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.ItemGroup;
+import com.deepercreeper.vampireapp.util.LanguageUtil;
 
 public class GroupOptionImpl implements GroupOption
 {
@@ -83,6 +84,12 @@ public class GroupOptionImpl implements GroupOption
 	}
 	
 	@Override
+	public String getDisplayName()
+	{
+		return LanguageUtil.instance().getValue(getName());
+	}
+	
+	@Override
 	public boolean hasGroup(final ItemGroup aGroup)
 	{
 		return hasGroup(aGroup.getName());
@@ -103,6 +110,6 @@ public class GroupOptionImpl implements GroupOption
 	@Override
 	public String toString()
 	{
-		return getName() + ": " + getGroups().toString();
+		return getDisplayName() + ": " + getGroups().toString();
 	}
 }

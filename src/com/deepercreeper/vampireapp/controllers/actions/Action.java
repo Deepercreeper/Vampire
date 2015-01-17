@@ -36,7 +36,11 @@ public interface Action extends Comparable<Action>
 		}
 	}
 	
+	public String getId();
+	
 	public ActionType getType();
+	
+	public String getDisplayName();
 	
 	public String getName();
 	

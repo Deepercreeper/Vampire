@@ -16,6 +16,8 @@ public interface GroupOption extends Comparable<GroupOption>
 	
 	public String getName();
 	
+	public String getDisplayName();
+	
 	public boolean hasGroup(ItemGroup aGroup);
 	
 	public boolean hasGroup(String aName);

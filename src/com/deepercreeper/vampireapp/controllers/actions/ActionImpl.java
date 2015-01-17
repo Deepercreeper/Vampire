@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.instances.ItemInstance;
+import com.deepercreeper.vampireapp.util.LanguageUtil;
 
 public class ActionImpl implements Action
 {
@@ -28,10 +29,13 @@ public class ActionImpl implements Action
 	
 	private final String						mName;
 	
-	public ActionImpl(final String aName, final ActionType aType, final int aMinLevel, final int aMinDices, final String[] aDiceNames,
-			final String[] aCostDiceNames, final String[] aCostNames)
+	private final String						mId;
+	
+	public ActionImpl(final String aName, final String aId, final ActionType aType, final int aMinLevel, final int aMinDices,
+			final String[] aDiceNames, final String[] aCostDiceNames, final String[] aCostNames)
 	{
 		mName = aName;
+		mId = aId;
 		mType = aType;
 		mMinLevel = aMinLevel;
 		mMinDices = aMinDices;
@@ -41,9 +45,21 @@ public class ActionImpl implements Action
 	}
 	
 	@Override
+	public String getId()
+	{
+		return mId;
+	}
+	
+	@Override
 	public int getMinLevel()
 	{
 		return mMinLevel;
+	}
+	
+	@Override
+	public String getDisplayName()
+	{
+		return LanguageUtil.instance().getValue(getName());
 	}
 	
 	@Override

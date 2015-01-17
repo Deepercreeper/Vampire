@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -32,15 +29,29 @@ import com.deepercreeper.vampireapp.controllers.restrictions.ConditionImpl;
 import com.deepercreeper.vampireapp.controllers.restrictions.Restriction;
 import com.deepercreeper.vampireapp.controllers.restrictions.Restriction.RestrictionType;
 import com.deepercreeper.vampireapp.controllers.restrictions.RestrictionImpl;
+import com.deepercreeper.vampireapp.util.DataUtil;
 
 public class Creator
 {
-	private static final String	CONTROLLER	= "controller", ITEM = "item", GROUP = "group", GROUP_OPTION = "group-option", CLAN = "clan",
-			CONDITION = "condition", RESTRICTION = "restriction", ACTION = "action";
+	private static final String	CONTROLLER		= "controller";
+	
+	private static final String	ITEM			= "item";
+	
+	private static final String	GROUP			= "group";
+	
+	private static final String	GROUP_OPTION	= "group-option";
+	
+	private static final String	CLAN			= "clan";
+	
+	private static final String	CONDITION		= "condition";
+	
+	private static final String	RESTRICTION		= "restriction";
+	
+	private static final String	ACTION			= "action";
 	
 	public static ClanController createClans(final Context aContext)
 	{
-		return createClans(getDocument(aContext));
+		return createClans(DataUtil.getDocument(aContext, "data", false));
 	}
 	
 	private static ClanController createClans(final Document aDoc)
@@ -194,7 +205,7 @@ public class Creator
 	
 	public static List<ItemController> createItems(final Context aContext)
 	{
-		return createControllers(getDocument(aContext));
+		return createControllers(DataUtil.getDocument(aContext, "data", false));
 	}
 	
 	private static List<ItemController> createControllers(final Document aDoc)
@@ -208,7 +219,9 @@ public class Creator
 				continue;
 			}
 			final Element controller = (Element) controllers.item(i);
-			final ItemController itemController = new ItemControllerImpl(controller.getAttribute("name"));
+			final String name = controller.getAttribute("name");
+			// TODO Connect the default items with the other named items in any way...
+			final ItemController itemController = new ItemControllerImpl(name);
 			for (final ItemGroup group : loadGroups(controller))
 			{
 				itemController.addGroup(group);
@@ -357,12 +370,18 @@ public class Creator
 			if (child.getTagName().equals(ACTION))
 			{
 				final ActionType type = Action.ActionType.get(child.getAttribute("type"));
+				final String name = child.getAttribute("name");
+				String id = name;
 				int minLevel = 0;
 				int minDices = 0;
 				String[] dices = null;
 				String[] costDices = null;
 				String[] cost = null;
 				
+				if (child.hasAttribute("id"))
+				{
+					id = child.getAttribute("id");
+				}
 				if (child.hasAttribute("minDices"))
 				{
 					minDices = Integer.parseInt(child.getAttribute("minDices"));
@@ -383,7 +402,7 @@ public class Creator
 				{
 					minLevel = Integer.parseInt(child.getAttribute("minLevel"));
 				}
-				actions.add(new ActionImpl(child.getAttribute("name"), type, minLevel, minDices, dices, costDices, cost));
+				actions.add(new ActionImpl(name, id, type, minLevel, minDices, dices, costDices, cost));
 			}
 		}
 		return actions;
@@ -451,22 +470,5 @@ public class Creator
 			groupsList.add(aController.getGroup(groupName));
 		}
 		return groupsList;
-	}
-	
-	private static Document getDocument(final Context aContext)
-	{
-		Document doc = null;
-		try
-		{
-			final DocumentBuilderFactory DOMfactory = DocumentBuilderFactory.newInstance();
-			final DocumentBuilder DOMbuilder = DOMfactory.newDocumentBuilder();
-			final String postfix = "-" + Locale.getDefault().getLanguage();
-			doc = DOMbuilder.parse(aContext.getAssets().open("data" + postfix + ".xml"));
-		}
-		catch (final Exception e)
-		{
-			return null;
-		}
-		return doc;
 	}
 }

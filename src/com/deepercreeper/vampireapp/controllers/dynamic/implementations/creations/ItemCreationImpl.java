@@ -759,7 +759,7 @@ public class ItemCreationImpl extends RestrictionableImpl implements ItemCreatio
 		mNameText.setLayoutParams(params);
 		if ( !mInitialized)
 		{
-			mNameText.setText(getItem().getName());
+			mNameText.setText(getItem().getDisplayName());
 			mNameText.setClickable(true);
 			mNameText.setOnClickListener(new OnClickListener()
 			{
@@ -767,7 +767,7 @@ public class ItemCreationImpl extends RestrictionableImpl implements ItemCreatio
 				@Override
 				public void onClick(final View aV)
 				{
-					Toast.makeText(getContext(), getItem().getDisplayName(), Toast.LENGTH_LONG).show();
+					Toast.makeText(getContext(), getItem().getDescription(), Toast.LENGTH_LONG).show();
 				}
 			});
 			mNameText.setGravity(Gravity.CENTER_VERTICAL);

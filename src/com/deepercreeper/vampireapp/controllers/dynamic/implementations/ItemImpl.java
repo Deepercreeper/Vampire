@@ -9,6 +9,7 @@ import com.deepercreeper.vampireapp.controllers.actions.Action;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.Item;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.Namable;
+import com.deepercreeper.vampireapp.util.LanguageUtil;
 import com.deepercreeper.vampireapp.util.Log;
 
 /**
@@ -158,7 +159,13 @@ public class ItemImpl implements Item
 	@Override
 	public String getDisplayName()
 	{
-		String displayName = getName();
+		return LanguageUtil.instance().getValue(getName());
+	}
+	
+	@Override
+	public String getDescription()
+	{
+		String displayName = getDisplayName();
 		
 		if (hasActions())
 		{
@@ -174,7 +181,7 @@ public class ItemImpl implements Item
 				{
 					displayName += ",";
 				}
-				displayName += " " + action.getName();
+				displayName += " " + action.getDisplayName();
 			}
 		}
 		return displayName;

@@ -502,6 +502,6 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 	@Override
 	public String toString()
 	{
-		return getName();
+		return getItemController().getDisplayName();
 	}
 }

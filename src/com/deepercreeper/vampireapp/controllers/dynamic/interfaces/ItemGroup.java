@@ -43,6 +43,8 @@ public interface ItemGroup extends Comparable<ItemGroup>
 	
 	public int getMaxValue();
 	
+	public String getDisplayName();
+	
 	/**
 	 * @return the group name.
 	 */

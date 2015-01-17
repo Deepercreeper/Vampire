@@ -53,8 +53,8 @@ public class SelectItemDialog extends DialogFragment
 		for (int i = 0; i < mNames.length; i++ )
 		{
 			final Item item = aItems.get(i);
-			mItems.put(item.getName(), item);
-			mNames[i] = item.getName();
+			mItems.put(item.getDisplayName(), item);
+			mNames[i] = item.getDisplayName();
 		}
 		mTitle = aTitle;
 		mContext = aContext;

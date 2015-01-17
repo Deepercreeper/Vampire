@@ -6,7 +6,7 @@
         <controller name="Attributes" >
 
             <group
-                name="Physically"
+                name="Physical"
                 freePointsCost="5"
                 maxLowLevelValue="5"
                 maxValue="6"
@@ -18,7 +18,7 @@
 
                 <item name="Dexterity"/>
 
-                <item name="Resistance"/>
+                <item name="Stamina"/>
             </group>
 
             <group
@@ -46,11 +46,11 @@
                 startValue="1"
                 value="true" >
 
-                <item name="Cognition"/>
+                <item name="Perception"/>
 
                 <item name="Intelligence"/>
 
-                <item name="Intellect"/>
+                <item name="Wits"/>
             </group>
 
             <group-option
@@ -58,7 +58,7 @@
                 maxValues="6,8,10"
                 value="true" >
 
-                <group name="Physically" />
+                <group name="Physical" />
 
                 <group name="Social" />
 
@@ -77,13 +77,13 @@
                 startValue="0"
                 value="true" >
 
-                <item name="Attention"/>
+                <item name="Alertness"/>
 
-                <item name="Excuses"/>
+                <item name="Subterfuge"/>
 
-                <item name="Ducking"/>
+                <item name="Dodge"/>
 
-                <item name="Theft"/>
+                <item name="Legerdemain"/>
 
                 <item name="Intimidation"/>
 
@@ -91,11 +91,11 @@
 
                 <item name="Leadership"/>
 
-                <item name="Hand to hand"/>
+                <item name="Brawl"/>
 
-                <item name="Acting"/>
+                <item name="Expression"/>
 
-                <item name="Sportiness"/>
+                <item name="Athletics"/>
             </group>
 
             <group
@@ -111,25 +111,25 @@
 
                 <item name="Etiquette"/>
 
-                <item name="Crafting"/>
+                <item name="Crafts"/>
 
                 <item name="Stealth"/>
+
+                <item name="Melee"/>
+
+                <item name="Survival"/>
+
+                <item name="Ride"/>
+
+                <item name="Animal ken"/>
 
                 <item name="Herbalism"/>
 
                 <item name="Music"/>
-
-                <item name="Melee"/>
-
-                <item name="Riding"/>
-
-                <item name="Zoology"/>
-
-                <item name="Survival"/>
             </group>
 
             <group
-                name="Knowledge"
+                name="Knowledges"
                 freePointsCost="3"
                 maxLowLevelValue="5"
                 maxValue="6"
@@ -137,11 +137,11 @@
                 startValue="0"
                 value="true" >
 
-                <item name="Academic knowledge"/>
+                <item name="Academics"/>
 
                 <item name="Folklore"/>
 
-                <item name="Legislation"/>
+                <item name="Law"/>
 
                 <item
                     name="Linguistics"
@@ -149,11 +149,11 @@
 
                 <item name="Medicine"/>
 
-                <item name="Inquiring"/>
+                <item name="Investigation"/>
 
                 <item name="Science"/>
 
-                <item name="Occultism"/>
+                <item name="Occult"/>
 
                 <item name="Politics"/>
 
@@ -169,11 +169,11 @@
 
                 <group name="Skills" />
 
-                <group name="Knowledge" />
+                <group name="Knowledges" />
             </group-option>
         </controller>
 
-        <controller name="Benefits" >
+        <controller name="Advantages" >
 
             <group
                 name="Disciplines"
@@ -193,31 +193,31 @@
 
                     <action
                         name="Soul sight"
-                        dices="Cognition,Empathy"
+                        dices="Perception,Empathy"
                         minLevel="2"
                         type="Ability" />
 
                     <action
                         name="Mental touch"
-                        dices="Cognition,Empathy"
+                        dices="Perception,Empathy"
                         minLevel="3"
                         type="Ability" />
 
                     <action
                         name="Stolen secrets"
-                        dices="Intelligence,Ducking"
+                        dices="Intelligence,Dodge"
                         minLevel="4"
                         type="Ability" />
 
                     <action
                         name="Anima altering"
-                        dices="Cognition,Occultism"
+                        dices="Perception,Occult"
                         minLevel="5"
                         type="Ability" />
 
                     <action
                         name="Foresight"
-                        dices="Cognition,Empathy"
+                        dices="Perception,Empathy"
                         minLevel="6"
                         type="Ability" />
                 </item>
@@ -226,7 +226,7 @@
 
                     <action
                         name="Speed"
-                        cost="Blood points=1"
+                        cost="Blood pool=1"
                         minLevel="1"
                         type="Ability" />
                 </item>
@@ -235,39 +235,39 @@
 
                     <action
                         name="Silence of death"
-                        cost="Blood points=1"
+                        cost="Blood pool=1"
                         minLevel="1"
                         type="Ability" />
 
                     <action
                         name="Weakness"
-                        cost="Blood points=1"
-                        dices="Volition"
+                        cost="Blood pool=1"
+                        dices="Willpower"
                         minLevel="2"
                         type="Ability" />
 
                     <action
                         name="Illness"
-                        cost="Blood points=3"
-                        dices="Volition"
+                        cost="Blood pool=3"
+                        dices="Willpower"
                         minLevel="3"
                         type="Ability" />
 
                     <action
                         name="Blood agony"
-                        cost="Blood points=1"
+                        cost="Blood pool=1"
                         minLevel="4"
                         type="Ability" />
 
                     <action
                         name="Blood essence"
-                        dices="Volition"
+                        dices="Willpower"
                         minLevel="5"
                         type="Ability" />
 
                     <action
                         name="Bloody sweat"
-                        dices="Volition"
+                        dices="Willpower"
                         minLevel="6"
                         type="Ability" />
                 </item>
@@ -289,7 +289,7 @@
 
                     <action
                         name="Language of wilderness pleasure"
-                        dices="Manipulation,Zoology"
+                        dices="Manipulation,Animal Ken"
                         minLevel="1"
                         type="Ability" />
 
@@ -307,19 +307,19 @@
 
                     <action
                         name="Ride on the wild ghost"
-                        dices="Charisma,Zoology"
+                        dices="Charisma,Animal Ken"
                         minLevel="4"
                         type="Ability" />
 
                     <action
                         name="Animal expulsion"
-                        dices="Manipulation,Zoology"
+                        dices="Manipulation,Animal Ken"
                         minLevel="5"
                         type="Ability" />
 
                     <action
                         name="Accelerated unity"
-                        dices="Cognition,Zoology"
+                        dices="Perception,Animal Ken"
                         minLevel="6"
                         type="Ability" />
                 </item>
@@ -340,7 +340,7 @@
 
                     <action
                         name="Revelers recognition"
-                        dices="Intellect,Ducking"
+                        dices="Wits,Dodge"
                         minLevel="3"
                         type="Ability" />
 
@@ -352,7 +352,7 @@
 
                     <action
                         name="Jar"
-                        costDices="Volition"
+                        costDices="Willpower"
                         minLevel="5"
                         type="Ability" />
 
@@ -367,36 +367,36 @@
 
                     <action
                         name="Formable face"
-                        dices="Intelligence,Crafting"
+                        dices="Intelligence,Crafts"
                         minLevel="1"
                         type="Ability" />
 
                     <action
                         name="Pugging of mortal pug"
-                        dices="Dexterity,Crafting"
+                        dices="Dexterity,Crafts"
                         minLevel="2"
                         type="Ability" />
 
                     <action
                         name="Tearing the skeleton"
-                        dices="Strenth,Crafting"
+                        dices="Strenth,Crafts"
                         minLevel="3"
                         type="Ability" />
 
                     <action
                         name="Awakening the Zulo frame"
-                        cost="Blood points=2"
+                        cost="Blood pool=2"
                         minLevel="4"
                         type="Ability" />
 
                     <action
-                        name="Rising the blood fluid"
+                        name="Rising of the blood fluid"
                         minLevel="5"
                         type="Ability" />
 
                     <action
                         name="Robbery-Chiropter"
-                        cost="Blood points=3"
+                        cost="Blood pool=3"
                         minLevel="6"
                         type="Ability" />
                 </item>
@@ -409,32 +409,32 @@
                         type="Ability" />
 
                     <action
-                        name="Claws of the animal"
-                        cost="Blood points=1"
+                        name="Animal claws"
+                        cost="Blood pool=1"
                         minLevel="2"
                         type="Ability" />
 
                     <action
                         name="Burial in earth"
-                        cost="Blood points=1"
+                        cost="Blood pool=1"
                         minLevel="3"
                         type="Ability" />
 
                     <action
                         name="Animal form"
-                        cost="Blood points=1"
+                        cost="Blood pool=1"
                         minLevel="4"
                         type="Ability" />
 
                     <action
                         name="Ghost body"
-                        cost="Blood points=1"
+                        cost="Blood pool=1"
                         minLevel="5"
                         type="Ability" />
 
                     <action
                         name="Blessed sleep"
-                        cost="Blood points=5"
+                        cost="Blood pool=5"
                         minLevel="6"
                         type="Ability" />
                 </item>
@@ -443,20 +443,20 @@
 
                     <action
                         name="Deadmask"
-                        cost="Blood points=1"
+                        cost="Blood pool=1"
                         minLevel="1"
                         type="Ability" />
 
                     <action
                         name="Blight"
-                        costDices="Volition"
+                        costDices="Willpower"
                         dices="Manipulation,Medicine"
                         minLevel="2"
                         type="Ability" />
 
                     <action
                         name="Awakening"
-                        cost="Volition=3"
+                        cost="Willpower=3"
                         minLevel="3"
                         type="Ability" />
 
@@ -467,13 +467,13 @@
 
                     <action
                         name="Black death"
-                        dices="Resistance,Occultism"
+                        dices="Stamina,Occult"
                         minLevel="5"
                         type="Ability" />
 
                     <action
                         name="Vigor Mortis"
-                        cost="Blood points=3"
+                        cost="Blood pool=3"
                         minLevel="6"
                         type="Ability" />
                 </item>
@@ -482,7 +482,7 @@
 
                     <action
                         name="Veneration"
-                        dices="Charisma,Acting"
+                        dices="Charisma,Expression"
                         minLevel="1"
                         type="Ability" />
 
@@ -500,7 +500,7 @@
 
                     <action
                         name="Summoning"
-                        dices="Charisma,Ducking"
+                        dices="Charisma,Dodge"
                         minLevel="4"
                         type="Ability" />
 
@@ -512,7 +512,7 @@
 
                     <action
                         name="Passion"
-                        dices="Manipulation,Ducking"
+                        dices="Manipulation,Dodge"
                         minLevel="6"
                         type="Ability" />
                 </item>
@@ -521,31 +521,31 @@
 
                     <action
                         name="Shadow play"
-                        cost="Blood points=1"
+                        cost="Blood pool=1"
                         minLevel="1"
                         type="Ability" />
 
                     <action
                         name="Notturno"
-                        dices="Cognition,Occultism"
+                        dices="Perception,Occult"
                         minLevel="2"
                         type="Ability" />
 
                     <action
                         name="Arms of Ahriman"
-                        dices="Manipulation,Occultism"
+                        dices="Manipulation,Occult"
                         minLevel="3"
                         type="Ability" />
 
                     <action
                         name="Nightshadow"
-                        dices="Intellect,Occultism"
+                        dices="Wits,Occult"
                         minLevel="4"
                         type="Ability" />
 
                     <action
                         name="Shadow body"
-                        cost="Blood points=3"
+                        cost="Blood pool=3"
                         minLevel="5"
                         type="Ability" />
 
@@ -556,8 +556,8 @@
                         type="Ability" />
 
                     <action
-                        name="Abyss ramble with other"
-                        dices="Intelligence,Hand to hand"
+                        name="Abyss ramble with others"
+                        dices="Intelligence,Brawl"
                         minLevel="6"
                         type="Ability" />
                 </item>
@@ -566,49 +566,49 @@
 
                     <action
                         name="Illusion"
-                        cost="Volition=1"
+                        cost="Willpower=1"
                         minLevel="1"
                         type="Ability" />
 
                     <action
                         name="Fata morgana"
-                        cost="Volition=2"
+                        cost="Willpower=2"
                         minLevel="1"
                         type="Ability" />
 
                     <action
                         name="Phenomenon"
-                        cost="Blood points=1"
+                        cost="Blood pool=1"
                         minLevel="2"
                         type="Ability" />
 
                     <action
                         name="Permanence"
-                        cost="Blood points=1"
+                        cost="Blood pool=1"
                         minLevel="3"
                         type="Ability" />
 
                     <action
                         name="Horrible reality"
-                        cost="Volition=2"
+                        cost="Willpower=2"
                         minLevel="4"
                         type="Ability" />
 
                     <action
                         name="Horrible reality attack"
-                        dices="Manipulation,Ducking"
+                        dices="Manipulation,Dodge"
                         minLevel="5"
                         type="Ability" />
 
                     <action
                         name="Mass horror"
-                        cost="Volition=2"
+                        cost="Willpower=2"
                         minLevel="6"
                         type="Ability" />
 
                     <action
                         name="Mass horror attack"
-                        dices="Manipulation,Ducking"
+                        dices="Manipulation,Dodge"
                         minLevel="6"
                         type="Ability" />
                 </item>
@@ -641,24 +641,24 @@
 
                     <action
                         name="Cobra frame"
-                        cost="Blood points=1"
+                        cost="Blood pool=1"
                         minLevel="4"
                         type="Ability" />
 
                     <action
-                        name="Deception at Toths balance"
+                        name="Deception at Thoths balance"
                         minLevel="5"
                         type="Ability" />
 
                     <action
                         name="Basilisk breath"
-                        cost="Blood points=1"
+                        cost="Blood pool=1"
                         minLevel="6"
                         type="Ability" />
 
                     <action
                         name="Basilisk breath attack"
-                        dices="Dexterity,Hand to hand"
+                        dices="Dexterity,Brawl"
                         minLevel="6"
                         type="Ability" />
                 </item>
@@ -667,25 +667,25 @@
 
                     <action
                         name="Sinnsence"
-                        dices="Cognition,Empathy"
+                        dices="Perception,Empathy"
                         minLevel="1"
                         type="Ability" />
 
                     <action
                         name="Fear of the hell below us"
-                        dices="Intellect,Intimidation"
+                        dices="Wits,Intimidation"
                         minLevel="2"
                         type="Ability" />
 
                     <action
                         name="Flames of the underworld"
-                        dices="Occultism,Dexterity"
+                        dices="Occult,Dexterity"
                         minLevel="3"
                         type="Ability" />
 
                     <action
                         name="Damage of flames of the underworld"
-                        costDices="Blood points"
+                        costDices="Blood pool"
                         minLevel="3"
                         type="Ability" />
 
@@ -696,7 +696,7 @@
 
                     <action
                         name="Curse"
-                        dices="Intelligence,Occultism"
+                        dices="Intelligence,Occult"
                         minLevel="5"
                         type="Ability" />
 
@@ -716,13 +716,13 @@
 
                     <action
                         name="Soul spook"
-                        dices="Manipulation,Ducking"
+                        dices="Manipulation,Dodge"
                         minLevel="3"
                         type="Ability" />
 
                     <action
                         name="Eyes of chaos"
-                        dices="Cognition,Occultism"
+                        dices="Perception,Occult"
                         minLevel="3"
                         type="Ability" />
 
@@ -759,7 +759,7 @@
 
                     <action
                         name="Mask of thousand faces"
-                        dices="Manipulation,Acting"
+                        dices="Manipulation,Expression"
                         minLevel="3"
                         type="Ability" />
 
@@ -793,31 +793,31 @@
 
                         <action
                             name="A sense for blood"
-                            dices="Volition"
+                            dices="Willpower"
                             minLevel="1"
                             type="Ability" />
 
                         <action
                             name="Bloody ecstasis"
-                            dices="Volition"
+                            dices="Willpower"
                             minLevel="2"
                             type="Ability" />
 
                         <action
                             name="Blood of might"
-                            dices="Volition"
+                            dices="Willpower"
                             minLevel="3"
                             type="Ability" />
 
                         <action
                             name="Vitae-robbery"
-                            dices="Volition"
+                            dices="Willpower"
                             minLevel="4"
                             type="Ability" />
 
                         <action
                             name="Blood bowl"
-                            dices="Volition"
+                            dices="Willpower"
                             minLevel="5"
                             type="Ability" />
                     </item>
@@ -828,31 +828,31 @@
 
                         <action
                             name="Candle fire"
-                            dices="Volition"
+                            dices="Willpower"
                             minLevel="1"
                             type="Ability" />
 
                         <action
                             name="Hand full fire"
-                            dices="Volition"
+                            dices="Willpower"
                             minLevel="2"
                             type="Ability" />
 
                         <action
                             name="Campfire"
-                            dices="Volition"
+                            dices="Willpower"
                             minLevel="3"
                             type="Ability" />
 
                         <action
                             name="Bonfire"
-                            dices="Volition"
+                            dices="Willpower"
                             minLevel="4"
                             type="Ability" />
 
                         <action
                             name="Fireheat"
-                            dices="Volition"
+                            dices="Willpower"
                             minLevel="5"
                             type="Ability" />
                     </item>
@@ -863,31 +863,31 @@
 
                         <action
                             name="1 pound"
-                            dices="Volition"
+                            dices="Willpower"
                             minLevel="1"
                             type="Ability" />
 
                         <action
                             name="10 kilo"
-                            dices="Volition"
+                            dices="Willpower"
                             minLevel="2"
                             type="Ability" />
 
                         <action
                             name="100 kilo"
-                            dices="Volition"
+                            dices="Willpower"
                             minLevel="3"
                             type="Ability" />
 
                         <action
                             name="250 kilo"
-                            dices="Volition"
+                            dices="Willpower"
                             minLevel="4"
                             type="Ability" />
 
                         <action
                             name="500 kilo"
-                            dices="Volition"
+                            dices="Willpower"
                             minLevel="5"
                             type="Ability" />
                     </item>
@@ -898,31 +898,31 @@
 
                         <action
                             name="Fog"
-                            dices="Volition"
+                            dices="Willpower"
                             minLevel="1"
                             type="Ability" />
 
                         <action
                             name="Rain"
-                            dices="Volition"
+                            dices="Willpower"
                             minLevel="2"
                             type="Ability" />
 
                         <action
                             name="Wind"
-                            dices="Volition"
+                            dices="Willpower"
                             minLevel="3"
                             type="Ability" />
 
                         <action
                             name="Storm"
-                            dices="Volition"
+                            dices="Willpower"
                             minLevel="4"
                             type="Ability" />
 
                         <action
                             name="Lightning"
-                            dices="Volition"
+                            dices="Willpower"
                             minDices="10"
                             minLevel="5"
                             type="Ability" />
@@ -934,31 +934,31 @@
 
                         <action
                             name="Eyes of sea"
-                            dices="Volition"
+                            dices="Willpower"
                             minLevel="1"
                             type="Ability" />
 
                         <action
                             name="Water prison"
-                            dices="Volition"
+                            dices="Willpower"
                             minLevel="2"
                             type="Ability" />
 
                         <action
                             name="Dehydration"
-                            dices="Volition"
+                            dices="Willpower"
                             minLevel="3"
                             type="Ability" />
 
                         <action
                             name="Floating wall"
-                            dices="Volition"
+                            dices="Willpower"
                             minLevel="4"
                             type="Ability" />
 
                         <action
                             name="Blood to water"
-                            dices="Volition"
+                            dices="Willpower"
                             minLevel="5"
                             type="Ability" />
                     </item>
@@ -969,38 +969,38 @@
 
                         <action
                             name="Elementary strength"
-                            cost="Volition=2"
-                            dices="Volition"
+                            cost="Willpower=2"
+                            dices="Willpower"
                             minLevel="1"
                             type="Ability" />
 
                         <action
                             name="Wooden tongues"
-                            dices="Volition"
+                            dices="Willpower"
                             minLevel="2"
                             type="Ability" />
 
                         <action
                             name="Revive stationaries"
-                            cost="Volition=1"
+                            cost="Willpower=1"
                             minLevel="3"
                             type="Ability" />
 
                         <action
                             name="Elementary frame"
-                            dices="Volition"
+                            dices="Willpower"
                             minLevel="4"
                             type="Ability" />
 
                         <action
                             name="Elemental summoning"
-                            dices="Volition"
+                            dices="Willpower"
                             minLevel="5"
                             type="Ability" />
 
                         <action
                             name="Elemental control"
-                            dices="Intellect,Occultism"
+                            dices="Wits,Occult"
                             minLevel="5"
                             type="Ability" />
                     </item>
@@ -1008,7 +1008,7 @@
             </group>
 
             <group
-                name="Background"
+                name="Backgrounds"
                 freePointsCost="7"
                 maxLowLevelValue="5"
                 maxValue="5"
@@ -1021,7 +1021,7 @@
                     needsDescription="true"/>
 
                 <item
-                    name="Minions"
+                    name="Retainers"
                     needsDescription="true"/>
 
                 <item name="Generation"/>
@@ -1070,11 +1070,11 @@
             </group-option>
 
             <group-option
-                name="Background"
+                name="Backgrounds"
                 maxValues="5"
                 value="true" >
 
-                <group name="Background" />
+                <group name="Backgrounds" />
             </group-option>
 
             <group-option
@@ -1086,10 +1086,10 @@
             </group-option>
         </controller>
 
-        <controller name="Properties" >
+        <controller name="Other traits" >
 
             <group
-                name="Properties"
+                name="Other traits"
                 mutable="true"
                 startValue="0"
                 value="true" >
@@ -1453,18 +1453,18 @@
             </group>
 
             <group-option
-                name="Properties"
+                name="Other traits"
                 maxValues="0"
                 value="true" >
 
-                <group name="Properties" />
+                <group name="Other traits" />
             </group-option>
         </controller>
 
         <controller name="Other" >
 
             <group
-                name="Path"
+                name="Road"
                 freePointsCost="2"
                 maxItems="1"
                 maxValue="10"
@@ -1472,66 +1472,66 @@
                 startValue="5"
                 value="true" >
 
-                <item name="Path of blood"/>
+                <item name="Road of blood"/>
 
-                <item name="Path of heaven"/>
+                <item name="Road of heaven"/>
 
-                <item name="Path of humanity"/>
+                <item name="Road of humanity"/>
 
-                <item name="Path of paradox"/>
+                <item name="Road of paradox"/>
 
-                <item name="Path of chivaldry"/>
+                <item name="Road of chivaldry"/>
 
-                <item name="Path of devil"/>
+                <item name="Road of devil"/>
 
-                <item name="Path of animal"/>
+                <item name="Road of animal"/>
 
-                <item name="Path of thyphon"/>
+                <item name="Road of thyphon"/>
             </group>
 
             <group
-                name="Volition"
+                name="Willpower"
                 freePointsCost="2"
                 maxValue="20"
                 mutable="false"
                 startValue="10"
                 value="true" >
 
-                <item name="Volition"/>
+                <item name="Willpower"/>
             </group>
 
             <group
-                name="Blood points"
+                name="Blood pool"
                 maxValue="20"
                 mutable="false"
                 startValue="10"
                 value="true" >
 
-                <item name="Blood points"/>
+                <item name="Blood pool"/>
             </group>
 
             <group-option
-                name="Path"
+                name="Road"
                 maxValues="5"
                 value="true" >
 
-                <group name="Path" />
+                <group name="Road" />
             </group-option>
 
             <group-option
-                name="Volition"
+                name="Willpower"
                 maxValues="10"
                 value="true" >
 
-                <group name="Volition" />
+                <group name="Willpower" />
             </group-option>
 
             <group-option
-                name="Blood points"
+                name="Blood pool"
                 maxValues="10"
                 value="true" >
 
-                <group name="Blood points" />
+                <group name="Blood pool" />
             </group-option>
         </controller>
     </controllers>
@@ -1543,6 +1543,11 @@
             <restriction
                 itemName="Disciplines"
                 items="Speed,Quietus,Obscuration"
+                type="GroupChildren" />
+
+            <restriction
+                itemName="Road"
+                items="Road of blood,Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
                 type="GroupChildren" />
         </clan>
 
@@ -1557,6 +1562,11 @@
                 itemName="Appearance"
                 range="=0"
                 type="ItemValue" />
+            
+            <restriction
+                itemName="Road"
+                items="Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
+                type="GroupChildren" />
         </clan>
 
         <clan name="Brujah" >
@@ -1564,6 +1574,11 @@
             <restriction
                 itemName="Disciplines"
                 items="Speed,Presence,Strenth"
+                type="GroupChildren" />
+            
+            <restriction
+                itemName="Road"
+                items="Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
                 type="GroupChildren" />
         </clan>
 
@@ -1577,6 +1592,11 @@
             <restriction
                 range="=13"
                 type="Generation" />
+            
+            <restriction
+                itemName="Road"
+                items="Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
+                type="GroupChildren" />
         </clan>
 
         <clan name="Gangrel" >
@@ -1584,6 +1604,11 @@
             <restriction
                 itemName="Disciplines"
                 items="Gestalt-switch,Fortitude,Animality"
+                type="GroupChildren" />
+            
+            <restriction
+                itemName="Road"
+                items="Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
                 type="GroupChildren" />
         </clan>
 
@@ -1593,6 +1618,11 @@
                 itemName="Disciplines"
                 items="Presence,Serpentis,Obscuration"
                 type="GroupChildren" />
+            
+            <restriction
+                itemName="Road"
+                items="Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
+                type="GroupChildren" />
         </clan>
 
         <clan name="Cappadozians" >
@@ -1601,6 +1631,11 @@
                 itemName="Disciplines"
                 items="Auspex,Mortis,Fortitude"
                 type="GroupChildren" />
+            
+            <restriction
+                itemName="Road"
+                items="Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
+                type="GroupChildren" />
         </clan>
 
         <clan name="Lasombra" >
@@ -1608,6 +1643,11 @@
             <restriction
                 itemName="Disciplines"
                 items="Domination,Shadow play,Force"
+                type="GroupChildren" />
+            
+            <restriction
+                itemName="Road"
+                items="Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
                 type="GroupChildren" />
         </clan>
 
@@ -1621,6 +1661,11 @@
             <restriction
                 range=">0"
                 type="Insanity" />
+            
+            <restriction
+                itemName="Road"
+                items="Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
+                type="GroupChildren" />
         </clan>
 
         <clan name="Ravnos" >
@@ -1628,6 +1673,11 @@
             <restriction
                 itemName="Disciplines"
                 items="Chimeras,Fortitude,Animality"
+                type="GroupChildren" />
+            
+            <restriction
+                itemName="Road"
+                items="Road of heaven,Road of humanity,Road of paradox,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
                 type="GroupChildren" />
         </clan>
 
@@ -1637,6 +1687,11 @@
                 itemName="Disciplines"
                 items="Auspex,Speed,Presence"
                 type="GroupChildren" />
+            
+            <restriction
+                itemName="Road"
+                items="Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
+                type="GroupChildren" />
         </clan>
 
         <clan name="Tzimisce" >
@@ -1645,6 +1700,11 @@
                 itemName="Disciplines"
                 items="Auspex,Fleshforming,Animality"
                 type="GroupChildren" />
+            
+            <restriction
+                itemName="Road"
+                items="Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
+                type="GroupChildren" />
         </clan>
 
         <clan name="Ventrue" >
@@ -1652,6 +1712,11 @@
             <restriction
                 itemName="Disciplines"
                 items="Domination,Presence,Fortitude"
+                type="GroupChildren" />
+            
+            <restriction
+                itemName="Road"
+                items="Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
                 type="GroupChildren" />
         </clan>
 
@@ -1666,6 +1731,11 @@
                 itemName="Thaumaturgy"
                 range="&lt;3"
                 type="ItemChildrenCount" />
+            
+            <restriction
+                itemName="Road"
+                items="Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
+                type="GroupChildren" />
 
             <restriction
                 index="1"

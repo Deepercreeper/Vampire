@@ -19,6 +19,7 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.deepercreeper.vampireapp.controllers.descriptions.DescriptionController;
 import com.deepercreeper.vampireapp.controllers.descriptions.DescriptionCreationValue;
 import com.deepercreeper.vampireapp.controllers.dialog.CreateStringDialog;
@@ -31,6 +32,7 @@ import com.deepercreeper.vampireapp.controllers.lists.ClanController;
 import com.deepercreeper.vampireapp.controllers.lists.NatureController;
 import com.deepercreeper.vampireapp.creation.CharCreator;
 import com.deepercreeper.vampireapp.creation.CreationMode;
+import com.deepercreeper.vampireapp.util.LanguageUtil;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 /**
@@ -40,6 +42,8 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class Vampire
 {
+	private static final String	TAG	= "Vampire";
+	
 	private enum State
 	{
 		MAIN, CREATE_CHAR_1, CREATE_CHAR_2, CREATE_CHAR_3
@@ -68,11 +72,14 @@ public class Vampire
 	public Vampire(final MainActivity aActivity)
 	{
 		mActivity = aActivity;
-		ViewUtil.setContext(mActivity);
+		ViewUtil.init(mActivity);
+		LanguageUtil.init(mActivity);
+		final long creationStart = System.currentTimeMillis();
 		mControllers = Creator.createItems(getContext());
 		mClans = Creator.createClans(getContext());
 		mNatures = new NatureController(getContext().getResources());
 		mDescriptions = new DescriptionController(getContext().getResources());
+		Toast.makeText(getContext(), "Creation took " + (System.currentTimeMillis() - creationStart) + " ms.", Toast.LENGTH_LONG).show();
 		
 		setState(State.MAIN);
 	}

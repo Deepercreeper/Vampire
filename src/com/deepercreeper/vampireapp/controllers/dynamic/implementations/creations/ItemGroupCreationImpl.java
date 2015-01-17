@@ -98,11 +98,14 @@ public class ItemGroupCreationImpl extends RestrictionableImpl implements ItemGr
 		{
 			removeItem(item);
 		}
-		for (final Item item : getItemGroup().getItemsList())
+		if ( !isMutable())
 		{
-			if ( !hasItem(item) && isItemOk(item))
+			for (final Item item : getItemGroup().getItemsList())
 			{
-				addItem(new ItemCreationImpl(item, getContext(), this, getCreationMode(), getPoints(), null));
+				if ( !hasItem(item) && isItemOk(item))
+				{
+					addItem(new ItemCreationImpl(item, getContext(), this, getCreationMode(), getPoints(), null));
+				}
 			}
 		}
 		updateAddButton();
@@ -530,7 +533,7 @@ public class ItemGroupCreationImpl extends RestrictionableImpl implements ItemGr
 	
 	private boolean isItemOk(final Item aItem)
 	{
-		for (final Restriction restriction : getRestrictions())
+		for (final Restriction restriction : getRestrictions(RestrictionType.GROUP_CHILDREN))
 		{
 			if ( !restriction.getItems().contains(aItem.getName()))
 			{
@@ -588,7 +591,7 @@ public class ItemGroupCreationImpl extends RestrictionableImpl implements ItemGr
 			getContainer().setOrientation(LinearLayout.VERTICAL);
 			
 			mTitleText.setLayoutParams(ViewUtil.getWrapHeight());
-			mTitleText.setText(getItemGroup().getName());
+			mTitleText.setText(getItemGroup().getDisplayName());
 			mTitleText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
 			mTitleText.setGravity(Gravity.CENTER);
 		}
@@ -624,6 +627,6 @@ public class ItemGroupCreationImpl extends RestrictionableImpl implements ItemGr
 	@Override
 	public String toString()
 	{
-		return getName() + ": " + getValue();
+		return getItemGroup().getDisplayName() + ": " + getValue();
 	}
 }

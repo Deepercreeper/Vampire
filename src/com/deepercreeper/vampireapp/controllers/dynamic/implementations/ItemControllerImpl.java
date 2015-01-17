@@ -9,6 +9,7 @@ import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.GroupOption;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.Item;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.ItemController;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.ItemGroup;
+import com.deepercreeper.vampireapp.util.LanguageUtil;
 
 public class ItemControllerImpl implements ItemController
 {
@@ -43,6 +44,12 @@ public class ItemControllerImpl implements ItemController
 		mGroupOptions.put(aGroupOption.getName(), aGroupOption);
 		mGroupOptionList.add(aGroupOption);
 		Collections.sort(mGroupOptionList);
+	}
+	
+	@Override
+	public String getDisplayName()
+	{
+		return LanguageUtil.instance().getValue(getName());
 	}
 	
 	@Override
@@ -102,6 +109,6 @@ public class ItemControllerImpl implements ItemController
 	@Override
 	public String toString()
 	{
-		return getName() + ": " + getGroupOptionsList().toString();
+		return getDisplayName() + ": " + getGroupOptionsList().toString();
 	}
 }
