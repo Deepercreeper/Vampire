@@ -1,22 +1,22 @@
-package com.deepercreeper.vampireapp.creation;
+package com.deepercreeper.vampireapp.character;
 
 import java.util.ArrayList;
 import java.util.List;
 import android.widget.TableLayout;
 import com.deepercreeper.vampireapp.Vampire;
-import com.deepercreeper.vampireapp.controllers.GenerationCreationValueController;
-import com.deepercreeper.vampireapp.controllers.InsanityCreationValueController;
+import com.deepercreeper.vampireapp.controllers.GenerationControllerCreation;
+import com.deepercreeper.vampireapp.controllers.InsanityControllerCreation;
 import com.deepercreeper.vampireapp.controllers.descriptions.DescriptionController;
 import com.deepercreeper.vampireapp.controllers.descriptions.DescriptionCreationValueController;
 import com.deepercreeper.vampireapp.controllers.dynamic.implementations.creations.ItemControllerCreationImpl;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.ItemController;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemControllerCreation;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemControllerCreation.PointHandler;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.restrictions.CreationRestriction;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.controllers.lists.Clan;
 import com.deepercreeper.vampireapp.controllers.lists.Nature;
-import com.deepercreeper.vampireapp.controllers.restrictions.Restriction;
-import com.deepercreeper.vampireapp.controllers.restrictions.Restriction.RestrictionType;
 import com.deepercreeper.vampireapp.util.Log;
 
 /**
@@ -54,7 +54,7 @@ public class CharCreator
 	
 	private Clan										mClan;
 	
-	private final GenerationCreationValueController		mGeneration;
+	private final GenerationControllerCreation		mGeneration;
 	
 	private int											mFreePoints			= START_FREE_POINTS;
 	
@@ -62,7 +62,7 @@ public class CharCreator
 	
 	private final DescriptionCreationValueController	mDescriptions;
 	
-	private final InsanityCreationValueController		mInsanities;
+	private final InsanityControllerCreation		mInsanities;
 	
 	/**
 	 * Creates a new character creator and initializes all values for the first time.
@@ -110,8 +110,8 @@ public class CharCreator
 			mControllers.add(new ItemControllerCreationImpl(controller, aVampire.getContext(), CreationMode.MAIN, points));
 		}
 		mDescriptions = new DescriptionCreationValueController(aDescriptions);
-		mInsanities = new InsanityCreationValueController(mVampire.getContext(), this);
-		mGeneration = new GenerationCreationValueController(mVampire.getContext(), this);
+		mInsanities = new InsanityControllerCreation(mVampire.getContext(), this);
+		mGeneration = new GenerationControllerCreation(mVampire.getContext(), this);
 		mNature = aNature;
 		mBehavior = aBehavior;
 		setClan(aClan);
@@ -198,7 +198,7 @@ public class CharCreator
 	/**
 	 * @return the generation controller.
 	 */
-	public GenerationCreationValueController getGeneration()
+	public GenerationControllerCreation getGeneration()
 	{
 		return mGeneration;
 	}
@@ -390,15 +390,15 @@ public class CharCreator
 	
 	private void addRestrictions()
 	{
-		for (final Restriction restriction : mClan.getRestrictions())
+		for (final CreationRestriction restriction : mClan.getRestrictions())
 		{
-			final RestrictionType type = restriction.getType();
-			if (type.equals(RestrictionType.ITEM_VALUE) || type.equals(RestrictionType.ITEM_CHILDREN_COUNT)
-					|| type.equals(RestrictionType.ITEM_CHILD_VALUE_AT) || type.equals(RestrictionType.GROUP_CHILDREN)
-					|| type.equals(RestrictionType.GROUP_CHILDREN_COUNT) || type.equals(RestrictionType.GROUP_ITEM_VALUE_AT))
+			final CreationRestrictionType type = restriction.getType();
+			if (type.equals(CreationRestrictionType.ITEM_VALUE) || type.equals(CreationRestrictionType.ITEM_CHILDREN_COUNT)
+					|| type.equals(CreationRestrictionType.ITEM_CHILD_VALUE_AT) || type.equals(CreationRestrictionType.GROUP_CHILDREN)
+					|| type.equals(CreationRestrictionType.GROUP_CHILDREN_COUNT) || type.equals(CreationRestrictionType.GROUP_ITEM_VALUE_AT))
 			{
-				final boolean item = type.equals(RestrictionType.ITEM_VALUE) || type.equals(RestrictionType.ITEM_CHILDREN_COUNT)
-						|| type.equals(RestrictionType.ITEM_CHILD_VALUE_AT);
+				final boolean item = type.equals(CreationRestrictionType.ITEM_VALUE) || type.equals(CreationRestrictionType.ITEM_CHILDREN_COUNT)
+						|| type.equals(CreationRestrictionType.ITEM_CHILD_VALUE_AT);
 				final String itemName = restriction.getItemName();
 				boolean foundItem = false;
 				for (final ItemControllerCreation controller : mControllers)
@@ -414,11 +414,11 @@ public class CharCreator
 					Log.w("CharCreator", "Couldn't find the item of a restriction.");
 				}
 			}
-			else if (type.equals(RestrictionType.INSANITY))
+			else if (type.equals(CreationRestrictionType.INSANITY))
 			{
 				mInsanities.addRestriction(restriction);
 			}
-			else if (type.equals(RestrictionType.GENERATION))
+			else if (type.equals(CreationRestrictionType.GENERATION))
 			{
 				mGeneration.addRestriction(restriction);
 			}
@@ -436,7 +436,7 @@ public class CharCreator
 	
 	private void removeRestrictions()
 	{
-		for (final Restriction restriction : mClan.getRestrictions())
+		for (final CreationRestriction restriction : mClan.getRestrictions())
 		{
 			restriction.clear();
 		}

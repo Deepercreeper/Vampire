@@ -1,12 +1,12 @@
 package com.deepercreeper.vampireapp.controllers;
 
-public class GenerationValueController
+public class GenerationController
 {
 	private static final int	MAX_LEVEL_POINTS	= 7;
 	
 	private int					mGeneration;
 	
-	public GenerationValueController(final int aGeneration)
+	public GenerationController(final int aGeneration)
 	{
 		mGeneration = aGeneration;
 	}
@@ -29,7 +29,7 @@ public class GenerationValueController
 		mGeneration = aGeneration;
 	}
 	
-	public boolean allowsMaxLevel()
+	public boolean isLowLevel()
 	{
 		return mGeneration <= MAX_LEVEL_POINTS;
 	}

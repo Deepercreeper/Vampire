@@ -1,9 +1,9 @@
-package com.deepercreeper.vampireapp.creation;
+package com.deepercreeper.vampireapp.character;
 
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemGroupCreation;
-import com.deepercreeper.vampireapp.controllers.restrictions.Restriction;
-import com.deepercreeper.vampireapp.controllers.restrictions.Restriction.RestrictionType;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.restrictions.CreationRestriction;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
 
 /**
  * The creation of a character has several states.<br>
@@ -64,14 +64,14 @@ public enum CreationMode
 		{
 			return false;
 		}
-		for (final Restriction restriction : group.getRestrictions(RestrictionType.GROUP_CHILDREN_COUNT))
+		for (final CreationRestriction restriction : group.getRestrictions(CreationRestrictionType.GROUP_CHILDREN_COUNT))
 		{
 			if (restriction.isActive(group.getItemController()) && group.getItemsList().size() <= restriction.getMinimum())
 			{
 				return false;
 			}
 		}
-		for (final Restriction restriction : group.getRestrictions(RestrictionType.GROUP_ITEM_VALUE_AT))
+		for (final CreationRestriction restriction : group.getRestrictions(CreationRestrictionType.GROUP_ITEM_VALUE_AT))
 		{
 			if (restriction.isActive(group.getItemController()) && restriction.getIndex() == group.indexOfItem(aItem)
 					&& aItem.getItem().getStartValue() < restriction.getMinimum())
@@ -89,14 +89,14 @@ public enum CreationMode
 			return false;
 		}
 		final ItemCreation parent = aItem.getParentItem();
-		for (final Restriction restriction : parent.getRestrictions(RestrictionType.ITEM_CHILDREN_COUNT))
+		for (final CreationRestriction restriction : parent.getRestrictions(CreationRestrictionType.ITEM_CHILDREN_COUNT))
 		{
 			if (restriction.isActive(aItem.getItemGroup().getItemController()) && parent.getChildrenList().size() <= restriction.getMinimum())
 			{
 				return false;
 			}
 		}
-		for (final Restriction restriction : parent.getRestrictions(RestrictionType.ITEM_CHILD_VALUE_AT))
+		for (final CreationRestriction restriction : parent.getRestrictions(CreationRestrictionType.ITEM_CHILD_VALUE_AT))
 		{
 			if (restriction.isActive(aItem.getItemGroup().getItemController()) && restriction.getIndex() == parent.indexOfChild(aItem)
 					&& aItem.getItem().getStartValue() < restriction.getMinimum())
@@ -175,7 +175,7 @@ public enum CreationMode
 		}
 		if (aRestrictions)
 		{
-			for (final Restriction restriction : aItem.getRestrictions(RestrictionType.ITEM_CHILDREN_COUNT))
+			for (final CreationRestriction restriction : aItem.getRestrictions(CreationRestrictionType.ITEM_CHILDREN_COUNT))
 			{
 				if (restriction.isActive(aItem.getItemGroup().getItemController()) && aItem.getChildrenList().size() >= restriction.getMaximum())
 				{

@@ -3,13 +3,13 @@ package com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations;
 import java.util.List;
 import android.content.Context;
 import android.widget.LinearLayout;
+import com.deepercreeper.vampireapp.character.CreationMode;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.Item;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemControllerCreation.PointHandler;
-import com.deepercreeper.vampireapp.controllers.restrictions.Restrictionable;
-import com.deepercreeper.vampireapp.creation.CreationMode;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.restrictions.CreationRestrictionable;
 
-public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, Restrictionable
+public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, CreationRestrictionable
 {
 	public void addItem();
 	

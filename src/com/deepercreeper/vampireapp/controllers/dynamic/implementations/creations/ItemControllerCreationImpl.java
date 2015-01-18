@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import android.content.Context;
 import android.widget.LinearLayout;
+import com.deepercreeper.vampireapp.character.CreationMode;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.GroupOption;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.ItemController;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.ItemGroup;
@@ -16,9 +17,8 @@ import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.Gro
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemControllerCreation;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemGroupCreation;
-import com.deepercreeper.vampireapp.controllers.restrictions.Restriction;
-import com.deepercreeper.vampireapp.controllers.restrictions.Restriction.RestrictionType;
-import com.deepercreeper.vampireapp.creation.CreationMode;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.restrictions.CreationRestriction;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 public class ItemControllerCreationImpl implements ItemControllerCreation
@@ -41,7 +41,7 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 	
 	private final Map<String, ItemCreation>						mItems					= new HashMap<String, ItemCreation>();
 	
-	private final Set<Restriction>								mInactiveRestrictions	= new HashSet<Restriction>();
+	private final Set<CreationRestriction>								mInactiveRestrictions	= new HashSet<CreationRestriction>();
 	
 	private boolean												mInitialized			= false;
 	
@@ -73,8 +73,8 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 		mItems.put(aItem.getName(), aItem);
 		if ( !mInactiveRestrictions.isEmpty())
 		{
-			final Set<Restriction> activeRestrictions = new HashSet<Restriction>();
-			for (final Restriction restriction : mInactiveRestrictions)
+			final Set<CreationRestriction> activeRestrictions = new HashSet<CreationRestriction>();
+			for (final CreationRestriction restriction : mInactiveRestrictions)
 			{
 				if (restriction.getItemName().equals(aItem.getName()))
 				{
@@ -82,7 +82,7 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 					activeRestrictions.add(restriction);
 				}
 			}
-			for (final Restriction restriction : activeRestrictions)
+			for (final CreationRestriction restriction : activeRestrictions)
 			{
 				mInactiveRestrictions.remove(restriction);
 			}
@@ -90,7 +90,7 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 	}
 	
 	@Override
-	public void addRestriction(final Restriction aRestriction)
+	public void addRestriction(final CreationRestriction aRestriction)
 	{
 		if (mItems.containsKey(aRestriction.getItemName()))
 		{
@@ -247,13 +247,13 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 	}
 	
 	@Override
-	public int getMaxValue(final RestrictionType... aTypes)
+	public int getMaxValue(final CreationRestrictionType... aTypes)
 	{
 		return Integer.MAX_VALUE;
 	}
 	
 	@Override
-	public int getMinValue(final RestrictionType... aTypes)
+	public int getMinValue(final CreationRestrictionType... aTypes)
 	{
 		return Integer.MIN_VALUE;
 	}
@@ -271,9 +271,9 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 	}
 	
 	@Override
-	public Set<Restriction> getRestrictions(final RestrictionType... aTypes)
+	public Set<CreationRestriction> getRestrictions(final CreationRestrictionType... aTypes)
 	{
-		final Set<Restriction> restrictions = new HashSet<Restriction>();
+		final Set<CreationRestriction> restrictions = new HashSet<CreationRestriction>();
 		for (final ItemCreation item : mItems.values())
 		{
 			if (item.hasRestrictions())
@@ -349,7 +349,7 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 	}
 	
 	@Override
-	public boolean isValueOk(final int aValue, final RestrictionType... aTypes)
+	public boolean isValueOk(final int aValue, final CreationRestrictionType... aTypes)
 	{
 		return true;
 	}
@@ -369,7 +369,7 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 	{
 		if (mItems.get(aName).hasRestrictions())
 		{
-			for (final Restriction restriction : mItems.get(aName).getRestrictions())
+			for (final CreationRestriction restriction : mItems.get(aName).getRestrictions())
 			{
 				restriction.clear();
 				mInactiveRestrictions.add(restriction);
@@ -379,7 +379,7 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 	}
 	
 	@Override
-	public void removeRestriction(final Restriction aRestriction)
+	public void removeRestriction(final CreationRestriction aRestriction)
 	{
 		mInactiveRestrictions.remove(aRestriction);
 	}

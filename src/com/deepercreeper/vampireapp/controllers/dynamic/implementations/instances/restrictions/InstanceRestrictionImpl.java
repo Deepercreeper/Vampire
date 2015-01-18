@@ -1,9 +1,12 @@
-package com.deepercreeper.vampireapp.controllers.restrictions;
+package com.deepercreeper.vampireapp.controllers.dynamic.implementations.instances.restrictions;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemControllerCreation;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.instances.ItemControllerInstance;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.instances.restrictions.InstanceCondition;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.instances.restrictions.InstanceRestriction;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.instances.restrictions.InstanceRestrictionable;
 
 /**
  * Some clans have restrictions, that define whether values or attributes have to have a specific value.<br>
@@ -11,26 +14,26 @@ import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.Ite
  * 
  * @author vrl
  */
-public class RestrictionImpl implements Restriction
+public class InstanceRestrictionImpl implements InstanceRestriction
 {
-	private final String			mItemName;
+	private final String					mItemName;
 	
-	private final List<String>		mItems;
+	private final List<String>				mItems;
 	
-	private final RestrictionType	mType;
+	private final InstanceRestrictionType			mType;
 	
-	private final int				mMinimum;
+	private final int						mMinimum;
 	
-	private final int				mMaximum;
+	private final int						mMaximum;
 	
-	private final int				mIndex;
+	private final int						mIndex;
 	
-	private final Set<Condition>	mConditions	= new HashSet<Condition>();
+	private final Set<InstanceCondition>	mConditions	= new HashSet<InstanceCondition>();
 	
-	private Restrictionable			mParent;
+	private InstanceRestrictionable			mParent;
 	
-	public RestrictionImpl(final RestrictionType aType, final String aItemName, final int aMinimum, final int aMaximum, final List<String> aItems,
-			final int aIndex)
+	public InstanceRestrictionImpl(final InstanceRestrictionType aType, final String aItemName, final int aMinimum, final int aMaximum,
+			final List<String> aItems, final int aIndex)
 	{
 		mType = aType;
 		mItemName = aItemName;
@@ -47,7 +50,7 @@ public class RestrictionImpl implements Restriction
 	}
 	
 	@Override
-	public void addCondition(final Condition aCondition)
+	public void addCondition(final InstanceCondition aCondition)
 	{
 		mConditions.add(aCondition);
 	}
@@ -59,9 +62,9 @@ public class RestrictionImpl implements Restriction
 	}
 	
 	@Override
-	public boolean isActive(final ItemControllerCreation aController)
+	public boolean isActive(final ItemControllerInstance aController)
 	{
-		for (final Condition condition : mConditions)
+		for (final InstanceCondition condition : mConditions)
 		{
 			if ( !condition.complied(aController))
 			{
@@ -85,7 +88,7 @@ public class RestrictionImpl implements Restriction
 	 *            The parent.
 	 */
 	@Override
-	public void setParent(final Restrictionable aParent)
+	public void setParent(final InstanceRestrictionable aParent)
 	{
 		mParent = aParent;
 	}
@@ -110,7 +113,7 @@ public class RestrictionImpl implements Restriction
 	}
 	
 	@Override
-	public Restrictionable getParent()
+	public InstanceRestrictionable getParent()
 	{
 		return mParent;
 	}
@@ -140,13 +143,13 @@ public class RestrictionImpl implements Restriction
 	}
 	
 	@Override
-	public RestrictionType getType()
+	public InstanceRestrictionType getType()
 	{
 		return mType;
 	}
 	
 	@Override
-	public Set<Condition> getConditions()
+	public Set<InstanceCondition> getConditions()
 	{
 		return mConditions;
 	}
@@ -177,11 +180,11 @@ public class RestrictionImpl implements Restriction
 		{
 			return false;
 		}
-		if ( !(obj instanceof RestrictionImpl))
+		if ( !(obj instanceof InstanceRestrictionImpl))
 		{
 			return false;
 		}
-		final RestrictionImpl other = (RestrictionImpl) obj;
+		final InstanceRestrictionImpl other = (InstanceRestrictionImpl) obj;
 		if (mConditions == null)
 		{
 			if (other.mConditions != null)

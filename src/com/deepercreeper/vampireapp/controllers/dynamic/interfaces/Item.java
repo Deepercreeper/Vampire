@@ -28,6 +28,10 @@ public interface Item extends Namable
 	
 	public void addAction(Action aAction);
 	
+	public int getEPCost();
+	
+	public int getEPCostMultiplicator();
+	
 	public boolean hasActions();
 	
 	public Action getAction(String aName);

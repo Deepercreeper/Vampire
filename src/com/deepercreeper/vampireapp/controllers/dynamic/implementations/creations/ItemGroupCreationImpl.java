@@ -16,22 +16,22 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.character.CreationMode;
 import com.deepercreeper.vampireapp.controllers.dialog.SelectItemDialog;
 import com.deepercreeper.vampireapp.controllers.dialog.SelectItemDialog.SelectionListener;
+import com.deepercreeper.vampireapp.controllers.dynamic.implementations.creations.restrictions.CreationRestrictionableImpl;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.Item;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemControllerCreation;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemControllerCreation.PointHandler;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.restrictions.CreationRestriction;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemGroupCreation;
-import com.deepercreeper.vampireapp.controllers.restrictions.Restriction;
-import com.deepercreeper.vampireapp.controllers.restrictions.Restriction.RestrictionType;
-import com.deepercreeper.vampireapp.controllers.restrictions.RestrictionableImpl;
-import com.deepercreeper.vampireapp.creation.CreationMode;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
-public class ItemGroupCreationImpl extends RestrictionableImpl implements ItemGroupCreation
+public class ItemGroupCreationImpl extends CreationRestrictionableImpl implements ItemGroupCreation
 {
 	private static final String				TAG				= "ItemGroupCreation";
 	
@@ -124,7 +124,7 @@ public class ItemGroupCreationImpl extends RestrictionableImpl implements ItemGr
 			return;
 		}
 		final List<Item> items = getAddableItems();
-		if (items.isEmpty() || getMaxValue(RestrictionType.GROUP_CHILDREN_COUNT) <= getItemsList().size())
+		if (items.isEmpty() || getMaxValue(CreationRestrictionType.GROUP_CHILDREN_COUNT) <= getItemsList().size())
 		{
 			return;
 		}
@@ -152,7 +152,7 @@ public class ItemGroupCreationImpl extends RestrictionableImpl implements ItemGr
 			Log.w(TAG, "Tried to add an already existing item.");
 			return;
 		}
-		if (getMaxValue(RestrictionType.GROUP_CHILDREN_COUNT) <= getItemsList().size())
+		if (getMaxValue(CreationRestrictionType.GROUP_CHILDREN_COUNT) <= getItemsList().size())
 		{
 			return;
 		}
@@ -426,7 +426,7 @@ public class ItemGroupCreationImpl extends RestrictionableImpl implements ItemGr
 			Log.w(TAG, "Tried to change a non mutable group.");
 			return;
 		}
-		if (getMinValue(RestrictionType.GROUP_CHILDREN_COUNT) >= getItemsList().size())
+		if (getMinValue(CreationRestrictionType.GROUP_CHILDREN_COUNT) >= getItemsList().size())
 		{
 			return;
 		}
@@ -533,7 +533,7 @@ public class ItemGroupCreationImpl extends RestrictionableImpl implements ItemGr
 	
 	private boolean isItemOk(final Item aItem)
 	{
-		for (final Restriction restriction : getRestrictions(RestrictionType.GROUP_CHILDREN))
+		for (final CreationRestriction restriction : getRestrictions(CreationRestrictionType.GROUP_CHILDREN))
 		{
 			if ( !restriction.getItems().contains(aItem.getName()))
 			{
@@ -562,7 +562,7 @@ public class ItemGroupCreationImpl extends RestrictionableImpl implements ItemGr
 	{
 		if (isMutable())
 		{
-			mAddButton.setEnabled( !getAddableItems().isEmpty() && getItemsList().size() < getMaxValue(RestrictionType.GROUP_CHILDREN_COUNT)
+			mAddButton.setEnabled( !getAddableItems().isEmpty() && getItemsList().size() < getMaxValue(CreationRestrictionType.GROUP_CHILDREN_COUNT)
 					&& getItemsList().size() < getItemGroup().getMaxItems());
 		}
 	}

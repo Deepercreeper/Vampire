@@ -1,8 +1,9 @@
-package com.deepercreeper.vampireapp.controllers.restrictions;
+package com.deepercreeper.vampireapp.controllers.dynamic.implementations.instances.restrictions;
 
-import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemControllerCreation;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.instances.ItemControllerInstance;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.instances.restrictions.InstanceCondition;
 
-public class ConditionImpl implements Condition
+public class InstanceConditionImpl implements InstanceCondition
 {
 	private final ConditionQuery	mQuery;
 	
@@ -14,7 +15,7 @@ public class ConditionImpl implements Condition
 	
 	private final int				mIndex;
 	
-	public ConditionImpl(final ConditionQuery aQuery, final String aItemName, final int aMinimum, final int aMaximum, final int aIndex)
+	public InstanceConditionImpl(final ConditionQuery aQuery, final String aItemName, final int aMinimum, final int aMaximum, final int aIndex)
 	{
 		mQuery = aQuery;
 		mItemName = aItemName;
@@ -30,7 +31,7 @@ public class ConditionImpl implements Condition
 	}
 	
 	@Override
-	public boolean complied(final ItemControllerCreation aController)
+	public boolean complied(final ItemControllerInstance aController)
 	{
 		return mQuery.complied(aController, this);
 	}
@@ -71,11 +72,11 @@ public class ConditionImpl implements Condition
 		{
 			return false;
 		}
-		if ( !(obj instanceof ConditionImpl))
+		if ( !(obj instanceof InstanceConditionImpl))
 		{
 			return false;
 		}
-		final ConditionImpl other = (ConditionImpl) obj;
+		final InstanceConditionImpl other = (InstanceConditionImpl) obj;
 		if (mIndex != other.mIndex)
 		{
 			return false;

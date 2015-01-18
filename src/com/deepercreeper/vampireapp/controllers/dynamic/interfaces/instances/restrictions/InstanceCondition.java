@@ -1,12 +1,12 @@
-package com.deepercreeper.vampireapp.controllers.restrictions;
+package com.deepercreeper.vampireapp.controllers.dynamic.interfaces.instances.restrictions;
 
 import java.util.HashMap;
 import java.util.Map;
-import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemControllerCreation;
-import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemCreation;
-import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemGroupCreation;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.instances.ItemControllerInstance;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.instances.ItemGroupInstance;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.instances.ItemInstance;
 
-public interface Condition
+public interface InstanceCondition
 {
 	public abstract class ConditionQuery
 	{
@@ -17,10 +17,10 @@ public interface Condition
 																							
 																							@Override
 																							public boolean complied(
-																									final ItemControllerCreation aController,
-																									final Condition aCondition)
+																									final ItemControllerInstance aController,
+																									final InstanceCondition aCondition)
 																							{
-																								final ItemCreation item = aController
+																								final ItemInstance item = aController
 																										.getItem(aCondition.getItemName());
 																								if (item.isValueItem()
 																										&& aCondition.isInRange(item.getValue()))
@@ -35,8 +35,8 @@ public interface Condition
 																						{
 																							@Override
 																							public boolean complied(
-																									final ItemControllerCreation aController,
-																									final Condition aCondition)
+																									final ItemControllerInstance aController,
+																									final InstanceCondition aCondition)
 																							{
 																								return !ITEM_VALUE.complied(aController, aCondition);
 																							}
@@ -47,8 +47,8 @@ public interface Condition
 																							
 																							@Override
 																							public boolean complied(
-																									final ItemControllerCreation aController,
-																									final Condition aCondition)
+																									final ItemControllerInstance aController,
+																									final InstanceCondition aCondition)
 																							{
 																								return aController.hasItem(aCondition.getItemName());
 																							}
@@ -58,8 +58,8 @@ public interface Condition
 																						{
 																							@Override
 																							public boolean complied(
-																									final ItemControllerCreation aController,
-																									final Condition aCondition)
+																									final ItemControllerInstance aController,
+																									final InstanceCondition aCondition)
 																							{
 																								return !HAS_ITEM.complied(aController, aCondition);
 																							}
@@ -69,10 +69,10 @@ public interface Condition
 																						{
 																							@Override
 																							public boolean complied(
-																									final ItemControllerCreation aController,
-																									final Condition aCondition)
+																									final ItemControllerInstance aController,
+																									final InstanceCondition aCondition)
 																							{
-																								final ItemCreation item = aController
+																								final ItemInstance item = aController
 																										.getItem(aCondition.getItemName());
 																								if ( !item.isParent())
 																								{
@@ -82,7 +82,7 @@ public interface Condition
 																								{
 																									return false;
 																								}
-																								final ItemCreation child = item.getChildAt(aCondition
+																								final ItemInstance child = item.getChildAt(aCondition
 																										.getIndex());
 																								return child.isValueItem()
 																										&& aCondition.isInRange(child.getValue());
@@ -93,8 +93,8 @@ public interface Condition
 																						{
 																							@Override
 																							public boolean complied(
-																									final ItemControllerCreation aController,
-																									final Condition aCondition)
+																									final ItemControllerInstance aController,
+																									final InstanceCondition aCondition)
 																							{
 																								return !ITEM_CHILD_VALUE_AT.complied(aController,
 																										aCondition);
@@ -106,16 +106,16 @@ public interface Condition
 																							
 																							@Override
 																							public boolean complied(
-																									final ItemControllerCreation aController,
-																									final Condition aCondition)
+																									final ItemControllerInstance aController,
+																									final InstanceCondition aCondition)
 																							{
-																								final ItemCreation item = aController
+																								final ItemInstance item = aController
 																										.getItem(aCondition.getItemName());
 																								if ( !item.isParent())
 																								{
 																									return false;
 																								}
-																								for (final ItemCreation child : item
+																								for (final ItemInstance child : item
 																										.getChildrenList())
 																								{
 																									if (child.isValueItem()
@@ -132,8 +132,8 @@ public interface Condition
 																						{
 																							@Override
 																							public boolean complied(
-																									final ItemControllerCreation aController,
-																									final Condition aCondition)
+																									final ItemControllerInstance aController,
+																									final InstanceCondition aCondition)
 																							{
 																								return !ITEM_HAS_CHILD_VALUE.complied(aController,
 																										aCondition);
@@ -145,12 +145,12 @@ public interface Condition
 																							
 																							@Override
 																							public boolean complied(
-																									final ItemControllerCreation aController,
-																									final Condition aCondition)
+																									final ItemControllerInstance aController,
+																									final InstanceCondition aCondition)
 																							{
-																								final ItemGroupCreation group = aController
+																								final ItemGroupInstance group = aController
 																										.getGroup(aCondition.getItemName());
-																								for (final ItemCreation item : group.getItemsList())
+																								for (final ItemInstance item : group.getItemsList())
 																								{
 																									if (item.isValueItem()
 																											&& aCondition.isInRange(item.getValue()))
@@ -166,8 +166,8 @@ public interface Condition
 																						{
 																							@Override
 																							public boolean complied(
-																									final ItemControllerCreation aController,
-																									final Condition aCondition)
+																									final ItemControllerInstance aController,
+																									final InstanceCondition aCondition)
 																							{
 																								return !GROUP_HAS_CHILD_VALUE.complied(aController,
 																										aCondition);
@@ -187,7 +187,7 @@ public interface Condition
 			return CONDITION_QUERIES.get(aName);
 		}
 		
-		public abstract boolean complied(ItemControllerCreation aController, Condition aCondition);
+		public abstract boolean complied(ItemControllerInstance aController, InstanceCondition aCondition);
 	}
 	
 	public int getIndex();
@@ -196,5 +196,5 @@ public interface Condition
 	
 	public boolean isInRange(int aValue);
 	
-	public boolean complied(ItemControllerCreation aController);
+	public boolean complied(ItemControllerInstance aController);
 }

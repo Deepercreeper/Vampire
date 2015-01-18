@@ -2,8 +2,8 @@ package com.deepercreeper.vampireapp.controllers.lists;
 
 import java.util.HashSet;
 import java.util.Set;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.restrictions.CreationRestriction;
 import com.deepercreeper.vampireapp.controllers.implementations.Named;
-import com.deepercreeper.vampireapp.controllers.restrictions.Restriction;
 
 /**
  * Each character has to have a single clan. The clan defines, which disciplines and restrictions<br>
@@ -15,14 +15,14 @@ public class Clan extends Named
 {
 	private static final String			NAME_DELIM		= ":", GENERATION_DELIM = ";", CLAN_DISCIPLIN_DELIM = ",";
 	
-	private final HashSet<Restriction>	mRestrictions	= new HashSet<Restriction>();
+	private final HashSet<CreationRestriction>	mRestrictions	= new HashSet<CreationRestriction>();
 	
 	public Clan(final String aName)
 	{
 		super(aName);
 	}
 	
-	public void addRestriction(final Restriction aRestriction)
+	public void addRestriction(final CreationRestriction aRestriction)
 	{
 		mRestrictions.add(aRestriction);
 	}
@@ -30,7 +30,7 @@ public class Clan extends Named
 	/**
 	 * @return a set of all restrictions of this clan.
 	 */
-	public Set<Restriction> getRestrictions()
+	public Set<CreationRestriction> getRestrictions()
 	{
 		return mRestrictions;
 	}

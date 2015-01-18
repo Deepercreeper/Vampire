@@ -1,6 +1,6 @@
 package com.deepercreeper.vampireapp.character;
 
-public class ExperienceController
+public class EPHandler
 {
 	private int	mEP	= 0;
 	

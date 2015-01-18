@@ -3,11 +3,11 @@ package com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations;
 import java.util.List;
 import android.content.Context;
 import android.widget.LinearLayout;
+import com.deepercreeper.vampireapp.character.CreationMode;
 import com.deepercreeper.vampireapp.controllers.dynamic.implementations.creations.ItemCreationImpl.ChangeAction;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.Item;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemControllerCreation.PointHandler;
-import com.deepercreeper.vampireapp.controllers.restrictions.Restrictionable;
-import com.deepercreeper.vampireapp.creation.CreationMode;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.restrictions.CreationRestrictionable;
 
 /**
  * Each item can be instantiated. That creates an item value.<br>
@@ -17,7 +17,7 @@ import com.deepercreeper.vampireapp.creation.CreationMode;
  * @param <T>
  *            The parent item type.
  */
-public interface ItemCreation extends Comparable<ItemCreation>, Restrictionable
+public interface ItemCreation extends Comparable<ItemCreation>, CreationRestrictionable
 {
 	public void addChild();
 	

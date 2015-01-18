@@ -1,6 +1,6 @@
 package com.deepercreeper.vampireapp.controllers;
 
-public class InsanityValueController
+public class InsanityController
 {	
 	
 }

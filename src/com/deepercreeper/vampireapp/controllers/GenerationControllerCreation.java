@@ -4,9 +4,9 @@ import android.content.Context;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.NumberPicker.OnValueChangeListener;
-import com.deepercreeper.vampireapp.controllers.restrictions.Restriction.RestrictionType;
-import com.deepercreeper.vampireapp.controllers.restrictions.RestrictionableImpl;
-import com.deepercreeper.vampireapp.creation.CharCreator;
+import com.deepercreeper.vampireapp.character.CharCreator;
+import com.deepercreeper.vampireapp.controllers.dynamic.implementations.creations.restrictions.CreationRestrictionableImpl;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 /**
@@ -14,7 +14,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  * 
  * @author vrl
  */
-public class GenerationCreationValueController extends RestrictionableImpl
+public class GenerationControllerCreation extends CreationRestrictionableImpl
 {
 	private final NumberPicker	mPicker;
 	
@@ -28,7 +28,7 @@ public class GenerationCreationValueController extends RestrictionableImpl
 	 * @param aCreator
 	 *            The character creator.
 	 */
-	public GenerationCreationValueController(final Context aContext, final CharCreator aCreator)
+	public GenerationControllerCreation(final Context aContext, final CharCreator aCreator)
 	{
 		mPicker = new NumberPicker(aContext);
 		mPicker.setLayoutParams(ViewUtil.getWrapHeight());
@@ -77,10 +77,10 @@ public class GenerationCreationValueController extends RestrictionableImpl
 	{
 		mPicker.setMinValue(CharCreator.MIN_GENERATION);
 		mPicker.setMaxValue(CharCreator.MAX_GENERATION);
-		if ( !getRestrictions(RestrictionType.GENERATION).isEmpty())
+		if ( !getRestrictions(CreationRestrictionType.GENERATION).isEmpty())
 		{
-			mPicker.setMinValue(getMinValue(RestrictionType.GENERATION));
-			mPicker.setMaxValue(getMaxValue(RestrictionType.GENERATION));
+			mPicker.setMinValue(getMinValue(CreationRestrictionType.GENERATION));
+			mPicker.setMaxValue(getMaxValue(CreationRestrictionType.GENERATION));
 		}
 	}
 }

@@ -41,6 +41,10 @@ public class ItemImpl implements Item
 	
 	private final int					mStartValue;
 	
+	private final int					mEPCost;
+	
+	private final int					mEPCostMultiplicator;
+	
 	private final int[]					mValues;
 	
 	private final List<Item>			mChildrenList;
@@ -48,7 +52,7 @@ public class ItemImpl implements Item
 	private final Map<String, Item>		mChildren;
 	
 	public ItemImpl(final String aName, final ItemGroup aGroup, final boolean aNeedsDescription, final boolean aParent, final boolean aMutableParent,
-			final int[] aValues, final int aStartValue, final Item aParentItem)
+			final int[] aValues, final int aStartValue, final int aEPCost, final int aEPCostMultiplicator, final Item aParentItem)
 	{
 		mName = aName;
 		mItemGroup = aGroup;
@@ -76,6 +80,34 @@ public class ItemImpl implements Item
 		{
 			mStartValue = aStartValue;
 		}
+		if (aEPCost == -1)
+		{
+			mEPCost = getItemGroup().getEPCost();
+		}
+		else
+		{
+			mEPCost = aEPCost;
+		}
+		if (aEPCostMultiplicator == -1)
+		{
+			mEPCostMultiplicator = getItemGroup().getEPCostMultiplicator();
+		}
+		else
+		{
+			mEPCostMultiplicator = aEPCostMultiplicator;
+		}
+	}
+	
+	@Override
+	public int getEPCost()
+	{
+		return mEPCost;
+	}
+	
+	@Override
+	public int getEPCostMultiplicator()
+	{
+		return mEPCostMultiplicator;
 	}
 	
 	@Override

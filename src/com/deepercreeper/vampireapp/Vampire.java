@@ -20,6 +20,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.deepercreeper.vampireapp.character.CharCreator;
+import com.deepercreeper.vampireapp.character.CreationMode;
 import com.deepercreeper.vampireapp.controllers.descriptions.DescriptionController;
 import com.deepercreeper.vampireapp.controllers.descriptions.DescriptionCreationValue;
 import com.deepercreeper.vampireapp.controllers.dialog.CreateStringDialog;
@@ -30,8 +32,6 @@ import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.Ite
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.controllers.lists.ClanController;
 import com.deepercreeper.vampireapp.controllers.lists.NatureController;
-import com.deepercreeper.vampireapp.creation.CharCreator;
-import com.deepercreeper.vampireapp.creation.CreationMode;
 import com.deepercreeper.vampireapp.util.LanguageUtil;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 

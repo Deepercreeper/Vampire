@@ -11,9 +11,9 @@ import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import com.deepercreeper.vampireapp.controllers.restrictions.Restriction.RestrictionType;
-import com.deepercreeper.vampireapp.controllers.restrictions.RestrictionableImpl;
-import com.deepercreeper.vampireapp.creation.CharCreator;
+import com.deepercreeper.vampireapp.character.CharCreator;
+import com.deepercreeper.vampireapp.controllers.dynamic.implementations.creations.restrictions.CreationRestrictionableImpl;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 /**
@@ -21,7 +21,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  * 
  * @author vrl
  */
-public class InsanityCreationValueController extends RestrictionableImpl
+public class InsanityControllerCreation extends CreationRestrictionableImpl
 {
 	private final List<String>	mInsanities	= new ArrayList<String>();
 	
@@ -39,7 +39,7 @@ public class InsanityCreationValueController extends RestrictionableImpl
 	 * @param aCreator
 	 *            The character creator.
 	 */
-	public InsanityCreationValueController(final Context aContext, final CharCreator aCreator)
+	public InsanityControllerCreation(final Context aContext, final CharCreator aCreator)
 	{
 		mContext = aContext;
 		mCreator = aCreator;
@@ -155,7 +155,7 @@ public class InsanityCreationValueController extends RestrictionableImpl
 	
 	public boolean isOk()
 	{
-		return isValueOk(mInsanities.size(), RestrictionType.INSANITY);
+		return isValueOk(mInsanities.size(), CreationRestrictionType.INSANITY);
 	}
 	
 	@Override

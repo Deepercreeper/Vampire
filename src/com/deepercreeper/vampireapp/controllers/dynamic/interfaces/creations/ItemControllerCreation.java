@@ -3,13 +3,13 @@ package com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations;
 import java.util.List;
 import android.content.Context;
 import android.widget.LinearLayout;
+import com.deepercreeper.vampireapp.character.CreationMode;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.GroupOption;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.ItemController;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.ItemGroup;
-import com.deepercreeper.vampireapp.controllers.restrictions.Restrictionable;
-import com.deepercreeper.vampireapp.creation.CreationMode;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.restrictions.CreationRestrictionable;
 
-public interface ItemControllerCreation extends Restrictionable
+public interface ItemControllerCreation extends CreationRestrictionable
 {
 	/**
 	 * Used to call the number of points from the parent.

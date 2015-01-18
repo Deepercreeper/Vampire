@@ -17,18 +17,18 @@ import com.deepercreeper.vampireapp.controllers.dynamic.implementations.GroupOpt
 import com.deepercreeper.vampireapp.controllers.dynamic.implementations.ItemControllerImpl;
 import com.deepercreeper.vampireapp.controllers.dynamic.implementations.ItemGroupImpl;
 import com.deepercreeper.vampireapp.controllers.dynamic.implementations.ItemImpl;
+import com.deepercreeper.vampireapp.controllers.dynamic.implementations.creations.restrictions.CreationConditionImpl;
+import com.deepercreeper.vampireapp.controllers.dynamic.implementations.creations.restrictions.CreationRestrictionImpl;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.GroupOption;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.Item;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.ItemController;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.ItemGroup;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.restrictions.CreationCondition;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.restrictions.CreationCondition.ConditionQuery;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.restrictions.CreationRestriction;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
 import com.deepercreeper.vampireapp.controllers.lists.Clan;
 import com.deepercreeper.vampireapp.controllers.lists.ClanController;
-import com.deepercreeper.vampireapp.controllers.restrictions.Condition;
-import com.deepercreeper.vampireapp.controllers.restrictions.Condition.ConditionQuery;
-import com.deepercreeper.vampireapp.controllers.restrictions.ConditionImpl;
-import com.deepercreeper.vampireapp.controllers.restrictions.Restriction;
-import com.deepercreeper.vampireapp.controllers.restrictions.Restriction.RestrictionType;
-import com.deepercreeper.vampireapp.controllers.restrictions.RestrictionImpl;
 import com.deepercreeper.vampireapp.util.DataUtil;
 
 public class Creator
@@ -67,8 +67,8 @@ public class Creator
 			}
 			final Element clanNode = (Element) clans.item(i);
 			final Clan clan = new Clan(clanNode.getAttribute("name"));
-			final Set<Restriction> restrictions = loadRestrictions(clanNode);
-			for (final Restriction restriction : restrictions)
+			final Set<CreationRestriction> restrictions = loadRestrictions(clanNode);
+			for (final CreationRestriction restriction : restrictions)
 			{
 				clan.addRestriction(restriction);
 			}
@@ -78,9 +78,9 @@ public class Creator
 		return controller;
 	}
 	
-	private static Set<Restriction> loadRestrictions(final Node aClanNode)
+	private static Set<CreationRestriction> loadRestrictions(final Node aClanNode)
 	{
-		final Set<Restriction> restrictions = new HashSet<Restriction>();
+		final Set<CreationRestriction> restrictions = new HashSet<CreationRestriction>();
 		final NodeList children = aClanNode.getChildNodes();
 		for (int i = 0; i < children.getLength(); i++ )
 		{
@@ -91,7 +91,7 @@ public class Creator
 			final Element child = (Element) (children.item(i));
 			if (child.getTagName().equals(RESTRICTION))
 			{
-				final RestrictionType type = RestrictionType.get(child.getAttribute("type"));
+				final CreationRestrictionType type = CreationRestrictionType.get(child.getAttribute("type"));
 				
 				String itemName = null;
 				int minimum = Integer.MIN_VALUE;
@@ -134,11 +134,11 @@ public class Creator
 					index = Integer.parseInt(child.getAttribute("index"));
 				}
 				
-				final Restriction restriction = new RestrictionImpl(type, itemName, minimum, maximum, items, index);
+				final CreationRestriction restriction = new CreationRestrictionImpl(type, itemName, minimum, maximum, items, index);
 				
 				if (child.hasChildNodes())
 				{
-					for (final Condition condition : loadConditions(child))
+					for (final CreationCondition condition : loadConditions(child))
 					{
 						restriction.addCondition(condition);
 					}
@@ -149,9 +149,9 @@ public class Creator
 		return restrictions;
 	}
 	
-	private static Set<Condition> loadConditions(final Node aRestrictionNode)
+	private static Set<CreationCondition> loadConditions(final Node aRestrictionNode)
 	{
-		final Set<Condition> conditions = new HashSet<Condition>();
+		final Set<CreationCondition> conditions = new HashSet<CreationCondition>();
 		final NodeList children = aRestrictionNode.getChildNodes();
 		for (int i = 0; i < children.getLength(); i++ )
 		{
@@ -197,7 +197,7 @@ public class Creator
 				{
 					index = Integer.parseInt(child.getAttribute("index"));
 				}
-				conditions.add(new ConditionImpl(query, itemName, minimum, maximum, index));
+				conditions.add(new CreationConditionImpl(query, itemName, minimum, maximum, index));
 			}
 		}
 		return conditions;
@@ -255,6 +255,8 @@ public class Creator
 				int startValue = 0;
 				int maxLowLevelValue = 0;
 				int freePointsCost = 0;
+				int epCost = 0;
+				int epCostMultiplicator = 0;
 				int maxItems = Integer.MAX_VALUE;
 				if (child.hasAttribute("maxItems"))
 				{
@@ -262,33 +264,33 @@ public class Creator
 				}
 				if (valueGroup)
 				{
-					try
+					if (child.hasAttribute("epCost"))
+					{
+						epCost = Integer.parseInt(child.getAttribute("epCost"));
+					}
+					if (child.hasAttribute("epCostMulti"))
+					{
+						epCostMultiplicator = Integer.parseInt(child.getAttribute("epCostMulti"));
+					}
+					if (child.hasAttribute("maxValue"))
 					{
 						maxValue = Integer.parseInt(child.getAttribute("maxValue"));
 					}
-					catch (final NumberFormatException e)
-					{
-						maxValue = Integer.MAX_VALUE;
-					}
-					try
+					if (child.hasAttribute("freePointsCost"))
 					{
 						freePointsCost = Integer.parseInt(child.getAttribute("freePointsCost"));
 					}
-					catch (final NumberFormatException e)
-					{
-						freePointsCost = 0;
-					}
-					try
+					if (child.hasAttribute("maxLowLevelValue"))
 					{
 						maxLowLevelValue = Integer.parseInt(child.getAttribute("maxLowLevelValue"));
 					}
-					catch (final NumberFormatException e)
+					if (child.hasAttribute("startValue"))
 					{
-						maxLowLevelValue = maxValue;
+						startValue = Integer.parseInt(child.getAttribute("startValue"));
 					}
-					startValue = Integer.parseInt(child.getAttribute("startValue"));
 				}
-				final ItemGroup group = new ItemGroupImpl(name, mutable, maxLowLevelValue, startValue, maxValue, freePointsCost, valueGroup, maxItems);
+				final ItemGroup group = new ItemGroupImpl(name, mutable, maxLowLevelValue, startValue, maxValue, freePointsCost, valueGroup,
+						maxItems, epCost, epCostMultiplicator);
 				for (final Item item : createItems(child, group, null))
 				{
 					group.addItem(item);
@@ -318,7 +320,17 @@ public class Creator
 				boolean valueItem = aParentGroup.isValueGroup();
 				int[] values = null;
 				int startValue = -1;
+				int epCost = -1;
+				int epCostMultiplicator = -1;
 				
+				if (child.hasAttribute("epCost"))
+				{
+					epCost = Integer.parseInt(child.getAttribute("epCost"));
+				}
+				if (child.hasAttribute("epCostMulti"))
+				{
+					epCostMultiplicator = Integer.parseInt(child.getAttribute("epCostMulti"));
+				}
 				if (child.hasAttribute("startValue"))
 				{
 					startValue = Integer.parseInt(child.getAttribute("startValue"));
@@ -341,7 +353,8 @@ public class Creator
 				
 				final Item item;
 				final boolean mutableParent = Boolean.parseBoolean(child.getAttribute("mutableParent"));
-				item = new ItemImpl(name, aParentGroup, needsDescription, parent, mutableParent, values, startValue, aParentItem);
+				item = new ItemImpl(name, aParentGroup, needsDescription, parent, mutableParent, values, startValue, epCost, epCostMultiplicator,
+						aParentItem);
 				for (final Item childItem : createItems(child, aParentGroup, item))
 				{
 					item.addChild(childItem);
