@@ -220,7 +220,6 @@ public class Creator
 			}
 			final Element controller = (Element) controllers.item(i);
 			final String name = controller.getAttribute("name");
-			// TODO Connect the default items with the other named items in any way...
 			final ItemController itemController = new ItemControllerImpl(name);
 			for (final ItemGroup group : loadGroups(controller))
 			{

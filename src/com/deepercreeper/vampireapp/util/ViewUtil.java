@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewParent;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -19,13 +18,19 @@ import android.widget.TableRow;
  */
 public class ViewUtil
 {
-	private static Context	sContext;
+	private static Context	sContext	= null;
 	
-	private static int		sId	= 1;
+	private static int		sId			= 1;
+	
+	private ViewUtil()
+	{}
 	
 	public static void init(final Context aContext)
 	{
-		sContext = aContext;
+		if (sContext == null)
+		{
+			sContext = aContext;
+		}
 	}
 	
 	public static int generateId(final View aView)
@@ -186,22 +191,6 @@ public class ViewUtil
 	public static LinearLayout.LayoutParams getZeroHeight()
 	{
 		return new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 0);
-	}
-	
-	/**
-	 * Applies the given value to the array of radio buttons to display it.
-	 * 
-	 * @param aValue
-	 *            The value do display.
-	 * @param aValueDisplay
-	 *            The radio button array.
-	 */
-	public static void applyValue(final int aValue, final RadioButton[] aValueDisplay)
-	{
-		for (int i = 0; i < aValueDisplay.length; i++ )
-		{
-			aValueDisplay[i].setChecked(i < aValue);
-		}
 	}
 	
 	/**

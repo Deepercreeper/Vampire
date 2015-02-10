@@ -27,6 +27,10 @@ public class LanguageUtil
 	
 	private void setContext(final Context aContext)
 	{
+		if (mContext != null)
+		{
+			return;
+		}
 		mInitialized = false;
 		mContext = aContext;
 		mValues.clear();

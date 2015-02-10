@@ -25,4 +25,5 @@
 	<string name="finish">Fertigstellen</string>
 	<string name="play">Spielen</string>
 	<string name="delete_char">Löschen</string>
+	<string name="service_name">Item Provider</string>
 </resources>

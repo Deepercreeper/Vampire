@@ -36,15 +36,11 @@ import com.deepercreeper.vampireapp.controllers.descriptions.DescriptionControll
 import com.deepercreeper.vampireapp.controllers.descriptions.DescriptionCreationValue;
 import com.deepercreeper.vampireapp.controllers.dialog.CreateStringDialog;
 import com.deepercreeper.vampireapp.controllers.dialog.CreateStringDialog.CreationListener;
-import com.deepercreeper.vampireapp.controllers.dynamic.Creator;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.ItemController;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemControllerCreation;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.controllers.lists.Clan;
-import com.deepercreeper.vampireapp.controllers.lists.ClanController;
 import com.deepercreeper.vampireapp.controllers.lists.Nature;
-import com.deepercreeper.vampireapp.controllers.lists.NatureController;
-import com.deepercreeper.vampireapp.util.LanguageUtil;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
@@ -65,14 +61,6 @@ public class Vampire
 	private static final String						TAG						= "Vampire";
 	
 	private final VampireActivity					mActivity;
-	
-	private final List<ItemController>				mControllers;
-	
-	private final NatureController					mNatures;
-	
-	private final ClanController					mClans;
-	
-	private final DescriptionController				mDescriptions;
 	
 	private final List<CharacterCompound>			mCharacterCompoundsList	= new ArrayList<CharacterCompound>();
 	
@@ -95,13 +83,6 @@ public class Vampire
 	public Vampire(final VampireActivity aActivity)
 	{
 		mActivity = aActivity;
-		ViewUtil.init(mActivity);
-		LanguageUtil.init(mActivity);
-		mControllers = Creator.createItems(getContext());
-		mClans = Creator.createClans(getContext());
-		mNatures = new NatureController(getContext().getResources());
-		mDescriptions = new DescriptionController(getContext().getResources());
-		
 		setState(State.MAIN);
 	}
 	
@@ -169,7 +150,7 @@ public class Vampire
 	
 	public Clan getClan(final String aName)
 	{
-		return mClans.get(aName);
+		return mActivity.getClans().get(aName);
 	}
 	
 	/**
@@ -182,7 +163,7 @@ public class Vampire
 	
 	public ItemController getController(final String aName)
 	{
-		for (final ItemController controller : mControllers)
+		for (final ItemController controller : mActivity.getControllers())
 		{
 			if (controller.getName().equals(aName))
 			{
@@ -195,12 +176,12 @@ public class Vampire
 	
 	public DescriptionController getDescriptions()
 	{
-		return mDescriptions;
+		return mActivity.getDescriptions();
 	}
 	
 	public Nature getNature(final String aName)
 	{
-		return mNatures.get(aName);
+		return mActivity.getNatures().get(aName);
 	}
 	
 	public void loadChar(final String aName)
@@ -319,7 +300,8 @@ public class Vampire
 		mActivity.setContentView(R.layout.create_char_1);
 		if (mCharCreator == null)
 		{
-			mCharCreator = new CharacterCreation(this, mControllers, mNatures.getFirst(), mNatures.getFirst(), mClans.getFirst(), mDescriptions);
+			mCharCreator = new CharacterCreation(this, mActivity.getControllers(), mActivity.getNatures().getFirst(), mActivity.getNatures()
+					.getFirst(), mActivity.getClans().getFirst(), mActivity.getDescriptions());
 		}
 		mCharCreator.resetFreePoints();
 		mCharCreator.releaseViews();
@@ -377,13 +359,14 @@ public class Vampire
 		});
 		
 		final Spinner natureSpinner = (Spinner) mActivity.findViewById(R.id.nature_spinner);
-		natureSpinner.setAdapter(new ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_dropdown_item, mNatures.getNames()));
+		natureSpinner
+				.setAdapter(new ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_dropdown_item, mActivity.getNatures().getNames()));
 		natureSpinner.setOnItemSelectedListener(new OnItemSelectedListener()
 		{
 			@Override
 			public void onItemSelected(final AdapterView<?> aParent, final View aView, final int aPosition, final long aId)
 			{
-				mCharCreator.setNature(mNatures.get(aPosition));
+				mCharCreator.setNature(mActivity.getNatures().get(aPosition));
 			}
 			
 			@Override
@@ -392,16 +375,17 @@ public class Vampire
 				return;
 			}
 		});
-		natureSpinner.setSelection(mNatures.indexOf(mCharCreator.getNature()));
+		natureSpinner.setSelection(mActivity.getNatures().indexOf(mCharCreator.getNature()));
 		
 		final Spinner behaviorSpinner = (Spinner) mActivity.findViewById(R.id.behavior_spinner);
-		behaviorSpinner.setAdapter(new ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_dropdown_item, mNatures.getNames()));
+		behaviorSpinner.setAdapter(new ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_dropdown_item, mActivity.getNatures()
+				.getNames()));
 		behaviorSpinner.setOnItemSelectedListener(new OnItemSelectedListener()
 		{
 			@Override
 			public void onItemSelected(final AdapterView<?> aParent, final View aView, final int aPosition, final long aId)
 			{
-				mCharCreator.setBehavior(mNatures.get(aPosition));
+				mCharCreator.setBehavior(mActivity.getNatures().get(aPosition));
 			}
 			
 			@Override
@@ -410,13 +394,13 @@ public class Vampire
 				return;
 			}
 		});
-		behaviorSpinner.setSelection(mNatures.indexOf(mCharCreator.getBehavior()));
+		behaviorSpinner.setSelection(mActivity.getNatures().indexOf(mCharCreator.getBehavior()));
 		
 		final LinearLayout generationPanel = (LinearLayout) mActivity.findViewById(R.id.generation_panel);
 		mCharCreator.getGeneration().init(generationPanel);
 		
 		final Spinner clanSpinner = (Spinner) mActivity.findViewById(R.id.clan_spinner);
-		clanSpinner.setAdapter(new ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_dropdown_item, mClans.getNames()));
+		clanSpinner.setAdapter(new ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_dropdown_item, mActivity.getClans().getNames()));
 		clanSpinner.setOnItemSelectedListener(new OnItemSelectedListener()
 		{
 			@Override
@@ -431,7 +415,7 @@ public class Vampire
 				// Do nothing
 			}
 		});
-		clanSpinner.setSelection(mClans.indexOf(mCharCreator.getClan()));
+		clanSpinner.setSelection(mActivity.getClans().indexOf(mCharCreator.getClan()));
 		
 		final LinearLayout controllersPanel = (LinearLayout) mActivity.findViewById(R.id.controllers_panel);
 		for (final ItemControllerCreation controller : mCharCreator.getControllers())
@@ -788,6 +772,6 @@ public class Vampire
 	
 	private void setClan(final int aClan)
 	{
-		mCharCreator.setClan(mClans.get(aClan));
+		mCharCreator.setClan(mActivity.getClans().get(aClan));
 	}
 }

@@ -99,6 +99,7 @@ public final class R {
         public static final int next=0x7f060009;
         public static final int play=0x7f060016;
         public static final int reset=0x7f06000b;
+        public static final int service_name=0x7f060018;
     }
     public static final class style {
         /** 

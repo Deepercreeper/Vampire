@@ -25,4 +25,5 @@
 	<string name="finish">Finish</string>
 	<string name="play">Play</string>
 	<string name="delete_char">Delete</string>
+	<string name="service_name">Item provider</string>
 </resources>

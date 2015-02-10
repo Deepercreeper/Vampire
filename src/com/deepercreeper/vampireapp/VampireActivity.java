@@ -1,9 +1,23 @@
 package com.deepercreeper.vampireapp;
 
+import java.util.List;
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+import com.deepercreeper.vampireapp.controllers.descriptions.DescriptionController;
+import com.deepercreeper.vampireapp.controllers.dynamic.Creator;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.ItemController;
+import com.deepercreeper.vampireapp.controllers.lists.ClanController;
+import com.deepercreeper.vampireapp.controllers.lists.NatureController;
+import com.deepercreeper.vampireapp.util.LanguageUtil;
+import com.deepercreeper.vampireapp.util.ViewUtil;
 
 /**
  * The main activity is the start class for the vampire app.<br>
@@ -13,7 +27,70 @@ import android.view.MenuItem;
  */
 public class VampireActivity extends Activity
 {
-	private Vampire	mVampire;
+	private static final boolean	SERVICE_ITEMS	= false;
+	
+	private ServiceConnection		mConnection;
+	
+	private Vampire					mVampire;
+	
+	private ItemProvider			mItems;
+	
+	private List<ItemController>	mControllers;
+	
+	private NatureController		mNatures;
+	
+	private ClanController			mClans;
+	
+	private DescriptionController	mDescriptions;
+	
+	@Override
+	protected void onCreate(final Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		ViewUtil.init(this);
+		LanguageUtil.init(this);
+		
+		if (SERVICE_ITEMS)
+		{
+			mConnection = new ServiceConnection()
+			{
+				
+				@Override
+				public void onServiceConnected(final ComponentName className, final IBinder binder)
+				{
+					final ItemProvider.ItemBinder b = (ItemProvider.ItemBinder) binder;
+					mItems = b.getItemProvider();
+					Toast.makeText(VampireActivity.this, "Connected", Toast.LENGTH_SHORT).show();
+				}
+				
+				@Override
+				public void onServiceDisconnected(final ComponentName className)
+				{
+					mItems = null;
+				}
+			};
+			
+			final Intent itemProvider = new Intent(this, ItemProvider.class);
+			startService(itemProvider);
+			bindService(itemProvider, mConnection, Context.BIND_AUTO_CREATE);
+			
+			mControllers = mItems.getControllers();
+			mClans = mItems.getClans();
+			mNatures = mItems.getNatures();
+			mDescriptions = mItems.getDescriptions();
+		}
+		else
+		{
+			mConnection = null;
+			
+			mControllers = Creator.createItems(this);
+			mClans = Creator.createClans(this);
+			mNatures = new NatureController(getResources());
+			mDescriptions = new DescriptionController(getResources());
+		}
+		
+		mVampire = new Vampire(this);
+	}
 	
 	@Override
 	public void onBackPressed()
@@ -45,9 +122,32 @@ public class VampireActivity extends Activity
 	}
 	
 	@Override
-	protected void onCreate(final Bundle savedInstanceState)
+	protected void onDestroy()
 	{
-		super.onCreate(savedInstanceState);
-		mVampire = new Vampire(this);
+		super.onDestroy();
+		if (SERVICE_ITEMS)
+		{
+			unbindService(mConnection);
+		}
+	}
+	
+	public List<ItemController> getControllers()
+	{
+		return mControllers;
+	}
+	
+	public ClanController getClans()
+	{
+		return mClans;
+	}
+	
+	public DescriptionController getDescriptions()
+	{
+		return mDescriptions;
+	}
+	
+	public NatureController getNatures()
+	{
+		return mNatures;
 	}
 }
