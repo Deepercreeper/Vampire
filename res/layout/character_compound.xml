@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
+
+    <TextView
+        android:id="@+id/concept_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/name_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/concept_label"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/generation_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/name_label"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/play_button"
+        android:layout_width="wrap_content"
+        android:layout_height="60sp"
+        android:layout_alignParentRight="true"
+        android:text="@string/play"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/ep_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/play_button"
+        android:layout_toLeftOf="@id/play_button"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/nature_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@id/play_button"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/behavior_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nature_label"
+        android:layout_toLeftOf="@id/play_button"
+        android:textSize="12sp" />
+
+</RelativeLayout>

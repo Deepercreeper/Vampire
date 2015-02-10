@@ -33,10 +33,6 @@ public interface ItemCreation extends Comparable<ItemCreation>, CreationRestrict
 	
 	public void editChild(Item aItem);
 	
-	public void init();
-	
-	public void updateButtons();
-	
 	public int getAbsoluteValue();
 	
 	public int getAllTempPoints();
@@ -45,15 +41,11 @@ public interface ItemCreation extends Comparable<ItemCreation>, CreationRestrict
 	
 	public ChangeAction getChangeTempPoints();
 	
-	public List<ItemCreation> getDescriptionItems();
+	public boolean isImportant();
 	
 	public ChangeAction getChangeValue();
 	
 	public ItemCreation getChildAt(int aIndex);
-	
-	public int indexOfChild(ItemCreation aItem);
-	
-	public boolean hasChildAt(int aIndex);
 	
 	public List<ItemCreation> getChildrenList();
 	
@@ -80,6 +72,8 @@ public interface ItemCreation extends Comparable<ItemCreation>, CreationRestrict
 	 * @return the user defined description for this value.
 	 */
 	public String getDescription();
+	
+	public List<ItemCreation> getDescriptionItems();
 	
 	public int getFreePointsCost();
 	
@@ -113,7 +107,11 @@ public interface ItemCreation extends Comparable<ItemCreation>, CreationRestrict
 	 */
 	public int getValue();
 	
+	public int getValueId();
+	
 	public boolean hasChild(Item aItem);
+	
+	public boolean hasChildAt(int aIndex);
 	
 	public boolean hasChildren();
 	
@@ -123,13 +121,15 @@ public interface ItemCreation extends Comparable<ItemCreation>, CreationRestrict
 	
 	public void increase();
 	
+	public int indexOfChild(ItemCreation aItem);
+	
+	public void init();
+	
 	public boolean isMutableParent();
 	
 	public boolean isParent();
 	
 	public boolean isValueItem();
-	
-	public void updateController();
 	
 	public boolean needsDescription();
 	
@@ -190,4 +190,8 @@ public interface ItemCreation extends Comparable<ItemCreation>, CreationRestrict
 	 *            The new points handler.
 	 */
 	public void setPoints(PointHandler aPoints);
+	
+	public void updateButtons();
+	
+	public void updateController();
 }

@@ -24,10 +24,10 @@ import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.Item;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemControllerCreation;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemControllerCreation.PointHandler;
-import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.restrictions.CreationRestriction;
-import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemGroupCreation;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.restrictions.CreationRestriction;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
@@ -41,7 +41,7 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 	
 	private final Context					mContext;
 	
-	private final ItemControllerCreation	mController;
+	private final ItemControllerCreation	mItemController;
 	
 	private final List<ItemCreation>		mItemsList		= new ArrayList<ItemCreation>();
 	
@@ -62,8 +62,8 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 	{
 		mItemGroup = aGroup;
 		mContext = aContext;
-		mController = aController;
-		setController(mController);
+		mItemController = aController;
+		setController(mItemController);
 		mMode = aMode;
 		mPoints = aPoints;
 		mContainer = new LinearLayout(getContext());
@@ -76,39 +76,11 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 			{
 				if (isItemOk(item))
 				{
-					addItem(new ItemCreationImpl(item, getContext(), this, getCreationMode(), getPoints(), null));
+					addItemSilent(new ItemCreationImpl(item, getContext(), this, getCreationMode(), getPoints(), null));
 				}
 			}
 			Collections.sort(mItemsList);
 		}
-	}
-	
-	@Override
-	public void updateRestrictions()
-	{
-		final Set<ItemCreation> removableItems = new HashSet<ItemCreation>();
-		for (final ItemCreation item : getItemsList())
-		{
-			if ( !isItemOk(item.getItem()))
-			{
-				removableItems.add(item);
-			}
-		}
-		for (final ItemCreation item : removableItems)
-		{
-			removeItem(item);
-		}
-		if ( !isMutable())
-		{
-			for (final Item item : getItemGroup().getItemsList())
-			{
-				if ( !hasItem(item) && isItemOk(item))
-				{
-					addItem(new ItemCreationImpl(item, getContext(), this, getCreationMode(), getPoints(), null));
-				}
-			}
-		}
-		updateAddButton();
 	}
 	
 	@Override
@@ -163,12 +135,6 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		getItemController().resize();
 		getItemController().addItemName(item);
 		updateController();
-	}
-	
-	@Override
-	public void updateController()
-	{
-		getItemController().updateGroups();
 	}
 	
 	@Override
@@ -282,12 +248,6 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 	}
 	
 	@Override
-	public int indexOfItem(final ItemCreation aItem)
-	{
-		return getItemsList().indexOf(aItem);
-	}
-	
-	@Override
 	public ItemCreation getItem(final Item aItem)
 	{
 		return mItems.get(aItem);
@@ -302,7 +262,7 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 	@Override
 	public ItemControllerCreation getItemController()
 	{
-		return mController;
+		return mItemController;
 	}
 	
 	@Override
@@ -392,6 +352,54 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 			return hasItem(getItemGroup().getItem(aName));
 		}
 		return false;
+	}
+	
+	@Override
+	public int indexOfItem(final ItemCreation aItem)
+	{
+		return getItemsList().indexOf(aItem);
+	}
+	
+	@Override
+	public void init()
+	{
+		if ( !mInitialized)
+		{
+			getContainer().setLayoutParams(ViewUtil.getWrapHeight());
+			getContainer().setOrientation(LinearLayout.VERTICAL);
+			
+			mTitleText.setLayoutParams(ViewUtil.getWrapHeight());
+			mTitleText.setText(getItemGroup().getDisplayName());
+			mTitleText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+			mTitleText.setGravity(Gravity.CENTER);
+		}
+		getContainer().addView(mTitleText);
+		
+		if (getCreationMode().canAddItem(this))
+		{
+			mAddButton.setLayoutParams(ViewUtil.getWrapHeight());
+			if ( !mInitialized)
+			{
+				mAddButton.setText(R.string.add);
+				mAddButton.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(final View aV)
+					{
+						addItem();
+					}
+				});
+			}
+			updateAddButton();
+			getContainer().addView(mAddButton);
+		}
+		
+		for (final ItemCreation item : getItemsList())
+		{
+			item.init();
+			getContainer().addView(item.getContainer());
+		}
+		mInitialized = true;
 	}
 	
 	@Override
@@ -506,6 +514,28 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 	}
 	
 	@Override
+	public String toString()
+	{
+		return getItemGroup().getDisplayName() + ": " + getValue();
+	}
+	
+	@Override
+	public void updateAddButton()
+	{
+		if (isMutable())
+		{
+			mAddButton.setEnabled( !getAddableItems().isEmpty() && getItemsList().size() < getMaxValue(CreationRestrictionType.GROUP_CHILDREN_COUNT)
+					&& getItemsList().size() < getItemGroup().getMaxItems());
+		}
+	}
+	
+	@Override
+	public void updateController()
+	{
+		getItemController().updateGroups();
+	}
+	
+	@Override
 	public void updateItems()
 	{
 		for (final ItemCreation item : getItemsList())
@@ -516,6 +546,49 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 			}
 		}
 		updateAddButton();
+	}
+	
+	@Override
+	public void updateRestrictions()
+	{
+		final Set<ItemCreation> removableItems = new HashSet<ItemCreation>();
+		for (final ItemCreation item : getItemsList())
+		{
+			if ( !isItemOk(item.getItem()))
+			{
+				removableItems.add(item);
+			}
+		}
+		for (final ItemCreation item : removableItems)
+		{
+			removeItemSilent(item);
+		}
+		if ( !isMutable())
+		{
+			for (final Item item : getItemGroup().getItemsList())
+			{
+				if ( !hasItem(item) && isItemOk(item))
+				{
+					addItemSilent(new ItemCreationImpl(item, getContext(), this, getCreationMode(), getPoints(), null));
+				}
+			}
+		}
+		updateAddButton();
+	}
+	
+	private void addItemSilent(final ItemCreation aItem)
+	{
+		if (getItemsList().contains(aItem))
+		{
+			Log.w(TAG, "Tried to add a child to a group twice.");
+			return;
+		}
+		getItemsList().add(aItem);
+		mItems.put(aItem.getItem(), aItem);
+		getContainer().addView(aItem.getContainer());
+		getItemController().addItemName(aItem);
+		getItemController().resize();
+		updateController();
 	}
 	
 	private List<Item> getAddableItems()
@@ -543,31 +616,7 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		return true;
 	}
 	
-	private void addItem(final ItemCreation aItem)
-	{
-		if (getItemsList().contains(aItem))
-		{
-			Log.w(TAG, "Tried to add a child to a group twice.");
-			return;
-		}
-		getItemsList().add(aItem);
-		mItems.put(aItem.getItem(), aItem);
-		getContainer().addView(aItem.getContainer());
-		getItemController().addItemName(aItem);
-		getItemController().resize();
-		updateController();
-	}
-	
-	private void updateAddButton()
-	{
-		if (isMutable())
-		{
-			mAddButton.setEnabled( !getAddableItems().isEmpty() && getItemsList().size() < getMaxValue(CreationRestrictionType.GROUP_CHILDREN_COUNT)
-					&& getItemsList().size() < getItemGroup().getMaxItems());
-		}
-	}
-	
-	private void removeItem(final ItemCreation aItem)
+	private void removeItemSilent(final ItemCreation aItem)
 	{
 		if ( !getItemsList().contains(aItem))
 		{
@@ -580,53 +629,5 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		getItemsList().remove(aItem);
 		getItemController().resize();
 		updateController();
-	}
-	
-	@Override
-	public void init()
-	{
-		if ( !mInitialized)
-		{
-			getContainer().setLayoutParams(ViewUtil.getWrapHeight());
-			getContainer().setOrientation(LinearLayout.VERTICAL);
-			
-			mTitleText.setLayoutParams(ViewUtil.getWrapHeight());
-			mTitleText.setText(getItemGroup().getDisplayName());
-			mTitleText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-			mTitleText.setGravity(Gravity.CENTER);
-		}
-		getContainer().addView(mTitleText);
-		
-		if (getCreationMode().canAddItem(this))
-		{
-			mAddButton.setLayoutParams(ViewUtil.getWrapHeight());
-			if ( !mInitialized)
-			{
-				mAddButton.setText(R.string.add);
-				mAddButton.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(final View aV)
-					{
-						addItem();
-					}
-				});
-			}
-			updateAddButton();
-			getContainer().addView(mAddButton);
-		}
-		
-		for (final ItemCreation item : getItemsList())
-		{
-			item.init();
-			getContainer().addView(item.getContainer());
-		}
-		mInitialized = true;
-	}
-	
-	@Override
-	public String toString()
-	{
-		return getItemGroup().getDisplayName() + ": " + getValue();
 	}
 }

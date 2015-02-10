@@ -23,10 +23,6 @@ public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, Creati
 	
 	public LinearLayout getContainer();
 	
-	public void init();
-	
-	public int indexOfItem(ItemCreation aItem);
-	
 	/**
 	 * @return the context of this value group.
 	 */
@@ -96,6 +92,10 @@ public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, Creati
 	 */
 	public boolean hasItem(String aName);
 	
+	public int indexOfItem(ItemCreation aItem);
+	
+	public void init();
+	
 	public boolean isMutable();
 	
 	public boolean isValueGroup();
@@ -130,6 +130,10 @@ public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, Creati
 	 */
 	public void setPoints(PointHandler aPoints);
 	
+	public void updateAddButton();
+	
+	public void updateController();
+	
 	/**
 	 * Updates all values and whether they can be increased and decreased.
 	 * 
@@ -139,6 +143,4 @@ public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, Creati
 	 *            Whether values can be decreased.
 	 */
 	public void updateItems();
-	
-	public void updateController();
 }

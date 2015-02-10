@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.deepercreeper.vampireapp.MainActivity" >
+    tools:context="com.deepercreeper.vampireapp.VampireActivity" >
 
     <Button
         android:id="@+id/create_character_button"
@@ -17,12 +17,11 @@
         android:layout_alignRight="@+id/characters_list"
         android:text="@string/button_create_character" />
 
-    <ListView
+    <LinearLayout
         android:id="@+id/characters_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/create_character_button"
-        android:layout_centerHorizontal="true" >
-    </ListView>
+        android:orientation="vertical" />
 
 </RelativeLayout>

@@ -2,8 +2,11 @@ package com.deepercreeper.vampireapp.controllers.dynamic.interfaces.instances;
 
 import java.util.List;
 import java.util.Set;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import android.content.Context;
 import android.widget.LinearLayout;
+import com.deepercreeper.vampireapp.character.CharacterInstance;
 import com.deepercreeper.vampireapp.character.EPHandler;
 import com.deepercreeper.vampireapp.character.Mode;
 import com.deepercreeper.vampireapp.controllers.actions.Action;
@@ -13,37 +16,17 @@ import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.instances.res
 
 public interface ItemInstance extends InstanceRestrictionable
 {
-	public Set<Action> getActions();
-	
-	public void initActions(ItemFinder aFinder);
-	
-	public Item getItem();
-	
-	public boolean canDecrease();
-	
 	public boolean canIncrease();
-	
-	public boolean hasDescription();
-	
-	public void clear();
-	
-	public void decrease();
-	
-	public void init();
-	
-	public void updateButtons();
 	
 	public int getAbsoluteValue();
 	
+	public Set<Action> getActions();
+	
 	public int getAllValues();
 	
-	public List<ItemInstance> getDescriptionItems();
+	public CharacterInstance getCharacter();
 	
 	public ItemInstance getChildAt(int aIndex);
-	
-	public int indexOfChild(ItemInstance aItem);
-	
-	public boolean hasChildAt(int aIndex);
 	
 	public List<ItemInstance> getChildrenList();
 	
@@ -51,19 +34,35 @@ public interface ItemInstance extends InstanceRestrictionable
 	
 	public Context getContext();
 	
+	public Element asElement(Document aDoc);
+	
+	public String getDescription();
+	
+	public List<ItemInstance> getDescriptionItems();
+	
+	public EPHandler getEP();
+	
 	public int getEPCost();
 	
+	public Item getItem();
+	
 	public ItemGroupInstance getItemGroup();
+	
+	public Mode getMode();
 	
 	public String getName();
 	
 	public ItemInstance getParentItem();
 	
-	public EPHandler getEP();
+	public int getValue();
 	
 	public boolean hasChild(Item aItem);
 	
+	public boolean hasChildAt(int aIndex);
+	
 	public boolean hasChildren();
+	
+	public boolean hasDescription();
 	
 	public boolean hasEnoughEP();
 	
@@ -71,29 +70,33 @@ public interface ItemInstance extends InstanceRestrictionable
 	
 	public void increase();
 	
+	public int indexOfChild(ItemInstance aItem);
+	
+	public void init();
+	
+	public void initActions(ItemFinder aFinder);
+	
 	public boolean isParent();
 	
 	public boolean isValueItem();
 	
-	public void updateCharacter();
+	public boolean masterCanDecrease();
 	
-	public com.deepercreeper.vampireapp.character.CharacterInstance getCharacter();
+	public boolean masterCanIncrease();
+	
+	public void masterDecrease();
+	
+	public void masterIncrease();
 	
 	public void refreshValue();
 	
 	public void release();
 	
-	public void setMode(Mode aMode);
-	
-	public void setDecreasable();
-	
 	public void setIncreasable();
 	
-	public void setEP(EPHandler aEP);
+	public void setMode(Mode aMode);
 	
-	public String getDescription();
+	public void updateButtons();
 	
-	public Mode getMode();
-	
-	public int getValue();
+	public void updateCharacter();
 }

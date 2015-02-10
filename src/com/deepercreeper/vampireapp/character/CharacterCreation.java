@@ -7,14 +7,14 @@ import com.deepercreeper.vampireapp.Vampire;
 import com.deepercreeper.vampireapp.controllers.GenerationControllerCreation;
 import com.deepercreeper.vampireapp.controllers.InsanityControllerCreation;
 import com.deepercreeper.vampireapp.controllers.descriptions.DescriptionController;
-import com.deepercreeper.vampireapp.controllers.descriptions.DescriptionCreationValueController;
+import com.deepercreeper.vampireapp.controllers.descriptions.DescriptionControllerCreation;
 import com.deepercreeper.vampireapp.controllers.dynamic.implementations.creations.ItemControllerCreationImpl;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.ItemController;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemControllerCreation;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemControllerCreation.PointHandler;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.restrictions.CreationRestriction;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
-import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.controllers.lists.Clan;
 import com.deepercreeper.vampireapp.controllers.lists.Nature;
 import com.deepercreeper.vampireapp.util.Log;
@@ -25,44 +25,44 @@ import com.deepercreeper.vampireapp.util.Log;
  * 
  * @author vrl
  */
-public class CharCreator
+public class CharacterCreation
 {
 	/**
 	 * The default minimum generation that is set, when creating a character.
 	 */
-	public static final int								MIN_GENERATION		= 8;
+	public static final int						MIN_GENERATION		= 8;
 	
 	/**
 	 * The default maximum generation that is set, when creating a character.
 	 */
-	public static final int								MAX_GENERATION		= 12;
+	public static final int						MAX_GENERATION		= 12;
 	
 	/**
 	 * The default number of free bonus points, a user can spend into his new created character.
 	 */
-	public static final int								START_FREE_POINTS	= 15;
+	public static final int						START_FREE_POINTS	= 15;
 	
-	private final Vampire								mVampire;
+	private final Vampire						mVampire;
 	
-	private String										mName				= "";
+	private String								mName				= "";
 	
-	private String										mConcept			= "";
+	private String								mConcept			= "";
 	
-	private Nature										mNature;
+	private Nature								mNature;
 	
-	private Nature										mBehavior;
+	private Nature								mBehavior;
 	
-	private Clan										mClan;
+	private Clan								mClan;
 	
-	private final GenerationControllerCreation		mGeneration;
+	private final GenerationControllerCreation	mGeneration;
 	
-	private int											mFreePoints			= START_FREE_POINTS;
+	private int									mFreePoints			= START_FREE_POINTS;
 	
-	private final List<ItemControllerCreation>			mControllers;
+	private final List<ItemControllerCreation>	mControllers;
 	
-	private final DescriptionCreationValueController	mDescriptions;
+	private final DescriptionControllerCreation	mDescriptions;
 	
-	private final InsanityControllerCreation		mInsanities;
+	private final InsanityControllerCreation	mInsanities;
 	
 	/**
 	 * Creates a new character creator and initializes all values for the first time.
@@ -78,7 +78,7 @@ public class CharCreator
 	 * @param aDescriptions
 	 *            The description fields.
 	 */
-	public CharCreator(final Vampire aVampire, final List<ItemController> aControllers, final Nature aNature, final Nature aBehavior,
+	public CharacterCreation(final Vampire aVampire, final List<ItemController> aControllers, final Nature aNature, final Nature aBehavior,
 			final Clan aClan, final DescriptionController aDescriptions)
 	{
 		mVampire = aVampire;
@@ -88,7 +88,7 @@ public class CharCreator
 			public void decrease(final int aValue)
 			{
 				mFreePoints -= aValue;
-				mVampire.setFreePoints(mFreePoints);
+				freePointsChanged();
 			}
 			
 			@Override
@@ -101,7 +101,7 @@ public class CharCreator
 			public void increase(final int aValue)
 			{
 				mFreePoints += aValue;
-				mVampire.setFreePoints(mFreePoints);
+				freePointsChanged();
 			}
 		};
 		mControllers = new ArrayList<ItemControllerCreation>();
@@ -109,7 +109,7 @@ public class CharCreator
 		{
 			mControllers.add(new ItemControllerCreationImpl(controller, aVampire.getContext(), CreationMode.MAIN, points));
 		}
-		mDescriptions = new DescriptionCreationValueController(aDescriptions);
+		mDescriptions = new DescriptionControllerCreation(aDescriptions);
 		mInsanities = new InsanityControllerCreation(mVampire.getContext(), this);
 		mGeneration = new GenerationControllerCreation(mVampire.getContext(), this);
 		mNature = aNature;
@@ -137,11 +137,6 @@ public class CharCreator
 		mInsanities.clear();
 	}
 	
-	public List<ItemControllerCreation> getControllers()
-	{
-		return mControllers;
-	}
-	
 	/**
 	 * @return the current behavior.
 	 */
@@ -166,10 +161,15 @@ public class CharCreator
 		return mConcept;
 	}
 	
+	public List<ItemControllerCreation> getControllers()
+	{
+		return mControllers;
+	}
+	
 	/**
 	 * @return the descriptions controller.
 	 */
-	public DescriptionCreationValueController getDescriptions()
+	public DescriptionControllerCreation getDescriptions()
 	{
 		return mDescriptions;
 	}
@@ -225,6 +225,11 @@ public class CharCreator
 	public Nature getNature()
 	{
 		return mNature;
+	}
+	
+	public Vampire getVampire()
+	{
+		return mVampire;
 	}
 	
 	/**
@@ -327,7 +332,7 @@ public class CharCreator
 	 */
 	public void setConcept(final String aConcept)
 	{
-		mConcept = aConcept;
+		mConcept = aConcept.trim();
 	}
 	
 	/**
@@ -374,7 +379,7 @@ public class CharCreator
 	 */
 	public void setName(final String aName)
 	{
-		mName = aName;
+		mName = aName.trim();
 	}
 	
 	/**

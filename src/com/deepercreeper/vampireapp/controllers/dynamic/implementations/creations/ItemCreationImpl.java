@@ -167,9 +167,48 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		{
 			for (final Item item : getItem().getChildrenList())
 			{
-				addChild(new ItemCreationImpl(item, getContext(), getItemGroup(), getCreationMode(), getItemGroup().getPoints(), this));
+				addChildSilent(new ItemCreationImpl(item, getContext(), getItemGroup(), getCreationMode(), getItemGroup().getPoints(), this));
 			}
 		}
+	}
+	
+	@Override
+	public int getValueId()
+	{
+		if ( !isValueItem())
+		{
+			Log.w(TAG, "Tried to get the value id of a non valule item.");
+			return 0;
+		}
+		return mValueId;
+	}
+	
+	@Override
+	public boolean isImportant()
+	{
+		if ( !isValueItem())
+		{
+			return false;
+		}
+		if (getValue() != 0)
+		{
+			return true;
+		}
+		if (hasChildren())
+		{
+			if ( !isMutableParent())
+			{
+				return true;
+			}
+			for (final ItemCreation item : getChildrenList())
+			{
+				if (item.isImportant())
+				{
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 	@Override
@@ -234,7 +273,8 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			Log.w(TAG, "Tried to ask whether a non value item can be decreased.");
 			return false;
 		}
-		final boolean canDecreaseItemValue = mValueId > Math.max(getItem().getStartValue(), getMinValue(CreationRestrictionType.ITEM_VALUE)) && mValueId > 0;
+		final boolean canDecreaseItemValue = mValueId > Math.max(getItem().getStartValue(), getMinValue(CreationRestrictionType.ITEM_VALUE))
+				&& mValueId > 0;
 		final boolean canDecreaseItemTempPoints = mTempPoints > 0;
 		boolean canDecreaseChild = true;
 		
@@ -278,7 +318,8 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			Log.w(TAG, "Tried to ask whether a non value item can be increased.");
 			return false;
 		}
-		final boolean canIncreaseItem = mValueId + mTempPoints < Math.min(getItem().getMaxLowLevelValue(), getMaxValue(CreationRestrictionType.ITEM_VALUE));
+		final boolean canIncreaseItem = mValueId + mTempPoints < Math.min(getItem().getMaxLowLevelValue(),
+				getMaxValue(CreationRestrictionType.ITEM_VALUE));
 		boolean canIncreaseChild = true;
 		
 		if (hasParentItem())
@@ -763,7 +804,6 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			mNameText.setClickable(true);
 			mNameText.setOnClickListener(new OnClickListener()
 			{
-				
 				@Override
 				public void onClick(final View aV)
 				{
@@ -1167,7 +1207,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		updateButtons();
 	}
 	
-	private void addChild(final ItemCreation aItem)
+	private void addChildSilent(final ItemCreation aItem)
 	{
 		if ( !isParent())
 		{

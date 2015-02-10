@@ -28,9 +28,10 @@ public class ViewUtil
 		sContext = aContext;
 	}
 	
-	public static void generateId(final View aView)
+	public static int generateId(final View aView)
 	{
-		aView.setId(sId++ );
+		aView.setId(sId);
+		return sId++ ;
 	}
 	
 	/**
@@ -116,11 +117,19 @@ public class ViewUtil
 	}
 	
 	/**
-	 * @return layout parameters for table row wrap all views.
+	 * @return layout parameters for relative wrap all views.
 	 */
-	public static TableRow.LayoutParams getRowWrapAll()
+	public static RelativeLayout.LayoutParams getRelativeWrapAll()
 	{
-		return new TableRow.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		return new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+	}
+	
+	/**
+	 * @return layout parameters for relative wrap width views.
+	 */
+	public static RelativeLayout.LayoutParams getRelativeWrapWidth()
+	{
+		return new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
 	}
 	
 	/**

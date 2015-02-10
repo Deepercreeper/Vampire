@@ -3,8 +3,7 @@ package com.deepercreeper.vampireapp.controllers;
 import android.content.Context;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
-import android.widget.NumberPicker.OnValueChangeListener;
-import com.deepercreeper.vampireapp.character.CharCreator;
+import com.deepercreeper.vampireapp.character.CharacterCreation;
 import com.deepercreeper.vampireapp.controllers.dynamic.implementations.creations.restrictions.CreationRestrictionableImpl;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
 import com.deepercreeper.vampireapp.util.ViewUtil;
@@ -18,8 +17,6 @@ public class GenerationControllerCreation extends CreationRestrictionableImpl
 {
 	private final NumberPicker	mPicker;
 	
-	private int					mGeneration;
-	
 	/**
 	 * Creates a new generation controller.
 	 * 
@@ -28,20 +25,13 @@ public class GenerationControllerCreation extends CreationRestrictionableImpl
 	 * @param aCreator
 	 *            The character creator.
 	 */
-	public GenerationControllerCreation(final Context aContext, final CharCreator aCreator)
+	public GenerationControllerCreation(final Context aContext, final CharacterCreation aCreator)
 	{
 		mPicker = new NumberPicker(aContext);
 		mPicker.setLayoutParams(ViewUtil.getWrapHeight());
-		mPicker.setMinValue(CharCreator.MIN_GENERATION);
-		mPicker.setMaxValue(CharCreator.MAX_GENERATION);
-		mPicker.setOnValueChangedListener(new OnValueChangeListener()
-		{
-			@Override
-			public void onValueChange(final NumberPicker aPicker, final int aOldVal, final int aNewVal)
-			{
-				mGeneration = aNewVal;
-			}
-		});
+		mPicker.setMinValue(CharacterCreation.MIN_GENERATION);
+		mPicker.setMaxValue(CharacterCreation.MAX_GENERATION);
+		mPicker.setValue(CharacterCreation.MIN_GENERATION);
 	}
 	
 	/**
@@ -49,7 +39,7 @@ public class GenerationControllerCreation extends CreationRestrictionableImpl
 	 */
 	public int getGeneration()
 	{
-		return mGeneration;
+		return mPicker.getValue();
 	}
 	
 	/**
@@ -75,8 +65,8 @@ public class GenerationControllerCreation extends CreationRestrictionableImpl
 	@Override
 	public void updateRestrictions()
 	{
-		mPicker.setMinValue(CharCreator.MIN_GENERATION);
-		mPicker.setMaxValue(CharCreator.MAX_GENERATION);
+		mPicker.setMinValue(CharacterCreation.MIN_GENERATION);
+		mPicker.setMaxValue(CharacterCreation.MAX_GENERATION);
 		if ( !getRestrictions(CreationRestrictionType.GENERATION).isEmpty())
 		{
 			mPicker.setMinValue(getMinValue(CreationRestrictionType.GENERATION));

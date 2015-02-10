@@ -3,7 +3,7 @@
 
     <string name="app_name">VampireApp</string>
     <string name="button_create_character">Neuen Charakter erstellen</string>
-    <string name="context_settings">Einstellungen</string>
+    <string name="delete_chars">Alle löschen</string>
     <string name="char_name">Charakter Name</string>
     <string name="concept">Konzept</string>
     <string name="nature_text">Wesen:</string>
@@ -22,4 +22,7 @@
 	<string name="add">Hinzufügen&#8230;</string>
 	<string name="edit_item">Bearbeiten von </string>
 	<string name="add_item">Item hinzufügen</string>
+	<string name="finish">Fertigstellen</string>
+	<string name="play">Spielen</string>
+	<string name="delete_char">Löschen</string>
 </resources>

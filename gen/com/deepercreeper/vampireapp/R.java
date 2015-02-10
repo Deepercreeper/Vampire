@@ -29,42 +29,47 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f09001d;
-        public static final int add_insanity_button=0x7f090019;
-        public static final int additional_info_label=0x7f090017;
-        public static final int back_to_1_button=0x7f090014;
-        public static final int back_to_2_button=0x7f09001b;
-        public static final int back_to_main_button=0x7f09000e;
-        public static final int basic_info_label=0x7f090002;
-        public static final int behavior_label=0x7f090005;
-        public static final int behavior_spinner=0x7f090009;
-        public static final int char_name_text=0x7f090003;
+        public static final int add_insanity_button=0x7f09001d;
+        public static final int additional_info_label=0x7f09001b;
+        public static final int back_to_1_button=0x7f090018;
+        public static final int back_to_2_button=0x7f09001f;
+        public static final int back_to_main_button=0x7f090012;
+        public static final int basic_info_label=0x7f090009;
+        public static final int behavior_label=0x7f090008;
+        public static final int behavior_spinner=0x7f09000e;
+        public static final int char_name_text=0x7f09000a;
         public static final int characters_list=0x7f090001;
-        public static final int clan_label=0x7f090008;
-        public static final int clan_spinner=0x7f09000b;
-        public static final int concept_text=0x7f090004;
-        public static final int controllers_2_panel=0x7f090013;
-        public static final int controllers_panel=0x7f09000d;
+        public static final int clan_label=0x7f09000d;
+        public static final int clan_spinner=0x7f090010;
+        public static final int concept_label=0x7f090002;
+        public static final int concept_text=0x7f09000b;
+        public static final int controllers_2_panel=0x7f090017;
+        public static final int controllers_panel=0x7f090011;
         public static final int create_character_button=0x7f090000;
-        public static final int description_values_panel=0x7f090018;
-        public static final int free_points_bar=0x7f090012;
-        public static final int free_points_info_label=0x7f090010;
-        public static final int free_points_text=0x7f090011;
-        public static final int generation_label=0x7f09000c;
-        public static final int generation_panel=0x7f09000a;
-        public static final int insanities_panel=0x7f09001a;
+        public static final int delete_chars=0x7f090021;
+        public static final int description_values_panel=0x7f09001c;
+        public static final int ep_label=0x7f090006;
+        public static final int free_points_bar=0x7f090016;
+        public static final int free_points_info_label=0x7f090014;
+        public static final int free_points_text=0x7f090015;
+        public static final int generation_label=0x7f090004;
+        public static final int generation_panel=0x7f09000f;
+        public static final int insanities_panel=0x7f09001e;
+        public static final int name_label=0x7f090003;
         public static final int nature_label=0x7f090007;
-        public static final int nature_spinner=0x7f090006;
-        public static final int next_to_2_button=0x7f09000f;
-        public static final int next_to_3_button=0x7f090016;
-        public static final int next_to_4_button=0x7f09001c;
-        public static final int reset_temp_points_button=0x7f090015;
+        public static final int nature_spinner=0x7f09000c;
+        public static final int next_to_2_button=0x7f090013;
+        public static final int next_to_3_button=0x7f09001a;
+        public static final int next_to_4_button=0x7f090020;
+        public static final int play_button=0x7f090005;
+        public static final int reset_temp_points_button=0x7f090019;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
-        public static final int create_char_1=0x7f030001;
-        public static final int create_char_2=0x7f030002;
-        public static final int create_char_3=0x7f030003;
+        public static final int character_compound=0x7f030001;
+        public static final int create_char_1=0x7f030002;
+        public static final int create_char_2=0x7f030003;
+        public static final int create_char_3=0x7f030004;
     }
     public static final class menu {
         public static final int main=0x7f080000;
@@ -83,13 +88,16 @@ public final class R {
         public static final int char_name=0x7f060003;
         public static final int clan_text=0x7f060007;
         public static final int concept=0x7f060004;
-        public static final int context_settings=0x7f060002;
+        public static final int delete_char=0x7f060017;
+        public static final int delete_chars=0x7f060002;
         public static final int description=0x7f06000c;
         public static final int edit_item=0x7f060013;
+        public static final int finish=0x7f060015;
         public static final int free_points_info=0x7f06000f;
         public static final int generation_text=0x7f060008;
         public static final int nature_text=0x7f060005;
         public static final int next=0x7f060009;
+        public static final int play=0x7f060016;
         public static final int reset=0x7f06000b;
     }
     public static final class style {
@@ -102,17 +110,6 @@ public final class R {
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         
-
-        Base application theme for API 11+. This theme completely replaces
-        AppBaseTheme from res/values/styles.xml on API 11+ devices.
-    
- API 11 theme customizations can go here. 
-
-        Base application theme for API 14+. This theme completely replaces
-        AppBaseTheme from BOTH res/values/styles.xml and
-        res/values-v11/styles.xml on API 14+ devices.
-    
- API 14 theme customizations can go here. 
          */
         public static final int AppBaseTheme=0x7f070000;
         /**  Application theme. 

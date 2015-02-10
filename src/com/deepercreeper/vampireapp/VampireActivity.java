@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 /**
  * The main activity is the start class for the vampire app.<br>
@@ -12,21 +11,9 @@ import android.view.View;
  * 
  * @author vrl
  */
-public class MainActivity extends Activity
+public class VampireActivity extends Activity
 {
 	private Vampire	mVampire;
-	
-	/**
-	 * Finds the view with the given id.
-	 * 
-	 * @param aId
-	 *            The view id.
-	 * @return the view with the given id.
-	 */
-	public View getView(final int aId)
-	{
-		return findViewById(aId);
-	}
 	
 	@Override
 	public void onBackPressed()
@@ -49,8 +36,9 @@ public class MainActivity extends Activity
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		final int id = item.getItemId();
-		if (id == R.id.action_settings)
+		if (id == R.id.delete_chars)
 		{
+			mVampire.deleteChars();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -61,11 +49,5 @@ public class MainActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		mVampire = new Vampire(this);
-		loadChars();
-	}
-	
-	private void loadChars()
-	{
-		// final SharedPreferences prefs = getPreferences(MODE_PRIVATE);
 	}
 }

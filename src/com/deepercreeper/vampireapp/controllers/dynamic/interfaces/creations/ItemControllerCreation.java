@@ -40,6 +40,8 @@ public interface ItemControllerCreation extends CreationRestrictionable
 		public void increase(int aValue);
 	}
 	
+	public void addItemName(ItemCreation aItem);
+	
 	public boolean canChangeGroupBy(final ItemGroupCreation aGroup, int aValue);
 	
 	public void clear();
@@ -66,8 +68,6 @@ public interface ItemControllerCreation extends CreationRestrictionable
 	 */
 	public List<ItemCreation> getDescriptionValues();
 	
-	public boolean hasGroup(String aName);
-	
 	public ItemGroupCreation getGroup(ItemGroup aGroup);
 	
 	public ItemGroupCreation getGroup(String aName);
@@ -82,13 +82,7 @@ public interface ItemControllerCreation extends CreationRestrictionable
 	
 	public int getGroupValue(String aName);
 	
-	public void addItemName(ItemCreation aItem);
-	
-	public void removeItemName(String aName);
-	
 	public ItemCreation getItem(final String aName);
-	
-	public boolean hasItem(String aName);
 	
 	/**
 	 * @return the controller.
@@ -101,16 +95,22 @@ public interface ItemControllerCreation extends CreationRestrictionable
 	
 	public PointHandler getPoints();
 	
-	public void init();
-	
 	public int getTempPoints();
 	
 	public int getValue();
+	
+	public boolean hasGroup(String aName);
+	
+	public boolean hasItem(String aName);
+	
+	public void init();
 	
 	/**
 	 * Removes all widgets from their parent container.
 	 */
 	public void release();
+	
+	public void removeItemName(String aName);
 	
 	public void resetTempPoints();
 	

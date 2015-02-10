@@ -41,7 +41,7 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 	
 	private final Map<String, ItemCreation>						mItems					= new HashMap<String, ItemCreation>();
 	
-	private final Set<CreationRestriction>								mInactiveRestrictions	= new HashSet<CreationRestriction>();
+	private final Set<CreationRestriction>						mInactiveRestrictions	= new HashSet<CreationRestriction>();
 	
 	private boolean												mInitialized			= false;
 	
@@ -59,11 +59,11 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 		init();
 		for (final ItemGroup group : getItemController().getGroupsList())
 		{
-			addGroup(new ItemGroupCreationImpl(group, getContext(), this, getCreationMode(), getPoints()));
+			addGroupSilent(new ItemGroupCreationImpl(group, getContext(), this, getCreationMode(), getPoints()));
 		}
 		for (final GroupOption groupOption : getItemController().getGroupOptionsList())
 		{
-			addGroupOption(new GroupOptionCreationImpl(groupOption, this, getContext()));
+			addGroupOptionSilent(new GroupOptionCreationImpl(groupOption, this, getContext()));
 		}
 	}
 	
@@ -243,7 +243,7 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 	@Override
 	public int getItemValue(final String aName)
 	{
-		return getGroup(getItemController().getItem(aName).getItemGroup()).getItem(aName).getValue();
+		return getItem(aName).getValue();
 	}
 	
 	@Override
@@ -349,6 +349,26 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 	}
 	
 	@Override
+	public void init()
+	{
+		if ( !mInitialized)
+		{
+			getContainer().setLayoutParams(ViewUtil.getWrapHeight());
+			getContainer().setOrientation(LinearLayout.VERTICAL);
+		}
+		
+		if ( !getGroupOptionsList().isEmpty())
+		{
+			for (final GroupOptionCreation groupOption : getGroupOptionsList())
+			{
+				groupOption.init();
+				getContainer().addView(groupOption.getContainer());
+			}
+		}
+		mInitialized = true;
+	}
+	
+	@Override
 	public boolean isValueOk(final int aValue, final CreationRestrictionType... aTypes)
 	{
 		return true;
@@ -411,7 +431,7 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 		mMode = aMode;
 		for (final ItemGroupCreation group : getGroupsList())
 		{
-			group.setCreationMode(mMode);
+			group.setCreationMode(getCreationMode());
 		}
 	}
 	
@@ -432,6 +452,12 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 		{
 			group.setPoints(getPoints());
 		}
+	}
+	
+	@Override
+	public String toString()
+	{
+		return getItemController().getDisplayName();
 	}
 	
 	@Override
@@ -462,46 +488,20 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 		}
 	}
 	
-	private void addGroup(final ItemGroupCreation aGroup)
-	{
-		getGroupsList().add(aGroup);
-		mGroups.put(aGroup.getName(), aGroup);
-	}
-	
-	private void addGroupOption(final GroupOptionCreation aGroupOption)
+	private void addGroupOptionSilent(final GroupOptionCreation aGroupOption)
 	{
 		getGroupOptionsList().add(aGroupOption);
 		for (final ItemGroup group : aGroupOption.getGroupOption().getGroups())
 		{
 			mGroupOptions.put(mGroups.get(group.getName()), aGroupOption);
 		}
-		Collections.sort(mGroupOptionsList);
+		Collections.sort(getGroupOptionsList());
 		getContainer().addView(aGroupOption.getContainer());
 	}
 	
-	@Override
-	public void init()
+	private void addGroupSilent(final ItemGroupCreation aGroup)
 	{
-		if ( !mInitialized)
-		{
-			getContainer().setLayoutParams(ViewUtil.getWrapHeight());
-			getContainer().setOrientation(LinearLayout.VERTICAL);
-		}
-		
-		if ( !getGroupOptionsList().isEmpty())
-		{
-			for (final GroupOptionCreation groupOption : getGroupOptionsList())
-			{
-				groupOption.init();
-				getContainer().addView(groupOption.getContainer());
-			}
-		}
-		mInitialized = true;
-	}
-	
-	@Override
-	public String toString()
-	{
-		return getItemController().getDisplayName();
+		getGroupsList().add(aGroup);
+		mGroups.put(aGroup.getName(), aGroup);
 	}
 }

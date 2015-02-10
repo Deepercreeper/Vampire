@@ -2,7 +2,17 @@ package com.deepercreeper.vampireapp.character;
 
 public class EPHandler
 {
-	private int	mEP	= 0;
+	private int	mEP;
+	
+	public EPHandler(final int aEP)
+	{
+		mEP = aEP;
+	}
+	
+	public EPHandler()
+	{
+		mEP = 0;
+	}
 	
 	public int getExperience()
 	{

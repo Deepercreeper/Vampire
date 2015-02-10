@@ -1,34 +1,39 @@
-package com.deepercreeper.vampireapp.controllers.dynamic.implementations.creations;
+package com.deepercreeper.vampireapp.controllers.dynamic.implementations.instances;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import com.deepercreeper.vampireapp.character.CharacterInstance;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.GroupOption;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.GroupOptionCreation;
-import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemControllerCreation;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemGroupCreation;
-import com.deepercreeper.vampireapp.util.ComparatorUtil;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.instances.GroupOptionInstance;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.instances.ItemControllerInstance;
+import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.instances.ItemGroupInstance;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ResizeAnimation;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
-public class GroupOptionCreationImpl implements GroupOptionCreation
+public class GroupOptionInstanceImpl implements GroupOptionInstance
 {
-	private static final String						TAG				= "GroupOptionCreation";
+	private static final String						TAG				= "GroupOptionInstance";
 	
 	private final GroupOption						mGroupOption;
 	
-	private final Map<ItemGroup, ItemGroupCreation>	mGroups			= new HashMap<ItemGroup, ItemGroupCreation>();
+	private final Map<ItemGroup, ItemGroupInstance>	mGroups			= new HashMap<ItemGroup, ItemGroupInstance>();
 	
-	private final List<ItemGroupCreation>			mGroupsList		= new ArrayList<ItemGroupCreation>();
+	private final List<ItemGroupInstance>			mGroupsList		= new ArrayList<ItemGroupInstance>();
 	
 	private final Context							mContext;
 	
@@ -38,120 +43,75 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 	
 	private final Button							mGroupButton;
 	
+	private final CharacterInstance					mCharacter;
+	
 	private boolean									mInitialized	= false;
 	
 	private boolean									mOpen			= false;
 	
-	public GroupOptionCreationImpl(final GroupOption aGroupOption, final ItemControllerCreation aItemController, final Context aContext)
+	public GroupOptionInstanceImpl(final Element aElement, final ItemControllerInstance aItemController, final Context aContext,
+			final CharacterInstance aCharacter)
 	{
-		mGroupOption = aGroupOption;
+		mGroupOption = aItemController.getItemController().getGroupOption(aElement.getAttribute("name"));
 		mContext = aContext;
 		mContainer = new LinearLayout(getContext());
 		mGroupContainer = new LinearLayout(getContext());
 		mGroupButton = new Button(getContext());
+		mCharacter = aCharacter;
 		
 		init();
 		
-		for (final ItemGroup group : getGroupOption().getGroups())
+		final NodeList children = aElement.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++ )
 		{
-			addGroupSilent(aItemController.getGroup(group));
-		}
-	}
-	
-	@Override
-	public boolean canChangeGroupBy(final ItemGroup aGroup, final int aValue)
-	{
-		return canChangeGroupBy(getGroup(aGroup), aValue);
-	}
-	
-	@Override
-	public boolean canChangeGroupBy(final ItemGroupCreation aGroup, final int aValue)
-	{
-		if ( !getGroupOption().hasMaxValues())
-		{
-			return true;
-		}
-		final List<Integer> maxValues = new ArrayList<Integer>();
-		{
-			final int groupValue = aGroup.getValue();
-			boolean isIrrelevantIncrease = true;
-			for (final int maxValue : getGroupOption().getMaxValues())
+			if (children.item(i) instanceof Element)
 			{
-				maxValues.add(maxValue);
-				if (isIrrelevantIncrease && (groupValue <= maxValue) != (groupValue + aValue <= maxValue))
-				{
-					isIrrelevantIncrease = false;
-				}
-			}
-			if (isIrrelevantIncrease)
-			{
-				return true;
-			}
-		}
-		
-		Collections.sort(maxValues);
-		
-		final List<ItemGroupCreation> groups = new ArrayList<ItemGroupCreation>();
-		
-		for (final ItemGroupCreation group : getGroupsList())
-		{
-			groups.add(group);
-		}
-		
-		ComparatorUtil.ITEM_GROUP_CREATION_COMPARATOR.setGroupChangeValue(aGroup.getName(), aValue);
-		
-		Collections.sort(groups, ComparatorUtil.ITEM_GROUP_CREATION_COMPARATOR);
-		
-		final boolean[] doneValues = new boolean[maxValues.size()];
-		
-		for (int groupIndex = groups.size() - 1; groupIndex >= 0; groupIndex-- )
-		{
-			boolean doneAnything = false;
-			
-			final ItemGroupCreation group = groups.get(groupIndex);
-			int groupValue = groups.get(groupIndex).getValue();
-			if (group.equals(aGroup))
-			{
-				groupValue += aValue;
-			}
-			
-			for (int doneIndex = doneValues.length - 1; doneIndex >= 0; doneIndex-- )
-			{
-				if (doneValues[doneIndex])
+				final Element group = (Element) children.item(i);
+				if ( !group.getTagName().equals("group"))
 				{
 					continue;
 				}
-				
-				if (groupValue > maxValues.get(doneIndex))
-				{
-					return false;
-				}
-				
-				doneValues[doneIndex] = true;
-				doneAnything = true;
-				break;
-			}
-			if ( !doneAnything)
-			{
-				return false;
+				addGroupSilent(aItemController.getGroup(group.getAttribute("name")));
 			}
 		}
-		return true;
 	}
 	
-	@Override
-	public boolean canChangeGroupBy(final String aName, final int aValue)
+	public GroupOptionInstanceImpl(final GroupOptionCreation aGroupOption, final ItemControllerInstance aItemController, final Context aContext,
+			final CharacterInstance aCharacter)
 	{
-		return canChangeGroupBy(getGroupOption().getGroup(aName), aValue);
-	}
-	
-	@Override
-	public void clear()
-	{
-		for (final ItemGroupCreation group : getGroupsList())
+		mGroupOption = aGroupOption.getGroupOption();
+		mContext = aContext;
+		mContainer = new LinearLayout(getContext());
+		mGroupContainer = new LinearLayout(getContext());
+		mGroupButton = new Button(getContext());
+		mCharacter = aCharacter;
+		
+		init();
+		
+		for (final ItemGroupCreation group : aGroupOption.getGroupsList())
 		{
-			group.clear();
+			addGroupSilent(aItemController.getGroup(group.getItemGroup()));
 		}
+	}
+	
+	@Override
+	public Element asElement(final Document aDoc)
+	{
+		final Element groupOption = aDoc.createElement("group-option");
+		groupOption.setAttribute("name", getName());
+		for (final ItemGroupInstance group : getGroupsList())
+		{
+			final Element groupElement = aDoc.createElement("group");
+			groupElement.setAttribute("name", group.getName());
+			groupOption.appendChild(groupElement);
+		}
+		return groupOption;
+	}
+	
+	@Override
+	public CharacterInstance getCharacter()
+	{
+		return mCharacter;
 	}
 	
 	@Override
@@ -163,7 +123,13 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 	}
 	
 	@Override
-	public int compareTo(final GroupOptionCreation aAnother)
+	public LinearLayout getContainer()
+	{
+		return mContainer;
+	}
+	
+	@Override
+	public int compareTo(final GroupOptionInstance aAnother)
 	{
 		if (aAnother == null)
 		{
@@ -173,30 +139,13 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 	}
 	
 	@Override
-	public boolean equals(final Object aO)
-	{
-		if (aO instanceof GroupOptionCreation)
-		{
-			final GroupOptionCreation item = (GroupOptionCreation) aO;
-			return getGroupOption().equals(item.getGroupOption());
-		}
-		return false;
-	}
-	
-	@Override
-	public LinearLayout getContainer()
-	{
-		return mContainer;
-	}
-	
-	@Override
 	public Context getContext()
 	{
 		return mContext;
 	}
 	
 	@Override
-	public ItemGroupCreation getGroup(final ItemGroup aGroup)
+	public ItemGroupInstance getGroup(final ItemGroup aGroup)
 	{
 		return mGroups.get(aGroup);
 	}
@@ -208,7 +157,7 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 	}
 	
 	@Override
-	public List<ItemGroupCreation> getGroupsList()
+	public List<ItemGroupInstance> getGroupsList()
 	{
 		return mGroupsList;
 	}
@@ -226,7 +175,7 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 	}
 	
 	@Override
-	public boolean hasGroup(final ItemGroupCreation aGroup)
+	public boolean hasGroup(final ItemGroupInstance aGroup)
 	{
 		return getGroupOption().hasGroup(aGroup.getName());
 	}
@@ -279,7 +228,7 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 		}
 		getContainer().addView(mGroupContainer);
 		
-		for (final ItemGroupCreation group : getGroupsList())
+		for (final ItemGroupInstance group : getGroupsList())
 		{
 			group.init();
 			mGroupContainer.addView(group.getContainer());
@@ -302,7 +251,7 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 	@Override
 	public void release()
 	{
-		for (final ItemGroupCreation group : getGroupsList())
+		for (final ItemGroupInstance group : getGroupsList())
 		{
 			group.release();
 		}
@@ -355,19 +304,13 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 	}
 	
 	@Override
-	public String toString()
-	{
-		return getGroupOption().getDisplayName();
-	}
-	
-	@Override
 	public void updateGroups()
 	{
 		boolean hasAnyItem = false;
-		for (final ItemGroupCreation group : getGroupsList())
+		for (final ItemGroupInstance group : getGroupsList())
 		{
 			group.updateItems();
-			if ( !group.getItemsList().isEmpty() || group.getCreationMode().canAddItem(group))
+			if ( !group.getItemsList().isEmpty())
 			{
 				hasAnyItem = true;
 			}
@@ -375,7 +318,13 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 		setEnabled(hasAnyItem);
 	}
 	
-	private void addGroupSilent(final ItemGroupCreation aGroup)
+	@Override
+	public String toString()
+	{
+		return getGroupOption().getDisplayName();
+	}
+	
+	private void addGroupSilent(final ItemGroupInstance aGroup)
 	{
 		if (getGroupsList().contains(aGroup))
 		{

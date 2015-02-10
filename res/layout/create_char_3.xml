@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/insanities_panel"
             android:layout_toRightOf="@id/back_to_2_button"
-            android:text="@string/next" />
+            android:text="@string/finish" />
     </RelativeLayout>
 
 </ScrollView>

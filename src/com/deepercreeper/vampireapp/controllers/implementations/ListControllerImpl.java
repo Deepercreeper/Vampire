@@ -68,8 +68,8 @@ public abstract class ListControllerImpl <T extends Namable> implements ListCont
 		Collections.sort(mValuesList);
 		for (final T value : mValuesList)
 		{
-			mNames.add(value.getName());
-			mValues.put(value.getName(), value);
+			mNames.add(value.getDisplayName());
+			mValues.put(value.getDisplayName(), value);
 		}
 	}
 }

@@ -9,7 +9,7 @@ import com.deepercreeper.vampireapp.controllers.implementations.ListControllerIm
  * 
  * @author vrl
  */
-public class DescriptionCreationValueController extends ListControllerImpl<DescriptionCreationValue>
+public class DescriptionControllerCreation extends ListControllerImpl<DescriptionCreationValue>
 {
 	private final DescriptionController	mController;
 	
@@ -19,7 +19,7 @@ public class DescriptionCreationValueController extends ListControllerImpl<Descr
 	 * @param aController
 	 *            The description controller.
 	 */
-	public DescriptionCreationValueController(final DescriptionController aController)
+	public DescriptionControllerCreation(final DescriptionController aController)
 	{
 		mController = aController;
 		final List<DescriptionCreationValue> values = new ArrayList<DescriptionCreationValue>();

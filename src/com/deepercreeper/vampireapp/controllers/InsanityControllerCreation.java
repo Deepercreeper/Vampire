@@ -11,7 +11,7 @@ import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import com.deepercreeper.vampireapp.character.CharCreator;
+import com.deepercreeper.vampireapp.character.CharacterCreation;
 import com.deepercreeper.vampireapp.controllers.dynamic.implementations.creations.restrictions.CreationRestrictionableImpl;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
 import com.deepercreeper.vampireapp.util.ViewUtil;
@@ -29,7 +29,7 @@ public class InsanityControllerCreation extends CreationRestrictionableImpl
 	
 	private final Context		mContext;
 	
-	private final CharCreator	mCreator;
+	private final CharacterCreation	mCreator;
 	
 	/**
 	 * Creates a new insanity controller.
@@ -39,7 +39,7 @@ public class InsanityControllerCreation extends CreationRestrictionableImpl
 	 * @param aCreator
 	 *            The character creator.
 	 */
-	public InsanityControllerCreation(final Context aContext, final CharCreator aCreator)
+	public InsanityControllerCreation(final Context aContext, final CharacterCreation aCreator)
 	{
 		mContext = aContext;
 		mCreator = aCreator;

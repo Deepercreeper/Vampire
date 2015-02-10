@@ -13,7 +13,7 @@ import com.deepercreeper.vampireapp.controllers.implementations.Named;
  */
 public class Clan extends Named
 {
-	private static final String			NAME_DELIM		= ":", GENERATION_DELIM = ";", CLAN_DISCIPLIN_DELIM = ",";
+	private static final String					NAME_DELIM		= ":", GENERATION_DELIM = ";", CLAN_DISCIPLIN_DELIM = ",";
 	
 	private final HashSet<CreationRestriction>	mRestrictions	= new HashSet<CreationRestriction>();
 	

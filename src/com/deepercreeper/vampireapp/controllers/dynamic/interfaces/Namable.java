@@ -11,4 +11,6 @@ public interface Namable extends Comparable<Namable>
 	 * @return the name of this entity.
 	 */
 	public String getName();
+	
+	public String getDisplayName();
 }
