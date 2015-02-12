@@ -17,7 +17,7 @@ import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.Ite
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemGroupCreation;
 import com.deepercreeper.vampireapp.util.ComparatorUtil;
 import com.deepercreeper.vampireapp.util.Log;
-import com.deepercreeper.vampireapp.util.ResizeAnimation;
+import com.deepercreeper.vampireapp.util.ResizeHeightAnimation;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 public class GroupOptionCreationImpl implements GroupOptionCreation
@@ -325,7 +325,7 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 		}
 		if (height != mGroupContainer.getHeight())
 		{
-			mGroupContainer.startAnimation(new ResizeAnimation(mGroupContainer, mGroupContainer.getWidth(), height));
+			mGroupContainer.startAnimation(new ResizeHeightAnimation(mGroupContainer, height));
 		}
 	}
 	

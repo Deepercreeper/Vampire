@@ -22,7 +22,7 @@ import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.instances.Gro
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.instances.ItemControllerInstance;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.instances.ItemGroupInstance;
 import com.deepercreeper.vampireapp.util.Log;
-import com.deepercreeper.vampireapp.util.ResizeAnimation;
+import com.deepercreeper.vampireapp.util.ResizeHeightAnimation;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 public class GroupOptionInstanceImpl implements GroupOptionInstance
@@ -274,7 +274,7 @@ public class GroupOptionInstanceImpl implements GroupOptionInstance
 		}
 		if (height != mGroupContainer.getHeight())
 		{
-			mGroupContainer.startAnimation(new ResizeAnimation(mGroupContainer, mGroupContainer.getWidth(), height));
+			mGroupContainer.startAnimation(new ResizeHeightAnimation(mGroupContainer, height));
 		}
 	}
 	

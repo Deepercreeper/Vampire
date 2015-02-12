@@ -10,7 +10,7 @@ import android.view.animation.Transformation;
  * 
  * @author Vincent
  */
-public class ResizeAnimation extends Animation
+public class ResizeHeightAnimation extends Animation
 {
 	private static final int	DURATION	= 300;
 	
@@ -20,26 +20,18 @@ public class ResizeAnimation extends Animation
 	
 	private final float			mStartHeight;
 	
-	private final float			mDestinationWidth;
-	
-	private final float			mStartWidth;
-	
 	/**
 	 * Creates a new animation for the given view.
 	 * 
 	 * @param aView
 	 *            The view to resize.
-	 * @param aDestinationWidth
-	 *            The width that should be reached.
 	 * @param aDestinationHeight
 	 *            The height that should be reached.
 	 */
-	public ResizeAnimation(final View aView, final float aDestinationWidth, final float aDestinationHeight)
+	public ResizeHeightAnimation(final View aView, final float aDestinationHeight)
 	{
 		mDestinationHeight = aDestinationHeight;
-		mDestinationWidth = aDestinationWidth;
 		mStartHeight = aView.getHeight();
-		mStartWidth = aView.getWidth();
 		mView = aView;
 		setDuration(DURATION);
 	}
@@ -55,7 +47,6 @@ public class ResizeAnimation extends Animation
 	{
 		final LayoutParams p = mView.getLayoutParams();
 		p.height = (int) (mStartHeight + (mDestinationHeight - mStartHeight) * aInterpolatedTime);
-		p.width = (int) (mStartWidth + (mDestinationWidth - mStartWidth) * aInterpolatedTime);
 		mView.requestLayout();
 	}
 }
