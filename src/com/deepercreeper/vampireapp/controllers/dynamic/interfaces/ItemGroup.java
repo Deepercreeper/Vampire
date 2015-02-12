@@ -15,6 +15,12 @@ public interface ItemGroup extends Comparable<ItemGroup>
 	
 	public int[] getDefaultValues();
 	
+	public String getDisplayName();
+	
+	public int getEPCost();
+	
+	public int getEPCostMultiplicator();
+	
 	/**
 	 * Returns whether and how many points need to be spent for increasing this item.<br>
 	 * If the value is positive it's a fixed value that needs to be spent each time.<br>
@@ -37,17 +43,11 @@ public interface ItemGroup extends Comparable<ItemGroup>
 	 */
 	public List<Item> getItemsList();
 	
-	public int getMaxLowLevelValue();
-	
-	public int getEPCost();
-	
-	public int getEPCostMultiplicator();
-	
 	public int getMaxItems();
 	
-	public int getMaxValue();
+	public int getMaxLowLevelValue();
 	
-	public String getDisplayName();
+	public int getMaxValue();
 	
 	/**
 	 * @return the group name.
@@ -57,6 +57,8 @@ public interface ItemGroup extends Comparable<ItemGroup>
 	public int getStartValue();
 	
 	public boolean hasItem(String aName);
+	
+	public boolean isFreeMutable();
 	
 	public boolean isMutable();
 	

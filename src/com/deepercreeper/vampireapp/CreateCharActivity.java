@@ -38,6 +38,8 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 	
 	public static final String	CHARACTER			= "CHARACTER";
 	
+	public static final String	FREE_CREATION		= "FREE_CREATION";
+	
 	public static final int		CREATE_CHAR_REQUEST	= 1;
 	
 	private enum State
@@ -46,6 +48,8 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 	}
 	
 	private String[]			mCharNames;
+	
+	private boolean				mFreeCreation;
 	
 	private State				mState;
 	
@@ -61,6 +65,7 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 		mItems = ConnectionUtil.loadItems(this);
 		
 		mCharNames = getIntent().getStringArrayExtra(CHAR_NAMES);
+		mFreeCreation = getIntent().getBooleanExtra(FREE_CREATION, false);
 		
 		setState(State.GENERAL);
 	}
@@ -104,16 +109,22 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 	{
 		setContentView(R.layout.create_char_general);
 		
+		CreationMode mode = CreationMode.MAIN;
+		if (mFreeCreation)
+		{
+			mode = CreationMode.FREE_MAIN;
+		}
+		
 		if (mChar == null)
 		{
-			mChar = new CharacterCreation(mItems, this, this);
+			mChar = new CharacterCreation(mItems, this, this, mode);
 		}
 		
 		mChar.resetFreePoints();
 		mChar.releaseViews();
 		mChar.getGeneration().release();
 		
-		mChar.setCreationMode(CreationMode.MAIN);
+		mChar.setCreationMode(mode);
 		
 		final TextView nameTextView = (TextView) findViewById(R.id.char_name_text);
 		final TextView conceptTextView = (TextView) findViewById(R.id.concept_text);
@@ -207,7 +218,7 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 		});
 		behaviorSpinner.setSelection(mItems.getNatures().indexOf(mChar.getBehavior()));
 		
-		mChar.getGeneration().init(generationPanel);
+		mChar.getGeneration().init(generationPanel, mFreeCreation);
 		
 		clanSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, mItems.getClans().getNames()));
 		clanSpinner.setOnItemSelectedListener(new OnItemSelectedListener()
@@ -240,7 +251,14 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 			@Override
 			public void onClick(final View aV)
 			{
-				setState(State.FREE_POINTS);
+				if (mFreeCreation)
+				{
+					setState(State.DESCRIPTIONS);
+				}
+				else
+				{
+					setState(State.FREE_POINTS);
+				}
 			}
 		});
 		

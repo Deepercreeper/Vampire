@@ -46,7 +46,17 @@ public class VampireActivity extends Activity
 			@Override
 			public void onClick(final View aV)
 			{
-				createChar();
+				createChar(false);
+			}
+		});
+		
+		final Button createFreeChar = (Button) findViewById(R.id.create_character_free_button);
+		createFreeChar.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				createChar(true);
 			}
 		});
 		
@@ -77,10 +87,11 @@ public class VampireActivity extends Activity
 		}
 	}
 	
-	private void createChar()
+	private void createChar(final boolean aFree)
 	{
 		final Intent intent = new Intent(this, CreateCharActivity.class);
 		intent.putExtra(CreateCharActivity.CHAR_NAMES, mChars.getCharNames());
+		intent.putExtra(CreateCharActivity.FREE_CREATION, aFree);
 		startActivityForResult(intent, CreateCharActivity.CREATE_CHAR_REQUEST);
 	}
 	

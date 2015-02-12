@@ -29,9 +29,6 @@ public class GenerationControllerCreation extends CreationRestrictionableImpl
 	{
 		mPicker = new NumberPicker(aContext);
 		mPicker.setLayoutParams(ViewUtil.getWrapHeight());
-		mPicker.setMinValue(CharacterCreation.MIN_GENERATION);
-		mPicker.setMaxValue(CharacterCreation.MAX_GENERATION);
-		mPicker.setValue(CharacterCreation.MIN_GENERATION);
 	}
 	
 	/**
@@ -48,9 +45,21 @@ public class GenerationControllerCreation extends CreationRestrictionableImpl
 	 * @param aLayout
 	 *            The layout.
 	 */
-	public void init(final LinearLayout aLayout)
+	public void init(final LinearLayout aLayout, final boolean aFreeMode)
 	{
 		aLayout.removeAllViews();
+		if (aFreeMode)
+		{
+			mPicker.setMinValue(1);
+			mPicker.setMaxValue(13);
+			mPicker.setValue(10);
+		}
+		else
+		{
+			mPicker.setMinValue(CharacterCreation.MIN_GENERATION);
+			mPicker.setMaxValue(CharacterCreation.MAX_GENERATION);
+			mPicker.setValue(CharacterCreation.MIN_GENERATION);
+		}
 		aLayout.addView(mPicker);
 	}
 	

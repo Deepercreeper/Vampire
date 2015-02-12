@@ -181,6 +181,7 @@
                 maxLowLevelValue="5"
                 maxValue="6"
                 mutable="false"
+                freeMutable="true"
                 startValue="0"
                 value="true" >
 

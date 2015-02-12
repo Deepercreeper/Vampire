@@ -4,6 +4,7 @@
     <string name="app_name">VampireApp</string>
     <string name="create_char">Charaktererstellung</string>
     <string name="button_create_character">Neuen Charakter erstellen</string>
+	<string name="button_create_character_free">Character frei erstellen</string>
     <string name="delete_chars">Alle löschen</string>
     <string name="char_name">Charakter Name</string>
     <string name="concept">Konzept</string>

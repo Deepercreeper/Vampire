@@ -46,6 +46,8 @@ public class CharacterCreation
 	
 	private final Context						mContext;
 	
+	private CreationMode						mMode;
+	
 	private String								mName				= "";
 	
 	private String								mConcept			= "";
@@ -74,11 +76,12 @@ public class CharacterCreation
 	 * @param aItems
 	 *            The vampire application.
 	 */
-	public CharacterCreation(final ItemProvider aItems, final Context aContext, final CharCreationListener aListener)
+	public CharacterCreation(final ItemProvider aItems, final Context aContext, final CharCreationListener aListener, final CreationMode aMode)
 	{
 		mItems = aItems;
 		mContext = aContext;
 		mListener = aListener;
+		mMode = aMode;
 		final PointHandler points = new PointHandler()
 		{
 			@Override
@@ -104,7 +107,7 @@ public class CharacterCreation
 		mControllers = new ArrayList<ItemControllerCreation>();
 		for (final ItemController controller : mItems.getControllers())
 		{
-			mControllers.add(new ItemControllerCreationImpl(controller, mContext, CreationMode.MAIN, points));
+			mControllers.add(new ItemControllerCreationImpl(controller, mContext, getCreationMode(), points));
 		}
 		mDescriptions = new DescriptionControllerCreation(mItems.getDescriptions());
 		mInsanities = new InsanityControllerCreation(mContext, this);
@@ -336,6 +339,11 @@ public class CharacterCreation
 		mConcept = aConcept.trim();
 	}
 	
+	public CreationMode getCreationMode()
+	{
+		return mMode;
+	}
+	
 	/**
 	 * Sets the current creation mode.
 	 * 
@@ -344,9 +352,10 @@ public class CharacterCreation
 	 */
 	public void setCreationMode(final CreationMode aMode)
 	{
+		mMode = aMode;
 		for (final ItemControllerCreation controller : mControllers)
 		{
-			controller.setCreationMode(aMode);
+			controller.setCreationMode(getCreationMode());
 		}
 	}
 	
@@ -397,6 +406,10 @@ public class CharacterCreation
 	
 	private void addRestrictions()
 	{
+		if (getCreationMode().isFreeMode())
+		{
+			return;
+		}
 		for (final CreationRestriction restriction : mClan.getRestrictions())
 		{
 			final CreationRestrictionType type = restriction.getType();

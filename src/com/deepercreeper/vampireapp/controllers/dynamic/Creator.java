@@ -249,8 +249,9 @@ public class Creator
 			{
 				final String name = child.getAttribute("name");
 				final boolean mutable = Boolean.parseBoolean(child.getAttribute("mutable"));
+				final boolean freeMutable = Boolean.parseBoolean(child.getAttribute("freeMutable"));
 				final boolean valueGroup = Boolean.parseBoolean(child.getAttribute("value"));
-				int maxValue = 0;
+				int maxValue = Integer.MAX_VALUE;
 				int startValue = 0;
 				int maxLowLevelValue = 0;
 				int freePointsCost = 0;
@@ -292,8 +293,8 @@ public class Creator
 						startValue = Integer.parseInt(child.getAttribute("startValue"));
 					}
 				}
-				final ItemGroup group = new ItemGroupImpl(name, mutable, maxLowLevelValue, startValue, maxValue, freePointsCost, valueGroup,
-						maxItems, epCost, epCostMultiplicator);
+				final ItemGroup group = new ItemGroupImpl(name, mutable, freeMutable, maxLowLevelValue, startValue, maxValue, freePointsCost,
+						valueGroup, maxItems, epCost, epCostMultiplicator);
 				for (final Item item : createItems(child, group, null))
 				{
 					group.addItem(item);

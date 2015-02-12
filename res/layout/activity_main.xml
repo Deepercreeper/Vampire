@@ -10,18 +10,23 @@
 
     <Button
         android:id="@+id/create_character_button"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/characters_list"
         android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/characters_list"
         android:text="@string/button_create_character" />
 
+    <Button
+        android:id="@+id/create_character_free_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+	android:layout_below="@id/create_character_button"
+        android:text="@string/button_create_character_free" />
+    
     <LinearLayout
         android:id="@+id/characters_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/create_character_button"
+        android:layout_below="@+id/create_character_free_button"
         android:orientation="vertical" />
 
 </RelativeLayout>

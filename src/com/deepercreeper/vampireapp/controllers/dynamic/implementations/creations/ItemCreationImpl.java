@@ -7,7 +7,6 @@ import java.util.Map;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -256,8 +255,11 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			Log.w(TAG, "Tried to ask whether a non value item can be decreased.");
 			return false;
 		}
-		final boolean canDecreaseItemValue = mValueId > Math.max(getItem().getStartValue(), getMinValue(CreationRestrictionType.ITEM_VALUE))
-				&& mValueId > 0;
+		boolean canDecreaseItemValue = mValueId > 0;
+		if ( !getCreationMode().isFreeMode())
+		{
+			canDecreaseItemValue &= mValueId > getMinValue(CreationRestrictionType.ITEM_VALUE) && mValueId > getItem().getStartValue();
+		}
 		final boolean canDecreaseItemTempPoints = mTempPoints > 0;
 		boolean canDecreaseChild = true;
 		
@@ -301,8 +303,12 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			Log.w(TAG, "Tried to ask whether a non value item can be increased.");
 			return false;
 		}
-		final boolean canIncreaseItem = mValueId + mTempPoints < Math.min(getItem().getMaxLowLevelValue(),
-				getMaxValue(CreationRestrictionType.ITEM_VALUE));
+		boolean canIncreaseItem = mValueId + mTempPoints < getItem().getMaxValue();
+		if ( !getCreationMode().isFreeMode())
+		{
+			canIncreaseItem &= mValueId + mTempPoints < getMaxValue(CreationRestrictionType.ITEM_VALUE)
+					&& mValueId + mTempPoints < getItem().getMaxLowLevelValue();
+		}
 		boolean canIncreaseChild = true;
 		
 		if (hasParentItem())
@@ -847,10 +853,10 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			{
 				additionalBarSize += 30;
 			}
-			ViewUtil.setWidth(mValueBar, additionalBarSize + 80);
+			ViewUtil.setWidth(mValueBar, additionalBarSize + 70);
 			ViewUtil.setWidth(mDecreaseButton, 30);
 			ViewUtil.setWidth(mIncreaseButton, 30);
-			ViewUtil.setWidth(mValueText, LayoutParams.WRAP_CONTENT);
+			ViewUtil.setWidth(mValueText, 30);
 		}
 		else
 		{
@@ -1162,7 +1168,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 	{
 		if (isParent() && isMutableParent())
 		{
-			ViewUtil.setEnabled(mAddButton, getCreationMode().canAddChild(this, true));
+			ViewUtil.setEnabled(mAddButton, getCreationMode().canAddChild(this, true) && !getAddableItems().isEmpty());
 		}
 	}
 	

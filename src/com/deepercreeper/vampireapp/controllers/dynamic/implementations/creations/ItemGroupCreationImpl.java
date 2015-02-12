@@ -405,6 +405,10 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 	@Override
 	public boolean isMutable()
 	{
+		if (getCreationMode().isFreeMode())
+		{
+			return getItemGroup().isMutable() || getItemGroup().isFreeMutable();
+		}
 		return getItemGroup().isMutable();
 	}
 	

@@ -26,18 +26,31 @@ public enum CreationMode
 	/**
 	 * Here are descriptions created. For items and character own descriptions.
 	 */
-	DESCRIPTIONS(false, false);
+	DESCRIPTIONS(false, false),
 	
-	private final boolean	mValueMode, mTempPointsMode;
+	/**
+	 * This is the free version of the main mode. Used for creating free characters.
+	 */
+	FREE_MAIN();
 	
-	CreationMode(final boolean aValueMode, final boolean aTempPointsMode)
+	private final boolean	mValueMode, mTempPointsMode, mFreeMode;
+	
+	private CreationMode(final boolean aValueMode, final boolean aTempPointsMode)
 	{
 		mValueMode = aValueMode;
 		mTempPointsMode = aTempPointsMode;
+		mFreeMode = false;
 		if (mValueMode && mTempPointsMode)
 		{
 			throw new IllegalArgumentException("Can't change value and temporary points in one mode!");
 		}
+	}
+	
+	private CreationMode()
+	{
+		mValueMode = true;
+		mTempPointsMode = false;
+		mFreeMode = true;
 	}
 	
 	public boolean canIncreaseItem(final ItemCreation aItem, final boolean aCanIncrease)
@@ -45,6 +58,10 @@ public enum CreationMode
 		if ( !aCanIncrease)
 		{
 			return false;
+		}
+		if (mFreeMode)
+		{
+			return true;
 		}
 		if (mValueMode)
 		{
@@ -59,6 +76,10 @@ public enum CreationMode
 	
 	public boolean canRemoveItem(final ItemCreation aItem)
 	{
+		if (mFreeMode)
+		{
+			return true;
+		}
 		final ItemGroupCreation group = aItem.getItemGroup();
 		if ( !group.canChangeBy( -aItem.getValue()))
 		{
@@ -84,6 +105,10 @@ public enum CreationMode
 	
 	public boolean canRemoveChild(final ItemCreation aItem)
 	{
+		if (mFreeMode)
+		{
+			return true;
+		}
 		if ( !aItem.getItemGroup().canChangeBy( -aItem.getValue()))
 		{
 			return false;
@@ -109,6 +134,10 @@ public enum CreationMode
 	
 	public boolean canDecreaseItem(final ItemCreation aItem, final boolean aCanDecreaseValue, final boolean aCanDecreaseTempPoints)
 	{
+		if (mFreeMode)
+		{
+			return aCanDecreaseValue;
+		}
 		if (mValueMode)
 		{
 			return aCanDecreaseValue && aItem.getItemGroup().canChangeBy(aItem.getDecreasedValue() - aItem.getValue());
@@ -173,6 +202,10 @@ public enum CreationMode
 		{
 			return false;
 		}
+		if (mFreeMode)
+		{
+			return true;
+		}
 		if (aRestrictions)
 		{
 			for (final CreationRestriction restriction : aItem.getRestrictions(CreationRestrictionType.ITEM_CHILDREN_COUNT))
@@ -213,5 +246,10 @@ public enum CreationMode
 			return false;
 		}
 		return false;
+	}
+	
+	public boolean isFreeMode()
+	{
+		return mFreeMode;
 	}
 }

@@ -42,6 +42,8 @@ public class ItemGroupImpl implements ItemGroup
 	
 	private final boolean				mMutable;
 	
+	private final boolean				mFreeMutable;
+	
 	private final boolean				mValueGroup;
 	
 	/**
@@ -50,11 +52,13 @@ public class ItemGroupImpl implements ItemGroup
 	 * @param aName
 	 *            The group name.
 	 */
-	public ItemGroupImpl(final String aName, final boolean aMutable, final int aMaxLowLevelValue, final int aStartValue, final int aMaxValue,
-			final int aFreePointsCost, final boolean aValueGroup, final int aMaxItems, final int aEPCost, final int aEPCostMultiplicator)
+	public ItemGroupImpl(final String aName, final boolean aMutable, final boolean aFreeMutable, final int aMaxLowLevelValue, final int aStartValue,
+			final int aMaxValue, final int aFreePointsCost, final boolean aValueGroup, final int aMaxItems, final int aEPCost,
+			final int aEPCostMultiplicator)
 	{
 		mName = aName;
 		mMutable = aMutable;
+		mFreeMutable = aFreeMutable;
 		mValueGroup = aValueGroup;
 		mFreePointsCost = aFreePointsCost;
 		mMaxLowLevelValue = aMaxLowLevelValue;
@@ -63,18 +67,6 @@ public class ItemGroupImpl implements ItemGroup
 		mMaxItems = aMaxItems;
 		mEPCost = aEPCost;
 		mEPCostMultiplicator = aEPCostMultiplicator;
-	}
-	
-	@Override
-	public int getEPCost()
-	{
-		return mEPCost;
-	}
-	
-	@Override
-	public int getEPCostMultiplicator()
-	{
-		return mEPCostMultiplicator;
 	}
 	
 	@Override
@@ -129,6 +121,18 @@ public class ItemGroupImpl implements ItemGroup
 	}
 	
 	@Override
+	public int getEPCost()
+	{
+		return mEPCost;
+	}
+	
+	@Override
+	public int getEPCostMultiplicator()
+	{
+		return mEPCostMultiplicator;
+	}
+	
+	@Override
 	public int getFreePointsCost()
 	{
 		if ( !isValueGroup())
@@ -137,12 +141,6 @@ public class ItemGroupImpl implements ItemGroup
 			return 0;
 		}
 		return mFreePointsCost;
-	}
-	
-	@Override
-	public int getMaxItems()
-	{
-		return mMaxItems;
 	}
 	
 	@Override
@@ -155,6 +153,12 @@ public class ItemGroupImpl implements ItemGroup
 	public List<Item> getItemsList()
 	{
 		return mItemsList;
+	}
+	
+	@Override
+	public int getMaxItems()
+	{
+		return mMaxItems;
 	}
 	
 	@Override
@@ -200,6 +204,12 @@ public class ItemGroupImpl implements ItemGroup
 	public boolean hasItem(final String aName)
 	{
 		return mItems.containsKey(aName);
+	}
+	
+	@Override
+	public boolean isFreeMutable()
+	{
+		return mFreeMutable;
 	}
 	
 	@Override
