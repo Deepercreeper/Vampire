@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewParent;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -130,6 +131,12 @@ public class ViewUtil
 	public static int calcPx(final int aDp, final Context aContext)
 	{
 		return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, aDp, aContext.getResources().getDisplayMetrics()));
+	}
+	
+	public static void setEnabled(final ImageButton aButton, final boolean aEnabled)
+	{
+		aButton.setEnabled(aEnabled);
+		aButton.setAlpha(aEnabled ? 1f : 0.4f);
 	}
 	
 	public static void hideWidth(final View aView)

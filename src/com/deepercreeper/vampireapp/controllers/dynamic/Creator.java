@@ -283,6 +283,10 @@ public class Creator
 					{
 						maxLowLevelValue = Integer.parseInt(child.getAttribute("maxLowLevelValue"));
 					}
+					else
+					{
+						maxLowLevelValue = maxValue;
+					}
 					if (child.hasAttribute("startValue"))
 					{
 						startValue = Integer.parseInt(child.getAttribute("startValue"));

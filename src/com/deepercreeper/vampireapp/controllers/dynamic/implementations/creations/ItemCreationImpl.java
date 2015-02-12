@@ -1027,7 +1027,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			Log.w(TAG, "Tried to change whether a non value item can be decreased.");
 			return;
 		}
-		mDecreaseButton.setEnabled(canDecrease());
+		ViewUtil.setEnabled(mDecreaseButton, canDecrease());
 	}
 	
 	@Override
@@ -1044,7 +1044,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			Log.w(TAG, "Tried to change whether a non value item can be increased.");
 			return;
 		}
-		mIncreaseButton.setEnabled(canIncrease());
+		ViewUtil.setEnabled(mIncreaseButton, canIncrease());
 	}
 	
 	@Override
@@ -1162,7 +1162,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 	{
 		if (isParent() && isMutableParent())
 		{
-			mAddButton.setEnabled(getCreationMode().canAddChild(this, true));
+			ViewUtil.setEnabled(mAddButton, getCreationMode().canAddChild(this, true));
 		}
 	}
 	
@@ -1179,8 +1179,8 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			{
 				canEditRemove = getCreationMode().canRemoveItem(this);
 			}
-			mEditButton.setEnabled(canEditRemove);
-			mRemoveButton.setEnabled(canEditRemove);
+			ViewUtil.setEnabled(mEditButton, canEditRemove);
+			ViewUtil.setEnabled(mRemoveButton, canEditRemove);
 		}
 	}
 }
