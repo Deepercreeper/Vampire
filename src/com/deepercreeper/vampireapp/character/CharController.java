@@ -2,6 +2,7 @@ package com.deepercreeper.vampireapp.character;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -72,6 +73,10 @@ public class CharController implements CharacterListener
 				list.append((char) c);
 			}
 			data = list.toString();
+		}
+		catch (final FileNotFoundException e)
+		{
+			Log.i(TAG, "No characters saved.");
 		}
 		catch (final IOException e)
 		{

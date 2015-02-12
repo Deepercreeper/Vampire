@@ -699,6 +699,8 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		
 		if ( !mInitialized)
 		{
+			getContainer().setLayoutParams(ViewUtil.getWrapHeight());
+			getContainer().setOrientation(LinearLayout.VERTICAL);
 			View.inflate(getContext(), R.layout.item_creation, getContainer());
 			
 			mRelativeContainer = (RelativeLayout) getContainer().findViewById(R.id.relative_item_container);

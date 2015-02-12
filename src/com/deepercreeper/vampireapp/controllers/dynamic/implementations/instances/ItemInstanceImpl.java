@@ -98,6 +98,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		if (isValueItem())
 		{
 			mEP = aEP;
+			mValueId = Integer.parseInt(aElement.getAttribute("value"));
 		}
 		if (isParent())
 		{
@@ -115,7 +116,6 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			throw new IllegalArgumentException("ItemInstance error!");
 		}
 		mParentItem = aParentItem;
-		mValueId = Integer.parseInt(aElement.getAttribute("value"));
 		
 		init();
 		
@@ -464,6 +464,8 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	{
 		if ( !mInitialized)
 		{
+			getContainer().setLayoutParams(ViewUtil.getWrapHeight());
+			getContainer().setOrientation(LinearLayout.VERTICAL);
 			View.inflate(getContext(), R.layout.item_instance, getContainer());
 			
 			mRelativeContainer = (RelativeLayout) getContainer().findViewById(R.id.relative_item_container);
