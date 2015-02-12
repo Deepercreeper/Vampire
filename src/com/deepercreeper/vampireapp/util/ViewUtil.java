@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewParent;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
@@ -18,20 +17,10 @@ import android.widget.TableRow;
  */
 public class ViewUtil
 {
-	private static Context	sContext	= null;
-	
-	private static int		sId			= 1;
+	private static int	sId	= 1;
 	
 	private ViewUtil()
 	{}
-	
-	public static void init(final Context aContext)
-	{
-		if (sContext == null)
-		{
-			sContext = aContext;
-		}
-	}
 	
 	public static int generateId(final View aView)
 	{
@@ -40,117 +29,35 @@ public class ViewUtil
 	}
 	
 	/**
-	 * @return layout parameters for buttons.
-	 */
-	public static LinearLayout.LayoutParams getButtonSize()
-	{
-		return new LinearLayout.LayoutParams(calcPx(30), calcPx(30));
-	}
-	
-	/**
-	 * @return layout parameters for relative buttons.
-	 */
-	public static RelativeLayout.LayoutParams getRelativeButtonSize()
-	{
-		return new RelativeLayout.LayoutParams(calcPx(30), calcPx(30));
-	}
-	
-	/**
-	 * @return layout parameters for short name text views.
-	 */
-	public static LinearLayout.LayoutParams getNameSizeShort()
-	{
-		return new LinearLayout.LayoutParams(calcPx(82), calcPx(30));
-	}
-	
-	/**
-	 * @return layout parameters for number text views.
-	 */
-	public static LinearLayout.LayoutParams getNumberSize()
-	{
-		return new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, calcPx(30));
-	}
-	
-	/**
 	 * @return layout parameters for table row buttons.
 	 */
-	public static TableRow.LayoutParams getRowButtonSize()
+	public static TableRow.LayoutParams getRowButtonSize(final Context aContext)
 	{
-		return new TableRow.LayoutParams(calcPx(30), calcPx(30));
-	}
-	
-	public static RelativeLayout.LayoutParams getRelativeValueBarSize(final int aWidth)
-	{
-		return new RelativeLayout.LayoutParams(calcPx(aWidth), calcPx(30));
-	}
-	
-	public static RelativeLayout.LayoutParams getRelativeValueTextSize()
-	{
-		return new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, calcPx(30));
+		return new TableRow.LayoutParams(calcPx(30, aContext), calcPx(30, aContext));
 	}
 	
 	/**
 	 * @return layout parameters for long table row name text views.
 	 */
-	public static RelativeLayout.LayoutParams getRelativeNameLong()
+	public static TableRow.LayoutParams getRowNameVeryLong(final Context aContext)
 	{
-		return new RelativeLayout.LayoutParams(calcPx(80), calcPx(30));
-	}
-	
-	/**
-	 * @return layout parameters for long table row name text views.
-	 */
-	public static TableRow.LayoutParams getRowNameVeryLong()
-	{
-		return new TableRow.LayoutParams(calcPx(300), LayoutParams.MATCH_PARENT);
+		return new TableRow.LayoutParams(calcPx(300, aContext), LayoutParams.MATCH_PARENT);
 	}
 	
 	/**
 	 * @return layout parameters for short table row name text views.
 	 */
-	public static TableRow.LayoutParams getRowNameShort()
+	public static TableRow.LayoutParams getRowNameShort(final Context aContext)
 	{
-		return new TableRow.LayoutParams(calcPx(82), LayoutParams.MATCH_PARENT);
+		return new TableRow.LayoutParams(calcPx(82, aContext), LayoutParams.MATCH_PARENT);
 	}
 	
 	/**
 	 * @return layout parameters for table row text views.
 	 */
-	public static TableRow.LayoutParams getRowTextSize()
+	public static TableRow.LayoutParams getRowTextSize(final Context aContext)
 	{
-		return new TableRow.LayoutParams(calcPx(247), LayoutParams.WRAP_CONTENT);
-	}
-	
-	/**
-	 * @return layout parameters for relative wrap all views.
-	 */
-	public static RelativeLayout.LayoutParams getRelativeWrapAll()
-	{
-		return new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-	}
-	
-	/**
-	 * @return layout parameters for relative wrap width views.
-	 */
-	public static RelativeLayout.LayoutParams getRelativeWrapWidth()
-	{
-		return new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
-	}
-	
-	/**
-	 * @return layout parameters for table row match all views.
-	 */
-	public static TableRow.LayoutParams getRowMatchAll()
-	{
-		return new TableRow.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-	}
-	
-	/**
-	 * @return layout parameters for table wrap all views.
-	 */
-	public static TableLayout.LayoutParams getTableWrapAll()
-	{
-		return new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		return new TableRow.LayoutParams(calcPx(247, aContext), LayoutParams.WRAP_CONTENT);
 	}
 	
 	/**
@@ -159,22 +66,6 @@ public class ViewUtil
 	public static TableLayout.LayoutParams getTableWrapHeight()
 	{
 		return new TableLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-	}
-	
-	/**
-	 * @return layout parameters for value views.
-	 */
-	public static LinearLayout.LayoutParams getValueSize()
-	{
-		return new LinearLayout.LayoutParams(calcPx(25), LayoutParams.WRAP_CONTENT);
-	}
-	
-	/**
-	 * @return layout parameters for wrap all views.
-	 */
-	public static LinearLayout.LayoutParams getWrapAll()
-	{
-		return new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 	}
 	
 	/**
@@ -236,9 +127,21 @@ public class ViewUtil
 	 *            The number of device independent pixels to transform.
 	 * @return the number of pixels that corresponds to the given value.
 	 */
-	public static int calcPx(final int aDp)
+	public static int calcPx(final int aDp, final Context aContext)
 	{
-		return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, aDp, sContext.getResources().getDisplayMetrics()));
+		return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, aDp, aContext.getResources().getDisplayMetrics()));
+	}
+	
+	public static void hideWidth(final View aView)
+	{
+		setWidth(aView, 0);
+	}
+	
+	public static void setWidth(final View aView, final int aWidth)
+	{
+		final LayoutParams params = aView.getLayoutParams();
+		params.width = calcPx(aWidth, aView.getContext());
+		aView.setLayoutParams(params);
 	}
 	
 	/**

@@ -1,8 +1,10 @@
 package com.deepercreeper.vampireapp.character;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +18,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import android.content.Context;
-import com.deepercreeper.vampireapp.Vampire;
+import com.deepercreeper.vampireapp.ItemProvider;
 import com.deepercreeper.vampireapp.controllers.GenerationController;
 import com.deepercreeper.vampireapp.controllers.InsanityController;
 import com.deepercreeper.vampireapp.controllers.descriptions.DescriptionControllerInstance;
@@ -31,7 +33,9 @@ public class CharacterInstance
 {
 	private static final String					TAG				= "CharacterInstance";
 	
-	private final Vampire						mVampire;
+	private final ItemProvider					mItems;
+	
+	private final Context						mContext;
 	
 	private final GenerationController			mGeneration;
 	
@@ -57,7 +61,8 @@ public class CharacterInstance
 	
 	public CharacterInstance(final CharacterCreation aCreator)
 	{
-		mVampire = aCreator.getVampire();
+		mItems = aCreator.getItems();
+		mContext = aCreator.getContext();
 		mGeneration = new GenerationController(aCreator.getGeneration().getGeneration());
 		mDescriptions = new DescriptionControllerInstance(aCreator.getDescriptions());
 		mInsanities = new InsanityController();
@@ -73,19 +78,21 @@ public class CharacterInstance
 		
 		for (final ItemControllerCreation controller : aCreator.getControllers())
 		{
-			mControllers.add(new ItemControllerInstanceImpl(controller, mVampire.getContext(), mMode, mEP, this));
+			mControllers.add(new ItemControllerInstanceImpl(controller, mContext, mMode, mEP, this));
 		}
 	}
 	
-	public CharacterInstance(final InputStream aStream, final Vampire aVampire) throws IOException
+	public CharacterInstance(final String aXML, final ItemProvider aItems, final Context aContext) throws IOException
 	{
 		Log.i(TAG, "Starting to load character xml.");
-		mVampire = aVampire;
+		mItems = aItems;
+		mContext = aContext;
 		
+		final InputStream stream = new ByteArrayInputStream(aXML.getBytes(Charset.defaultCharset()));
 		Document doc = null;
 		try
 		{
-			doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(aStream);
+			doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(stream);
 		}
 		catch (final Exception e)
 		{
@@ -105,10 +112,10 @@ public class CharacterInstance
 		final Element meta = (Element) root.getElementsByTagName("meta").item(0);
 		mName = meta.getAttribute("name");
 		mConcept = meta.getAttribute("concept");
-		mNature = mVampire.getNature(meta.getAttribute("nature"));
-		mBehavior = mVampire.getNature(meta.getAttribute("behavior"));
+		mNature = mItems.getNatures().get(meta.getAttribute("nature"));
+		mBehavior = mItems.getNatures().get(meta.getAttribute("behavior"));
 		mGeneration = new GenerationController(Integer.parseInt(meta.getAttribute("generation")));
-		mClan = mVampire.getClan(meta.getAttribute("clan"));
+		mClan = mItems.getClans().get(meta.getAttribute("clan"));
 		mEP = new EPHandler(Integer.parseInt(meta.getAttribute("ep")));
 		mMode = Mode.valueOf(meta.getAttribute("mode"));
 		
@@ -141,7 +148,7 @@ public class CharacterInstance
 				}
 			}
 		}
-		mDescriptions = new DescriptionControllerInstance(descriptionsMap, mVampire.getDescriptions());
+		mDescriptions = new DescriptionControllerInstance(descriptionsMap, mItems.getDescriptions());
 		
 		// Controllers
 		final Element controllers = (Element) root.getElementsByTagName("controllers").item(0);
@@ -152,7 +159,7 @@ public class CharacterInstance
 				final Element controller = (Element) controllers.getChildNodes().item(i);
 				if (controller.getTagName().equals("controller"))
 				{
-					mControllers.add(new ItemControllerInstanceImpl(controller, mVampire, mVampire.getContext(), mMode, mEP, this));
+					mControllers.add(new ItemControllerInstanceImpl(controller, mItems, mContext, mMode, mEP, this));
 				}
 			}
 		}
@@ -162,7 +169,7 @@ public class CharacterInstance
 	
 	public Context getContext()
 	{
-		return mVampire.getContext();
+		return mContext;
 	}
 	
 	public void update()
@@ -227,7 +234,7 @@ public class CharacterInstance
 		return mGeneration.isLowLevel();
 	}
 	
-	public void save(final OutputStream aStream)
+	public String serialize()
 	{
 		Document doc = null;
 		try
@@ -240,7 +247,7 @@ public class CharacterInstance
 		}
 		if (doc == null)
 		{
-			return;
+			return null;
 		}
 		
 		// Root element
@@ -296,7 +303,8 @@ public class CharacterInstance
 		
 		// TODO Restrictions
 		
-		final StreamResult result = new StreamResult(aStream);
+		final ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		final StreamResult result = new StreamResult(stream);
 		try
 		{
 			TransformerFactory.newInstance().newTransformer().transform(new DOMSource(doc), result);
@@ -307,11 +315,13 @@ public class CharacterInstance
 		}
 		try
 		{
-			aStream.close();
+			stream.close();
 		}
 		catch (final IOException e)
 		{
 			Log.e(TAG, "Could not close stream.");
 		}
+		
+		return new String(stream.toByteArray(), Charset.defaultCharset());
 	}
 }

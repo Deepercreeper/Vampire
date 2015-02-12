@@ -10,8 +10,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import android.content.Context;
-import android.text.TextUtils.TruncateAt;
-import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
@@ -20,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.CharacterInstance;
 import com.deepercreeper.vampireapp.character.EPHandler;
 import com.deepercreeper.vampireapp.character.Mode;
@@ -45,11 +44,11 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	
 	private final ItemGroupInstance			mItemGroup;
 	
-	private final ImageButton				mIncreaseButton;
+	private ImageButton						mIncreaseButton;
 	
-	private final ProgressBar				mValueBar;
+	private ProgressBar						mValueBar;
 	
-	private final TextView					mValueText;
+	private TextView						mValueText;
 	
 	private final LinearLayout				mContainer;
 	
@@ -59,9 +58,9 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	
 	private final ItemInstance				mParentItem;
 	
-	private final RelativeLayout			mRelativeContainer;
+	private RelativeLayout					mRelativeContainer;
 	
-	private final TextView					mNameText;
+	private TextView						mNameText;
 	
 	private final String					mDescription;
 	
@@ -95,21 +94,10 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		setController(getItemGroup().getItemController());
 		mMode = aMode;
 		mContainer = new LinearLayout(getContext());
-		mRelativeContainer = new RelativeLayout(getContext());
-		mNameText = new TextView(getContext());
 		
 		if (isValueItem())
 		{
-			mIncreaseButton = new ImageButton(getContext());
-			mValueBar = new ProgressBar(getContext(), null, android.R.attr.progressBarStyleHorizontal);
-			mValueText = new TextView(getContext());
 			mEP = aEP;
-		}
-		else
-		{
-			mIncreaseButton = null;
-			mValueBar = null;
-			mValueText = null;
 		}
 		if (isParent())
 		{
@@ -162,16 +150,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		
 		if (isValueItem())
 		{
-			mIncreaseButton = new ImageButton(getContext());
-			mValueBar = new ProgressBar(getContext(), null, android.R.attr.progressBarStyleHorizontal);
-			mValueText = new TextView(getContext());
 			mEP = aEP;
-		}
-		else
-		{
-			mIncreaseButton = null;
-			mValueBar = null;
-			mValueText = null;
 		}
 		if (isParent())
 		{
@@ -485,21 +464,15 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	{
 		if ( !mInitialized)
 		{
-			getContainer().setLayoutParams(ViewUtil.getWrapHeight());
-			getContainer().setOrientation(LinearLayout.VERTICAL);
+			View.inflate(getContext(), R.layout.item_instance, getContainer());
 			
-			mRelativeContainer.setLayoutParams(ViewUtil.getWrapAll());
-		}
-		
-		RelativeLayout.LayoutParams params;
-		View leftView = null;
-		
-		params = ViewUtil.getRelativeNameLong();
-		mNameText.setLayoutParams(params);
-		if ( !mInitialized)
-		{
+			mRelativeContainer = (RelativeLayout) getContainer().findViewById(R.id.relative_item_container);
+			mValueText = (TextView) getContainer().findViewById(R.id.item_value);
+			mValueBar = (ProgressBar) getContainer().findViewById(R.id.item_value_bar);
+			mIncreaseButton = (ImageButton) getContainer().findViewById(R.id.item_increase_button);
+			mNameText = (TextView) getContainer().findViewById(R.id.item_name);
+			
 			mNameText.setText(getItem().getDisplayName());
-			mNameText.setClickable(true);
 			mNameText.setOnClickListener(new OnClickListener()
 			{
 				@Override
@@ -508,52 +481,9 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 					Toast.makeText(getContext(), getItem().getDescription(), Toast.LENGTH_LONG).show();
 				}
 			});
-			mNameText.setGravity(Gravity.CENTER_VERTICAL);
-			mNameText.setSingleLine();
-			mNameText.setEllipsize(TruncateAt.END);
-		}
-		leftView = mNameText;
-		mRelativeContainer.addView(mNameText);
-		
-		if (isValueItem())
-		{
-			params = ViewUtil.getRelativeValueTextSize();
-			if (leftView != null)
-			{
-				ViewUtil.generateId(leftView);
-				params.addRule(RelativeLayout.RIGHT_OF, leftView.getId());
-			}
-			mValueText.setLayoutParams(params);
-			if ( !mInitialized)
-			{
-				mValueText.setGravity(Gravity.CENTER_VERTICAL);
-				mValueText.setPadding(mValueText.getPaddingLeft(), mValueText.getPaddingTop(), ViewUtil.calcPx(5), mValueText.getPaddingBottom());
-				mValueText.setSingleLine();
-				mValueText.setEllipsize(TruncateAt.END);
-			}
-			leftView = mValueText;
-			mRelativeContainer.addView(mValueText);
 			
-			params = ViewUtil.getRelativeValueBarSize(200);
-			if (leftView != null)
+			if (isValueItem())
 			{
-				ViewUtil.generateId(leftView);
-				params.addRule(RelativeLayout.RIGHT_OF, leftView.getId());
-			}
-			mValueBar.setLayoutParams(params);
-			leftView = mValueBar;
-			mRelativeContainer.addView(mValueBar);
-			
-			params = ViewUtil.getRelativeButtonSize();
-			if (leftView != null)
-			{
-				ViewUtil.generateId(leftView);
-				params.addRule(RelativeLayout.RIGHT_OF, leftView.getId());
-			}
-			mIncreaseButton.setLayoutParams(params);
-			if ( !mInitialized)
-			{
-				mIncreaseButton.setImageResource(android.R.drawable.ic_media_next);
 				mIncreaseButton.setOnClickListener(new OnClickListener()
 				{
 					@Override
@@ -562,14 +492,17 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 						increase();
 					}
 				});
+				
+				refreshValue();
 			}
-			leftView = mIncreaseButton;
-			mRelativeContainer.addView(mIncreaseButton);
-			
-			refreshValue();
 		}
-		
-		getContainer().addView(mRelativeContainer);
+		else
+		{
+			if (mRelativeContainer.getParent() == null)
+			{
+				getContainer().addView(mRelativeContainer, 0);
+			}
+		}
 		
 		if (hasChildren())
 		{
@@ -579,6 +512,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 				getContainer().addView(child.getContainer());
 			}
 		}
+		
 		mInitialized = true;
 	}
 	
@@ -687,11 +621,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			}
 		}
 		ViewUtil.release(getContainer());
-		ViewUtil.release(mNameText);
 		ViewUtil.release(mRelativeContainer);
-		ViewUtil.release(mValueText);
-		ViewUtil.release(mValueBar);
-		ViewUtil.release(mIncreaseButton);
 	}
 	
 	@Override

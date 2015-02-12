@@ -9,15 +9,22 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.Vampire;
 import com.deepercreeper.vampireapp.util.Log;
 
 public class CharacterContextMenu extends DialogFragment
 {
 	private static final String	TAG	= "CharacterContextMenu";
+	
+	public static interface CharacterListener
+	{
+		public void deleteChar(String aName);
+		
+		public void play(String aName);
+	}
 	
 	private enum Action
 	{
@@ -36,16 +43,19 @@ public class CharacterContextMenu extends DialogFragment
 		}
 	}
 	
-	private static boolean	sDialogOpen	= false;
+	private static boolean			sDialogOpen	= false;
 	
-	private final Vampire	mVampire;
+	private final CharacterListener	mListener;
 	
-	private final String	mName;
+	private final Context			mContext;
 	
-	private CharacterContextMenu(final Vampire aVampire, final String aName)
+	private final String			mName;
+	
+	private CharacterContextMenu(final CharacterListener aListener, final Context aContext, final String aName)
 	{
 		sDialogOpen = true;
-		mVampire = aVampire;
+		mContext = aContext;
+		mListener = aListener;
 		mName = aName;
 	}
 	
@@ -56,13 +66,13 @@ public class CharacterContextMenu extends DialogFragment
 		final Map<String, Action> actions = new HashMap<String, Action>();
 		for (final Action action : Action.values())
 		{
-			final String item = mVampire.getContext().getString(action.getResId());
+			final String item = mContext.getString(action.getResId());
 			items.add(item);
 			actions.put(item, action);
 		}
 		Collections.sort(items);
 		
-		final AlertDialog.Builder builder = new AlertDialog.Builder(mVampire.getContext());
+		final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 		builder.setTitle(mName).setItems(items.toArray(new String[items.size()]), new DialogInterface.OnClickListener()
 		{
 			@Override
@@ -94,18 +104,18 @@ public class CharacterContextMenu extends DialogFragment
 		switch (aAction)
 		{
 			case DELETE :
-				mVampire.deleteChar(mName);
+				mListener.deleteChar(mName);
 				break;
 		}
 	}
 	
-	public static void showCharacterContextMenu(final Vampire aVampire, final String aName)
+	public static void showCharacterContextMenu(final CharacterListener aListener, final Activity aContext, final String aName)
 	{
 		if (sDialogOpen)
 		{
 			Log.i(TAG, "Tried to open a dialog twice.");
 			return;
 		}
-		new CharacterContextMenu(aVampire, aName).show(((Activity) aVampire.getContext()).getFragmentManager(), aName);
+		new CharacterContextMenu(aListener, aContext, aName).show((aContext).getFragmentManager(), aName);
 	}
 }

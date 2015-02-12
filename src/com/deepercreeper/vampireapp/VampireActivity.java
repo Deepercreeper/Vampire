@@ -1,23 +1,20 @@
 package com.deepercreeper.vampireapp;
 
-import java.util.List;
+import java.io.IOException;
 import android.app.Activity;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
-import com.deepercreeper.vampireapp.controllers.descriptions.DescriptionController;
-import com.deepercreeper.vampireapp.controllers.dynamic.Creator;
-import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.ItemController;
-import com.deepercreeper.vampireapp.controllers.lists.ClanController;
-import com.deepercreeper.vampireapp.controllers.lists.NatureController;
-import com.deepercreeper.vampireapp.util.LanguageUtil;
-import com.deepercreeper.vampireapp.util.ViewUtil;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import com.deepercreeper.vampireapp.character.CharController;
+import com.deepercreeper.vampireapp.character.CharacterInstance;
+import com.deepercreeper.vampireapp.util.ConnectionUtil;
 
 /**
  * The main activity is the start class for the vampire app.<br>
@@ -27,75 +24,75 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class VampireActivity extends Activity
 {
+	private static final String		TAG				= "VampireActivity";
+	
 	private static final boolean	SERVICE_ITEMS	= false;
+	
+	private CharController			mChars;
 	
 	private ServiceConnection		mConnection;
 	
-	private Vampire					mVampire;
-	
 	private ItemProvider			mItems;
-	
-	private List<ItemController>	mControllers;
-	
-	private NatureController		mNatures;
-	
-	private ClanController			mClans;
-	
-	private DescriptionController	mDescriptions;
 	
 	@Override
 	protected void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		ViewUtil.init(this);
-		LanguageUtil.init(this);
 		
-		if (SERVICE_ITEMS)
+		mItems = ConnectionUtil.loadItems(this);
+		
+		mChars = new CharController(this, mItems);
+		
+		setContentView(R.layout.activity_main);
+		
+		final Button createChar = (Button) findViewById(R.id.create_character_button);
+		createChar.setOnClickListener(new OnClickListener()
 		{
-			mConnection = new ServiceConnection()
+			@Override
+			public void onClick(final View aV)
 			{
-				
-				@Override
-				public void onServiceConnected(final ComponentName className, final IBinder binder)
-				{
-					final ItemProvider.ItemBinder b = (ItemProvider.ItemBinder) binder;
-					mItems = b.getItemProvider();
-					Toast.makeText(VampireActivity.this, "Connected", Toast.LENGTH_SHORT).show();
-				}
-				
-				@Override
-				public void onServiceDisconnected(final ComponentName className)
-				{
-					mItems = null;
-				}
-			};
-			
-			final Intent itemProvider = new Intent(this, ItemProvider.class);
-			startService(itemProvider);
-			bindService(itemProvider, mConnection, Context.BIND_AUTO_CREATE);
-			
-			mControllers = mItems.getControllers();
-			mClans = mItems.getClans();
-			mNatures = mItems.getNatures();
-			mDescriptions = mItems.getDescriptions();
-		}
-		else
-		{
-			mConnection = null;
-			
-			mControllers = Creator.createItems(this);
-			mClans = Creator.createClans(this);
-			mNatures = new NatureController(getResources());
-			mDescriptions = new DescriptionController(getResources());
-		}
+				createChar();
+			}
+		});
 		
-		mVampire = new Vampire(this);
+		mChars.setCharsList((LinearLayout) findViewById(R.id.characters_list));
+		mChars.loadCharCompounds();
+		mChars.sortChars();
+	}
+	
+	@Override
+	protected void onActivityResult(final int aRequestCode, final int aResultCode, final Intent aData)
+	{
+		if (aRequestCode == CreateCharActivity.CREATE_CHAR_REQUEST && aResultCode == RESULT_OK)
+		{
+			final String xml = aData.getStringExtra(CreateCharActivity.CHARACTER);
+			CharacterInstance character = null;
+			try
+			{
+				character = new CharacterInstance(xml, getItems(), this);
+			}
+			catch (final IOException e)
+			{
+				Log.e(TAG, "Could not create character from xml.");
+			}
+			if (character != null)
+			{
+				mChars.addChar(character);
+			}
+		}
+	}
+	
+	private void createChar()
+	{
+		final Intent intent = new Intent(this, CreateCharActivity.class);
+		intent.putExtra(CreateCharActivity.CHAR_NAMES, mChars.getCharNames());
+		startActivityForResult(intent, CreateCharActivity.CREATE_CHAR_REQUEST);
 	}
 	
 	@Override
 	public void onBackPressed()
 	{
-		mVampire.back();
+		finish();
 	}
 	
 	@Override
@@ -115,7 +112,7 @@ public class VampireActivity extends Activity
 		final int id = item.getItemId();
 		if (id == R.id.delete_chars)
 		{
-			mVampire.deleteChars();
+			mChars.deleteChars();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -131,23 +128,8 @@ public class VampireActivity extends Activity
 		}
 	}
 	
-	public List<ItemController> getControllers()
+	public ItemProvider getItems()
 	{
-		return mControllers;
-	}
-	
-	public ClanController getClans()
-	{
-		return mClans;
-	}
-	
-	public DescriptionController getDescriptions()
-	{
-		return mDescriptions;
-	}
-	
-	public NatureController getNatures()
-	{
-		return mNatures;
+		return mItems;
 	}
 }

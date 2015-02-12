@@ -2,11 +2,11 @@ package com.deepercreeper.vampireapp.character;
 
 import java.util.ArrayList;
 import java.util.List;
+import android.content.Context;
 import android.widget.TableLayout;
-import com.deepercreeper.vampireapp.Vampire;
+import com.deepercreeper.vampireapp.ItemProvider;
 import com.deepercreeper.vampireapp.controllers.GenerationControllerCreation;
 import com.deepercreeper.vampireapp.controllers.InsanityControllerCreation;
-import com.deepercreeper.vampireapp.controllers.descriptions.DescriptionController;
 import com.deepercreeper.vampireapp.controllers.descriptions.DescriptionControllerCreation;
 import com.deepercreeper.vampireapp.controllers.dynamic.implementations.creations.ItemControllerCreationImpl;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.ItemController;
@@ -42,7 +42,9 @@ public class CharacterCreation
 	 */
 	public static final int						START_FREE_POINTS	= 15;
 	
-	private final Vampire						mVampire;
+	private final ItemProvider					mItems;
+	
+	private final Context						mContext;
 	
 	private String								mName				= "";
 	
@@ -64,24 +66,19 @@ public class CharacterCreation
 	
 	private final InsanityControllerCreation	mInsanities;
 	
+	private final CharCreationListener			mListener;
+	
 	/**
 	 * Creates a new character creator and initializes all values for the first time.
 	 * 
-	 * @param aVampire
+	 * @param aItems
 	 *            The vampire application.
-	 * @param aNature
-	 *            The start nature.
-	 * @param aBehavior
-	 *            The start behavior.
-	 * @param aClan
-	 *            The start clan.
-	 * @param aDescriptions
-	 *            The description fields.
 	 */
-	public CharacterCreation(final Vampire aVampire, final List<ItemController> aControllers, final Nature aNature, final Nature aBehavior,
-			final Clan aClan, final DescriptionController aDescriptions)
+	public CharacterCreation(final ItemProvider aItems, final Context aContext, final CharCreationListener aListener)
 	{
-		mVampire = aVampire;
+		mItems = aItems;
+		mContext = aContext;
+		mListener = aListener;
 		final PointHandler points = new PointHandler()
 		{
 			@Override
@@ -105,16 +102,15 @@ public class CharacterCreation
 			}
 		};
 		mControllers = new ArrayList<ItemControllerCreation>();
-		for (final ItemController controller : aControllers)
+		for (final ItemController controller : mItems.getControllers())
 		{
-			mControllers.add(new ItemControllerCreationImpl(controller, aVampire.getContext(), CreationMode.MAIN, points));
+			mControllers.add(new ItemControllerCreationImpl(controller, mContext, CreationMode.MAIN, points));
 		}
-		mDescriptions = new DescriptionControllerCreation(aDescriptions);
-		mInsanities = new InsanityControllerCreation(mVampire.getContext(), this);
-		mGeneration = new GenerationControllerCreation(mVampire.getContext(), this);
-		mNature = aNature;
-		mBehavior = aBehavior;
-		setClan(aClan);
+		mDescriptions = new DescriptionControllerCreation(mItems.getDescriptions());
+		mInsanities = new InsanityControllerCreation(mContext, this);
+		mGeneration = new GenerationControllerCreation(mContext, this);
+		mBehavior = mNature = mItems.getNatures().getFirst();
+		setClan(mItems.getClans().getFirst());
 	}
 	
 	/**
@@ -135,6 +131,11 @@ public class CharacterCreation
 	{
 		mDescriptions.clear();
 		mInsanities.clear();
+	}
+	
+	public Context getContext()
+	{
+		return mContext;
 	}
 	
 	/**
@@ -227,9 +228,9 @@ public class CharacterCreation
 		return mNature;
 	}
 	
-	public Vampire getVampire()
+	public ItemProvider getItems()
 	{
-		return mVampire;
+		return mItems;
 	}
 	
 	/**
@@ -368,7 +369,8 @@ public class CharacterCreation
 	 */
 	public void setInsanitiesOk(final boolean aOk)
 	{
-		mVampire.setInsanitiesOk(aOk);
+		// TODO Roll up the insanities handler
+		mListener.setInsanitiesOk(aOk);
 	}
 	
 	/**
@@ -436,7 +438,8 @@ public class CharacterCreation
 		{
 			controller.updateGroups();
 		}
-		mVampire.setFreePoints(mFreePoints);
+		// TODO ... owm activity
+		mListener.setFreePoints(mFreePoints);
 	}
 	
 	private void removeRestrictions()
@@ -445,5 +448,12 @@ public class CharacterCreation
 		{
 			restriction.clear();
 		}
+	}
+	
+	public interface CharCreationListener
+	{
+		public void setFreePoints(int aValue);
+		
+		public void setInsanitiesOk(boolean aOk);
 	}
 }

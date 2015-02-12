@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import android.content.Context;
-import android.text.TextUtils.TruncateAt;
-import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
@@ -76,13 +74,13 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 	
 	private final ItemGroupCreation			mItemGroup;
 	
-	private final ImageButton				mIncreaseButton;
+	private ImageButton						mIncreaseButton;
 	
-	private final ImageButton				mDecreaseButton;
+	private ImageButton						mDecreaseButton;
 	
-	private final ProgressBar				mValueBar;
+	private ProgressBar						mValueBar;
 	
-	private final TextView					mValueText;
+	private TextView						mValueText;
 	
 	private final LinearLayout				mContainer;
 	
@@ -92,15 +90,15 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 	
 	private final ItemCreation				mParentItem;
 	
-	private final RelativeLayout			mRelativeContainer;
+	private RelativeLayout					mRelativeContainer;
 	
-	private final ImageButton				mAddButton;
+	private ImageButton						mAddButton;
 	
-	private final ImageButton				mEditButton;
+	private ImageButton						mEditButton;
 	
-	private final ImageButton				mRemoveButton;
+	private ImageButton						mRemoveButton;
 	
-	private final TextView					mNameText;
+	private TextView						mNameText;
 	
 	private boolean							mInitialized		= false;
 	
@@ -123,26 +121,10 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		setController(aGroup.getItemController());
 		mMode = aMode;
 		mContainer = new LinearLayout(getContext());
-		mRelativeContainer = new RelativeLayout(getContext());
-		mAddButton = new ImageButton(getContext());
-		mEditButton = new ImageButton(getContext());
-		mRemoveButton = new ImageButton(getContext());
-		mNameText = new TextView(getContext());
 		if (isValueItem())
 		{
-			mIncreaseButton = new ImageButton(getContext());
-			mDecreaseButton = new ImageButton(getContext());
-			mValueBar = new ProgressBar(getContext(), null, android.R.attr.progressBarStyleHorizontal);
-			mValueText = new TextView(getContext());
 			mValueId = getItem().getStartValue();
 			mPoints = aPoints;
-		}
-		else
-		{
-			mIncreaseButton = null;
-			mDecreaseButton = null;
-			mValueBar = null;
-			mValueText = null;
 		}
 		if (isParent())
 		{
@@ -711,27 +693,35 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 	@Override
 	public void init()
 	{
-		if ( !mInitialized)
-		{
-			getContainer().setLayoutParams(ViewUtil.getWrapHeight());
-			getContainer().setOrientation(LinearLayout.VERTICAL);
-			
-			mRelativeContainer.setLayoutParams(ViewUtil.getWrapAll());
-		}
-		
-		RelativeLayout.LayoutParams params;
-		View leftView = null;
 		final boolean canEditItem = getCreationMode().canEditItem(this);
 		final boolean canAddChildren = getCreationMode().canAddChild(this, false);
 		
-		if (canEditItem)
+		if ( !mInitialized)
 		{
-			params = ViewUtil.getRelativeButtonSize();
-			mEditButton.setLayoutParams(params);
-			if ( !mInitialized)
+			View.inflate(getContext(), R.layout.item_creation, getContainer());
+			
+			mRelativeContainer = (RelativeLayout) getContainer().findViewById(R.id.relative_item_container);
+			mEditButton = (ImageButton) getContainer().findViewById(R.id.item_edit_button);
+			mRemoveButton = (ImageButton) getContainer().findViewById(R.id.item_remove_button);
+			mNameText = (TextView) getContainer().findViewById(R.id.item_name);
+			mDecreaseButton = (ImageButton) getContainer().findViewById(R.id.item_decrease_button);
+			mValueText = (TextView) getContainer().findViewById(R.id.item_value);
+			mValueBar = (ProgressBar) getContainer().findViewById(R.id.item_value_bar);
+			mIncreaseButton = (ImageButton) getContainer().findViewById(R.id.item_increase_button);
+			mAddButton = (ImageButton) getContainer().findViewById(R.id.item_add_button);
+			
+			mNameText.setText(getItem().getDisplayName());
+			mNameText.setOnClickListener(new OnClickListener()
 			{
-				mEditButton.setContentDescription("Edit");
-				mEditButton.setImageResource(android.R.drawable.ic_menu_edit);
+				@Override
+				public void onClick(final View aV)
+				{
+					Toast.makeText(getContext(), getItem().getDescription(), Toast.LENGTH_LONG).show();
+				}
+			});
+			
+			if (canEditItem)
+			{
 				mEditButton.setOnClickListener(new OnClickListener()
 				{
 					@Override
@@ -753,17 +743,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 						}
 					}
 				});
-			}
-			mRelativeContainer.addView(mEditButton);
-			
-			params = ViewUtil.getRelativeButtonSize();
-			ViewUtil.generateId(mEditButton);
-			params.addRule(RelativeLayout.RIGHT_OF, mEditButton.getId());
-			mRemoveButton.setLayoutParams(params);
-			if ( !mInitialized)
-			{
-				mRemoveButton.setContentDescription("Remove");
-				mRemoveButton.setImageResource(android.R.drawable.ic_menu_delete);
+				
 				mRemoveButton.setOnClickListener(new OnClickListener()
 				{
 					@Override
@@ -785,50 +765,12 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 						}
 					}
 				});
+				
+				updateEditRemoveButtons();
 			}
-			leftView = mRemoveButton;
-			mRelativeContainer.addView(mRemoveButton);
-			updateEditRemoveButtons();
-		}
-		
-		params = ViewUtil.getRelativeNameLong();
-		if (leftView != null)
-		{
-			ViewUtil.generateId(leftView);
-			params.addRule(RelativeLayout.RIGHT_OF, leftView.getId());
-		}
-		mNameText.setLayoutParams(params);
-		if ( !mInitialized)
-		{
-			mNameText.setText(getItem().getDisplayName());
-			mNameText.setClickable(true);
-			mNameText.setOnClickListener(new OnClickListener()
+			
+			if (isValueItem())
 			{
-				@Override
-				public void onClick(final View aV)
-				{
-					Toast.makeText(getContext(), getItem().getDescription(), Toast.LENGTH_LONG).show();
-				}
-			});
-			mNameText.setGravity(Gravity.CENTER_VERTICAL);
-			mNameText.setSingleLine();
-			mNameText.setEllipsize(TruncateAt.END);
-		}
-		leftView = mNameText;
-		mRelativeContainer.addView(mNameText);
-		
-		if (isValueItem())
-		{
-			params = ViewUtil.getRelativeButtonSize();
-			if (leftView != null)
-			{
-				ViewUtil.generateId(leftView);
-				params.addRule(RelativeLayout.RIGHT_OF, leftView.getId());
-			}
-			mDecreaseButton.setLayoutParams(params);
-			if ( !mInitialized)
-			{
-				mDecreaseButton.setImageResource(android.R.drawable.ic_media_previous);
 				mDecreaseButton.setOnClickListener(new OnClickListener()
 				{
 					@Override
@@ -837,27 +779,62 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 						decrease();
 					}
 				});
+				
+				mIncreaseButton.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(final View aV)
+					{
+						increase();
+					}
+				});
+				
+				refreshValue();
 			}
-			leftView = mDecreaseButton;
-			mRelativeContainer.addView(mDecreaseButton);
 			
-			params = ViewUtil.getRelativeValueTextSize();
-			if (leftView != null)
+			if (canAddChildren)
 			{
-				ViewUtil.generateId(leftView);
-				params.addRule(RelativeLayout.RIGHT_OF, leftView.getId());
+				mAddButton.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(final View aV)
+					{
+						addChild();
+					}
+				});
+				
+				updateAddButton();
 			}
-			mValueText.setLayoutParams(params);
-			if ( !mInitialized)
+		}
+		else
+		{
+			if (mRelativeContainer.getParent() == null)
 			{
-				mValueText.setGravity(Gravity.CENTER_VERTICAL);
-				mValueText.setPadding(mValueText.getPaddingLeft(), mValueText.getPaddingTop(), ViewUtil.calcPx(5), mValueText.getPaddingBottom());
-				mValueText.setSingleLine();
-				mValueText.setEllipsize(TruncateAt.END);
+				getContainer().addView(mRelativeContainer, 0);
 			}
-			leftView = mValueText;
-			mRelativeContainer.addView(mValueText);
-			
+		}
+		
+		if (canEditItem)
+		{
+			ViewUtil.setWidth(mEditButton, 30);
+			ViewUtil.setWidth(mRemoveButton, 30);
+		}
+		else
+		{
+			ViewUtil.hideWidth(mEditButton);
+			ViewUtil.hideWidth(mRemoveButton);
+		}
+		if (canAddChildren)
+		{
+			ViewUtil.setWidth(mAddButton, 30);
+		}
+		else
+		{
+			ViewUtil.hideWidth(mAddButton);
+		}
+		
+		if (isValueItem())
+		{
 			int additionalBarSize = 0;
 			if ( !canEditItem)
 			{
@@ -867,68 +844,8 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			{
 				additionalBarSize += 30;
 			}
-			params = ViewUtil.getRelativeValueBarSize(80 + additionalBarSize);
-			if (leftView != null)
-			{
-				ViewUtil.generateId(leftView);
-				params.addRule(RelativeLayout.RIGHT_OF, leftView.getId());
-			}
-			mValueBar.setLayoutParams(params);
-			leftView = mValueBar;
-			mRelativeContainer.addView(mValueBar);
-			
-			params = ViewUtil.getRelativeButtonSize();
-			if (leftView != null)
-			{
-				ViewUtil.generateId(leftView);
-				params.addRule(RelativeLayout.RIGHT_OF, leftView.getId());
-			}
-			mIncreaseButton.setLayoutParams(params);
-			if ( !mInitialized)
-			{
-				mIncreaseButton.setImageResource(android.R.drawable.ic_media_next);
-				mIncreaseButton.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(final View aV)
-					{
-						increase();
-					}
-				});
-			}
-			leftView = mIncreaseButton;
-			mRelativeContainer.addView(mIncreaseButton);
-			
-			refreshValue();
+			ViewUtil.setWidth(mValueBar, additionalBarSize + 80);
 		}
-		
-		if (canAddChildren)
-		{
-			params = ViewUtil.getRelativeButtonSize();
-			if (leftView != null)
-			{
-				ViewUtil.generateId(leftView);
-				params.addRule(RelativeLayout.RIGHT_OF, leftView.getId());
-			}
-			mAddButton.setLayoutParams(params);
-			if ( !mInitialized)
-			{
-				mAddButton.setContentDescription("Add");
-				mAddButton.setImageResource(android.R.drawable.ic_menu_add);
-				mAddButton.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(final View aV)
-					{
-						addChild();
-					}
-				});
-			}
-			leftView = mAddButton;
-			mRelativeContainer.addView(mAddButton);
-		}
-		
-		getContainer().addView(mRelativeContainer);
 		
 		if (hasChildren())
 		{
@@ -938,7 +855,6 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 				getContainer().addView(child.getContainer());
 			}
 		}
-		updateAddButton();
 		mInitialized = true;
 	}
 	
@@ -1000,15 +916,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			}
 		}
 		ViewUtil.release(getContainer());
-		ViewUtil.release(mEditButton);
-		ViewUtil.release(mRemoveButton);
-		ViewUtil.release(mAddButton);
-		ViewUtil.release(mNameText);
 		ViewUtil.release(mRelativeContainer);
-		ViewUtil.release(mDecreaseButton);
-		ViewUtil.release(mValueText);
-		ViewUtil.release(mValueBar);
-		ViewUtil.release(mIncreaseButton);
 	}
 	
 	@Override

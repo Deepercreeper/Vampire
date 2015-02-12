@@ -12,7 +12,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import android.content.Context;
 import android.widget.LinearLayout;
-import com.deepercreeper.vampireapp.Vampire;
+import com.deepercreeper.vampireapp.ItemProvider;
 import com.deepercreeper.vampireapp.character.CharacterInstance;
 import com.deepercreeper.vampireapp.character.EPHandler;
 import com.deepercreeper.vampireapp.character.Mode;
@@ -59,10 +59,10 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	
 	private final EPHandler										mEP;
 	
-	public ItemControllerInstanceImpl(final Element aElement, final Vampire aVampire, final Context aContext, final Mode aMode, final EPHandler aEP,
-			final CharacterInstance aCharacter)
+	public ItemControllerInstanceImpl(final Element aElement, final ItemProvider aItems, final Context aContext, final Mode aMode,
+			final EPHandler aEP, final CharacterInstance aCharacter)
 	{
-		mItemController = aVampire.getController(aElement.getAttribute("name"));
+		mItemController = aItems.getController(aElement.getAttribute("name"));
 		mContext = aContext;
 		mMode = aMode;
 		mEP = aEP;

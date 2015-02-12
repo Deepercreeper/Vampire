@@ -23,11 +23,11 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class InsanityControllerCreation extends CreationRestrictionableImpl
 {
-	private final List<String>	mInsanities	= new ArrayList<String>();
+	private final List<String>		mInsanities	= new ArrayList<String>();
 	
-	private TableLayout			mTable;
+	private TableLayout				mTable;
 	
-	private final Context		mContext;
+	private final Context			mContext;
 	
 	private final CharacterCreation	mCreator;
 	
@@ -121,7 +121,7 @@ public class InsanityControllerCreation extends CreationRestrictionableImpl
 		final String insanity = mInsanities.get(aIndex);
 		
 		final ImageButton removeButton = new ImageButton(mContext);
-		removeButton.setLayoutParams(ViewUtil.getRowButtonSize());
+		removeButton.setLayoutParams(ViewUtil.getRowButtonSize(mContext));
 		removeButton.setImageResource(android.R.drawable.ic_menu_delete);
 		removeButton.setOnClickListener(new OnClickListener()
 		{
@@ -135,7 +135,7 @@ public class InsanityControllerCreation extends CreationRestrictionableImpl
 		row.addView(removeButton);
 		
 		final TextView name = new TextView(mContext);
-		name.setLayoutParams(ViewUtil.getRowNameVeryLong());
+		name.setLayoutParams(ViewUtil.getRowNameVeryLong(mContext));
 		name.setGravity(Gravity.CENTER_VERTICAL);
 		name.setSingleLine();
 		name.setEllipsize(TruncateAt.END);

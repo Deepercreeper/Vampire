@@ -1,6 +1,6 @@
 package com.deepercreeper.vampireapp.character;
 
-import android.content.Context;
+import android.app.Activity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -8,13 +8,15 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.Vampire;
 import com.deepercreeper.vampireapp.controllers.dialog.CharacterContextMenu;
+import com.deepercreeper.vampireapp.controllers.dialog.CharacterContextMenu.CharacterListener;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 public class CharacterCompound implements Comparable<CharacterCompound>
 {
 	private static final String		TAG	= "CharacterCompound";
+	
+	private final Activity			mContext;
 	
 	private final String			mName;
 	
@@ -34,9 +36,10 @@ public class CharacterCompound implements Comparable<CharacterCompound>
 	
 	private long					mLastUsed;
 	
-	public CharacterCompound(final String aCharacter, final Vampire aVampire)
+	public CharacterCompound(final String aCharacter, final CharacterListener aListener, final Activity aContext)
 	{
 		final String[] data = aCharacter.split("\t");
+		mContext = aContext;
 		mName = data[0];
 		mConcept = data[1];
 		mGeneration = Integer.parseInt(data[2]);
@@ -52,13 +55,14 @@ public class CharacterCompound implements Comparable<CharacterCompound>
 			mLastUsed = 0;
 		}
 		
-		mContainer = new RelativeLayout(aVampire.getContext());
+		mContainer = new RelativeLayout(mContext);
 		mData = createData();
-		init(aVampire);
+		init(aListener);
 	}
 	
-	public CharacterCompound(final CharacterInstance aCharacter, final Vampire aVampire)
+	public CharacterCompound(final CharacterInstance aCharacter, final CharacterListener aListener, final Activity aContext)
 	{
+		mContext = aContext;
 		mName = aCharacter.getName();
 		mConcept = aCharacter.getConcept();
 		mGeneration = aCharacter.getGeneration();
@@ -67,15 +71,14 @@ public class CharacterCompound implements Comparable<CharacterCompound>
 		mEP = aCharacter.getEP();
 		mLastUsed = 0;
 		
-		mContainer = new RelativeLayout(aVampire.getContext());
+		mContainer = new RelativeLayout(mContext);
 		mData = createData();
-		init(aVampire);
+		init(aListener);
 	}
 	
-	private void init(final Vampire aVampire)
+	private void init(final CharacterListener aListener)
 	{
-		final Context context = aVampire.getContext();
-		View.inflate(context, R.layout.character_compound, mContainer);
+		View.inflate(mContext, R.layout.character_compound, mContainer);
 		
 		final TextView concept = (TextView) mContainer.findViewById(R.id.concept_label);
 		concept.setText(mConcept);
@@ -87,7 +90,7 @@ public class CharacterCompound implements Comparable<CharacterCompound>
 			@Override
 			public boolean onLongClick(final View aV)
 			{
-				CharacterContextMenu.showCharacterContextMenu(aVampire, mName);
+				CharacterContextMenu.showCharacterContextMenu(aListener, mContext, mName);
 				return true;
 			}
 		});
@@ -102,9 +105,8 @@ public class CharacterCompound implements Comparable<CharacterCompound>
 			@Override
 			public void onClick(final View aV)
 			{
-				aVampire.loadChar(mName);
 				use();
-				aVampire.reloadChars();
+				aListener.play(mName);
 			}
 		});
 		
@@ -112,10 +114,10 @@ public class CharacterCompound implements Comparable<CharacterCompound>
 		ep.setText("EP: " + mEP);
 		
 		final TextView behavior = (TextView) mContainer.findViewById(R.id.behavior_label);
-		behavior.setText(context.getString(R.string.behavior_text) + " " + mBehavior);
+		behavior.setText(mContext.getString(R.string.behavior_text) + " " + mBehavior);
 		
 		final TextView nature = (TextView) mContainer.findViewById(R.id.nature_label);
-		nature.setText(context.getString(R.string.nature_text) + " " + mNature);
+		nature.setText(mContext.getString(R.string.nature_text) + " " + mNature);
 	}
 	
 	public long getLastUsed()
