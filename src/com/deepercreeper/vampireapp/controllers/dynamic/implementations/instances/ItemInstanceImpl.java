@@ -79,7 +79,14 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	public ItemInstanceImpl(final Element aElement, final ItemGroupInstance aItemGroup, final Context aContext, final Mode aMode,
 			final EPHandler aEP, final ItemInstance aParentItem, final CharacterInstance aCharacter)
 	{
-		mItem = aItemGroup.getItemGroup().getItem(aElement.getAttribute("name"));
+		if (aParentItem == null)
+		{
+			mItem = aItemGroup.getItemGroup().getItem(aElement.getAttribute("name"));
+		}
+		else
+		{
+			mItem = aParentItem.getItem().getChild(aElement.getAttribute("name"));
+		}
 		mCharacter = aCharacter;
 		mItemGroup = aItemGroup;
 		mContext = aContext;
