@@ -7,6 +7,7 @@ import java.util.Map;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -845,6 +846,16 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 				additionalBarSize += 30;
 			}
 			ViewUtil.setWidth(mValueBar, additionalBarSize + 80);
+			ViewUtil.setWidth(mDecreaseButton, 30);
+			ViewUtil.setWidth(mIncreaseButton, 30);
+			ViewUtil.setWidth(mValueText, LayoutParams.WRAP_CONTENT);
+		}
+		else
+		{
+			ViewUtil.hideWidth(mValueBar);
+			ViewUtil.hideWidth(mDecreaseButton);
+			ViewUtil.hideWidth(mIncreaseButton);
+			ViewUtil.hideWidth(mValueText);
 		}
 		
 		if (hasChildren())
