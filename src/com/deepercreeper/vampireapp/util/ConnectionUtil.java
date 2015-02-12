@@ -22,7 +22,9 @@ public class ConnectionUtil
 			final Intent itemProvider = new Intent(aContext, ItemProviderService.class);
 			aContext.startService(itemProvider);
 			aContext.bindService(itemProvider, connection, Context.BIND_AUTO_CREATE);
-			return connection.getItems();
+			ItemProvider items = connection.getItems();
+			aContext.unbindService(connection);
+			return items;
 		}
 		return new ItemProviderImpl(aContext);
 	}

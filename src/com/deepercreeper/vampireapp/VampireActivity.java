@@ -3,7 +3,6 @@ package com.deepercreeper.vampireapp;
 import java.io.IOException;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -24,15 +23,11 @@ import com.deepercreeper.vampireapp.util.ConnectionUtil;
  */
 public class VampireActivity extends Activity
 {
-	private static final String		TAG				= "VampireActivity";
+	private static final String	TAG	= "VampireActivity";
 	
-	private static final boolean	SERVICE_ITEMS	= false;
+	private CharController		mChars;
 	
-	private CharController			mChars;
-	
-	private ServiceConnection		mConnection;
-	
-	private ItemProvider			mItems;
+	private ItemProvider		mItems;
 	
 	@Override
 	protected void onCreate(final Bundle savedInstanceState)
@@ -116,16 +111,6 @@ public class VampireActivity extends Activity
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-	
-	@Override
-	protected void onDestroy()
-	{
-		super.onDestroy();
-		if (SERVICE_ITEMS)
-		{
-			unbindService(mConnection);
-		}
 	}
 	
 	public ItemProvider getItems()
