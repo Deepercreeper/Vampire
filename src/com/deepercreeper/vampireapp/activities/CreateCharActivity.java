@@ -2,7 +2,6 @@ package com.deepercreeper.vampireapp.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -18,13 +17,11 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.R.id;
-import com.deepercreeper.vampireapp.R.layout;
-import com.deepercreeper.vampireapp.R.string;
 import com.deepercreeper.vampireapp.character.CharacterCreation;
 import com.deepercreeper.vampireapp.character.CharacterCreation.CharCreationListener;
 import com.deepercreeper.vampireapp.character.CharacterInstance;
 import com.deepercreeper.vampireapp.character.CreationMode;
+import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
@@ -34,7 +31,7 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.CreateStringDialog;
 import com.deepercreeper.vampireapp.util.view.CreateStringDialog.CreationListener;
 
-public class CreateCharActivity extends Activity implements CharCreationListener
+public class CreateCharActivity extends Activity implements CharCreationListener, ItemConsumer
 {
 	private static final String	TAG					= "CreateCharActivity";
 	
@@ -62,12 +59,23 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 	private CharacterCreation	mChar;
 	
 	@Override
-	protected void onCreate(final Bundle aSavedInstanceState)
+	protected void onStart()
 	{
-		super.onCreate(aSavedInstanceState);
+		super.onStart();
 		
-		mItems = ConnectionUtil.loadItems(this);
+		ConnectionUtil.loadItems(this, this);
+	}
+	
+	@Override
+	public void consumeItems(final ItemProvider aItems)
+	{
+		mItems = aItems;
 		
+		init();
+	}
+	
+	private void init()
+	{
 		mCharNames = getIntent().getStringArrayExtra(CHAR_NAMES);
 		mFreeCreation = getIntent().getBooleanExtra(FREE_CREATION, false);
 		

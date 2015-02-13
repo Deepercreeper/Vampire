@@ -7,48 +7,50 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import com.deepercreeper.vampireapp.activities.ItemProviderService;
-import com.deepercreeper.vampireapp.items.ItemProvider;
+import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProviderImpl;
 
 public class ConnectionUtil
 {
-	private static final boolean	SERVICE_ITEMS	= false;
+	private static final boolean	SERVICE_ITEMS	= true;
 	
-	public static ItemProvider loadItems(final Activity aContext)
+	public static void loadItems(final Activity aContext, final ItemConsumer aConsumer)
 	{
 		if (SERVICE_ITEMS)
 		{
-			final ItemConnection connection = new ItemConnection();
+			final ItemConnection connection = new ItemConnection(aConsumer, aContext);
 			final Intent itemProvider = new Intent(aContext, ItemProviderService.class);
 			aContext.startService(itemProvider);
 			aContext.bindService(itemProvider, connection, Context.BIND_AUTO_CREATE);
-			ItemProvider items = connection.getItems();
-			aContext.unbindService(connection);
-			return items;
+			return;
 		}
-		return new ItemProviderImpl(aContext);
+		aConsumer.consumeItems(new ItemProviderImpl(aContext));
 	}
 	
 	private static class ItemConnection implements ServiceConnection
 	{
-		private ItemProvider	mTempItems;
+		private final ItemConsumer	mConsumer;
+		
+		private final Activity		mActivity;
+		
+		private ItemConnection(final ItemConsumer aConsumer, final Activity aActivity)
+		{
+			mConsumer = aConsumer;
+			mActivity = aActivity;
+		}
 		
 		@Override
 		public void onServiceConnected(final ComponentName className, final IBinder binder)
 		{
 			final ItemProviderService.ItemBinder b = (ItemProviderService.ItemBinder) binder;
-			mTempItems = b.getItemProvider();
+			mConsumer.consumeItems(b.getItemProvider());
+			mActivity.unbindService(this);
 		}
 		
 		@Override
-		public void onServiceDisconnected(final ComponentName className)
+		public void onServiceDisconnected(final ComponentName aName)
 		{
-			mTempItems = null;
-		}
-		
-		public ItemProvider getItems()
-		{
-			return mTempItems;
+			// Do nothing
 		}
 	}
 }

@@ -34,7 +34,9 @@ public class ItemProviderService extends Service implements ItemProvider
 	public void onCreate()
 	{
 		super.onCreate();
+		
 		mInitializing = true;
+		
 		LanguageUtil.init(this);
 		Log.i(TAG, "Starting item provider.");
 		mControllers = ItemUtil.createItems(this);
@@ -42,6 +44,7 @@ public class ItemProviderService extends Service implements ItemProvider
 		mNatures = new NatureController(getResources());
 		mDescriptions = new DescriptionController(getResources());
 		Log.i(TAG, "Started item provider.");
+		
 		mInitializing = false;
 	}
 	

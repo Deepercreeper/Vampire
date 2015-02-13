@@ -3,7 +3,6 @@ package com.deepercreeper.vampireapp.activities;
 import java.io.IOException;
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +13,7 @@ import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.CharController;
 import com.deepercreeper.vampireapp.character.CharacterInstance;
+import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.util.ConnectionUtil;
 
@@ -23,7 +23,7 @@ import com.deepercreeper.vampireapp.util.ConnectionUtil;
  * 
  * @author vrl
  */
-public class VampireActivity extends Activity
+public class VampireActivity extends Activity implements ItemConsumer
 {
 	private static final String	TAG	= "VampireActivity";
 	
@@ -32,12 +32,23 @@ public class VampireActivity extends Activity
 	private ItemProvider		mItems;
 	
 	@Override
-	protected void onCreate(final Bundle savedInstanceState)
+	protected void onStart()
 	{
-		super.onCreate(savedInstanceState);
+		super.onStart();
 		
-		mItems = ConnectionUtil.loadItems(this);
+		ConnectionUtil.loadItems(this, this);
+	}
+	
+	@Override
+	public void consumeItems(final ItemProvider aItems)
+	{
+		mItems = aItems;
 		
+		init();
+	}
+	
+	private void init()
+	{
 		mChars = new CharController(this, mItems);
 		
 		setContentView(R.layout.activity_main);
