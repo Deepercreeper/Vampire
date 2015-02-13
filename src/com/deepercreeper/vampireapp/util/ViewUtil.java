@@ -148,7 +148,6 @@ public class ViewUtil
 	{
 		final LayoutParams params = aView.getLayoutParams();
 		params.width = calcPx(aWidth, aView.getContext());
-		aView.setLayoutParams(params);
 	}
 	
 	/**

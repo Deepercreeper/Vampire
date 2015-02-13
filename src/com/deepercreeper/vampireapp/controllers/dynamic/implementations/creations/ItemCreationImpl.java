@@ -853,7 +853,8 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			{
 				additionalBarSize += 30;
 			}
-			ViewUtil.setWidth(mValueBar, additionalBarSize + 70);
+			mValueBar.getLayoutParams().width = ViewUtil.calcPx(additionalBarSize, getContext())
+					+ Math.round(getContext().getResources().getDimension(R.dimen.item_value_bar_width));
 			ViewUtil.setWidth(mDecreaseButton, 30);
 			ViewUtil.setWidth(mIncreaseButton, 30);
 			ViewUtil.setWidth(mValueText, 30);
