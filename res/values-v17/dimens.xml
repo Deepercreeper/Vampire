@@ -1,0 +1,5 @@
+<resources>
+
+    <dimen name="item_value_bar_width">70dp</dimen>
+
+</resources>

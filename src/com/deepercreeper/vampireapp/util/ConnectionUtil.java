@@ -6,9 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import com.deepercreeper.vampireapp.ItemProvider;
-import com.deepercreeper.vampireapp.ItemProviderImpl;
-import com.deepercreeper.vampireapp.ItemProviderService;
+import com.deepercreeper.vampireapp.activities.ItemProviderService;
+import com.deepercreeper.vampireapp.items.ItemProvider;
+import com.deepercreeper.vampireapp.items.ItemProviderImpl;
 
 public class ConnectionUtil
 {

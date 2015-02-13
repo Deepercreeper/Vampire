@@ -8,9 +8,9 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.controllers.dialog.CharacterContextMenu;
-import com.deepercreeper.vampireapp.controllers.dialog.CharacterContextMenu.CharacterListener;
 import com.deepercreeper.vampireapp.util.ViewUtil;
+import com.deepercreeper.vampireapp.util.view.CharacterContextMenu;
+import com.deepercreeper.vampireapp.util.view.CharacterContextMenu.CharacterListener;
 
 public class CharacterCompound implements Comparable<CharacterCompound>
 {

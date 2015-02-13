@@ -18,15 +18,17 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import android.content.Context;
-import com.deepercreeper.vampireapp.ItemProvider;
-import com.deepercreeper.vampireapp.controllers.GenerationController;
-import com.deepercreeper.vampireapp.controllers.InsanityController;
-import com.deepercreeper.vampireapp.controllers.descriptions.DescriptionControllerInstance;
-import com.deepercreeper.vampireapp.controllers.dynamic.implementations.instances.ItemControllerInstanceImpl;
-import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemControllerCreation;
-import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.instances.ItemControllerInstance;
-import com.deepercreeper.vampireapp.controllers.lists.Clan;
-import com.deepercreeper.vampireapp.controllers.lists.Nature;
+import com.deepercreeper.vampireapp.items.ItemProvider;
+import com.deepercreeper.vampireapp.items.implementations.instances.ItemControllerInstanceImpl;
+import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
+import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
+import com.deepercreeper.vampireapp.lists.controllers.instances.DescriptionInstanceController;
+import com.deepercreeper.vampireapp.lists.controllers.instances.GenerationControllerInstance;
+import com.deepercreeper.vampireapp.lists.controllers.instances.InsanityControllerInstance;
+import com.deepercreeper.vampireapp.lists.items.Clan;
+import com.deepercreeper.vampireapp.lists.items.Nature;
+import com.deepercreeper.vampireapp.mechanics.Duration;
+import com.deepercreeper.vampireapp.mechanics.Duration.Type;
 import com.deepercreeper.vampireapp.util.Log;
 
 public class CharacterInstance
@@ -37,13 +39,13 @@ public class CharacterInstance
 	
 	private final Context						mContext;
 	
-	private final GenerationController			mGeneration;
+	private final GenerationControllerInstance			mGeneration;
 	
 	private final List<ItemControllerInstance>	mControllers	= new ArrayList<ItemControllerInstance>();
 	
-	private final DescriptionControllerInstance	mDescriptions;
+	private final DescriptionInstanceController	mDescriptions;
 	
-	private final InsanityController			mInsanities;
+	private final InsanityControllerInstance			mInsanities;
 	
 	private final EPHandler						mEP;
 	
@@ -63,9 +65,9 @@ public class CharacterInstance
 	{
 		mItems = aCreator.getItems();
 		mContext = aCreator.getContext();
-		mGeneration = new GenerationController(aCreator.getGeneration().getGeneration());
-		mDescriptions = new DescriptionControllerInstance(aCreator.getDescriptions());
-		mInsanities = new InsanityController();
+		mGeneration = new GenerationControllerInstance(aCreator.getGeneration().getGeneration());
+		mDescriptions = new DescriptionInstanceController(aCreator.getDescriptions());
+		mInsanities = new InsanityControllerInstance(aCreator.getInsanities());
 		mEP = new EPHandler();
 		
 		mName = aCreator.getName();
@@ -114,13 +116,13 @@ public class CharacterInstance
 		mConcept = meta.getAttribute("concept");
 		mNature = mItems.getNatures().getItemWithName(meta.getAttribute("nature"));
 		mBehavior = mItems.getNatures().getItemWithName(meta.getAttribute("behavior"));
-		mGeneration = new GenerationController(Integer.parseInt(meta.getAttribute("generation")));
+		mGeneration = new GenerationControllerInstance(Integer.parseInt(meta.getAttribute("generation")));
 		mClan = mItems.getClans().getItemWithName(meta.getAttribute("clan"));
 		mEP = new EPHandler(Integer.parseInt(meta.getAttribute("ep")));
 		mMode = Mode.valueOf(meta.getAttribute("mode"));
 		
 		// Insanities
-		mInsanities = new InsanityController();
+		mInsanities = new InsanityControllerInstance();
 		final Element insanities = (Element) root.getElementsByTagName("insanities").item(0);
 		for (int i = 0; i < insanities.getChildNodes().getLength(); i++ )
 		{
@@ -129,7 +131,17 @@ public class CharacterInstance
 				final Element insanity = (Element) insanities.getChildNodes().item(i);
 				if (insanity.getTagName().equals("insanity"))
 				{
-					mInsanities.addInsanity(insanity.getAttribute("name"));
+					Duration duration;
+					if (insanity.getAttribute("durationType").equals("forever"))
+					{
+						duration = Duration.FOREVER;
+					}
+					else
+					{
+						duration = new Duration(Type.valueOf(insanity.getAttribute("durationType")), Integer.parseInt(insanity
+								.getAttribute("durationValue")));
+					}
+					mInsanities.addInsanity(insanity.getAttribute("name"), duration);
 				}
 			}
 		}
@@ -148,7 +160,7 @@ public class CharacterInstance
 				}
 			}
 		}
-		mDescriptions = new DescriptionControllerInstance(descriptionsMap, mItems.getDescriptions());
+		mDescriptions = new DescriptionInstanceController(descriptionsMap, mItems.getDescriptions());
 		
 		// Controllers
 		final Element controllers = (Element) root.getElementsByTagName("controllers").item(0);
@@ -271,7 +283,17 @@ public class CharacterInstance
 		for (final String insanity : mInsanities.getInsanities())
 		{
 			final Element insanityElement = doc.createElement("insanity");
+			final Duration duration = mInsanities.getDurationOf(insanity);
 			insanityElement.setAttribute("name", insanity);
+			if (duration == Duration.FOREVER)
+			{
+				insanityElement.setAttribute("durationType", "forever");
+			}
+			else
+			{
+				insanityElement.setAttribute("durationType", duration.getType().name());
+				insanityElement.setAttribute("durationValue", "" + duration.getValue());
+			}
 			insanities.appendChild(insanityElement);
 		}
 		root.appendChild(insanities);

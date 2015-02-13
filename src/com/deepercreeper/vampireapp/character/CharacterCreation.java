@@ -4,19 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import android.content.Context;
 import android.widget.TableLayout;
-import com.deepercreeper.vampireapp.ItemProvider;
-import com.deepercreeper.vampireapp.controllers.GenerationControllerCreation;
-import com.deepercreeper.vampireapp.controllers.InsanityControllerCreation;
-import com.deepercreeper.vampireapp.controllers.descriptions.DescriptionControllerCreation;
-import com.deepercreeper.vampireapp.controllers.dynamic.implementations.creations.ItemControllerCreationImpl;
-import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.ItemController;
-import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemControllerCreation;
-import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemControllerCreation.PointHandler;
-import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemCreation;
-import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.restrictions.CreationRestriction;
-import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
-import com.deepercreeper.vampireapp.controllers.lists.Clan;
-import com.deepercreeper.vampireapp.controllers.lists.Nature;
+import com.deepercreeper.vampireapp.items.ItemProvider;
+import com.deepercreeper.vampireapp.items.implementations.creations.ItemControllerCreationImpl;
+import com.deepercreeper.vampireapp.items.interfaces.ItemController;
+import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
+import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
+import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation.PointHandler;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
+import com.deepercreeper.vampireapp.lists.controllers.creations.DescriptionCreationController;
+import com.deepercreeper.vampireapp.lists.controllers.creations.GenerationControllerCreation;
+import com.deepercreeper.vampireapp.lists.controllers.creations.InsanityControllerCreation;
+import com.deepercreeper.vampireapp.lists.items.Clan;
+import com.deepercreeper.vampireapp.lists.items.Nature;
 import com.deepercreeper.vampireapp.util.Log;
 
 /**
@@ -66,7 +66,7 @@ public class CharacterCreation
 	
 	private final List<ItemControllerCreation>	mControllers;
 	
-	private final DescriptionControllerCreation	mDescriptions;
+	private final DescriptionCreationController	mDescriptions;
 	
 	private final InsanityControllerCreation	mInsanities;
 	
@@ -111,7 +111,7 @@ public class CharacterCreation
 		{
 			mControllers.add(new ItemControllerCreationImpl(controller, mContext, getCreationMode(), points));
 		}
-		mDescriptions = new DescriptionControllerCreation(mItems.getDescriptions());
+		mDescriptions = new DescriptionCreationController(mItems.getDescriptions());
 		mInsanities = new InsanityControllerCreation(mContext, this);
 		mGeneration = new GenerationControllerCreation(mContext, this);
 		mBehavior = mNature = mItems.getNatures().getFirst();
@@ -175,7 +175,7 @@ public class CharacterCreation
 	/**
 	 * @return the descriptions controller.
 	 */
-	public DescriptionControllerCreation getDescriptions()
+	public DescriptionCreationController getDescriptions()
 	{
 		return mDescriptions;
 	}
@@ -212,9 +212,9 @@ public class CharacterCreation
 	/**
 	 * @return a list of all insanities.
 	 */
-	public List<String> getInsanities()
+	public InsanityControllerCreation getInsanities()
 	{
-		return mInsanities.getInsanities();
+		return mInsanities;
 	}
 	
 	/**

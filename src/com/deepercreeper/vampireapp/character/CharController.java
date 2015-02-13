@@ -16,9 +16,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-import com.deepercreeper.vampireapp.ItemProvider;
-import com.deepercreeper.vampireapp.controllers.dialog.CharacterContextMenu.CharacterListener;
+import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.util.Log;
+import com.deepercreeper.vampireapp.util.view.CharacterContextMenu.CharacterListener;
 
 public class CharController implements CharacterListener
 {

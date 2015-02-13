@@ -1,9 +1,9 @@
 package com.deepercreeper.vampireapp.character;
 
-import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemCreation;
-import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemGroupCreation;
-import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.restrictions.CreationRestriction;
-import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
+import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
+import com.deepercreeper.vampireapp.items.interfaces.creations.ItemGroupCreation;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
 
 /**
  * The creation of a character has several states.<br>

@@ -1,7 +1,7 @@
 package com.deepercreeper.vampireapp.util;
 
 import java.util.Comparator;
-import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.creations.ItemGroupCreation;
+import com.deepercreeper.vampireapp.items.interfaces.creations.ItemGroupCreation;
 
 public class ComparatorUtil
 {
