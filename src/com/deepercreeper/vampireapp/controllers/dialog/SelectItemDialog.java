@@ -1,5 +1,6 @@
 package com.deepercreeper.vampireapp.controllers.dialog;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import android.app.Activity;
@@ -56,6 +57,7 @@ public class SelectItemDialog extends DialogFragment
 			mItems.put(item.getDisplayName(), item);
 			mNames[i] = item.getDisplayName();
 		}
+		Arrays.sort(mNames);
 		mTitle = aTitle;
 		mContext = aContext;
 		mAction = aAction;
