@@ -43,11 +43,11 @@ public final class R {
         public static final int back_to_main_button=0x7f090020;
         public static final int basic_info_label=0x7f090017;
         public static final int behavior_label=0x7f090009;
-        public static final int behavior_spinner=0x7f09001c;
+        public static final int behavior_spinner=0x7f09001b;
         public static final int char_name_text=0x7f090018;
         public static final int characters_list=0x7f090002;
-        public static final int clan_label=0x7f09001b;
-        public static final int clan_spinner=0x7f09001e;
+        public static final int clan_label=0x7f09001e;
+        public static final int clan_spinner=0x7f09001c;
         public static final int concept_label=0x7f090003;
         public static final int concept_text=0x7f090019;
         public static final int controllers_2_panel=0x7f090013;

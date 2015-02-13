@@ -31,6 +31,8 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
 
 public class CreateCharActivity extends Activity implements CharCreationListener
 {
+	private static final String	TAG					= "CreateCharActivity";
+	
 	public static final String	CHAR_NAMES			= "CHAR_NAMES";
 	
 	public static final String	CHARACTER			= "CHARACTER";

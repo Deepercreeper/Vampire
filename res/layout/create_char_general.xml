@@ -27,10 +27,7 @@
             android:layout_below="@id/basic_info_label"
             android:ems="10"
             android:hint="@string/char_name"
-            android:inputType="textPersonName" >
-
-            <requestFocus />
-        </EditText>
+            android:inputType="textPersonName" />
 
         <EditText
             android:id="@+id/concept_text"
@@ -41,96 +38,72 @@
             android:hint="@string/concept"
             android:inputType="textPersonName" />
 
-        <TextView
-            android:id="@+id/behavior_label"
+        <Spinner
+            android:id="@+id/nature_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/nature_spinner"
-            android:gravity="center_vertical"
-            android:paddingBottom="12sp"
-            android:paddingTop="10sp"
-            android:text="@string/nature_text"
-            android:textSize="20sp" />
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/concept_text" />
+
+        <Spinner
+            android:id="@+id/behavior_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/nature_spinner" />
+
+        <Spinner
+            android:id="@+id/clan_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/behavior_spinner" />
+
+        <LinearLayout
+            android:id="@+id/generation_panel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/clan_spinner"
+            android:orientation="vertical" />
 
         <TextView
             android:id="@+id/nature_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/nature_spinner"
             android:layout_alignParentLeft="true"
-            android:layout_below="@id/concept_text"
-            android:gravity="center_vertical"
-            android:paddingBottom="12sp"
-            android:paddingTop="10sp"
             android:text="@string/behavior_text"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/behavior_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/behavior_spinner"
+            android:layout_alignParentLeft="true"
+            android:text="@string/nature_text"
             android:textSize="20sp" />
 
         <TextView
             android:id="@+id/clan_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/clan_spinner"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/behavior_spinner"
-            android:gravity="center_vertical"
-            android:paddingBottom="12sp"
-            android:paddingTop="10sp"
             android:text="@string/clan_text"
             android:textSize="20sp" />
-
-        <Spinner
-            android:id="@+id/nature_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/nature_label"
-            android:layout_alignLeft="@+id/generation_panel"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@id/nature_label"
-            android:layout_below="@id/concept_text"
-            android:layout_toRightOf="@id/nature_label"
-            android:entries="@array/nature_and_behavior" />
-
-        <Spinner
-            android:id="@+id/behavior_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/behavior_label"
-            android:layout_alignLeft="@+id/generation_panel"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@id/behavior_label"
-            android:layout_below="@id/nature_spinner"
-            android:layout_toRightOf="@id/behavior_label"
-            android:entries="@array/nature_and_behavior" />
-
-        <Spinner
-            android:id="@+id/clan_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/clan_label"
-            android:layout_alignLeft="@id/generation_panel"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@id/clan_label"
-            android:layout_below="@id/behavior_spinner"
-            android:layout_toRightOf="@id/clan_label" />
 
         <TextView
             android:id="@+id/generation_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignTop="@id/generation_panel"
+            android:layout_alignBottom="@id/generation_panel"
             android:layout_alignParentLeft="true"
-            android:layout_below="@id/clan_spinner"
             android:gravity="center_vertical"
-            android:paddingBottom="70sp"
-            android:paddingTop="70sp"
             android:text="@string/generation_text"
             android:textSize="20sp" />
-
-        <LinearLayout
-            android:id="@+id/generation_panel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/clan_spinner"
-            android:layout_toRightOf="@id/generation_label"
-            android:orientation="vertical" />
 
         <LinearLayout
             android:id="@+id/controllers_panel"
