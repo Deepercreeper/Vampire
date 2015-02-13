@@ -197,7 +197,7 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 			@Override
 			public void onItemSelected(final AdapterView<?> aParent, final View aView, final int aPosition, final long aId)
 			{
-				mChar.setNature(mItems.getNatures().get(aPosition));
+				mChar.setNature(mItems.getNatures().getItemAtDisplayNamePosition(aPosition));
 			}
 			
 			@Override
@@ -206,7 +206,7 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 				// Do nothing
 			}
 		});
-		natureSpinner.setSelection(mItems.getNatures().indexOf(mChar.getNature()));
+		natureSpinner.setSelection(mItems.getNatures().displayIndexOf(mChar.getNature()));
 		
 		behaviorSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, mItems.getNatures()
 				.getDisplayNames()));
@@ -215,7 +215,7 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 			@Override
 			public void onItemSelected(final AdapterView<?> aParent, final View aView, final int aPosition, final long aId)
 			{
-				mChar.setBehavior(mItems.getNatures().get(aPosition));
+				mChar.setBehavior(mItems.getNatures().getItemAtDisplayNamePosition(aPosition));
 			}
 			
 			@Override
@@ -224,7 +224,7 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 				// Do nothing
 			}
 		});
-		behaviorSpinner.setSelection(mItems.getNatures().indexOf(mChar.getBehavior()));
+		behaviorSpinner.setSelection(mItems.getNatures().displayIndexOf(mChar.getBehavior()));
 		
 		mChar.getGeneration().init(generationPanel, mFreeCreation);
 		
@@ -234,7 +234,7 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 			@Override
 			public void onItemSelected(final AdapterView<?> aParent, final View aView, final int aPosition, final long aId)
 			{
-				mChar.setClan(mItems.getClans().get(aPosition));
+				mChar.setClan(mItems.getClans().getItemAtDisplayNamePosition(aPosition));
 			}
 			
 			@Override
@@ -243,7 +243,7 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 				// Do nothing
 			}
 		});
-		clanSpinner.setSelection(mItems.getClans().indexOf(mChar.getClan()));
+		clanSpinner.setSelection(mItems.getClans().displayIndexOf(mChar.getClan()));
 		
 		for (final ItemControllerCreation controller : mChar.getControllers())
 		{
@@ -385,7 +385,7 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 			descriptionsPanel.addView(description);
 		}
 		
-		for (final DescriptionCreationValue description : mChar.getDescriptions().getValues())
+		for (final DescriptionCreationValue description : mChar.getDescriptions().getValuesList())
 		{
 			final EditText value = new EditText(this);
 			value.setLayoutParams(ViewUtil.getWrapHeight());

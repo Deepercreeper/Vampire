@@ -10,7 +10,7 @@ public class DescriptionControllerInstance
 	
 	public DescriptionControllerInstance(final Map<String, String> aValues, final DescriptionController aController)
 	{
-		for (final Description description : aController.getValues())
+		for (final Description description : aController.getValuesList())
 		{
 			String value = aValues.get(description.getName());
 			if (value == null)
@@ -23,7 +23,7 @@ public class DescriptionControllerInstance
 	
 	public DescriptionControllerInstance(final DescriptionControllerCreation aController)
 	{
-		for (final DescriptionCreationValue value : aController.getValues())
+		for (final DescriptionCreationValue value : aController.getValuesList())
 		{
 			mValues.put(value.getName(), new DescriptionValue(value.getItem(), value.getValue()));
 		}

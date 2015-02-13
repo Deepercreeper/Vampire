@@ -23,7 +23,7 @@ public class DescriptionControllerCreation extends ListControllerImpl<Descriptio
 	{
 		mController = aController;
 		final List<DescriptionCreationValue> values = new ArrayList<DescriptionCreationValue>();
-		for (final Description description : mController.getValues())
+		for (final Description description : mController.getValuesList())
 		{
 			values.add(new DescriptionCreationValue(description));
 		}
@@ -35,7 +35,7 @@ public class DescriptionControllerCreation extends ListControllerImpl<Descriptio
 	 */
 	public void clear()
 	{
-		for (final DescriptionCreationValue value : getValues())
+		for (final DescriptionCreationValue value : getValuesList())
 		{
 			value.clear();
 		}

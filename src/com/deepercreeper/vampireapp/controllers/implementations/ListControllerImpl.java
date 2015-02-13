@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.Namable;
 import com.deepercreeper.vampireapp.controllers.lists.ListController;
-import com.deepercreeper.vampireapp.util.LanguageUtil;
 
 /**
  * An implementation for list controllers.
@@ -17,28 +17,44 @@ import com.deepercreeper.vampireapp.util.LanguageUtil;
  */
 public abstract class ListControllerImpl <T extends Namable> implements ListController<T>
 {
-	private final HashMap<String, T>	mValues		= new HashMap<String, T>();
+	private final Map<String, T>	mValues			= new HashMap<String, T>();
 	
-	private final List<String>			mNames		= new ArrayList<String>();
+	private final Map<String, T>	mDisplayValues	= new HashMap<String, T>();
 	
-	private final List<T>				mValuesList	= new ArrayList<T>();
+	private final List<String>		mNames			= new ArrayList<String>();
+	
+	private final List<String>		mDisplayNames	= new ArrayList<String>();
+	
+	private final List<T>			mValuesList		= new ArrayList<T>();
 	
 	@Override
-	public T get(final int aPos)
+	public T getItemAtPosition(final int aPos)
 	{
-		return mValues.get(mNames.get(aPos));
+		return mValues.get(getNames().get(aPos));
 	}
 	
 	@Override
-	public T get(final String aName)
+	public T getItemAtDisplayNamePosition(final int aPos)
+	{
+		return getItemWithDisplayName(getDisplayNames().get(aPos));
+	}
+	
+	@Override
+	public T getItemWithName(final String aName)
 	{
 		return mValues.get(aName);
 	}
 	
 	@Override
+	public T getItemWithDisplayName(final String aName)
+	{
+		return mDisplayValues.get(aName);
+	}
+	
+	@Override
 	public T getFirst()
 	{
-		return mValues.get(mNames.get(0));
+		return mDisplayValues.get(getDisplayNames().get(0));
 	}
 	
 	@Override
@@ -47,18 +63,14 @@ public abstract class ListControllerImpl <T extends Namable> implements ListCont
 		return mNames;
 	}
 	
+	@Override
 	public List<String> getDisplayNames()
 	{
-		final List<String> displayNames = new ArrayList<String>();
-		for (final String name : getNames())
-		{
-			displayNames.add(LanguageUtil.instance().getValue(name));
-		}
-		return displayNames;
+		return mDisplayNames;
 	}
 	
 	@Override
-	public List<T> getValues()
+	public List<T> getValuesList()
 	{
 		return mValuesList;
 	}
@@ -66,21 +78,31 @@ public abstract class ListControllerImpl <T extends Namable> implements ListCont
 	@Override
 	public int indexOf(final T aValue)
 	{
-		return mNames.indexOf(aValue.getName());
+		return getNames().indexOf(aValue.getName());
+	}
+	
+	@Override
+	public int displayIndexOf(final T aValue)
+	{
+		return getDisplayNames().indexOf(aValue.getDisplayName());
 	}
 	
 	@Override
 	public final void init(final List<T> aValues)
 	{
-		mValuesList.clear();
-		mNames.clear();
+		getValuesList().clear();
+		getNames().clear();
+		getDisplayNames().clear();
 		mValues.clear();
-		mValuesList.addAll(aValues);
-		Collections.sort(mValuesList);
-		for (final T value : mValuesList)
+		getValuesList().addAll(aValues);
+		Collections.sort(getValuesList());
+		for (final T value : getValuesList())
 		{
 			mNames.add(value.getName());
+			mDisplayNames.add(value.getDisplayName());
+			mDisplayValues.put(value.getDisplayName(), value);
 			mValues.put(value.getName(), value);
 		}
+		Collections.sort(mDisplayNames);
 	}
 }

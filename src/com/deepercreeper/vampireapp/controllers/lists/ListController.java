@@ -5,17 +5,25 @@ import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.Namable;
 
 public interface ListController <T extends Namable>
 {
-	T get(int aPos);
+	public T getItemAtPosition(int aPos);
 	
-	T get(String aName);
+	public T getItemAtDisplayNamePosition(final int aPos);
 	
-	T getFirst();
+	public List<String> getDisplayNames();
 	
-	List<String> getNames();
+	public T getFirst();
 	
-	List<T> getValues();
+	public T getItemWithDisplayName(String aName);
 	
-	int indexOf(T aValue);
+	public T getItemWithName(String aName);
+	
+	public List<String> getNames();
+	
+	public List<T> getValuesList();
+	
+	public int indexOf(T aValue);
+	
+	public int displayIndexOf(T aValue);
 	
 	public void init(List<T> aValues);
 }

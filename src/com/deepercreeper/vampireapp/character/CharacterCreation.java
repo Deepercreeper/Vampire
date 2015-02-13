@@ -27,6 +27,8 @@ import com.deepercreeper.vampireapp.util.Log;
  */
 public class CharacterCreation
 {
+	private static final String					TAG					= "CharacterCreation";
+	
 	/**
 	 * The default minimum generation that is set, when creating a character.
 	 */

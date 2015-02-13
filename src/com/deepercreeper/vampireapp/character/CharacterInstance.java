@@ -112,10 +112,10 @@ public class CharacterInstance
 		final Element meta = (Element) root.getElementsByTagName("meta").item(0);
 		mName = meta.getAttribute("name");
 		mConcept = meta.getAttribute("concept");
-		mNature = mItems.getNatures().get(meta.getAttribute("nature"));
-		mBehavior = mItems.getNatures().get(meta.getAttribute("behavior"));
+		mNature = mItems.getNatures().getItemWithName(meta.getAttribute("nature"));
+		mBehavior = mItems.getNatures().getItemWithName(meta.getAttribute("behavior"));
 		mGeneration = new GenerationController(Integer.parseInt(meta.getAttribute("generation")));
-		mClan = mItems.getClans().get(meta.getAttribute("clan"));
+		mClan = mItems.getClans().getItemWithName(meta.getAttribute("clan"));
 		mEP = new EPHandler(Integer.parseInt(meta.getAttribute("ep")));
 		mMode = Mode.valueOf(meta.getAttribute("mode"));
 		
