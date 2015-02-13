@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="nature_and_behavior">
-        <item>Autokrat</item>
-        <item>Barbar</item>
-        <item>Büßer</item>
-        <item>Einzelgänger</item>
-        <item>Fanatiker</item>
+        <item>Autocrat</item>
+        <item>Barbarian</item>
+        <item>Ascetic</item>
+        <item>Lone wolf</item>
+        <item>Fanatic</item>
         <item>Gigolo</item>
-        <item>Helfer</item>
-        <item>Kind</item>
+        <item>Helper</item>
+        <item>Child</item>
         <item>Monster</item>
-        <item>Narr</item>
-        <item>Neuerer</item>
-        <item>Rebell</item>
-        <item>Richter</item>
-        <item>Schurke</item>
-        <item>Tyrann</item>
-        <item>Überlebenskünstler</item>
-        <item>Verteidiger</item>
-        <item>Zelebrant</item>
+        <item>Fool</item>
+        <item>Innovator</item>
+        <item>Rebel</item>
+        <item>Judge</item>
+        <item>Roghue</item>
+        <item>Tyrant</item>
+        <item>Survivor</item>
+        <item>Defender</item>
+        <item>Celebrant</item>
     </string-array>
     <string-array name="description_fields">
-        <item>Präludium</item>
-        <item>Weiterer Verlauf</item>
-        <item>Alter</item>
-        <item>Siehtaus wie</item>
-        <item>Geburtsdatum</item>
-        <item>Todesdatum</item>
-        <item>Haarfarbe</item>
-        <item>Nationalität</item>
-        <item>Größe</item>
-        <item>Gewicht</item>
-        <item>Geschlecht</item>
-        <item>Beschreibung</item>
+        <item>Prelude</item>
+        <item>Further process</item>
+        <item>Age</item>
+        <item>Looks like</item>
+        <item>Date of birth</item>
+        <item>Date of death</item>
+        <item>Hair color</item>
+        <item>Nationality</item>
+        <item>Height</item>
+        <item>Weight</item>
+        <item>Gender</item>
+        <item>Description</item>
     </string-array>
 
 </resources>

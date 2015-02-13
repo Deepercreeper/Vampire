@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextUtils.TruncateAt;
 import android.text.TextWatcher;
-import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -18,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.character.CharacterCreation;
 import com.deepercreeper.vampireapp.character.CharacterCreation.CharCreationListener;
@@ -100,7 +97,14 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 				setState(State.GENERAL);
 				break;
 			case DESCRIPTIONS :
-				setState(State.FREE_POINTS);
+				if (mFreeCreation)
+				{
+					setState(State.GENERAL);
+				}
+				else
+				{
+					setState(State.FREE_POINTS);
+				}
 				break;
 		}
 	}
@@ -184,7 +188,8 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 			}
 		});
 		
-		natureSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, mItems.getNatures().getNames()));
+		natureSpinner
+				.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, mItems.getNatures().getDisplayNames()));
 		natureSpinner.setOnItemSelectedListener(new OnItemSelectedListener()
 		{
 			@Override
@@ -201,7 +206,8 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 		});
 		natureSpinner.setSelection(mItems.getNatures().indexOf(mChar.getNature()));
 		
-		behaviorSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, mItems.getNatures().getNames()));
+		behaviorSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, mItems.getNatures()
+				.getDisplayNames()));
 		behaviorSpinner.setOnItemSelectedListener(new OnItemSelectedListener()
 		{
 			@Override
@@ -220,7 +226,7 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 		
 		mChar.getGeneration().init(generationPanel, mFreeCreation);
 		
-		clanSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, mItems.getClans().getNames()));
+		clanSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, mItems.getClans().getDisplayNames()));
 		clanSpinner.setOnItemSelectedListener(new OnItemSelectedListener()
 		{
 			@Override
@@ -336,7 +342,7 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 		
 		mChar.setCreationMode(CreationMode.DESCRIPTIONS);
 		
-		final TableLayout descriptionsPanel = (TableLayout) findViewById(R.id.description_values_panel);
+		final LinearLayout descriptionsPanel = (LinearLayout) findViewById(R.id.description_values_panel);
 		final TableLayout insanitiesTable = (TableLayout) findViewById(R.id.insanities_panel);
 		final Button addInsanity = (Button) findViewById(R.id.add_insanity_button);
 		final Button backButton = (Button) findViewById(R.id.back_to_2_button);
@@ -348,21 +354,9 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 		
 		for (final ItemCreation item : mChar.getDescriptionValues())
 		{
-			final TableRow row = new TableRow(this);
-			row.setLayoutParams(ViewUtil.getTableWrapHeight());
-			
-			final TextView name = new TextView(this);
-			name.setLayoutParams(ViewUtil.getRowNameShort(this));
-			name.setGravity(Gravity.CENTER_VERTICAL);
-			name.setEllipsize(TruncateAt.END);
-			name.setSingleLine();
-			name.setText(item.getItem().getName() + ":");
-			
-			row.addView(name);
-			
 			final EditText description = new EditText(this);
 			description.setLayoutParams(ViewUtil.getRowTextSize(this));
-			description.setHint(R.string.description);
+			description.setHint(item.getItem().getDisplayName());
 			description.setEms(10);
 			description.setSingleLine();
 			description.addTextChangedListener(new TextWatcher()
@@ -386,28 +380,14 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 					// Do nothing
 				}
 			});
-			row.addView(description);
-			
-			descriptionsPanel.addView(row);
+			descriptionsPanel.addView(description);
 		}
 		
 		for (final DescriptionCreationValue description : mChar.getDescriptions().getValues())
 		{
-			final TableRow row = new TableRow(this);
-			row.setLayoutParams(ViewUtil.getTableWrapHeight());
-			
-			final TextView name = new TextView(this);
-			name.setLayoutParams(ViewUtil.getRowNameShort(this));
-			name.setGravity(Gravity.CENTER_VERTICAL);
-			name.setSingleLine();
-			name.setEllipsize(TruncateAt.END);
-			name.setText(description.getName() + ":");
-			
-			row.addView(name);
-			
 			final EditText value = new EditText(this);
-			value.setLayoutParams(ViewUtil.getRowTextSize(this));
-			value.setHint(R.string.description);
+			value.setLayoutParams(ViewUtil.getWrapHeight());
+			value.setHint(description.getDisplayName());
 			value.setEms(10);
 			value.setSingleLine();
 			value.addTextChangedListener(new TextWatcher()
@@ -431,9 +411,7 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 					// Do nothing
 				}
 			});
-			row.addView(value);
-			
-			descriptionsPanel.addView(row);
+			descriptionsPanel.addView(value);
 		}
 		
 		mChar.initInsanities(insanitiesTable);

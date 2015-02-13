@@ -72,7 +72,14 @@ public class LanguageUtil
 			if ( !line.isEmpty())
 			{
 				final String[] keyAndValue = line.split("=");
-				mValues.put(keyAndValue[0], keyAndValue[1]);
+				if (keyAndValue.length < 2)
+				{
+					Log.w(TAG, "The following line is no statement: " + line);
+				}
+				else
+				{
+					mValues.put(keyAndValue[0], keyAndValue[1]);
+				}
 			}
 		}
 		mInitialized = true;

@@ -144,7 +144,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/controllers_panel"
-            android:text="@string/back" />
+            android:text="@string/cancel" />
 
         <Button
             android:id="@+id/next_to_2_button"

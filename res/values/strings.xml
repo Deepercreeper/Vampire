@@ -14,6 +14,7 @@
     <string name="generation_text">Generation:</string>
 	<string name="next">Weiter</string>
 	<string name="back">Zurück</string>
+	<string name="cancel">Abbrechen</string>
 	<string name="reset">Zurücksetzen</string>
 	<string name="description">Beschreibung</string>
 	<string name="additional_info">Zusatzinformationen</string>

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import com.deepercreeper.vampireapp.controllers.dynamic.interfaces.Namable;
 import com.deepercreeper.vampireapp.controllers.lists.ListController;
+import com.deepercreeper.vampireapp.util.LanguageUtil;
 
 /**
  * An implementation for list controllers.
@@ -46,6 +47,16 @@ public abstract class ListControllerImpl <T extends Namable> implements ListCont
 		return mNames;
 	}
 	
+	public List<String> getDisplayNames()
+	{
+		final List<String> displayNames = new ArrayList<String>();
+		for (final String name : getNames())
+		{
+			displayNames.add(LanguageUtil.instance().getValue(name));
+		}
+		return displayNames;
+	}
+	
 	@Override
 	public List<T> getValues()
 	{
@@ -68,8 +79,8 @@ public abstract class ListControllerImpl <T extends Namable> implements ListCont
 		Collections.sort(mValuesList);
 		for (final T value : mValuesList)
 		{
-			mNames.add(value.getDisplayName());
-			mValues.put(value.getDisplayName(), value);
+			mNames.add(value.getName());
+			mValues.put(value.getName(), value);
 		}
 	}
 }

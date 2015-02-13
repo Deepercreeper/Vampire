@@ -94,34 +94,35 @@ public final class R {
         public static final int main=0x7f080000;
     }
     public static final class string {
-        public static final int add=0x7f060014;
-        public static final int add_insanity=0x7f060012;
-        public static final int add_insanity_message=0x7f060013;
-        public static final int add_item=0x7f060016;
-        public static final int additional_info=0x7f06000f;
+        public static final int add=0x7f060015;
+        public static final int add_insanity=0x7f060013;
+        public static final int add_insanity_message=0x7f060014;
+        public static final int add_item=0x7f060017;
+        public static final int additional_info=0x7f060010;
         public static final int app_name=0x7f060000;
         public static final int back=0x7f06000c;
-        public static final int basic_info=0x7f060010;
+        public static final int basic_info=0x7f060011;
         public static final int behavior_text=0x7f060008;
         public static final int button_create_character=0x7f060002;
         public static final int button_create_character_free=0x7f060003;
+        public static final int cancel=0x7f06000d;
         public static final int char_name=0x7f060005;
         public static final int clan_text=0x7f060009;
         public static final int concept=0x7f060006;
-        public static final int content_description=0x7f06001b;
+        public static final int content_description=0x7f06001c;
         public static final int create_char=0x7f060001;
-        public static final int delete_char=0x7f060019;
+        public static final int delete_char=0x7f06001a;
         public static final int delete_chars=0x7f060004;
-        public static final int description=0x7f06000e;
-        public static final int edit_item=0x7f060015;
-        public static final int finish=0x7f060017;
-        public static final int free_points_info=0x7f060011;
+        public static final int description=0x7f06000f;
+        public static final int edit_item=0x7f060016;
+        public static final int finish=0x7f060018;
+        public static final int free_points_info=0x7f060012;
         public static final int generation_text=0x7f06000a;
         public static final int nature_text=0x7f060007;
         public static final int next=0x7f06000b;
-        public static final int play=0x7f060018;
-        public static final int reset=0x7f06000d;
-        public static final int service_name=0x7f06001a;
+        public static final int play=0x7f060019;
+        public static final int reset=0x7f06000e;
+        public static final int service_name=0x7f06001b;
     }
     public static final class style {
         /** 
