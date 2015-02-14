@@ -87,7 +87,7 @@ public class ItemGroupImpl implements ItemGroup
 		{
 			return getName().compareTo(null);
 		}
-		return getName().compareTo(aAnother.getName());
+		return getDisplayName().compareTo(aAnother.getDisplayName());
 	}
 	
 	@Override

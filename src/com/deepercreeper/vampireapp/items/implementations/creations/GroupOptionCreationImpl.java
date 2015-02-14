@@ -56,6 +56,7 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 		{
 			addGroupSilent(aItemController.getGroup(group));
 		}
+		sortGroups();
 	}
 	
 	@Override
@@ -279,11 +280,7 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 		}
 		getContainer().addView(mGroupContainer);
 		
-		for (final ItemGroupCreation group : getGroupsList())
-		{
-			group.init();
-			mGroupContainer.addView(group.getContainer());
-		}
+		sortGroups();
 		mInitialized = true;
 	}
 	
@@ -398,5 +395,19 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 		mGroupsList.add(aGroup);
 		Collections.sort(mGroupsList);
 		mGroupContainer.addView(aGroup.getContainer());
+	}
+	
+	private void sortGroups()
+	{
+		for (final ItemGroupCreation group : getGroupsList())
+		{
+			group.release();
+		}
+		Collections.sort(getGroupsList());
+		for (final ItemGroupCreation group : getGroupsList())
+		{
+			group.init();
+			mGroupContainer.addView(group.getContainer());
+		}
 	}
 }

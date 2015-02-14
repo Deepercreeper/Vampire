@@ -74,6 +74,7 @@ public class GroupOptionInstanceImpl implements GroupOptionInstance
 				addGroupSilent(aItemController.getGroup(group.getAttribute("name")));
 			}
 		}
+		sortGroups();
 	}
 	
 	public GroupOptionInstanceImpl(final GroupOptionCreation aGroupOption, final ItemControllerInstance aItemController, final Context aContext,
@@ -92,6 +93,7 @@ public class GroupOptionInstanceImpl implements GroupOptionInstance
 		{
 			addGroupSilent(aItemController.getGroup(group.getItemGroup()));
 		}
+		sortGroups();
 	}
 	
 	@Override
@@ -228,11 +230,7 @@ public class GroupOptionInstanceImpl implements GroupOptionInstance
 		}
 		getContainer().addView(mGroupContainer);
 		
-		for (final ItemGroupInstance group : getGroupsList())
-		{
-			group.init();
-			mGroupContainer.addView(group.getContainer());
-		}
+		sortGroups();
 		mInitialized = true;
 	}
 	
@@ -347,5 +345,19 @@ public class GroupOptionInstanceImpl implements GroupOptionInstance
 		mGroupsList.add(aGroup);
 		Collections.sort(mGroupsList);
 		mGroupContainer.addView(aGroup.getContainer());
+	}
+	
+	private void sortGroups()
+	{
+		for (final ItemGroupInstance group : getGroupsList())
+		{
+			group.release();
+		}
+		Collections.sort(getGroupsList());
+		for (final ItemGroupInstance group : getGroupsList())
+		{
+			group.init();
+			mGroupContainer.addView(group.getContainer());
+		}
 	}
 }

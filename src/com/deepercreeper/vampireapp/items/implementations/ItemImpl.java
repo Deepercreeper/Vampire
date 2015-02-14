@@ -175,7 +175,7 @@ public class ItemImpl implements Item
 	@Override
 	public int compareTo(final Namable aAnother)
 	{
-		return getName().compareTo(aAnother.getName());
+		return getDisplayName().compareTo(aAnother.getDisplayName());
 	}
 	
 	@Override

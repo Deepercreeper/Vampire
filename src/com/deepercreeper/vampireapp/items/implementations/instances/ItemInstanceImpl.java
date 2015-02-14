@@ -1,6 +1,7 @@
 package com.deepercreeper.vampireapp.items.implementations.instances;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -140,6 +141,10 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 				addChildSilent(new ItemInstanceImpl(item, getItemGroup(), getContext(), getMode(), getEP(), this, getCharacter()));
 			}
 		}
+		if (hasChildren())
+		{
+			sortChildren();
+		}
 	}
 	
 	public ItemInstanceImpl(final ItemCreation aItem, final ItemGroupInstance aItemGroup, final Mode aMode, final EPHandler aEP,
@@ -189,7 +194,18 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 					addChildSilent(new ItemInstanceImpl(item, getItemGroup(), getMode(), getEP(), this, getCharacter()));
 				}
 			}
+			sortChildren();
 		}
+	}
+	
+	@Override
+	public int compareTo(final ItemInstance aAnother)
+	{
+		if (aAnother == null)
+		{
+			return getItem().compareTo(null);
+		}
+		return getItem().compareTo(aAnother.getItem());
 	}
 	
 	@Override
@@ -527,11 +543,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		
 		if (hasChildren())
 		{
-			for (final ItemInstance child : getChildrenList())
-			{
-				child.init();
-				getContainer().addView(child.getContainer());
-			}
+			sortChildren();
 		}
 		
 		mInitialized = true;
@@ -703,6 +715,20 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 					// TODO Implement
 				}
 			}
+		}
+	}
+	
+	private void sortChildren()
+	{
+		for (final ItemInstance item : getChildrenList())
+		{
+			item.release();
+		}
+		Collections.sort(getChildrenList());
+		for (final ItemInstance item : getChildrenList())
+		{
+			item.init();
+			getContainer().addView(item.getContainer());
 		}
 	}
 	

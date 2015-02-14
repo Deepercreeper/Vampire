@@ -1,6 +1,7 @@
 package com.deepercreeper.vampireapp.items.implementations.instances;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,6 +81,7 @@ public class ItemGroupInstanceImpl extends InstanceRestrictionableImpl implement
 				addItemSilent(new ItemInstanceImpl(item, this, getContext(), getMode(), getEP(), null, getCharacter()));
 			}
 		}
+		sortItems();
 	}
 	
 	public ItemGroupInstanceImpl(final ItemGroupCreation aItemGroup, final ItemControllerInstance aItemController, final Context aContext,
@@ -104,6 +106,7 @@ public class ItemGroupInstanceImpl extends InstanceRestrictionableImpl implement
 				addItemSilent(new ItemInstanceImpl(item, this, getMode(), getEP(), null, getCharacter()));
 			}
 		}
+		sortItems();
 	}
 	
 	@Override
@@ -271,11 +274,7 @@ public class ItemGroupInstanceImpl extends InstanceRestrictionableImpl implement
 		}
 		getContainer().addView(mTitleText);
 		
-		for (final ItemInstance item : getItemsList())
-		{
-			item.init();
-			getContainer().addView(item.getContainer());
-		}
+		sortItems();
 		mInitialized = true;
 	}
 	
@@ -334,6 +333,20 @@ public class ItemGroupInstanceImpl extends InstanceRestrictionableImpl implement
 	public void updateRestrictions()
 	{
 		// TODO Implement
+	}
+	
+	private void sortItems()
+	{
+		for (final ItemInstance item : getItemsList())
+		{
+			item.release();
+		}
+		Collections.sort(getItemsList());
+		for (final ItemInstance item : getItemsList())
+		{
+			item.init();
+			getContainer().addView(item.getContainer());
+		}
 	}
 	
 	private void addItemSilent(final ItemInstance aItem)

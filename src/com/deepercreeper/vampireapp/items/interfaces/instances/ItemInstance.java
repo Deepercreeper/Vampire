@@ -14,7 +14,7 @@ import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.Inst
 import com.deepercreeper.vampireapp.mechanics.Action;
 import com.deepercreeper.vampireapp.mechanics.Action.ItemFinder;
 
-public interface ItemInstance extends InstanceRestrictionable
+public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemInstance>
 {
 	public boolean canIncrease();
 	

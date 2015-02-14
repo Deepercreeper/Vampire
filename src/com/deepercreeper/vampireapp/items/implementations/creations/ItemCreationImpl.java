@@ -1,6 +1,7 @@
 package com.deepercreeper.vampireapp.items.implementations.creations;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -151,6 +152,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			{
 				addChildSilent(new ItemCreationImpl(item, getContext(), getItemGroup(), getCreationMode(), getItemGroup().getPoints(), this));
 			}
+			sortChildren();
 		}
 	}
 	
@@ -869,11 +871,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		
 		if (hasChildren())
 		{
-			for (final ItemCreation child : getChildrenList())
-			{
-				child.init();
-				getContainer().addView(child.getContainer());
-			}
+			sortChildren();
 		}
 		mInitialized = true;
 	}
@@ -1150,6 +1148,20 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		getChildrenList().add(aItem);
 		mChildren.put(aItem.getName(), aItem);
 		getContainer().addView(aItem.getContainer());
+	}
+	
+	private void sortChildren()
+	{
+		for (final ItemCreation item : getChildrenList())
+		{
+			item.release();
+		}
+		Collections.sort(getChildrenList());
+		for (final ItemCreation item : getChildrenList())
+		{
+			item.init();
+			getContainer().addView(item.getContainer());
+		}
 	}
 	
 	private List<Item> getAddableItems()

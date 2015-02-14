@@ -21,9 +21,9 @@ import com.deepercreeper.vampireapp.items.implementations.creations.restrictions
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
+import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation.PointHandler;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemGroupCreation;
-import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation.PointHandler;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
 import com.deepercreeper.vampireapp.util.Log;
@@ -79,7 +79,7 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 					addItemSilent(new ItemCreationImpl(item, getContext(), this, getCreationMode(), getPoints(), null));
 				}
 			}
-			Collections.sort(mItemsList);
+			sortItems();
 		}
 	}
 	
@@ -394,11 +394,7 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 			getContainer().addView(mAddButton);
 		}
 		
-		for (final ItemCreation item : getItemsList())
-		{
-			item.init();
-			getContainer().addView(item.getContainer());
-		}
+		sortItems();
 		mInitialized = true;
 	}
 	
@@ -593,6 +589,20 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		getItemController().addItemName(aItem);
 		getItemController().resize();
 		updateController();
+	}
+	
+	private void sortItems()
+	{
+		for (final ItemCreation item : getItemsList())
+		{
+			item.release();
+		}
+		Collections.sort(getItemsList());
+		for (final ItemCreation item : getItemsList())
+		{
+			item.init();
+			getContainer().addView(item.getContainer());
+		}
 	}
 	
 	private List<Item> getAddableItems()

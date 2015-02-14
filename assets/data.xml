@@ -75,6 +75,7 @@
                 name="Talents"
                 freePointsCost="3"
                 epCostMulti="2"
+                epCostNew="3"
                 maxLowLevelValue="5"
                 maxValue="6"
                 mutable="false"
