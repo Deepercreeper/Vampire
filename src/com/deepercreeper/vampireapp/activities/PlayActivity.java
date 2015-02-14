@@ -8,11 +8,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.CharacterInstance;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
+import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
 import com.deepercreeper.vampireapp.util.ConnectionUtil;
 
 public class PlayActivity extends Activity implements ItemConsumer
@@ -62,12 +64,27 @@ public class PlayActivity extends Activity implements ItemConsumer
 			mChar = character;
 		}
 		
+		mChar.release();
+		
 		setContentView(R.layout.play_lobby);
 		
 		final TextView charName = (TextView) findViewById(R.id.char_name);
+		final LinearLayout controllersPanel = (LinearLayout) findViewById(R.id.controllers_panel);
+		final Button exit = (Button) findViewById(R.id.exit);
+		
+		mChar.update();
+		mChar.init();
+		for (final ItemControllerInstance controller : mChar.getControllers())
+		{
+			if (controller.hasAnyItem())
+			{
+				controllersPanel.addView(controller.getContainer());
+				controller.close();
+			}
+		}
+		
 		charName.setText(mChar.getName());
 		
-		final Button exit = (Button) findViewById(R.id.exit);
 		exit.setOnClickListener(new OnClickListener()
 		{
 			@Override

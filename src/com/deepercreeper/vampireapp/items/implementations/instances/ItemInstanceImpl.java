@@ -431,6 +431,10 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	@Override
 	public boolean hasEnoughEP()
 	{
+		if (getEPCost() == 0)
+		{
+			return false;
+		}
 		return getEP().getExperience() >= getEPCost();
 	}
 	
@@ -494,14 +498,21 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			
 			if (isValueItem())
 			{
-				mIncreaseButton.setOnClickListener(new OnClickListener()
+				if (getEPCost() == 0)
 				{
-					@Override
-					public void onClick(final View aV)
+					ViewUtil.hideWidth(mIncreaseButton);
+				}
+				else
+				{
+					mIncreaseButton.setOnClickListener(new OnClickListener()
 					{
-						increase();
-					}
-				});
+						@Override
+						public void onClick(final View aV)
+						{
+							increase();
+						}
+					});
+				}
 				
 				refreshValue();
 			}
@@ -642,7 +653,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			Log.w(TAG, "Tried to change whether a non value item can be increased.");
 			return;
 		}
-		mIncreaseButton.setEnabled(canIncrease());
+		ViewUtil.setEnabled(mIncreaseButton, canIncrease());
 	}
 	
 	@Override

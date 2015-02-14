@@ -21,6 +21,8 @@ public interface ItemControllerInstance extends InstanceRestrictionable
 	
 	public Context getContext();
 	
+	public boolean hasAnyItem();
+	
 	public List<ItemInstance> getDescriptionValues();
 	
 	public Element asElement(Document aDoc);

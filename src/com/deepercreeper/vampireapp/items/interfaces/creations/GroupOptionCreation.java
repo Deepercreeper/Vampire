@@ -20,6 +20,8 @@ public interface GroupOptionCreation extends Comparable<GroupOptionCreation>
 	
 	public LinearLayout getContainer();
 	
+	public boolean hasAnyItem();
+	
 	public Context getContext();
 	
 	public ItemGroupCreation getGroup(ItemGroup aGroup);

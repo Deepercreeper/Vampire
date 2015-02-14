@@ -180,6 +180,22 @@ public class CharacterInstance
 		Log.i(TAG, "Finished loading character.");
 	}
 	
+	public void release()
+	{
+		for (final ItemControllerInstance controller : getControllers())
+		{
+			controller.release();
+		}
+	}
+	
+	public void init()
+	{
+		for (final ItemControllerInstance controller : getControllers())
+		{
+			controller.init();
+		}
+	}
+	
 	public Context getContext()
 	{
 		return mContext;

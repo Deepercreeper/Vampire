@@ -7,6 +7,7 @@
 
             <group
                 name="Physical"
+                epCostMulti="4"
                 freePointsCost="5"
                 maxLowLevelValue="5"
                 maxValue="6"
@@ -24,6 +25,7 @@
             <group
                 name="Social"
                 freePointsCost="5"
+                epCostMulti="4"
                 maxLowLevelValue="5"
                 maxValue="6"
                 mutable="false"
@@ -40,6 +42,7 @@
             <group
                 name="Mental"
                 freePointsCost="5"
+                epCostMulti="4"
                 maxLowLevelValue="5"
                 maxValue="6"
                 mutable="false"
@@ -71,6 +74,7 @@
             <group
                 name="Talents"
                 freePointsCost="3"
+                epCostMulti="2"
                 maxLowLevelValue="5"
                 maxValue="6"
                 mutable="false"
@@ -101,6 +105,7 @@
             <group
                 name="Skills"
                 freePointsCost="3"
+                epCostMulti="2"
                 maxLowLevelValue="5"
                 maxValue="6"
                 mutable="false"
@@ -131,6 +136,7 @@
             <group
                 name="Knowledges"
                 freePointsCost="3"
+                epCostMulti="2"
                 maxLowLevelValue="5"
                 maxValue="6"
                 mutable="false"
@@ -178,6 +184,7 @@
             <group
                 name="Disciplines"
                 freePointsCost="7"
+                epCostMulti="5"
                 maxLowLevelValue="5"
                 maxValue="6"
                 mutable="false"
@@ -1468,6 +1475,7 @@
                 name="Road"
                 freePointsCost="2"
                 maxItems="1"
+                epCostMulti="2"
                 maxValue="10"
                 mutable="true"
                 startValue="5"
@@ -1493,6 +1501,7 @@
             <group
                 name="Willpower"
                 freePointsCost="2"
+                epCostMulti="2"
                 maxValue="20"
                 mutable="false"
                 startValue="10"
@@ -1765,5 +1774,4 @@
             </restriction>
         </clan>
     </clans>
-
 </data>

@@ -17,6 +17,8 @@ public interface GroupOptionInstance extends Comparable<GroupOptionInstance>
 	
 	public Context getContext();
 	
+	public boolean hasAnyItem();
+	
 	public ItemGroupInstance getGroup(ItemGroup aGroup);
 	
 	public GroupOption getGroupOption();

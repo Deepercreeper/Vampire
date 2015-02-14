@@ -363,16 +363,25 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 	@Override
 	public void updateGroups()
 	{
-		boolean hasAnyItem = false;
+		setEnabled(hasAnyItem());
+	}
+	
+	@Override
+	public boolean hasAnyItem()
+	{
+		if (getGroupsList().isEmpty())
+		{
+			return false;
+		}
 		for (final ItemGroupCreation group : getGroupsList())
 		{
 			group.updateItems();
 			if ( !group.getItemsList().isEmpty() || group.getCreationMode().canAddItem(group))
 			{
-				hasAnyItem = true;
+				return true;
 			}
 		}
-		setEnabled(hasAnyItem);
+		return false;
 	}
 	
 	private void addGroupSilent(final ItemGroupCreation aGroup)

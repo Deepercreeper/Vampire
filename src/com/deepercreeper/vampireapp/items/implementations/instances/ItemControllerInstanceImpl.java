@@ -155,6 +155,24 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	}
 	
 	@Override
+	public boolean hasAnyItem()
+	{
+		if (getGroupsList().isEmpty())
+		{
+			return false;
+		}
+		for (final ItemGroupInstance group : getGroupsList())
+		{
+			group.updateItems();
+			if ( !group.getItemsList().isEmpty())
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	@Override
 	public void close()
 	{
 		for (final GroupOptionInstance group : getGroupOptionsList())
@@ -349,8 +367,11 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 		{
 			for (final GroupOptionInstance groupOption : getGroupOptionsList())
 			{
-				groupOption.init();
-				getContainer().addView(groupOption.getContainer());
+				if (groupOption.hasAnyItem())
+				{
+					groupOption.init();
+					getContainer().addView(groupOption.getContainer());
+				}
 			}
 		}
 		mInitialized = true;
