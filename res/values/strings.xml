@@ -30,4 +30,6 @@
 	<string name="delete_char">Löschen</string>
 	<string name="service_name">Item Provider</string>
 	<string name="content_description">Placeholder</string>
+	<string name="play_char">Lobby</string>
+	<string name="exit">Beenden</string>
 </resources>

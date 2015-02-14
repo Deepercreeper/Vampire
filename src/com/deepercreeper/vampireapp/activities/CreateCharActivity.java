@@ -2,6 +2,7 @@ package com.deepercreeper.vampireapp.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -59,9 +60,9 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 	private CharacterCreation	mChar;
 	
 	@Override
-	protected void onStart()
+	protected void onCreate(final Bundle aSavedInstanceState)
 	{
-		super.onStart();
+		super.onCreate(aSavedInstanceState);
 		
 		ConnectionUtil.loadItems(this, this);
 	}

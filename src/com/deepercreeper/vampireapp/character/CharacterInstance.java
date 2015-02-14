@@ -29,6 +29,7 @@ import com.deepercreeper.vampireapp.lists.items.Clan;
 import com.deepercreeper.vampireapp.lists.items.Nature;
 import com.deepercreeper.vampireapp.mechanics.Duration;
 import com.deepercreeper.vampireapp.mechanics.Duration.Type;
+import com.deepercreeper.vampireapp.util.CodingUtil;
 import com.deepercreeper.vampireapp.util.Log;
 
 public class CharacterInstance
@@ -39,13 +40,13 @@ public class CharacterInstance
 	
 	private final Context						mContext;
 	
-	private final GenerationControllerInstance			mGeneration;
+	private final GenerationControllerInstance	mGeneration;
 	
 	private final List<ItemControllerInstance>	mControllers	= new ArrayList<ItemControllerInstance>();
 	
 	private final DescriptionInstanceController	mDescriptions;
 	
-	private final InsanityControllerInstance			mInsanities;
+	private final InsanityControllerInstance	mInsanities;
 	
 	private final EPHandler						mEP;
 	
@@ -112,8 +113,8 @@ public class CharacterInstance
 		
 		// Meta data
 		final Element meta = (Element) root.getElementsByTagName("meta").item(0);
-		mName = meta.getAttribute("name");
-		mConcept = meta.getAttribute("concept");
+		mName = CodingUtil.decode(meta.getAttribute("name"));
+		mConcept = CodingUtil.decode(meta.getAttribute("concept"));
 		mNature = mItems.getNatures().getItemWithName(meta.getAttribute("nature"));
 		mBehavior = mItems.getNatures().getItemWithName(meta.getAttribute("behavior"));
 		mGeneration = new GenerationControllerInstance(Integer.parseInt(meta.getAttribute("generation")));
@@ -141,7 +142,7 @@ public class CharacterInstance
 						duration = new Duration(Type.valueOf(insanity.getAttribute("durationType")), Integer.parseInt(insanity
 								.getAttribute("durationValue")));
 					}
-					mInsanities.addInsanity(insanity.getAttribute("name"), duration);
+					mInsanities.addInsanity(CodingUtil.decode(insanity.getAttribute("name")), duration);
 				}
 			}
 		}
@@ -156,7 +157,7 @@ public class CharacterInstance
 				final Element description = (Element) descriptions.getChildNodes().item(i);
 				if (description.getTagName().equals("description"))
 				{
-					descriptionsMap.put(description.getAttribute("key"), description.getAttribute("value"));
+					descriptionsMap.put(description.getAttribute("key"), CodingUtil.decode(description.getAttribute("value")));
 				}
 			}
 		}
@@ -268,8 +269,8 @@ public class CharacterInstance
 		
 		// Meta data
 		final Element meta = doc.createElement("meta");
-		meta.setAttribute("name", getName());
-		meta.setAttribute("concept", getConcept());
+		meta.setAttribute("name", CodingUtil.encode(getName()));
+		meta.setAttribute("concept", CodingUtil.encode(getConcept()));
 		meta.setAttribute("nature", getNature().getName());
 		meta.setAttribute("behavior", getBehavior().getName());
 		meta.setAttribute("generation", "" + mGeneration.getGeneration());
@@ -284,7 +285,7 @@ public class CharacterInstance
 		{
 			final Element insanityElement = doc.createElement("insanity");
 			final Duration duration = mInsanities.getDurationOf(insanity);
-			insanityElement.setAttribute("name", insanity);
+			insanityElement.setAttribute("name", CodingUtil.encode(insanity));
 			if (duration == Duration.FOREVER)
 			{
 				insanityElement.setAttribute("durationType", "forever");
@@ -310,7 +311,7 @@ public class CharacterInstance
 			{
 				value = "";
 			}
-			descriptionItem.setAttribute("value", value);
+			descriptionItem.setAttribute("value", CodingUtil.encode(value));
 			descriptions.appendChild(descriptionItem);
 		}
 		root.appendChild(descriptions);

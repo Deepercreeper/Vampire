@@ -3,6 +3,7 @@ package com.deepercreeper.vampireapp.activities;
 import java.io.IOException;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,9 +33,9 @@ public class VampireActivity extends Activity implements ItemConsumer
 	private ItemProvider		mItems;
 	
 	@Override
-	protected void onStart()
+	protected void onCreate(final Bundle aSavedInstanceState)
 	{
-		super.onStart();
+		super.onCreate(aSavedInstanceState);
 		
 		ConnectionUtil.loadItems(this, this);
 	}
@@ -87,7 +88,7 @@ public class VampireActivity extends Activity implements ItemConsumer
 			CharacterInstance character = null;
 			try
 			{
-				character = new CharacterInstance(xml, getItems(), this);
+				character = new CharacterInstance(xml, mItems, this);
 			}
 			catch (final IOException e)
 			{
@@ -96,6 +97,23 @@ public class VampireActivity extends Activity implements ItemConsumer
 			if (character != null)
 			{
 				mChars.addChar(character);
+			}
+		}
+		else if (aRequestCode == PlayActivity.PLAY_CHAR_REQUEST && aResultCode == RESULT_OK)
+		{
+			final String xml = aData.getStringExtra(PlayActivity.CHARACTER);
+			CharacterInstance character = null;
+			try
+			{
+				character = new CharacterInstance(xml, mItems, this);
+			}
+			catch (final IOException e)
+			{
+				Log.e(TAG, "Could not create character from xml.");
+			}
+			if (character != null)
+			{
+				mChars.updateChar(character);
 			}
 		}
 	}
@@ -135,10 +153,5 @@ public class VampireActivity extends Activity implements ItemConsumer
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-	
-	public ItemProvider getItems()
-	{
-		return mItems;
 	}
 }

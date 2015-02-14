@@ -14,8 +14,9 @@ import java.util.List;
 import java.util.Map;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+import com.deepercreeper.vampireapp.activities.PlayActivity;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.view.CharacterContextMenu.CharacterListener;
@@ -111,7 +112,9 @@ public class CharController implements CharacterListener
 		{
 			charCompound.release();
 		}
+		
 		Collections.sort(mCharacterCompoundsList);
+		
 		for (final CharacterCompound charCompound : mCharacterCompoundsList)
 		{
 			mCharsList.addView(charCompound.getContainer());
@@ -120,19 +123,7 @@ public class CharController implements CharacterListener
 	
 	public void addChar(final CharacterInstance aCharacter)
 	{
-		try
-		{
-			final String xml = aCharacter.serialize();
-			final PrintWriter writer = new PrintWriter(mContext.openFileOutput(aCharacter.getName() + ".chr", Context.MODE_PRIVATE));
-			writer.append(xml);
-			writer.flush();
-			writer.close();
-		}
-		catch (final IOException e)
-		{
-			Log.e(TAG, "Could not open file stream.");
-		}
-		mCharacterCache.put(aCharacter.getName(), aCharacter);
+		saveChar(aCharacter);
 		
 		final CharacterCompound charCompound = new CharacterCompound(aCharacter, this, mContext);
 		mCharacterCompoundsList.add(charCompound);
@@ -179,6 +170,16 @@ public class CharController implements CharacterListener
 	@Override
 	public void play(final String aName)
 	{
+		final CharacterInstance character = loadChar(aName);
+		
+		final Intent intent = new Intent(mContext, PlayActivity.class);
+		intent.putExtra(PlayActivity.CHARACTER, character.serialize());
+		
+		mContext.startActivityForResult(intent, PlayActivity.PLAY_CHAR_REQUEST);
+	}
+	
+	public CharacterInstance loadChar(final String aName)
+	{
 		CharacterInstance character = mCharacterCache.get(aName);
 		if (character == null)
 		{
@@ -200,11 +201,10 @@ public class CharController implements CharacterListener
 		}
 		if (character == null)
 		{
-			return;
+			return null;
 		}
 		mCharacterCache.put(character.getName(), character);
-		Toast.makeText(mContext, character.getConcept(), Toast.LENGTH_SHORT).show();
-		sortChars();
+		return character;
 	}
 	
 	@Override
@@ -217,6 +217,45 @@ public class CharController implements CharacterListener
 		mCharacterCompounds.remove(aName);
 		
 		saveCharsList();
+	}
+	
+	public void saveChar(final CharacterInstance aCharacter)
+	{
+		try
+		{
+			final String xml = aCharacter.serialize();
+			final PrintWriter writer = new PrintWriter(mContext.openFileOutput(aCharacter.getName() + ".chr", Context.MODE_PRIVATE));
+			writer.append(xml);
+			writer.flush();
+			writer.close();
+		}
+		catch (final IOException e)
+		{
+			Log.e(TAG, "Could not open file stream.");
+		}
+		mCharacterCache.put(aCharacter.getName(), aCharacter);
+	}
+	
+	public void updateChar(final CharacterInstance aCharacter)
+	{
+		saveChar(aCharacter);
+		
+		CharacterCompound charCompound = mCharacterCompounds.get(aCharacter.getName());
+		
+		charCompound.release();
+		
+		mCharacterCompounds.remove(aCharacter.getName());
+		mCharacterCompoundsList.remove(charCompound);
+		
+		charCompound = new CharacterCompound(aCharacter, this, mContext);
+		
+		mCharacterCompounds.put(aCharacter.getName(), charCompound);
+		mCharacterCompoundsList.add(charCompound);
+		
+		charCompound.use();
+		saveCharsList();
+		
+		sortChars();
 	}
 	
 	public void deleteChars()

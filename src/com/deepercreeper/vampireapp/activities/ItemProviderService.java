@@ -38,6 +38,7 @@ public class ItemProviderService extends Service implements ItemProvider
 		mInitializing = true;
 		
 		LanguageUtil.init(this);
+		
 		Log.i(TAG, "Starting item provider.");
 		mControllers = ItemUtil.createItems(this);
 		mClans = ItemUtil.createClans(this);

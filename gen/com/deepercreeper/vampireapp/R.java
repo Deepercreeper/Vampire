@@ -37,6 +37,7 @@ public final class R {
         public static final int basic_info_label=0x7f090017;
         public static final int behavior_label=0x7f090009;
         public static final int behavior_spinner=0x7f09001b;
+        public static final int char_name=0x7f09002b;
         public static final int char_name_text=0x7f090018;
         public static final int characters_list=0x7f090002;
         public static final int clan_label=0x7f09001e;
@@ -47,9 +48,10 @@ public final class R {
         public static final int controllers_panel=0x7f09001f;
         public static final int create_character_button=0x7f090000;
         public static final int create_character_free_button=0x7f090001;
-        public static final int delete_chars=0x7f09002b;
+        public static final int delete_chars=0x7f09002d;
         public static final int description_values_panel=0x7f09000b;
         public static final int ep_label=0x7f090007;
+        public static final int exit=0x7f09002c;
         public static final int free_points_bar=0x7f090012;
         public static final int free_points_info_label=0x7f090010;
         public static final int free_points_text=0x7f090011;
@@ -82,6 +84,7 @@ public final class R {
         public static final int create_char_general=0x7f030004;
         public static final int item_creation=0x7f030005;
         public static final int item_instance=0x7f030006;
+        public static final int play_lobby=0x7f030007;
     }
     public static final class menu {
         public static final int main=0x7f080000;
@@ -108,30 +111,21 @@ public final class R {
         public static final int delete_chars=0x7f060004;
         public static final int description=0x7f06000f;
         public static final int edit_item=0x7f060016;
+        public static final int exit=0x7f06001e;
         public static final int finish=0x7f060018;
         public static final int free_points_info=0x7f060012;
         public static final int generation_text=0x7f06000a;
         public static final int nature_text=0x7f060007;
         public static final int next=0x7f06000b;
         public static final int play=0x7f060019;
+        public static final int play_char=0x7f06001d;
         public static final int reset=0x7f06000e;
         public static final int service_name=0x7f06001b;
     }
     public static final class style {
-        /** 
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    
-
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        
+        /**  Maybe add an own style for all used views some day 
          */
         public static final int AppBaseTheme=0x7f070000;
-        /**  Application theme. 
- All customizations that are NOT specific to a particular API-level can go here. 
-         */
         public static final int AppTheme=0x7f070001;
     }
 }

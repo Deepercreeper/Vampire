@@ -14,27 +14,27 @@ import com.deepercreeper.vampireapp.util.view.CharacterContextMenu.CharacterList
 
 public class CharacterCompound implements Comparable<CharacterCompound>
 {
-	private static final String		TAG	= "CharacterCompound";
+	private static final String	TAG	= "CharacterCompound";
 	
-	private final Activity			mContext;
+	private final Activity		mContext;
 	
-	private final String			mName;
+	private final String		mName;
 	
-	private final String			mConcept;
+	private final String		mConcept;
 	
-	private final int				mGeneration;
+	private final int			mGeneration;
 	
-	private final String			mNature;
+	private final String		mNature;
 	
-	private final String			mBehavior;
+	private final String		mBehavior;
 	
-	private final int				mEP;
+	private final int			mEP;
 	
-	private final RelativeLayout	mContainer;
+	private final String		mData;
 	
-	private final String			mData;
+	private RelativeLayout		mContainer;
 	
-	private long					mLastUsed;
+	private long				mLastUsed;
 	
 	public CharacterCompound(final String aCharacter, final CharacterListener aListener, final Activity aContext)
 	{
@@ -55,7 +55,6 @@ public class CharacterCompound implements Comparable<CharacterCompound>
 			mLastUsed = 0;
 		}
 		
-		mContainer = new RelativeLayout(mContext);
 		mData = createData();
 		init(aListener);
 	}
@@ -71,14 +70,13 @@ public class CharacterCompound implements Comparable<CharacterCompound>
 		mEP = aCharacter.getEP();
 		mLastUsed = 0;
 		
-		mContainer = new RelativeLayout(mContext);
 		mData = createData();
 		init(aListener);
 	}
 	
 	private void init(final CharacterListener aListener)
 	{
-		View.inflate(mContext, R.layout.character_compound, mContainer);
+		mContainer = (RelativeLayout) View.inflate(mContext, R.layout.character_compound, null);
 		
 		final TextView concept = (TextView) mContainer.findViewById(R.id.concept_label);
 		concept.setText(mConcept);
@@ -163,7 +161,15 @@ public class CharacterCompound implements Comparable<CharacterCompound>
 	{
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((mBehavior == null) ? 0 : mBehavior.hashCode());
+		result = prime * result + ((mConcept == null) ? 0 : mConcept.hashCode());
+		result = prime * result + ((mContainer == null) ? 0 : mContainer.hashCode());
+		result = prime * result + ((mContext == null) ? 0 : mContext.hashCode());
+		result = prime * result + mEP;
+		result = prime * result + mGeneration;
+		result = prime * result + (int) (mLastUsed ^ (mLastUsed >>> 32));
 		result = prime * result + ((mName == null) ? 0 : mName.hashCode());
+		result = prime * result + ((mNature == null) ? 0 : mNature.hashCode());
 		return result;
 	}
 	
@@ -183,6 +189,10 @@ public class CharacterCompound implements Comparable<CharacterCompound>
 			return false;
 		}
 		final CharacterCompound other = (CharacterCompound) obj;
+		if (mLastUsed != other.mLastUsed)
+		{
+			return false;
+		}
 		if (mName == null)
 		{
 			if (other.mName != null)
@@ -214,10 +224,6 @@ public class CharacterCompound implements Comparable<CharacterCompound>
 		{
 			return getName().compareTo(aAnother.getName());
 		}
-		if (getLastUsed() > aAnother.getLastUsed())
-		{
-			return -1;
-		}
-		return 1;
+		return Long.valueOf(aAnother.getLastUsed()).compareTo(getLastUsed());
 	}
 }

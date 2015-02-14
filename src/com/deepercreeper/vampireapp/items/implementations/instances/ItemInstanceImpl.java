@@ -31,6 +31,7 @@ import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.Inst
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction.InstanceRestrictionType;
 import com.deepercreeper.vampireapp.mechanics.Action;
 import com.deepercreeper.vampireapp.mechanics.Action.ItemFinder;
+import com.deepercreeper.vampireapp.util.CodingUtil;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
@@ -92,7 +93,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		mContext = aContext;
 		if (getItem().needsDescription())
 		{
-			mDescription = aElement.getAttribute("description");
+			mDescription = CodingUtil.decode(aElement.getAttribute("description"));
 		}
 		else
 		{
@@ -202,7 +203,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		}
 		if (hasDescription())
 		{
-			item.setAttribute("description", getDescription());
+			item.setAttribute("description", CodingUtil.encode(getDescription()));
 		}
 		
 		if (hasChildren())
