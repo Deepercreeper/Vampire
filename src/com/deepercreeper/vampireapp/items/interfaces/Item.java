@@ -24,11 +24,16 @@ public interface Item extends Namable
 	 */
 	public String getDescription();
 	
+	@Override
 	public String getDisplayName();
 	
 	public void addAction(Action aAction);
 	
+	public boolean canEPIncrease();
+	
 	public int getEPCost();
+	
+	public int getEPCostNew();
 	
 	public int getEPCostMultiplicator();
 	

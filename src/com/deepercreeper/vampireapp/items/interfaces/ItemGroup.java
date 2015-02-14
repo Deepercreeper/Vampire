@@ -19,6 +19,8 @@ public interface ItemGroup extends Comparable<ItemGroup>
 	
 	public int getEPCost();
 	
+	public int getEPCostNew();
+	
 	public int getEPCostMultiplicator();
 	
 	/**

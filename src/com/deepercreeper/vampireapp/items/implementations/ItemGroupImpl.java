@@ -38,6 +38,8 @@ public class ItemGroupImpl implements ItemGroup
 	
 	private final int					mEPCost;
 	
+	private final int					mEPCostNew;
+	
 	private final int					mEPCostMultiplicator;
 	
 	private final boolean				mMutable;
@@ -53,7 +55,7 @@ public class ItemGroupImpl implements ItemGroup
 	 *            The group name.
 	 */
 	public ItemGroupImpl(final String aName, final boolean aMutable, final boolean aFreeMutable, final int aMaxLowLevelValue, final int aStartValue,
-			final int aMaxValue, final int aFreePointsCost, final boolean aValueGroup, final int aMaxItems, final int aEPCost,
+			final int aMaxValue, final int aFreePointsCost, final boolean aValueGroup, final int aMaxItems, final int aEPCost, final int aEPCostNew,
 			final int aEPCostMultiplicator)
 	{
 		mName = aName;
@@ -66,6 +68,7 @@ public class ItemGroupImpl implements ItemGroup
 		mMaxValue = aMaxValue;
 		mMaxItems = aMaxItems;
 		mEPCost = aEPCost;
+		mEPCostNew = aEPCostNew;
 		mEPCostMultiplicator = aEPCostMultiplicator;
 	}
 	
@@ -130,6 +133,12 @@ public class ItemGroupImpl implements ItemGroup
 	public int getEPCostMultiplicator()
 	{
 		return mEPCostMultiplicator;
+	}
+	
+	@Override
+	public int getEPCostNew()
+	{
+		return mEPCostNew;
 	}
 	
 	@Override

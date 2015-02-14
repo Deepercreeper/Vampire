@@ -43,6 +43,8 @@ public class ItemImpl implements Item
 	
 	private final int					mEPCost;
 	
+	private final int					mEPCostNew;
+	
 	private final int					mEPCostMultiplicator;
 	
 	private final int[]					mValues;
@@ -52,7 +54,8 @@ public class ItemImpl implements Item
 	private final Map<String, Item>		mChildren;
 	
 	public ItemImpl(final String aName, final ItemGroup aGroup, final boolean aNeedsDescription, final boolean aParent, final boolean aMutableParent,
-			final int[] aValues, final int aStartValue, final int aEPCost, final int aEPCostMultiplicator, final Item aParentItem)
+			final int[] aValues, final int aStartValue, final int aEPCost, final int aEPCostNew, final int aEPCostMultiplicator,
+			final Item aParentItem)
 	{
 		mName = aName;
 		mItemGroup = aGroup;
@@ -88,6 +91,14 @@ public class ItemImpl implements Item
 		{
 			mEPCost = aEPCost;
 		}
+		if (aEPCostNew == -1)
+		{
+			mEPCostNew = getItemGroup().getEPCostNew();
+		}
+		else
+		{
+			mEPCostNew = aEPCostNew;
+		}
 		if (aEPCostMultiplicator == -1)
 		{
 			mEPCostMultiplicator = getItemGroup().getEPCostMultiplicator();
@@ -99,9 +110,21 @@ public class ItemImpl implements Item
 	}
 	
 	@Override
+	public boolean canEPIncrease()
+	{
+		return getEPCost() != 0 || getEPCostNew() != 0 || getEPCostMultiplicator() != 0;
+	}
+	
+	@Override
 	public int getEPCost()
 	{
 		return mEPCost;
+	}
+	
+	@Override
+	public int getEPCostNew()
+	{
+		return mEPCostNew;
 	}
 	
 	@Override

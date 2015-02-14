@@ -303,6 +303,7 @@ public class GroupOptionInstanceImpl implements GroupOptionInstance
 		resize();
 	}
 	
+	@Override
 	public boolean hasAnyItem()
 	{
 		if (getGroupsList().isEmpty())
@@ -322,16 +323,11 @@ public class GroupOptionInstanceImpl implements GroupOptionInstance
 	@Override
 	public void updateGroups()
 	{
-		boolean hasAnyItem = false;
 		for (final ItemGroupInstance group : getGroupsList())
 		{
 			group.updateItems();
-			if ( !group.getItemsList().isEmpty())
-			{
-				hasAnyItem = true;
-			}
 		}
-		setEnabled(hasAnyItem);
+		setEnabled(hasAnyItem());
 	}
 	
 	@Override

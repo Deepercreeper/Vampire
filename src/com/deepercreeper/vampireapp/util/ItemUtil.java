@@ -21,14 +21,14 @@ import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationCondition;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationCondition.ConditionQuery;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
 import com.deepercreeper.vampireapp.lists.controllers.ClanController;
 import com.deepercreeper.vampireapp.lists.items.Clan;
 import com.deepercreeper.vampireapp.mechanics.Action;
-import com.deepercreeper.vampireapp.mechanics.ActionImpl;
 import com.deepercreeper.vampireapp.mechanics.Action.ActionType;
+import com.deepercreeper.vampireapp.mechanics.ActionImpl;
 
 public class ItemUtil
 {
@@ -256,6 +256,7 @@ public class ItemUtil
 				int freePointsCost = 0;
 				int epCost = 0;
 				int epCostMultiplicator = 0;
+				int epCostNew = 0;
 				int maxItems = Integer.MAX_VALUE;
 				if (child.hasAttribute("maxItems"))
 				{
@@ -270,6 +271,10 @@ public class ItemUtil
 					if (child.hasAttribute("epCostMulti"))
 					{
 						epCostMultiplicator = Integer.parseInt(child.getAttribute("epCostMulti"));
+					}
+					if (child.hasAttribute("epCostNew"))
+					{
+						epCostNew = Integer.parseInt(child.getAttribute("epCostNew"));
 					}
 					if (child.hasAttribute("maxValue"))
 					{
@@ -293,7 +298,7 @@ public class ItemUtil
 					}
 				}
 				final ItemGroup group = new ItemGroupImpl(name, mutable, freeMutable, maxLowLevelValue, startValue, maxValue, freePointsCost,
-						valueGroup, maxItems, epCost, epCostMultiplicator);
+						valueGroup, maxItems, epCost, epCostNew, epCostMultiplicator);
 				for (final Item item : createItems(child, group, null))
 				{
 					group.addItem(item);
@@ -324,11 +329,16 @@ public class ItemUtil
 				int[] values = null;
 				int startValue = -1;
 				int epCost = -1;
+				int epCostNew = -1;
 				int epCostMultiplicator = -1;
 				
 				if (child.hasAttribute("epCost"))
 				{
 					epCost = Integer.parseInt(child.getAttribute("epCost"));
+				}
+				if (child.hasAttribute("epCostNew"))
+				{
+					epCostNew = Integer.parseInt(child.getAttribute("epCostNew"));
 				}
 				if (child.hasAttribute("epCostMulti"))
 				{
@@ -356,8 +366,8 @@ public class ItemUtil
 				
 				final Item item;
 				final boolean mutableParent = Boolean.parseBoolean(child.getAttribute("mutableParent"));
-				item = new ItemImpl(name, aParentGroup, needsDescription, parent, mutableParent, values, startValue, epCost, epCostMultiplicator,
-						aParentItem);
+				item = new ItemImpl(name, aParentGroup, needsDescription, parent, mutableParent, values, startValue, epCost, epCostNew,
+						epCostMultiplicator, aParentItem);
 				for (final Item childItem : createItems(child, aParentGroup, item))
 				{
 					item.addChild(childItem);

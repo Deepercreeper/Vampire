@@ -363,6 +363,10 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 	@Override
 	public void updateGroups()
 	{
+		for (final ItemGroupCreation group : getGroupsList())
+		{
+			group.updateItems();
+		}
 		setEnabled(hasAnyItem());
 	}
 	
@@ -375,7 +379,6 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 		}
 		for (final ItemGroupCreation group : getGroupsList())
 		{
-			group.updateItems();
 			if ( !group.getItemsList().isEmpty() || group.getCreationMode().canAddItem(group))
 			{
 				return true;
