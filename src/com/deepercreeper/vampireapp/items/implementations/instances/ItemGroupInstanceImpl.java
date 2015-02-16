@@ -14,7 +14,7 @@ import android.view.Gravity;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.character.CharacterInstance;
-import com.deepercreeper.vampireapp.character.EPHandler;
+import com.deepercreeper.vampireapp.character.EPController;
 import com.deepercreeper.vampireapp.character.Mode;
 import com.deepercreeper.vampireapp.items.implementations.instances.restrictions.InstanceRestrictionableImpl;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
@@ -51,10 +51,10 @@ public class ItemGroupInstanceImpl extends InstanceRestrictionableImpl implement
 	
 	private Mode							mMode;
 	
-	private final EPHandler					mEP;
+	private final EPController					mEP;
 	
 	public ItemGroupInstanceImpl(final Element aElement, final ItemControllerInstance aItemController, final Context aContext, final Mode aMode,
-			final EPHandler aEP, final CharacterInstance aCharacter)
+			final EPController aEP, final CharacterInstance aCharacter)
 	{
 		mItemGroup = aItemController.getItemController().getGroup(aElement.getAttribute("name"));
 		mItemController = aItemController;
@@ -93,7 +93,7 @@ public class ItemGroupInstanceImpl extends InstanceRestrictionableImpl implement
 	}
 	
 	public ItemGroupInstanceImpl(final ItemGroupCreation aItemGroup, final ItemControllerInstance aItemController, final Context aContext,
-			final Mode aMode, final EPHandler aEP, final CharacterInstance aCharacter)
+			final Mode aMode, final EPController aEP, final CharacterInstance aCharacter)
 	{
 		mItemGroup = aItemGroup.getItemGroup();
 		mContext = aContext;
@@ -190,7 +190,7 @@ public class ItemGroupInstanceImpl extends InstanceRestrictionableImpl implement
 	}
 	
 	@Override
-	public EPHandler getEP()
+	public EPController getEP()
 	{
 		return mEP;
 	}
@@ -341,7 +341,7 @@ public class ItemGroupInstanceImpl extends InstanceRestrictionableImpl implement
 	@Override
 	public String toString()
 	{
-		return getItemGroup().getDisplayName() + ": " + getValue();
+		return getItemGroup().getDisplayName();
 	}
 	
 	@Override

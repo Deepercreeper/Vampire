@@ -179,11 +179,8 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 	@Override
 	public boolean isImportant()
 	{
-		if ( !isValueItem())
-		{
-			return false;
-		}
-		if (getValue() != 0)
+		// TODO Add if this is only a non value item?
+		if (isValueItem() && getValue() != 0)
 		{
 			return true;
 		}

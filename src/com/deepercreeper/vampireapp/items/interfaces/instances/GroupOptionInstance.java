@@ -1,15 +1,14 @@
 package com.deepercreeper.vampireapp.items.interfaces.instances;
 
 import java.util.List;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import android.content.Context;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.character.CharacterInstance;
 import com.deepercreeper.vampireapp.items.interfaces.GroupOption;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
+import com.deepercreeper.vampireapp.util.Saveable;
 
-public interface GroupOptionInstance extends Comparable<GroupOptionInstance>
+public interface GroupOptionInstance extends Comparable<GroupOptionInstance>, Saveable
 {
 	public void close();
 	
@@ -24,8 +23,6 @@ public interface GroupOptionInstance extends Comparable<GroupOptionInstance>
 	public GroupOption getGroupOption();
 	
 	public List<ItemGroupInstance> getGroupsList();
-	
-	public Element asElement(Document aDoc);
 	
 	public CharacterInstance getCharacter();
 	

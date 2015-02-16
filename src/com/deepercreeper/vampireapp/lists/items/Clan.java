@@ -52,7 +52,6 @@ public class Clan extends Named
 	public String getDescription()
 	{
 		return getName();
-		// TODO Implement
 	}
 	
 	@Override

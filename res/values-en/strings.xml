@@ -8,6 +8,7 @@
     <string name="delete_chars">Delete all</string>
     <string name="char_name">Character name</string>
     <string name="concept">Concept</string>
+    <string name="ep">Experience:</string>
     <string name="nature_text">Nature:</string>
     <string name="behavior_text">Behavior:</string>
     <string name="clan_text">Clan:</string>

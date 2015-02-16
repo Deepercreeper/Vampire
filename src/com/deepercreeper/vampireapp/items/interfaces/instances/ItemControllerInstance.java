@@ -1,19 +1,18 @@
 package com.deepercreeper.vampireapp.items.interfaces.instances;
 
 import java.util.List;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import android.content.Context;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.character.CharacterInstance;
-import com.deepercreeper.vampireapp.character.EPHandler;
+import com.deepercreeper.vampireapp.character.EPController;
 import com.deepercreeper.vampireapp.character.Mode;
 import com.deepercreeper.vampireapp.items.interfaces.GroupOption;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestrictionable;
+import com.deepercreeper.vampireapp.util.Saveable;
 
-public interface ItemControllerInstance extends InstanceRestrictionable
+public interface ItemControllerInstance extends InstanceRestrictionable, Saveable
 {
 	public void close();
 	
@@ -25,9 +24,7 @@ public interface ItemControllerInstance extends InstanceRestrictionable
 	
 	public List<ItemInstance> getDescriptionValues();
 	
-	public Element asElement(Document aDoc);
-	
-	public EPHandler getEP();
+	public EPController getEP();
 	
 	public CharacterInstance getCharacter();
 	

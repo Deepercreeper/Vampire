@@ -29,6 +29,7 @@ import com.deepercreeper.vampireapp.lists.items.Clan;
 import com.deepercreeper.vampireapp.lists.items.Nature;
 import com.deepercreeper.vampireapp.mechanics.Duration;
 import com.deepercreeper.vampireapp.mechanics.Duration.Type;
+import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.CodingUtil;
 import com.deepercreeper.vampireapp.util.Log;
 
@@ -40,15 +41,17 @@ public class CharacterInstance
 	
 	private final Context						mContext;
 	
-	private final GenerationControllerInstance	mGeneration;
-	
 	private final List<ItemControllerInstance>	mControllers	= new ArrayList<ItemControllerInstance>();
+	
+	private final List<TimeListener>			mTimeListeners	= new ArrayList<TimeListener>();
+	
+	private final GenerationControllerInstance	mGeneration;
 	
 	private final DescriptionInstanceController	mDescriptions;
 	
 	private final InsanityControllerInstance	mInsanities;
 	
-	private final EPHandler						mEP;
+	private final EPController					mEP;
 	
 	private final String						mName;
 	
@@ -60,6 +63,8 @@ public class CharacterInstance
 	
 	private final Clan							mClan;
 	
+	private final HealthController				mHealth;
+	
 	private Mode								mMode;
 	
 	public CharacterInstance(final CharacterCreation aCreator)
@@ -69,7 +74,8 @@ public class CharacterInstance
 		mGeneration = new GenerationControllerInstance(aCreator.getGeneration().getGeneration());
 		mDescriptions = new DescriptionInstanceController(aCreator.getDescriptions());
 		mInsanities = new InsanityControllerInstance(aCreator.getInsanities());
-		mEP = new EPHandler();
+		mEP = new EPController(getContext());
+		mHealth = new HealthController(aCreator.getHealth());
 		
 		mName = aCreator.getName();
 		mConcept = aCreator.getConcept();
@@ -119,8 +125,18 @@ public class CharacterInstance
 		mBehavior = mItems.getNatures().getItemWithName(meta.getAttribute("behavior"));
 		mGeneration = new GenerationControllerInstance(Integer.parseInt(meta.getAttribute("generation")));
 		mClan = mItems.getClans().getItemWithName(meta.getAttribute("clan"));
-		mEP = new EPHandler(Integer.parseInt(meta.getAttribute("ep")));
+		mEP = new EPController(Integer.parseInt(meta.getAttribute("ep")), getContext());
 		mMode = Mode.valueOf(meta.getAttribute("mode"));
+		
+		// Health
+		if (root.getElementsByTagName("health").getLength() == 0)
+		{
+			mHealth = new HealthController(new int[] { 0, 1, 1, 2, 2, 5, Integer.MAX_VALUE });
+		}
+		else
+		{
+			mHealth = new HealthController((Element) root.getElementsByTagName("health").item(0));
+		}
 		
 		// Insanities
 		mInsanities = new InsanityControllerInstance();
@@ -177,11 +193,19 @@ public class CharacterInstance
 			}
 		}
 		
+		addTimeListeners();
 		Log.i(TAG, "Finished loading character.");
+	}
+	
+	private void addTimeListeners()
+	{
+		mTimeListeners.add(mInsanities);
+		mTimeListeners.add(mHealth);
 	}
 	
 	public void release()
 	{
+		mEP.release();
 		for (final ItemControllerInstance controller : getControllers())
 		{
 			controller.release();
@@ -190,6 +214,7 @@ public class CharacterInstance
 	
 	public void init()
 	{
+		mEP.init();
 		for (final ItemControllerInstance controller : getControllers())
 		{
 			controller.init();
@@ -212,6 +237,11 @@ public class CharacterInstance
 	public int getEP()
 	{
 		return mEP.getExperience();
+	}
+	
+	public EPController getEPHandler()
+	{
+		return mEP;
 	}
 	
 	public int getGeneration()
@@ -294,6 +324,9 @@ public class CharacterInstance
 		meta.setAttribute("ep", "" + mEP.getExperience());
 		meta.setAttribute("mode", mMode.name());
 		root.appendChild(meta);
+		
+		// Health
+		root.appendChild(mHealth.asElement(doc));
 		
 		// Insanities
 		final Element insanities = doc.createElement("insanities");

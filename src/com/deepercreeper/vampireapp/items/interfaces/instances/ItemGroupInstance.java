@@ -1,18 +1,17 @@
 package com.deepercreeper.vampireapp.items.interfaces.instances;
 
 import java.util.List;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import android.content.Context;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.character.CharacterInstance;
-import com.deepercreeper.vampireapp.character.EPHandler;
+import com.deepercreeper.vampireapp.character.EPController;
 import com.deepercreeper.vampireapp.character.Mode;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestrictionable;
+import com.deepercreeper.vampireapp.util.Saveable;
 
-public interface ItemGroupInstance extends InstanceRestrictionable, Comparable<ItemGroupInstance>
+public interface ItemGroupInstance extends InstanceRestrictionable, Comparable<ItemGroupInstance>, Saveable
 {
 	public LinearLayout getContainer();
 	
@@ -22,11 +21,9 @@ public interface ItemGroupInstance extends InstanceRestrictionable, Comparable<I
 	
 	public boolean hasOrder();
 	
-	public EPHandler getEP();
+	public EPController getEP();
 	
 	public ItemInstance getItem(Item aItem);
-	
-	public Element asElement(Document aDoc);
 	
 	public ItemInstance getItem(String aName);
 	

@@ -436,7 +436,7 @@ public class ItemUtil
 		return actions;
 	}
 	
-	private static int[] parseValues(final String aValues)
+	public static int[] parseValues(final String aValues)
 	{
 		final String[] integers = aValues.split(",");
 		final int[] values = new int[integers.length];
@@ -445,6 +445,20 @@ public class ItemUtil
 			values[i] = Integer.parseInt(integers[i]);
 		}
 		return values;
+	}
+	
+	public static String parseValues(final int[] aValues)
+	{
+		final StringBuilder values = new StringBuilder();
+		for (int i = 0; i < aValues.length; i++ )
+		{
+			if (i != 0)
+			{
+				values.append(",");
+			}
+			values.append(aValues[i]);
+		}
+		return values.toString();
 	}
 	
 	private static String[] parseList(final String aList)

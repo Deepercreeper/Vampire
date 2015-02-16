@@ -8,8 +8,8 @@ import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.implementations.creations.ItemControllerCreationImpl;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
-import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation.PointHandler;
+import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
 import com.deepercreeper.vampireapp.lists.controllers.creations.DescriptionCreationController;
@@ -127,6 +127,12 @@ public class CharacterCreation
 	public void addInsanity(final String aInsanity)
 	{
 		mInsanities.addInsanity(aInsanity);
+	}
+	
+	public int[] getHealth()
+	{
+		// TODO Implement Health creation
+		return new int[] { 0, 1, 1, 2, 2, 5, Integer.MAX_VALUE };
 	}
 	
 	/**
@@ -380,7 +386,6 @@ public class CharacterCreation
 	 */
 	public void setInsanitiesOk(final boolean aOk)
 	{
-		// TODO Roll up the insanities handler
 		mListener.setInsanitiesOk(aOk);
 	}
 	
@@ -453,7 +458,6 @@ public class CharacterCreation
 		{
 			controller.updateGroups();
 		}
-		// TODO ... owm activity
 		mListener.setFreePoints(mFreePoints);
 	}
 	

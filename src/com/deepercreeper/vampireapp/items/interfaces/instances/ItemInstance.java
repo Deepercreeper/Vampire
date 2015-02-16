@@ -2,19 +2,18 @@ package com.deepercreeper.vampireapp.items.interfaces.instances;
 
 import java.util.List;
 import java.util.Set;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import android.content.Context;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.character.CharacterInstance;
-import com.deepercreeper.vampireapp.character.EPHandler;
+import com.deepercreeper.vampireapp.character.EPController;
 import com.deepercreeper.vampireapp.character.Mode;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestrictionable;
 import com.deepercreeper.vampireapp.mechanics.Action;
 import com.deepercreeper.vampireapp.mechanics.Action.ItemFinder;
+import com.deepercreeper.vampireapp.util.Saveable;
 
-public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemInstance>
+public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemInstance>, Saveable
 {
 	public boolean canIncrease();
 	
@@ -36,13 +35,11 @@ public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemIn
 	
 	public Context getContext();
 	
-	public Element asElement(Document aDoc);
-	
 	public String getDescription();
 	
 	public List<ItemInstance> getDescriptionItems();
 	
-	public EPHandler getEP();
+	public EPController getEP();
 	
 	public int getEPCost();
 	

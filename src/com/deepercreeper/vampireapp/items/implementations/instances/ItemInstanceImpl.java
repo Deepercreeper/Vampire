@@ -21,7 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.CharacterInstance;
-import com.deepercreeper.vampireapp.character.EPHandler;
+import com.deepercreeper.vampireapp.character.EPController;
 import com.deepercreeper.vampireapp.character.Mode;
 import com.deepercreeper.vampireapp.items.implementations.instances.restrictions.InstanceRestrictionableImpl;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
@@ -72,14 +72,14 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	
 	private boolean							mInitialized	= false;
 	
-	private final EPHandler					mEP;
+	private final EPController					mEP;
 	
 	private Mode							mMode;
 	
 	private int								mValueId		= 0;
 	
 	public ItemInstanceImpl(final Element aElement, final ItemGroupInstance aItemGroup, final Context aContext, final Mode aMode,
-			final EPHandler aEP, final ItemInstance aParentItem, final CharacterInstance aCharacter)
+			final EPController aEP, final ItemInstance aParentItem, final CharacterInstance aCharacter)
 	{
 		if (aParentItem == null)
 		{
@@ -152,7 +152,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		}
 	}
 	
-	public ItemInstanceImpl(final ItemCreation aItem, final ItemGroupInstance aItemGroup, final Mode aMode, final EPHandler aEP,
+	public ItemInstanceImpl(final ItemCreation aItem, final ItemGroupInstance aItemGroup, final Mode aMode, final EPController aEP,
 			final ItemInstance aParentItem, final CharacterInstance aCharacter)
 	{
 		mItem = aItem.getItem();
@@ -402,7 +402,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	}
 	
 	@Override
-	public EPHandler getEP()
+	public EPController getEP()
 	{
 		if (mEP == null)
 		{
@@ -547,7 +547,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			
 			if (isValueItem())
 			{
-				int additionalBarWidth = 140;
+				int additionalBarWidth = 120;
 				if (getItem().canEPIncrease())
 				{
 					mIncreaseButton.setOnClickListener(new OnClickListener()

@@ -13,7 +13,7 @@ import org.w3c.dom.NodeList;
 import android.content.Context;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.character.CharacterInstance;
-import com.deepercreeper.vampireapp.character.EPHandler;
+import com.deepercreeper.vampireapp.character.EPController;
 import com.deepercreeper.vampireapp.character.Mode;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.interfaces.GroupOption;
@@ -57,10 +57,10 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	
 	private Mode												mMode;
 	
-	private final EPHandler										mEP;
+	private final EPController										mEP;
 	
 	public ItemControllerInstanceImpl(final Element aElement, final ItemProvider aItems, final Context aContext, final Mode aMode,
-			final EPHandler aEP, final CharacterInstance aCharacter)
+			final EPController aEP, final CharacterInstance aCharacter)
 	{
 		mItemController = aItems.getController(aElement.getAttribute("name"));
 		mContext = aContext;
@@ -98,7 +98,7 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 		}
 	}
 	
-	public ItemControllerInstanceImpl(final ItemControllerCreation aItemController, final Context aContext, final Mode aMode, final EPHandler aEP,
+	public ItemControllerInstanceImpl(final ItemControllerCreation aItemController, final Context aContext, final Mode aMode, final EPController aEP,
 			final CharacterInstance aCharacter)
 	{
 		mItemController = aItemController.getItemController();
@@ -211,7 +211,7 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	}
 	
 	@Override
-	public EPHandler getEP()
+	public EPController getEP()
 	{
 		return mEP;
 	}
