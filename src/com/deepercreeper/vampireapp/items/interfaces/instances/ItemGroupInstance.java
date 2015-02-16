@@ -20,6 +20,8 @@ public interface ItemGroupInstance extends InstanceRestrictionable, Comparable<I
 	
 	public List<ItemInstance> getDescriptionItems();
 	
+	public boolean hasOrder();
+	
 	public EPHandler getEP();
 	
 	public ItemInstance getItem(Item aItem);

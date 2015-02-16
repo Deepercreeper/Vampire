@@ -27,6 +27,8 @@ public interface ItemCreation extends Comparable<ItemCreation>, CreationRestrict
 	
 	public boolean canIncrease();
 	
+	public boolean hasOrder();
+	
 	public void clear();
 	
 	public void decrease();

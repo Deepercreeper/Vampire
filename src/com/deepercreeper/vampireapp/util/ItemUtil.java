@@ -250,6 +250,7 @@ public class ItemUtil
 				final boolean mutable = Boolean.parseBoolean(child.getAttribute("mutable"));
 				final boolean freeMutable = Boolean.parseBoolean(child.getAttribute("freeMutable"));
 				final boolean valueGroup = Boolean.parseBoolean(child.getAttribute("value"));
+				final boolean order = Boolean.parseBoolean(child.getAttribute("order"));
 				int maxValue = Integer.MAX_VALUE;
 				int startValue = 0;
 				int maxLowLevelValue = 0;
@@ -297,7 +298,7 @@ public class ItemUtil
 						startValue = Integer.parseInt(child.getAttribute("startValue"));
 					}
 				}
-				final ItemGroup group = new ItemGroupImpl(name, mutable, freeMutable, maxLowLevelValue, startValue, maxValue, freePointsCost,
+				final ItemGroup group = new ItemGroupImpl(name, mutable, order, freeMutable, maxLowLevelValue, startValue, maxValue, freePointsCost,
 						valueGroup, maxItems, epCost, epCostNew, epCostMultiplicator);
 				for (final Item item : createItems(child, group, null))
 				{
@@ -325,6 +326,7 @@ public class ItemUtil
 				final String name = child.getAttribute("name");
 				final boolean needsDescription = Boolean.parseBoolean(child.getAttribute("needsDescription"));
 				final boolean parent = Boolean.parseBoolean(child.getAttribute("parent"));
+				final boolean order = Boolean.parseBoolean(child.getAttribute("order"));
 				boolean valueItem = aParentGroup.isValueGroup();
 				int[] values = null;
 				int startValue = -1;
@@ -366,7 +368,7 @@ public class ItemUtil
 				
 				final Item item;
 				final boolean mutableParent = Boolean.parseBoolean(child.getAttribute("mutableParent"));
-				item = new ItemImpl(name, aParentGroup, needsDescription, parent, mutableParent, values, startValue, epCost, epCostNew,
+				item = new ItemImpl(name, aParentGroup, needsDescription, parent, mutableParent, order, values, startValue, epCost, epCostNew,
 						epCostMultiplicator, aParentItem);
 				for (final Item childItem : createItems(child, aParentGroup, item))
 				{

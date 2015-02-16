@@ -152,8 +152,17 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			{
 				addChildSilent(new ItemCreationImpl(item, getContext(), getItemGroup(), getCreationMode(), getItemGroup().getPoints(), this));
 			}
-			sortChildren();
+			if ( !hasOrder())
+			{
+				sortChildren();
+			}
 		}
+	}
+	
+	@Override
+	public boolean hasOrder()
+	{
+		return getItem().hasOrder();
 	}
 	
 	@Override
@@ -846,16 +855,16 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		
 		if (isValueItem())
 		{
-			int additionalBarSize = 0;
+			int additionalBarWidth = 0;
 			if ( !canEditItem)
 			{
-				additionalBarSize += 60;
+				additionalBarWidth += 60;
 			}
 			if ( !canAddChildren)
 			{
-				additionalBarSize += 30;
+				additionalBarWidth += 30;
 			}
-			mValueBar.getLayoutParams().width = ViewUtil.calcPx(additionalBarSize, getContext())
+			mValueBar.getLayoutParams().width = ViewUtil.calcPx(additionalBarWidth, getContext())
 					+ Math.round(getContext().getResources().getDimension(R.dimen.item_value_bar_width));
 			ViewUtil.setWidth(mDecreaseButton, 30);
 			ViewUtil.setWidth(mIncreaseButton, 30);
@@ -871,7 +880,18 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		
 		if (hasChildren())
 		{
-			sortChildren();
+			if ( !hasOrder())
+			{
+				sortChildren();
+			}
+			else
+			{
+				for (final ItemCreation item : getChildrenList())
+				{
+					item.init();
+					getContainer().addView(item.getContainer());
+				}
+			}
 		}
 		mInitialized = true;
 	}

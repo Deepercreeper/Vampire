@@ -23,6 +23,8 @@ public interface ItemGroup extends Comparable<ItemGroup>
 	
 	public int getEPCostMultiplicator();
 	
+	public boolean hasOrder();
+	
 	/**
 	 * Returns whether and how many points need to be spent for increasing this item.<br>
 	 * If the value is positive it's a fixed value that needs to be spent each time.<br>

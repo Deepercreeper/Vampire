@@ -72,7 +72,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	
 	private boolean							mInitialized	= false;
 	
-	private EPHandler						mEP;
+	private final EPHandler					mEP;
 	
 	private Mode							mMode;
 	
@@ -92,6 +92,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		mCharacter = aCharacter;
 		mItemGroup = aItemGroup;
 		mContext = aContext;
+		mEP = aEP;
 		if (getItem().needsDescription())
 		{
 			mDescription = CodingUtil.decode(aElement.getAttribute("description"));
@@ -106,7 +107,6 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		
 		if (isValueItem())
 		{
-			mEP = aEP;
 			mValueId = Integer.parseInt(aElement.getAttribute("value"));
 		}
 		if (isParent())
@@ -138,10 +138,15 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 				{
 					continue;
 				}
-				addChildSilent(new ItemInstanceImpl(item, getItemGroup(), getContext(), getMode(), getEP(), this, getCharacter()));
+				int pos = -1;
+				if (hasOrder())
+				{
+					pos = Integer.parseInt(item.getAttribute("order"));
+				}
+				addChildSilent(new ItemInstanceImpl(item, getItemGroup(), getContext(), getMode(), getEP(), this, getCharacter()), pos);
 			}
 		}
-		if (hasChildren())
+		if (hasChildren() && !hasOrder())
 		{
 			sortChildren();
 		}
@@ -155,6 +160,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		mItemGroup = aItemGroup;
 		mContext = aItem.getContext();
 		mDescription = aItem.getDescription();
+		mEP = aEP;
 		setController(aItemGroup.getItemController());
 		mMode = aMode;
 		mContainer = new LinearLayout(getContext());
@@ -162,9 +168,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		mNameText = new TextView(getContext());
 		
 		if (isValueItem())
-		{
-			mEP = aEP;
-		}
+		{}
 		if (isParent())
 		{
 			mChildrenList = new ArrayList<ItemInstance>();
@@ -181,7 +185,11 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			throw new IllegalArgumentException("ItemInstance error!");
 		}
 		mParentItem = aParentItem;
-		mValueId = aItem.getValueId();
+		
+		if (isValueItem())
+		{
+			mValueId = aItem.getValueId();
+		}
 		
 		init();
 		
@@ -191,10 +199,13 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			{
 				if ( !aItem.isMutableParent() || item.isImportant())
 				{
-					addChildSilent(new ItemInstanceImpl(item, getItemGroup(), getMode(), getEP(), this, getCharacter()));
+					addChildSilent(new ItemInstanceImpl(item, getItemGroup(), getMode(), aEP, this, getCharacter()), -1);
 				}
 			}
-			sortChildren();
+			if ( !hasOrder())
+			{
+				sortChildren();
+			}
 		}
 	}
 	
@@ -206,6 +217,12 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			return getItem().compareTo(null);
 		}
 		return getItem().compareTo(aAnother.getItem());
+	}
+	
+	@Override
+	public boolean hasOrder()
+	{
+		return getItem().hasOrder();
 	}
 	
 	@Override
@@ -224,9 +241,21 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		
 		if (hasChildren())
 		{
-			for (final ItemInstance child : getChildrenList())
+			if (hasOrder())
 			{
-				item.appendChild(child.asElement(aDoc));
+				for (int i = 0; i < getChildrenList().size(); i++ )
+				{
+					final Element childElement = getChildrenList().get(i).asElement(aDoc);
+					childElement.setAttribute("order", "" + i);
+					item.appendChild(childElement);
+				}
+			}
+			else
+			{
+				for (final ItemInstance child : getChildrenList())
+				{
+					item.appendChild(child.asElement(aDoc));
+				}
 			}
 		}
 		return item;
@@ -375,6 +404,10 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	@Override
 	public EPHandler getEP()
 	{
+		if (mEP == null)
+		{
+			Log.w(TAG, "Tried to get EP, but was null.");
+		}
 		return mEP;
 	}
 	
@@ -514,6 +547,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			
 			if (isValueItem())
 			{
+				int additionalBarWidth = 140;
 				if (getItem().canEPIncrease())
 				{
 					mIncreaseButton.setOnClickListener(new OnClickListener()
@@ -528,9 +562,19 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 				else
 				{
 					ViewUtil.hideWidth(mIncreaseButton);
+					
+					additionalBarWidth += 30;
 				}
 				
+				mValueBar.getLayoutParams().width = ViewUtil.calcPx(additionalBarWidth, getContext())
+						+ Math.round(getContext().getResources().getDimension(R.dimen.item_value_bar_width));
+				
 				refreshValue();
+			}
+			else
+			{
+				ViewUtil.hideWidth(mValueBar);
+				ViewUtil.hideWidth(mIncreaseButton);
 			}
 		}
 		else
@@ -543,7 +587,18 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		
 		if (hasChildren())
 		{
-			sortChildren();
+			if ( !hasOrder())
+			{
+				sortChildren();
+			}
+			else
+			{
+				for (final ItemInstance item : getChildrenList())
+				{
+					item.init();
+					getContainer().addView(item.getContainer());
+				}
+			}
 		}
 		
 		mInitialized = true;
@@ -732,7 +787,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		}
 	}
 	
-	private void addChildSilent(final ItemInstance aItem)
+	private void addChildSilent(final ItemInstance aItem, final int aPos)
 	{
 		if ( !isParent())
 		{
@@ -744,8 +799,16 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			Log.w(TAG, "Tried to add a child to a parent item twice.");
 			return;
 		}
-		getChildrenList().add(aItem);
 		mChildren.put(aItem.getName(), aItem);
-		getContainer().addView(aItem.getContainer());
+		if (aPos != -1)
+		{
+			getChildrenList().add(aPos, aItem);
+			getContainer().addView(aItem.getContainer(), aPos);
+		}
+		else
+		{
+			getChildrenList().add(aItem);
+			getContainer().addView(aItem.getContainer());
+		}
 	}
 }

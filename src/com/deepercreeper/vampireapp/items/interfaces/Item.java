@@ -51,6 +51,8 @@ public interface Item extends Namable
 	
 	public int getMaxLowLevelValue();
 	
+	public boolean hasOrder();
+	
 	public Item getParentItem();
 	
 	public int getStartValue();

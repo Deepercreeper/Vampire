@@ -79,8 +79,17 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 					addItemSilent(new ItemCreationImpl(item, getContext(), this, getCreationMode(), getPoints(), null));
 				}
 			}
-			sortItems();
+			if ( !hasOrder())
+			{
+				sortItems();
+			}
 		}
+	}
+	
+	@Override
+	public boolean hasOrder()
+	{
+		return getItemGroup().hasOrder();
 	}
 	
 	@Override
@@ -394,7 +403,18 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 			getContainer().addView(mAddButton);
 		}
 		
-		sortItems();
+		if ( !hasOrder())
+		{
+			sortItems();
+		}
+		else
+		{
+			for (final ItemCreation item : getItemsList())
+			{
+				item.init();
+				getContainer().addView(item.getContainer());
+			}
+		}
 		mInitialized = true;
 	}
 	

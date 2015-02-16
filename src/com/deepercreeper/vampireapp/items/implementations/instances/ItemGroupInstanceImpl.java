@@ -78,10 +78,18 @@ public class ItemGroupInstanceImpl extends InstanceRestrictionableImpl implement
 				{
 					continue;
 				}
-				addItemSilent(new ItemInstanceImpl(item, this, getContext(), getMode(), getEP(), null, getCharacter()));
+				int pos = -1;
+				if (hasOrder())
+				{
+					pos = Integer.parseInt(item.getAttribute("order"));
+				}
+				addItemSilent(new ItemInstanceImpl(item, this, getContext(), getMode(), getEP(), null, getCharacter()), pos);
 			}
 		}
-		sortItems();
+		if ( !hasOrder())
+		{
+			sortItems();
+		}
 	}
 	
 	public ItemGroupInstanceImpl(final ItemGroupCreation aItemGroup, final ItemControllerInstance aItemController, final Context aContext,
@@ -103,10 +111,13 @@ public class ItemGroupInstanceImpl extends InstanceRestrictionableImpl implement
 		{
 			if ( !getItemGroup().isMutable() || item.isImportant())
 			{
-				addItemSilent(new ItemInstanceImpl(item, this, getMode(), getEP(), null, getCharacter()));
+				addItemSilent(new ItemInstanceImpl(item, this, getMode(), getEP(), null, getCharacter()), -1);
 			}
 		}
-		sortItems();
+		if ( !hasOrder())
+		{
+			sortItems();
+		}
 	}
 	
 	@Override
@@ -114,11 +125,22 @@ public class ItemGroupInstanceImpl extends InstanceRestrictionableImpl implement
 	{
 		final Element group = aDoc.createElement("group");
 		group.setAttribute("name", getName());
-		for (final ItemInstance item : getItemsList())
+		for (int i = 0; i < getItemsList().size(); i++ )
 		{
-			group.appendChild(item.asElement(aDoc));
+			final Element element = getItemsList().get(i).asElement(aDoc);
+			if (hasOrder())
+			{
+				element.setAttribute("order", "" + i);
+			}
+			group.appendChild(element);
 		}
 		return group;
+	}
+	
+	@Override
+	public boolean hasOrder()
+	{
+		return getItemGroup().hasOrder();
 	}
 	
 	@Override
@@ -274,7 +296,18 @@ public class ItemGroupInstanceImpl extends InstanceRestrictionableImpl implement
 		}
 		getContainer().addView(mTitleText);
 		
-		sortItems();
+		if ( !hasOrder())
+		{
+			sortItems();
+		}
+		else
+		{
+			for (final ItemInstance item : getItemsList())
+			{
+				item.init();
+				getContainer().addView(item.getContainer());
+			}
+		}
 		mInitialized = true;
 	}
 	
@@ -349,16 +382,24 @@ public class ItemGroupInstanceImpl extends InstanceRestrictionableImpl implement
 		}
 	}
 	
-	private void addItemSilent(final ItemInstance aItem)
+	private void addItemSilent(final ItemInstance aItem, final int aPos)
 	{
 		if (getItemsList().contains(aItem))
 		{
 			Log.w(TAG, "Tried to add a child to a group twice.");
 			return;
 		}
-		getItemsList().add(aItem);
 		mItems.put(aItem.getItem(), aItem);
-		getContainer().addView(aItem.getContainer());
+		if (aPos != -1)
+		{
+			getItemsList().add(aPos, aItem);
+			getContainer().addView(aItem.getContainer(), aPos + 1);
+		}
+		else
+		{
+			getItemsList().add(aItem);
+			getContainer().addView(aItem.getContainer(), aPos + 1);
+		}
 		getItemController().resize();
 		updateController();
 	}

@@ -17,6 +17,8 @@ public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, Creati
 	
 	public boolean canChangeBy(int aValue);
 	
+	public boolean hasOrder();
+	
 	public void clear();
 	
 	public void editItem(Item aItem);

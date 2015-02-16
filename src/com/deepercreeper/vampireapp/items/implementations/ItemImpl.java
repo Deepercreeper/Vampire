@@ -39,6 +39,8 @@ public class ItemImpl implements Item
 	
 	private final boolean				mValueItem;
 	
+	private final boolean				mOrder;
+	
 	private final int					mStartValue;
 	
 	private final int					mEPCost;
@@ -54,14 +56,15 @@ public class ItemImpl implements Item
 	private final Map<String, Item>		mChildren;
 	
 	public ItemImpl(final String aName, final ItemGroup aGroup, final boolean aNeedsDescription, final boolean aParent, final boolean aMutableParent,
-			final int[] aValues, final int aStartValue, final int aEPCost, final int aEPCostNew, final int aEPCostMultiplicator,
-			final Item aParentItem)
+			final boolean aOrder, final int[] aValues, final int aStartValue, final int aEPCost, final int aEPCostNew,
+			final int aEPCostMultiplicator, final Item aParentItem)
 	{
 		mName = aName;
 		mItemGroup = aGroup;
 		mNeedsDescription = aNeedsDescription;
 		mParent = aParent;
 		mMutableParent = aMutableParent;
+		mOrder = aOrder;
 		mValues = aValues;
 		mValueItem = mValues != null;
 		mParentItem = aParentItem;
@@ -107,6 +110,12 @@ public class ItemImpl implements Item
 		{
 			mEPCostMultiplicator = aEPCostMultiplicator;
 		}
+	}
+	
+	@Override
+	public boolean hasOrder()
+	{
+		return mOrder;
 	}
 	
 	@Override

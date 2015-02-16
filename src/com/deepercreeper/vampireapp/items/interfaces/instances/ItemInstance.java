@@ -20,6 +20,8 @@ public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemIn
 	
 	public int getAbsoluteValue();
 	
+	public boolean hasOrder();
+	
 	public Set<Action> getActions();
 	
 	public int getAllValues();

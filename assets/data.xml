@@ -107,6 +107,7 @@
                 name="Skills"
                 freePointsCost="3"
                 epCostMulti="2"
+                epCostNew="3"
                 maxLowLevelValue="5"
                 maxValue="6"
                 mutable="false"
@@ -138,6 +139,7 @@
                 name="Knowledges"
                 freePointsCost="3"
                 epCostMulti="2"
+                epCostNew="3"
                 maxLowLevelValue="5"
                 maxValue="6"
                 mutable="false"
@@ -185,7 +187,8 @@
             <group
                 name="Disciplines"
                 freePointsCost="7"
-                epCostMulti="5"
+                epCostMulti="7"
+                epCostNew="10"
                 maxLowLevelValue="5"
                 maxValue="6"
                 mutable="false"
@@ -794,6 +797,7 @@
                     name="Thaumaturgy"
                     mutableParent="true"
                     parent="true"
+                    order="true"
                     valueItem="false">
 
                     <item
@@ -1502,7 +1506,7 @@
             <group
                 name="Willpower"
                 freePointsCost="2"
-                epCostMulti="2"
+                epCostMulti="1"
                 maxValue="20"
                 mutable="false"
                 startValue="10"
