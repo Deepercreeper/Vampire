@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.character;
+package com.deepercreeper.vampireapp.character.instance;
 
 import java.io.File;
 import java.io.FileInputStream;

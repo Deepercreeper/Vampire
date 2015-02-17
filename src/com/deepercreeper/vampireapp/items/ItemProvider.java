@@ -17,4 +17,6 @@ public interface ItemProvider
 	public DescriptionController getDescriptions();
 	
 	public NatureController getNatures();
+	
+	public int[] getDefaultHealth();
 }

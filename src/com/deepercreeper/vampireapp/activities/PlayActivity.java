@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.character.CharacterInstance;
+import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
@@ -76,6 +76,8 @@ public class PlayActivity extends Activity implements ItemConsumer
 		mChar.init();
 		
 		controllersPanel.addView(mChar.getEPHandler().getContainer());
+		
+		controllersPanel.addView(mChar.getHealth().getContainer());
 		
 		for (final ItemControllerInstance controller : mChar.getControllers())
 		{

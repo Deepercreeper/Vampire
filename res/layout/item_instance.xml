@@ -29,6 +29,7 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="100dp"
         android:layout_height="30dp"
+        android:progressDrawable="@drawable/progress_bar"
         android:layout_toRightOf="@id/item_value" />
 
     <ImageButton

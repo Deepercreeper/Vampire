@@ -6,7 +6,7 @@ import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.lists.controllers.ClanController;
 import com.deepercreeper.vampireapp.lists.controllers.DescriptionController;
 import com.deepercreeper.vampireapp.lists.controllers.NatureController;
-import com.deepercreeper.vampireapp.util.ItemUtil;
+import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.LanguageUtil;
 
 public class ItemProviderImpl implements ItemProvider
@@ -19,13 +19,16 @@ public class ItemProviderImpl implements ItemProvider
 	
 	private final List<ItemController>	mControllers;
 	
+	private final int[]					mDefaultHealth;
+	
 	public ItemProviderImpl(final Context aContext)
 	{
 		LanguageUtil.init(aContext);
-		mClans = ItemUtil.createClans(aContext);
-		mControllers = ItemUtil.createItems(aContext);
+		mClans = DataUtil.createClans(aContext);
+		mControllers = DataUtil.createItems(aContext);
 		mNatures = new NatureController(aContext.getResources());
 		mDescriptions = new DescriptionController(aContext.getResources());
+		mDefaultHealth = DataUtil.loadDefaultHealth(aContext);
 	}
 	
 	@Override
@@ -50,6 +53,12 @@ public class ItemProviderImpl implements ItemProvider
 	public NatureController getNatures()
 	{
 		return mNatures;
+	}
+	
+	@Override
+	public int[] getDefaultHealth()
+	{
+		return mDefaultHealth;
 	}
 	
 	@Override

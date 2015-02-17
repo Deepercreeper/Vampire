@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.character;
+package com.deepercreeper.vampireapp.character.instance;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -18,6 +18,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import android.content.Context;
+import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.implementations.instances.ItemControllerInstanceImpl;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
@@ -63,7 +64,7 @@ public class CharacterInstance
 	
 	private final Clan							mClan;
 	
-	private final HealthController				mHealth;
+	private final HealthControllerInstance		mHealth;
 	
 	private Mode								mMode;
 	
@@ -75,7 +76,7 @@ public class CharacterInstance
 		mDescriptions = new DescriptionInstanceController(aCreator.getDescriptions());
 		mInsanities = new InsanityControllerInstance(aCreator.getInsanities());
 		mEP = new EPController(getContext());
-		mHealth = new HealthController(aCreator.getHealth());
+		mHealth = new HealthControllerInstance(aCreator.getHealthSteps(), mContext);
 		
 		mName = aCreator.getName();
 		mConcept = aCreator.getConcept();
@@ -129,14 +130,7 @@ public class CharacterInstance
 		mMode = Mode.valueOf(meta.getAttribute("mode"));
 		
 		// Health
-		if (root.getElementsByTagName("health").getLength() == 0)
-		{
-			mHealth = new HealthController(new int[] { 0, 1, 1, 2, 2, 5, Integer.MAX_VALUE });
-		}
-		else
-		{
-			mHealth = new HealthController((Element) root.getElementsByTagName("health").item(0));
-		}
+		mHealth = new HealthControllerInstance((Element) root.getElementsByTagName("health").item(0), mContext);
 		
 		// Insanities
 		mInsanities = new InsanityControllerInstance();
@@ -203,9 +197,15 @@ public class CharacterInstance
 		mTimeListeners.add(mHealth);
 	}
 	
+	public HealthControllerInstance getHealth()
+	{
+		return mHealth;
+	}
+	
 	public void release()
 	{
 		mEP.release();
+		mHealth.release();
 		for (final ItemControllerInstance controller : getControllers())
 		{
 			controller.release();
@@ -215,6 +215,7 @@ public class CharacterInstance
 	public void init()
 	{
 		mEP.init();
+		mHealth.init();
 		for (final ItemControllerInstance controller : getControllers())
 		{
 			controller.init();

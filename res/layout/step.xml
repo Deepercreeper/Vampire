@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+    
+	<ImageButton
+        android:id="@+id/remove_button"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentLeft="true"
+        android:contentDescription="@string/content_description"
+        android:src="@android:drawable/ic_menu_delete" />
+	
+	<TextView 
+		android:id="@+id/value_label"
+		android:layout_width="wrap_content"
+		android:layout_height="30dp"
+		android:gravity="center_vertical"
+		android:layout_toRightOf="@id/remove_button"
+	    />
+
+	<ImageButton
+        android:id="@+id/increase_button"
+        android:layout_width="80dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:contentDescription="@string/content_description"
+        android:src="@android:drawable/arrow_up_float" />
+		
+	<ImageButton
+        android:id="@+id/decrease_button"
+        android:layout_width="80dp"
+        android:layout_height="30dp"
+        android:layout_toLeftOf="@id/increase_button"
+        android:contentDescription="@string/content_description"
+        android:src="@android:drawable/arrow_down_float" />
+    
+</RelativeLayout>

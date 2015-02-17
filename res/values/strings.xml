@@ -33,4 +33,7 @@
 	<string name="content_description">Placeholder</string>
 	<string name="play_char">Lobby</string>
 	<string name="exit">Beenden</string>
+	<string name="add_health">Lebensstufe hinzufügen</string>
+	<string name="health">Leben:</string>
+	<string name="ko">Außer Gefecht</string>
 </resources>

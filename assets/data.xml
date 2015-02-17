@@ -24,8 +24,8 @@
 
             <group
                 name="Social"
-                freePointsCost="5"
                 epCostMulti="4"
+                freePointsCost="5"
                 maxLowLevelValue="5"
                 maxValue="6"
                 mutable="false"
@@ -41,8 +41,8 @@
 
             <group
                 name="Mental"
-                freePointsCost="5"
                 epCostMulti="4"
+                freePointsCost="5"
                 maxLowLevelValue="5"
                 maxValue="6"
                 mutable="false"
@@ -73,9 +73,9 @@
 
             <group
                 name="Talents"
-                freePointsCost="3"
                 epCostMulti="2"
                 epCostNew="3"
+                freePointsCost="3"
                 maxLowLevelValue="5"
                 maxValue="6"
                 mutable="false"
@@ -105,9 +105,9 @@
 
             <group
                 name="Skills"
-                freePointsCost="3"
                 epCostMulti="2"
                 epCostNew="3"
+                freePointsCost="3"
                 maxLowLevelValue="5"
                 maxValue="6"
                 mutable="false"
@@ -137,9 +137,9 @@
 
             <group
                 name="Knowledges"
-                freePointsCost="3"
                 epCostMulti="2"
                 epCostNew="3"
+                freePointsCost="3"
                 maxLowLevelValue="5"
                 maxValue="6"
                 mutable="false"
@@ -186,13 +186,13 @@
 
             <group
                 name="Disciplines"
-                freePointsCost="7"
                 epCostMulti="7"
                 epCostNew="10"
+                freeMutable="true"
+                freePointsCost="7"
                 maxLowLevelValue="5"
                 maxValue="6"
                 mutable="false"
-                freeMutable="true"
                 startValue="0"
                 value="true" >
 
@@ -796,8 +796,8 @@
                 <item
                     name="Thaumaturgy"
                     mutableParent="true"
-                    parent="true"
                     order="true"
+                    parent="true"
                     valueItem="false">
 
                     <item
@@ -1478,9 +1478,9 @@
 
             <group
                 name="Road"
+                epCostMulti="2"
                 freePointsCost="2"
                 maxItems="1"
-                epCostMulti="2"
                 maxValue="10"
                 mutable="true"
                 startValue="5"
@@ -1505,8 +1505,8 @@
 
             <group
                 name="Willpower"
-                freePointsCost="2"
                 epCostMulti="1"
+                freePointsCost="2"
                 maxValue="20"
                 mutable="false"
                 startValue="10"
@@ -1577,7 +1577,7 @@
                 itemName="Appearance"
                 range="=0"
                 type="ItemValue" />
-            
+
             <restriction
                 itemName="Road"
                 items="Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
@@ -1590,7 +1590,7 @@
                 itemName="Disciplines"
                 items="Speed,Presence,Strenth"
                 type="GroupChildren" />
-            
+
             <restriction
                 itemName="Road"
                 items="Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
@@ -1607,7 +1607,7 @@
             <restriction
                 range="=13"
                 type="Generation" />
-            
+
             <restriction
                 itemName="Road"
                 items="Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
@@ -1620,7 +1620,7 @@
                 itemName="Disciplines"
                 items="Gestalt-switch,Fortitude,Animality"
                 type="GroupChildren" />
-            
+
             <restriction
                 itemName="Road"
                 items="Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
@@ -1633,7 +1633,7 @@
                 itemName="Disciplines"
                 items="Presence,Serpentis,Obscuration"
                 type="GroupChildren" />
-            
+
             <restriction
                 itemName="Road"
                 items="Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
@@ -1646,7 +1646,7 @@
                 itemName="Disciplines"
                 items="Auspex,Mortis,Fortitude"
                 type="GroupChildren" />
-            
+
             <restriction
                 itemName="Road"
                 items="Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
@@ -1659,7 +1659,7 @@
                 itemName="Disciplines"
                 items="Domination,Shadow play,Force"
                 type="GroupChildren" />
-            
+
             <restriction
                 itemName="Road"
                 items="Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
@@ -1676,7 +1676,7 @@
             <restriction
                 range=">0"
                 type="Insanity" />
-            
+
             <restriction
                 itemName="Road"
                 items="Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
@@ -1689,7 +1689,7 @@
                 itemName="Disciplines"
                 items="Chimeras,Fortitude,Animality"
                 type="GroupChildren" />
-            
+
             <restriction
                 itemName="Road"
                 items="Road of heaven,Road of humanity,Road of paradox,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
@@ -1702,7 +1702,7 @@
                 itemName="Disciplines"
                 items="Auspex,Speed,Presence"
                 type="GroupChildren" />
-            
+
             <restriction
                 itemName="Road"
                 items="Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
@@ -1715,7 +1715,7 @@
                 itemName="Disciplines"
                 items="Auspex,Fleshforming,Animality"
                 type="GroupChildren" />
-            
+
             <restriction
                 itemName="Road"
                 items="Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
@@ -1728,7 +1728,7 @@
                 itemName="Disciplines"
                 items="Domination,Presence,Fortitude"
                 type="GroupChildren" />
-            
+
             <restriction
                 itemName="Road"
                 items="Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
@@ -1746,7 +1746,7 @@
                 itemName="Thaumaturgy"
                 range="&lt;3"
                 type="ItemChildrenCount" />
-            
+
             <restriction
                 itemName="Road"
                 items="Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
@@ -1779,4 +1779,7 @@
             </restriction>
         </clan>
     </clans>
+
+    <health values="0,1,1,2,2,5,-1" />
+
 </data>

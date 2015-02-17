@@ -3,7 +3,7 @@ package com.deepercreeper.vampireapp.items.interfaces.creations;
 import java.util.List;
 import android.content.Context;
 import android.widget.LinearLayout;
-import com.deepercreeper.vampireapp.character.CreationMode;
+import com.deepercreeper.vampireapp.character.creation.CreationMode;
 import com.deepercreeper.vampireapp.items.interfaces.GroupOption;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;

@@ -39,7 +39,7 @@ public class LanguageUtil
 			mInitialized = true;
 			return;
 		}
-		final Document pack = DataUtil.getDocument(mContext, "language", true);
+		final Document pack = FilesUtil.loadDocument(mContext, "language", true);
 		if (pack == null)
 		{
 			mInitialized = true;

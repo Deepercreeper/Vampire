@@ -15,7 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.character.CreationMode;
+import com.deepercreeper.vampireapp.character.creation.CreationMode;
 import com.deepercreeper.vampireapp.items.implementations.creations.restrictions.CreationRestrictionableImpl;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation.PointHandler;

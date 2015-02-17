@@ -3,7 +3,7 @@ package com.deepercreeper.vampireapp.lists.controllers.creations;
 import android.content.Context;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
-import com.deepercreeper.vampireapp.character.CharacterCreation;
+import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
 import com.deepercreeper.vampireapp.items.implementations.creations.restrictions.CreationRestrictionableImpl;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
 import com.deepercreeper.vampireapp.util.ViewUtil;

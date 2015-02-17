@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.character;
+package com.deepercreeper.vampireapp.character.creation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +70,8 @@ public class CharacterCreation
 	
 	private final InsanityControllerCreation	mInsanities;
 	
+	private final HealthControllerCreation		mHealth;
+	
 	private final CharCreationListener			mListener;
 	
 	/**
@@ -114,6 +116,7 @@ public class CharacterCreation
 		mDescriptions = new DescriptionCreationController(mItems.getDescriptions());
 		mInsanities = new InsanityControllerCreation(mContext, this);
 		mGeneration = new GenerationControllerCreation(mContext, this);
+		mHealth = new HealthControllerCreation(mContext, mItems);
 		mBehavior = mNature = mItems.getNatures().getFirst();
 		setClan(mItems.getClans().getFirst());
 	}
@@ -129,10 +132,14 @@ public class CharacterCreation
 		mInsanities.addInsanity(aInsanity);
 	}
 	
-	public int[] getHealth()
+	public int[] getHealthSteps()
 	{
-		// TODO Implement Health creation
-		return new int[] { 0, 1, 1, 2, 2, 5, Integer.MAX_VALUE };
+		return mHealth.getSteps();
+	}
+	
+	public HealthControllerCreation getHealth()
+	{
+		return mHealth;
 	}
 	
 	/**
@@ -280,6 +287,7 @@ public class CharacterCreation
 		{
 			controller.release();
 		}
+		mHealth.release();
 	}
 	
 	/**

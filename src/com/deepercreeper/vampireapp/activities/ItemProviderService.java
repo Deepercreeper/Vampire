@@ -10,7 +10,7 @@ import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.lists.controllers.ClanController;
 import com.deepercreeper.vampireapp.lists.controllers.DescriptionController;
 import com.deepercreeper.vampireapp.lists.controllers.NatureController;
-import com.deepercreeper.vampireapp.util.ItemUtil;
+import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.LanguageUtil;
 import com.deepercreeper.vampireapp.util.Log;
 
@@ -28,6 +28,8 @@ public class ItemProviderService extends Service implements ItemProvider
 	
 	private DescriptionController	mDescriptions;
 	
+	private int[]					mDefaultHealth;
+	
 	private boolean					mInitializing	= false;
 	
 	@Override
@@ -40,10 +42,11 @@ public class ItemProviderService extends Service implements ItemProvider
 		LanguageUtil.init(this);
 		
 		Log.i(TAG, "Starting item provider.");
-		mControllers = ItemUtil.createItems(this);
-		mClans = ItemUtil.createClans(this);
+		mControllers = DataUtil.createItems(this);
+		mClans = DataUtil.createClans(this);
 		mNatures = new NatureController(getResources());
 		mDescriptions = new DescriptionController(getResources());
+		mDefaultHealth = DataUtil.loadDefaultHealth(this);
 		Log.i(TAG, "Started item provider.");
 		
 		mInitializing = false;
@@ -102,6 +105,12 @@ public class ItemProviderService extends Service implements ItemProvider
 	public NatureController getNatures()
 	{
 		return mNatures;
+	}
+	
+	@Override
+	public int[] getDefaultHealth()
+	{
+		return mDefaultHealth;
 	}
 	
 	@Override

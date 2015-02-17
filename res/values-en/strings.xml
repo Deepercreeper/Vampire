@@ -33,4 +33,7 @@
 	<string name="content_description">Placeholder</string>
 	<string name="play_char">Lobby</string>
 	<string name="exit">Beenden</string>
+	<string name="add_health">Add health step</string>
+	<string name="health">Health:</string>
+	<string name="ko">Knocked out</string>
 </resources>

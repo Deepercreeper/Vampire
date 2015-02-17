@@ -18,10 +18,10 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.character.CharacterCreation;
-import com.deepercreeper.vampireapp.character.CharacterCreation.CharCreationListener;
-import com.deepercreeper.vampireapp.character.CharacterInstance;
-import com.deepercreeper.vampireapp.character.CreationMode;
+import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
+import com.deepercreeper.vampireapp.character.creation.CharacterCreation.CharCreationListener;
+import com.deepercreeper.vampireapp.character.creation.CreationMode;
+import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
@@ -265,6 +265,12 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 			controllersPanel.addView(controller.getContainer());
 			controller.close();
 			controller.updateGroups();
+		}
+		
+		if (mFreeCreation)
+		{
+			mChar.getHealth().init();
+			controllersPanel.addView(mChar.getHealth().getContainer());
 		}
 		
 		nextButton.setEnabled(isNameOk(mChar.getName()));
