@@ -1,6 +1,7 @@
 package com.deepercreeper.vampireapp.items;
 
 import java.util.List;
+import com.deepercreeper.vampireapp.character.Health;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.lists.controllers.ClanController;
 import com.deepercreeper.vampireapp.lists.controllers.DescriptionController;
@@ -18,5 +19,5 @@ public interface ItemProvider
 	
 	public NatureController getNatures();
 	
-	public int[] getDefaultHealth();
+	public Health getHealth();
 }

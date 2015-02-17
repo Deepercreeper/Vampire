@@ -10,6 +10,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import android.content.Context;
+import com.deepercreeper.vampireapp.character.Health;
 import com.deepercreeper.vampireapp.items.implementations.GroupOptionImpl;
 import com.deepercreeper.vampireapp.items.implementations.ItemControllerImpl;
 import com.deepercreeper.vampireapp.items.implementations.ItemGroupImpl;
@@ -159,11 +160,12 @@ public class DataUtil
 		return restrictions;
 	}
 	
-	public static int[] loadDefaultHealth(final Context aContext)
+	public static Health loadHealth(final Context aContext)
 	{
 		final Document doc = getData(aContext);
 		final Element element = (Element) doc.getElementsByTagName("health").item(0);
-		return parseValues(element.getAttribute("values"));
+		final Health health = new Health(parseValues(element.getAttribute("values")), element.getAttribute("cost"));
+		return health;
 	}
 	
 	private static Set<CreationCondition> loadConditions(final Node aRestrictionNode)

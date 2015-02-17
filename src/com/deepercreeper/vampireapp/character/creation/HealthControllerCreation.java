@@ -109,22 +109,31 @@ public class HealthControllerCreation
 	
 	private final Context		mContext;
 	
-	private boolean				mInitialized	= false;
+	private final String		mCost;
 	
 	private final Button		mAddButton;
+	
+	private boolean				mInitialized	= false;
 	
 	public HealthControllerCreation(final Context aContext, final ItemProvider aItems)
 	{
 		mContext = aContext;
+		mCost = aItems.getHealth().getCost();
+		
 		mContainer = new LinearLayout(mContext);
 		mAddButton = new Button(mContext);
 		
-		for (final int health : aItems.getDefaultHealth())
+		for (final int health : aItems.getHealth().getSteps())
 		{
 			mSteps.add(new Step(health));
 		}
 		
 		init();
+	}
+	
+	public String getCost()
+	{
+		return mCost;
 	}
 	
 	public void release()

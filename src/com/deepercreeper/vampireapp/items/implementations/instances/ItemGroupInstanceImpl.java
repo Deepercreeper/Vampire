@@ -51,7 +51,7 @@ public class ItemGroupInstanceImpl extends InstanceRestrictionableImpl implement
 	
 	private Mode							mMode;
 	
-	private final EPController					mEP;
+	private final EPController				mEP;
 	
 	public ItemGroupInstanceImpl(final Element aElement, final ItemControllerInstance aItemController, final Context aContext, final Mode aMode,
 			final EPController aEP, final CharacterInstance aCharacter)
@@ -401,6 +401,7 @@ public class ItemGroupInstanceImpl extends InstanceRestrictionableImpl implement
 			getContainer().addView(aItem.getContainer(), aPos + 1);
 		}
 		getItemController().resize();
+		getItemController().addItem(aItem);
 		updateController();
 	}
 }

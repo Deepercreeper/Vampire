@@ -3,6 +3,7 @@ package com.deepercreeper.vampireapp.character.instance;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
@@ -10,6 +11,9 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.character.creation.HealthControllerCreation;
+import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
+import com.deepercreeper.vampireapp.mechanics.Action.ItemFinder;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.Saveable;
@@ -17,9 +21,15 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
 
 public class HealthControllerInstance implements TimeListener, Saveable
 {
+	private static final String		TAG				= "HealthControllerInstance";
+	
 	private final RelativeLayout	mContainer;
 	
 	private final Context			mContext;
+	
+	private final ItemInstance		mCost;
+	
+	private final ItemFinder		mItems;
 	
 	private ImageButton				mHealButton;
 	
@@ -37,22 +47,26 @@ public class HealthControllerInstance implements TimeListener, Saveable
 	
 	private int						mValue			= 0;
 	
-	public HealthControllerInstance(final Element aElement, final Context aContext)
+	public HealthControllerInstance(final Element aElement, final Context aContext, final ItemFinder aItems)
 	{
 		mContext = aContext;
+		mItems = aItems;
 		mContainer = (RelativeLayout) View.inflate(aContext, R.layout.health, null);
 		mSteps = DataUtil.parseValues(aElement.getAttribute("steps"));
 		mHeavyWounds = Boolean.valueOf(aElement.getAttribute("heavy"));
 		mCanHeal = Boolean.valueOf(aElement.getAttribute("canHeal"));
 		mValue = Integer.parseInt(aElement.getAttribute("value"));
+		mCost = mItems.findItem(aElement.getAttribute("cost"));
 		init();
 	}
 	
-	public HealthControllerInstance(final int[] aSteps, final Context aContext)
+	public HealthControllerInstance(final HealthControllerCreation aHealth, final Context aContext, final ItemFinder aItems)
 	{
 		mContext = aContext;
+		mItems = aItems;
 		mContainer = (RelativeLayout) View.inflate(aContext, R.layout.health, null);
-		mSteps = aSteps;
+		mSteps = aHealth.getSteps();
+		mCost = mItems.findItem(aHealth.getCost());
 		init();
 	}
 	
@@ -147,8 +161,8 @@ public class HealthControllerInstance implements TimeListener, Saveable
 	
 	public boolean canHeal()
 	{
-		// TODO Ask the player for blood
-		return mCanHeal && mValue > 0;
+		Log.i(TAG, "" + (mCost.getValue() > 0));
+		return mCanHeal && mValue > 0 && mCost.getValue() > 0;
 	}
 	
 	public void heal(final int aValue)
@@ -172,6 +186,7 @@ public class HealthControllerInstance implements TimeListener, Saveable
 		element.setAttribute("value", "" + mValue);
 		element.setAttribute("canHeal", "" + mCanHeal);
 		element.setAttribute("heavy", "" + mHeavyWounds);
+		element.setAttribute("cost", mCost.getName());
 		return element;
 	}
 	

@@ -57,7 +57,7 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	
 	private Mode												mMode;
 	
-	private final EPController										mEP;
+	private final EPController									mEP;
 	
 	public ItemControllerInstanceImpl(final Element aElement, final ItemProvider aItems, final Context aContext, final Mode aMode,
 			final EPController aEP, final CharacterInstance aCharacter)
@@ -152,6 +152,12 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 			controller.appendChild(group.asElement(aDoc));
 		}
 		return controller;
+	}
+	
+	@Override
+	public void addItem(final ItemInstance aItem)
+	{
+		mItems.put(aItem.getName(), aItem);
 	}
 	
 	@Override

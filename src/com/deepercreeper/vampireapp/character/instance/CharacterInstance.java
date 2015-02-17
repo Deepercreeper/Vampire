@@ -23,18 +23,20 @@ import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.implementations.instances.ItemControllerInstanceImpl;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
+import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.lists.controllers.instances.DescriptionInstanceController;
 import com.deepercreeper.vampireapp.lists.controllers.instances.GenerationControllerInstance;
 import com.deepercreeper.vampireapp.lists.controllers.instances.InsanityControllerInstance;
 import com.deepercreeper.vampireapp.lists.items.Clan;
 import com.deepercreeper.vampireapp.lists.items.Nature;
+import com.deepercreeper.vampireapp.mechanics.Action.ItemFinder;
 import com.deepercreeper.vampireapp.mechanics.Duration;
 import com.deepercreeper.vampireapp.mechanics.Duration.Type;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.CodingUtil;
 import com.deepercreeper.vampireapp.util.Log;
 
-public class CharacterInstance
+public class CharacterInstance implements ItemFinder
 {
 	private static final String					TAG				= "CharacterInstance";
 	
@@ -76,7 +78,6 @@ public class CharacterInstance
 		mDescriptions = new DescriptionInstanceController(aCreator.getDescriptions());
 		mInsanities = new InsanityControllerInstance(aCreator.getInsanities());
 		mEP = new EPController(getContext());
-		mHealth = new HealthControllerInstance(aCreator.getHealthSteps(), mContext);
 		
 		mName = aCreator.getName();
 		mConcept = aCreator.getConcept();
@@ -90,6 +91,8 @@ public class CharacterInstance
 		{
 			mControllers.add(new ItemControllerInstanceImpl(controller, mContext, mMode, mEP, this));
 		}
+		
+		mHealth = new HealthControllerInstance(aCreator.getHealth(), mContext, this);
 	}
 	
 	public CharacterInstance(final String aXML, final ItemProvider aItems, final Context aContext) throws IOException
@@ -128,9 +131,6 @@ public class CharacterInstance
 		mClan = mItems.getClans().getItemWithName(meta.getAttribute("clan"));
 		mEP = new EPController(Integer.parseInt(meta.getAttribute("ep")), getContext());
 		mMode = Mode.valueOf(meta.getAttribute("mode"));
-		
-		// Health
-		mHealth = new HealthControllerInstance((Element) root.getElementsByTagName("health").item(0), mContext);
 		
 		// Insanities
 		mInsanities = new InsanityControllerInstance();
@@ -187,8 +187,24 @@ public class CharacterInstance
 			}
 		}
 		
+		// Health
+		mHealth = new HealthControllerInstance((Element) root.getElementsByTagName("health").item(0), mContext, this);
+		
 		addTimeListeners();
 		Log.i(TAG, "Finished loading character.");
+	}
+	
+	@Override
+	public ItemInstance findItem(final String aName)
+	{
+		for (final ItemControllerInstance controller : mControllers)
+		{
+			if (controller.hasItem(aName))
+			{
+				return controller.getItem(aName);
+			}
+		}
+		return null;
 	}
 	
 	private void addTimeListeners()

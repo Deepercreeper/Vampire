@@ -26,6 +26,8 @@ public interface ItemControllerInstance extends InstanceRestrictionable, Saveabl
 	
 	public EPController getEP();
 	
+	public void addItem(ItemInstance aItem);
+	
 	public CharacterInstance getCharacter();
 	
 	public ItemGroupInstance getGroup(ItemGroup aGroup);

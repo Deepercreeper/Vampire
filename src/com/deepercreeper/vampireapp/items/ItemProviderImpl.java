@@ -2,6 +2,7 @@ package com.deepercreeper.vampireapp.items;
 
 import java.util.List;
 import android.content.Context;
+import com.deepercreeper.vampireapp.character.Health;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.lists.controllers.ClanController;
 import com.deepercreeper.vampireapp.lists.controllers.DescriptionController;
@@ -19,7 +20,7 @@ public class ItemProviderImpl implements ItemProvider
 	
 	private final List<ItemController>	mControllers;
 	
-	private final int[]					mDefaultHealth;
+	private final Health				mHealth;
 	
 	public ItemProviderImpl(final Context aContext)
 	{
@@ -28,7 +29,7 @@ public class ItemProviderImpl implements ItemProvider
 		mControllers = DataUtil.createItems(aContext);
 		mNatures = new NatureController(aContext.getResources());
 		mDescriptions = new DescriptionController(aContext.getResources());
-		mDefaultHealth = DataUtil.loadDefaultHealth(aContext);
+		mHealth = DataUtil.loadHealth(aContext);
 	}
 	
 	@Override
@@ -56,9 +57,9 @@ public class ItemProviderImpl implements ItemProvider
 	}
 	
 	@Override
-	public int[] getDefaultHealth()
+	public Health getHealth()
 	{
-		return mDefaultHealth;
+		return mHealth;
 	}
 	
 	@Override

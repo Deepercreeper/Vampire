@@ -72,7 +72,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	
 	private boolean							mInitialized	= false;
 	
-	private final EPController					mEP;
+	private final EPController				mEP;
 	
 	private Mode							mMode;
 	
@@ -810,5 +810,6 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			getChildrenList().add(aItem);
 			getContainer().addView(aItem.getContainer());
 		}
+		getItemGroup().getItemController().addItem(aItem);
 	}
 }
