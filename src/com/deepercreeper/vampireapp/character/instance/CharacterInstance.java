@@ -68,6 +68,8 @@ public class CharacterInstance implements ItemFinder
 	
 	private final HealthControllerInstance		mHealth;
 	
+	private final MoneyController				mMoney;
+	
 	private Mode								mMode;
 	
 	public CharacterInstance(final CharacterCreation aCreator)
@@ -78,6 +80,7 @@ public class CharacterInstance implements ItemFinder
 		mDescriptions = new DescriptionInstanceController(aCreator.getDescriptions());
 		mInsanities = new InsanityControllerInstance(aCreator.getInsanities());
 		mEP = new EPController(getContext());
+		mMoney = new MoneyController(mItems.getMoney(), getContext());
 		
 		mName = aCreator.getName();
 		mConcept = aCreator.getConcept();
@@ -89,10 +92,10 @@ public class CharacterInstance implements ItemFinder
 		
 		for (final ItemControllerCreation controller : aCreator.getControllers())
 		{
-			mControllers.add(new ItemControllerInstanceImpl(controller, mContext, mMode, mEP, this));
+			mControllers.add(new ItemControllerInstanceImpl(controller, getContext(), mMode, mEP, this));
 		}
 		
-		mHealth = new HealthControllerInstance(aCreator.getHealth(), mContext, this);
+		mHealth = new HealthControllerInstance(aCreator.getHealth(), getContext(), this);
 	}
 	
 	public CharacterInstance(final String aXML, final ItemProvider aItems, final Context aContext) throws IOException
@@ -190,6 +193,9 @@ public class CharacterInstance implements ItemFinder
 		// Health
 		mHealth = new HealthControllerInstance((Element) root.getElementsByTagName("health").item(0), mContext, this);
 		
+		// Money
+		mMoney = new MoneyController(mItems.getMoney(), (Element) root.getElementsByTagName("money").item(0), getContext());
+		
 		addTimeListeners();
 		Log.i(TAG, "Finished loading character.");
 	}
@@ -222,6 +228,7 @@ public class CharacterInstance implements ItemFinder
 	{
 		mEP.release();
 		mHealth.release();
+		mMoney.release();
 		for (final ItemControllerInstance controller : getControllers())
 		{
 			controller.release();
@@ -232,10 +239,16 @@ public class CharacterInstance implements ItemFinder
 	{
 		mEP.init();
 		mHealth.init();
+		mMoney.init();
 		for (final ItemControllerInstance controller : getControllers())
 		{
 			controller.init();
 		}
+	}
+	
+	public MoneyController getMoney()
+	{
+		return mMoney;
 	}
 	
 	public Context getContext()
@@ -344,6 +357,9 @@ public class CharacterInstance implements ItemFinder
 		
 		// Health
 		root.appendChild(mHealth.asElement(doc));
+		
+		// Money
+		root.appendChild(mMoney.asElement(doc));
 		
 		// Insanities
 		final Element insanities = doc.createElement("insanities");

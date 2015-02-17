@@ -79,6 +79,8 @@ public class PlayActivity extends Activity implements ItemConsumer
 		
 		controllersPanel.addView(mChar.getHealth().getContainer());
 		
+		controllersPanel.addView(mChar.getMoney().getContainer());
+		
 		for (final ItemControllerInstance controller : mChar.getControllers())
 		{
 			if (controller.hasAnyItem())

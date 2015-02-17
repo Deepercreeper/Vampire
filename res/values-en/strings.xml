@@ -36,4 +36,5 @@
 	<string name="add_health">Add health step</string>
 	<string name="health">Health:</string>
 	<string name="ko">Knocked out</string>
+	<string name="money">Money:</string>
 </resources>

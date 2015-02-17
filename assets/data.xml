@@ -1780,8 +1780,10 @@
         </clan>
     </clans>
 
-    <health values="0,1,1,2,2,5,-1" 
+    <health
         cost="Blood pool"
-        />
+        values="0,1,1,2,2,5,-1" />
+
+    <money currencies="G,S,K" />
 
 </data>

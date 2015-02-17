@@ -36,4 +36,5 @@
 	<string name="add_health">Lebensstufe hinzufügen</string>
 	<string name="health">Leben:</string>
 	<string name="ko">Außer Gefecht</string>
+	<string name="money">Geld:</string>
 </resources>
