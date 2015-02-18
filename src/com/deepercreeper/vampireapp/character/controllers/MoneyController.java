@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.character.instance;
+package com.deepercreeper.vampireapp.character.controllers;
 
 import java.util.HashMap;
 import java.util.Map;

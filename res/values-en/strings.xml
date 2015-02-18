@@ -37,4 +37,13 @@
 	<string name="health">Health:</string>
 	<string name="ko">Knocked out</string>
 	<string name="money">Money:</string>
+	<string name="weight">Weight</string>
+	<string name="difficulty">Difficulty</string>
+	<string name="additional_damage">Additional damage</string>
+	<string name="damage">Damage</string>
+	<string name="stash">Stash</string>
+	<string name="distance">Distance</string>
+	<string name="reload_time">Reload time</string>
+	<string name="magazine">Magazine</string>
+	<string name="ammo">Ammo</string>
 </resources>

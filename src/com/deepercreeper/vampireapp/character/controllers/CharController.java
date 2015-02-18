@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.character.instance;
+package com.deepercreeper.vampireapp.character.controllers;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,6 +17,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.activities.PlayActivity;
+import com.deepercreeper.vampireapp.character.instance.CharacterCompound;
+import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.view.CharacterContextMenu.CharacterListener;

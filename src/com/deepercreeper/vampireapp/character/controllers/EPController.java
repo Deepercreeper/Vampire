@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.character.instance;
+package com.deepercreeper.vampireapp.character.controllers;
 
 import android.content.Context;
 import android.view.View;

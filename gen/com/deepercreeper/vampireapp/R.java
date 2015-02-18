@@ -114,7 +114,9 @@ public final class R {
         public static final int add_insanity=0x7f060014;
         public static final int add_insanity_message=0x7f060015;
         public static final int add_item=0x7f060018;
+        public static final int additional_damage=0x7f060027;
         public static final int additional_info=0x7f060011;
+        public static final int ammo=0x7f06002d;
         public static final int app_name=0x7f060000;
         public static final int back=0x7f06000d;
         public static final int basic_info=0x7f060012;
@@ -127,9 +129,12 @@ public final class R {
         public static final int concept=0x7f060006;
         public static final int content_description=0x7f06001d;
         public static final int create_char=0x7f060001;
+        public static final int damage=0x7f060028;
         public static final int delete_char=0x7f06001b;
         public static final int delete_chars=0x7f060004;
         public static final int description=0x7f060010;
+        public static final int difficulty=0x7f060026;
+        public static final int distance=0x7f06002a;
         public static final int edit_item=0x7f060017;
         public static final int ep=0x7f060007;
         public static final int exit=0x7f06001f;
@@ -138,13 +143,18 @@ public final class R {
         public static final int generation_text=0x7f06000b;
         public static final int health=0x7f060021;
         public static final int ko=0x7f060022;
+        public static final int magazine=0x7f06002c;
         public static final int money=0x7f060023;
         public static final int nature_text=0x7f060008;
         public static final int next=0x7f06000c;
         public static final int play=0x7f06001a;
         public static final int play_char=0x7f06001e;
+        public static final int reload_time=0x7f06002b;
         public static final int reset=0x7f06000f;
         public static final int service_name=0x7f06001c;
+        public static final int stash=0x7f060029;
+        public static final int weight=0x7f060024;
+        public static final int weight_unit=0x7f060025;
     }
     public static final class style {
         /**  Maybe add an own style for all used views some day 

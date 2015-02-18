@@ -37,4 +37,15 @@
 	<string name="health">Leben:</string>
 	<string name="ko">Außer Gefecht</string>
 	<string name="money">Geld:</string>
+	<string name="weight">Gewicht</string>
+	<string name="weight_unit">kg</string>
+	<string name="difficulty">Schwierigkeit</string>
+	<string name="additional_damage">Zusätzlicher Schaden</string>
+	<string name="damage">Schaden</string>
+	<string name="stash">Versteck</string>
+	<string name="distance">Reichweite</string>
+	<string name="reload_time">Nachladezeit</string>
+	<string name="magazine">Magazin</string>
+	<string name="ammo">Munition</string>
+	
 </resources>
