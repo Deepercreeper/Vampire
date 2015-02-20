@@ -15,11 +15,16 @@ import com.deepercreeper.vampireapp.util.Saveable;
 
 public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemInstance>, Saveable
 {
+	public interface ItemValueListener
+	{
+		public void valueChanged();
+	}
+	
+	public void addValueListener(ItemValueListener aListener);
+	
 	public boolean canIncrease();
 	
 	public int getAbsoluteValue();
-	
-	public boolean hasOrder();
 	
 	public Set<Action> getActions();
 	
@@ -43,6 +48,8 @@ public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemIn
 	
 	public int getEPCost();
 	
+	public void removeValueListener(ItemValueListener aListener);
+	
 	public Item getItem();
 	
 	public ItemGroupInstance getItemGroup();
@@ -64,6 +71,8 @@ public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemIn
 	public boolean hasDescription();
 	
 	public boolean hasEnoughEP();
+	
+	public boolean hasOrder();
 	
 	public boolean hasParentItem();
 	

@@ -40,11 +40,29 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 {
 	public static final String				TAG				= "ItemInstance";
 	
+	private final List<ItemInstance>		mChildrenList;
+	
+	private final Map<String, ItemInstance>	mChildren;
+	
+	private final Set<Action>				mActions		= new HashSet<Action>();
+	
+	private final List<ItemValueListener>	mValueListeners	= new ArrayList<ItemValueListener>();
+	
 	private final Item						mItem;
 	
 	private final Context					mContext;
 	
 	private final ItemGroupInstance			mItemGroup;
+	
+	private final LinearLayout				mContainer;
+	
+	private final ItemInstance				mParentItem;
+	
+	private final String					mDescription;
+	
+	private final CharacterInstance			mCharacter;
+	
+	private final EPController				mEP;
 	
 	private ImageButton						mIncreaseButton;
 	
@@ -52,27 +70,11 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	
 	private TextView						mValueText;
 	
-	private final LinearLayout				mContainer;
-	
-	private final List<ItemInstance>		mChildrenList;
-	
-	private final Map<String, ItemInstance>	mChildren;
-	
-	private final ItemInstance				mParentItem;
-	
 	private RelativeLayout					mRelativeContainer;
 	
 	private TextView						mNameText;
 	
-	private final String					mDescription;
-	
-	private final Set<Action>				mActions		= new HashSet<Action>();
-	
-	private final CharacterInstance			mCharacter;
-	
 	private boolean							mInitialized	= false;
-	
-	private final EPController				mEP;
 	
 	private Mode							mMode;
 	
@@ -167,8 +169,6 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		mRelativeContainer = new RelativeLayout(getContext());
 		mNameText = new TextView(getContext());
 		
-		if (isValueItem())
-		{}
 		if (isParent())
 		{
 			mChildrenList = new ArrayList<ItemInstance>();
@@ -207,6 +207,18 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 				sortChildren();
 			}
 		}
+	}
+	
+	@Override
+	public void addValueListener(final ItemValueListener aListener)
+	{
+		mValueListeners.add(aListener);
+	}
+	
+	@Override
+	public void removeValueListener(final ItemValueListener aListener)
+	{
+		mValueListeners.remove(aListener);
 	}
 	
 	@Override
@@ -512,6 +524,15 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		getEP().decreaseBy(getEPCost());
 		refreshValue();
 		updateCharacter();
+		updateValueListeners();
+	}
+	
+	private void updateValueListeners()
+	{
+		for (final ItemValueListener listener : mValueListeners)
+		{
+			listener.valueChanged();
+		}
 	}
 	
 	@Override

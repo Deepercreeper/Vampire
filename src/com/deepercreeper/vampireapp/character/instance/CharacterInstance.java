@@ -81,7 +81,7 @@ public class CharacterInstance implements ItemFinder
 	{
 		mItems = aCreator.getItems();
 		mContext = aCreator.getContext();
-		mGeneration = new GenerationControllerInstance(aCreator.getGeneration().getGeneration());
+		mGeneration = new GenerationControllerInstance(aCreator.getGeneration().getGeneration(), this);
 		mDescriptions = new DescriptionInstanceController(aCreator.getDescriptions());
 		mInsanities = new InsanityControllerInstance(aCreator.getInsanities());
 		mEP = new EPController(getContext());
@@ -136,7 +136,7 @@ public class CharacterInstance implements ItemFinder
 		mConcept = CodingUtil.decode(meta.getAttribute("concept"));
 		mNature = mItems.getNatures().getItemWithName(meta.getAttribute("nature"));
 		mBehavior = mItems.getNatures().getItemWithName(meta.getAttribute("behavior"));
-		mGeneration = new GenerationControllerInstance(Integer.parseInt(meta.getAttribute("generation")));
+		mGeneration = new GenerationControllerInstance(Integer.parseInt(meta.getAttribute("generation")), this);
 		mClan = mItems.getClans().getItemWithName(meta.getAttribute("clan"));
 		mEP = new EPController(Integer.parseInt(meta.getAttribute("ep")), getContext());
 		mMode = Mode.valueOf(meta.getAttribute("mode"));

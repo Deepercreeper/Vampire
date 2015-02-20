@@ -15,13 +15,14 @@ import com.deepercreeper.vampireapp.character.Inventory;
 import com.deepercreeper.vampireapp.character.InventoryItem;
 import com.deepercreeper.vampireapp.character.Weapon;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
+import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance.ItemValueListener;
 import com.deepercreeper.vampireapp.mechanics.Action.ItemFinder;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.Saveable;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.ResizeHeightAnimation;
 
-public class InventoryController implements Saveable
+public class InventoryController implements Saveable, ItemValueListener
 {
 	private static final String			TAG				= "InventoryController";
 	
@@ -60,6 +61,7 @@ public class InventoryController implements Saveable
 		mContext = aContext;
 		
 		mMaxWeightItem = mItems.findItem(mInventory.getMaxWeightItem());
+		mMaxWeightItem.addValueListener(this);
 		
 		updateMaxWeight();
 		
@@ -75,6 +77,7 @@ public class InventoryController implements Saveable
 		mContext = aContext;
 		
 		mMaxWeightItem = mItems.findItem(mInventory.getMaxWeightItem());
+		mMaxWeightItem.addValueListener(this);
 		
 		updateMaxWeight();
 		
@@ -111,6 +114,13 @@ public class InventoryController implements Saveable
 		{
 			item.release();
 		}
+	}
+	
+	@Override
+	public void valueChanged()
+	{
+		updateMaxWeight();
+		setWeight();
 	}
 	
 	public void init()
