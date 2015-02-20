@@ -32,12 +32,13 @@
 	<string name="service_name">Item provider</string>
 	<string name="content_description">Placeholder</string>
 	<string name="play_char">Lobby</string>
-	<string name="exit">Beenden</string>
+	<string name="exit">Exit</string>
 	<string name="add_health">Add health step</string>
 	<string name="health">Health:</string>
 	<string name="ko">Knocked out</string>
 	<string name="money">Money:</string>
 	<string name="weight">Weight</string>
+	<string name="max_weight">Maximum weight</string>
 	<string name="difficulty">Difficulty</string>
 	<string name="additional_damage">Additional damage</string>
 	<string name="damage">Damage</string>
@@ -46,4 +47,5 @@
 	<string name="reload_time">Reload time</string>
 	<string name="magazine">Magazine</string>
 	<string name="ammo">Ammo</string>
+	<string name="inventory">Inventory</string>
 </resources>

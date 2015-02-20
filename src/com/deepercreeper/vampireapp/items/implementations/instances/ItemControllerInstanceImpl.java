@@ -367,6 +367,8 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 		{
 			getContainer().setLayoutParams(ViewUtil.getWrapHeight());
 			getContainer().setOrientation(LinearLayout.VERTICAL);
+			
+			mInitialized = true;
 		}
 		
 		if ( !getGroupOptionsList().isEmpty())
@@ -380,7 +382,6 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 				}
 			}
 		}
-		mInitialized = true;
 	}
 	
 	@Override

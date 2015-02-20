@@ -576,6 +576,8 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 				ViewUtil.hideWidth(mValueBar);
 				ViewUtil.hideWidth(mIncreaseButton);
 			}
+			
+			mInitialized = true;
 		}
 		else
 		{
@@ -600,8 +602,6 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 				}
 			}
 		}
-		
-		mInitialized = true;
 	}
 	
 	@Override

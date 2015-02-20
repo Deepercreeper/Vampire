@@ -822,6 +822,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 				
 				updateAddButton();
 			}
+			mInitialized = true;
 		}
 		else
 		{
@@ -890,7 +891,6 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 				}
 			}
 		}
-		mInitialized = true;
 	}
 	
 	@Override

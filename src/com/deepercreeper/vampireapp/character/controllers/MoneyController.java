@@ -68,11 +68,11 @@ public class MoneyController implements Saveable
 			getContainer().setLayoutParams(ViewUtil.getWrapHeight());
 			
 			mMoneyDisplay = (TextView) getContainer().findViewById(R.id.money);
+			
+			mInitialized = true;
 		}
 		
 		updateValue();
-		
-		mInitialized = true;
 	}
 	
 	public void updateValue()

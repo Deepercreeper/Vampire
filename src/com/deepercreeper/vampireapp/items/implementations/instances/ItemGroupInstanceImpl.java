@@ -293,6 +293,8 @@ public class ItemGroupInstanceImpl extends InstanceRestrictionableImpl implement
 			mTitleText.setText(getItemGroup().getDisplayName());
 			mTitleText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
 			mTitleText.setGravity(Gravity.CENTER);
+			
+			mInitialized = true;
 		}
 		getContainer().addView(mTitleText);
 		
@@ -308,7 +310,6 @@ public class ItemGroupInstanceImpl extends InstanceRestrictionableImpl implement
 				getContainer().addView(item.getContainer());
 			}
 		}
-		mInitialized = true;
 	}
 	
 	@Override

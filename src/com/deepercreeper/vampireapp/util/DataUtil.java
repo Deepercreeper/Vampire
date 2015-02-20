@@ -11,6 +11,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import android.content.Context;
 import com.deepercreeper.vampireapp.character.Health;
+import com.deepercreeper.vampireapp.character.Inventory;
 import com.deepercreeper.vampireapp.character.Money;
 import com.deepercreeper.vampireapp.items.implementations.GroupOptionImpl;
 import com.deepercreeper.vampireapp.items.implementations.ItemControllerImpl;
@@ -175,6 +176,14 @@ public class DataUtil
 		final Element element = (Element) doc.getElementsByTagName("money").item(0);
 		final Money money = new Money(parseList(element.getAttribute("currencies")));
 		return money;
+	}
+	
+	public static Inventory loadInventory(final Context aContext)
+	{
+		final Document doc = getData(aContext);
+		final Element element = (Element) doc.getElementsByTagName("inventory").item(0);
+		final Inventory inventory = new Inventory(parseValues(element.getAttribute("maxWeights")), element.getAttribute("maxWeightItem"));
+		return inventory;
 	}
 	
 	private static Set<CreationCondition> loadConditions(final Node aRestrictionNode)

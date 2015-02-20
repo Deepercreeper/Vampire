@@ -90,6 +90,8 @@ public class PlayActivity extends Activity implements ItemConsumer
 			}
 		}
 		
+		controllersPanel.addView(mChar.getInventory().getContainer());
+		
 		charName.setText(mChar.getName());
 		
 		exit.setOnClickListener(new OnClickListener()

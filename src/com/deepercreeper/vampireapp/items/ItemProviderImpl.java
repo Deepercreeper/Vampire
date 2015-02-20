@@ -3,6 +3,7 @@ package com.deepercreeper.vampireapp.items;
 import java.util.List;
 import android.content.Context;
 import com.deepercreeper.vampireapp.character.Health;
+import com.deepercreeper.vampireapp.character.Inventory;
 import com.deepercreeper.vampireapp.character.Money;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.lists.controllers.ClanController;
@@ -25,6 +26,8 @@ public class ItemProviderImpl implements ItemProvider
 	
 	private final Money					mMoney;
 	
+	private final Inventory				mInventory;
+	
 	public ItemProviderImpl(final Context aContext)
 	{
 		LanguageUtil.init(aContext);
@@ -34,6 +37,7 @@ public class ItemProviderImpl implements ItemProvider
 		mDescriptions = new DescriptionController(aContext.getResources());
 		mHealth = DataUtil.loadHealth(aContext);
 		mMoney = DataUtil.loadMoney(aContext);
+		mInventory = DataUtil.loadInventory(aContext);
 	}
 	
 	@Override
@@ -70,6 +74,12 @@ public class ItemProviderImpl implements ItemProvider
 	public Money getMoney()
 	{
 		return mMoney;
+	}
+	
+	@Override
+	public Inventory getInventory()
+	{
+		return mInventory;
 	}
 	
 	@Override

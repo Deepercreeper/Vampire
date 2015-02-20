@@ -158,6 +158,8 @@ public class HealthControllerCreation
 					addStep();
 				}
 			});
+			
+			mInitialized = true;
 		}
 		
 		getContainer().addView(mAddButton);
@@ -166,8 +168,6 @@ public class HealthControllerCreation
 		{
 			getContainer().addView(step.getContainer());
 		}
-		
-		mInitialized = true;
 	}
 	
 	public LinearLayout getContainer()

@@ -415,7 +415,11 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 				getContainer().addView(item.getContainer());
 			}
 		}
-		mInitialized = true;
+		
+		if ( !mInitialized)
+		{
+			mInitialized = true;
+		}
 	}
 	
 	@Override

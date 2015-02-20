@@ -277,11 +277,11 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 		if ( !mInitialized)
 		{
 			mGroupContainer.setOrientation(LinearLayout.VERTICAL);
+			mInitialized = true;
 		}
 		getContainer().addView(mGroupContainer);
 		
 		sortGroups();
-		mInitialized = true;
 	}
 	
 	@Override

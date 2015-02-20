@@ -92,12 +92,12 @@ public class HealthControllerInstance implements TimeListener, Saveable
 			mValueBar.setMax(mSteps.length - 1);
 			mValueBar.getLayoutParams().width = ViewUtil.calcPx(70, mContext)
 					+ Math.round(mContext.getResources().getDimension(R.dimen.item_value_bar_width));
+			
+			mInitialized = true;
 		}
 		
 		ViewUtil.setEnabled(mHealButton, canHeal());
 		updateValue();
-		
-		mInitialized = true;
 	}
 	
 	public void release()

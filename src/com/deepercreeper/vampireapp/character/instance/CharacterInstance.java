@@ -19,6 +19,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import android.content.Context;
 import com.deepercreeper.vampireapp.character.controllers.EPController;
+import com.deepercreeper.vampireapp.character.controllers.InventoryController;
 import com.deepercreeper.vampireapp.character.controllers.MoneyController;
 import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
 import com.deepercreeper.vampireapp.items.ItemProvider;
@@ -72,6 +73,8 @@ public class CharacterInstance implements ItemFinder
 	
 	private final MoneyController				mMoney;
 	
+	private final InventoryController			mInventory;
+	
 	private Mode								mMode;
 	
 	public CharacterInstance(final CharacterCreation aCreator)
@@ -97,6 +100,7 @@ public class CharacterInstance implements ItemFinder
 			mControllers.add(new ItemControllerInstanceImpl(controller, getContext(), mMode, mEP, this));
 		}
 		
+		mInventory = new InventoryController(mItems.getInventory(), this, mContext);
 		mHealth = new HealthControllerInstance(aCreator.getHealth(), getContext(), this);
 	}
 	
@@ -198,6 +202,9 @@ public class CharacterInstance implements ItemFinder
 		// Money
 		mMoney = new MoneyController(mItems.getMoney(), (Element) root.getElementsByTagName("money").item(0), getContext());
 		
+		// Inventory
+		mInventory = new InventoryController((Element) root.getElementsByTagName("inventory").item(0), mItems.getInventory(), this, getContext());
+		
 		addTimeListeners();
 		Log.i(TAG, "Finished loading character.");
 	}
@@ -231,6 +238,7 @@ public class CharacterInstance implements ItemFinder
 		mEP.release();
 		mHealth.release();
 		mMoney.release();
+		mInventory.release();
 		for (final ItemControllerInstance controller : getControllers())
 		{
 			controller.release();
@@ -242,6 +250,7 @@ public class CharacterInstance implements ItemFinder
 		mEP.init();
 		mHealth.init();
 		mMoney.init();
+		mInventory.init();
 		for (final ItemControllerInstance controller : getControllers())
 		{
 			controller.init();
@@ -251,6 +260,11 @@ public class CharacterInstance implements ItemFinder
 	public MoneyController getMoney()
 	{
 		return mMoney;
+	}
+	
+	public InventoryController getInventory()
+	{
+		return mInventory;
 	}
 	
 	public Context getContext()
@@ -362,6 +376,9 @@ public class CharacterInstance implements ItemFinder
 		
 		// Money
 		root.appendChild(mMoney.asElement(doc));
+		
+		// Inventory
+		root.appendChild(mInventory.asElement(doc));
 		
 		// Insanities
 		final Element insanities = doc.createElement("insanities");

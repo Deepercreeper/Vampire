@@ -4,6 +4,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import android.content.Context;
 import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.character.controllers.InventoryController;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.mechanics.Action.ItemFinder;
 
@@ -29,9 +30,9 @@ public class Weapon extends InventoryItem
 	
 	public Weapon(final String aName, final int aWeight, final int aDifficulty, final int aDamage, final String aAdditionalDamage,
 			final String aStash, final int aDistance, final int aReloadTime, final int aMagazine, final String aAmmo, final ItemFinder aItems,
-			final Context aContext)
+			final Context aContext, final InventoryController aController)
 	{
-		super(aName, aWeight, aContext);
+		super(aName, aWeight, aContext, aController);
 		mDifficulty = aDifficulty;
 		mDamage = aDamage;
 		mStash = aStash;
@@ -51,14 +52,14 @@ public class Weapon extends InventoryItem
 	}
 	
 	public Weapon(final String aName, final int aWeight, final int aDifficulty, final int aDamage, final String aAdditionalDamage,
-			final String aStash, final ItemFinder aItems, final Context aContext)
+			final String aStash, final ItemFinder aItems, final Context aContext, final InventoryController aController)
 	{
-		this(aName, aWeight, aDifficulty, aDamage, aAdditionalDamage, aStash, -1, -1, -1, null, aItems, aContext);
+		this(aName, aWeight, aDifficulty, aDamage, aAdditionalDamage, aStash, -1, -1, -1, null, aItems, aContext, aController);
 	}
 	
-	public Weapon(final Element aElement, final ItemFinder aItems, final Context aContext)
+	public Weapon(final Element aElement, final ItemFinder aItems, final Context aContext, final InventoryController aController)
 	{
-		super(aElement.getAttribute("name"), Integer.parseInt(aElement.getAttribute("weight")), aContext);
+		super(aElement.getAttribute("name"), Integer.parseInt(aElement.getAttribute("weight")), aContext, aController);
 		mItems = aItems;
 		mDifficulty = Integer.parseInt(aElement.getAttribute("difficulty"));
 		mDamage = Integer.parseInt(aElement.getAttribute("damage"));
@@ -157,7 +158,7 @@ public class Weapon extends InventoryItem
 	{
 		final StringBuilder info = new StringBuilder();
 		info.append(getName() + ": ");
-		info.append(getContext().getString(R.string.weight) + ": " + getWeight() + getContext().getString(R.string.weight_unit) + ", ");
+		info.append(getContext().getString(R.string.weight) + ": " + getWeight() + " " + getContext().getString(R.string.weight_unit) + ", ");
 		info.append(getContext().getString(R.string.difficulty) + ": " + getDifficulty() + ", ");
 		info.append(getContext().getString(R.string.damage) + ": " + getDamage() + ", ");
 		if (mAdditionalDamage != null)
@@ -182,6 +183,7 @@ public class Weapon extends InventoryItem
 		{
 			info.append(getContext().getString(R.string.ammo) + ": " + getAmmo() + ", ");
 		}
+		info.delete(info.length() - 2, info.length());
 		return info.toString();
 	}
 	

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import com.deepercreeper.vampireapp.character.Health;
+import com.deepercreeper.vampireapp.character.Inventory;
 import com.deepercreeper.vampireapp.character.Money;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
@@ -34,6 +35,8 @@ public class ItemProviderService extends Service implements ItemProvider
 	
 	private Money					mMoney;
 	
+	private Inventory				mInventory;
+	
 	private boolean					mInitializing	= false;
 	
 	@Override
@@ -52,6 +55,7 @@ public class ItemProviderService extends Service implements ItemProvider
 		mDescriptions = new DescriptionController(getResources());
 		mHealth = DataUtil.loadHealth(this);
 		mMoney = DataUtil.loadMoney(this);
+		mInventory = DataUtil.loadInventory(this);
 		Log.i(TAG, "Started item provider.");
 		
 		mInitializing = false;
@@ -122,6 +126,12 @@ public class ItemProviderService extends Service implements ItemProvider
 	public Money getMoney()
 	{
 		return mMoney;
+	}
+	
+	@Override
+	public Inventory getInventory()
+	{
+		return mInventory;
 	}
 	
 	@Override

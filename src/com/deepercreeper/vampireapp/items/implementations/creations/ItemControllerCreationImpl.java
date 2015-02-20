@@ -355,6 +355,7 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 		{
 			getContainer().setLayoutParams(ViewUtil.getWrapHeight());
 			getContainer().setOrientation(LinearLayout.VERTICAL);
+			mInitialized = true;
 		}
 		
 		if ( !getGroupOptionsList().isEmpty())
@@ -365,7 +366,6 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 				getContainer().addView(groupOption.getContainer());
 			}
 		}
-		mInitialized = true;
 	}
 	
 	@Override
