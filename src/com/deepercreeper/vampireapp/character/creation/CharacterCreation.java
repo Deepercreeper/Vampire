@@ -13,7 +13,7 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction;
-import com.deepercreeper.vampireapp.lists.controllers.creations.DescriptionCreationController;
+import com.deepercreeper.vampireapp.lists.controllers.creations.DescriptionControllerCreation;
 import com.deepercreeper.vampireapp.lists.controllers.creations.GenerationControllerCreation;
 import com.deepercreeper.vampireapp.lists.controllers.creations.InsanityControllerCreation;
 import com.deepercreeper.vampireapp.lists.items.Clan;
@@ -67,7 +67,7 @@ public class CharacterCreation
 	
 	private final List<ItemControllerCreation>	mControllers;
 	
-	private final DescriptionCreationController	mDescriptions;
+	private final DescriptionControllerCreation	mDescriptions;
 	
 	private final InsanityControllerCreation	mInsanities;
 	
@@ -114,7 +114,7 @@ public class CharacterCreation
 		{
 			mControllers.add(new ItemControllerCreationImpl(controller, mContext, getCreationMode(), points));
 		}
-		mDescriptions = new DescriptionCreationController(mItems.getDescriptions());
+		mDescriptions = new DescriptionControllerCreation(mItems.getDescriptions());
 		mInsanities = new InsanityControllerCreation(mContext, this);
 		mGeneration = new GenerationControllerCreation(mContext, this);
 		mHealth = new HealthControllerCreation(mContext, mItems);
@@ -225,7 +225,7 @@ public class CharacterCreation
 	/**
 	 * @return the descriptions controller.
 	 */
-	public DescriptionCreationController getDescriptions()
+	public DescriptionControllerCreation getDescriptions()
 	{
 		return mDescriptions;
 	}

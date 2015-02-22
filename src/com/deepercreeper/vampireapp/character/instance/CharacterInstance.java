@@ -6,9 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -31,7 +29,7 @@ import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerIns
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction.InstanceRestrictionType;
-import com.deepercreeper.vampireapp.lists.controllers.instances.DescriptionInstanceController;
+import com.deepercreeper.vampireapp.lists.controllers.instances.DescriptionControllerInstance;
 import com.deepercreeper.vampireapp.lists.controllers.instances.GenerationControllerInstance;
 import com.deepercreeper.vampireapp.lists.controllers.instances.InsanityControllerInstance;
 import com.deepercreeper.vampireapp.lists.items.Clan;
@@ -57,7 +55,7 @@ public class CharacterInstance implements ItemFinder
 	
 	private final GenerationControllerInstance	mGeneration;
 	
-	private final DescriptionInstanceController	mDescriptions;
+	private final DescriptionControllerInstance	mDescriptions;
 	
 	private final InsanityControllerInstance	mInsanities;
 	
@@ -86,7 +84,7 @@ public class CharacterInstance implements ItemFinder
 		mItems = aCreator.getItems();
 		mContext = aCreator.getContext();
 		mGeneration = new GenerationControllerInstance(aCreator.getGenerationValue(), this);
-		mDescriptions = new DescriptionInstanceController(aCreator.getDescriptions());
+		mDescriptions = new DescriptionControllerInstance(aCreator.getDescriptions());
 		mInsanities = new InsanityControllerInstance(aCreator.getInsanities());
 		mEP = new EPController(getContext());
 		mMoney = new MoneyController(mItems.getMoney(), getContext());
@@ -154,22 +152,10 @@ public class CharacterInstance implements ItemFinder
 		
 		// Insanities
 		mInsanities = new InsanityControllerInstance((Element) root.getElementsByTagName("insanities").item(0));
+		mTimeListeners.add(mInsanities);
 		
 		// Descriptions
-		final Map<String, String> descriptionsMap = new HashMap<String, String>();
-		final Element descriptions = (Element) root.getElementsByTagName("descriptions").item(0);
-		for (int i = 0; i < descriptions.getChildNodes().getLength(); i++ )
-		{
-			if (descriptions.getChildNodes().item(i) instanceof Element)
-			{
-				final Element description = (Element) descriptions.getChildNodes().item(i);
-				if (description.getTagName().equals("description"))
-				{
-					descriptionsMap.put(description.getAttribute("key"), CodingUtil.decode(description.getAttribute("value")));
-				}
-			}
-		}
-		mDescriptions = new DescriptionInstanceController(descriptionsMap, mItems.getDescriptions());
+		mDescriptions = new DescriptionControllerInstance((Element) root.getElementsByTagName("descriptions").item(0), mItems.getDescriptions());
 		
 		// Controllers
 		final Element controllers = (Element) root.getElementsByTagName("controllers").item(0);
@@ -187,6 +173,7 @@ public class CharacterInstance implements ItemFinder
 		
 		// Health
 		mHealth = new HealthControllerInstance((Element) root.getElementsByTagName("health").item(0), mContext, this);
+		mTimeListeners.add(mHealth);
 		
 		// Money
 		mMoney = new MoneyController(mItems.getMoney(), (Element) root.getElementsByTagName("money").item(0), getContext());
@@ -209,32 +196,7 @@ public class CharacterInstance implements ItemFinder
 			}
 		}
 		
-		addTimeListeners();
 		Log.i(TAG, "Finished loading character.");
-	}
-	
-	@Override
-	public ItemInstance findItem(final String aName)
-	{
-		for (final ItemControllerInstance controller : mControllers)
-		{
-			if (controller.hasItem(aName))
-			{
-				return controller.getItem(aName);
-			}
-		}
-		return null;
-	}
-	
-	private void addTimeListeners()
-	{
-		mTimeListeners.add(mInsanities);
-		mTimeListeners.add(mHealth);
-	}
-	
-	public HealthControllerInstance getHealth()
-	{
-		return mHealth;
 	}
 	
 	public void addRestriction(final InstanceRestriction aRestriction)
@@ -271,49 +233,32 @@ public class CharacterInstance implements ItemFinder
 		}
 	}
 	
-	public void removeRestriction(final InstanceRestriction aRestriction)
+	@Override
+	public ItemInstance findItem(final String aName)
 	{
-		mRestrictions.remove(aRestriction);
-		mTimeListeners.remove(aRestriction);
-	}
-	
-	public List<InstanceRestriction> getRestrictions()
-	{
-		return mRestrictions;
-	}
-	
-	public void release()
-	{
-		mEP.release();
-		mHealth.release();
-		mMoney.release();
-		mInventory.release();
-		for (final ItemControllerInstance controller : getControllers())
+		for (final ItemControllerInstance controller : mControllers)
 		{
-			controller.release();
+			if (controller.hasItem(aName))
+			{
+				return controller.getItem(aName);
+			}
 		}
+		return null;
 	}
 	
-	public void init()
+	public Nature getBehavior()
 	{
-		mEP.init();
-		mHealth.init();
-		mMoney.init();
-		mInventory.init();
-		for (final ItemControllerInstance controller : getControllers())
-		{
-			controller.init();
-		}
+		return mBehavior;
 	}
 	
-	public MoneyController getMoney()
+	public Clan getClan()
 	{
-		return mMoney;
+		return mClan;
 	}
 	
-	public InventoryController getInventory()
+	public String getConcept()
 	{
-		return mInventory;
+		return mConcept;
 	}
 	
 	public Context getContext()
@@ -321,12 +266,9 @@ public class CharacterInstance implements ItemFinder
 		return mContext;
 	}
 	
-	public void update()
+	public List<ItemControllerInstance> getControllers()
 	{
-		for (final ItemControllerInstance controller : getControllers())
-		{
-			controller.updateGroups();
-		}
+		return mControllers;
 	}
 	
 	public int getEP()
@@ -344,19 +286,24 @@ public class CharacterInstance implements ItemFinder
 		return mGeneration.getGeneration();
 	}
 	
+	public HealthControllerInstance getHealth()
+	{
+		return mHealth;
+	}
+	
+	public InventoryController getInventory()
+	{
+		return mInventory;
+	}
+	
+	public MoneyController getMoney()
+	{
+		return mMoney;
+	}
+	
 	public String getName()
 	{
 		return mName;
-	}
-	
-	public String getConcept()
-	{
-		return mConcept;
-	}
-	
-	public Clan getClan()
-	{
-		return mClan;
 	}
 	
 	public Nature getNature()
@@ -364,28 +311,44 @@ public class CharacterInstance implements ItemFinder
 		return mNature;
 	}
 	
-	public void setMode(final Mode aMode)
+	public List<InstanceRestriction> getRestrictions()
 	{
-		mMode = aMode;
-		for (final ItemControllerInstance controller : mControllers)
+		return mRestrictions;
+	}
+	
+	public void init()
+	{
+		mEP.init();
+		mHealth.init();
+		mMoney.init();
+		mInventory.init();
+		for (final ItemControllerInstance controller : getControllers())
 		{
-			controller.setMode(mMode);
+			controller.init();
 		}
-	}
-	
-	public Nature getBehavior()
-	{
-		return mBehavior;
-	}
-	
-	public List<ItemControllerInstance> getControllers()
-	{
-		return mControllers;
 	}
 	
 	public boolean isLowLevel()
 	{
 		return mGeneration.isLowLevel();
+	}
+	
+	public void release()
+	{
+		mEP.release();
+		mHealth.release();
+		mMoney.release();
+		mInventory.release();
+		for (final ItemControllerInstance controller : getControllers())
+		{
+			controller.release();
+		}
+	}
+	
+	public void removeRestriction(final InstanceRestriction aRestriction)
+	{
+		mRestrictions.remove(aRestriction);
+		mTimeListeners.remove(aRestriction);
 	}
 	
 	public String serialize()
@@ -433,21 +396,7 @@ public class CharacterInstance implements ItemFinder
 		root.appendChild(mInsanities.asElement(doc));
 		
 		// Descriptions
-		final Element descriptions = doc.createElement("descriptions");
-		for (final String descriptionKey : mDescriptions.getKeys())
-		{
-			// TODO Rewrite Descriptions
-			final Element descriptionItem = doc.createElement("description");
-			descriptionItem.setAttribute("key", descriptionKey);
-			String value = mDescriptions.getValue(descriptionKey).getValue();
-			if (value == null)
-			{
-				value = "";
-			}
-			descriptionItem.setAttribute("value", CodingUtil.encode(value));
-			descriptions.appendChild(descriptionItem);
-		}
-		root.appendChild(descriptions);
+		root.appendChild(mDescriptions.asElement(doc));
 		
 		// Controllers
 		final Element controllers = doc.createElement("controllers");
@@ -485,5 +434,22 @@ public class CharacterInstance implements ItemFinder
 		}
 		
 		return new String(stream.toByteArray(), Charset.defaultCharset());
+	}
+	
+	public void setMode(final Mode aMode)
+	{
+		mMode = aMode;
+		for (final ItemControllerInstance controller : mControllers)
+		{
+			controller.setMode(mMode);
+		}
+	}
+	
+	public void update()
+	{
+		for (final ItemControllerInstance controller : getControllers())
+		{
+			controller.updateGroups();
+		}
 	}
 }

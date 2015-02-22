@@ -630,6 +630,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			{
 				for (final ItemInstance item : getChildrenList())
 				{
+					item.release();
 					item.init();
 					getContainer().addView(item.getContainer());
 				}
