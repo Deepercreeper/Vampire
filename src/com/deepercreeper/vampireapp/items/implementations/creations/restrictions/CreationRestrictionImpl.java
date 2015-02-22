@@ -3,10 +3,12 @@ package com.deepercreeper.vampireapp.items.implementations.creations.restriction
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import com.deepercreeper.vampireapp.items.implementations.instances.restrictions.InstanceRestrictionImpl;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationCondition;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestrictionable;
+import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction;
 
 /**
  * Some clans have restrictions, that define whether values or attributes have to have a specific value.<br>
@@ -16,24 +18,28 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.Crea
  */
 public class CreationRestrictionImpl implements CreationRestriction
 {
-	private final String			mItemName;
+	private final String					mItemName;
 	
-	private final List<String>		mItems;
+	private final List<String>				mItems;
 	
 	private final CreationRestrictionType	mType;
 	
-	private final int				mMinimum;
+	private final int						mMinimum;
 	
-	private final int				mMaximum;
+	private final int						mMaximum;
 	
-	private final int				mIndex;
+	private final int						mIndex;
+	
+	private final int						mValue;
+	
+	private final boolean					mCreationRestriction;
 	
 	private final Set<CreationCondition>	mConditions	= new HashSet<CreationCondition>();
 	
 	private CreationRestrictionable			mParent;
 	
-	public CreationRestrictionImpl(final CreationRestrictionType aType, final String aItemName, final int aMinimum, final int aMaximum, final List<String> aItems,
-			final int aIndex)
+	public CreationRestrictionImpl(final CreationRestrictionType aType, final String aItemName, final int aMinimum, final int aMaximum,
+			final List<String> aItems, final int aIndex, final int aValue, final boolean aCreationRestriction)
 	{
 		mType = aType;
 		mItemName = aItemName;
@@ -41,12 +47,39 @@ public class CreationRestrictionImpl implements CreationRestriction
 		mMinimum = aMinimum;
 		mMaximum = aMaximum;
 		mIndex = aIndex;
+		mValue = aValue;
+		mCreationRestriction = aCreationRestriction;
+	}
+	
+	@Override
+	public InstanceRestriction createInstance()
+	{
+		return new InstanceRestrictionImpl(getType().getInstanceType(), getItemName(), getMinimum(), getMaximum(), getItems(), getIndex(), getValue());
+		// TODO Maybe add the conditions too
+	}
+	
+	@Override
+	public int getValue()
+	{
+		return mValue;
+	}
+	
+	@Override
+	public boolean isPersistent()
+	{
+		return getType().isPersistent();
 	}
 	
 	@Override
 	public int getIndex()
 	{
 		return mIndex;
+	}
+	
+	@Override
+	public boolean isCreationRestriction()
+	{
+		return mCreationRestriction;
 	}
 	
 	@Override

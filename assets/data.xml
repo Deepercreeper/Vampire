@@ -193,7 +193,7 @@
                 maxLowLevelValue="5"
                 maxValue="6"
                 mutable="false"
-                startValue="0"
+                startValue="1"
                 value="true" >
 
                 <item name="Auspex">
@@ -1561,6 +1561,21 @@
                 type="GroupChildren" />
 
             <restriction
+                itemName="Speed"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
+                itemName="Quietus"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
+                itemName="Obscuration"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
                 itemName="Road"
                 items="Road of blood,Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
                 type="GroupChildren" />
@@ -1575,7 +1590,41 @@
 
             <restriction
                 itemName="Appearance"
+                type="ItemEpCostMulti"
+                value="0"
+                />
+            
+            <restriction
+                itemName="Appearance"
+                type="ItemEpCost"
+                value="0"
+                />
+            
+            <restriction
+                itemName="Appearance"
+                type="ItemEpCostNew"
+                value="0"
+                />
+            
+            <restriction
+                itemName="Force"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
+                itemName="Animality"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
+                itemName="Obscuration"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
+                itemName="Appearance"
                 range="=0"
+                creationRestriction="true"
                 type="ItemValue" />
 
             <restriction
@@ -1590,6 +1639,21 @@
                 itemName="Disciplines"
                 items="Speed,Presence,Strenth"
                 type="GroupChildren" />
+
+            <restriction
+                itemName="Speed"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
+                itemName="Presence"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
+                itemName="Strength"
+                type="ItemEpCostMulti"
+                value="5" />
 
             <restriction
                 itemName="Road"
@@ -1622,6 +1686,21 @@
                 type="GroupChildren" />
 
             <restriction
+                itemName="Gestalt-switch"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
+                itemName="Fortitude"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
+                itemName="Animality"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
                 itemName="Road"
                 items="Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
                 type="GroupChildren" />
@@ -1633,6 +1712,21 @@
                 itemName="Disciplines"
                 items="Presence,Serpentis,Obscuration"
                 type="GroupChildren" />
+
+            <restriction
+                itemName="Presence"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
+                itemName="Serpentis"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
+                itemName="Obscuration"
+                type="ItemEpCostMulti"
+                value="5" />
 
             <restriction
                 itemName="Road"
@@ -1648,6 +1742,21 @@
                 type="GroupChildren" />
 
             <restriction
+                itemName="Auspex"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
+                itemName="Mortis"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
+                itemName="Fortitude"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
                 itemName="Road"
                 items="Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
                 type="GroupChildren" />
@@ -1661,6 +1770,21 @@
                 type="GroupChildren" />
 
             <restriction
+                itemName="Domination"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
+                itemName="Shadow play"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
+                itemName="Force"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
                 itemName="Road"
                 items="Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
                 type="GroupChildren" />
@@ -1672,6 +1796,21 @@
                 itemName="Disciplines"
                 items="Auspex,Insanity,Obscuration"
                 type="GroupChildren" />
+
+            <restriction
+                itemName="Auspex"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
+                itemName="Insanity"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
+                itemName="Obscuration"
+                type="ItemEpCostMulti"
+                value="5" />
 
             <restriction
                 range=">0"
@@ -1691,6 +1830,21 @@
                 type="GroupChildren" />
 
             <restriction
+                itemName="Chimeras"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
+                itemName="Fortitude"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
+                itemName="Animality"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
                 itemName="Road"
                 items="Road of heaven,Road of humanity,Road of paradox,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
                 type="GroupChildren" />
@@ -1702,6 +1856,21 @@
                 itemName="Disciplines"
                 items="Auspex,Speed,Presence"
                 type="GroupChildren" />
+
+            <restriction
+                itemName="Auspex"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
+                itemName="Speed"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
+                itemName="Presence"
+                type="ItemEpCostMulti"
+                value="5" />
 
             <restriction
                 itemName="Road"
@@ -1717,6 +1886,21 @@
                 type="GroupChildren" />
 
             <restriction
+                itemName="Auspex"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
+                itemName="Fleshforming"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
+                itemName="Animality"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
                 itemName="Road"
                 items="Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
                 type="GroupChildren" />
@@ -1730,6 +1914,21 @@
                 type="GroupChildren" />
 
             <restriction
+                itemName="Domination"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
+                itemName="Presence"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
+                itemName="Fortitude"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
                 itemName="Road"
                 items="Road of heaven,Road of humanity,Road of chivaldry,Road of devil,Road of animal,Road of thyphon"
                 type="GroupChildren" />
@@ -1741,6 +1940,33 @@
                 itemName="Disciplines"
                 items="Thaumaturgy,Auspex,Domination"
                 type="GroupChildren" />
+
+            <restriction
+                index="0"
+                itemName="Thaumaturgy"
+                type="ItemChildEpCostMultiAt"
+                value="4" />
+
+            <restriction
+                index="1"
+                itemName="Thaumaturgy"
+                type="ItemChildEpCostMultiAt"
+                value="5" />
+
+            <restriction
+                itemName="Thaumaturgy"
+                type="ItemChildEpCostNew"
+                value="7" />
+
+            <restriction
+                itemName="Auspex"
+                type="ItemEpCostMulti"
+                value="5" />
+
+            <restriction
+                itemName="Domination"
+                type="ItemEpCostMulti"
+                value="5" />
 
             <restriction
                 itemName="Thaumaturgy"
@@ -1781,12 +2007,11 @@
     </clans>
 
     <special-items
-        healthCost="Blood pool"
-        defaultHealth="0,1,1,2,2,5,-1"
         currencies="G,S,K"
-        maxWeightItem="Strength"
-        maxWeightSteps="10,20,50,100,150,500"
+        defaultHealth="0,1,1,2,2,5,-1"
         generationItem="Generation"
-        />
+        healthCost="Blood pool"
+        maxWeightItem="Strength"
+        maxWeightSteps="10,20,50,100,150,500" />
 
 </data>

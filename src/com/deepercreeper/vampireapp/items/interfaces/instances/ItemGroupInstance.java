@@ -8,10 +8,9 @@ import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.character.instance.Mode;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
-import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestrictionable;
 import com.deepercreeper.vampireapp.util.Saveable;
 
-public interface ItemGroupInstance extends InstanceRestrictionable, Comparable<ItemGroupInstance>, Saveable
+public interface ItemGroupInstance extends Comparable<ItemGroupInstance>, Saveable
 {
 	public LinearLayout getContainer();
 	

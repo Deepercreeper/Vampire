@@ -9,10 +9,9 @@ import com.deepercreeper.vampireapp.character.instance.Mode;
 import com.deepercreeper.vampireapp.items.interfaces.GroupOption;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
-import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestrictionable;
 import com.deepercreeper.vampireapp.util.Saveable;
 
-public interface ItemControllerInstance extends InstanceRestrictionable, Saveable
+public interface ItemControllerInstance extends Saveable
 {
 	public void close();
 	

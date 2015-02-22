@@ -3,10 +3,13 @@ package com.deepercreeper.vampireapp.items.implementations.instances.restriction
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceCondition;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestrictionable;
+import com.deepercreeper.vampireapp.util.DataUtil;
 
 /**
  * Some clans have restrictions, that define whether values or attributes have to have a specific value.<br>
@@ -20,7 +23,9 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 	
 	private final List<String>				mItems;
 	
-	private final InstanceRestrictionType			mType;
+	private final InstanceRestrictionType	mType;
+	
+	private final int						mValue;
 	
 	private final int						mMinimum;
 	
@@ -32,8 +37,33 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 	
 	private InstanceRestrictionable			mParent;
 	
+	public InstanceRestrictionImpl(final Element aElement)
+	{
+		mType = InstanceRestrictionType.get(aElement.getAttribute("type"));
+		if (aElement.hasAttribute("itemName"))
+		{
+			mItemName = aElement.getAttribute("itemName");
+		}
+		else
+		{
+			mItemName = null;
+		}
+		if (aElement.hasAttribute("items"))
+		{
+			mItems = DataUtil.parseList(aElement.getAttribute("items"));
+		}
+		else
+		{
+			mItems = null;
+		}
+		mMinimum = Integer.parseInt(aElement.getAttribute("minimum"));
+		mMaximum = Integer.parseInt(aElement.getAttribute("maximum"));
+		mIndex = Integer.parseInt(aElement.getAttribute("index"));
+		mValue = Integer.parseInt(aElement.getAttribute("value"));
+	}
+	
 	public InstanceRestrictionImpl(final InstanceRestrictionType aType, final String aItemName, final int aMinimum, final int aMaximum,
-			final List<String> aItems, final int aIndex)
+			final List<String> aItems, final int aIndex, final int aValue)
 	{
 		mType = aType;
 		mItemName = aItemName;
@@ -41,12 +71,7 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 		mMinimum = aMinimum;
 		mMaximum = aMaximum;
 		mIndex = aIndex;
-	}
-	
-	@Override
-	public int getIndex()
-	{
-		return mIndex;
+		mValue = aValue;
 	}
 	
 	@Override
@@ -56,41 +81,23 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 	}
 	
 	@Override
-	public boolean hasConditions()
+	public Element asElement(final Document aDoc)
 	{
-		return !mConditions.isEmpty();
-	}
-	
-	@Override
-	public boolean isActive(final ItemControllerInstance aController)
-	{
-		for (final InstanceCondition condition : mConditions)
+		final Element element = aDoc.createElement("restriction");
+		element.setAttribute("type", getType().getName());
+		if (getItemName() != null)
 		{
-			if ( !condition.complied(aController))
-			{
-				return false;
-			}
+			element.setAttribute("itemName", getItemName());
 		}
-		return true;
-	}
-	
-	@Override
-	public void update()
-	{
-		getParent().updateRestrictions();
-	}
-	
-	/**
-	 * Adds a restricted parent to this restriction. That makes sure,<br>
-	 * that the removal of restrictions is done for each restricted value of this restriction.
-	 * 
-	 * @param aParent
-	 *            The parent.
-	 */
-	@Override
-	public void setParent(final InstanceRestrictionable aParent)
-	{
-		mParent = aParent;
+		if (getItems() != null)
+		{
+			element.setAttribute("items", DataUtil.parseList(getItems()));
+		}
+		element.setAttribute("minimum", "" + getMinimum());
+		element.setAttribute("maximum", "" + getMaximum());
+		element.setAttribute("index", "" + getIndex());
+		element.setAttribute("value", "" + getValue());
+		return element;
 	}
 	
 	/**
@@ -104,69 +111,6 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 			mParent.removeRestriction(this);
 			mParent = null;
 		}
-	}
-	
-	@Override
-	public int getMinimum()
-	{
-		return mMinimum;
-	}
-	
-	@Override
-	public InstanceRestrictionable getParent()
-	{
-		return mParent;
-	}
-	
-	@Override
-	public int getMaximum()
-	{
-		return mMaximum;
-	}
-	
-	@Override
-	public boolean isInRange(final int aValue)
-	{
-		return mMinimum <= aValue && aValue <= mMaximum;
-	}
-	
-	@Override
-	public String getItemName()
-	{
-		return mItemName;
-	}
-	
-	@Override
-	public List<String> getItems()
-	{
-		return mItems;
-	}
-	
-	@Override
-	public InstanceRestrictionType getType()
-	{
-		return mType;
-	}
-	
-	@Override
-	public Set<InstanceCondition> getConditions()
-	{
-		return mConditions;
-	}
-	
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((mConditions == null) ? 0 : mConditions.hashCode());
-		result = prime * result + mIndex;
-		result = prime * result + ((mItemName == null) ? 0 : mItemName.hashCode());
-		result = prime * result + ((mItems == null) ? 0 : mItems.hashCode());
-		result = prime * result + mMaximum;
-		result = prime * result + mMinimum;
-		result = prime * result + ((mType == null) ? 0 : mType.hashCode());
-		return result;
 	}
 	
 	@Override
@@ -230,6 +174,10 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 		{
 			return false;
 		}
+		if (mValue != other.mValue)
+		{
+			return false;
+		}
 		if (mType == null)
 		{
 			if (other.mType != null)
@@ -242,5 +190,158 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 			return false;
 		}
 		return true;
+	}
+	
+	@Override
+	public Set<InstanceCondition> getConditions()
+	{
+		return mConditions;
+	}
+	
+	@Override
+	public int getIndex()
+	{
+		return mIndex;
+	}
+	
+	@Override
+	public String getItemName()
+	{
+		return mItemName;
+	}
+	
+	@Override
+	public List<String> getItems()
+	{
+		return mItems;
+	}
+	
+	@Override
+	public int getMaximum()
+	{
+		return mMaximum;
+	}
+	
+	@Override
+	public int getMinimum()
+	{
+		return mMinimum;
+	}
+	
+	@Override
+	public InstanceRestrictionable getParent()
+	{
+		return mParent;
+	}
+	
+	@Override
+	public InstanceRestrictionType getType()
+	{
+		return mType;
+	}
+	
+	@Override
+	public int getValue()
+	{
+		return mValue;
+	}
+	
+	@Override
+	public boolean hasConditions()
+	{
+		return !mConditions.isEmpty();
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((mConditions == null) ? 0 : mConditions.hashCode());
+		result = prime * result + mIndex;
+		result = prime * result + ((mItemName == null) ? 0 : mItemName.hashCode());
+		result = prime * result + ((mItems == null) ? 0 : mItems.hashCode());
+		result = prime * result + mMaximum;
+		result = prime * result + mMinimum;
+		result = prime * result + mValue;
+		result = prime * result + ((mType == null) ? 0 : mType.hashCode());
+		return result;
+	}
+	
+	@Override
+	public boolean isActive(final ItemControllerInstance aController)
+	{
+		for (final InstanceCondition condition : mConditions)
+		{
+			if ( !condition.complied(aController))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	@Override
+	public boolean isInRange(final int aValue)
+	{
+		return mMinimum <= aValue && aValue <= mMaximum;
+	}
+	
+	/**
+	 * Adds a restricted parent to this restriction. That makes sure,<br>
+	 * that the removal of restrictions is done for each restricted value of this restriction.
+	 * 
+	 * @param aParent
+	 *            The parent.
+	 */
+	@Override
+	public void setParent(final InstanceRestrictionable aParent)
+	{
+		mParent = aParent;
+	}
+	
+	@Override
+	public void update()
+	{
+		getParent().updateRestrictions();
+	}
+	
+	@Override
+	public String toString()
+	{
+		final StringBuilder string = new StringBuilder();
+		string.append(getType().getName() + ": ");
+		boolean first = true;
+		if (getItemName() != null)
+		{
+			if ( !first)
+			{
+				string.append(", ");
+			}
+			else
+			{
+				first = false;
+			}
+			string.append("ItemName = " + getItemName());
+		}
+		if (getItems() != null)
+		{
+			if ( !first)
+			{
+				string.append(", ");
+			}
+			else
+			{
+				first = false;
+			}
+			string.append("Items = " + getItems());
+		}
+		if ( !first)
+		{
+			string.append(", ");
+		}
+		string.append("Minimum = " + getMinimum()).append(", Maximum = " + getMaximum());
+		string.append(", Index = " + getIndex()).append(", Value = " + getValue());
+		return string.toString();
 	}
 }

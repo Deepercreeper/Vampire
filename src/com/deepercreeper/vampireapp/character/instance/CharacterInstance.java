@@ -17,6 +17,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import android.content.Context;
 import com.deepercreeper.vampireapp.character.controllers.EPController;
 import com.deepercreeper.vampireapp.character.controllers.InventoryController;
@@ -24,9 +25,12 @@ import com.deepercreeper.vampireapp.character.controllers.MoneyController;
 import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.implementations.instances.ItemControllerInstanceImpl;
+import com.deepercreeper.vampireapp.items.implementations.instances.restrictions.InstanceRestrictionImpl;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
+import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction;
+import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction.InstanceRestrictionType;
 import com.deepercreeper.vampireapp.lists.controllers.instances.DescriptionInstanceController;
 import com.deepercreeper.vampireapp.lists.controllers.instances.GenerationControllerInstance;
 import com.deepercreeper.vampireapp.lists.controllers.instances.InsanityControllerInstance;
@@ -50,6 +54,8 @@ public class CharacterInstance implements ItemFinder
 	private final List<ItemControllerInstance>	mControllers	= new ArrayList<ItemControllerInstance>();
 	
 	private final List<TimeListener>			mTimeListeners	= new ArrayList<TimeListener>();
+	
+	private final List<InstanceRestriction>		mRestrictions	= new ArrayList<InstanceRestriction>();
 	
 	private final GenerationControllerInstance	mGeneration;
 	
@@ -102,6 +108,13 @@ public class CharacterInstance implements ItemFinder
 		
 		mInventory = new InventoryController(mItems.getInventory(), this, mContext);
 		mHealth = new HealthControllerInstance(aCreator.getHealth(), getContext(), this);
+		
+		for (final InstanceRestriction restriction : aCreator.getRestrictions())
+		{
+			addRestriction(restriction);
+		}
+		
+		Log.i(TAG, "Restrictions: " + getRestrictions());
 	}
 	
 	public CharacterInstance(final String aXML, final ItemProvider aItems, final Context aContext) throws IOException
@@ -205,6 +218,21 @@ public class CharacterInstance implements ItemFinder
 		// Inventory
 		mInventory = new InventoryController((Element) root.getElementsByTagName("inventory").item(0), mItems.getInventory(), this, getContext());
 		
+		// Restrictions
+		final Element restrictions = (Element) root.getElementsByTagName("restrictions").item(0);
+		final NodeList restrictionsList = restrictions.getChildNodes();
+		for (int i = 0; i < restrictionsList.getLength(); i++ )
+		{
+			if (restrictionsList.item(i) instanceof Element)
+			{
+				final Element restriction = (Element) restrictionsList.item(i);
+				if (restriction.getTagName().equals("restriction"))
+				{
+					addRestriction(new InstanceRestrictionImpl(restriction));
+				}
+			}
+		}
+		
 		addTimeListeners();
 		Log.i(TAG, "Finished loading character.");
 	}
@@ -231,6 +259,47 @@ public class CharacterInstance implements ItemFinder
 	public HealthControllerInstance getHealth()
 	{
 		return mHealth;
+	}
+	
+	public void addRestriction(final InstanceRestriction aRestriction)
+	{
+		if (aRestriction.getType() == InstanceRestrictionType.ITEM_CHILD_EP_COST_MULTI_AT)
+		{
+			final ItemInstance item = findItem(aRestriction.getItemName());
+			if (item != null)
+			{
+				if (item.hasChildAt(aRestriction.getIndex()))
+				{
+					final ItemInstance child = item.getChildAt(aRestriction.getIndex());
+					final InstanceRestriction restriction = new InstanceRestrictionImpl(InstanceRestrictionType.ITEM_EP_COST_MULTI, child.getName(),
+							aRestriction.getMinimum(), aRestriction.getMaximum(), aRestriction.getItems(), 0, aRestriction.getValue());
+					child.addRestriction(restriction);
+					mRestrictions.add(restriction);
+				}
+			}
+		}
+		else if (aRestriction.getType() == InstanceRestrictionType.ITEM_CHILD_EP_COST_NEW
+				|| aRestriction.getType() == InstanceRestrictionType.ITEM_EP_COST
+				|| aRestriction.getType() == InstanceRestrictionType.ITEM_EP_COST_MULTI
+				|| aRestriction.getType() == InstanceRestrictionType.ITEM_EP_COST_NEW || aRestriction.getType() == InstanceRestrictionType.ITEM_VALUE)
+		{
+			final ItemInstance item = findItem(aRestriction.getItemName());
+			if (item != null)
+			{
+				item.addRestriction(aRestriction);
+				mRestrictions.add(aRestriction);
+			}
+		}
+	}
+	
+	public void removeRestriction(final InstanceRestriction aRestriction)
+	{
+		mRestrictions.remove(aRestriction);
+	}
+	
+	public List<InstanceRestriction> getRestrictions()
+	{
+		return mRestrictions;
 	}
 	
 	public void release()
@@ -425,7 +494,13 @@ public class CharacterInstance implements ItemFinder
 		}
 		root.appendChild(controllers);
 		
-		// TODO Restrictions
+		// Restrictions
+		final Element restrictionElement = doc.createElement("restrictions");
+		for (final InstanceRestriction restriction : getRestrictions())
+		{
+			restrictionElement.appendChild(restriction.asElement(doc));
+		}
+		root.appendChild(restrictionElement);
 		
 		final ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		final StreamResult result = new StreamResult(stream);

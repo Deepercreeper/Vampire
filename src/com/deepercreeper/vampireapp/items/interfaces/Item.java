@@ -10,7 +10,13 @@ import com.deepercreeper.vampireapp.mechanics.Action;
  */
 public interface Item extends Namable
 {
+	public void addAction(Action aAction);
+	
 	public void addChild(Item aItem);
+	
+	public Action getAction(String aName);
+	
+	public List<Action> getActionsList();
 	
 	public Item getChild(String aName);
 	
@@ -27,31 +33,19 @@ public interface Item extends Namable
 	@Override
 	public String getDisplayName();
 	
-	public void addAction(Action aAction);
-	
-	public boolean canEPIncrease();
-	
 	public int getEPCost();
-	
-	public int getEPCostNew();
 	
 	public int getEPCostMultiplicator();
 	
-	public boolean hasActions();
-	
-	public Action getAction(String aName);
-	
-	public List<Action> getActionsList();
+	public int getEPCostNew();
 	
 	public int getFreePointsCost();
 	
 	public ItemGroup getItemGroup();
 	
-	public int getMaxValue();
-	
 	public int getMaxLowLevelValue();
 	
-	public boolean hasOrder();
+	public int getMaxValue();
 	
 	public Item getParentItem();
 	
@@ -59,9 +53,13 @@ public interface Item extends Namable
 	
 	public int[] getValues();
 	
+	public boolean hasActions();
+	
 	public boolean hasChild(Item aItem);
 	
 	public boolean hasChild(String aName);
+	
+	public boolean hasOrder();
 	
 	public boolean hasParentItem();
 	

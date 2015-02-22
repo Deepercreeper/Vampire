@@ -119,12 +119,6 @@ public class ItemImpl implements Item
 	}
 	
 	@Override
-	public boolean canEPIncrease()
-	{
-		return getEPCost() != 0 || getEPCostNew() != 0 || getEPCostMultiplicator() != 0;
-	}
-	
-	@Override
 	public int getEPCost()
 	{
 		return mEPCost;

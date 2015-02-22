@@ -3,10 +3,8 @@ package com.deepercreeper.vampireapp.items.implementations.instances;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -26,9 +24,6 @@ import com.deepercreeper.vampireapp.items.interfaces.instances.GroupOptionInstan
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemGroupInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
-import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction;
-import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction.InstanceRestrictionType;
-import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 public class ItemControllerInstanceImpl implements ItemControllerInstance
@@ -117,24 +112,6 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 		for (final GroupOptionCreation groupOption : aItemController.getGroupOptionsList())
 		{
 			addGroupOptionSilent(new GroupOptionInstanceImpl(groupOption, this, getContext(), getCharacter()));
-		}
-	}
-	
-	@Override
-	public void addRestriction(final InstanceRestriction aRestriction)
-	{
-		if (mItems.containsKey(aRestriction.getItemName()))
-		{
-			mItems.get(aRestriction.getItemName()).addRestriction(aRestriction);
-		}
-		else if (mGroups.containsKey(aRestriction.getItemName()))
-		{
-			mGroups.get(aRestriction.getItemName()).addRestriction(aRestriction);
-		}
-		else
-		{
-			Log.w(TAG, "Tried to restrict a non added item or group.");
-			aRestriction.clear();
 		}
 	}
 	
@@ -284,18 +261,6 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	}
 	
 	@Override
-	public int getMaxValue(final InstanceRestrictionType... aTypes)
-	{
-		return Integer.MAX_VALUE;
-	}
-	
-	@Override
-	public int getMinValue(final InstanceRestrictionType... aTypes)
-	{
-		return Integer.MIN_VALUE;
-	}
-	
-	@Override
 	public Mode getMode()
 	{
 		return mMode;
@@ -305,47 +270,6 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	public String getName()
 	{
 		return getItemController().getName();
-	}
-	
-	@Override
-	public Set<InstanceRestriction> getRestrictions(final InstanceRestrictionType... aTypes)
-	{
-		final Set<InstanceRestriction> restrictions = new HashSet<InstanceRestriction>();
-		for (final ItemInstance item : mItems.values())
-		{
-			if (item.hasRestrictions())
-			{
-				restrictions.addAll(item.getRestrictions(aTypes));
-			}
-		}
-		for (final ItemGroupInstance group : getGroupsList())
-		{
-			if (group.hasRestrictions())
-			{
-				restrictions.addAll(group.getRestrictions(aTypes));
-			}
-		}
-		return restrictions;
-	}
-	
-	@Override
-	public boolean hasRestrictions()
-	{
-		for (final ItemInstance item : mItems.values())
-		{
-			if (item.hasRestrictions())
-			{
-				return true;
-			}
-		}
-		for (final ItemGroupInstance group : getGroupsList())
-		{
-			if (group.hasRestrictions())
-			{
-				return true;
-			}
-		}
-		return false;
 	}
 	
 	@Override
@@ -382,18 +306,6 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 				}
 			}
 		}
-	}
-	
-	@Override
-	public boolean isValueOk(final int aValue, final InstanceRestrictionType... aTypes)
-	{
-		return true;
-	}
-	
-	@Override
-	public void removeRestriction(final InstanceRestriction aRestriction)
-	{
-		// Nothing to do
 	}
 	
 	@Override
@@ -440,25 +352,6 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 		for (final GroupOptionInstance groupOption : getGroupOptionsList())
 		{
 			groupOption.updateGroups();
-		}
-	}
-	
-	@Override
-	public void updateRestrictions()
-	{
-		for (final ItemInstance item : mItems.values())
-		{
-			if (item.hasRestrictions())
-			{
-				item.updateRestrictions();
-			}
-		}
-		for (final ItemGroupInstance group : getGroupsList())
-		{
-			if (group.hasRestrictions())
-			{
-				group.updateRestrictions();
-			}
 		}
 	}
 	

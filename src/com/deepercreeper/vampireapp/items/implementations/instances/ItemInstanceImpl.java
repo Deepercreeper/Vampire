@@ -60,8 +60,6 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	
 	private final String					mDescription;
 	
-	private final CharacterInstance			mCharacter;
-	
 	private final EPController				mEP;
 	
 	private ImageButton						mIncreaseButton;
@@ -83,6 +81,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	public ItemInstanceImpl(final Element aElement, final ItemGroupInstance aItemGroup, final Context aContext, final Mode aMode,
 			final EPController aEP, final ItemInstance aParentItem, final CharacterInstance aCharacter)
 	{
+		super(aCharacter);
 		if (aParentItem == null)
 		{
 			mItem = aItemGroup.getItemGroup().getItem(aElement.getAttribute("name"));
@@ -91,7 +90,6 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		{
 			mItem = aParentItem.getItem().getChild(aElement.getAttribute("name"));
 		}
-		mCharacter = aCharacter;
 		mItemGroup = aItemGroup;
 		mContext = aContext;
 		mEP = aEP;
@@ -157,8 +155,8 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	public ItemInstanceImpl(final ItemCreation aItem, final ItemGroupInstance aItemGroup, final Mode aMode, final EPController aEP,
 			final ItemInstance aParentItem, final CharacterInstance aCharacter)
 	{
+		super(aCharacter);
 		mItem = aItem.getItem();
-		mCharacter = aCharacter;
 		mItemGroup = aItemGroup;
 		mContext = aItem.getContext();
 		mDescription = aItem.getDescription();
@@ -282,7 +280,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			return false;
 		}
 		final boolean canIncreaseItem;
-		if (mCharacter.isLowLevel())
+		if (getCharacter().isLowLevel())
 		{
 			canIncreaseItem = mValueId < Math.min(getItem().getMaxLowLevelValue(), getMaxValue(InstanceRestrictionType.ITEM_VALUE));
 		}
@@ -290,38 +288,8 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		{
 			canIncreaseItem = mValueId < getMaxValue(InstanceRestrictionType.ITEM_VALUE);
 		}
-		boolean canIncreaseChild = true;
 		
-		if (hasParentItem())
-		{
-			for (final InstanceRestriction restriction : getParentItem().getRestrictions(InstanceRestrictionType.ITEM_CHILD_VALUE_AT))
-			{
-				if (getParentItem().indexOfChild(this) == restriction.getIndex())
-				{
-					if (restriction.isActive(getItemGroup().getItemController()) && restriction.getMaximum() <= getValue())
-					{
-						canIncreaseChild = false;
-						break;
-					}
-				}
-			}
-		}
-		else
-		{
-			for (final InstanceRestriction restriction : getItemGroup().getRestrictions(InstanceRestrictionType.GROUP_ITEM_VALUE_AT))
-			{
-				if (getItemGroup().indexOfItem(this) == restriction.getIndex())
-				{
-					if (restriction.isActive(getItemGroup().getItemController()) && restriction.getMaximum() <= getValue())
-					{
-						canIncreaseChild = false;
-						break;
-					}
-				}
-			}
-		}
-		
-		return canIncreaseItem && canIncreaseChild && hasEnoughEP();
+		return canIncreaseItem && hasEnoughEP();
 	}
 	
 	@Override
@@ -352,12 +320,6 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			}
 		}
 		return values;
-	}
-	
-	@Override
-	public CharacterInstance getCharacter()
-	{
-		return mCharacter;
 	}
 	
 	@Override
@@ -424,13 +386,13 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	}
 	
 	@Override
-	public int getEPCost()
+	public int calcEPCost()
 	{
 		if (getValue() == 0)
 		{
-			return getItem().getEPCostNew();
+			return getEPCostNew();
 		}
-		return getItem().getEPCost() + getValue() * getItem().getEPCostMultiplicator();
+		return getEPCost() + getValue() * getEPCostMulti();
 	}
 	
 	@Override
@@ -542,6 +504,52 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	}
 	
 	@Override
+	public int getEPCostMulti()
+	{
+		if (hasRestrictions(InstanceRestrictionType.ITEM_EP_COST_MULTI))
+		{
+			for (final InstanceRestriction restriction : getRestrictions(InstanceRestrictionType.ITEM_EP_COST_MULTI))
+			{
+				return restriction.getValue();
+			}
+		}
+		return getItem().getEPCostMultiplicator();
+	}
+	
+	@Override
+	public int getEPCostNew()
+	{
+		if (hasRestrictions(InstanceRestrictionType.ITEM_EP_COST_NEW))
+		{
+			for (final InstanceRestriction restriction : getRestrictions(InstanceRestrictionType.ITEM_EP_COST_NEW))
+			{
+				return restriction.getValue();
+			}
+		}
+		if (hasParentItem() && getParentItem().hasRestrictions(InstanceRestrictionType.ITEM_CHILD_EP_COST_NEW))
+		{
+			for (final InstanceRestriction restriction : getParentItem().getRestrictions(InstanceRestrictionType.ITEM_CHILD_EP_COST_NEW))
+			{
+				return restriction.getValue();
+			}
+		}
+		return getItem().getEPCostNew();
+	}
+	
+	@Override
+	public int getEPCost()
+	{
+		if (hasRestrictions(InstanceRestrictionType.ITEM_EP_COST))
+		{
+			for (final InstanceRestriction restriction : getRestrictions(InstanceRestrictionType.ITEM_EP_COST))
+			{
+				return restriction.getValue();
+			}
+		}
+		return getItem().getEPCost();
+	}
+	
+	@Override
 	public void init()
 	{
 		if ( !mInitialized)
@@ -568,29 +576,14 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			
 			if (isValueItem())
 			{
-				int additionalBarWidth = 120;
-				if (getItem().canEPIncrease())
+				mIncreaseButton.setOnClickListener(new OnClickListener()
 				{
-					mIncreaseButton.setOnClickListener(new OnClickListener()
+					@Override
+					public void onClick(final View aV)
 					{
-						@Override
-						public void onClick(final View aV)
-						{
-							increase();
-						}
-					});
-				}
-				else
-				{
-					ViewUtil.hideWidth(mIncreaseButton);
-					
-					additionalBarWidth += 30;
-				}
-				
-				mValueBar.getLayoutParams().width = ViewUtil.calcPx(additionalBarWidth, getContext())
-						+ Math.round(getContext().getResources().getDimension(R.dimen.item_value_bar_width));
-				
-				refreshValue();
+						increase();
+					}
+				});
 			}
 			else
 			{
@@ -608,6 +601,25 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			}
 		}
 		
+		if (isValueItem())
+		{
+			int additionalBarWidth = 120;
+			if (canEPIncrease())
+			{
+				ViewUtil.setWidth(mIncreaseButton, 30);
+			}
+			else
+			{
+				ViewUtil.hideWidth(mIncreaseButton);
+				additionalBarWidth += 30;
+			}
+			
+			mValueBar.getLayoutParams().width = ViewUtil.calcPx(additionalBarWidth, getContext())
+					+ Math.round(getContext().getResources().getDimension(R.dimen.item_value_bar_width));
+			
+			refreshValue();
+		}
+		
 		if (hasChildren())
 		{
 			if ( !hasOrder())
@@ -623,6 +635,12 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 				}
 			}
 		}
+	}
+	
+	@Override
+	public boolean canEPIncrease()
+	{
+		return getEPCost() != 0 || getEPCostMulti() != 0 || getEPCostNew() != 0;
 	}
 	
 	@Override
@@ -782,13 +800,21 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	@Override
 	public void updateRestrictions()
 	{
+		init();
 		if (isValueItem())
 		{
 			if (hasRestrictions())
 			{
-				while ( !isValueOk(getValue(), InstanceRestrictionType.ITEM_VALUE))
+				if ( !isValueOk(getValue(), InstanceRestrictionType.ITEM_VALUE))
 				{
-					// TODO Implement
+					while (mValueId < getMinValue(InstanceRestrictionType.ITEM_VALUE))
+					{
+						masterIncrease();
+					}
+					while (mValueId > getMaxValue(InstanceRestrictionType.ITEM_VALUE))
+					{
+						masterDecrease();
+					}
 				}
 			}
 		}

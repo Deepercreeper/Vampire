@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.deepercreeper.vampireapp.character.controllers.EPController;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.character.instance.Mode;
-import com.deepercreeper.vampireapp.items.implementations.instances.restrictions.InstanceRestrictionableImpl;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
@@ -27,7 +26,7 @@ import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
-public class ItemGroupInstanceImpl extends InstanceRestrictionableImpl implements ItemGroupInstance
+public class ItemGroupInstanceImpl implements ItemGroupInstance
 {
 	private static final String				TAG				= "ItemGroupInstance";
 	
@@ -59,7 +58,6 @@ public class ItemGroupInstanceImpl extends InstanceRestrictionableImpl implement
 		mItemGroup = aItemController.getItemController().getGroup(aElement.getAttribute("name"));
 		mItemController = aItemController;
 		mContext = aContext;
-		setController(mItemController);
 		mMode = aMode;
 		mEP = aEP;
 		mCharacter = aCharacter;
@@ -98,7 +96,6 @@ public class ItemGroupInstanceImpl extends InstanceRestrictionableImpl implement
 		mItemGroup = aItemGroup.getItemGroup();
 		mContext = aContext;
 		mItemController = aItemController;
-		setController(mItemController);
 		mMode = aMode;
 		mEP = aEP;
 		mCharacter = aCharacter;
@@ -361,12 +358,6 @@ public class ItemGroupInstanceImpl extends InstanceRestrictionableImpl implement
 				item.updateButtons();
 			}
 		}
-	}
-	
-	@Override
-	public void updateRestrictions()
-	{
-		// TODO Implement
 	}
 	
 	private void sortItems()

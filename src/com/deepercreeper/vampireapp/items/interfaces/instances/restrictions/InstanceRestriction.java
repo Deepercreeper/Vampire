@@ -5,30 +5,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
+import com.deepercreeper.vampireapp.util.Saveable;
 
-public interface InstanceRestriction
+public interface InstanceRestriction extends Saveable
 {
 	public static class InstanceRestrictionType
 	{
-		private static final Map<String, InstanceRestrictionType>	RESTRICTION_TYPES		= new HashMap<String, InstanceRestrictionType>();
+		private static final Map<String, InstanceRestrictionType>	RESTRICTION_TYPES			= new HashMap<String, InstanceRestrictionType>();
 		
-		public static final InstanceRestrictionType					ITEM_VALUE				= new InstanceRestrictionType("ItemValue");
+		public static final InstanceRestrictionType					ITEM_VALUE					= new InstanceRestrictionType("ItemValue");
 		
-		public static final InstanceRestrictionType					ITEM_CHILD_VALUE_AT		= new InstanceRestrictionType("ItemChildValueAt");
+		public static final InstanceRestrictionType					ITEM_EP_COST				= new InstanceRestrictionType("ItemEpCost");
 		
-		public static final InstanceRestrictionType					ITEM_CHILDREN_COUNT		= new InstanceRestrictionType("ItemChildrenCount");
+		public static final InstanceRestrictionType					ITEM_EP_COST_MULTI			= new InstanceRestrictionType("ItemEpCostMulti");
 		
-		public static final InstanceRestrictionType					GROUP_CHILDREN			= new InstanceRestrictionType("GroupChildren");
+		public static final InstanceRestrictionType					ITEM_EP_COST_NEW			= new InstanceRestrictionType("ItemEpCostNew");
 		
-		public static final InstanceRestrictionType					GROUP_CHILDREN_COUNT	= new InstanceRestrictionType("GroupChildrenCount");
+		public static final InstanceRestrictionType					ITEM_CHILD_EP_COST_MULTI_AT	= new InstanceRestrictionType(
+																										"ItemChildEpCostMultiAt");
 		
-		public static final InstanceRestrictionType					GROUP_ITEM_VALUE_AT		= new InstanceRestrictionType("GroupItemValueAt");
+		public static final InstanceRestrictionType					ITEM_CHILD_EP_COST_NEW		= new InstanceRestrictionType("ItemChildEpCostNew");
 		
-		public static final InstanceRestrictionType					INSANITY				= new InstanceRestrictionType("Insanity");
-		
-		public static final InstanceRestrictionType					GENERATION				= new InstanceRestrictionType("Generation");
-		
-		private final String								mName;
+		private final String										mName;
 		
 		private InstanceRestrictionType(final String aName)
 		{
@@ -71,6 +69,8 @@ public interface InstanceRestriction
 	public void setParent(InstanceRestrictionable aParent);
 	
 	public InstanceRestrictionable getParent();
+	
+	public int getValue();
 	
 	public void clear();
 	

@@ -380,6 +380,10 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			Log.w(TAG, "Tried to decrease a non value item.");
 			return;
 		}
+		if ( !canDecrease())
+		{
+			return;
+		}
 		getCreationMode().decreaseItem(this);
 		refreshValue();
 		updateController();
@@ -692,6 +696,10 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		if ( !isValueItem())
 		{
 			Log.w(TAG, "Tried to increase a non value item.");
+			return;
+		}
+		if ( !canIncrease())
+		{
 			return;
 		}
 		getCreationMode().increaseItem(this);

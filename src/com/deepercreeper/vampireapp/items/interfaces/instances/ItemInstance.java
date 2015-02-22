@@ -5,7 +5,6 @@ import java.util.Set;
 import android.content.Context;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.character.controllers.EPController;
-import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.character.instance.Mode;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestrictionable;
@@ -30,9 +29,15 @@ public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemIn
 	
 	public int getAllValues();
 	
-	public CharacterInstance getCharacter();
-	
 	public ItemInstance getChildAt(int aIndex);
+	
+	public boolean canEPIncrease();
+	
+	public int getEPCostMulti();
+	
+	public int getEPCostNew();
+	
+	public int calcEPCost();
 	
 	public List<ItemInstance> getChildrenList();
 	

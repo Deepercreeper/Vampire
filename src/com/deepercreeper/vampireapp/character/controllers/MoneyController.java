@@ -46,7 +46,7 @@ public class MoneyController implements Saveable
 	public MoneyController(final Money aMoney, final Element aElement, final Context aContext)
 	{
 		mMoney = aMoney;
-		for (final String value : DataUtil.parseList(aElement.getAttribute("values")))
+		for (final String value : DataUtil.parseArray(aElement.getAttribute("values")))
 		{
 			final String[] currencyAndValue = value.split(":");
 			mValues.put(currencyAndValue[1], Integer.parseInt(currencyAndValue[0]));

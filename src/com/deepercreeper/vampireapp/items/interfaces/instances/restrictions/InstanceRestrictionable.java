@@ -1,6 +1,7 @@
 package com.deepercreeper.vampireapp.items.interfaces.instances.restrictions;
 
 import java.util.Set;
+import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction.InstanceRestrictionType;
 
 /**
@@ -29,7 +30,9 @@ public interface InstanceRestrictionable
 	/**
 	 * @return whether restrictions are currently added to this field.
 	 */
-	public boolean hasRestrictions();
+	public boolean hasRestrictions(InstanceRestrictionType... aTypes);
+	
+	public CharacterInstance getCharacter();
 	
 	public Set<InstanceRestriction> getRestrictions(InstanceRestrictionType... aTypes);
 	

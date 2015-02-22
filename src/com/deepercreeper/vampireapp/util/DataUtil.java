@@ -35,6 +35,8 @@ import com.deepercreeper.vampireapp.mechanics.ActionImpl;
 
 public class DataUtil
 {
+	private static final String	TAG				= "DataUtil";
+	
 	private static final String	CONTROLLER		= "controller";
 	
 	private static final String	ITEM			= "item";
@@ -83,11 +85,44 @@ public class DataUtil
 	
 	public static Money loadMoney(final Context aContext)
 	{
-		final Money money = new Money(parseList(getSpecialItems(aContext).getAttribute("currencies")));
+		final Money money = new Money(parseArray(getSpecialItems(aContext).getAttribute("currencies")));
 		return money;
 	}
 	
-	public static String[] parseList(final String aList)
+	public static List<String> parseList(final String aList)
+	{
+		return Arrays.asList(parseArray(aList));
+	}
+	
+	public static String parseList(final List<String> aList)
+	{
+		final StringBuilder list = new StringBuilder();
+		for (int i = 0; i < aList.size(); i++ )
+		{
+			if (i != 0)
+			{
+				list.append(",");
+			}
+			list.append(aList.get(i));
+		}
+		return list.toString();
+	}
+	
+	public static String parseArray(final String[] aList)
+	{
+		final StringBuilder list = new StringBuilder();
+		for (int i = 0; i < aList.length; i++ )
+		{
+			if (i != 0)
+			{
+				list.append(",");
+			}
+			list.append(aList[i]);
+		}
+		return list.toString();
+	}
+	
+	public static String[] parseArray(final String aList)
 	{
 		return aList.split(",");
 	}
@@ -163,15 +198,15 @@ public class DataUtil
 				}
 				if (child.hasAttribute("dices"))
 				{
-					dices = parseList(child.getAttribute("dices"));
+					dices = parseArray(child.getAttribute("dices"));
 				}
 				if (child.hasAttribute("costDices"))
 				{
-					costDices = parseList(child.getAttribute("costDices"));
+					costDices = parseArray(child.getAttribute("costDices"));
 				}
 				if (child.hasAttribute("costs"))
 				{
-					cost = parseList(child.getAttribute("cost"));
+					cost = parseArray(child.getAttribute("cost"));
 				}
 				if (child.hasAttribute("minLevel"))
 				{
@@ -501,10 +536,17 @@ public class DataUtil
 			{
 				final CreationRestrictionType type = CreationRestrictionType.get(child.getAttribute("type"));
 				
+				if (type == null)
+				{
+					Log.w(TAG, "Restriction type could not be found: " + child.getAttribute("type"));
+				}
+				
+				final boolean creationRestriction = Boolean.parseBoolean(child.getAttribute("creationRestriction"));
 				String itemName = null;
 				int minimum = Integer.MIN_VALUE;
 				int maximum = Integer.MAX_VALUE;
 				int index = 0;
+				int value = 0;
 				List<String> items = null;
 				
 				if (child.hasAttribute("itemName"))
@@ -535,14 +577,19 @@ public class DataUtil
 				}
 				if (child.hasAttribute("items"))
 				{
-					items = Arrays.asList(parseList(child.getAttribute("items")));
+					items = Arrays.asList(parseArray(child.getAttribute("items")));
 				}
 				if (child.hasAttribute("index"))
 				{
 					index = Integer.parseInt(child.getAttribute("index"));
 				}
+				if (child.hasAttribute("value"))
+				{
+					value = Integer.parseInt(child.getAttribute("value"));
+				}
 				
-				final CreationRestriction restriction = new CreationRestrictionImpl(type, itemName, minimum, maximum, items, index);
+				final CreationRestriction restriction = new CreationRestrictionImpl(type, itemName, minimum, maximum, items, index, value,
+						creationRestriction);
 				
 				if (child.hasChildNodes())
 				{

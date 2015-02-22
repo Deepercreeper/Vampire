@@ -12,6 +12,7 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCre
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
+import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction;
 import com.deepercreeper.vampireapp.lists.controllers.creations.DescriptionCreationController;
 import com.deepercreeper.vampireapp.lists.controllers.creations.GenerationControllerCreation;
 import com.deepercreeper.vampireapp.lists.controllers.creations.InsanityControllerCreation;
@@ -130,6 +131,19 @@ public class CharacterCreation
 	public void addInsanity(final String aInsanity)
 	{
 		mInsanities.addInsanity(aInsanity);
+	}
+	
+	public List<InstanceRestriction> getRestrictions()
+	{
+		final List<InstanceRestriction> restrictions = new ArrayList<InstanceRestriction>();
+		for (final CreationRestriction restriction : mClan.getRestrictions())
+		{
+			if (restriction.isPersistent() && !restriction.isCreationRestriction())
+			{
+				restrictions.add(restriction.createInstance());
+			}
+		}
+		return restrictions;
 	}
 	
 	public int[] getHealthSteps()
