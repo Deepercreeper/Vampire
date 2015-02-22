@@ -9,6 +9,7 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.Crea
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestrictionable;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction;
+import com.deepercreeper.vampireapp.mechanics.Duration;
 
 /**
  * Some clans have restrictions, that define whether values or attributes have to have a specific value.<br>
@@ -54,7 +55,12 @@ public class CreationRestrictionImpl implements CreationRestriction
 	@Override
 	public InstanceRestriction createInstance()
 	{
-		return new InstanceRestrictionImpl(getType().getInstanceType(), getItemName(), getMinimum(), getMaximum(), getItems(), getIndex(), getValue());
+		if ( !isPersistent())
+		{
+			return null;
+		}
+		return new InstanceRestrictionImpl(getType().getInstanceType(), getItemName(), getMinimum(), getMaximum(), getItems(), getIndex(),
+				getValue(), Duration.FOREVER);
 		// TODO Maybe add the conditions too
 	}
 	

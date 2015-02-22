@@ -2,8 +2,11 @@ package com.deepercreeper.vampireapp.mechanics;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import com.deepercreeper.vampireapp.util.Saveable;
 
-public class Duration implements TimeListener
+public class Duration implements TimeListener, Saveable
 {
 	public interface DurationListener
 	{
@@ -41,6 +44,37 @@ public class Duration implements TimeListener
 		}
 		mType = aType;
 		mValue = aValue;
+	}
+	
+	private Duration(final Element aElement)
+	{
+		mType = Type.valueOf(aElement.getAttribute("durationType"));
+		mValue = Integer.parseInt(aElement.getAttribute("durationValue"));
+	}
+	
+	public static Duration create(final Element aElement)
+	{
+		if (aElement.getAttribute("type").equals("forever"))
+		{
+			return FOREVER;
+		}
+		return new Duration(aElement);
+	}
+	
+	@Override
+	public Element asElement(final Document aDoc)
+	{
+		final Element element = aDoc.createElement("duration");
+		if (this == FOREVER)
+		{
+			element.setAttribute("type", "forever");
+		}
+		else
+		{
+			element.setAttribute("type", getType().name());
+			element.setAttribute("value", "" + getValue());
+		}
+		return element;
 	}
 	
 	public Type getType()
@@ -128,5 +162,15 @@ public class Duration implements TimeListener
 		{
 			onDue();
 		}
+	}
+	
+	@Override
+	public String toString()
+	{
+		if (this == FOREVER)
+		{
+			return "Forever";
+		}
+		return getType().name() + ": " + getValue();
 	}
 }

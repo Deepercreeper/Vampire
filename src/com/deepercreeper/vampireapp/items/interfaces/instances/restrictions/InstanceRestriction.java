@@ -5,9 +5,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
+import com.deepercreeper.vampireapp.mechanics.Duration;
+import com.deepercreeper.vampireapp.mechanics.Duration.DurationListener;
+import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.Saveable;
 
-public interface InstanceRestriction extends Saveable
+public interface InstanceRestriction extends Saveable, TimeListener, DurationListener
 {
 	public static class InstanceRestrictionType
 	{
@@ -65,6 +68,8 @@ public interface InstanceRestriction extends Saveable
 	public boolean hasConditions();
 	
 	public boolean isActive(ItemControllerInstance aController);
+	
+	public Duration getDuration();
 	
 	public void setParent(InstanceRestrictionable aParent);
 	

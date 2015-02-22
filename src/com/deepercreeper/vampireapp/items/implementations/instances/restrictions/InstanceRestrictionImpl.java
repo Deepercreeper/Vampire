@@ -9,6 +9,7 @@ import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerIns
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceCondition;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestrictionable;
+import com.deepercreeper.vampireapp.mechanics.Duration;
 import com.deepercreeper.vampireapp.util.DataUtil;
 
 /**
@@ -23,7 +24,11 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 	
 	private final List<String>				mItems;
 	
+	private final Set<InstanceCondition>	mConditions	= new HashSet<InstanceCondition>();
+	
 	private final InstanceRestrictionType	mType;
+	
+	private final Duration					mDuration;
 	
 	private final int						mValue;
 	
@@ -32,8 +37,6 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 	private final int						mMaximum;
 	
 	private final int						mIndex;
-	
-	private final Set<InstanceCondition>	mConditions	= new HashSet<InstanceCondition>();
 	
 	private InstanceRestrictionable			mParent;
 	
@@ -60,10 +63,12 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 		mMaximum = Integer.parseInt(aElement.getAttribute("maximum"));
 		mIndex = Integer.parseInt(aElement.getAttribute("index"));
 		mValue = Integer.parseInt(aElement.getAttribute("value"));
+		mDuration = Duration.create((Element) aElement.getElementsByTagName("duration").item(0));
+		mDuration.addListener(this);
 	}
 	
 	public InstanceRestrictionImpl(final InstanceRestrictionType aType, final String aItemName, final int aMinimum, final int aMaximum,
-			final List<String> aItems, final int aIndex, final int aValue)
+			final List<String> aItems, final int aIndex, final int aValue, final Duration aDuration)
 	{
 		mType = aType;
 		mItemName = aItemName;
@@ -72,6 +77,8 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 		mMaximum = aMaximum;
 		mIndex = aIndex;
 		mValue = aValue;
+		mDuration = aDuration;
+		mDuration.addListener(this);
 	}
 	
 	@Override
@@ -97,7 +104,38 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 		element.setAttribute("maximum", "" + getMaximum());
 		element.setAttribute("index", "" + getIndex());
 		element.setAttribute("value", "" + getValue());
+		element.appendChild(mDuration.asElement(aDoc));
 		return element;
+	}
+	
+	@Override
+	public void onDue()
+	{
+		clear();
+	}
+	
+	@Override
+	public Duration getDuration()
+	{
+		return mDuration;
+	}
+	
+	@Override
+	public void day()
+	{
+		mDuration.day();
+	}
+	
+	@Override
+	public void hour()
+	{
+		mDuration.hour();
+	}
+	
+	@Override
+	public void round()
+	{
+		mDuration.round();
 	}
 	
 	/**
@@ -342,6 +380,7 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 		}
 		string.append("Minimum = " + getMinimum()).append(", Maximum = " + getMaximum());
 		string.append(", Index = " + getIndex()).append(", Value = " + getValue());
+		string.append(", " + getDuration());
 		return string.toString();
 	}
 }

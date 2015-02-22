@@ -37,8 +37,6 @@ import com.deepercreeper.vampireapp.lists.controllers.instances.InsanityControll
 import com.deepercreeper.vampireapp.lists.items.Clan;
 import com.deepercreeper.vampireapp.lists.items.Nature;
 import com.deepercreeper.vampireapp.mechanics.Action.ItemFinder;
-import com.deepercreeper.vampireapp.mechanics.Duration;
-import com.deepercreeper.vampireapp.mechanics.Duration.Type;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.CodingUtil;
 import com.deepercreeper.vampireapp.util.Log;
@@ -155,29 +153,7 @@ public class CharacterInstance implements ItemFinder
 		mMode = Mode.valueOf(meta.getAttribute("mode"));
 		
 		// Insanities
-		mInsanities = new InsanityControllerInstance();
-		final Element insanities = (Element) root.getElementsByTagName("insanities").item(0);
-		for (int i = 0; i < insanities.getChildNodes().getLength(); i++ )
-		{
-			if (insanities.getChildNodes().item(i) instanceof Element)
-			{
-				final Element insanity = (Element) insanities.getChildNodes().item(i);
-				if (insanity.getTagName().equals("insanity"))
-				{
-					Duration duration;
-					if (insanity.getAttribute("durationType").equals("forever"))
-					{
-						duration = Duration.FOREVER;
-					}
-					else
-					{
-						duration = new Duration(Type.valueOf(insanity.getAttribute("durationType")), Integer.parseInt(insanity
-								.getAttribute("durationValue")));
-					}
-					mInsanities.addInsanity(CodingUtil.decode(insanity.getAttribute("name")), duration);
-				}
-			}
-		}
+		mInsanities = new InsanityControllerInstance((Element) root.getElementsByTagName("insanities").item(0));
 		
 		// Descriptions
 		final Map<String, String> descriptionsMap = new HashMap<String, String>();
@@ -272,9 +248,11 @@ public class CharacterInstance implements ItemFinder
 				{
 					final ItemInstance child = item.getChildAt(aRestriction.getIndex());
 					final InstanceRestriction restriction = new InstanceRestrictionImpl(InstanceRestrictionType.ITEM_EP_COST_MULTI, child.getName(),
-							aRestriction.getMinimum(), aRestriction.getMaximum(), aRestriction.getItems(), 0, aRestriction.getValue());
+							aRestriction.getMinimum(), aRestriction.getMaximum(), aRestriction.getItems(), 0, aRestriction.getValue(),
+							aRestriction.getDuration());
 					child.addRestriction(restriction);
 					mRestrictions.add(restriction);
+					mTimeListeners.add(restriction);
 				}
 			}
 		}
@@ -288,6 +266,7 @@ public class CharacterInstance implements ItemFinder
 			{
 				item.addRestriction(aRestriction);
 				mRestrictions.add(aRestriction);
+				mTimeListeners.add(aRestriction);
 			}
 		}
 	}
@@ -295,6 +274,7 @@ public class CharacterInstance implements ItemFinder
 	public void removeRestriction(final InstanceRestriction aRestriction)
 	{
 		mRestrictions.remove(aRestriction);
+		mTimeListeners.remove(aRestriction);
 	}
 	
 	public List<InstanceRestriction> getRestrictions()
@@ -450,24 +430,7 @@ public class CharacterInstance implements ItemFinder
 		root.appendChild(mInventory.asElement(doc));
 		
 		// Insanities
-		final Element insanities = doc.createElement("insanities");
-		for (final String insanity : mInsanities.getInsanities())
-		{
-			final Element insanityElement = doc.createElement("insanity");
-			final Duration duration = mInsanities.getDurationOf(insanity);
-			insanityElement.setAttribute("name", CodingUtil.encode(insanity));
-			if (duration == Duration.FOREVER)
-			{
-				insanityElement.setAttribute("durationType", "forever");
-			}
-			else
-			{
-				insanityElement.setAttribute("durationType", duration.getType().name());
-				insanityElement.setAttribute("durationValue", "" + duration.getValue());
-			}
-			insanities.appendChild(insanityElement);
-		}
-		root.appendChild(insanities);
+		root.appendChild(mInsanities.asElement(doc));
 		
 		// Descriptions
 		final Element descriptions = doc.createElement("descriptions");
