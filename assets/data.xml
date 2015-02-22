@@ -1780,14 +1780,13 @@
         </clan>
     </clans>
 
-    <health
-        cost="Blood pool"
-        values="0,1,1,2,2,5,-1" />
-
-    <money currencies="G,S,K" />
-
-    <inventory
+    <special-items
+        healthCost="Blood pool"
+        defaultHealth="0,1,1,2,2,5,-1"
+        currencies="G,S,K"
         maxWeightItem="Strength"
-        maxWeights="10,20,50,100,150,500" />
+        maxWeightSteps="10,20,50,100,150,500"
+        generationItem="Generation"
+        />
 
 </data>

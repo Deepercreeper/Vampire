@@ -142,6 +142,29 @@ public class CharacterCreation
 		return mHealth;
 	}
 	
+	public int getGenerationValue()
+	{
+		int generation = mGeneration.getGeneration();
+		final ItemCreation generationItem = findItem(mItems.getGenerationItem());
+		if (generationItem != null)
+		{
+			generation -= generationItem.getValue();
+		}
+		return generation;
+	}
+	
+	public ItemCreation findItem(final String aName)
+	{
+		for (final ItemControllerCreation controller : mControllers)
+		{
+			if (controller.hasItem(aName))
+			{
+				return controller.getItem(aName);
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 * Removes all user defined descriptions.
 	 */

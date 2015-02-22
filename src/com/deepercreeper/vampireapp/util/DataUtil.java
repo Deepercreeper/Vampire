@@ -53,9 +53,68 @@ public class DataUtil
 	
 	private static Document		sData;
 	
-	public static ClanController createClans(final Context aContext)
+	public static String loadGenerationItem(final Context aContext)
 	{
-		return createClans(getData(aContext));
+		return getSpecialItems(aContext).getAttribute("generationItem");
+	}
+	
+	public static ClanController loadClans(final Context aContext)
+	{
+		return loadClans(getData(aContext));
+	}
+	
+	public static Health loadHealth(final Context aContext)
+	{
+		final Element element = getSpecialItems(aContext);
+		return new Health(parseValues(element.getAttribute("defaultHealth")), element.getAttribute("healthCost"));
+	}
+	
+	public static Inventory loadInventory(final Context aContext)
+	{
+		final Element element = getSpecialItems(aContext);
+		final Inventory inventory = new Inventory(parseValues(element.getAttribute("maxWeightSteps")), element.getAttribute("maxWeightItem"));
+		return inventory;
+	}
+	
+	public static List<ItemController> loadItems(final Context aContext)
+	{
+		return loadControllers(getData(aContext));
+	}
+	
+	public static Money loadMoney(final Context aContext)
+	{
+		final Money money = new Money(parseList(getSpecialItems(aContext).getAttribute("currencies")));
+		return money;
+	}
+	
+	public static String[] parseList(final String aList)
+	{
+		return aList.split(",");
+	}
+	
+	public static String parseValues(final int[] aValues)
+	{
+		final StringBuilder values = new StringBuilder();
+		for (int i = 0; i < aValues.length; i++ )
+		{
+			if (i != 0)
+			{
+				values.append(",");
+			}
+			values.append(aValues[i]);
+		}
+		return values.toString();
+	}
+	
+	public static int[] parseValues(final String aValues)
+	{
+		final String[] integers = aValues.split(",");
+		final int[] values = new int[integers.length];
+		for (int i = 0; i < integers.length; i++ )
+		{
+			values[i] = Integer.parseInt(integers[i]);
+		}
+		return values;
 	}
 	
 	private static Document getData(final Context aContext)
@@ -67,7 +126,64 @@ public class DataUtil
 		return sData;
 	}
 	
-	private static ClanController createClans(final Document aDoc)
+	private static Element getSpecialItems(final Context aContext)
+	{
+		return (Element) getData(aContext).getElementsByTagName("special-items").item(0);
+	}
+	
+	private static Set<Action> loadActions(final Node aItem)
+	{
+		final Set<Action> actions = new HashSet<Action>();
+		final NodeList children = aItem.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++ )
+		{
+			if ( !(children.item(i) instanceof Element))
+			{
+				continue;
+			}
+			final Element child = (Element) children.item(i);
+			if (child.getTagName().equals(ACTION))
+			{
+				final ActionType type = Action.ActionType.get(child.getAttribute("type"));
+				final String name = child.getAttribute("name");
+				String id = name;
+				int minLevel = 0;
+				int minDices = 0;
+				String[] dices = null;
+				String[] costDices = null;
+				String[] cost = null;
+				
+				if (child.hasAttribute("id"))
+				{
+					id = child.getAttribute("id");
+				}
+				if (child.hasAttribute("minDices"))
+				{
+					minDices = Integer.parseInt(child.getAttribute("minDices"));
+				}
+				if (child.hasAttribute("dices"))
+				{
+					dices = parseList(child.getAttribute("dices"));
+				}
+				if (child.hasAttribute("costDices"))
+				{
+					costDices = parseList(child.getAttribute("costDices"));
+				}
+				if (child.hasAttribute("costs"))
+				{
+					cost = parseList(child.getAttribute("cost"));
+				}
+				if (child.hasAttribute("minLevel"))
+				{
+					minLevel = Integer.parseInt(child.getAttribute("minLevel"));
+				}
+				actions.add(new ActionImpl(name, id, type, minLevel, minDices, dices, costDices, cost));
+			}
+		}
+		return actions;
+	}
+	
+	private static ClanController loadClans(final Document aDoc)
 	{
 		final ClanController controller = new ClanController();
 		final List<Clan> clansList = new ArrayList<Clan>();
@@ -89,6 +205,285 @@ public class DataUtil
 		}
 		controller.init(clansList);
 		return controller;
+	}
+	
+	private static Set<CreationCondition> loadConditions(final Node aRestrictionNode)
+	{
+		final Set<CreationCondition> conditions = new HashSet<CreationCondition>();
+		final NodeList children = aRestrictionNode.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++ )
+		{
+			if ( !(children.item(i) instanceof Element))
+			{
+				continue;
+			}
+			final Element child = (Element) (children.item(i));
+			if (child.getTagName().equals(CONDITION))
+			{
+				final ConditionQuery query = ConditionQuery.getQuery(child.getAttribute("query"));
+				String itemName = null;
+				int minimum = Integer.MIN_VALUE;
+				int maximum = Integer.MAX_VALUE;
+				int index = 0;
+				if (child.hasAttribute("range"))
+				{
+					final String range = child.getAttribute("range");
+					
+					if (range.startsWith("="))
+					{
+						minimum = maximum = Integer.parseInt(range.substring(1));
+					}
+					else if (range.startsWith("<"))
+					{
+						maximum = Integer.parseInt(range.substring(1)) - 1;
+					}
+					else if (range.startsWith(">"))
+					{
+						minimum = Integer.parseInt(range.substring(1)) + 1;
+					}
+					else if (range.contains("-"))
+					{
+						minimum = Integer.parseInt(range.split("-")[0]);
+						maximum = Integer.parseInt(range.split("-")[1]);
+					}
+				}
+				if (child.hasAttribute("itemName"))
+				{
+					itemName = child.getAttribute("itemName");
+				}
+				if (child.hasAttribute("index"))
+				{
+					index = Integer.parseInt(child.getAttribute("index"));
+				}
+				conditions.add(new CreationConditionImpl(query, itemName, minimum, maximum, index));
+			}
+		}
+		return conditions;
+	}
+	
+	private static List<ItemController> loadControllers(final Document aDoc)
+	{
+		final List<ItemController> controllersList = new ArrayList<ItemController>();
+		final NodeList controllers = aDoc.getElementsByTagName(CONTROLLER);
+		for (int i = 0; i < controllers.getLength(); i++ )
+		{
+			if ( !(controllers.item(i) instanceof Element))
+			{
+				continue;
+			}
+			final Element controller = (Element) controllers.item(i);
+			final String name = controller.getAttribute("name");
+			final ItemController itemController = new ItemControllerImpl(name);
+			for (final ItemGroup group : loadGroups(controller))
+			{
+				itemController.addGroup(group);
+			}
+			for (final GroupOption groupOption : loadGroupOptions(controller, itemController))
+			{
+				itemController.addGroupOption(groupOption);
+			}
+			controllersList.add(itemController);
+		}
+		return controllersList;
+	}
+	
+	private static List<GroupOption> loadGroupOptions(final Node aController, final ItemController aParent)
+	{
+		final List<GroupOption> groupOptionsList = new ArrayList<GroupOption>();
+		final NodeList children = aController.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++ )
+		{
+			if ( !(children.item(i) instanceof Element))
+			{
+				continue;
+			}
+			final Element child = (Element) (children.item(i));
+			if (child.getTagName().equals(GROUP_OPTION))
+			{
+				final String name = child.getAttribute("name");
+				final boolean valuedGroupOption = Boolean.parseBoolean(child.getAttribute("value"));
+				int[] maxValues = null;
+				if (valuedGroupOption && child.hasAttribute("maxValues"))
+				{
+					maxValues = parseValues(child.getAttribute("maxValues"));
+				}
+				final GroupOption groupOption = new GroupOptionImpl(name, maxValues);
+				for (final ItemGroup group : loadGroups(child, aParent))
+				{
+					groupOption.addGroup(group);
+				}
+				groupOptionsList.add(groupOption);
+			}
+		}
+		return groupOptionsList;
+	}
+	
+	private static List<ItemGroup> loadGroups(final Element aGroupOption, final ItemController aController)
+	{
+		final List<ItemGroup> groupsList = new ArrayList<ItemGroup>();
+		final NodeList children = aGroupOption.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++ )
+		{
+			if ( !(children.item(i) instanceof Element))
+			{
+				continue;
+			}
+			final Element child = (Element) children.item(i);
+			final String groupName = child.getAttribute("name");
+			groupsList.add(aController.getGroup(groupName));
+		}
+		return groupsList;
+	}
+	
+	private static List<ItemGroup> loadGroups(final Node aController)
+	{
+		final List<ItemGroup> groupsList = new ArrayList<ItemGroup>();
+		final NodeList children = aController.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++ )
+		{
+			if ( !(children.item(i) instanceof Element))
+			{
+				continue;
+			}
+			final Element child = (Element) (children.item(i));
+			if (child.getTagName().equals(GROUP))
+			{
+				final String name = child.getAttribute("name");
+				final boolean mutable = Boolean.parseBoolean(child.getAttribute("mutable"));
+				final boolean freeMutable = Boolean.parseBoolean(child.getAttribute("freeMutable"));
+				final boolean valueGroup = Boolean.parseBoolean(child.getAttribute("value"));
+				final boolean order = Boolean.parseBoolean(child.getAttribute("order"));
+				int maxValue = Integer.MAX_VALUE;
+				int startValue = 0;
+				int maxLowLevelValue = 0;
+				int freePointsCost = 0;
+				int epCost = 0;
+				int epCostMultiplicator = 0;
+				int epCostNew = 0;
+				int maxItems = Integer.MAX_VALUE;
+				if (child.hasAttribute("maxItems"))
+				{
+					maxItems = Integer.parseInt(child.getAttribute("maxItems"));
+				}
+				if (valueGroup)
+				{
+					if (child.hasAttribute("epCost"))
+					{
+						epCost = Integer.parseInt(child.getAttribute("epCost"));
+					}
+					if (child.hasAttribute("epCostMulti"))
+					{
+						epCostMultiplicator = Integer.parseInt(child.getAttribute("epCostMulti"));
+					}
+					if (child.hasAttribute("epCostNew"))
+					{
+						epCostNew = Integer.parseInt(child.getAttribute("epCostNew"));
+					}
+					if (child.hasAttribute("maxValue"))
+					{
+						maxValue = Integer.parseInt(child.getAttribute("maxValue"));
+					}
+					if (child.hasAttribute("freePointsCost"))
+					{
+						freePointsCost = Integer.parseInt(child.getAttribute("freePointsCost"));
+					}
+					if (child.hasAttribute("maxLowLevelValue"))
+					{
+						maxLowLevelValue = Integer.parseInt(child.getAttribute("maxLowLevelValue"));
+					}
+					else
+					{
+						maxLowLevelValue = maxValue;
+					}
+					if (child.hasAttribute("startValue"))
+					{
+						startValue = Integer.parseInt(child.getAttribute("startValue"));
+					}
+				}
+				final ItemGroup group = new ItemGroupImpl(name, mutable, order, freeMutable, maxLowLevelValue, startValue, maxValue, freePointsCost,
+						valueGroup, maxItems, epCost, epCostNew, epCostMultiplicator);
+				for (final Item item : loadItems(child, group, null))
+				{
+					group.addItem(item);
+				}
+				groupsList.add(group);
+			}
+		}
+		return groupsList;
+	}
+	
+	private static List<Item> loadItems(final Node aParentNode, final ItemGroup aParentGroup, final Item aParentItem)
+	{
+		final List<Item> itemsList = new ArrayList<Item>();
+		final NodeList children = aParentNode.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++ )
+		{
+			if ( !(children.item(i) instanceof Element))
+			{
+				continue;
+			}
+			final Element child = (Element) (children.item(i));
+			if (child.getTagName().equals(ITEM))
+			{
+				final String name = child.getAttribute("name");
+				final boolean needsDescription = Boolean.parseBoolean(child.getAttribute("needsDescription"));
+				final boolean parent = Boolean.parseBoolean(child.getAttribute("parent"));
+				final boolean order = Boolean.parseBoolean(child.getAttribute("order"));
+				boolean valueItem = aParentGroup.isValueGroup();
+				int[] values = null;
+				int startValue = -1;
+				int epCost = -1;
+				int epCostNew = -1;
+				int epCostMultiplicator = -1;
+				
+				if (child.hasAttribute("epCost"))
+				{
+					epCost = Integer.parseInt(child.getAttribute("epCost"));
+				}
+				if (child.hasAttribute("epCostNew"))
+				{
+					epCostNew = Integer.parseInt(child.getAttribute("epCostNew"));
+				}
+				if (child.hasAttribute("epCostMulti"))
+				{
+					epCostMultiplicator = Integer.parseInt(child.getAttribute("epCostMulti"));
+				}
+				if (child.hasAttribute("startValue"))
+				{
+					startValue = Integer.parseInt(child.getAttribute("startValue"));
+				}
+				if (child.hasAttribute("valueItem"))
+				{
+					valueItem = Boolean.parseBoolean(child.getAttribute("valueItem"));
+				}
+				if (valueItem)
+				{
+					if (child.hasAttribute("values"))
+					{
+						values = parseValues(child.getAttribute("values"));
+					}
+					else
+					{
+						values = aParentGroup.getDefaultValues();
+					}
+				}
+				
+				final Item item;
+				final boolean mutableParent = Boolean.parseBoolean(child.getAttribute("mutableParent"));
+				item = new ItemImpl(name, aParentGroup, needsDescription, parent, mutableParent, order, values, startValue, epCost, epCostNew,
+						epCostMultiplicator, aParentItem);
+				for (final Item childItem : loadItems(child, aParentGroup, item))
+				{
+					item.addChild(childItem);
+				}
+				for (final Action action : loadActions(child))
+				{
+					item.addAction(action);
+				}
+				itemsList.add(item);
+			}
+		}
+		return itemsList;
 	}
 	
 	private static Set<CreationRestriction> loadRestrictions(final Node aClanNode)
@@ -160,395 +555,5 @@ public class DataUtil
 			}
 		}
 		return restrictions;
-	}
-	
-	public static Health loadHealth(final Context aContext)
-	{
-		final Document doc = getData(aContext);
-		final Element element = (Element) doc.getElementsByTagName("health").item(0);
-		final Health health = new Health(parseValues(element.getAttribute("values")), element.getAttribute("cost"));
-		return health;
-	}
-	
-	public static Money loadMoney(final Context aContext)
-	{
-		final Document doc = getData(aContext);
-		final Element element = (Element) doc.getElementsByTagName("money").item(0);
-		final Money money = new Money(parseList(element.getAttribute("currencies")));
-		return money;
-	}
-	
-	public static Inventory loadInventory(final Context aContext)
-	{
-		final Document doc = getData(aContext);
-		final Element element = (Element) doc.getElementsByTagName("inventory").item(0);
-		final Inventory inventory = new Inventory(parseValues(element.getAttribute("maxWeights")), element.getAttribute("maxWeightItem"));
-		return inventory;
-	}
-	
-	private static Set<CreationCondition> loadConditions(final Node aRestrictionNode)
-	{
-		final Set<CreationCondition> conditions = new HashSet<CreationCondition>();
-		final NodeList children = aRestrictionNode.getChildNodes();
-		for (int i = 0; i < children.getLength(); i++ )
-		{
-			if ( !(children.item(i) instanceof Element))
-			{
-				continue;
-			}
-			final Element child = (Element) (children.item(i));
-			if (child.getTagName().equals(CONDITION))
-			{
-				final ConditionQuery query = ConditionQuery.getQuery(child.getAttribute("query"));
-				String itemName = null;
-				int minimum = Integer.MIN_VALUE;
-				int maximum = Integer.MAX_VALUE;
-				int index = 0;
-				if (child.hasAttribute("range"))
-				{
-					final String range = child.getAttribute("range");
-					
-					if (range.startsWith("="))
-					{
-						minimum = maximum = Integer.parseInt(range.substring(1));
-					}
-					else if (range.startsWith("<"))
-					{
-						maximum = Integer.parseInt(range.substring(1)) - 1;
-					}
-					else if (range.startsWith(">"))
-					{
-						minimum = Integer.parseInt(range.substring(1)) + 1;
-					}
-					else if (range.contains("-"))
-					{
-						minimum = Integer.parseInt(range.split("-")[0]);
-						maximum = Integer.parseInt(range.split("-")[1]);
-					}
-				}
-				if (child.hasAttribute("itemName"))
-				{
-					itemName = child.getAttribute("itemName");
-				}
-				if (child.hasAttribute("index"))
-				{
-					index = Integer.parseInt(child.getAttribute("index"));
-				}
-				conditions.add(new CreationConditionImpl(query, itemName, minimum, maximum, index));
-			}
-		}
-		return conditions;
-	}
-	
-	public static List<ItemController> createItems(final Context aContext)
-	{
-		return createControllers(getData(aContext));
-	}
-	
-	private static List<ItemController> createControllers(final Document aDoc)
-	{
-		final List<ItemController> controllersList = new ArrayList<ItemController>();
-		final NodeList controllers = aDoc.getElementsByTagName(CONTROLLER);
-		for (int i = 0; i < controllers.getLength(); i++ )
-		{
-			if ( !(controllers.item(i) instanceof Element))
-			{
-				continue;
-			}
-			final Element controller = (Element) controllers.item(i);
-			final String name = controller.getAttribute("name");
-			final ItemController itemController = new ItemControllerImpl(name);
-			for (final ItemGroup group : loadGroups(controller))
-			{
-				itemController.addGroup(group);
-			}
-			for (final GroupOption groupOption : createGroupOptions(controller, itemController))
-			{
-				itemController.addGroupOption(groupOption);
-			}
-			controllersList.add(itemController);
-		}
-		return controllersList;
-	}
-	
-	private static List<ItemGroup> loadGroups(final Node aController)
-	{
-		final List<ItemGroup> groupsList = new ArrayList<ItemGroup>();
-		final NodeList children = aController.getChildNodes();
-		for (int i = 0; i < children.getLength(); i++ )
-		{
-			if ( !(children.item(i) instanceof Element))
-			{
-				continue;
-			}
-			final Element child = (Element) (children.item(i));
-			if (child.getTagName().equals(GROUP))
-			{
-				final String name = child.getAttribute("name");
-				final boolean mutable = Boolean.parseBoolean(child.getAttribute("mutable"));
-				final boolean freeMutable = Boolean.parseBoolean(child.getAttribute("freeMutable"));
-				final boolean valueGroup = Boolean.parseBoolean(child.getAttribute("value"));
-				final boolean order = Boolean.parseBoolean(child.getAttribute("order"));
-				int maxValue = Integer.MAX_VALUE;
-				int startValue = 0;
-				int maxLowLevelValue = 0;
-				int freePointsCost = 0;
-				int epCost = 0;
-				int epCostMultiplicator = 0;
-				int epCostNew = 0;
-				int maxItems = Integer.MAX_VALUE;
-				if (child.hasAttribute("maxItems"))
-				{
-					maxItems = Integer.parseInt(child.getAttribute("maxItems"));
-				}
-				if (valueGroup)
-				{
-					if (child.hasAttribute("epCost"))
-					{
-						epCost = Integer.parseInt(child.getAttribute("epCost"));
-					}
-					if (child.hasAttribute("epCostMulti"))
-					{
-						epCostMultiplicator = Integer.parseInt(child.getAttribute("epCostMulti"));
-					}
-					if (child.hasAttribute("epCostNew"))
-					{
-						epCostNew = Integer.parseInt(child.getAttribute("epCostNew"));
-					}
-					if (child.hasAttribute("maxValue"))
-					{
-						maxValue = Integer.parseInt(child.getAttribute("maxValue"));
-					}
-					if (child.hasAttribute("freePointsCost"))
-					{
-						freePointsCost = Integer.parseInt(child.getAttribute("freePointsCost"));
-					}
-					if (child.hasAttribute("maxLowLevelValue"))
-					{
-						maxLowLevelValue = Integer.parseInt(child.getAttribute("maxLowLevelValue"));
-					}
-					else
-					{
-						maxLowLevelValue = maxValue;
-					}
-					if (child.hasAttribute("startValue"))
-					{
-						startValue = Integer.parseInt(child.getAttribute("startValue"));
-					}
-				}
-				final ItemGroup group = new ItemGroupImpl(name, mutable, order, freeMutable, maxLowLevelValue, startValue, maxValue, freePointsCost,
-						valueGroup, maxItems, epCost, epCostNew, epCostMultiplicator);
-				for (final Item item : createItems(child, group, null))
-				{
-					group.addItem(item);
-				}
-				groupsList.add(group);
-			}
-		}
-		return groupsList;
-	}
-	
-	private static List<Item> createItems(final Node aParentNode, final ItemGroup aParentGroup, final Item aParentItem)
-	{
-		final List<Item> itemsList = new ArrayList<Item>();
-		final NodeList children = aParentNode.getChildNodes();
-		for (int i = 0; i < children.getLength(); i++ )
-		{
-			if ( !(children.item(i) instanceof Element))
-			{
-				continue;
-			}
-			final Element child = (Element) (children.item(i));
-			if (child.getTagName().equals(ITEM))
-			{
-				final String name = child.getAttribute("name");
-				final boolean needsDescription = Boolean.parseBoolean(child.getAttribute("needsDescription"));
-				final boolean parent = Boolean.parseBoolean(child.getAttribute("parent"));
-				final boolean order = Boolean.parseBoolean(child.getAttribute("order"));
-				boolean valueItem = aParentGroup.isValueGroup();
-				int[] values = null;
-				int startValue = -1;
-				int epCost = -1;
-				int epCostNew = -1;
-				int epCostMultiplicator = -1;
-				
-				if (child.hasAttribute("epCost"))
-				{
-					epCost = Integer.parseInt(child.getAttribute("epCost"));
-				}
-				if (child.hasAttribute("epCostNew"))
-				{
-					epCostNew = Integer.parseInt(child.getAttribute("epCostNew"));
-				}
-				if (child.hasAttribute("epCostMulti"))
-				{
-					epCostMultiplicator = Integer.parseInt(child.getAttribute("epCostMulti"));
-				}
-				if (child.hasAttribute("startValue"))
-				{
-					startValue = Integer.parseInt(child.getAttribute("startValue"));
-				}
-				if (child.hasAttribute("valueItem"))
-				{
-					valueItem = Boolean.parseBoolean(child.getAttribute("valueItem"));
-				}
-				if (valueItem)
-				{
-					if (child.hasAttribute("values"))
-					{
-						values = parseValues(child.getAttribute("values"));
-					}
-					else
-					{
-						values = aParentGroup.getDefaultValues();
-					}
-				}
-				
-				final Item item;
-				final boolean mutableParent = Boolean.parseBoolean(child.getAttribute("mutableParent"));
-				item = new ItemImpl(name, aParentGroup, needsDescription, parent, mutableParent, order, values, startValue, epCost, epCostNew,
-						epCostMultiplicator, aParentItem);
-				for (final Item childItem : createItems(child, aParentGroup, item))
-				{
-					item.addChild(childItem);
-				}
-				for (final Action action : loadActions(child))
-				{
-					item.addAction(action);
-				}
-				itemsList.add(item);
-			}
-		}
-		return itemsList;
-	}
-	
-	private static Set<Action> loadActions(final Node aItem)
-	{
-		final Set<Action> actions = new HashSet<Action>();
-		final NodeList children = aItem.getChildNodes();
-		for (int i = 0; i < children.getLength(); i++ )
-		{
-			if ( !(children.item(i) instanceof Element))
-			{
-				continue;
-			}
-			final Element child = (Element) children.item(i);
-			if (child.getTagName().equals(ACTION))
-			{
-				final ActionType type = Action.ActionType.get(child.getAttribute("type"));
-				final String name = child.getAttribute("name");
-				String id = name;
-				int minLevel = 0;
-				int minDices = 0;
-				String[] dices = null;
-				String[] costDices = null;
-				String[] cost = null;
-				
-				if (child.hasAttribute("id"))
-				{
-					id = child.getAttribute("id");
-				}
-				if (child.hasAttribute("minDices"))
-				{
-					minDices = Integer.parseInt(child.getAttribute("minDices"));
-				}
-				if (child.hasAttribute("dices"))
-				{
-					dices = parseList(child.getAttribute("dices"));
-				}
-				if (child.hasAttribute("costDices"))
-				{
-					costDices = parseList(child.getAttribute("costDices"));
-				}
-				if (child.hasAttribute("costs"))
-				{
-					cost = parseList(child.getAttribute("cost"));
-				}
-				if (child.hasAttribute("minLevel"))
-				{
-					minLevel = Integer.parseInt(child.getAttribute("minLevel"));
-				}
-				actions.add(new ActionImpl(name, id, type, minLevel, minDices, dices, costDices, cost));
-			}
-		}
-		return actions;
-	}
-	
-	public static int[] parseValues(final String aValues)
-	{
-		final String[] integers = aValues.split(",");
-		final int[] values = new int[integers.length];
-		for (int i = 0; i < integers.length; i++ )
-		{
-			values[i] = Integer.parseInt(integers[i]);
-		}
-		return values;
-	}
-	
-	public static String parseValues(final int[] aValues)
-	{
-		final StringBuilder values = new StringBuilder();
-		for (int i = 0; i < aValues.length; i++ )
-		{
-			if (i != 0)
-			{
-				values.append(",");
-			}
-			values.append(aValues[i]);
-		}
-		return values.toString();
-	}
-	
-	public static String[] parseList(final String aList)
-	{
-		return aList.split(",");
-	}
-	
-	private static List<GroupOption> createGroupOptions(final Node aController, final ItemController aParent)
-	{
-		final List<GroupOption> groupOptionsList = new ArrayList<GroupOption>();
-		final NodeList children = aController.getChildNodes();
-		for (int i = 0; i < children.getLength(); i++ )
-		{
-			if ( !(children.item(i) instanceof Element))
-			{
-				continue;
-			}
-			final Element child = (Element) (children.item(i));
-			if (child.getTagName().equals(GROUP_OPTION))
-			{
-				final String name = child.getAttribute("name");
-				final boolean valuedGroupOption = Boolean.parseBoolean(child.getAttribute("value"));
-				int[] maxValues = null;
-				if (valuedGroupOption && child.hasAttribute("maxValues"))
-				{
-					maxValues = parseValues(child.getAttribute("maxValues"));
-				}
-				final GroupOption groupOption = new GroupOptionImpl(name, maxValues);
-				for (final ItemGroup group : loadGroups(child, aParent))
-				{
-					groupOption.addGroup(group);
-				}
-				groupOptionsList.add(groupOption);
-			}
-		}
-		return groupOptionsList;
-	}
-	
-	private static List<ItemGroup> loadGroups(final Element aGroupOption, final ItemController aController)
-	{
-		final List<ItemGroup> groupsList = new ArrayList<ItemGroup>();
-		final NodeList children = aGroupOption.getChildNodes();
-		for (int i = 0; i < children.getLength(); i++ )
-		{
-			if ( !(children.item(i) instanceof Element))
-			{
-				continue;
-			}
-			final Element child = (Element) children.item(i);
-			final String groupName = child.getAttribute("name");
-			groupsList.add(aController.getGroup(groupName));
-		}
-		return groupsList;
 	}
 }

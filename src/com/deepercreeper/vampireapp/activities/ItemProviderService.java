@@ -19,6 +19,14 @@ import com.deepercreeper.vampireapp.util.Log;
 
 public class ItemProviderService extends Service implements ItemProvider
 {
+	public class ItemBinder extends Binder
+	{
+		public ItemProvider getItemProvider()
+		{
+			return ItemProviderService.this;
+		}
+	}
+	
 	private static final String		TAG				= "ItemProvider";
 	
 	private final IBinder			mBinder			= new ItemBinder();
@@ -37,34 +45,70 @@ public class ItemProviderService extends Service implements ItemProvider
 	
 	private Inventory				mInventory;
 	
+	private String					mGenerationItem;
+	
 	private boolean					mInitializing	= false;
 	
 	@Override
-	public void onCreate()
+	public ClanController getClans()
 	{
-		super.onCreate();
-		
-		mInitializing = true;
-		
-		LanguageUtil.init(this);
-		
-		Log.i(TAG, "Starting item provider.");
-		mControllers = DataUtil.createItems(this);
-		mClans = DataUtil.createClans(this);
-		mNatures = new NatureController(getResources());
-		mDescriptions = new DescriptionController(getResources());
-		mHealth = DataUtil.loadHealth(this);
-		mMoney = DataUtil.loadMoney(this);
-		mInventory = DataUtil.loadInventory(this);
-		Log.i(TAG, "Started item provider.");
-		
-		mInitializing = false;
+		return mClans;
 	}
 	
 	@Override
-	public int onStartCommand(final Intent intent, final int flags, final int startId)
+	public ItemController getController(final String aName)
 	{
-		return Service.START_NOT_STICKY;
+		for (final ItemController controller : getControllers())
+		{
+			if (controller.getName().equals(aName))
+			{
+				return controller;
+			}
+		}
+		Log.e(TAG, "Could not find controller.");
+		return null;
+	}
+	
+	@Override
+	public List<ItemController> getControllers()
+	{
+		return mControllers;
+	}
+	
+	@Override
+	public DescriptionController getDescriptions()
+	{
+		return mDescriptions;
+	}
+	
+	@Override
+	public String getGenerationItem()
+	{
+		return mGenerationItem;
+	}
+	
+	@Override
+	public Health getHealth()
+	{
+		return mHealth;
+	}
+	
+	@Override
+	public Inventory getInventory()
+	{
+		return mInventory;
+	}
+	
+	@Override
+	public Money getMoney()
+	{
+		return mMoney;
+	}
+	
+	@Override
+	public NatureController getNatures()
+	{
+		return mNatures;
 	}
 	
 	@Override
@@ -84,67 +128,32 @@ public class ItemProviderService extends Service implements ItemProvider
 		return mBinder;
 	}
 	
-	public class ItemBinder extends Binder
+	@Override
+	public void onCreate()
 	{
-		public ItemProvider getItemProvider()
-		{
-			return ItemProviderService.this;
-		}
+		super.onCreate();
+		
+		mInitializing = true;
+		
+		LanguageUtil.init(this);
+		
+		Log.i(TAG, "Starting item provider.");
+		mControllers = DataUtil.loadItems(this);
+		mClans = DataUtil.loadClans(this);
+		mNatures = new NatureController(getResources());
+		mDescriptions = new DescriptionController(getResources());
+		mHealth = DataUtil.loadHealth(this);
+		mMoney = DataUtil.loadMoney(this);
+		mInventory = DataUtil.loadInventory(this);
+		mGenerationItem = DataUtil.loadGenerationItem(this);
+		Log.i(TAG, "Started item provider.");
+		
+		mInitializing = false;
 	}
 	
 	@Override
-	public List<ItemController> getControllers()
+	public int onStartCommand(final Intent intent, final int flags, final int startId)
 	{
-		return mControllers;
-	}
-	
-	@Override
-	public ClanController getClans()
-	{
-		return mClans;
-	}
-	
-	@Override
-	public DescriptionController getDescriptions()
-	{
-		return mDescriptions;
-	}
-	
-	@Override
-	public NatureController getNatures()
-	{
-		return mNatures;
-	}
-	
-	@Override
-	public Health getHealth()
-	{
-		return mHealth;
-	}
-	
-	@Override
-	public Money getMoney()
-	{
-		return mMoney;
-	}
-	
-	@Override
-	public Inventory getInventory()
-	{
-		return mInventory;
-	}
-	
-	@Override
-	public ItemController getController(final String aName)
-	{
-		for (final ItemController controller : getControllers())
-		{
-			if (controller.getName().equals(aName))
-			{
-				return controller;
-			}
-		}
-		Log.e(TAG, "Could not find controller.");
-		return null;
+		return Service.START_NOT_STICKY;
 	}
 }

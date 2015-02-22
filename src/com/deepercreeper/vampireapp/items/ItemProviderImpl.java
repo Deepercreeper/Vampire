@@ -28,22 +28,38 @@ public class ItemProviderImpl implements ItemProvider
 	
 	private final Inventory				mInventory;
 	
+	private final String				mGenerationItem;
+	
 	public ItemProviderImpl(final Context aContext)
 	{
 		LanguageUtil.init(aContext);
-		mClans = DataUtil.createClans(aContext);
-		mControllers = DataUtil.createItems(aContext);
+		mClans = DataUtil.loadClans(aContext);
+		mControllers = DataUtil.loadItems(aContext);
 		mNatures = new NatureController(aContext.getResources());
 		mDescriptions = new DescriptionController(aContext.getResources());
 		mHealth = DataUtil.loadHealth(aContext);
 		mMoney = DataUtil.loadMoney(aContext);
 		mInventory = DataUtil.loadInventory(aContext);
+		mGenerationItem = DataUtil.loadGenerationItem(aContext);
 	}
 	
 	@Override
 	public ClanController getClans()
 	{
 		return mClans;
+	}
+	
+	@Override
+	public ItemController getController(final String aName)
+	{
+		for (final ItemController controller : getControllers())
+		{
+			if (controller.getName().equals(aName))
+			{
+				return controller;
+			}
+		}
+		return null;
 	}
 	
 	@Override
@@ -59,9 +75,9 @@ public class ItemProviderImpl implements ItemProvider
 	}
 	
 	@Override
-	public NatureController getNatures()
+	public String getGenerationItem()
 	{
-		return mNatures;
+		return mGenerationItem;
 	}
 	
 	@Override
@@ -71,27 +87,20 @@ public class ItemProviderImpl implements ItemProvider
 	}
 	
 	@Override
-	public Money getMoney()
-	{
-		return mMoney;
-	}
-	
-	@Override
 	public Inventory getInventory()
 	{
 		return mInventory;
 	}
 	
 	@Override
-	public ItemController getController(final String aName)
+	public Money getMoney()
 	{
-		for (final ItemController controller : getControllers())
-		{
-			if (controller.getName().equals(aName))
-			{
-				return controller;
-			}
-		}
-		return null;
+		return mMoney;
+	}
+	
+	@Override
+	public NatureController getNatures()
+	{
+		return mNatures;
 	}
 }

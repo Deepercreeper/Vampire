@@ -81,7 +81,7 @@ public class CharacterInstance implements ItemFinder
 	{
 		mItems = aCreator.getItems();
 		mContext = aCreator.getContext();
-		mGeneration = new GenerationControllerInstance(aCreator.getGeneration().getGeneration(), this);
+		mGeneration = new GenerationControllerInstance(aCreator.getGenerationValue(), this);
 		mDescriptions = new DescriptionInstanceController(aCreator.getDescriptions());
 		mInsanities = new InsanityControllerInstance(aCreator.getInsanities());
 		mEP = new EPController(getContext());

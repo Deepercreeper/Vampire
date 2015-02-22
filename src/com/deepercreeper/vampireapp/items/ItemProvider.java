@@ -11,19 +11,21 @@ import com.deepercreeper.vampireapp.lists.controllers.NatureController;
 
 public interface ItemProvider
 {
-	public List<ItemController> getControllers();
+	public ClanController getClans();
 	
 	public ItemController getController(String aName);
 	
-	public ClanController getClans();
+	public List<ItemController> getControllers();
 	
 	public DescriptionController getDescriptions();
 	
-	public NatureController getNatures();
+	public String getGenerationItem();
 	
 	public Health getHealth();
 	
+	public Inventory getInventory();
+	
 	public Money getMoney();
 	
-	public Inventory getInventory();
+	public NatureController getNatures();
 }
