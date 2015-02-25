@@ -458,7 +458,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	@Override
 	public boolean hasEnoughEP()
 	{
-		return getEP().getExperience() >= getEPCost();
+		return getEP().getExperience() >= calcEPCost();
 	}
 	
 	@Override

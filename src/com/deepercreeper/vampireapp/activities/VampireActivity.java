@@ -1,6 +1,5 @@
 package com.deepercreeper.vampireapp.activities;
 
-import java.io.IOException;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +13,8 @@ import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.controllers.CharController;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
+import com.deepercreeper.vampireapp.host.Host;
+import com.deepercreeper.vampireapp.host.HostController;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.util.ConnectionUtil;
@@ -29,6 +30,8 @@ public class VampireActivity extends Activity implements ItemConsumer
 	private static final String	TAG	= "VampireActivity";
 	
 	private CharController		mChars;
+	
+	private HostController		mHosts;
 	
 	private ItemProvider		mItems;
 	
@@ -51,10 +54,15 @@ public class VampireActivity extends Activity implements ItemConsumer
 	private void init()
 	{
 		mChars = new CharController(this, mItems);
+		mHosts = new HostController(this, mItems);
 		
 		setContentView(R.layout.activity_main);
 		
 		final Button createChar = (Button) findViewById(R.id.create_character_button);
+		final Button createFreeChar = (Button) findViewById(R.id.create_character_free_button);
+		final Button createHost = (Button) findViewById(R.id.create_host_button);
+		final Button playHost = (Button) findViewById(R.id.play_host_button);
+		
 		createChar.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -63,8 +71,6 @@ public class VampireActivity extends Activity implements ItemConsumer
 				createChar(false);
 			}
 		});
-		
-		final Button createFreeChar = (Button) findViewById(R.id.create_character_free_button);
 		createFreeChar.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -73,10 +79,28 @@ public class VampireActivity extends Activity implements ItemConsumer
 				createChar(true);
 			}
 		});
+		createHost.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				mHosts.createHost();
+			}
+		});
+		playHost.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				mHosts.play();
+			}
+		});
 		
 		mChars.setCharsList((LinearLayout) findViewById(R.id.characters_list));
 		mChars.loadCharCompounds();
 		mChars.sortChars();
+		
+		mHosts.loadHosts();
 	}
 	
 	@Override
@@ -90,7 +114,7 @@ public class VampireActivity extends Activity implements ItemConsumer
 			{
 				character = new CharacterInstance(xml, mItems, this);
 			}
-			catch (final IOException e)
+			catch (final IllegalArgumentException e)
 			{
 				Log.e(TAG, "Could not create character from xml.");
 			}
@@ -107,7 +131,7 @@ public class VampireActivity extends Activity implements ItemConsumer
 			{
 				character = new CharacterInstance(xml, mItems, this);
 			}
-			catch (final IOException e)
+			catch (final IllegalArgumentException e)
 			{
 				Log.e(TAG, "Could not create character from xml.");
 			}
@@ -115,6 +139,12 @@ public class VampireActivity extends Activity implements ItemConsumer
 			{
 				mChars.updateChar(character);
 			}
+		}
+		else if (aRequestCode == HostActivity.PLAY_HOST_REQUEST && aRequestCode == RESULT_OK)
+		{
+			final String xml = aData.getStringExtra(HostActivity.HOST);
+			final Host host = new Host(xml, mItems);
+			mHosts.updateHost(host);
 		}
 	}
 	

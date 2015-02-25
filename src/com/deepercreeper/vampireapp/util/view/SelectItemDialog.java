@@ -24,7 +24,7 @@ public class SelectItemDialog extends DialogFragment
 	 * 
 	 * @author Vincent
 	 */
-	public static interface SelectionListener
+	public static interface ItemSelectionListener
 	{
 		/**
 		 * Invoked when the given item was selected.
@@ -35,19 +35,28 @@ public class SelectItemDialog extends DialogFragment
 		public void select(Item aItem);
 	}
 	
-	private static boolean				sDialogOpen	= false;
+	public static interface StringSelectionListener
+	{
+		public void select(String aItem);
+	}
 	
-	private final HashMap<String, Item>	mItems		= new HashMap<String, Item>();
+	private static boolean					sDialogOpen	= false;
 	
-	private final String[]				mNames;
+	private final HashMap<String, Item>		mItems		= new HashMap<String, Item>();
 	
-	private final String				mTitle;
+	private final String[]					mNames;
 	
-	private final Context				mContext;
+	private final String					mTitle;
 	
-	private final SelectionListener		mAction;
+	private final Context					mContext;
 	
-	private SelectItemDialog(final List<Item> aItems, final String aTitle, final Context aContext, final SelectionListener aAction)
+	private final ItemSelectionListener		mItemAction;
+	
+	private final StringSelectionListener	mStringAction;
+	
+	private final boolean					mItemsSelection;
+	
+	private SelectItemDialog(final List<Item> aItems, final String aTitle, final Context aContext, final ItemSelectionListener aAction)
 	{
 		sDialogOpen = true;
 		mNames = new String[aItems.size()];
@@ -60,7 +69,21 @@ public class SelectItemDialog extends DialogFragment
 		Arrays.sort(mNames);
 		mTitle = aTitle;
 		mContext = aContext;
-		mAction = aAction;
+		mItemAction = aAction;
+		mStringAction = null;
+		mItemsSelection = true;
+	}
+	
+	private SelectItemDialog(final List<String> aItems, final String aTitle, final Context aContext, final StringSelectionListener aAction)
+	{
+		sDialogOpen = true;
+		mNames = aItems.toArray(new String[aItems.size()]);
+		Arrays.sort(mNames);
+		mTitle = aTitle;
+		mContext = aContext;
+		mItemAction = null;
+		mStringAction = aAction;
+		mItemsSelection = false;
 	}
 	
 	@Override
@@ -72,7 +95,14 @@ public class SelectItemDialog extends DialogFragment
 			@Override
 			public void onClick(final DialogInterface dialog, final int which)
 			{
-				mAction.select(mItems.get(mNames[which]));
+				if (mItemsSelection)
+				{
+					mItemAction.select(mItems.get(mNames[which]));
+				}
+				else
+				{
+					mStringAction.select(mNames[which]);
+				}
 			}
 		});
 		return builder.create();
@@ -106,7 +136,17 @@ public class SelectItemDialog extends DialogFragment
 	 * @param aAction
 	 *            The selection action.
 	 */
-	public static void showSelectionDialog(final List<Item> aItems, final String aTitle, final Context aContext, final SelectionListener aAction)
+	public static void showSelectionDialog(final List<Item> aItems, final String aTitle, final Context aContext, final ItemSelectionListener aAction)
+	{
+		if (sDialogOpen)
+		{
+			return;
+		}
+		new SelectItemDialog(aItems, aTitle, aContext, aAction).show(((Activity) aContext).getFragmentManager(), aTitle);
+	}
+	
+	public static void showSelectionDialog(final List<String> aItems, final String aTitle, final Context aContext,
+			final StringSelectionListener aAction)
 	{
 		if (sDialogOpen)
 		{

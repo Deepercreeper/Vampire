@@ -1,25 +1,19 @@
 package com.deepercreeper.vampireapp.character.controllers;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.activities.PlayActivity;
 import com.deepercreeper.vampireapp.character.instance.CharacterCompound;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.items.ItemProvider;
+import com.deepercreeper.vampireapp.util.FilesUtil;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.view.CharacterContextMenu.CharacterListener;
 
@@ -64,38 +58,7 @@ public class CharController implements CharacterListener
 	
 	public void loadCharCompounds()
 	{
-		String data = null;
-		InputStreamReader reader = null;
-		try
-		{
-			reader = new InputStreamReader(mContext.openFileInput(CHARACTER_LIST));
-			final StringBuilder list = new StringBuilder();
-			int c;
-			while ((c = reader.read()) != -1)
-			{
-				list.append((char) c);
-			}
-			data = list.toString();
-		}
-		catch (final FileNotFoundException e)
-		{
-			Log.i(TAG, "No characters saved.");
-		}
-		catch (final IOException e)
-		{
-			Log.e(TAG, "Could not load characters list.");
-		}
-		try
-		{
-			if (reader != null)
-			{
-				reader.close();
-			}
-		}
-		catch (final IOException e)
-		{
-			Log.e(TAG, "Could not close reader.");
-		}
+		final String data = FilesUtil.loadFile(CHARACTER_LIST, mContext);
 		if (data != null && !data.trim().isEmpty())
 		{
 			for (final String character : data.split("\n"))
@@ -146,27 +109,8 @@ public class CharController implements CharacterListener
 			}
 			characterNames.append(mCharacterCompoundsList.get(i));
 		}
-		OutputStreamWriter writer = null;
-		try
-		{
-			writer = new OutputStreamWriter(mContext.openFileOutput(CHARACTER_LIST, Context.MODE_PRIVATE));
-			writer.append(characterNames.toString());
-		}
-		catch (final IOException e)
-		{
-			Log.e(TAG, "Could not save characters list.");
-		}
-		if (writer != null)
-		{
-			try
-			{
-				writer.close();
-			}
-			catch (final IOException e)
-			{
-				Log.e(TAG, "Could not close stream.");
-			}
-		}
+		
+		FilesUtil.saveFile(characterNames.toString(), CHARACTER_LIST, mContext);
 	}
 	
 	@Override
@@ -185,20 +129,10 @@ public class CharController implements CharacterListener
 		CharacterInstance character = mCharacterCache.get(aName);
 		if (character == null)
 		{
-			try
+			final String data = FilesUtil.loadFile(aName + ".chr", mContext);
+			if (data != null)
 			{
-				final StringBuilder xml = new StringBuilder();
-				final FileInputStream stream = mContext.openFileInput(aName + ".chr");
-				int c;
-				while ((c = stream.read()) != -1)
-				{
-					xml.append((char) c);
-				}
-				character = new CharacterInstance(xml.toString(), mItems, mContext);
-			}
-			catch (final IOException e)
-			{
-				Log.e(TAG, "Could not load character.");
+				character = new CharacterInstance(data, mItems, mContext);
 			}
 		}
 		if (character == null)
@@ -223,18 +157,7 @@ public class CharController implements CharacterListener
 	
 	public void saveChar(final CharacterInstance aCharacter)
 	{
-		try
-		{
-			final String xml = aCharacter.serialize();
-			final PrintWriter writer = new PrintWriter(mContext.openFileOutput(aCharacter.getName() + ".chr", Context.MODE_PRIVATE));
-			writer.append(xml);
-			writer.flush();
-			writer.close();
-		}
-		catch (final IOException e)
-		{
-			Log.e(TAG, "Could not open file stream.");
-		}
+		FilesUtil.saveFile(aCharacter.serialize(), aCharacter.getName() + ".chr", mContext);
 		mCharacterCache.put(aCharacter.getName(), aCharacter);
 	}
 	

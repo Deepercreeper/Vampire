@@ -1,6 +1,5 @@
 package com.deepercreeper.vampireapp.activities;
 
-import java.io.IOException;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -53,7 +52,7 @@ public class PlayActivity extends Activity implements ItemConsumer
 		{
 			character = new CharacterInstance(xml, mItems, this);
 		}
-		catch (final IOException e)
+		catch (final IllegalArgumentException e)
 		{
 			Log.e(TAG, "Could not create character from xml.");
 			setResult(RESULT_CANCELED);

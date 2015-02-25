@@ -29,7 +29,7 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.Crea
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.SelectItemDialog;
-import com.deepercreeper.vampireapp.util.view.SelectItemDialog.SelectionListener;
+import com.deepercreeper.vampireapp.util.view.SelectItemDialog.ItemSelectionListener;
 
 public class ItemGroupCreationImpl extends CreationRestrictionableImpl implements ItemGroupCreation
 {
@@ -109,7 +109,7 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		{
 			return;
 		}
-		final SelectionListener action = new SelectionListener()
+		final ItemSelectionListener action = new ItemSelectionListener()
 		{
 			@Override
 			public void select(final Item aChoosenItem)
@@ -198,7 +198,7 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		{
 			return;
 		}
-		final SelectionListener action = new SelectionListener()
+		final ItemSelectionListener action = new ItemSelectionListener()
 		{
 			@Override
 			public void select(final Item aChoosenItem)

@@ -1,18 +1,7 @@
 package com.deepercreeper.vampireapp.character.instance;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -37,6 +26,7 @@ import com.deepercreeper.vampireapp.lists.items.Nature;
 import com.deepercreeper.vampireapp.mechanics.Action.ItemFinder;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.CodingUtil;
+import com.deepercreeper.vampireapp.util.FilesUtil;
 import com.deepercreeper.vampireapp.util.Log;
 
 public class CharacterInstance implements ItemFinder
@@ -113,25 +103,16 @@ public class CharacterInstance implements ItemFinder
 		Log.i(TAG, "Restrictions: " + getRestrictions());
 	}
 	
-	public CharacterInstance(final String aXML, final ItemProvider aItems, final Context aContext) throws IOException
+	public CharacterInstance(final String aXML, final ItemProvider aItems, final Context aContext) throws IllegalArgumentException
 	{
 		Log.i(TAG, "Starting to load character xml.");
 		mItems = aItems;
 		mContext = aContext;
 		
-		final InputStream stream = new ByteArrayInputStream(aXML.getBytes(Charset.defaultCharset()));
-		Document doc = null;
-		try
-		{
-			doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(stream);
-		}
-		catch (final Exception e)
-		{
-			Log.e(TAG, "Could not read input stream.");
-		}
+		final Document doc = FilesUtil.loadDocument(aXML);
 		if (doc == null)
 		{
-			throw new IOException("Error while reading the XML data.");
+			throw new IllegalArgumentException();
 		}
 		
 		Log.i(TAG, "Finished parsing character xml.");
@@ -353,15 +334,7 @@ public class CharacterInstance implements ItemFinder
 	
 	public String serialize()
 	{
-		Document doc = null;
-		try
-		{
-			doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-		}
-		catch (final ParserConfigurationException e)
-		{
-			Log.e(TAG, "Could not create a XML document.");
-		}
+		final Document doc = FilesUtil.createDocument();
 		if (doc == null)
 		{
 			return null;
@@ -414,26 +387,7 @@ public class CharacterInstance implements ItemFinder
 		}
 		root.appendChild(restrictionElement);
 		
-		final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		final StreamResult result = new StreamResult(stream);
-		try
-		{
-			TransformerFactory.newInstance().newTransformer().transform(new DOMSource(doc), result);
-		}
-		catch (final TransformerException e)
-		{
-			Log.e(TAG, "Could not write document into stream.");
-		}
-		try
-		{
-			stream.close();
-		}
-		catch (final IOException e)
-		{
-			Log.e(TAG, "Could not close stream.");
-		}
-		
-		return new String(stream.toByteArray(), Charset.defaultCharset());
+		return FilesUtil.readDocument(doc);
 	}
 	
 	public void setMode(final Mode aMode)

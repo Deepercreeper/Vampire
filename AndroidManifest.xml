@@ -40,8 +40,18 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="com.deepercreeper.vampireapp.activities.HostActivity"
+            android:label="@string/play_lobby"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name="com.deepercreeper.vampireapp.activities.PlayActivity"
-            android:label="@string/play_char"
+            android:label="@string/play_lobby"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
