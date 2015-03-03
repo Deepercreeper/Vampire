@@ -1,13 +1,20 @@
 package com.deepercreeper.vampireapp.activities;
 
+import java.util.Locale;
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.R;
@@ -27,13 +34,19 @@ import com.deepercreeper.vampireapp.util.ConnectionUtil;
  */
 public class VampireActivity extends Activity implements ItemConsumer
 {
-	private static final String	TAG	= "VampireActivity";
+	private static final String		TAG					= "VampireActivity";
 	
-	private CharController		mChars;
+	private static final String		ARG_SECTION_NUMBER	= "section_number";
 	
-	private HostController		mHosts;
+	private CharController			mChars;
 	
-	private ItemProvider		mItems;
+	private HostController			mHosts;
+	
+	private ItemProvider			mItems;
+	
+	private SectionsPagerAdapter	mSectionsPagerAdapter;
+	
+	private ViewPager				mViewPager;
 	
 	@Override
 	protected void onCreate(final Bundle aSavedInstanceState)
@@ -53,16 +66,23 @@ public class VampireActivity extends Activity implements ItemConsumer
 	
 	private void init()
 	{
+		mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
+		
 		mChars = new CharController(this, mItems);
 		mHosts = new HostController(this, mItems);
 		
 		setContentView(R.layout.activity_main);
 		
-		final Button createChar = (Button) findViewById(R.id.create_character_button);
-		final Button createFreeChar = (Button) findViewById(R.id.create_character_free_button);
-		final Button createHost = (Button) findViewById(R.id.create_host_button);
-		final Button playHost = (Button) findViewById(R.id.play_host_button);
+		mViewPager = (ViewPager) findViewById(R.id.pager);
+		mViewPager.setAdapter(mSectionsPagerAdapter);
 		
+		mViewPager.setCurrentItem(1);
+	}
+	
+	private void initChars(final ViewGroup aRoot)
+	{
+		final Button createChar = (Button) aRoot.findViewById(R.id.create_character_button);
+		final Button createFreeChar = (Button) aRoot.findViewById(R.id.create_character_free_button);
 		createChar.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -79,6 +99,16 @@ public class VampireActivity extends Activity implements ItemConsumer
 				createChar(true);
 			}
 		});
+		
+		mChars.setCharsList((LinearLayout) aRoot.findViewById(R.id.characters_list));
+		mChars.loadCharCompounds();
+		mChars.sortChars();
+	}
+	
+	private void initHosts(final ViewGroup aRoot)
+	{
+		final Button createHost = (Button) aRoot.findViewById(R.id.create_host_button);
+		
 		createHost.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -87,19 +117,8 @@ public class VampireActivity extends Activity implements ItemConsumer
 				mHosts.createHost();
 			}
 		});
-		playHost.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(final View aV)
-			{
-				mHosts.play();
-			}
-		});
 		
-		mChars.setCharsList((LinearLayout) findViewById(R.id.characters_list));
-		mChars.loadCharCompounds();
-		mChars.sortChars();
-		
+		mHosts.setHostsList((LinearLayout) aRoot.findViewById(R.id.hosts_list));
 		mHosts.loadHosts();
 	}
 	
@@ -183,5 +202,77 @@ public class VampireActivity extends Activity implements ItemConsumer
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	public class SectionsPagerAdapter extends FragmentPagerAdapter
+	{
+		public SectionsPagerAdapter(final FragmentManager aManager)
+		{
+			super(aManager);
+		}
+		
+		@Override
+		public Fragment getItem(final int position)
+		{
+			return newFragmentInstance(position + 1);
+		}
+		
+		@Override
+		public int getCount()
+		{
+			return 3;
+		}
+		
+		@Override
+		public CharSequence getPageTitle(final int position)
+		{
+			final Locale l = Locale.getDefault();
+			switch (position)
+			{
+				case 0 :
+					return getString(R.string.friends).toUpperCase(l);
+				case 1 :
+					return getString(R.string.characters).toUpperCase(l);
+				case 2 :
+					return getString(R.string.hosts).toUpperCase(l);
+			}
+			return null;
+		}
+	}
+	
+	private PlaceholderFragment newFragmentInstance(final int sectionNumber)
+	{
+		final PlaceholderFragment fragment = new PlaceholderFragment();
+		final Bundle args = new Bundle();
+		args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+		fragment.setArguments(args);
+		return fragment;
+	}
+	
+	public class PlaceholderFragment extends Fragment
+	{
+		public PlaceholderFragment()
+		{}
+		
+		@Override
+		public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
+		{
+			ViewGroup rootView = null;
+			switch (getArguments().getInt(ARG_SECTION_NUMBER))
+			{
+				case 1 :
+					rootView = (ViewGroup) inflater.inflate(R.layout.friends_fragment, container, false);
+					break;
+				case 2 :
+					rootView = (ViewGroup) inflater.inflate(R.layout.characters_fragment, container, false);
+					initChars(rootView);
+					break;
+				case 3 :
+					rootView = (ViewGroup) inflater.inflate(R.layout.hosts_fragment, container, false);
+					initHosts(rootView);
+					break;
+			}
+			return rootView;
+		}
 	}
 }

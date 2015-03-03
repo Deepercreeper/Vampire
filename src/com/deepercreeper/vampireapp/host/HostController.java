@@ -6,19 +6,26 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import android.R.color;
 import android.app.Activity;
 import android.content.Intent;
+import android.util.TypedValue;
+import android.view.View;
+import android.view.View.OnLongClickListener;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.activities.HostActivity;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.util.FilesUtil;
 import com.deepercreeper.vampireapp.util.Log;
+import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.CreateStringDialog;
 import com.deepercreeper.vampireapp.util.view.CreateStringDialog.CreationListener;
-import com.deepercreeper.vampireapp.util.view.SelectItemDialog;
-import com.deepercreeper.vampireapp.util.view.SelectItemDialog.StringSelectionListener;
+import com.deepercreeper.vampireapp.util.view.HostContextMenu;
+import com.deepercreeper.vampireapp.util.view.HostContextMenu.HostListener;
 
-public class HostController
+public class HostController implements HostListener
 {
 	private static final String		TAG					= "HostController";
 	
@@ -33,6 +40,8 @@ public class HostController
 	private final ItemProvider		mItems;
 	
 	private final Activity			mContext;
+	
+	private LinearLayout			mHostsList;
 	
 	public HostController(final Activity aContext, final ItemProvider aItems)
 	{
@@ -49,7 +58,7 @@ public class HostController
 			{
 				mHostNames.add(host);
 			}
-			Collections.sort(mHostNames);
+			sortHosts();
 		}
 	}
 	
@@ -79,6 +88,12 @@ public class HostController
 		saveHost(aHost);
 	}
 	
+	public void setHostsList(final LinearLayout aHostsList)
+	{
+		mHostsList = aHostsList;
+	}
+	
+	@Override
 	public void deleteHost(final String aName)
 	{
 		final File hostFile = new File(mContext.getFilesDir(), aName + ".hst");
@@ -87,6 +102,7 @@ public class HostController
 			Log.e(TAG, "Could not delete character file.");
 		}
 		mHostNames.remove(aName);
+		sortHosts();
 		saveHostsList();
 	}
 	
@@ -94,7 +110,48 @@ public class HostController
 	{
 		mHostNames.add(aHost.getName());
 		FilesUtil.saveFile(aHost.serialize(), aHost.getName() + ".hst", mContext);
+		sortHosts();
 		saveHostsList();
+	}
+	
+	public void sortHosts()
+	{
+		mHostsList.removeAllViews();
+		
+		Collections.sort(mHostNames);
+		
+		boolean first = true;
+		
+		for (final String host : mHostNames)
+		{
+			if (first)
+			{
+				first = false;
+			}
+			else
+			{
+				final View line = new View(mContext);
+				line.setLayoutParams(ViewUtil.getLine(mContext));
+				line.setBackgroundColor(mContext.getResources().getColor(color.darker_gray));
+				mHostsList.addView(line);
+			}
+			
+			final TextView hostView = new TextView(mContext);
+			hostView.setLayoutParams(ViewUtil.getWrapHeight());
+			hostView.setText(host);
+			hostView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+			hostView.setLongClickable(true);
+			hostView.setOnLongClickListener(new OnLongClickListener()
+			{
+				@Override
+				public boolean onLongClick(final View aV)
+				{
+					HostContextMenu.showCharacterContextMenu(HostController.this, mContext, host);
+					return false;
+				}
+			});
+			mHostsList.addView(hostView);
+		}
 	}
 	
 	public Host loadHost(final String aName)
@@ -116,20 +173,8 @@ public class HostController
 		return host;
 	}
 	
-	public void play()
-	{
-		final StringSelectionListener listener = new StringSelectionListener()
-		{
-			@Override
-			public void select(final String aItem)
-			{
-				play(aItem);
-			}
-		};
-		SelectItemDialog.showSelectionDialog(mHostNames, mContext.getString(R.string.choose_host), mContext, listener);
-	}
-	
-	public void play(final String aName)
+	@Override
+	public void playHost(final String aName)
 	{
 		final Host host = loadHost(aName);
 		

@@ -53,5 +53,10 @@
     <string name="create_host_button">Create new host</string>
     <string name="play_host_button">Start host</string>
     <string name="choose_host">Choose host</string>
-
+	<string name="friends">Friends</string>	
+	<string name="characters">Characters</string>
+	<string name="hosts">Hosts</string>
+	<string name="delete_host">Delete</string>
+	<string name="play_host">Play</string>
+    
 </resources>

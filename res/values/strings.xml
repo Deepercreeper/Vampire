@@ -54,4 +54,10 @@
     <string name="create_host_button">Neuen Host erstellen</string>
     <string name="play_host_button">Host starten</string>
 	<string name="choose_host">Host auswählen</string>
+	<string name="friends">Freunde</string>
+	<string name="characters">Charaktere</string>
+	<string name="hosts">Hosts</string>
+	<string name="delete_host">Löschen</string>
+	<string name="play_host">Starten</string>
+	
 </resources>

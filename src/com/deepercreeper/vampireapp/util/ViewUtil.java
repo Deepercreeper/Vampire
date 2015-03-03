@@ -29,6 +29,11 @@ public class ViewUtil
 		return sId++ ;
 	}
 	
+	public static LinearLayout.LayoutParams getLine(final Context aContext)
+	{
+		return new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, calcPx(1, aContext));
+	}
+	
 	/**
 	 * @return layout parameters for table row buttons.
 	 */

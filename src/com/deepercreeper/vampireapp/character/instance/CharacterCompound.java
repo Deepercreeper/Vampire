@@ -32,6 +32,8 @@ public class CharacterCompound implements Comparable<CharacterCompound>
 	
 	private final String		mData;
 	
+	private View				mTrimmer;
+	
 	private RelativeLayout		mContainer;
 	
 	private long				mLastUsed;
@@ -74,9 +76,23 @@ public class CharacterCompound implements Comparable<CharacterCompound>
 		init(aListener);
 	}
 	
+	public void setFirst(final boolean aFirst)
+	{
+		if (aFirst)
+		{
+			mTrimmer.setVisibility(View.INVISIBLE);
+		}
+		else
+		{
+			mTrimmer.setVisibility(View.VISIBLE);
+		}
+	}
+	
 	private void init(final CharacterListener aListener)
 	{
 		mContainer = (RelativeLayout) View.inflate(mContext, R.layout.character_compound, null);
+		
+		mTrimmer = mContainer.findViewById(R.id.trimmer);
 		
 		final TextView concept = (TextView) mContainer.findViewById(R.id.concept_label);
 		concept.setText(mConcept);
