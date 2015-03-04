@@ -54,6 +54,7 @@ public class HostController implements HostListener
 		final String data = FilesUtil.loadFile(HOSTS_LIST, mContext);
 		if (data != null && !data.trim().isEmpty())
 		{
+			mHostNames.clear();
 			for (final String host : data.split("\n"))
 			{
 				mHostNames.add(host);
