@@ -38,6 +38,8 @@ public class VampireActivity extends Activity implements ItemConsumer
 	
 	private static final String		ARG_SECTION_NUMBER	= "section_number";
 	
+	private boolean					mBluetooth			= true;
+	
 	private CharController			mChars;
 	
 	private HostController			mHosts;
@@ -196,12 +198,25 @@ public class VampireActivity extends Activity implements ItemConsumer
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		final int id = item.getItemId();
-		if (id == R.id.delete_chars)
+		switch (id)
 		{
-			mChars.deleteChars();
-			return true;
+			case R.id.delete_chars :
+				mChars.deleteChars();
+				return true;
+			case R.id.bluetooth :
+				setBluetooth( !mBluetooth);
+				int stringId = mBluetooth ? R.string.bluetooth : R.string.network;
+				item.setTitle(stringId);
+				return true;
 		}
+		
 		return super.onOptionsItemSelected(item);
+	}
+	
+	private void setBluetooth(boolean aBluetooth)
+	{
+		mBluetooth = aBluetooth;
+		// TODO Do what is to do
 	}
 	
 	public class SectionsPagerAdapter extends FragmentPagerAdapter

@@ -2,6 +2,8 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <string name="app_name">VampireApp</string>
+    <string name = "bluetooth">Bluetooth</string>
+    <string name = "network">Network</string>
     <string name="create_char">Charaktererstellung</string>
     <string name="button_create_character">Neuen Charakter erstellen</string>
     <string name="button_create_character_free">Character frei erstellen</string>

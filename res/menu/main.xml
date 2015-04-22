@@ -7,5 +7,8 @@
         android:orderInCategory="100"
         android:showAsAction="always"
         android:title="@string/delete_chars"/>
+    <item
+        android:id="@+id/bluetooth"
+        android:title="@string/bluetooth"/>
 
 </menu>
