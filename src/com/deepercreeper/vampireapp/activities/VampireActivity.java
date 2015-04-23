@@ -4,7 +4,10 @@ import java.util.Locale;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -17,6 +20,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.controllers.CharController;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
@@ -24,6 +28,8 @@ import com.deepercreeper.vampireapp.host.Host;
 import com.deepercreeper.vampireapp.host.HostController;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
+import com.deepercreeper.vampireapp.util.BluetoothReceiver;
+import com.deepercreeper.vampireapp.util.BluetoothReceiver.BluetoothListener;
 import com.deepercreeper.vampireapp.util.ConnectionUtil;
 
 /**
@@ -37,6 +43,10 @@ public class VampireActivity extends Activity implements ItemConsumer
 	private static final String		TAG					= "VampireActivity";
 	
 	private static final String		ARG_SECTION_NUMBER	= "section_number";
+	
+	private final BluetoothReceiver	mReceiver			= new BluetoothReceiver();
+	
+	private Menu					mOptionsMenu;
 	
 	private boolean					mBluetooth			= true;
 	
@@ -55,7 +65,37 @@ public class VampireActivity extends Activity implements ItemConsumer
 	{
 		super.onCreate(aSavedInstanceState);
 		
+		IntentFilter filter1 = new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED);
+		IntentFilter filter2 = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
+		IntentFilter filter3 = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+		IntentFilter filter4 = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+		registerReceiver(mReceiver, filter1);
+		registerReceiver(mReceiver, filter2);
+		registerReceiver(mReceiver, filter3);
+		registerReceiver(mReceiver, filter4);
+		
+		BluetoothListener listener = new BluetoothListener()
+		{
+			@Override
+			public void action(BluetoothDevice aDevice)
+			{
+				if (mBluetooth)
+				{
+					checkBluetooth();
+				}
+			}
+		};
+		mReceiver.setBluetoothListener(BluetoothAdapter.STATE_ON, listener);
+		mReceiver.setBluetoothListener(BluetoothAdapter.STATE_OFF, listener);
+		
 		ConnectionUtil.loadItems(this, this);
+	}
+	
+	@Override
+	protected void onDestroy()
+	{
+		unregisterReceiver(mReceiver);
+		super.onDestroy();
 	}
 	
 	@Override
@@ -204,19 +244,54 @@ public class VampireActivity extends Activity implements ItemConsumer
 				mChars.deleteChars();
 				return true;
 			case R.id.bluetooth :
-				setBluetooth( !mBluetooth);
-				int stringId = mBluetooth ? R.string.bluetooth : R.string.network;
-				item.setTitle(stringId);
+				setBluetooth(true);
+				return true;
+			case R.id.network :
+				setBluetooth(false);
 				return true;
 		}
 		
 		return super.onOptionsItemSelected(item);
 	}
 	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu aMenu)
+	{
+		mOptionsMenu = aMenu;
+		return super.onPrepareOptionsMenu(aMenu);
+	}
+	
 	private void setBluetooth(boolean aBluetooth)
 	{
 		mBluetooth = aBluetooth;
-		// TODO Do what is to do
+		mOptionsMenu.findItem(R.id.bluetooth).setChecked(mBluetooth);
+		mOptionsMenu.findItem(R.id.network).setChecked( !mBluetooth);
+		if (mBluetooth)
+		{
+			checkBluetooth();
+		}
+		else
+		{
+			checkNetwork();
+		}
+	}
+	
+	private void checkBluetooth()
+	{
+		BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter(); // (BluetoothAdapter) getSystemService(Service.BLUETOOTH_SERVICE);
+		if (btAdapter == null || !btAdapter.isEnabled())
+		{
+			Toast.makeText(this, "Bluetooth is not enabled!", Toast.LENGTH_SHORT).show();
+		}
+		else
+		{
+			Toast.makeText(this, "Bluetooth is enabled!", Toast.LENGTH_SHORT).show();
+		}
+	}
+	
+	private void checkNetwork()
+	{
+		Toast.makeText(this, "Network connections are not enabled yet!", Toast.LENGTH_SHORT).show();
 	}
 	
 	public class SectionsPagerAdapter extends FragmentPagerAdapter

@@ -2,8 +2,9 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <string name="app_name">VampireApp</string>
-    <string name = "bluetooth">Bluetooth</string>
-    <string name = "network">Network</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="network">Internet</string>
+    <string name="connection">Verbindung</string>
     <string name="create_char">Charaktererstellung</string>
     <string name="button_create_character">Neuen Charakter erstellen</string>
     <string name="button_create_character_free">Character frei erstellen</string>
@@ -55,11 +56,11 @@
     <string name="create_host">Gib einen namen für den neuen Host ein:</string>
     <string name="create_host_button">Neuen Host erstellen</string>
     <string name="play_host_button">Host starten</string>
-	<string name="choose_host">Host auswählen</string>
-	<string name="friends">Freunde</string>
-	<string name="characters">Charaktere</string>
-	<string name="hosts">Hosts</string>
-	<string name="delete_host">Löschen</string>
-	<string name="play_host">Starten</string>
-	
+    <string name="choose_host">Host auswählen</string>
+    <string name="friends">Freunde</string>
+    <string name="characters">Charaktere</string>
+    <string name="hosts">Hosts</string>
+    <string name="delete_host">Löschen</string>
+    <string name="play_host">Starten</string>
+
 </resources>
