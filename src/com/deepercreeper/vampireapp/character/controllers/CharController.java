@@ -13,6 +13,7 @@ import com.deepercreeper.vampireapp.activities.PlayActivity;
 import com.deepercreeper.vampireapp.character.instance.CharacterCompound;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.items.ItemProvider;
+import com.deepercreeper.vampireapp.util.ConnectionController;
 import com.deepercreeper.vampireapp.util.FilesUtil;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.view.CharacterContextMenu.CharacterListener;
@@ -22,6 +23,8 @@ public class CharController implements CharacterListener
 	private static final String						TAG						= "CharController";
 	
 	private static final String						CHARACTER_LIST			= "Chars.lst";
+	
+	private final ConnectionController				mConnection;
 	
 	private final List<CharacterCompound>			mCharacterCompoundsList	= new ArrayList<CharacterCompound>();
 	
@@ -35,10 +38,11 @@ public class CharController implements CharacterListener
 	
 	private LinearLayout							mCharsList;
 	
-	public CharController(final Activity aContext, final ItemProvider aItems)
+	public CharController(final Activity aContext, final ItemProvider aItems, ConnectionController aConnection)
 	{
 		mContext = aContext;
 		mItems = aItems;
+		mConnection = aConnection;
 	}
 	
 	public void setCharsList(final LinearLayout aCharsList)
@@ -93,11 +97,17 @@ public class CharController implements CharacterListener
 		}
 	}
 	
+	public List<CharacterCompound> getCharacterCompoundsList()
+	{
+		return mCharacterCompoundsList;
+	}
+	
 	public void addChar(final CharacterInstance aCharacter)
 	{
 		saveChar(aCharacter);
 		
 		final CharacterCompound charCompound = new CharacterCompound(aCharacter, this, mContext);
+		charCompound.getPlayButton().setEnabled(mConnection.isActive());
 		mCharacterCompoundsList.add(charCompound);
 		mCharacterCompounds.put(charCompound.getName(), charCompound);
 		sortChars();

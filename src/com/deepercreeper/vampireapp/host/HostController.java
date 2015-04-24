@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.activities.HostActivity;
 import com.deepercreeper.vampireapp.items.ItemProvider;
+import com.deepercreeper.vampireapp.util.ConnectionController;
 import com.deepercreeper.vampireapp.util.FilesUtil;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
@@ -27,26 +28,29 @@ import com.deepercreeper.vampireapp.util.view.HostContextMenu.HostListener;
 
 public class HostController implements HostListener
 {
-	private static final String		TAG					= "HostController";
+	private static final String			TAG					= "HostController";
 	
-	private static final String		HOSTS_LIST			= "Hosts.lst";
+	private static final String			HOSTS_LIST			= "Hosts.lst";
 	
-	private static final String		DEFAULT_LOCATION	= "Germany";
+	private static final String			DEFAULT_LOCATION	= "Germany";
 	
-	private final Map<String, Host>	mHostsCache			= new HashMap<String, Host>();
+	private final ConnectionController	mConnection;
 	
-	private final List<String>		mHostNames			= new ArrayList<String>();
+	private final Map<String, Host>		mHostsCache			= new HashMap<String, Host>();
 	
-	private final ItemProvider		mItems;
+	private final List<String>			mHostNames			= new ArrayList<String>();
 	
-	private final Activity			mContext;
+	private final ItemProvider			mItems;
 	
-	private LinearLayout			mHostsList;
+	private final Activity				mContext;
 	
-	public HostController(final Activity aContext, final ItemProvider aItems)
+	private LinearLayout				mHostsList;
+	
+	public HostController(final Activity aContext, final ItemProvider aItems, ConnectionController aConnection)
 	{
 		mItems = aItems;
 		mContext = aContext;
+		mConnection = aConnection;
 	}
 	
 	public void loadHosts()
@@ -115,6 +119,18 @@ public class HostController implements HostListener
 		saveHostsList();
 	}
 	
+	public void setHostsEnabled(boolean aEnabled)
+	{
+		for (int i = 0; i < mHostsList.getChildCount(); i++ )
+		{
+			View view = mHostsList.getChildAt(i);
+			if (view instanceof TextView)
+			{
+				view.setEnabled(aEnabled);
+			}
+		}
+	}
+	
 	public void sortHosts()
 	{
 		mHostsList.removeAllViews();
@@ -142,6 +158,7 @@ public class HostController implements HostListener
 			hostView.setText(host);
 			hostView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
 			hostView.setLongClickable(true);
+			hostView.setEnabled(mConnection.isActive());
 			hostView.setOnLongClickListener(new OnLongClickListener()
 			{
 				@Override

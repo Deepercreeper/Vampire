@@ -32,6 +32,8 @@ public class CharacterCompound implements Comparable<CharacterCompound>
 	
 	private final String		mData;
 	
+	private Button				mPlay;
+	
 	private View				mTrimmer;
 	
 	private RelativeLayout		mContainer;
@@ -113,8 +115,8 @@ public class CharacterCompound implements Comparable<CharacterCompound>
 		final TextView generation = (TextView) mContainer.findViewById(R.id.generation_label);
 		generation.setText("" + mGeneration);
 		
-		final Button play = (Button) mContainer.findViewById(R.id.play_button);
-		play.setOnClickListener(new OnClickListener()
+		mPlay = (Button) mContainer.findViewById(R.id.play_button);
+		mPlay.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(final View aV)
@@ -132,6 +134,11 @@ public class CharacterCompound implements Comparable<CharacterCompound>
 		
 		final TextView nature = (TextView) mContainer.findViewById(R.id.nature_label);
 		nature.setText(mContext.getString(R.string.nature_text) + " " + mNature);
+	}
+	
+	public Button getPlayButton()
+	{
+		return mPlay;
 	}
 	
 	public long getLastUsed()
