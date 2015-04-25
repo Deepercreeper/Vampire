@@ -22,7 +22,7 @@
         </service>
 
         <activity
-            android:name="com.deepercreeper.vampireapp.activities.VampireActivity"
+            android:name="com.deepercreeper.vampireapp.activities.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>

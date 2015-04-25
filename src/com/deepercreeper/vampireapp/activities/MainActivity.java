@@ -35,7 +35,7 @@ import com.deepercreeper.vampireapp.util.ConnectionUtil;
  * 
  * @author vrl
  */
-public class VampireActivity extends Activity implements ItemConsumer, ConnectionListener
+public class MainActivity extends Activity implements ItemConsumer, ConnectionListener
 {
 	private static final String			TAG					= "VampireActivity";
 	
