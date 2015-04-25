@@ -37,23 +37,23 @@ import com.deepercreeper.vampireapp.util.ConnectionUtil;
  */
 public class MainActivity extends Activity implements ItemConsumer, ConnectionListener
 {
-	private static final String			TAG					= "VampireActivity";
+	private static final String		TAG					= "VampireActivity";
 	
-	private static final String			ARG_SECTION_NUMBER	= "section_number";
+	private static final String		ARG_SECTION_NUMBER	= "section_number";
 	
-	private final ConnectionController	mConnection			= new ConnectionController(this);
+	private ConnectionController	mConnection;
 	
-	private Menu						mOptionsMenu;
+	private Menu					mOptionsMenu;
 	
-	private CharController				mChars;
+	private CharController			mChars;
 	
-	private HostController				mHosts;
+	private HostController			mHosts;
 	
-	private ItemProvider				mItems;
+	private ItemProvider			mItems;
 	
-	private SectionsPagerAdapter		mSectionsPagerAdapter;
+	private SectionsPagerAdapter	mSectionsPagerAdapter;
 	
-	private ViewPager					mViewPager;
+	private ViewPager				mViewPager;
 	
 	@Override
 	protected void onCreate(final Bundle aSavedInstanceState)
@@ -80,6 +80,9 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 	
 	private void init()
 	{
+		mConnection = new ConnectionController(this);
+		mConnection.addListener(this);
+		
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
 		
 		mChars = new CharController(this, mItems, mConnection);
@@ -204,7 +207,7 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
-		if (mConnection.hasBluetooth())
+		if ( !mConnection.hasBluetooth())
 		{
 			menu.findItem(R.id.bluetooth).setEnabled(false).setChecked(false);
 			menu.findItem(R.id.network).setChecked(true);
@@ -235,7 +238,7 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 		return super.onOptionsItemSelected(item);
 	}
 	
-	private void setBluetooth(boolean aBluetooth)
+	private void setBluetooth(final boolean aBluetooth)
 	{
 		mConnection.setBluetooth(aBluetooth);
 		mOptionsMenu.findItem(R.id.bluetooth).setChecked(mConnection.isBluetooth());
@@ -245,23 +248,26 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 	@Override
 	protected void onResume()
 	{
-		mConnection.checkConnection();
+		if (mConnection != null)
+		{
+			mConnection.checkConnection();
+		}
 		super.onResume();
 	}
 	
 	@Override
-	public boolean onPrepareOptionsMenu(Menu aMenu)
+	public boolean onPrepareOptionsMenu(final Menu aMenu)
 	{
 		mOptionsMenu = aMenu;
 		return super.onPrepareOptionsMenu(aMenu);
 	}
 	
 	@Override
-	public void connectionEnabled(boolean aEnabled)
+	public void connectionEnabled(final boolean aEnabled)
 	{
 		if (mChars != null)
 		{
-			for (CharacterCompound charCompound : mChars.getCharacterCompoundsList())
+			for (final CharacterCompound charCompound : mChars.getCharacterCompoundsList())
 			{
 				charCompound.getPlayButton().setEnabled(aEnabled);
 			}

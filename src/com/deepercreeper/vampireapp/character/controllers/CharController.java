@@ -14,6 +14,7 @@ import com.deepercreeper.vampireapp.character.instance.CharacterCompound;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.util.ConnectionController;
+import com.deepercreeper.vampireapp.util.ConnectionController.BluetoothConnectionListener;
 import com.deepercreeper.vampireapp.util.FilesUtil;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.view.CharacterContextMenu.CharacterListener;
@@ -38,7 +39,7 @@ public class CharController implements CharacterListener
 	
 	private LinearLayout							mCharsList;
 	
-	public CharController(final Activity aContext, final ItemProvider aItems, ConnectionController aConnection)
+	public CharController(final Activity aContext, final ItemProvider aItems, final ConnectionController aConnection)
 	{
 		mContext = aContext;
 		mItems = aItems;
@@ -133,12 +134,21 @@ public class CharController implements CharacterListener
 	@Override
 	public void play(final String aName)
 	{
-		final CharacterInstance character = loadChar(aName);
+		final BluetoothConnectionListener listener = new BluetoothConnectionListener()
+		{
+			@Override
+			public void connectedTo(final String aDevice)
+			{
+				final CharacterInstance character = loadChar(aName);
+				
+				final Intent intent = new Intent(mContext, PlayActivity.class);
+				intent.putExtra(PlayActivity.CHARACTER, character.serialize());
+				
+				mContext.startActivityForResult(intent, PlayActivity.PLAY_CHAR_REQUEST);
+			}
+		};
 		
-		final Intent intent = new Intent(mContext, PlayActivity.class);
-		intent.putExtra(PlayActivity.CHARACTER, character.serialize());
-		
-		mContext.startActivityForResult(intent, PlayActivity.PLAY_CHAR_REQUEST);
+		mConnection.connect(listener);
 	}
 	
 	public CharacterInstance loadChar(final String aName)
