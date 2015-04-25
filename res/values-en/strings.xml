@@ -2,6 +2,9 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <string name="app_name">VampireApp</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="network">Network</string>
+    <string name="connection">Connection</string>
     <string name="create_char">Charactercreation</string>
     <string name="button_create_character">Create new character</string>
     <string name="button_create_character_free">Create character free</string>
@@ -53,10 +56,10 @@
     <string name="create_host_button">Create new host</string>
     <string name="play_host_button">Start host</string>
     <string name="choose_host">Choose host</string>
-	<string name="friends">Friends</string>	
-	<string name="characters">Characters</string>
-	<string name="hosts">Hosts</string>
-	<string name="delete_host">Delete</string>
-	<string name="play_host">Play</string>
-    
+    <string name="friends">Friends</string>
+    <string name="characters">Characters</string>
+    <string name="hosts">Hosts</string>
+    <string name="delete_host">Delete</string>
+    <string name="play_host">Play</string>
+
 </resources>

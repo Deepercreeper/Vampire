@@ -19,11 +19,14 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.controllers.CharController;
+import com.deepercreeper.vampireapp.character.instance.CharacterCompound;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.host.Host;
 import com.deepercreeper.vampireapp.host.HostController;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
+import com.deepercreeper.vampireapp.util.ConnectionController;
+import com.deepercreeper.vampireapp.util.ConnectionController.ConnectionListener;
 import com.deepercreeper.vampireapp.util.ConnectionUtil;
 
 /**
@@ -32,21 +35,25 @@ import com.deepercreeper.vampireapp.util.ConnectionUtil;
  * 
  * @author vrl
  */
-public class VampireActivity extends Activity implements ItemConsumer
+public class VampireActivity extends Activity implements ItemConsumer, ConnectionListener
 {
-	private static final String		TAG					= "VampireActivity";
+	private static final String			TAG					= "VampireActivity";
 	
-	private static final String		ARG_SECTION_NUMBER	= "section_number";
+	private static final String			ARG_SECTION_NUMBER	= "section_number";
 	
-	private CharController			mChars;
+	private final ConnectionController	mConnection			= new ConnectionController(this);
 	
-	private HostController			mHosts;
+	private Menu						mOptionsMenu;
 	
-	private ItemProvider			mItems;
+	private CharController				mChars;
 	
-	private SectionsPagerAdapter	mSectionsPagerAdapter;
+	private HostController				mHosts;
 	
-	private ViewPager				mViewPager;
+	private ItemProvider				mItems;
+	
+	private SectionsPagerAdapter		mSectionsPagerAdapter;
+	
+	private ViewPager					mViewPager;
 	
 	@Override
 	protected void onCreate(final Bundle aSavedInstanceState)
@@ -54,6 +61,13 @@ public class VampireActivity extends Activity implements ItemConsumer
 		super.onCreate(aSavedInstanceState);
 		
 		ConnectionUtil.loadItems(this, this);
+	}
+	
+	@Override
+	protected void onDestroy()
+	{
+		mConnection.close();
+		super.onDestroy();
 	}
 	
 	@Override
@@ -68,8 +82,8 @@ public class VampireActivity extends Activity implements ItemConsumer
 	{
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
 		
-		mChars = new CharController(this, mItems);
-		mHosts = new HostController(this, mItems);
+		mChars = new CharController(this, mItems, mConnection);
+		mHosts = new HostController(this, mItems, mConnection);
 		
 		setContentView(R.layout.activity_main);
 		
@@ -102,7 +116,7 @@ public class VampireActivity extends Activity implements ItemConsumer
 		
 		mChars.setCharsList((LinearLayout) aRoot.findViewById(R.id.characters_list));
 		mChars.loadCharCompounds();
-		mChars.sortChars();
+		// mChars.sortChars();
 	}
 	
 	private void initHosts(final ViewGroup aRoot)
@@ -165,6 +179,10 @@ public class VampireActivity extends Activity implements ItemConsumer
 			final Host host = new Host(xml, mItems);
 			mHosts.updateHost(host);
 		}
+		else
+		{
+			System.out.println("Unknown request code: " + aRequestCode + " " + aResultCode);
+		}
 	}
 	
 	private void createChar(final boolean aFree)
@@ -186,6 +204,11 @@ public class VampireActivity extends Activity implements ItemConsumer
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+		if (mConnection.hasBluetooth())
+		{
+			menu.findItem(R.id.bluetooth).setEnabled(false).setChecked(false);
+			menu.findItem(R.id.network).setChecked(true);
+		}
 		return true;
 	}
 	
@@ -196,17 +219,59 @@ public class VampireActivity extends Activity implements ItemConsumer
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		final int id = item.getItemId();
-		if (id == R.id.delete_chars)
+		switch (id)
 		{
-			mChars.deleteChars();
-			return true;
+			case R.id.delete_chars :
+				mChars.deleteChars();
+				return true;
+			case R.id.bluetooth :
+				setBluetooth(true);
+				return true;
+			case R.id.network :
+				setBluetooth(false);
+				return true;
 		}
+		
 		return super.onOptionsItemSelected(item);
 	}
 	
-	public class SectionsPagerAdapter extends FragmentPagerAdapter
+	private void setBluetooth(boolean aBluetooth)
 	{
-		public SectionsPagerAdapter(final FragmentManager aManager)
+		mConnection.setBluetooth(aBluetooth);
+		mOptionsMenu.findItem(R.id.bluetooth).setChecked(mConnection.isBluetooth());
+		mOptionsMenu.findItem(R.id.network).setChecked( !mConnection.isBluetooth());
+	}
+	
+	@Override
+	protected void onResume()
+	{
+		mConnection.checkConnection();
+		super.onResume();
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu aMenu)
+	{
+		mOptionsMenu = aMenu;
+		return super.onPrepareOptionsMenu(aMenu);
+	}
+	
+	@Override
+	public void connectionEnabled(boolean aEnabled)
+	{
+		if (mChars != null)
+		{
+			for (CharacterCompound charCompound : mChars.getCharacterCompoundsList())
+			{
+				charCompound.getPlayButton().setEnabled(aEnabled);
+			}
+			mHosts.setHostsEnabled(aEnabled);
+		}
+	}
+	
+	private class SectionsPagerAdapter extends FragmentPagerAdapter
+	{
+		private SectionsPagerAdapter(final FragmentManager aManager)
 		{
 			super(aManager);
 		}
@@ -249,9 +314,9 @@ public class VampireActivity extends Activity implements ItemConsumer
 		return fragment;
 	}
 	
-	public class PlaceholderFragment extends Fragment
+	private class PlaceholderFragment extends Fragment
 	{
-		public PlaceholderFragment()
+		private PlaceholderFragment()
 		{}
 		
 		@Override

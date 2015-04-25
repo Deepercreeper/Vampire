@@ -8,6 +8,8 @@
         android:minSdkVersion="16"
         android:targetSdkVersion="21" />
 
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    
     <application
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
