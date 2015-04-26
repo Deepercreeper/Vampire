@@ -17,10 +17,25 @@ import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.LanguageUtil;
 import com.deepercreeper.vampireapp.util.Log;
 
+/**
+ * This is an item provider service implementation, that makes it possible<br>
+ * to load the whole item system just once. It provides the controllers, groups and items as much<br>
+ * as the other information, that is needed, when a vampire is created.
+ * 
+ * @author Vincent
+ */
 public class ItemProviderService extends Service implements ItemProvider
 {
+	/**
+	 * The binder that is able to provide the items of the vampire.
+	 * 
+	 * @author Vincent
+	 */
 	public class ItemBinder extends Binder
 	{
+		/**
+		 * @return the underlying item provider that is able to return all the item information.
+		 */
 		public ItemProvider getItemProvider()
 		{
 			return ItemProviderService.this;

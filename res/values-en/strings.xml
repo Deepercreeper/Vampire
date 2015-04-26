@@ -3,6 +3,7 @@
 
     <string name="app_name">VampireApp</string>
     <string name="bluetooth">Bluetooth</string>
+    <string name="no_paired_device">You have no paired devices!</string>
     <string name="network">Network</string>
     <string name="connection">Connection</string>
     <string name="create_char">Charactercreation</string>

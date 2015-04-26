@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.util;
+package com.deepercreeper.vampireapp.connection;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -10,7 +10,9 @@ import android.bluetooth.BluetoothDevice;
 import android.content.IntentFilter;
 import android.widget.Toast;
 import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.util.BluetoothReceiver;
 import com.deepercreeper.vampireapp.util.BluetoothReceiver.BluetoothListener;
+import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.view.SelectItemDialog;
 import com.deepercreeper.vampireapp.util.view.SelectItemDialog.StringSelectionListener;
 
@@ -131,6 +133,7 @@ public class ConnectionController
 		final Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
 		if (pairedDevices.isEmpty())
 		{
+			Toast.makeText(mContext, R.string.no_paired_device, Toast.LENGTH_SHORT).show();
 			return;
 		}
 		final List<String> deviceNames = new ArrayList<String>();

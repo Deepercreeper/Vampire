@@ -13,10 +13,22 @@ import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.util.ConnectionUtil;
 
+/**
+ * This activity represents the running host game. It is able to accept new players<br>
+ * and handles the whole vampire game.
+ * 
+ * @author Vincent
+ */
 public class HostActivity extends Activity implements ItemConsumer
 {
+	/**
+	 * The request code for starting a host game.
+	 */
 	public static final int		PLAY_HOST_REQUEST	= 3;
 	
+	/**
+	 * The extra key for the hosts name.
+	 */
 	public static final String	HOST				= "HOST";
 	
 	private Host				mHost;

@@ -21,12 +21,12 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.controllers.CharController;
 import com.deepercreeper.vampireapp.character.instance.CharacterCompound;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
+import com.deepercreeper.vampireapp.connection.ConnectionController;
+import com.deepercreeper.vampireapp.connection.ConnectionController.ConnectionListener;
 import com.deepercreeper.vampireapp.host.Host;
 import com.deepercreeper.vampireapp.host.HostController;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
-import com.deepercreeper.vampireapp.util.ConnectionController;
-import com.deepercreeper.vampireapp.util.ConnectionController.ConnectionListener;
 import com.deepercreeper.vampireapp.util.ConnectionUtil;
 
 /**

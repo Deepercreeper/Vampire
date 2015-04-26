@@ -32,16 +32,33 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.CreateStringDialog;
 import com.deepercreeper.vampireapp.util.view.CreateStringDialog.CreationListener;
 
+/**
+ * This activity is used to create a character. Either a free character,<br>
+ * that is able to have everything or a new character, that is bounded to<br>
+ * the creation system.
+ * 
+ * @author Vincent
+ */
 public class CreateCharActivity extends Activity implements CharCreationListener, ItemConsumer
 {
-	private static final String	TAG					= "CreateCharActivity";
-	
+	/**
+	 * The extra key for a list of already used character names, so the new name is not already in use.
+	 */
 	public static final String	CHAR_NAMES			= "CHAR_NAMES";
 	
+	/**
+	 * The extra key for the serialized character data. Used for sending the created character back to the main activity.
+	 */
 	public static final String	CHARACTER			= "CHARACTER";
 	
+	/**
+	 * The extra key for whether creating a free or a system restricted character.
+	 */
 	public static final String	FREE_CREATION		= "FREE_CREATION";
 	
+	/**
+	 * The request code for creating a new character.
+	 */
 	public static final int		CREATE_CHAR_REQUEST	= 1;
 	
 	private enum State
