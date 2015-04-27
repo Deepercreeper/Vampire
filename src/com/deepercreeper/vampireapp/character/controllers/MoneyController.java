@@ -14,8 +14,9 @@ import com.deepercreeper.vampireapp.character.Money;
 import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.Saveable;
 import com.deepercreeper.vampireapp.util.ViewUtil;
+import com.deepercreeper.vampireapp.util.view.Viewable;
 
-public class MoneyController implements Saveable
+public class MoneyController implements Saveable, Viewable
 {
 	private static final String			TAG				= "MoneyController";
 	
@@ -56,11 +57,36 @@ public class MoneyController implements Saveable
 		init();
 	}
 	
-	public void release()
+	public void add(final String aCurrency, final int aValue)
 	{
-		ViewUtil.release(getContainer());
+		mValues.put(aCurrency, getValue(aCurrency) + aValue);
 	}
 	
+	@Override
+	public Element asElement(final Document aDoc)
+	{
+		final Element element = aDoc.createElement("money");
+		element.setAttribute("values", serializeValues(false, ":"));
+		return element;
+	}
+	
+	@Override
+	public RelativeLayout getContainer()
+	{
+		return mContainer;
+	}
+	
+	public String getMoney()
+	{
+		return serializeValues(true, " ");
+	}
+	
+	public int getValue(final String aCurrency)
+	{
+		return mValues.get(aCurrency);
+	}
+	
+	@Override
 	public void init()
 	{
 		if ( !mInitialized)
@@ -75,24 +101,10 @@ public class MoneyController implements Saveable
 		updateValue();
 	}
 	
-	public void updateValue()
+	@Override
+	public void release()
 	{
-		mMoneyDisplay.setText("" + getMoney());
-	}
-	
-	public RelativeLayout getContainer()
-	{
-		return mContainer;
-	}
-	
-	public int getValue(final String aCurrency)
-	{
-		return mValues.get(aCurrency);
-	}
-	
-	public void add(final String aCurrency, final int aValue)
-	{
-		mValues.put(aCurrency, getValue(aCurrency) + aValue);
+		ViewUtil.release(getContainer());
 	}
 	
 	public void remove(final String aCurrency, final int aValue)
@@ -105,17 +117,9 @@ public class MoneyController implements Saveable
 		mValues.put(aCurrency, getValue(aCurrency) - aValue);
 	}
 	
-	public String getMoney()
+	public void updateValue()
 	{
-		return serializeValues(true, " ");
-	}
-	
-	@Override
-	public Element asElement(final Document aDoc)
-	{
-		final Element element = aDoc.createElement("money");
-		element.setAttribute("values", serializeValues(false, ":"));
-		return element;
+		mMoneyDisplay.setText("" + getMoney());
 	}
 	
 	private String serializeValues(final boolean aSpaces, final String aDelimiter)

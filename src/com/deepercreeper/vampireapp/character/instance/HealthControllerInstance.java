@@ -18,8 +18,9 @@ import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.Saveable;
 import com.deepercreeper.vampireapp.util.ViewUtil;
+import com.deepercreeper.vampireapp.util.view.Viewable;
 
-public class HealthControllerInstance implements TimeListener, Saveable
+public class HealthControllerInstance implements TimeListener, Saveable, Viewable
 {
 	private static final String		TAG				= "HealthControllerInstance";
 	
@@ -70,6 +71,95 @@ public class HealthControllerInstance implements TimeListener, Saveable
 		init();
 	}
 	
+	public void addStep()
+	{
+		final int[] steps = new int[mSteps.length + 1];
+		steps[0] = 0;
+		for (int i = 0; i < mSteps.length; i++ )
+		{
+			steps[i + 1] = mSteps[i];
+		}
+		mSteps = steps;
+	}
+	
+	@Override
+	public Element asElement(final Document aDoc)
+	{
+		final Element element = aDoc.createElement("health");
+		element.setAttribute("steps", DataUtil.parseValues(mSteps));
+		element.setAttribute("value", "" + mValue);
+		element.setAttribute("canHeal", "" + mCanHeal);
+		element.setAttribute("heavy", "" + mHeavyWounds);
+		element.setAttribute("cost", mCost.getName());
+		return element;
+	}
+	
+	public boolean canAct()
+	{
+		return mSteps[mValue] != -1;
+	}
+	
+	public boolean canHeal()
+	{
+		Log.i(TAG, "" + (mCost.getValue() > 0));
+		return mCanHeal && mValue > 0 && mCost.getValue() > 0;
+	}
+	
+	@Override
+	public void day()
+	{
+		mCanHeal = true;
+	}
+	
+	public RelativeLayout getContainer()
+	{
+		return mContainer;
+	}
+	
+	public int getStep()
+	{
+		if (mSteps[mValue] == -1)
+		{
+			return 0;
+		}
+		return mSteps[mValue];
+	}
+	
+	public void heal(final int aValue)
+	{
+		if ( !canHeal())
+		{
+			return;
+		}
+		mValue -= aValue;
+		if (mValue < 0)
+		{
+			mValue = 0;
+		}
+	}
+	
+	@Override
+	public void hour()
+	{}
+	
+	public void hurt(final int aValue, final boolean aHeavy)
+	{
+		mValue += aValue;
+		if (mValue >= mSteps.length)
+		{
+			mValue = mSteps.length - 1;
+		}
+		if (aHeavy)
+		{
+			mHeavyWounds = true;
+		}
+		mCanHeal = true;
+		if (mHeavyWounds)
+		{
+			mCanHeal = false;
+		}
+	}
+	
 	public void init()
 	{
 		if ( !mInitialized)
@@ -105,102 +195,13 @@ public class HealthControllerInstance implements TimeListener, Saveable
 		ViewUtil.release(getContainer());
 	}
 	
+	@Override
+	public void round()
+	{}
+	
 	public void updateValue()
 	{
 		mValueBar.setProgress(mSteps.length - mValue - 1);
 		mStepLabel.setText("" + -getStep());
 	}
-	
-	public RelativeLayout getContainer()
-	{
-		return mContainer;
-	}
-	
-	public void addStep()
-	{
-		final int[] steps = new int[mSteps.length + 1];
-		steps[0] = 0;
-		for (int i = 0; i < mSteps.length; i++ )
-		{
-			steps[i + 1] = mSteps[i];
-		}
-		mSteps = steps;
-	}
-	
-	public int getStep()
-	{
-		if (mSteps[mValue] == -1)
-		{
-			return 0;
-		}
-		return mSteps[mValue];
-	}
-	
-	public void hurt(final int aValue, final boolean aHeavy)
-	{
-		mValue += aValue;
-		if (mValue >= mSteps.length)
-		{
-			mValue = mSteps.length - 1;
-		}
-		if (aHeavy)
-		{
-			mHeavyWounds = true;
-		}
-		mCanHeal = true;
-		if (mHeavyWounds)
-		{
-			mCanHeal = false;
-		}
-	}
-	
-	public boolean canAct()
-	{
-		return mSteps[mValue] != -1;
-	}
-	
-	public boolean canHeal()
-	{
-		Log.i(TAG, "" + (mCost.getValue() > 0));
-		return mCanHeal && mValue > 0 && mCost.getValue() > 0;
-	}
-	
-	public void heal(final int aValue)
-	{
-		if ( !canHeal())
-		{
-			return;
-		}
-		mValue -= aValue;
-		if (mValue < 0)
-		{
-			mValue = 0;
-		}
-	}
-	
-	@Override
-	public Element asElement(final Document aDoc)
-	{
-		final Element element = aDoc.createElement("health");
-		element.setAttribute("steps", DataUtil.parseValues(mSteps));
-		element.setAttribute("value", "" + mValue);
-		element.setAttribute("canHeal", "" + mCanHeal);
-		element.setAttribute("heavy", "" + mHeavyWounds);
-		element.setAttribute("cost", mCost.getName());
-		return element;
-	}
-	
-	@Override
-	public void day()
-	{
-		mCanHeal = true;
-	}
-	
-	@Override
-	public void hour()
-	{}
-	
-	@Override
-	public void round()
-	{}
 }

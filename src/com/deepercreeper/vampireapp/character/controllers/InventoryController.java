@@ -21,8 +21,9 @@ import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.Saveable;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.ResizeHeightAnimation;
+import com.deepercreeper.vampireapp.util.view.Viewable;
 
-public class InventoryController implements Saveable, ItemValueListener
+public class InventoryController implements Saveable, ItemValueListener, Viewable
 {
 	private static final String			TAG				= "InventoryController";
 	
@@ -139,6 +140,7 @@ public class InventoryController implements Saveable, ItemValueListener
 		resize();
 	}
 	
+	@Override
 	public LinearLayout getContainer()
 	{
 		return mContainer;
@@ -154,6 +156,7 @@ public class InventoryController implements Saveable, ItemValueListener
 		return mWeight;
 	}
 	
+	@Override
 	public void init()
 	{
 		if ( !mInitialized)
@@ -192,6 +195,7 @@ public class InventoryController implements Saveable, ItemValueListener
 		close();
 	}
 	
+	@Override
 	public void release()
 	{
 		ViewUtil.release(getContainer());

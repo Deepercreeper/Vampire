@@ -35,6 +35,13 @@ public enum CreationMode
 	
 	private final boolean	mValueMode, mTempPointsMode, mFreeMode;
 	
+	private CreationMode()
+	{
+		mValueMode = true;
+		mTempPointsMode = false;
+		mFreeMode = true;
+	}
+	
 	private CreationMode(final boolean aValueMode, final boolean aTempPointsMode)
 	{
 		mValueMode = aValueMode;
@@ -44,152 +51,6 @@ public enum CreationMode
 		{
 			throw new IllegalArgumentException("Can't change value and temporary points in one mode!");
 		}
-	}
-	
-	private CreationMode()
-	{
-		mValueMode = true;
-		mTempPointsMode = false;
-		mFreeMode = true;
-	}
-	
-	public boolean canIncreaseItem(final ItemCreation aItem, final boolean aCanIncrease)
-	{
-		if ( !aCanIncrease)
-		{
-			return false;
-		}
-		if (mFreeMode)
-		{
-			return true;
-		}
-		if (mValueMode)
-		{
-			return aItem.getItemGroup().canChangeBy(aItem.getIncreasedValue() - aItem.getValue());
-		}
-		if (mTempPointsMode)
-		{
-			return aItem.hasEnoughPoints() && aItem.getItem().getFreePointsCost() != 0;
-		}
-		return false;
-	}
-	
-	public boolean canRemoveItem(final ItemCreation aItem)
-	{
-		if (mFreeMode)
-		{
-			return true;
-		}
-		final ItemGroupCreation group = aItem.getItemGroup();
-		if ( !group.canChangeBy( -aItem.getValue()))
-		{
-			return false;
-		}
-		for (final CreationRestriction restriction : group.getRestrictions(CreationRestrictionType.GROUP_CHILDREN_COUNT))
-		{
-			if (restriction.isActive(group.getItemController()) && group.getItemsList().size() <= restriction.getMinimum())
-			{
-				return false;
-			}
-		}
-		for (final CreationRestriction restriction : group.getRestrictions(CreationRestrictionType.GROUP_ITEM_VALUE_AT))
-		{
-			if (restriction.isActive(group.getItemController()) && restriction.getIndex() == group.indexOfItem(aItem)
-					&& aItem.getItem().getStartValue() < restriction.getMinimum())
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	public boolean canRemoveChild(final ItemCreation aItem)
-	{
-		if (mFreeMode)
-		{
-			return true;
-		}
-		if ( !aItem.getItemGroup().canChangeBy( -aItem.getValue()))
-		{
-			return false;
-		}
-		final ItemCreation parent = aItem.getParentItem();
-		for (final CreationRestriction restriction : parent.getRestrictions(CreationRestrictionType.ITEM_CHILDREN_COUNT))
-		{
-			if (restriction.isActive(aItem.getItemGroup().getItemController()) && parent.getChildrenList().size() <= restriction.getMinimum())
-			{
-				return false;
-			}
-		}
-		for (final CreationRestriction restriction : parent.getRestrictions(CreationRestrictionType.ITEM_CHILD_VALUE_AT))
-		{
-			if (restriction.isActive(aItem.getItemGroup().getItemController()) && restriction.getIndex() == parent.indexOfChild(aItem)
-					&& aItem.getItem().getStartValue() < restriction.getMinimum())
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	public boolean canDecreaseItem(final ItemCreation aItem, final boolean aCanDecreaseValue, final boolean aCanDecreaseTempPoints)
-	{
-		if (mFreeMode)
-		{
-			return aCanDecreaseValue;
-		}
-		if (mValueMode)
-		{
-			return aCanDecreaseValue && aItem.getItemGroup().canChangeBy(aItem.getDecreasedValue() - aItem.getValue());
-		}
-		if (mTempPointsMode)
-		{
-			return aCanDecreaseTempPoints && aItem.getItem().getFreePointsCost() != 0;
-		}
-		return false;
-	}
-	
-	public void increaseItem(final ItemCreation aItem)
-	{
-		if (mValueMode)
-		{
-			aItem.getChangeValue().increase();
-		}
-		else if (mTempPointsMode)
-		{
-			aItem.getChangeTempPoints().increase();
-			aItem.getPoints().decrease(aItem.getFreePointsCost());
-		}
-	}
-	
-	public void decreaseItem(final ItemCreation aItem)
-	{
-		if (mValueMode)
-		{
-			aItem.getChangeValue().decrease();
-		}
-		else if (mTempPointsMode)
-		{
-			aItem.getChangeTempPoints().decrease();
-			aItem.getPoints().increase(aItem.getFreePointsCost());
-		}
-	}
-	
-	public boolean canAddItem(final ItemGroupCreation aGroup)
-	{
-		if ( !aGroup.isMutable())
-		{
-			return false;
-		}
-		if (mValueMode)
-		{
-			return true;
-		}
-		if (mTempPointsMode)
-		{
-			return false;
-		}
-		return false;
 	}
 	
 	public boolean canAddChild(final ItemCreation aItem, final boolean aRestrictions)
@@ -227,6 +88,40 @@ public enum CreationMode
 		return false;
 	}
 	
+	public boolean canAddItem(final ItemGroupCreation aGroup)
+	{
+		if ( !aGroup.isMutable())
+		{
+			return false;
+		}
+		if (mValueMode)
+		{
+			return true;
+		}
+		if (mTempPointsMode)
+		{
+			return false;
+		}
+		return false;
+	}
+	
+	public boolean canDecreaseItem(final ItemCreation aItem, final boolean aCanDecreaseValue, final boolean aCanDecreaseTempPoints)
+	{
+		if (mFreeMode)
+		{
+			return aCanDecreaseValue;
+		}
+		if (mValueMode)
+		{
+			return aCanDecreaseValue && aItem.getItemGroup().canChangeBy(aItem.getDecreasedValue() - aItem.getValue());
+		}
+		if (mTempPointsMode)
+		{
+			return aCanDecreaseTempPoints && aItem.getItem().getFreePointsCost() != 0;
+		}
+		return false;
+	}
+	
 	public boolean canEditItem(final ItemCreation aItem)
 	{
 		if ( !aItem.hasParentItem() && !aItem.getItemGroup().isMutable())
@@ -246,6 +141,111 @@ public enum CreationMode
 			return false;
 		}
 		return false;
+	}
+	
+	public boolean canIncreaseItem(final ItemCreation aItem, final boolean aCanIncrease)
+	{
+		if ( !aCanIncrease)
+		{
+			return false;
+		}
+		if (mFreeMode)
+		{
+			return true;
+		}
+		if (mValueMode)
+		{
+			return aItem.getItemGroup().canChangeBy(aItem.getIncreasedValue() - aItem.getValue());
+		}
+		if (mTempPointsMode)
+		{
+			return aItem.hasEnoughPoints() && aItem.getItem().getFreePointsCost() != 0;
+		}
+		return false;
+	}
+	
+	public boolean canRemoveChild(final ItemCreation aItem)
+	{
+		if (mFreeMode)
+		{
+			return true;
+		}
+		if ( !aItem.getItemGroup().canChangeBy( -aItem.getValue()))
+		{
+			return false;
+		}
+		final ItemCreation parent = aItem.getParentItem();
+		for (final CreationRestriction restriction : parent.getRestrictions(CreationRestrictionType.ITEM_CHILDREN_COUNT))
+		{
+			if (restriction.isActive(aItem.getItemGroup().getItemController()) && parent.getChildrenList().size() <= restriction.getMinimum())
+			{
+				return false;
+			}
+		}
+		for (final CreationRestriction restriction : parent.getRestrictions(CreationRestrictionType.ITEM_CHILD_VALUE_AT))
+		{
+			if (restriction.isActive(aItem.getItemGroup().getItemController()) && restriction.getIndex() == parent.indexOfChild(aItem)
+					&& aItem.getItem().getStartValue() < restriction.getMinimum())
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public boolean canRemoveItem(final ItemCreation aItem)
+	{
+		if (mFreeMode)
+		{
+			return true;
+		}
+		final ItemGroupCreation group = aItem.getItemGroup();
+		if ( !group.canChangeBy( -aItem.getValue()))
+		{
+			return false;
+		}
+		for (final CreationRestriction restriction : group.getRestrictions(CreationRestrictionType.GROUP_CHILDREN_COUNT))
+		{
+			if (restriction.isActive(group.getItemController()) && group.getItemsList().size() <= restriction.getMinimum())
+			{
+				return false;
+			}
+		}
+		for (final CreationRestriction restriction : group.getRestrictions(CreationRestrictionType.GROUP_ITEM_VALUE_AT))
+		{
+			if (restriction.isActive(group.getItemController()) && restriction.getIndex() == group.indexOfItem(aItem)
+					&& aItem.getItem().getStartValue() < restriction.getMinimum())
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public void decreaseItem(final ItemCreation aItem)
+	{
+		if (mValueMode)
+		{
+			aItem.getChangeValue().decrease();
+		}
+		else if (mTempPointsMode)
+		{
+			aItem.getChangeTempPoints().decrease();
+			aItem.getPoints().increase(aItem.getFreePointsCost());
+		}
+	}
+	
+	public void increaseItem(final ItemCreation aItem)
+	{
+		if (mValueMode)
+		{
+			aItem.getChangeValue().increase();
+		}
+		else if (mTempPointsMode)
+		{
+			aItem.getChangeTempPoints().increase();
+			aItem.getPoints().decrease(aItem.getFreePointsCost());
+		}
 	}
 	
 	public boolean isFreeMode()

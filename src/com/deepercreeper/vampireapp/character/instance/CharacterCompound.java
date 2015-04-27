@@ -11,34 +11,35 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.CharacterContextMenu;
 import com.deepercreeper.vampireapp.util.view.CharacterContextMenu.CharacterListener;
+import com.deepercreeper.vampireapp.util.view.Viewable;
 
-public class CharacterCompound implements Comparable<CharacterCompound>
+public class CharacterCompound implements Comparable<CharacterCompound>, Viewable
 {
-	private static final String	TAG	= "CharacterCompound";
+	private final Activity			mContext;
 	
-	private final Activity		mContext;
+	private final String			mName;
 	
-	private final String		mName;
+	private final String			mConcept;
 	
-	private final String		mConcept;
+	private final int				mGeneration;
 	
-	private final int			mGeneration;
+	private final String			mNature;
 	
-	private final String		mNature;
+	private final String			mBehavior;
 	
-	private final String		mBehavior;
+	private final int				mEP;
 	
-	private final int			mEP;
+	private final String			mData;
 	
-	private final String		mData;
+	private final CharacterListener	mListener;
 	
-	private Button				mPlay;
+	private Button					mPlay;
 	
-	private View				mTrimmer;
+	private View					mTrimmer;
 	
-	private RelativeLayout		mContainer;
+	private RelativeLayout			mContainer;
 	
-	private long				mLastUsed;
+	private long					mLastUsed;
 	
 	public CharacterCompound(final String aCharacter, final CharacterListener aListener, final Activity aContext)
 	{
@@ -60,7 +61,8 @@ public class CharacterCompound implements Comparable<CharacterCompound>
 		}
 		
 		mData = createData();
-		init(aListener);
+		mListener = aListener;
+		init();
 	}
 	
 	public CharacterCompound(final CharacterInstance aCharacter, final CharacterListener aListener, final Activity aContext)
@@ -75,7 +77,8 @@ public class CharacterCompound implements Comparable<CharacterCompound>
 		mLastUsed = 0;
 		
 		mData = createData();
-		init(aListener);
+		mListener = aListener;
+		init();
 	}
 	
 	public void setFirst(final boolean aFirst)
@@ -90,7 +93,8 @@ public class CharacterCompound implements Comparable<CharacterCompound>
 		}
 	}
 	
-	private void init(final CharacterListener aListener)
+	@Override
+	public void init()
 	{
 		mContainer = (RelativeLayout) View.inflate(mContext, R.layout.character_compound, null);
 		
@@ -106,7 +110,7 @@ public class CharacterCompound implements Comparable<CharacterCompound>
 			@Override
 			public boolean onLongClick(final View aV)
 			{
-				CharacterContextMenu.showCharacterContextMenu(aListener, mContext, mName);
+				CharacterContextMenu.showCharacterContextMenu(mListener, mContext, mName);
 				return true;
 			}
 		});
@@ -122,7 +126,7 @@ public class CharacterCompound implements Comparable<CharacterCompound>
 			public void onClick(final View aV)
 			{
 				use();
-				aListener.play(mName);
+				mListener.play(mName);
 			}
 		});
 		
@@ -151,6 +155,7 @@ public class CharacterCompound implements Comparable<CharacterCompound>
 		mLastUsed = System.currentTimeMillis();
 	}
 	
+	@Override
 	public void release()
 	{
 		ViewUtil.release(getContainer());
@@ -161,6 +166,7 @@ public class CharacterCompound implements Comparable<CharacterCompound>
 		return mName;
 	}
 	
+	@Override
 	public RelativeLayout getContainer()
 	{
 		return mContainer;

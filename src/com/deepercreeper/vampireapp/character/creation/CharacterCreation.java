@@ -28,6 +28,13 @@ import com.deepercreeper.vampireapp.util.Log;
  */
 public class CharacterCreation
 {
+	public interface CharCreationListener
+	{
+		public void setFreePoints(int aValue);
+		
+		public void setInsanitiesOk(boolean aOk);
+	}
+	
 	private static final String					TAG					= "CharacterCreation";
 	
 	/**
@@ -133,38 +140,13 @@ public class CharacterCreation
 		mInsanities.addInsanity(aInsanity);
 	}
 	
-	public List<InstanceRestriction> getRestrictions()
+	/**
+	 * Removes all user defined descriptions.
+	 */
+	public void clearDescriptions()
 	{
-		final List<InstanceRestriction> restrictions = new ArrayList<InstanceRestriction>();
-		for (final CreationRestriction restriction : mClan.getRestrictions())
-		{
-			if (restriction.isPersistent() && !restriction.isCreationRestriction())
-			{
-				restrictions.add(restriction.createInstance());
-			}
-		}
-		return restrictions;
-	}
-	
-	public int[] getHealthSteps()
-	{
-		return mHealth.getSteps();
-	}
-	
-	public HealthControllerCreation getHealth()
-	{
-		return mHealth;
-	}
-	
-	public int getGenerationValue()
-	{
-		int generation = mGeneration.getGeneration();
-		final ItemCreation generationItem = findItem(mItems.getGenerationItem());
-		if (generationItem != null)
-		{
-			generation -= generationItem.getValue();
-		}
-		return generation;
+		mDescriptions.clear();
+		mInsanities.clear();
 	}
 	
 	public ItemCreation findItem(final String aName)
@@ -177,20 +159,6 @@ public class CharacterCreation
 			}
 		}
 		return null;
-	}
-	
-	/**
-	 * Removes all user defined descriptions.
-	 */
-	public void clearDescriptions()
-	{
-		mDescriptions.clear();
-		mInsanities.clear();
-	}
-	
-	public Context getContext()
-	{
-		return mContext;
 	}
 	
 	/**
@@ -217,9 +185,19 @@ public class CharacterCreation
 		return mConcept;
 	}
 	
+	public Context getContext()
+	{
+		return mContext;
+	}
+	
 	public List<ItemControllerCreation> getControllers()
 	{
 		return mControllers;
+	}
+	
+	public CreationMode getCreationMode()
+	{
+		return mMode;
 	}
 	
 	/**
@@ -259,12 +237,38 @@ public class CharacterCreation
 		return mGeneration;
 	}
 	
+	public int getGenerationValue()
+	{
+		int generation = mGeneration.getGeneration();
+		final ItemCreation generationItem = findItem(mItems.getGenerationItem());
+		if (generationItem != null)
+		{
+			generation -= generationItem.getValue();
+		}
+		return generation;
+	}
+	
+	public HealthControllerCreation getHealth()
+	{
+		return mHealth;
+	}
+	
+	public int[] getHealthSteps()
+	{
+		return mHealth.getSteps();
+	}
+	
 	/**
 	 * @return a list of all insanities.
 	 */
 	public InsanityControllerCreation getInsanities()
 	{
 		return mInsanities;
+	}
+	
+	public ItemProvider getItems()
+	{
+		return mItems;
 	}
 	
 	/**
@@ -283,9 +287,17 @@ public class CharacterCreation
 		return mNature;
 	}
 	
-	public ItemProvider getItems()
+	public List<InstanceRestriction> getRestrictions()
 	{
-		return mItems;
+		final List<InstanceRestriction> restrictions = new ArrayList<InstanceRestriction>();
+		for (final CreationRestriction restriction : mClan.getRestrictions())
+		{
+			if (restriction.isPersistent() && !restriction.isCreationRestriction())
+			{
+				restrictions.add(restriction.createInstance());
+			}
+		}
+		return restrictions;
 	}
 	
 	/**
@@ -390,11 +402,6 @@ public class CharacterCreation
 	public void setConcept(final String aConcept)
 	{
 		mConcept = aConcept.trim();
-	}
-	
-	public CreationMode getCreationMode()
-	{
-		return mMode;
 	}
 	
 	/**
@@ -512,12 +519,5 @@ public class CharacterCreation
 		{
 			restriction.clear();
 		}
-	}
-	
-	public interface CharCreationListener
-	{
-		public void setFreePoints(int aValue);
-		
-		public void setInsanitiesOk(boolean aOk);
 	}
 }

@@ -13,8 +13,9 @@ import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.util.ViewUtil;
+import com.deepercreeper.vampireapp.util.view.Viewable;
 
-public class HealthControllerCreation
+public class HealthControllerCreation implements Viewable
 {
 	private class Step
 	{
@@ -81,9 +82,9 @@ public class HealthControllerCreation
 			return this == aO;
 		}
 		
-		public void release()
+		public RelativeLayout getContainer()
 		{
-			ViewUtil.release(mStepContainer);
+			return mStepContainer;
 		}
 		
 		public int getValue()
@@ -91,15 +92,15 @@ public class HealthControllerCreation
 			return mValue;
 		}
 		
-		public RelativeLayout getContainer()
-		{
-			return mStepContainer;
-		}
-		
 		@Override
 		public int hashCode()
 		{
 			return super.hashCode();
+		}
+		
+		public void release()
+		{
+			ViewUtil.release(mStepContainer);
 		}
 	}
 	
@@ -131,17 +132,28 @@ public class HealthControllerCreation
 		init();
 	}
 	
+	@Override
+	public LinearLayout getContainer()
+	{
+		return mContainer;
+	}
+	
 	public String getCost()
 	{
 		return mCost;
 	}
 	
-	public void release()
+	public int[] getSteps()
 	{
-		ViewUtil.release(getContainer());
-		getContainer().removeAllViews();
+		final int[] steps = new int[mSteps.size()];
+		for (int i = 0; i < steps.length; i++ )
+		{
+			steps[i] = mSteps.get(i).getValue();
+		}
+		return steps;
 	}
 	
+	@Override
 	public void init()
 	{
 		if ( !mInitialized)
@@ -170,14 +182,11 @@ public class HealthControllerCreation
 		}
 	}
 	
-	public LinearLayout getContainer()
+	@Override
+	public void release()
 	{
-		return mContainer;
-	}
-	
-	private void removeStep(final Step aStep)
-	{
-		mSteps.remove(aStep);
+		ViewUtil.release(getContainer());
+		getContainer().removeAllViews();
 	}
 	
 	private void addStep()
@@ -186,13 +195,8 @@ public class HealthControllerCreation
 		getContainer().addView(mSteps.get(0).getContainer(), 1);
 	}
 	
-	public int[] getSteps()
+	private void removeStep(final Step aStep)
 	{
-		final int[] steps = new int[mSteps.size()];
-		for (int i = 0; i < steps.length; i++ )
-		{
-			steps[i] = mSteps.get(i).getValue();
-		}
-		return steps;
+		mSteps.remove(aStep);
 	}
 }
