@@ -16,17 +16,37 @@ import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
 import com.deepercreeper.vampireapp.util.ConnectionUtil;
 
+/**
+ * This activity is used to play a character, that was created before and connect to a host.<br>
+ * This is the real play process that a non master user can do with this app.
+ * 
+ * @author vrl
+ */
 public class PlayActivity extends Activity implements ItemConsumer
 {
 	private static final String	TAG					= "PlayActivity";
 	
+	/**
+	 * The extra key for the character that is going to be played.
+	 */
 	public static final String	CHARACTER			= "CHARACTER";
 	
+	/**
+	 * The request code for playing a character.
+	 */
 	public static final int		PLAY_CHAR_REQUEST	= 2;
 	
 	private ItemProvider		mItems;
 	
 	private CharacterInstance	mChar;
+	
+	@Override
+	public void consumeItems(final ItemProvider aItems)
+	{
+		mItems = aItems;
+		
+		init();
+	}
 	
 	@Override
 	protected void onCreate(final Bundle aSavedInstanceState)
@@ -36,12 +56,12 @@ public class PlayActivity extends Activity implements ItemConsumer
 		ConnectionUtil.loadItems(this, this);
 	}
 	
-	@Override
-	public void consumeItems(final ItemProvider aItems)
+	private void exit()
 	{
-		mItems = aItems;
-		
-		init();
+		final Intent intent = new Intent();
+		intent.putExtra(CHARACTER, mChar.serialize());
+		setResult(RESULT_OK, intent);
+		finish();
 	}
 	
 	private void init()
@@ -101,13 +121,5 @@ public class PlayActivity extends Activity implements ItemConsumer
 				exit();
 			}
 		});
-	}
-	
-	private void exit()
-	{
-		final Intent intent = new Intent();
-		intent.putExtra(CHARACTER, mChar.serialize());
-		setResult(RESULT_OK, intent);
-		finish();
 	}
 }

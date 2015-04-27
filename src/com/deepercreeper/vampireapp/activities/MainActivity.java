@@ -37,6 +37,69 @@ import com.deepercreeper.vampireapp.util.ConnectionUtil;
  */
 public class MainActivity extends Activity implements ItemConsumer, ConnectionListener
 {
+	private class PlaceholderFragment extends Fragment
+	{
+		private PlaceholderFragment()
+		{}
+		
+		@Override
+		public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
+		{
+			ViewGroup rootView = null;
+			switch (getArguments().getInt(ARG_SECTION_NUMBER))
+			{
+				case 1 :
+					rootView = (ViewGroup) inflater.inflate(R.layout.friends_fragment, container, false);
+					break;
+				case 2 :
+					rootView = (ViewGroup) inflater.inflate(R.layout.characters_fragment, container, false);
+					initChars(rootView);
+					break;
+				case 3 :
+					rootView = (ViewGroup) inflater.inflate(R.layout.hosts_fragment, container, false);
+					initHosts(rootView);
+					break;
+			}
+			return rootView;
+		}
+	}
+	
+	private class SectionsPagerAdapter extends FragmentPagerAdapter
+	{
+		private SectionsPagerAdapter(final FragmentManager aManager)
+		{
+			super(aManager);
+		}
+		
+		@Override
+		public int getCount()
+		{
+			return 3;
+		}
+		
+		@Override
+		public Fragment getItem(final int position)
+		{
+			return newFragmentInstance(position + 1);
+		}
+		
+		@Override
+		public CharSequence getPageTitle(final int position)
+		{
+			final Locale l = Locale.getDefault();
+			switch (position)
+			{
+				case 0 :
+					return getString(R.string.friends).toUpperCase(l);
+				case 1 :
+					return getString(R.string.characters).toUpperCase(l);
+				case 2 :
+					return getString(R.string.hosts).toUpperCase(l);
+			}
+			return null;
+		}
+	}
+	
 	private static final String		TAG					= "VampireActivity";
 	
 	private static final String		ARG_SECTION_NUMBER	= "section_number";
@@ -56,6 +119,125 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 	private ViewPager				mViewPager;
 	
 	@Override
+	public void connectionEnabled(final boolean aEnabled)
+	{
+		if (mChars != null)
+		{
+			for (final CharacterCompound charCompound : mChars.getCharacterCompoundsList())
+			{
+				charCompound.getPlayButton().setEnabled(aEnabled);
+			}
+			mHosts.setHostsEnabled(aEnabled);
+		}
+	}
+	
+	@Override
+	public void consumeItems(final ItemProvider aItems)
+	{
+		mItems = aItems;
+		
+		init();
+	}
+	
+	@Override
+	public void onBackPressed()
+	{
+		finish();
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(final Menu menu)
+	{
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		if ( !mConnection.hasBluetooth())
+		{
+			menu.findItem(R.id.bluetooth).setEnabled(false).setChecked(false);
+			menu.findItem(R.id.network).setChecked(true);
+		}
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(final MenuItem item)
+	{
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
+		final int id = item.getItemId();
+		switch (id)
+		{
+			case R.id.delete_chars :
+				mChars.deleteChars();
+				return true;
+			case R.id.bluetooth :
+				setBluetooth(true);
+				return true;
+			case R.id.network :
+				setBluetooth(false);
+				return true;
+		}
+		
+		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(final Menu aMenu)
+	{
+		mOptionsMenu = aMenu;
+		return super.onPrepareOptionsMenu(aMenu);
+	}
+	
+	@Override
+	protected void onActivityResult(final int aRequestCode, final int aResultCode, final Intent aData)
+	{
+		if (aRequestCode == CreateCharActivity.CREATE_CHAR_REQUEST && aResultCode == RESULT_OK)
+		{
+			final String xml = aData.getStringExtra(CreateCharActivity.CHARACTER);
+			CharacterInstance character = null;
+			try
+			{
+				character = new CharacterInstance(xml, mItems, this);
+			}
+			catch (final IllegalArgumentException e)
+			{
+				Log.e(TAG, "Could not create character from xml.");
+			}
+			if (character != null)
+			{
+				mChars.addChar(character);
+			}
+		}
+		else if (aRequestCode == PlayActivity.PLAY_CHAR_REQUEST && aResultCode == RESULT_OK)
+		{
+			final String xml = aData.getStringExtra(PlayActivity.CHARACTER);
+			CharacterInstance character = null;
+			try
+			{
+				character = new CharacterInstance(xml, mItems, this);
+			}
+			catch (final IllegalArgumentException e)
+			{
+				Log.e(TAG, "Could not create character from xml.");
+			}
+			if (character != null)
+			{
+				mChars.updateChar(character);
+			}
+		}
+		else if (aRequestCode == HostActivity.PLAY_HOST_REQUEST && aRequestCode == RESULT_OK)
+		{
+			final String xml = aData.getStringExtra(HostActivity.HOST);
+			final Host host = new Host(xml, mItems);
+			mHosts.updateHost(host);
+		}
+		else
+		{
+			System.out.println("Unknown request code: " + aRequestCode + " " + aResultCode);
+		}
+	}
+	
+	@Override
 	protected void onCreate(final Bundle aSavedInstanceState)
 	{
 		super.onCreate(aSavedInstanceState);
@@ -71,11 +253,21 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 	}
 	
 	@Override
-	public void consumeItems(final ItemProvider aItems)
+	protected void onResume()
 	{
-		mItems = aItems;
-		
-		init();
+		if (mConnection != null)
+		{
+			mConnection.checkConnection();
+		}
+		super.onResume();
+	}
+	
+	private void createChar(final boolean aFree)
+	{
+		final Intent intent = new Intent(this, CreateCharActivity.class);
+		intent.putExtra(CreateCharActivity.CHAR_NAMES, mChars.getCharNames());
+		intent.putExtra(CreateCharActivity.FREE_CREATION, aFree);
+		startActivityForResult(intent, CreateCharActivity.CREATE_CHAR_REQUEST);
 	}
 	
 	private void init()
@@ -139,178 +331,6 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 		mHosts.loadHosts();
 	}
 	
-	@Override
-	protected void onActivityResult(final int aRequestCode, final int aResultCode, final Intent aData)
-	{
-		if (aRequestCode == CreateCharActivity.CREATE_CHAR_REQUEST && aResultCode == RESULT_OK)
-		{
-			final String xml = aData.getStringExtra(CreateCharActivity.CHARACTER);
-			CharacterInstance character = null;
-			try
-			{
-				character = new CharacterInstance(xml, mItems, this);
-			}
-			catch (final IllegalArgumentException e)
-			{
-				Log.e(TAG, "Could not create character from xml.");
-			}
-			if (character != null)
-			{
-				mChars.addChar(character);
-			}
-		}
-		else if (aRequestCode == PlayActivity.PLAY_CHAR_REQUEST && aResultCode == RESULT_OK)
-		{
-			final String xml = aData.getStringExtra(PlayActivity.CHARACTER);
-			CharacterInstance character = null;
-			try
-			{
-				character = new CharacterInstance(xml, mItems, this);
-			}
-			catch (final IllegalArgumentException e)
-			{
-				Log.e(TAG, "Could not create character from xml.");
-			}
-			if (character != null)
-			{
-				mChars.updateChar(character);
-			}
-		}
-		else if (aRequestCode == HostActivity.PLAY_HOST_REQUEST && aRequestCode == RESULT_OK)
-		{
-			final String xml = aData.getStringExtra(HostActivity.HOST);
-			final Host host = new Host(xml, mItems);
-			mHosts.updateHost(host);
-		}
-		else
-		{
-			System.out.println("Unknown request code: " + aRequestCode + " " + aResultCode);
-		}
-	}
-	
-	private void createChar(final boolean aFree)
-	{
-		final Intent intent = new Intent(this, CreateCharActivity.class);
-		intent.putExtra(CreateCharActivity.CHAR_NAMES, mChars.getCharNames());
-		intent.putExtra(CreateCharActivity.FREE_CREATION, aFree);
-		startActivityForResult(intent, CreateCharActivity.CREATE_CHAR_REQUEST);
-	}
-	
-	@Override
-	public void onBackPressed()
-	{
-		finish();
-	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(final Menu menu)
-	{
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		if ( !mConnection.hasBluetooth())
-		{
-			menu.findItem(R.id.bluetooth).setEnabled(false).setChecked(false);
-			menu.findItem(R.id.network).setChecked(true);
-		}
-		return true;
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(final MenuItem item)
-	{
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		final int id = item.getItemId();
-		switch (id)
-		{
-			case R.id.delete_chars :
-				mChars.deleteChars();
-				return true;
-			case R.id.bluetooth :
-				setBluetooth(true);
-				return true;
-			case R.id.network :
-				setBluetooth(false);
-				return true;
-		}
-		
-		return super.onOptionsItemSelected(item);
-	}
-	
-	private void setBluetooth(final boolean aBluetooth)
-	{
-		mConnection.setBluetooth(aBluetooth);
-		mOptionsMenu.findItem(R.id.bluetooth).setChecked(mConnection.isBluetooth());
-		mOptionsMenu.findItem(R.id.network).setChecked( !mConnection.isBluetooth());
-	}
-	
-	@Override
-	protected void onResume()
-	{
-		if (mConnection != null)
-		{
-			mConnection.checkConnection();
-		}
-		super.onResume();
-	}
-	
-	@Override
-	public boolean onPrepareOptionsMenu(final Menu aMenu)
-	{
-		mOptionsMenu = aMenu;
-		return super.onPrepareOptionsMenu(aMenu);
-	}
-	
-	@Override
-	public void connectionEnabled(final boolean aEnabled)
-	{
-		if (mChars != null)
-		{
-			for (final CharacterCompound charCompound : mChars.getCharacterCompoundsList())
-			{
-				charCompound.getPlayButton().setEnabled(aEnabled);
-			}
-			mHosts.setHostsEnabled(aEnabled);
-		}
-	}
-	
-	private class SectionsPagerAdapter extends FragmentPagerAdapter
-	{
-		private SectionsPagerAdapter(final FragmentManager aManager)
-		{
-			super(aManager);
-		}
-		
-		@Override
-		public Fragment getItem(final int position)
-		{
-			return newFragmentInstance(position + 1);
-		}
-		
-		@Override
-		public int getCount()
-		{
-			return 3;
-		}
-		
-		@Override
-		public CharSequence getPageTitle(final int position)
-		{
-			final Locale l = Locale.getDefault();
-			switch (position)
-			{
-				case 0 :
-					return getString(R.string.friends).toUpperCase(l);
-				case 1 :
-					return getString(R.string.characters).toUpperCase(l);
-				case 2 :
-					return getString(R.string.hosts).toUpperCase(l);
-			}
-			return null;
-		}
-	}
-	
 	private PlaceholderFragment newFragmentInstance(final int sectionNumber)
 	{
 		final PlaceholderFragment fragment = new PlaceholderFragment();
@@ -320,30 +340,10 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 		return fragment;
 	}
 	
-	private class PlaceholderFragment extends Fragment
+	private void setBluetooth(final boolean aBluetooth)
 	{
-		private PlaceholderFragment()
-		{}
-		
-		@Override
-		public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
-		{
-			ViewGroup rootView = null;
-			switch (getArguments().getInt(ARG_SECTION_NUMBER))
-			{
-				case 1 :
-					rootView = (ViewGroup) inflater.inflate(R.layout.friends_fragment, container, false);
-					break;
-				case 2 :
-					rootView = (ViewGroup) inflater.inflate(R.layout.characters_fragment, container, false);
-					initChars(rootView);
-					break;
-				case 3 :
-					rootView = (ViewGroup) inflater.inflate(R.layout.hosts_fragment, container, false);
-					initHosts(rootView);
-					break;
-			}
-			return rootView;
-		}
+		mConnection.setBluetooth(aBluetooth);
+		mOptionsMenu.findItem(R.id.bluetooth).setChecked(mConnection.isBluetooth());
+		mOptionsMenu.findItem(R.id.network).setChecked( !mConnection.isBluetooth());
 	}
 }

@@ -36,6 +36,15 @@ public class HostActivity extends Activity implements ItemConsumer
 	private ItemProvider		mItems;
 	
 	@Override
+	public void consumeItems(final ItemProvider aItems)
+	{
+		mItems = aItems;
+		mHost = new Host(getIntent().getStringExtra(HOST), mItems);
+		
+		init();
+	}
+	
+	@Override
 	protected void onCreate(final Bundle aSavedInstanceState)
 	{
 		super.onCreate(aSavedInstanceState);
@@ -43,13 +52,12 @@ public class HostActivity extends Activity implements ItemConsumer
 		ConnectionUtil.loadItems(this, this);
 	}
 	
-	@Override
-	public void consumeItems(final ItemProvider aItems)
+	private void exit()
 	{
-		mItems = aItems;
-		mHost = new Host(getIntent().getStringExtra(HOST), mItems);
-		
-		init();
+		final Intent intent = new Intent();
+		intent.putExtra(HOST, mHost.serialize());
+		setResult(RESULT_OK, intent);
+		finish();
 	}
 	
 	private void init()
@@ -68,13 +76,5 @@ public class HostActivity extends Activity implements ItemConsumer
 				exit();
 			}
 		});
-	}
-	
-	private void exit()
-	{
-		final Intent intent = new Intent();
-		intent.putExtra(HOST, mHost.serialize());
-		setResult(RESULT_OK, intent);
-		finish();
 	}
 }

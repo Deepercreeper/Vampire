@@ -41,6 +41,11 @@ import com.deepercreeper.vampireapp.util.view.CreateStringDialog.CreationListene
  */
 public class CreateCharActivity extends Activity implements CharCreationListener, ItemConsumer
 {
+	private enum State
+	{
+		GENERAL, FREE_POINTS, DESCRIPTIONS
+	}
+	
 	/**
 	 * The extra key for a list of already used character names, so the new name is not already in use.
 	 */
@@ -61,11 +66,6 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 	 */
 	public static final int		CREATE_CHAR_REQUEST	= 1;
 	
-	private enum State
-	{
-		GENERAL, FREE_POINTS, DESCRIPTIONS
-	}
-	
 	private String[]			mCharNames;
 	
 	private boolean				mFreeCreation;
@@ -77,44 +77,11 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 	private CharacterCreation	mChar;
 	
 	@Override
-	protected void onCreate(final Bundle aSavedInstanceState)
-	{
-		super.onCreate(aSavedInstanceState);
-		
-		ConnectionUtil.loadItems(this, this);
-	}
-	
-	@Override
 	public void consumeItems(final ItemProvider aItems)
 	{
 		mItems = aItems;
 		
 		init();
-	}
-	
-	private void init()
-	{
-		mCharNames = getIntent().getStringArrayExtra(CHAR_NAMES);
-		mFreeCreation = getIntent().getBooleanExtra(FREE_CREATION, false);
-		
-		setState(State.GENERAL);
-	}
-	
-	private void setState(final State aState)
-	{
-		mState = aState;
-		switch (mState)
-		{
-			case GENERAL :
-				initGeneral();
-				break;
-			case FREE_POINTS :
-				initFreePoints();
-				break;
-			case DESCRIPTIONS :
-				initDescriptions();
-				break;
-		}
 	}
 	
 	@Override
@@ -140,6 +107,223 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 				}
 				break;
 		}
+	}
+	
+	@Override
+	public void setFreePoints(final int aValue)
+	{
+		if (mState == State.FREE_POINTS)
+		{
+			((TextView) findViewById(R.id.free_points_text)).setText("" + aValue);
+			((ProgressBar) findViewById(R.id.free_points_bar)).setProgress(aValue);
+			((Button) findViewById(R.id.next_to_3_button)).setEnabled(aValue == 0);
+		}
+	}
+	
+	@Override
+	public void setInsanitiesOk(final boolean aOk)
+	{
+		if (mState == State.DESCRIPTIONS)
+		{
+			findViewById(R.id.next_to_4_button).setEnabled(aOk);
+		}
+	}
+	
+	@Override
+	protected void onCreate(final Bundle aSavedInstanceState)
+	{
+		super.onCreate(aSavedInstanceState);
+		
+		ConnectionUtil.loadItems(this, this);
+	}
+	
+	private void init()
+	{
+		mCharNames = getIntent().getStringArrayExtra(CHAR_NAMES);
+		mFreeCreation = getIntent().getBooleanExtra(FREE_CREATION, false);
+		
+		setState(State.GENERAL);
+	}
+	
+	private void initDescriptions()
+	{
+		setContentView(R.layout.create_char_descriptions);
+		
+		mChar.releaseViews();
+		
+		mChar.setCreationMode(CreationMode.DESCRIPTIONS);
+		
+		final LinearLayout descriptionsPanel = (LinearLayout) findViewById(R.id.description_values_panel);
+		final TableLayout insanitiesTable = (TableLayout) findViewById(R.id.insanities_panel);
+		final Button addInsanity = (Button) findViewById(R.id.add_insanity_button);
+		final Button backButton = (Button) findViewById(R.id.back_to_2_button);
+		final Button nextButton = (Button) findViewById(R.id.next_to_4_button);
+		
+		backButton.requestFocus();
+		
+		setInsanitiesOk(mChar.insanitiesOk());
+		
+		for (final ItemCreation item : mChar.getDescriptionValues())
+		{
+			final EditText description = new EditText(this);
+			description.setLayoutParams(ViewUtil.getRowTextSize(this));
+			description.setHint(item.getItem().getDisplayName());
+			description.setEms(10);
+			description.setSingleLine();
+			description.addTextChangedListener(new TextWatcher()
+			{
+				
+				@Override
+				public void afterTextChanged(final Editable aS)
+				{
+					item.setDescription(description.getText().toString());
+				}
+				
+				@Override
+				public void beforeTextChanged(final CharSequence aS, final int aStart, final int aCount, final int aAfter)
+				{
+					// Do nothing
+				}
+				
+				@Override
+				public void onTextChanged(final CharSequence aS, final int aStart, final int aBefore, final int aCount)
+				{
+					// Do nothing
+				}
+			});
+			descriptionsPanel.addView(description);
+		}
+		
+		for (final DescriptionCreation description : mChar.getDescriptions().getValuesList())
+		{
+			final EditText value = new EditText(this);
+			value.setLayoutParams(ViewUtil.getWrapHeight());
+			value.setHint(description.getDisplayName());
+			value.setEms(10);
+			value.setSingleLine();
+			value.addTextChangedListener(new TextWatcher()
+			{
+				
+				@Override
+				public void afterTextChanged(final Editable aS)
+				{
+					description.setValue(value.getText().toString());
+				}
+				
+				@Override
+				public void beforeTextChanged(final CharSequence aS, final int aStart, final int aCount, final int aAfter)
+				{
+					// Do nothing
+				}
+				
+				@Override
+				public void onTextChanged(final CharSequence aS, final int aStart, final int aBefore, final int aCount)
+				{
+					// Do nothing
+				}
+			});
+			descriptionsPanel.addView(value);
+		}
+		
+		mChar.initInsanities(insanitiesTable);
+		
+		addInsanity.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				final CreationListener listener = new CreationListener()
+				{
+					@Override
+					public void create(final String aString)
+					{
+						mChar.addInsanity(aString);
+					}
+				};
+				CreateStringDialog.showCreateStringDialog(getString(R.string.add_insanity), getString(R.string.add_insanity_message),
+						CreateCharActivity.this, listener);
+			}
+		});
+		
+		backButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				mChar.clearDescriptions();
+				mChar.releaseInsanities();
+				onBackPressed();
+			}
+		});
+		
+		nextButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				final CharacterInstance character = new CharacterInstance(mChar);
+				final Intent intent = new Intent();
+				intent.putExtra(CHARACTER, character.serialize());
+				setResult(RESULT_OK, intent);
+				finish();
+			}
+		});
+	}
+	
+	private void initFreePoints()
+	{
+		setContentView(R.layout.create_char_free_points);
+		
+		mChar.releaseViews();
+		
+		mChar.setCreationMode(CreationMode.POINTS);
+		
+		setFreePoints(mChar.getFreePoints());
+		
+		final ProgressBar pointsBar = (ProgressBar) findViewById(R.id.free_points_bar);
+		final LinearLayout controllersPanel = (LinearLayout) findViewById(R.id.controllers_2_panel);
+		final Button resetTempPoints = (Button) findViewById(R.id.reset_temp_points_button);
+		final Button backButton = (Button) findViewById(R.id.back_to_1_button);
+		final Button nextButton = (Button) findViewById(R.id.next_to_3_button);
+		
+		backButton.requestFocus();
+		
+		pointsBar.setMax(CharacterCreation.START_FREE_POINTS);
+		
+		for (final ItemControllerCreation controller : mChar.getControllers())
+		{
+			controller.init();
+			controllersPanel.addView(controller.getContainer());
+			controller.close();
+			controller.updateGroups();
+		}
+		
+		resetTempPoints.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				mChar.resetFreePoints();
+			}
+		});
+		
+		backButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				onBackPressed();
+			}
+		});
+		
+		nextButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				setState(State.DESCRIPTIONS);
+			}
+		});
 	}
 	
 	private void initGeneral()
@@ -317,207 +501,6 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 		});
 	}
 	
-	private void initFreePoints()
-	{
-		setContentView(R.layout.create_char_free_points);
-		
-		mChar.releaseViews();
-		
-		mChar.setCreationMode(CreationMode.POINTS);
-		
-		setFreePoints(mChar.getFreePoints());
-		
-		final ProgressBar pointsBar = (ProgressBar) findViewById(R.id.free_points_bar);
-		final LinearLayout controllersPanel = (LinearLayout) findViewById(R.id.controllers_2_panel);
-		final Button resetTempPoints = (Button) findViewById(R.id.reset_temp_points_button);
-		final Button backButton = (Button) findViewById(R.id.back_to_1_button);
-		final Button nextButton = (Button) findViewById(R.id.next_to_3_button);
-		
-		backButton.requestFocus();
-		
-		pointsBar.setMax(CharacterCreation.START_FREE_POINTS);
-		
-		for (final ItemControllerCreation controller : mChar.getControllers())
-		{
-			controller.init();
-			controllersPanel.addView(controller.getContainer());
-			controller.close();
-			controller.updateGroups();
-		}
-		
-		resetTempPoints.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(final View aV)
-			{
-				mChar.resetFreePoints();
-			}
-		});
-		
-		backButton.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(final View aV)
-			{
-				onBackPressed();
-			}
-		});
-		
-		nextButton.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(final View aV)
-			{
-				setState(State.DESCRIPTIONS);
-			}
-		});
-	}
-	
-	private void initDescriptions()
-	{
-		setContentView(R.layout.create_char_descriptions);
-		
-		mChar.releaseViews();
-		
-		mChar.setCreationMode(CreationMode.DESCRIPTIONS);
-		
-		final LinearLayout descriptionsPanel = (LinearLayout) findViewById(R.id.description_values_panel);
-		final TableLayout insanitiesTable = (TableLayout) findViewById(R.id.insanities_panel);
-		final Button addInsanity = (Button) findViewById(R.id.add_insanity_button);
-		final Button backButton = (Button) findViewById(R.id.back_to_2_button);
-		final Button nextButton = (Button) findViewById(R.id.next_to_4_button);
-		
-		backButton.requestFocus();
-		
-		setInsanitiesOk(mChar.insanitiesOk());
-		
-		for (final ItemCreation item : mChar.getDescriptionValues())
-		{
-			final EditText description = new EditText(this);
-			description.setLayoutParams(ViewUtil.getRowTextSize(this));
-			description.setHint(item.getItem().getDisplayName());
-			description.setEms(10);
-			description.setSingleLine();
-			description.addTextChangedListener(new TextWatcher()
-			{
-				
-				@Override
-				public void afterTextChanged(final Editable aS)
-				{
-					item.setDescription(description.getText().toString());
-				}
-				
-				@Override
-				public void beforeTextChanged(final CharSequence aS, final int aStart, final int aCount, final int aAfter)
-				{
-					// Do nothing
-				}
-				
-				@Override
-				public void onTextChanged(final CharSequence aS, final int aStart, final int aBefore, final int aCount)
-				{
-					// Do nothing
-				}
-			});
-			descriptionsPanel.addView(description);
-		}
-		
-		for (final DescriptionCreation description : mChar.getDescriptions().getValuesList())
-		{
-			final EditText value = new EditText(this);
-			value.setLayoutParams(ViewUtil.getWrapHeight());
-			value.setHint(description.getDisplayName());
-			value.setEms(10);
-			value.setSingleLine();
-			value.addTextChangedListener(new TextWatcher()
-			{
-				
-				@Override
-				public void afterTextChanged(final Editable aS)
-				{
-					description.setValue(value.getText().toString());
-				}
-				
-				@Override
-				public void beforeTextChanged(final CharSequence aS, final int aStart, final int aCount, final int aAfter)
-				{
-					// Do nothing
-				}
-				
-				@Override
-				public void onTextChanged(final CharSequence aS, final int aStart, final int aBefore, final int aCount)
-				{
-					// Do nothing
-				}
-			});
-			descriptionsPanel.addView(value);
-		}
-		
-		mChar.initInsanities(insanitiesTable);
-		
-		addInsanity.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(final View aV)
-			{
-				final CreationListener listener = new CreationListener()
-				{
-					@Override
-					public void create(final String aString)
-					{
-						mChar.addInsanity(aString);
-					}
-				};
-				CreateStringDialog.showCreateStringDialog(getString(R.string.add_insanity), getString(R.string.add_insanity_message),
-						CreateCharActivity.this, listener);
-			}
-		});
-		
-		backButton.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(final View aV)
-			{
-				mChar.clearDescriptions();
-				mChar.releaseInsanities();
-				onBackPressed();
-			}
-		});
-		
-		nextButton.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(final View aV)
-			{
-				final CharacterInstance character = new CharacterInstance(mChar);
-				final Intent intent = new Intent();
-				intent.putExtra(CHARACTER, character.serialize());
-				setResult(RESULT_OK, intent);
-				finish();
-			}
-		});
-	}
-	
-	@Override
-	public void setFreePoints(final int aValue)
-	{
-		if (mState == State.FREE_POINTS)
-		{
-			((TextView) findViewById(R.id.free_points_text)).setText("" + aValue);
-			((ProgressBar) findViewById(R.id.free_points_bar)).setProgress(aValue);
-			((Button) findViewById(R.id.next_to_3_button)).setEnabled(aValue == 0);
-		}
-	}
-	
-	@Override
-	public void setInsanitiesOk(final boolean aOk)
-	{
-		if (mState == State.DESCRIPTIONS)
-		{
-			findViewById(R.id.next_to_4_button).setEnabled(aOk);
-		}
-	}
-	
 	private boolean isConceptOk(final String aConcept)
 	{
 		if (aConcept == null || aConcept.trim().isEmpty())
@@ -541,5 +524,22 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 			}
 		}
 		return true;
+	}
+	
+	private void setState(final State aState)
+	{
+		mState = aState;
+		switch (mState)
+		{
+			case GENERAL :
+				initGeneral();
+				break;
+			case FREE_POINTS :
+				initFreePoints();
+				break;
+			case DESCRIPTIONS :
+				initDescriptions();
+				break;
+		}
 	}
 }

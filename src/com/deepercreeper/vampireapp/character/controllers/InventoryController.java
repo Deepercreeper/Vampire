@@ -54,22 +54,6 @@ public class InventoryController implements Saveable, ItemValueListener
 	
 	private boolean						mInitialized	= false;
 	
-	public InventoryController(final Inventory aInventory, final ItemFinder aItems, final Context aContext)
-	{
-		mInventory = aInventory;
-		mItems = aItems;
-		mContext = aContext;
-		
-		mMaxWeightItem = mItems.findItem(mInventory.getMaxWeightItem());
-		mMaxWeightItem.addValueListener(this);
-		
-		updateMaxWeight();
-		
-		mContainer = (LinearLayout) View.inflate(mContext, R.layout.inventory, null);
-		
-		init();
-	}
-	
 	public InventoryController(final Element aElement, final Inventory aInventory, final ItemFinder aItems, final Context aContext)
 	{
 		mInventory = aInventory;
@@ -102,25 +86,72 @@ public class InventoryController implements Saveable, ItemValueListener
 		}
 	}
 	
+	public InventoryController(final Inventory aInventory, final ItemFinder aItems, final Context aContext)
+	{
+		mInventory = aInventory;
+		mItems = aItems;
+		mContext = aContext;
+		
+		mMaxWeightItem = mItems.findItem(mInventory.getMaxWeightItem());
+		mMaxWeightItem.addValueListener(this);
+		
+		updateMaxWeight();
+		
+		mContainer = (LinearLayout) View.inflate(mContext, R.layout.inventory, null);
+		
+		init();
+	}
+	
+	public void addItem(final InventoryItem aItem)
+	{
+		if ( !canAddItem(aItem))
+		{
+			Log.w(TAG, "Tried to add an item that weights too much.");
+		}
+		mItemsList.add(aItem);
+		mWeight += aItem.getWeight();
+		setWeight();
+		aItem.init();
+		mInventoryContainer.addView(aItem.getContainer());
+		resize();
+	}
+	
+	@Override
+	public Element asElement(final Document aDoc)
+	{
+		final Element element = aDoc.createElement("inventory");
+		for (final InventoryItem item : mItemsList)
+		{
+			element.appendChild(item.asElement(aDoc));
+		}
+		return element;
+	}
+	
+	public boolean canAddItem(final InventoryItem aItem)
+	{
+		return getWeight() + aItem.getWeight() <= getMaxWeight();
+	}
+	
+	public void close()
+	{
+		mOpen = false;
+		mInventoryButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
+		resize();
+	}
+	
 	public LinearLayout getContainer()
 	{
 		return mContainer;
 	}
 	
-	public void release()
+	public int getMaxWeight()
 	{
-		ViewUtil.release(getContainer());
-		for (final InventoryItem item : mItemsList)
-		{
-			item.release();
-		}
+		return mMaxWeight;
 	}
 	
-	@Override
-	public void valueChanged()
+	public int getWeight()
 	{
-		updateMaxWeight();
-		setWeight();
+		return mWeight;
 	}
 	
 	public void init()
@@ -161,30 +192,21 @@ public class InventoryController implements Saveable, ItemValueListener
 		close();
 	}
 	
-	private void setWeight()
+	public void release()
 	{
-		mWeightLabel.setText(mContext.getString(R.string.weight) + ": " + mWeight + " " + mContext.getString(R.string.weight_unit));
-		mMaxWeightLabel.setText(mContext.getString(R.string.max_weight) + ": " + mMaxWeight + " " + mContext.getString(R.string.weight_unit));
+		ViewUtil.release(getContainer());
+		for (final InventoryItem item : mItemsList)
+		{
+			item.release();
+		}
 	}
 	
-	public void toggleOpen()
+	public void removeItem(final InventoryItem aItem)
 	{
-		mOpen = !mOpen;
-		if (mOpen)
-		{
-			mInventoryButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
-		}
-		else
-		{
-			mInventoryButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
-		}
-		resize();
-	}
-	
-	public void close()
-	{
-		mOpen = false;
-		mInventoryButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
+		mItemsList.remove(aItem);
+		mWeight -= aItem.getWeight();
+		setWeight();
+		aItem.release();
 		resize();
 	}
 	
@@ -205,63 +227,41 @@ public class InventoryController implements Saveable, ItemValueListener
 		}
 	}
 	
-	public void updateMaxWeight()
-	{
-		mMaxWeight = mInventory.getMaxWeightOf(mMaxWeightItem.getValue());
-	}
-	
 	public void setMaxWeight(final int aMaxWeight)
 	{
 		mMaxWeight = aMaxWeight;
 		setWeight();
 	}
 	
-	public int getMaxWeight()
+	public void toggleOpen()
 	{
-		return mMaxWeight;
-	}
-	
-	public boolean canAddItem(final InventoryItem aItem)
-	{
-		return getWeight() + aItem.getWeight() <= getMaxWeight();
-	}
-	
-	public void addItem(final InventoryItem aItem)
-	{
-		if ( !canAddItem(aItem))
+		mOpen = !mOpen;
+		if (mOpen)
 		{
-			Log.w(TAG, "Tried to add an item that weights too much.");
+			mInventoryButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
 		}
-		mItemsList.add(aItem);
-		mWeight += aItem.getWeight();
-		setWeight();
-		aItem.init();
-		mInventoryContainer.addView(aItem.getContainer());
+		else
+		{
+			mInventoryButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
+		}
 		resize();
 	}
 	
-	public void removeItem(final InventoryItem aItem)
+	public void updateMaxWeight()
 	{
-		mItemsList.remove(aItem);
-		mWeight -= aItem.getWeight();
-		setWeight();
-		aItem.release();
-		resize();
-	}
-	
-	public int getWeight()
-	{
-		return mWeight;
+		mMaxWeight = mInventory.getMaxWeightOf(mMaxWeightItem.getValue());
 	}
 	
 	@Override
-	public Element asElement(final Document aDoc)
+	public void valueChanged()
 	{
-		final Element element = aDoc.createElement("inventory");
-		for (final InventoryItem item : mItemsList)
-		{
-			element.appendChild(item.asElement(aDoc));
-		}
-		return element;
+		updateMaxWeight();
+		setWeight();
+	}
+	
+	private void setWeight()
+	{
+		mWeightLabel.setText(mContext.getString(R.string.weight) + ": " + mWeight + " " + mContext.getString(R.string.weight_unit));
+		mMaxWeightLabel.setText(mContext.getString(R.string.max_weight) + ": " + mMaxWeight + " " + mContext.getString(R.string.weight_unit));
 	}
 }
