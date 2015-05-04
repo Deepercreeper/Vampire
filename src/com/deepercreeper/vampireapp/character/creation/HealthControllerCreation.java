@@ -15,6 +15,12 @@ import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.Viewable;
 
+/**
+ * This controller controls the health system of a character in creation mode.<br>
+ * It provides adding, removing and changing health steps.
+ * 
+ * @author vrl
+ */
 public class HealthControllerCreation implements Viewable
 {
 	private class Step
@@ -116,6 +122,14 @@ public class HealthControllerCreation implements Viewable
 	
 	private boolean				mInitialized	= false;
 	
+	/**
+	 * Creates a new health controller creation.
+	 * 
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aItems
+	 *            The item provider.
+	 */
 	public HealthControllerCreation(final Context aContext, final ItemProvider aItems)
 	{
 		mContext = aContext;
@@ -138,11 +152,17 @@ public class HealthControllerCreation implements Viewable
 		return mContainer;
 	}
 	
+	/**
+	 * @return the name of the item, which is decreased, when the character tries to heal a health step.
+	 */
 	public String getCost()
 	{
 		return mCost;
 	}
 	
+	/**
+	 * @return an array of health steps. each step describes, how many negative points the state contains.
+	 */
 	public int[] getSteps()
 	{
 		final int[] steps = new int[mSteps.size()];

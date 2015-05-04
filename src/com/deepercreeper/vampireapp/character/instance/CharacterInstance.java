@@ -29,6 +29,11 @@ import com.deepercreeper.vampireapp.util.CodingUtil;
 import com.deepercreeper.vampireapp.util.FilesUtil;
 import com.deepercreeper.vampireapp.util.Log;
 
+/**
+ * This represents an existing character that can be played, saved and loaded.
+ * 
+ * @author vrl
+ */
 public class CharacterInstance implements ItemFinder
 {
 	private static final String					TAG				= "CharacterInstance";
@@ -69,6 +74,12 @@ public class CharacterInstance implements ItemFinder
 	
 	private Mode								mMode;
 	
+	/**
+	 * Creates a new character out of the given character creation.
+	 * 
+	 * @param aCreator
+	 *            The character creation.
+	 */
 	public CharacterInstance(final CharacterCreation aCreator)
 	{
 		mItems = aCreator.getItems();
@@ -103,6 +114,18 @@ public class CharacterInstance implements ItemFinder
 		Log.i(TAG, "Restrictions: " + getRestrictions());
 	}
 	
+	/**
+	 * Creates a new character out of the given XML data it was saved to.
+	 * 
+	 * @param aXML
+	 *            The XML data.
+	 * @param aItems
+	 *            The item provider.
+	 * @param aContext
+	 *            The underlying context.
+	 * @throws IllegalArgumentException
+	 *             if the XML document can't be parsed.
+	 */
 	public CharacterInstance(final String aXML, final ItemProvider aItems, final Context aContext) throws IllegalArgumentException
 	{
 		Log.i(TAG, "Starting to load character xml.");
@@ -180,6 +203,12 @@ public class CharacterInstance implements ItemFinder
 		Log.i(TAG, "Finished loading character.");
 	}
 	
+	/**
+	 * Adds a new restriction to this character.
+	 * 
+	 * @param aRestriction
+	 *            The new restriction.
+	 */
 	public void addRestriction(final InstanceRestriction aRestriction)
 	{
 		if (aRestriction.getType() == InstanceRestrictionType.ITEM_CHILD_EP_COST_MULTI_AT)
@@ -227,76 +256,121 @@ public class CharacterInstance implements ItemFinder
 		return null;
 	}
 	
+	/**
+	 * @return this characters behavior.
+	 */
 	public Nature getBehavior()
 	{
 		return mBehavior;
 	}
 	
+	/**
+	 * @return this characters clan.
+	 */
 	public Clan getClan()
 	{
 		return mClan;
 	}
 	
+	/**
+	 * @return this characters concept.
+	 */
 	public String getConcept()
 	{
 		return mConcept;
 	}
 	
+	/**
+	 * @return the underlying context.
+	 */
 	public Context getContext()
 	{
 		return mContext;
 	}
 	
+	/**
+	 * @return a list of all item controllers.
+	 */
 	public List<ItemControllerInstance> getControllers()
 	{
 		return mControllers;
 	}
 	
+	/**
+	 * @return the current amount of experience this character has.
+	 */
 	public int getEP()
 	{
 		return mEP.getExperience();
 	}
 	
+	/**
+	 * @return the experience controller of this character.
+	 */
 	public EPController getEPHandler()
 	{
 		return mEP;
 	}
 	
+	/**
+	 * @return The current character generation.
+	 */
 	public int getGeneration()
 	{
 		return mGeneration.getGeneration();
 	}
 	
+	/**
+	 * @return the characters health controller.
+	 */
 	public HealthControllerInstance getHealth()
 	{
 		return mHealth;
 	}
 	
+	/**
+	 * @return the characters inventory controller.
+	 */
 	public InventoryController getInventory()
 	{
 		return mInventory;
 	}
 	
+	/**
+	 * @return the characters money controller.
+	 */
 	public MoneyController getMoney()
 	{
 		return mMoney;
 	}
 	
+	/**
+	 * @return the character name.
+	 */
 	public String getName()
 	{
 		return mName;
 	}
 	
+	/**
+	 * @return the characters nature.
+	 */
 	public Nature getNature()
 	{
 		return mNature;
 	}
 	
+	/**
+	 * @return a list of all current character restrictions.
+	 */
 	public List<InstanceRestriction> getRestrictions()
 	{
 		return mRestrictions;
 	}
 	
+	/**
+	 * Initializes all subcomponents of this character.
+	 */
 	public void init()
 	{
 		mEP.init();
@@ -309,11 +383,17 @@ public class CharacterInstance implements ItemFinder
 		}
 	}
 	
+	/**
+	 * @return whether this character is a low level character.
+	 */
 	public boolean isLowLevel()
 	{
 		return mGeneration.isLowLevel();
 	}
 	
+	/**
+	 * Releases all subcomponents of this character.
+	 */
 	public void release()
 	{
 		mEP.release();
@@ -326,12 +406,21 @@ public class CharacterInstance implements ItemFinder
 		}
 	}
 	
+	/**
+	 * removes the given character restriction.
+	 * 
+	 * @param aRestriction
+	 *            The restriction to remove.
+	 */
 	public void removeRestriction(final InstanceRestriction aRestriction)
 	{
 		mRestrictions.remove(aRestriction);
 		mTimeListeners.remove(aRestriction);
 	}
 	
+	/**
+	 * @return a XML that contains all data of this character, so it can be recreated out of it.
+	 */
 	public String serialize()
 	{
 		final Document doc = FilesUtil.createDocument();
@@ -390,6 +479,12 @@ public class CharacterInstance implements ItemFinder
 		return FilesUtil.readDocument(doc);
 	}
 	
+	/**
+	 * Sets the characters current mode to the given one.
+	 * 
+	 * @param aMode
+	 *            The mode.
+	 */
 	public void setMode(final Mode aMode)
 	{
 		mMode = aMode;
@@ -399,6 +494,9 @@ public class CharacterInstance implements ItemFinder
 		}
 	}
 	
+	/**
+	 * Updates all item controllers.
+	 */
 	public void update()
 	{
 		for (final ItemControllerInstance controller : getControllers())

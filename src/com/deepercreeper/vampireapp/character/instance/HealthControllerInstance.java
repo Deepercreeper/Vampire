@@ -20,6 +20,12 @@ import com.deepercreeper.vampireapp.util.Saveable;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.Viewable;
 
+/**
+ * This controller is used to control the health of a character.<br>
+ * It handles the health display, hurting and healing the health.
+ * 
+ * @author vrl
+ */
 public class HealthControllerInstance implements TimeListener, Saveable, Viewable
 {
 	private static final String		TAG				= "HealthControllerInstance";
@@ -48,6 +54,16 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	
 	private int						mValue			= 0;
 	
+	/**
+	 * Creates a new health controller out of the given XML data.
+	 * 
+	 * @param aElement
+	 *            The XML data.
+	 * @param aContext
+	 *            the underlying context.
+	 * @param aItems
+	 *            The item finder.
+	 */
 	public HealthControllerInstance(final Element aElement, final Context aContext, final ItemFinder aItems)
 	{
 		mContext = aContext;
@@ -61,6 +77,16 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		init();
 	}
 	
+	/**
+	 * Creates a new health controller out of the given health controller creation.
+	 * 
+	 * @param aHealth
+	 *            The controller creation.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aItems
+	 *            The item finder.
+	 */
 	public HealthControllerInstance(final HealthControllerCreation aHealth, final Context aContext, final ItemFinder aItems)
 	{
 		mContext = aContext;
@@ -71,6 +97,9 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		init();
 	}
 	
+	/**
+	 * Adds a new step to the front of all health steps.
+	 */
 	public void addStep()
 	{
 		final int[] steps = new int[mSteps.length + 1];
@@ -94,11 +123,17 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		return element;
 	}
 	
+	/**
+	 * @return whether the character is able to do anything anymore.
+	 */
 	public boolean canAct()
 	{
 		return mSteps[mValue] != -1;
 	}
 	
+	/**
+	 * @return whether the character is able to heal himself.
+	 */
 	public boolean canHeal()
 	{
 		Log.i(TAG, "" + (mCost.getValue() > 0));
@@ -111,11 +146,15 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		mCanHeal = true;
 	}
 	
+	@Override
 	public RelativeLayout getContainer()
 	{
 		return mContainer;
 	}
 	
+	/**
+	 * @return the current health step and specifically its negative points.
+	 */
 	public int getStep()
 	{
 		if (mSteps[mValue] == -1)
@@ -125,6 +164,12 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		return mSteps[mValue];
 	}
 	
+	/**
+	 * Heals the character by the given amount of steps if possible.
+	 * 
+	 * @param aValue
+	 *            The number of steps to heal.
+	 */
 	public void heal(final int aValue)
 	{
 		if ( !canHeal())
@@ -142,6 +187,14 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	public void hour()
 	{}
 	
+	/**
+	 * Adds the given amount of damage to the characters health.
+	 * 
+	 * @param aValue
+	 *            The amount of health steps that are damaged.
+	 * @param aHeavy
+	 *            Whether the damage is heavy damage and can't be healed before a night has been gone.
+	 */
 	public void hurt(final int aValue, final boolean aHeavy)
 	{
 		mValue += aValue;
@@ -160,6 +213,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		}
 	}
 	
+	@Override
 	public void init()
 	{
 		if ( !mInitialized)
@@ -190,6 +244,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		updateValue();
 	}
 	
+	@Override
 	public void release()
 	{
 		ViewUtil.release(getContainer());
@@ -199,9 +254,13 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	public void round()
 	{}
 	
+	/**
+	 * Updates the displayed health value and the heal button.
+	 */
 	public void updateValue()
 	{
 		mValueBar.setProgress(mSteps.length - mValue - 1);
 		mStepLabel.setText("" + -getStep());
+		ViewUtil.setEnabled(mHealButton, canHeal());
 	}
 }

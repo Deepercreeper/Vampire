@@ -125,7 +125,7 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 		{
 			for (final CharacterCompound charCompound : mChars.getCharacterCompoundsList())
 			{
-				charCompound.getPlayButton().setEnabled(aEnabled);
+				charCompound.setPlayingEnabled(aEnabled);
 			}
 			mHosts.setHostsEnabled(aEnabled);
 		}

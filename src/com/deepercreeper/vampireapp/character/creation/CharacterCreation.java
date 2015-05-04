@@ -28,14 +28,29 @@ import com.deepercreeper.vampireapp.util.Log;
  */
 public class CharacterCreation
 {
+	/**
+	 * A listener for character creation changes.
+	 * 
+	 * @author vrl
+	 */
 	public interface CharCreationListener
 	{
+		/**
+		 * The free points of this creation have changed.
+		 * 
+		 * @param aValue
+		 *            The new number of free points.
+		 */
 		public void setFreePoints(int aValue);
 		
+		/**
+		 * Insanities have been added or removed so that the OK state of it may changed.
+		 * 
+		 * @param aOk
+		 *            Whether the insanities are OK now.
+		 */
 		public void setInsanitiesOk(boolean aOk);
 	}
-	
-	private static final String					TAG					= "CharacterCreation";
 	
 	/**
 	 * The default minimum generation that is set, when creating a character.
@@ -83,10 +98,16 @@ public class CharacterCreation
 	private final CharCreationListener			mListener;
 	
 	/**
-	 * Creates a new character creator and initializes all values for the first time.
+	 * Creates a new character creation.
 	 * 
 	 * @param aItems
-	 *            The vampire application.
+	 *            An item provider that is used to create item creations from each item type.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aListener
+	 *            A character creation listener, that is called at specific changes.
+	 * @param aMode
+	 *            The initial creation mode.
 	 */
 	public CharacterCreation(final ItemProvider aItems, final Context aContext, final CharCreationListener aListener, final CreationMode aMode)
 	{
@@ -149,6 +170,11 @@ public class CharacterCreation
 		mInsanities.clear();
 	}
 	
+	/**
+	 * @param aName
+	 *            The item name.
+	 * @return The item creation with the given name.
+	 */
 	public ItemCreation findItem(final String aName)
 	{
 		for (final ItemControllerCreation controller : mControllers)
@@ -185,16 +211,25 @@ public class CharacterCreation
 		return mConcept;
 	}
 	
+	/**
+	 * @return The underlying context.
+	 */
 	public Context getContext()
 	{
 		return mContext;
 	}
 	
+	/**
+	 * @return a list of item controller creations.
+	 */
 	public List<ItemControllerCreation> getControllers()
 	{
 		return mControllers;
 	}
 	
+	/**
+	 * @return the current creation mode.
+	 */
 	public CreationMode getCreationMode()
 	{
 		return mMode;
@@ -237,8 +272,12 @@ public class CharacterCreation
 		return mGeneration;
 	}
 	
+	/**
+	 * @return The current generation value.
+	 */
 	public int getGenerationValue()
 	{
+		// TODO Use this method to change the maximum number of blood points.
 		int generation = mGeneration.getGeneration();
 		final ItemCreation generationItem = findItem(mItems.getGenerationItem());
 		if (generationItem != null)
@@ -248,24 +287,33 @@ public class CharacterCreation
 		return generation;
 	}
 	
+	/**
+	 * @return the health controller.
+	 */
 	public HealthControllerCreation getHealth()
 	{
 		return mHealth;
 	}
 	
+	/**
+	 * @return the health steps of this character.
+	 */
 	public int[] getHealthSteps()
 	{
 		return mHealth.getSteps();
 	}
 	
 	/**
-	 * @return a list of all insanities.
+	 * @return the insanity controller.
 	 */
 	public InsanityControllerCreation getInsanities()
 	{
 		return mInsanities;
 	}
 	
+	/**
+	 * @return the item provider.
+	 */
 	public ItemProvider getItems()
 	{
 		return mItems;
@@ -287,6 +335,9 @@ public class CharacterCreation
 		return mNature;
 	}
 	
+	/**
+	 * @return all persistent non creation restrictions.
+	 */
 	public List<InstanceRestriction> getRestrictions()
 	{
 		final List<InstanceRestriction> restrictions = new ArrayList<InstanceRestriction>();

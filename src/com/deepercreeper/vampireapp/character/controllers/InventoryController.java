@@ -23,6 +23,12 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.ResizeHeightAnimation;
 import com.deepercreeper.vampireapp.util.view.Viewable;
 
+/**
+ * This controller is used to control the whole character inventory.<br>
+ * It contains weight management, an items list and their usability.
+ * 
+ * @author vrl
+ */
 public class InventoryController implements Saveable, ItemValueListener, Viewable
 {
 	private static final String			TAG				= "InventoryController";
@@ -55,6 +61,18 @@ public class InventoryController implements Saveable, ItemValueListener, Viewabl
 	
 	private boolean						mInitialized	= false;
 	
+	/**
+	 * Creates a new inventory controller from the given XML document.
+	 * 
+	 * @param aElement
+	 *            The XML data.
+	 * @param aInventory
+	 *            The default inventory settings.
+	 * @param aItems
+	 *            An item finder, that provides items by search name.
+	 * @param aContext
+	 *            The underlying context.
+	 */
 	public InventoryController(final Element aElement, final Inventory aInventory, final ItemFinder aItems, final Context aContext)
 	{
 		mInventory = aInventory;
@@ -87,6 +105,16 @@ public class InventoryController implements Saveable, ItemValueListener, Viewabl
 		}
 	}
 	
+	/**
+	 * Creates a new inventory controller.
+	 * 
+	 * @param aInventory
+	 *            The default inventory settings.
+	 * @param aItems
+	 *            An item finder, that provides all items by their name.
+	 * @param aContext
+	 *            The underlying context.
+	 */
 	public InventoryController(final Inventory aInventory, final ItemFinder aItems, final Context aContext)
 	{
 		mInventory = aInventory;
@@ -103,6 +131,12 @@ public class InventoryController implements Saveable, ItemValueListener, Viewabl
 		init();
 	}
 	
+	/**
+	 * Adds a new inventory item to this inventory, if possible.
+	 * 
+	 * @param aItem
+	 *            The item to add.
+	 */
 	public void addItem(final InventoryItem aItem)
 	{
 		if ( !canAddItem(aItem))
@@ -128,11 +162,20 @@ public class InventoryController implements Saveable, ItemValueListener, Viewabl
 		return element;
 	}
 	
+	/**
+	 * @param aItem
+	 *            The item to add.
+	 * @return whether the given item can be added to this inventory.<br>
+	 *         Referring to the weight properties.
+	 */
 	public boolean canAddItem(final InventoryItem aItem)
 	{
 		return getWeight() + aItem.getWeight() <= getMaxWeight();
 	}
 	
+	/**
+	 * Closes the inventory view.
+	 */
 	public void close()
 	{
 		mOpen = false;
@@ -146,11 +189,17 @@ public class InventoryController implements Saveable, ItemValueListener, Viewabl
 		return mContainer;
 	}
 	
+	/**
+	 * @return the current maximum weight that can be ported.
+	 */
 	public int getMaxWeight()
 	{
 		return mMaxWeight;
 	}
 	
+	/**
+	 * @return the current weight of items that is ported inside this inventory.
+	 */
 	public int getWeight()
 	{
 		return mWeight;
@@ -205,6 +254,12 @@ public class InventoryController implements Saveable, ItemValueListener, Viewabl
 		}
 	}
 	
+	/**
+	 * Removes the given item from this inventory.
+	 * 
+	 * @param aItem
+	 *            The item to remove.
+	 */
 	public void removeItem(final InventoryItem aItem)
 	{
 		mItemsList.remove(aItem);
@@ -214,6 +269,9 @@ public class InventoryController implements Saveable, ItemValueListener, Viewabl
 		resize();
 	}
 	
+	/**
+	 * Resizes the inventory display if necessary.
+	 */
 	public void resize()
 	{
 		if (mInventoryContainer.getAnimation() != null && !mInventoryContainer.getAnimation().hasEnded())
@@ -231,12 +289,21 @@ public class InventoryController implements Saveable, ItemValueListener, Viewabl
 		}
 	}
 	
+	/**
+	 * Sets the new maximum weight that can be ported.
+	 * 
+	 * @param aMaxWeight
+	 *            The new maximum weight.
+	 */
 	public void setMaxWeight(final int aMaxWeight)
 	{
 		mMaxWeight = aMaxWeight;
 		setWeight();
 	}
 	
+	/**
+	 * Opens or closes the inventory display.
+	 */
 	public void toggleOpen()
 	{
 		mOpen = !mOpen;
@@ -251,6 +318,9 @@ public class InventoryController implements Saveable, ItemValueListener, Viewabl
 		resize();
 	}
 	
+	/**
+	 * Recalculates the maximum weight out of the weight defining item of the character.
+	 */
 	public void updateMaxWeight()
 	{
 		mMaxWeight = mInventory.getMaxWeightOf(mMaxWeightItem.getValue());

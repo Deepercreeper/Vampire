@@ -16,6 +16,12 @@ import com.deepercreeper.vampireapp.util.Saveable;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.Viewable;
 
+/**
+ * This controller is used to control the money and warranty of the character.<br>
+ * It displays the current wealth and allows to add or subtract money.
+ * 
+ * @author vrl
+ */
 public class MoneyController implements Saveable, Viewable
 {
 	private static final String			TAG				= "MoneyController";
@@ -32,6 +38,14 @@ public class MoneyController implements Saveable, Viewable
 	
 	private boolean						mInitialized	= false;
 	
+	/**
+	 * Creates a new money controller.
+	 * 
+	 * @param aMoney
+	 *            the default money settings.
+	 * @param aContext
+	 *            The underlying context.
+	 */
 	public MoneyController(final Money aMoney, final Context aContext)
 	{
 		mMoney = aMoney;
@@ -44,6 +58,16 @@ public class MoneyController implements Saveable, Viewable
 		init();
 	}
 	
+	/**
+	 * Creates a new money controller out of the given XML data.
+	 * 
+	 * @param aMoney
+	 *            The default money settings.
+	 * @param aElement
+	 *            The XML document.
+	 * @param aContext
+	 *            The underlying context.
+	 */
 	public MoneyController(final Money aMoney, final Element aElement, final Context aContext)
 	{
 		mMoney = aMoney;
@@ -57,6 +81,14 @@ public class MoneyController implements Saveable, Viewable
 		init();
 	}
 	
+	/**
+	 * Adds the given amount of the given type of money to the pocket.
+	 * 
+	 * @param aCurrency
+	 *            The type of money that is added.
+	 * @param aValue
+	 *            The amount of money.
+	 */
 	public void add(final String aCurrency, final int aValue)
 	{
 		mValues.put(aCurrency, getValue(aCurrency) + aValue);
@@ -76,11 +108,19 @@ public class MoneyController implements Saveable, Viewable
 		return mContainer;
 	}
 	
+	/**
+	 * @return a display string that tells how much money is inside the characters pocket.
+	 */
 	public String getMoney()
 	{
 		return serializeValues(true, " ");
 	}
 	
+	/**
+	 * @param aCurrency
+	 *            The money type.
+	 * @return The current value of the given type of money, the character has.
+	 */
 	public int getValue(final String aCurrency)
 	{
 		return mValues.get(aCurrency);
@@ -107,6 +147,14 @@ public class MoneyController implements Saveable, Viewable
 		ViewUtil.release(getContainer());
 	}
 	
+	/**
+	 * Removes the given amount of the given warranty from the pocket.
+	 * 
+	 * @param aCurrency
+	 *            The type of money that is removed.
+	 * @param aValue
+	 *            The amount of money that is removed.
+	 */
 	public void remove(final String aCurrency, final int aValue)
 	{
 		if (getValue(aCurrency) < aValue)
@@ -117,6 +165,9 @@ public class MoneyController implements Saveable, Viewable
 		mValues.put(aCurrency, getValue(aCurrency) - aValue);
 	}
 	
+	/**
+	 * Displays the current amount of money again.
+	 */
 	public void updateValue()
 	{
 		mMoneyDisplay.setText("" + getMoney());

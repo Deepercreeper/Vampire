@@ -72,7 +72,7 @@ public class CharController implements CharacterListener
 		saveChar(aCharacter);
 		
 		final CharacterCompound charCompound = new CharacterCompound(aCharacter, this, mContext);
-		charCompound.getPlayButton().setEnabled(mConnection.isActive());
+		charCompound.setPlayingEnabled(mConnection.isActive());
 		mCharacterCompoundsList.add(charCompound);
 		mCharacterCompounds.put(charCompound.getName(), charCompound);
 		sortChars();

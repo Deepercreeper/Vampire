@@ -53,6 +53,13 @@ public enum CreationMode
 		}
 	}
 	
+	/**
+	 * @param aItem
+	 *            The parent item.
+	 * @param aRestrictions
+	 *            The current existing restrictions of the parent item.
+	 * @return whether a child can be added to the given item, depending on the current restrictions.
+	 */
 	public boolean canAddChild(final ItemCreation aItem, final boolean aRestrictions)
 	{
 		if ( !aItem.isParent())
@@ -88,6 +95,11 @@ public enum CreationMode
 		return false;
 	}
 	
+	/**
+	 * @param aGroup
+	 *            The item group.
+	 * @return whether an item can be added to the given group.
+	 */
 	public boolean canAddItem(final ItemGroupCreation aGroup)
 	{
 		if ( !aGroup.isMutable())
@@ -105,6 +117,15 @@ public enum CreationMode
 		return false;
 	}
 	
+	/**
+	 * @param aItem
+	 *            The item.
+	 * @param aCanDecreaseValue
+	 *            Whether the item can be decreased at all.
+	 * @param aCanDecreaseTempPoints
+	 *            Whether the temporary points of the given item can be decreased.
+	 * @return whether the given item can be decreased.
+	 */
 	public boolean canDecreaseItem(final ItemCreation aItem, final boolean aCanDecreaseValue, final boolean aCanDecreaseTempPoints)
 	{
 		if (mFreeMode)
@@ -122,6 +143,11 @@ public enum CreationMode
 		return false;
 	}
 	
+	/**
+	 * @param aItem
+	 *            The item.
+	 * @return whether the given item can be replaced by another item.
+	 */
 	public boolean canEditItem(final ItemCreation aItem)
 	{
 		if ( !aItem.hasParentItem() && !aItem.getItemGroup().isMutable())
@@ -143,6 +169,13 @@ public enum CreationMode
 		return false;
 	}
 	
+	/**
+	 * @param aItem
+	 *            The item.
+	 * @param aCanIncrease
+	 *            Whether the given item can be increased at all.
+	 * @return whether the given item can be increased.
+	 */
 	public boolean canIncreaseItem(final ItemCreation aItem, final boolean aCanIncrease)
 	{
 		if ( !aCanIncrease)
@@ -164,6 +197,11 @@ public enum CreationMode
 		return false;
 	}
 	
+	/**
+	 * @param aItem
+	 *            The child item.
+	 * @return Whether the given item can be removed from its parent item.
+	 */
 	public boolean canRemoveChild(final ItemCreation aItem)
 	{
 		if (mFreeMode)
@@ -193,6 +231,11 @@ public enum CreationMode
 		return true;
 	}
 	
+	/**
+	 * @param aItem
+	 *            the child item.
+	 * @return whether the given item can be removed from its parent group.
+	 */
 	public boolean canRemoveItem(final ItemCreation aItem)
 	{
 		if (mFreeMode)
@@ -222,6 +265,12 @@ public enum CreationMode
 		return true;
 	}
 	
+	/**
+	 * Decreases the given item depending on the current mode.
+	 * 
+	 * @param aItem
+	 *            The item to decrease.
+	 */
 	public void decreaseItem(final ItemCreation aItem)
 	{
 		if (mValueMode)
@@ -235,6 +284,12 @@ public enum CreationMode
 		}
 	}
 	
+	/**
+	 * Increases the given item depending on the current mode.
+	 * 
+	 * @param aItem
+	 *            The item to increase.
+	 */
 	public void increaseItem(final ItemCreation aItem)
 	{
 		if (mValueMode)
@@ -248,6 +303,9 @@ public enum CreationMode
 		}
 	}
 	
+	/**
+	 * @return whether this is a free creation mode.
+	 */
 	public boolean isFreeMode()
 	{
 		return mFreeMode;

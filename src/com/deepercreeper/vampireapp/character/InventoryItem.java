@@ -13,21 +13,38 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.controllers.InventoryController;
 import com.deepercreeper.vampireapp.util.Saveable;
 import com.deepercreeper.vampireapp.util.ViewUtil;
+import com.deepercreeper.vampireapp.util.view.Viewable;
 
-public class InventoryItem implements Saveable
+/**
+ * An inventory item has several properties and can be stored inside the inventory.<br>
+ * The properties are at least the name and the weight of this item.
+ * 
+ * @author vrl
+ */
+public class InventoryItem implements Saveable, Viewable
 {
-	private final InventoryController	mController;
+	private final int				mWeight;
 	
-	private final int					mWeight;
+	private final String			mName;
 	
-	private final String				mName;
+	private final Context			mContext;
 	
-	private final Context				mContext;
+	private final RelativeLayout	mContainer;
 	
-	private final RelativeLayout		mContainer;
+	private InventoryController		mController;
 	
-	private boolean						mInitialized	= false;
+	private boolean					mInitialized	= false;
 	
+	/**
+	 * Creates a new inventory item out of the given XML data.
+	 * 
+	 * @param aElement
+	 *            The XML data.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aController
+	 *            The parent inventory controller.
+	 */
 	public InventoryItem(final Element aElement, final Context aContext, final InventoryController aController)
 	{
 		mContext = aContext;
@@ -40,6 +57,18 @@ public class InventoryItem implements Saveable
 		init();
 	}
 	
+	/**
+	 * Creates a new inventory item.
+	 * 
+	 * @param aName
+	 *            The item name.
+	 * @param aWeight
+	 *            The item weight.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aController
+	 *            the parent inventory controller.
+	 */
 	public InventoryItem(final String aName, final int aWeight, final Context aContext, final InventoryController aController)
 	{
 		mContext = aContext;
@@ -52,16 +81,19 @@ public class InventoryItem implements Saveable
 		init();
 	}
 	
+	@Override
 	public RelativeLayout getContainer()
 	{
 		return mContainer;
 	}
 	
+	@Override
 	public void release()
 	{
 		ViewUtil.release(getContainer());
 	}
 	
+	@Override
 	public void init()
 	{
 		if ( !mInitialized)
@@ -94,29 +126,55 @@ public class InventoryItem implements Saveable
 		}
 	}
 	
+	/**
+	 * @return The parent inventory controller.
+	 */
 	public InventoryController getController()
 	{
 		return mController;
 	}
 	
+	/**
+	 * @return the item name.
+	 */
 	public String getName()
 	{
 		return mName;
 	}
 	
+	/**
+	 * @return the item weight.
+	 */
 	public int getWeight()
 	{
 		return mWeight;
 	}
 	
+	/**
+	 * @return a summary of this item.
+	 */
 	public String getInfo()
 	{
 		return getName() + ": " + getWeight() + " " + getContext().getString(R.string.weight_unit);
 	}
 	
+	/**
+	 * @return the underlying context.
+	 */
 	public Context getContext()
 	{
 		return mContext;
+	}
+	
+	/**
+	 * Sets the parent inventory controller.
+	 * 
+	 * @param aController
+	 *            The new parent inventory controller.
+	 */
+	public void addTo(InventoryController aController)
+	{
+		mController = aController;
 	}
 	
 	@Override

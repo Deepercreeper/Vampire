@@ -8,6 +8,11 @@ import com.deepercreeper.vampireapp.character.controllers.InventoryController;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.mechanics.Action.ItemFinder;
 
+/**
+ * This is a sub type of an inventory item and represents a weapon.
+ * 
+ * @author vrl
+ */
 public class Weapon extends InventoryItem
 {
 	private final ItemFinder	mItems;
@@ -28,6 +33,36 @@ public class Weapon extends InventoryItem
 	
 	private String				mAmmo;
 	
+	/**
+	 * Creates a new weapon.
+	 * 
+	 * @param aName
+	 *            The weapon name.
+	 * @param aWeight
+	 *            The weapon weight.
+	 * @param aDifficulty
+	 *            the difficulty of this weapon.
+	 * @param aDamage
+	 *            The damage this weapon takes.
+	 * @param aAdditionalDamage
+	 *            Additional damage, that is dependent on an item..
+	 * @param aStash
+	 *            The place, this weapon can be stored.
+	 * @param aDistance
+	 *            The maximum distance. <code>-1</code> for melee weapons.
+	 * @param aReloadTime
+	 *            The number of rounds it takes to reload this weapon. <code>-1</code> for melee weapons.
+	 * @param aMagazine
+	 *            The number of bullets or arrows etc. that can be fired before reload is necessary. <code>-1</code> for melee weapons.
+	 * @param aAmmo
+	 *            The ammo type of this weapon. <code>null</code> for melee weapons.
+	 * @param aItems
+	 *            The item finder.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aController
+	 *            The parent inventory controller.
+	 */
 	public Weapon(final String aName, final int aWeight, final int aDifficulty, final int aDamage, final String aAdditionalDamage,
 			final String aStash, final int aDistance, final int aReloadTime, final int aMagazine, final String aAmmo, final ItemFinder aItems,
 			final Context aContext, final InventoryController aController)
@@ -51,12 +86,46 @@ public class Weapon extends InventoryItem
 		}
 	}
 	
+	/**
+	 * Creates a new melee weapon.
+	 * 
+	 * @param aName
+	 *            The weapon name.
+	 * @param aWeight
+	 *            The weapon weight.
+	 * @param aDifficulty
+	 *            the difficulty of this weapon.
+	 * @param aDamage
+	 *            The damage this weapon takes.
+	 * @param aAdditionalDamage
+	 *            Additional damage that is dependent on an item.
+	 * @param aStash
+	 *            The place, this weapon can be stored.
+	 * @param aItems
+	 *            The item finder.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aController
+	 *            The parent inventory controller.
+	 */
 	public Weapon(final String aName, final int aWeight, final int aDifficulty, final int aDamage, final String aAdditionalDamage,
 			final String aStash, final ItemFinder aItems, final Context aContext, final InventoryController aController)
 	{
 		this(aName, aWeight, aDifficulty, aDamage, aAdditionalDamage, aStash, -1, -1, -1, null, aItems, aContext, aController);
 	}
 	
+	/**
+	 * Creates a weapon out of the given XML data.
+	 * 
+	 * @param aElement
+	 *            The XML data.
+	 * @param aItems
+	 *            The item finder.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aController
+	 *            The parent inventory controller.
+	 */
 	public Weapon(final Element aElement, final ItemFinder aItems, final Context aContext, final InventoryController aController)
 	{
 		super(aElement.getAttribute("name"), Integer.parseInt(aElement.getAttribute("weight")), aContext, aController);
@@ -78,36 +147,61 @@ public class Weapon extends InventoryItem
 		}
 	}
 	
+	/**
+	 * @return The difficulty of using this weapon.
+	 */
 	public int getDifficulty()
 	{
 		return mDifficulty;
 	}
 	
+	/**
+	 * @return the current value of the item, that causes additional damage or <code>0</code> if there is no additional damage.
+	 */
 	public int getAdditionalDamage()
 	{
+		if (mAdditionalDamage == null)
+		{
+			return 0;
+		}
 		return mAdditionalDamage.getValue();
 	}
 	
+	/**
+	 * @return the default damage, the weapon takes.
+	 */
 	public int getDamage()
 	{
 		return mDamage;
 	}
 	
+	/**
+	 * @return the place, this weapon can be stored.
+	 */
 	public String getStash()
 	{
 		return mStash;
 	}
 	
+	/**
+	 * @return The type of ammo this weapon needs or <code>null</code> if this is a melee weapon.
+	 */
 	public String getAmmo()
 	{
 		return mAmmo;
 	}
 	
+	/**
+	 * @return the maximum distance of this weapon or <code>-1</code> if this i a melee weapon.
+	 */
 	public int getDistance()
 	{
 		return mDistance;
 	}
 	
+	/**
+	 * @return
+	 */
 	public int getMagazine()
 	{
 		return mMagazine;

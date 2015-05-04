@@ -13,6 +13,12 @@ import com.deepercreeper.vampireapp.util.view.CharacterContextMenu;
 import com.deepercreeper.vampireapp.util.view.CharacterContextMenu.CharacterListener;
 import com.deepercreeper.vampireapp.util.view.Viewable;
 
+/**
+ * A container for characters, that displays main information about it and prevents the system from<br>
+ * loading all characters after system start.
+ * 
+ * @author vrl
+ */
 public class CharacterCompound implements Comparable<CharacterCompound>, Viewable
 {
 	private final Activity			mContext;
@@ -41,6 +47,42 @@ public class CharacterCompound implements Comparable<CharacterCompound>, Viewabl
 	
 	private long					mLastUsed;
 	
+	/**
+	 * Creates a new character compound out of the existing character.
+	 * 
+	 * @param aCharacter
+	 *            The character.
+	 * @param aListener
+	 *            The character listener, that is used for doing actions to the character.
+	 * @param aContext
+	 *            the underlying context.
+	 */
+	public CharacterCompound(final CharacterInstance aCharacter, final CharacterListener aListener, final Activity aContext)
+	{
+		mContext = aContext;
+		mName = aCharacter.getName();
+		mConcept = aCharacter.getConcept();
+		mGeneration = aCharacter.getGeneration();
+		mNature = aCharacter.getNature().getName();
+		mBehavior = aCharacter.getBehavior().getName();
+		mEP = aCharacter.getEP();
+		mLastUsed = 0;
+		
+		mData = createData();
+		mListener = aListener;
+		init();
+	}
+	
+	/**
+	 * Creates a new character compound out of the given character data.
+	 * 
+	 * @param aCharacter
+	 *            The XML data that contains the main character information.
+	 * @param aListener
+	 *            The character listener, that is used for doing actions to the character.
+	 * @param aContext
+	 *            The underlying context.
+	 */
 	public CharacterCompound(final String aCharacter, final CharacterListener aListener, final Activity aContext)
 	{
 		final String[] data = aCharacter.split("\t");
@@ -65,32 +107,102 @@ public class CharacterCompound implements Comparable<CharacterCompound>, Viewabl
 		init();
 	}
 	
-	public CharacterCompound(final CharacterInstance aCharacter, final CharacterListener aListener, final Activity aContext)
+	@Override
+	public int compareTo(final CharacterCompound aAnother)
 	{
-		mContext = aContext;
-		mName = aCharacter.getName();
-		mConcept = aCharacter.getConcept();
-		mGeneration = aCharacter.getGeneration();
-		mNature = aCharacter.getNature().getName();
-		mBehavior = aCharacter.getBehavior().getName();
-		mEP = aCharacter.getEP();
-		mLastUsed = 0;
-		
-		mData = createData();
-		mListener = aListener;
-		init();
+		if (aAnother == null)
+		{
+			return 1;
+		}
+		if (getLastUsed() == aAnother.getLastUsed())
+		{
+			return getName().compareTo(aAnother.getName());
+		}
+		return Long.valueOf(aAnother.getLastUsed()).compareTo(getLastUsed());
 	}
 	
-	public void setFirst(final boolean aFirst)
+	@Override
+	public boolean equals(final Object obj)
 	{
-		if (aFirst)
+		if (this == obj)
 		{
-			mTrimmer.setVisibility(View.INVISIBLE);
+			return true;
 		}
-		else
+		if (obj == null)
 		{
-			mTrimmer.setVisibility(View.VISIBLE);
+			return false;
 		}
+		if ( !(obj instanceof CharacterCompound))
+		{
+			return false;
+		}
+		final CharacterCompound other = (CharacterCompound) obj;
+		if (mLastUsed != other.mLastUsed)
+		{
+			return false;
+		}
+		if (mName == null)
+		{
+			if (other.mName != null)
+			{
+				return false;
+			}
+		}
+		else if ( !mName.equals(other.mName))
+		{
+			return false;
+		}
+		return true;
+	}
+	
+	@Override
+	public RelativeLayout getContainer()
+	{
+		return mContainer;
+	}
+	
+	/**
+	 * @return the time, this character was used last.
+	 */
+	public long getLastUsed()
+	{
+		return mLastUsed;
+	}
+	
+	/**
+	 * @return the characters name.
+	 */
+	public String getName()
+	{
+		return mName;
+	}
+	
+	/**
+	 * Sets whether this character can be played.
+	 * 
+	 * @param aEnabled
+	 *            Whether this character can be played.
+	 */
+	public void setPlayingEnabled(boolean aEnabled)
+	{
+		mPlay.setEnabled(aEnabled);
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((mBehavior == null) ? 0 : mBehavior.hashCode());
+		result = prime * result + ((mConcept == null) ? 0 : mConcept.hashCode());
+		result = prime * result + ((mContainer == null) ? 0 : mContainer.hashCode());
+		result = prime * result + ((mContext == null) ? 0 : mContext.hashCode());
+		result = prime * result + mEP;
+		result = prime * result + mGeneration;
+		result = prime * result + (int) (mLastUsed ^ (mLastUsed >>> 32));
+		result = prime * result + ((mName == null) ? 0 : mName.hashCode());
+		result = prime * result + ((mNature == null) ? 0 : mNature.hashCode());
+		return result;
 	}
 	
 	@Override
@@ -140,36 +252,42 @@ public class CharacterCompound implements Comparable<CharacterCompound>, Viewabl
 		nature.setText(mContext.getString(R.string.nature_text) + " " + mNature);
 	}
 	
-	public Button getPlayButton()
-	{
-		return mPlay;
-	}
-	
-	public long getLastUsed()
-	{
-		return mLastUsed;
-	}
-	
-	public void use()
-	{
-		mLastUsed = System.currentTimeMillis();
-	}
-	
 	@Override
 	public void release()
 	{
 		ViewUtil.release(getContainer());
 	}
 	
-	public String getName()
+	/**
+	 * Sets whether this character is the first character inside the characters list.
+	 * 
+	 * @param aFirst
+	 *            Whether the first or not.
+	 */
+	public void setFirst(final boolean aFirst)
 	{
-		return mName;
+		if (aFirst)
+		{
+			mTrimmer.setVisibility(View.INVISIBLE);
+		}
+		else
+		{
+			mTrimmer.setVisibility(View.VISIBLE);
+		}
 	}
 	
 	@Override
-	public RelativeLayout getContainer()
+	public String toString()
 	{
-		return mContainer;
+		return mData;
+	}
+	
+	/**
+	 * Sets the last used time to the current system time.
+	 */
+	public void use()
+	{
+		mLastUsed = System.currentTimeMillis();
 	}
 	
 	private String createData()
@@ -183,76 +301,5 @@ public class CharacterCompound implements Comparable<CharacterCompound>, Viewabl
 		character.append(mEP + "\t");
 		character.append(mLastUsed);
 		return character.toString();
-	}
-	
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((mBehavior == null) ? 0 : mBehavior.hashCode());
-		result = prime * result + ((mConcept == null) ? 0 : mConcept.hashCode());
-		result = prime * result + ((mContainer == null) ? 0 : mContainer.hashCode());
-		result = prime * result + ((mContext == null) ? 0 : mContext.hashCode());
-		result = prime * result + mEP;
-		result = prime * result + mGeneration;
-		result = prime * result + (int) (mLastUsed ^ (mLastUsed >>> 32));
-		result = prime * result + ((mName == null) ? 0 : mName.hashCode());
-		result = prime * result + ((mNature == null) ? 0 : mNature.hashCode());
-		return result;
-	}
-	
-	@Override
-	public boolean equals(final Object obj)
-	{
-		if (this == obj)
-		{
-			return true;
-		}
-		if (obj == null)
-		{
-			return false;
-		}
-		if ( !(obj instanceof CharacterCompound))
-		{
-			return false;
-		}
-		final CharacterCompound other = (CharacterCompound) obj;
-		if (mLastUsed != other.mLastUsed)
-		{
-			return false;
-		}
-		if (mName == null)
-		{
-			if (other.mName != null)
-			{
-				return false;
-			}
-		}
-		else if ( !mName.equals(other.mName))
-		{
-			return false;
-		}
-		return true;
-	}
-	
-	@Override
-	public String toString()
-	{
-		return mData;
-	}
-	
-	@Override
-	public int compareTo(final CharacterCompound aAnother)
-	{
-		if (aAnother == null)
-		{
-			return 1;
-		}
-		if (getLastUsed() == aAnother.getLastUsed())
-		{
-			return getName().compareTo(aAnother.getName());
-		}
-		return Long.valueOf(aAnother.getLastUsed()).compareTo(getLastUsed());
 	}
 }
