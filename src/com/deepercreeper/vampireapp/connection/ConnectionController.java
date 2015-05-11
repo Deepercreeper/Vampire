@@ -16,6 +16,12 @@ import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.view.SelectItemDialog;
 import com.deepercreeper.vampireapp.util.view.SelectItemDialog.StringSelectionListener;
 
+/**
+ * This controller handles all connection actions like creating an open Bluetooth port<br>
+ * for other devices or connecting an searching for open Bluetooth ports.
+ * 
+ * @author vrl
+ */
 public class ConnectionController
 {
 	private static final String				TAG					= "ConnectionController";
@@ -32,12 +38,21 @@ public class ConnectionController
 	
 	private boolean							mCheckingForDevies	= false;
 	
+	/**
+	 * Creates a new connection controller for the given activity.
+	 * 
+	 * @param aContext
+	 *            The underlying context.
+	 */
 	public ConnectionController(final Activity aContext)
 	{
 		mContext = aContext;
 		init();
 	}
 	
+	/**
+	 * Initializes all adapters and adds listeners for device changes.
+	 */
 	public void init()
 	{
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -66,16 +81,31 @@ public class ConnectionController
 		}
 	}
 	
+	/**
+	 * Adds the given connection listener.
+	 * 
+	 * @param aListener
+	 *            The listener that should be called when the connection state changes.
+	 */
 	public void addListener(final ConnectionListener aListener)
 	{
 		mListeners.add(aListener);
 	}
 	
+	/**
+	 * Removes the given listener.
+	 * 
+	 * @param aListener
+	 *            The listener to remove.
+	 */
 	public void removeListener(final ConnectionListener aListener)
 	{
 		mListeners.remove(aListener);
 	}
 	
+	/**
+	 * @return whether currently Bluetooth is the used connection.
+	 */
 	public boolean isBluetooth()
 	{
 		return mBluetooth;
@@ -105,6 +135,9 @@ public class ConnectionController
 		Toast.makeText(mContext, "Network connections are not enabled yet!", Toast.LENGTH_SHORT).show();
 	}
 	
+	/**
+	 * Checks the used connection even if nothing changed.
+	 */
 	public void checkConnection()
 	{
 		if (mBluetooth)
@@ -117,17 +150,32 @@ public class ConnectionController
 		}
 	}
 	
+	/**
+	 * Sets whether Bluetooth or the network connection should be used to connect.
+	 * 
+	 * @param aBluetooth
+	 *            {@code true} if Bluetooth should be used and {@code false} if the network should be the connection.
+	 */
 	public void setBluetooth(final boolean aBluetooth)
 	{
 		mBluetooth = aBluetooth;
 		checkConnection();
 	}
 	
+	/**
+	 * @return whther this device is able to create Bluetooth connections.
+	 */
 	public boolean hasBluetooth()
 	{
 		return mBluetoothAdapter != null;
 	}
 	
+	/**
+	 * Tries to connect to any of the user paired devices and logs in if possible.
+	 * 
+	 * @param aListener
+	 *            The listener that is called if the connection was successful.
+	 */
 	public void connect(final BluetoothConnectionListener aListener)
 	{
 		final Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
@@ -152,17 +200,31 @@ public class ConnectionController
 		SelectItemDialog.showSelectionDialog(deviceNames, mContext.getString(R.string.choose_host), mContext, listener);
 	}
 	
+	/**
+	 * Connects to the device with the given name.
+	 * 
+	 * @param aDevice
+	 *            The device name.
+	 * @param aListener
+	 *            The Bluetooth listener that is called if the device was connected.
+	 */
 	public void connect(final String aDevice, final BluetoothConnectionListener aListener)
 	{
 		Log.i(TAG, "Tried to connect to " + aDevice);
 		aListener.connectedTo(aDevice);
 	}
 	
+	/**
+	 * Allows other devices to connect to this device.
+	 */
 	public void openConnection()
 	{
 		mCheckingForDevies = true;
 	}
 	
+	/**
+	 * @return whether the used connection is active.
+	 */
 	public boolean isActive()
 	{
 		if (mBluetooth)
@@ -173,18 +235,43 @@ public class ConnectionController
 		return false;
 	}
 	
+	/**
+	 * Unregisters all receivers and stops the connection.
+	 */
 	public void close()
 	{
 		mContext.unregisterReceiver(mReceiver);
 	}
 	
+	/**
+	 * This listener is used to react to connection events.
+	 * 
+	 * @author vrl
+	 */
 	public interface ConnectionListener
 	{
+		/**
+		 * Called when the connection state has changed.
+		 * 
+		 * @param aEnabled
+		 *            Whether the connection is enabled.
+		 */
 		public void connectionEnabled(boolean aEnabled);
 	}
 	
+	/**
+	 * This listener is used to react to Bluetooth events.
+	 * 
+	 * @author vrl
+	 */
 	public interface BluetoothConnectionListener
 	{
+		/**
+		 * Called when this device was connected to another device with the given name.
+		 * 
+		 * @param aDevice
+		 *            The connected device name.
+		 */
 		public void connectedTo(String aDevice);
 	}
 }

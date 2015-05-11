@@ -49,13 +49,13 @@ public class Weapon extends InventoryItem
 	 * @param aStash
 	 *            The place, this weapon can be stored.
 	 * @param aDistance
-	 *            The maximum distance. <code>-1</code> for melee weapons.
+	 *            The maximum distance. {@code -1} for melee weapons.
 	 * @param aReloadTime
-	 *            The number of rounds it takes to reload this weapon. <code>-1</code> for melee weapons.
+	 *            The number of rounds it takes to reload this weapon. {@code -1} for melee weapons.
 	 * @param aMagazine
-	 *            The number of bullets or arrows etc. that can be fired before reload is necessary. <code>-1</code> for melee weapons.
+	 *            The number of bullets or arrows etc. that can be fired before reload is necessary. {@code -1} for melee weapons.
 	 * @param aAmmo
-	 *            The ammo type of this weapon. <code>null</code> for melee weapons.
+	 *            The ammo type of this weapon. {@code null} for melee weapons.
 	 * @param aItems
 	 *            The item finder.
 	 * @param aContext
@@ -156,7 +156,7 @@ public class Weapon extends InventoryItem
 	}
 	
 	/**
-	 * @return the current value of the item, that causes additional damage or <code>0</code> if there is no additional damage.
+	 * @return the current value of the item, that causes additional damage or {@code 0} if there is no additional damage.
 	 */
 	public int getAdditionalDamage()
 	{
@@ -184,7 +184,7 @@ public class Weapon extends InventoryItem
 	}
 	
 	/**
-	 * @return The type of ammo this weapon needs or <code>null</code> if this is a melee weapon.
+	 * @return The type of ammo this weapon needs or {@code null} if this is a melee weapon.
 	 */
 	public String getAmmo()
 	{
@@ -192,7 +192,7 @@ public class Weapon extends InventoryItem
 	}
 	
 	/**
-	 * @return the maximum distance of this weapon or <code>-1</code> if this i a melee weapon.
+	 * @return the maximum distance of this weapon or {@code -1} if this i a melee weapon.
 	 */
 	public int getDistance()
 	{
@@ -200,48 +200,94 @@ public class Weapon extends InventoryItem
 	}
 	
 	/**
-	 * @return
+	 * @return the maximum number of bullets that can be stored, before reload is necessary or {@code -1} if this is a melee weapon.
 	 */
 	public int getMagazine()
 	{
 		return mMagazine;
 	}
 	
+	/**
+	 * @return the number of rounds necessary to reload this weapon or {@code -1} if this is a melee weapon.
+	 */
 	public int getReloadTime()
 	{
 		return mReloadTime;
 	}
 	
+	/**
+	 * Sets the ammo type for non melee weapons.
+	 * 
+	 * @param aAmmo
+	 *            The new ammo type or {@code null} if this is a melee weapon.
+	 */
 	public void setAmmo(final String aAmmo)
 	{
 		mAmmo = aAmmo;
 	}
 	
+	/**
+	 * Sets the damage this weapon takes.
+	 * 
+	 * @param aDamage
+	 *            The new number of instant damage points this weapon takes.
+	 */
 	public void setDamage(final int aDamage)
 	{
 		mDamage = aDamage;
 	}
 	
+	/**
+	 * Sets the weapons difficulty.
+	 * 
+	 * @param aDifficulty
+	 *            The new minimum value each dice has to count to add a hit.
+	 */
 	public void setDifficulty(final int aDifficulty)
 	{
 		mDifficulty = aDifficulty;
 	}
 	
+	/**
+	 * Sets the new maximum distance for non melee weapons.
+	 * 
+	 * @param aDistance
+	 *            The new distance in meters or {@code -1} if this is a melee weapon.
+	 */
 	public void setDistance(final int aDistance)
 	{
 		mDistance = aDistance;
 	}
 	
+	/**
+	 * Sets the magazine size for non melee weapons.
+	 * 
+	 * @param aMagazine
+	 *            The new number of bullets, arrows, etc. a character can shoot before reloading<br>
+	 *            or {@code -1} if this is a melee weapon.
+	 */
 	public void setMagazine(final int aMagazine)
 	{
 		mMagazine = aMagazine;
 	}
 	
+	/**
+	 * Sets the reload time for non melee weapons.
+	 * 
+	 * @param aReloadTime
+	 *            the new number of rounds used to reload or {@code -1} if this is a melee weapon.
+	 */
 	public void setReloadTime(final int aReloadTime)
 	{
 		mReloadTime = aReloadTime;
 	}
 	
+	/**
+	 * Sets the new weapon storing place.
+	 * 
+	 * @param aStash
+	 *            The place where to store this weapon.
+	 */
 	public void setStash(final String aStash)
 	{
 		mStash = aStash;

@@ -30,7 +30,7 @@ import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.util.ConnectionUtil;
 
 /**
- * The main activity is the start class for the vampire app.<br>
+ * The main activity is the start class for the vampire application.<br>
  * This just handles inputs and passes them to the vampire.
  * 
  * @author vrl

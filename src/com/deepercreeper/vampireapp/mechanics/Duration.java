@@ -6,18 +6,53 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import com.deepercreeper.vampireapp.util.Saveable;
 
+/**
+ * This class represents a duration of time, that counts down to zero.
+ * 
+ * @author vrl
+ */
 public class Duration implements TimeListener, Saveable
 {
+	/**
+	 * A listener that is used to wait for durations to get done.
+	 * 
+	 * @author vrl
+	 */
 	public interface DurationListener
 	{
+		/**
+		 * Called when the given duration is due.
+		 */
 		public void onDue();
 	}
 	
+	/**
+	 * There are different duration types.
+	 * 
+	 * @author vrl
+	 */
 	public enum Type
 	{
-		ROUND, HOUR, DAY
+		/**
+		 * A round is equal to a very short time, that is used to make the game flow.<br>
+		 * Typically a round is around a second, but does not count up to hours.
+		 */
+		ROUND,
+		
+		/**
+		 * Represents an hour.
+		 */
+		HOUR,
+		
+		/**
+		 * Represents a day. By default a day is around 10 hours long.
+		 */
+		DAY
 	}
 	
+	/**
+	 * This duration won't end.
+	 */
 	public static final Duration			FOREVER		= new Duration();
 	
 	private final Type						mType;
@@ -32,6 +67,14 @@ public class Duration implements TimeListener, Saveable
 		mValue = -1;
 	}
 	
+	/**
+	 * Creates a new duration.
+	 * 
+	 * @param aType
+	 *            The duration type.
+	 * @param aValue
+	 *            The value.
+	 */
 	public Duration(final Type aType, final int aValue)
 	{
 		if (aValue <= 0)
@@ -52,6 +95,13 @@ public class Duration implements TimeListener, Saveable
 		mValue = Integer.parseInt(aElement.getAttribute("durationValue"));
 	}
 	
+	/**
+	 * Creates a duration out of the given XML data.
+	 * 
+	 * @param aElement
+	 *            The XML data.
+	 * @return a new duration that matches the data.
+	 */
 	public static Duration create(final Element aElement)
 	{
 		if (aElement.getAttribute("type").equals("forever"))
@@ -77,16 +127,28 @@ public class Duration implements TimeListener, Saveable
 		return element;
 	}
 	
+	/**
+	 * @return the duration type.
+	 */
 	public Type getType()
 	{
 		return mType;
 	}
 	
+	/**
+	 * @return the number of times, the duration method needs to be called to make this duration end.
+	 */
 	public int getValue()
 	{
 		return mValue;
 	}
 	
+	/**
+	 * Adds a duration listener to this duration.
+	 * 
+	 * @param aListener
+	 *            The listener that should be called, when this duration ends.
+	 */
 	public void addListener(final DurationListener aListener)
 	{
 		mListeners.add(aListener);

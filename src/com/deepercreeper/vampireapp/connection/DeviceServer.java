@@ -11,6 +11,8 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import com.deepercreeper.vampireapp.util.Log;
 
+@SuppressWarnings("javadoc")
+@Deprecated
 public class DeviceServer extends Thread
 {
 	public static final int			ENABLE_BLUETOOTH_REQUEST	= 4;

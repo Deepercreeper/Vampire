@@ -6,6 +6,11 @@ import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.util.CodingUtil;
 import com.deepercreeper.vampireapp.util.FilesUtil;
 
+/**
+ * This host represents a whole vampire game, that accepts users and handles the game flow.
+ * 
+ * @author vrl
+ */
 public class Host
 {
 	private final String		mName;
@@ -14,6 +19,16 @@ public class Host
 	
 	private final String		mLocation;
 	
+	/**
+	 * Creates a new host with the given name and location.
+	 * 
+	 * @param aName
+	 *            The host name.
+	 * @param aItems
+	 *            The item provider.
+	 * @param aLocation
+	 *            The host location.
+	 */
 	public Host(final String aName, final ItemProvider aItems, final String aLocation)
 	{
 		mName = aName;
@@ -21,6 +36,14 @@ public class Host
 		mLocation = aLocation;
 	}
 	
+	/**
+	 * Creates a host out of the given XML data.
+	 * 
+	 * @param aXML
+	 *            The XML data.
+	 * @param aItems
+	 *            The item provider.
+	 */
 	public Host(final String aXML, final ItemProvider aItems)
 	{
 		mItems = aItems;
@@ -40,6 +63,9 @@ public class Host
 		mLocation = meta.getAttribute("location");
 	}
 	
+	/**
+	 * @return a serialized version of this host, that is possible to be sent and saved.
+	 */
 	public String serialize()
 	{
 		final Document doc = FilesUtil.createDocument();
@@ -61,6 +87,9 @@ public class Host
 		return FilesUtil.readDocument(doc);
 	}
 	
+	/**
+	 * @return the host name.
+	 */
 	public String getName()
 	{
 		return mName;

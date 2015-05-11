@@ -26,6 +26,11 @@ import com.deepercreeper.vampireapp.util.view.CreateStringDialog.CreationListene
 import com.deepercreeper.vampireapp.util.view.HostContextMenu;
 import com.deepercreeper.vampireapp.util.view.HostContextMenu.HostListener;
 
+/**
+ * This controller handles all existing hosts. They can be saved, loaded and played.
+ * 
+ * @author vrl
+ */
 public class HostController implements HostListener
 {
 	private static final String			TAG					= "HostController";
@@ -46,6 +51,16 @@ public class HostController implements HostListener
 	
 	private LinearLayout				mHostsList;
 	
+	/**
+	 * Creates a new host controller.
+	 * 
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aItems
+	 *            The item provider.
+	 * @param aConnection
+	 *            The connection controller.
+	 */
 	public HostController(final Activity aContext, final ItemProvider aItems, ConnectionController aConnection)
 	{
 		mItems = aItems;
@@ -53,6 +68,9 @@ public class HostController implements HostListener
 		mConnection = aConnection;
 	}
 	
+	/**
+	 * Loads all saved hosts from stored files.
+	 */
 	public void loadHosts()
 	{
 		final String data = FilesUtil.loadFile(HOSTS_LIST, mContext);
@@ -67,6 +85,9 @@ public class HostController implements HostListener
 		}
 	}
 	
+	/**
+	 * Creates a new host by asking the user.
+	 */
 	public void createHost()
 	{
 		final CreationListener listener = new CreationListener()
@@ -88,11 +109,22 @@ public class HostController implements HostListener
 				listener);
 	}
 	
+	/**
+	 * Updates the data of the given host.
+	 * 
+	 * @param aHost
+	 *            The host to update.
+	 */
 	public void updateHost(final Host aHost)
 	{
 		saveHost(aHost);
 	}
 	
+	/**
+	 * Sets the hosts list view.
+	 * 
+	 * @param aHostsList
+	 */
 	public void setHostsList(final LinearLayout aHostsList)
 	{
 		mHostsList = aHostsList;
@@ -111,6 +143,11 @@ public class HostController implements HostListener
 		saveHostsList();
 	}
 	
+	/**
+	 * Saves the given host to a file.
+	 * 
+	 * @param aHost
+	 */
 	public void saveHost(final Host aHost)
 	{
 		mHostNames.add(aHost.getName());
@@ -119,6 +156,12 @@ public class HostController implements HostListener
 		saveHostsList();
 	}
 	
+	/**
+	 * Sets whether hosts can be played.
+	 * 
+	 * @param aEnabled
+	 *            Whether any connection is able to make hosts be played.
+	 */
 	public void setHostsEnabled(boolean aEnabled)
 	{
 		for (int i = 0; i < mHostsList.getChildCount(); i++ )
@@ -131,6 +174,9 @@ public class HostController implements HostListener
 		}
 	}
 	
+	/**
+	 * Sorts the display position of all hosts.
+	 */
 	public void sortHosts()
 	{
 		mHostsList.removeAllViews();
@@ -172,6 +218,13 @@ public class HostController implements HostListener
 		}
 	}
 	
+	/**
+	 * Loads the given host from its file.
+	 * 
+	 * @param aName
+	 *            The host name.
+	 * @return the loaded host.
+	 */
 	public Host loadHost(final String aName)
 	{
 		Host host = mHostsCache.get(aName);
@@ -202,6 +255,9 @@ public class HostController implements HostListener
 		mContext.startActivityForResult(intent, HostActivity.PLAY_HOST_REQUEST);
 	}
 	
+	/**
+	 * Saves the list of hosts to a list file.
+	 */
 	public void saveHostsList()
 	{
 		final StringBuilder hostNames = new StringBuilder();
@@ -217,6 +273,9 @@ public class HostController implements HostListener
 		FilesUtil.saveFile(hostNames.toString(), HOSTS_LIST, mContext);
 	}
 	
+	/**
+	 * @return a list of all host names.
+	 */
 	public List<String> getHostNames()
 	{
 		return mHostNames;
