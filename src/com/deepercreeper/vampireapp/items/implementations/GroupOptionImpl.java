@@ -5,15 +5,12 @@ import java.util.HashMap;
 import java.util.Map;
 import com.deepercreeper.vampireapp.items.interfaces.GroupOption;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
-import com.deepercreeper.vampireapp.util.LanguageUtil;
 
-public class GroupOptionImpl implements GroupOption
+public class GroupOptionImpl extends Named implements GroupOption
 {
 	private static final String				TAG		= "GroupOption";
 	
 	private final Map<String, ItemGroup>	mGroups	= new HashMap<String, ItemGroup>();
-	
-	private final String					mName;
 	
 	private final int[]						mMaxValues;
 	
@@ -21,7 +18,7 @@ public class GroupOptionImpl implements GroupOption
 	
 	public GroupOptionImpl(final String aName, final int[] aMaxValues)
 	{
-		mName = aName;
+		super(aName);
 		mValueGroupOption = aMaxValues != null;
 		mMaxValues = aMaxValues;
 	}
@@ -30,16 +27,6 @@ public class GroupOptionImpl implements GroupOption
 	public void addGroup(final ItemGroup aGroup)
 	{
 		mGroups.put(aGroup.getName(), aGroup);
-	}
-	
-	@Override
-	public int compareTo(final GroupOption aAnother)
-	{
-		if (aAnother == null)
-		{
-			return getName().compareTo(null);
-		}
-		return getName().compareTo(aAnother.getName());
 	}
 	
 	@Override
@@ -72,24 +59,6 @@ public class GroupOptionImpl implements GroupOption
 	}
 	
 	@Override
-	public boolean hasMaxValues()
-	{
-		return mMaxValues != null;
-	}
-	
-	@Override
-	public String getName()
-	{
-		return mName;
-	}
-	
-	@Override
-	public String getDisplayName()
-	{
-		return LanguageUtil.instance().getValue(getName());
-	}
-	
-	@Override
 	public boolean hasGroup(final ItemGroup aGroup)
 	{
 		return hasGroup(aGroup.getName());
@@ -99,6 +68,12 @@ public class GroupOptionImpl implements GroupOption
 	public boolean hasGroup(final String aName)
 	{
 		return mGroups.containsKey(aName);
+	}
+	
+	@Override
+	public boolean hasMaxValues()
+	{
+		return mMaxValues != null;
 	}
 	
 	@Override

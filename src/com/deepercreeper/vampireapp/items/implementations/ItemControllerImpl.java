@@ -9,12 +9,9 @@ import com.deepercreeper.vampireapp.items.interfaces.GroupOption;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
-import com.deepercreeper.vampireapp.util.LanguageUtil;
 
-public class ItemControllerImpl implements ItemController
+public class ItemControllerImpl extends Named implements ItemController
 {
-	private static final String				TAG					= "ItemController";
-	
 	private final Map<String, ItemGroup>	mGroups				= new HashMap<String, ItemGroup>();
 	
 	private final List<ItemGroup>			mGroupList			= new ArrayList<ItemGroup>();
@@ -23,11 +20,9 @@ public class ItemControllerImpl implements ItemController
 	
 	private final List<GroupOption>			mGroupOptionList	= new ArrayList<GroupOption>();
 	
-	private final String					mName;
-	
 	public ItemControllerImpl(final String aName)
 	{
-		mName = aName;
+		super(aName);
 	}
 	
 	@Override
@@ -44,12 +39,6 @@ public class ItemControllerImpl implements ItemController
 		mGroupOptions.put(aGroupOption.getName(), aGroupOption);
 		mGroupOptionList.add(aGroupOption);
 		Collections.sort(mGroupOptionList);
-	}
-	
-	@Override
-	public String getDisplayName()
-	{
-		return LanguageUtil.instance().getValue(getName());
 	}
 	
 	@Override
@@ -98,12 +87,6 @@ public class ItemControllerImpl implements ItemController
 			}
 		}
 		return null;
-	}
-	
-	@Override
-	public String getName()
-	{
-		return mName;
 	}
 	
 	@Override

@@ -6,10 +6,8 @@ import java.util.List;
  * Each controller handles one or more item group.
  * 
  * @author Vincent
- * @param <Item>
- *            The item type.
  */
-public interface ItemController
+public interface ItemController extends Namable
 {
 	public void addGroup(ItemGroup aGroup);
 	
@@ -24,8 +22,4 @@ public interface ItemController
 	public List<ItemGroup> getGroupsList();
 	
 	public Item getItem(String aName);
-	
-	public String getDisplayName();
-	
-	public String getName();
 }

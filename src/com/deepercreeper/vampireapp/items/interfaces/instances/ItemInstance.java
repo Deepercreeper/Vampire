@@ -9,7 +9,7 @@ import com.deepercreeper.vampireapp.character.instance.Mode;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestrictionable;
 import com.deepercreeper.vampireapp.mechanics.Action;
-import com.deepercreeper.vampireapp.mechanics.Action.ItemFinder;
+import com.deepercreeper.vampireapp.util.ItemFinder;
 import com.deepercreeper.vampireapp.util.Saveable;
 
 public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemInstance>, Saveable

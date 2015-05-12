@@ -6,21 +6,16 @@ import java.util.HashMap;
 import java.util.List;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
-import com.deepercreeper.vampireapp.util.LanguageUtil;
 import com.deepercreeper.vampireapp.util.Log;
 
 /**
  * An implementation of item groups. Each item group should extend this class.
  * 
  * @author Vincent
- * @param <T>
- *            The item type.
  */
-public class ItemGroupImpl implements ItemGroup
+public class ItemGroupImpl extends Named implements ItemGroup
 {
 	private static final String			TAG			= "ItemGroup";
-	
-	private final String				mName;
 	
 	private final List<Item>			mItemsList	= new ArrayList<Item>();
 	
@@ -60,7 +55,7 @@ public class ItemGroupImpl implements ItemGroup
 			final int aStartValue, final int aMaxValue, final int aFreePointsCost, final boolean aValueGroup, final int aMaxItems, final int aEPCost,
 			final int aEPCostNew, final int aEPCostMultiplicator)
 	{
-		mName = aName;
+		super(aName);
 		mMutable = aMutable;
 		mOrder = aOrder;
 		mFreeMutable = aFreeMutable;
@@ -76,27 +71,11 @@ public class ItemGroupImpl implements ItemGroup
 	}
 	
 	@Override
-	public boolean hasOrder()
-	{
-		return mOrder;
-	}
-	
-	@Override
 	public void addItem(final Item aItem)
 	{
 		getItemsList().add(aItem);
 		mItems.put(aItem.getName(), aItem);
 		Collections.sort(getItemsList());
-	}
-	
-	@Override
-	public int compareTo(final ItemGroup aAnother)
-	{
-		if (aAnother == null)
-		{
-			return getName().compareTo(null);
-		}
-		return getDisplayName().compareTo(aAnother.getDisplayName());
 	}
 	
 	@Override
@@ -124,12 +103,6 @@ public class ItemGroupImpl implements ItemGroup
 			values[i] = i;
 		}
 		return values;
-	}
-	
-	@Override
-	public String getDisplayName()
-	{
-		return LanguageUtil.instance().getValue(getName());
 	}
 	
 	@Override
@@ -202,12 +175,6 @@ public class ItemGroupImpl implements ItemGroup
 	}
 	
 	@Override
-	public String getName()
-	{
-		return mName;
-	}
-	
-	@Override
 	public int getStartValue()
 	{
 		if ( !isValueGroup())
@@ -222,6 +189,12 @@ public class ItemGroupImpl implements ItemGroup
 	public boolean hasItem(final String aName)
 	{
 		return mItems.containsKey(aName);
+	}
+	
+	@Override
+	public boolean hasOrder()
+	{
+		return mOrder;
 	}
 	
 	@Override

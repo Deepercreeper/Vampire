@@ -23,10 +23,10 @@ import com.deepercreeper.vampireapp.lists.controllers.instances.GenerationContro
 import com.deepercreeper.vampireapp.lists.controllers.instances.InsanityControllerInstance;
 import com.deepercreeper.vampireapp.lists.items.Clan;
 import com.deepercreeper.vampireapp.lists.items.Nature;
-import com.deepercreeper.vampireapp.mechanics.Action.ItemFinder;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.CodingUtil;
 import com.deepercreeper.vampireapp.util.FilesUtil;
+import com.deepercreeper.vampireapp.util.ItemFinder;
 import com.deepercreeper.vampireapp.util.Log;
 
 /**

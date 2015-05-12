@@ -12,6 +12,13 @@ import com.deepercreeper.vampireapp.lists.controllers.NatureController;
 import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.LanguageUtil;
 
+/**
+ * A deprecated item provider implementation, that uses the device file,<br>
+ * by loading it every time, the application starts.
+ * 
+ * @author vrl
+ */
+@Deprecated
 public class ItemProviderImpl implements ItemProvider
 {
 	private final ClanController		mClans;
@@ -30,6 +37,12 @@ public class ItemProviderImpl implements ItemProvider
 	
 	private final String				mGenerationItem;
 	
+	/**
+	 * Creates a new item provider.
+	 * 
+	 * @param aContext
+	 *            The underlying context.
+	 */
 	public ItemProviderImpl(final Context aContext)
 	{
 		LanguageUtil.init(aContext);

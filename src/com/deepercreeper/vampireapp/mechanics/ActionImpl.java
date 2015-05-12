@@ -5,8 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
+import com.deepercreeper.vampireapp.util.ItemFinder;
 import com.deepercreeper.vampireapp.util.LanguageUtil;
 
+/**
+ * The default implementation of an action.
+ * 
+ * @author vrl
+ */
 public class ActionImpl implements Action
 {
 	private final ActionType					mType;
@@ -31,6 +37,27 @@ public class ActionImpl implements Action
 	
 	private final String						mId;
 	
+	/**
+	 * Creates a new action.
+	 * 
+	 * @param aName
+	 *            The action name.
+	 * @param aId
+	 *            The action Id.
+	 * @param aType
+	 *            The action type.
+	 * @param aMinLevel
+	 *            The minimum item level of this action.
+	 * @param aMinDices
+	 *            The minimum number of dices that are used to do this action.
+	 * @param aDiceNames
+	 *            A list of names for the items whose value are added to the minimum dice number.
+	 * @param aCostDiceNames
+	 *            These items can be spent by a user define amount to have a special effect.
+	 * @param aCostNames
+	 *            A list of item names and a value for each. It defines, how many item points<br>
+	 *            need to be spent for using this action.
+	 */
 	public ActionImpl(final String aName, final String aId, final ActionType aType, final int aMinLevel, final int aMinDices,
 			final String[] aDiceNames, final String[] aCostDiceNames, final String[] aCostNames)
 	{

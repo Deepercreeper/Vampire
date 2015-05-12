@@ -7,9 +7,7 @@ import java.util.List;
 import java.util.Map;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
-import com.deepercreeper.vampireapp.items.interfaces.Namable;
 import com.deepercreeper.vampireapp.mechanics.Action;
-import com.deepercreeper.vampireapp.util.LanguageUtil;
 import com.deepercreeper.vampireapp.util.Log;
 
 /**
@@ -17,7 +15,7 @@ import com.deepercreeper.vampireapp.util.Log;
  * 
  * @author Vincent
  */
-public class ItemImpl implements Item
+public class ItemImpl extends Named implements Item
 {
 	private static final String			TAG				= "Item";
 	
@@ -26,8 +24,6 @@ public class ItemImpl implements Item
 	private final List<Action>			mActionsList	= new ArrayList<Action>();
 	
 	private final ItemGroup				mItemGroup;
-	
-	private final String				mName;
 	
 	private final Item					mParentItem;
 	
@@ -59,7 +55,7 @@ public class ItemImpl implements Item
 			final boolean aOrder, final int[] aValues, final int aStartValue, final int aEPCost, final int aEPCostNew,
 			final int aEPCostMultiplicator, final Item aParentItem)
 	{
-		mName = aName;
+		super(aName);
 		mItemGroup = aGroup;
 		mNeedsDescription = aNeedsDescription;
 		mParent = aParent;
@@ -113,53 +109,11 @@ public class ItemImpl implements Item
 	}
 	
 	@Override
-	public boolean hasOrder()
-	{
-		return mOrder;
-	}
-	
-	@Override
-	public int getEPCost()
-	{
-		return mEPCost;
-	}
-	
-	@Override
-	public int getEPCostNew()
-	{
-		return mEPCostNew;
-	}
-	
-	@Override
-	public int getEPCostMultiplicator()
-	{
-		return mEPCostMultiplicator;
-	}
-	
-	@Override
 	public void addAction(final Action aAction)
 	{
 		mActionsList.add(aAction);
 		mActions.put(aAction.getName(), aAction);
 		Collections.sort(getActionsList());
-	}
-	
-	@Override
-	public List<Action> getActionsList()
-	{
-		return mActionsList;
-	}
-	
-	@Override
-	public Action getAction(final String aName)
-	{
-		return mActions.get(aName);
-	}
-	
-	@Override
-	public boolean hasActions()
-	{
-		return !getActionsList().isEmpty();
 	}
 	
 	@Override
@@ -176,12 +130,6 @@ public class ItemImpl implements Item
 	}
 	
 	@Override
-	public int compareTo(final Namable aAnother)
-	{
-		return getDisplayName().compareTo(aAnother.getDisplayName());
-	}
-	
-	@Override
 	public boolean equals(final Object aO)
 	{
 		if (aO instanceof Item)
@@ -190,6 +138,18 @@ public class ItemImpl implements Item
 			return getName().equals(item.getName());
 		}
 		return false;
+	}
+	
+	@Override
+	public Action getAction(final String aName)
+	{
+		return mActions.get(aName);
+	}
+	
+	@Override
+	public List<Action> getActionsList()
+	{
+		return mActionsList;
 	}
 	
 	@Override
@@ -212,12 +172,6 @@ public class ItemImpl implements Item
 			return null;
 		}
 		return mChildrenList;
-	}
-	
-	@Override
-	public String getDisplayName()
-	{
-		return LanguageUtil.instance().getValue(getName());
 	}
 	
 	@Override
@@ -246,6 +200,24 @@ public class ItemImpl implements Item
 	}
 	
 	@Override
+	public int getEPCost()
+	{
+		return mEPCost;
+	}
+	
+	@Override
+	public int getEPCostMultiplicator()
+	{
+		return mEPCostMultiplicator;
+	}
+	
+	@Override
+	public int getEPCostNew()
+	{
+		return mEPCostNew;
+	}
+	
+	@Override
 	public int getFreePointsCost()
 	{
 		if ( !isValueItem())
@@ -263,17 +235,6 @@ public class ItemImpl implements Item
 	}
 	
 	@Override
-	public int getMaxValue()
-	{
-		if ( !isValueItem())
-		{
-			Log.w(TAG, "Tried to get the maximum value of a non value item.");
-			return 0;
-		}
-		return Math.min(getItemGroup().getMaxValue(), getValues().length - 1);
-	}
-	
-	@Override
 	public int getMaxLowLevelValue()
 	{
 		if ( !isValueItem())
@@ -285,9 +246,14 @@ public class ItemImpl implements Item
 	}
 	
 	@Override
-	public String getName()
+	public int getMaxValue()
 	{
-		return mName;
+		if ( !isValueItem())
+		{
+			Log.w(TAG, "Tried to get the maximum value of a non value item.");
+			return 0;
+		}
+		return Math.min(getItemGroup().getMaxValue(), getValues().length - 1);
 	}
 	
 	@Override
@@ -319,6 +285,12 @@ public class ItemImpl implements Item
 	}
 	
 	@Override
+	public boolean hasActions()
+	{
+		return !getActionsList().isEmpty();
+	}
+	
+	@Override
 	public boolean hasChild(final Item aItem)
 	{
 		if ( !isParent())
@@ -344,6 +316,12 @@ public class ItemImpl implements Item
 	public int hashCode()
 	{
 		return getName().hashCode();
+	}
+	
+	@Override
+	public boolean hasOrder()
+	{
+		return mOrder;
 	}
 	
 	@Override

@@ -6,16 +6,12 @@ import java.util.List;
  * A item group is used to control several items.
  * 
  * @author Vincent
- * @param <T>
- *            The item type.
  */
-public interface ItemGroup extends Comparable<ItemGroup>
+public interface ItemGroup extends Namable
 {
 	public void addItem(Item aItem);
 	
 	public int[] getDefaultValues();
-	
-	public String getDisplayName();
 	
 	public int getEPCost();
 	
@@ -52,11 +48,6 @@ public interface ItemGroup extends Comparable<ItemGroup>
 	public int getMaxLowLevelValue();
 	
 	public int getMaxValue();
-	
-	/**
-	 * @return the group name.
-	 */
-	public String getName();
 	
 	public int getStartValue();
 	

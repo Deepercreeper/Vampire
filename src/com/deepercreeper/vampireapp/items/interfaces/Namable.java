@@ -12,5 +12,8 @@ public interface Namable extends Comparable<Namable>
 	 */
 	public String getName();
 	
+	/**
+	 * @return the locale depending display name.
+	 */
 	public String getDisplayName();
 }
