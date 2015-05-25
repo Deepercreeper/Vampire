@@ -2,7 +2,7 @@ package com.deepercreeper.vampireapp.items.interfaces;
 
 import java.util.Collection;
 
-public interface GroupOption extends Namable
+public interface GroupOption extends Nameable
 {
 	public void addGroup(ItemGroup aGroup);
 	

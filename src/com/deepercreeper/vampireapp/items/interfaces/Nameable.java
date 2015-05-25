@@ -5,7 +5,7 @@ package com.deepercreeper.vampireapp.items.interfaces;
  * 
  * @author Vincent
  */
-public interface Namable extends Comparable<Namable>
+public interface Nameable extends Comparable<Nameable>, CharSequence
 {
 	/**
 	 * @return the name of this entity.

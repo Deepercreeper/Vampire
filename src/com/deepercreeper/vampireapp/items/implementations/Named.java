@@ -1,6 +1,6 @@
 package com.deepercreeper.vampireapp.items.implementations;
 
-import com.deepercreeper.vampireapp.items.interfaces.Namable;
+import com.deepercreeper.vampireapp.items.interfaces.Nameable;
 import com.deepercreeper.vampireapp.util.LanguageUtil;
 
 /**
@@ -8,7 +8,7 @@ import com.deepercreeper.vampireapp.util.LanguageUtil;
  * 
  * @author Vincent
  */
-public abstract class Named implements Namable
+public abstract class Named implements Nameable
 {
 	private final String	mName;
 	
@@ -24,7 +24,7 @@ public abstract class Named implements Namable
 	}
 	
 	@Override
-	public int compareTo(final Namable aAnother)
+	public int compareTo(final Nameable aAnother)
 	{
 		return getName().compareTo(aAnother.getName());
 	}
@@ -37,6 +37,30 @@ public abstract class Named implements Namable
 	
 	@Override
 	public String getName()
+	{
+		return mName;
+	}
+	
+	@Override
+	public char charAt(final int aIndex)
+	{
+		return mName.charAt(aIndex);
+	}
+	
+	@Override
+	public int length()
+	{
+		return mName.length();
+	}
+	
+	@Override
+	public CharSequence subSequence(final int aStart, final int aEnd)
+	{
+		return mName.subSequence(aStart, aEnd);
+	}
+	
+	@Override
+	public String toString()
 	{
 		return mName;
 	}

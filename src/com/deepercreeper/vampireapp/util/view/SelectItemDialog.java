@@ -1,8 +1,6 @@
 package com.deepercreeper.vampireapp.util.view;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -10,99 +8,57 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import com.deepercreeper.vampireapp.items.interfaces.Item;
+import com.deepercreeper.vampireapp.items.interfaces.Nameable;
 
 /**
  * Used for selecting items from a list and then invoking the given action.
  * 
  * @author Vincent
  */
-public class SelectItemDialog extends DialogFragment
+public class SelectItemDialog <T extends Nameable> extends DialogFragment
 {
 	/**
 	 * A listener that is invoked when a selection was made.
 	 * 
 	 * @author Vincent
+	 * @param <S>
+	 *            The type of nameable that is selected.
 	 */
-	public static interface ItemSelectionListener
+	public static interface NamableSelectionListener <S extends Nameable>
 	{
-		/**
-		 * Invoked when the given item was selected.
-		 * 
-		 * @param aItem
-		 *            The item that was selected.
-		 */
-		public void select(Item aItem);
+		public void select(S aDevice);
 	}
 	
-	public static interface StringSelectionListener
-	{
-		public void select(String aItem);
-	}
+	private static boolean						sDialogOpen	= false;
 	
-	private static boolean					sDialogOpen	= false;
+	private final T[]							mNamables;
 	
-	private final HashMap<String, Item>		mItems		= new HashMap<String, Item>();
+	private final String						mTitle;
 	
-	private final String[]					mNames;
+	private final Context						mContext;
 	
-	private final String					mTitle;
+	private final NamableSelectionListener<T>	mAction;
 	
-	private final Context					mContext;
-	
-	private final ItemSelectionListener		mItemAction;
-	
-	private final StringSelectionListener	mStringAction;
-	
-	private final boolean					mItemsSelection;
-	
-	private SelectItemDialog(final List<Item> aItems, final String aTitle, final Context aContext, final ItemSelectionListener aAction)
+	private SelectItemDialog(final T[] aNamables, final String aTitle, final Context aContext, final NamableSelectionListener<T> aAction)
 	{
 		sDialogOpen = true;
-		mNames = new String[aItems.size()];
-		for (int i = 0; i < mNames.length; i++ )
-		{
-			final Item item = aItems.get(i);
-			mItems.put(item.getDisplayName(), item);
-			mNames[i] = item.getDisplayName();
-		}
-		Arrays.sort(mNames);
+		mNamables = aNamables;
+		Arrays.sort(mNamables);
 		mTitle = aTitle;
 		mContext = aContext;
-		mItemAction = aAction;
-		mStringAction = null;
-		mItemsSelection = true;
-	}
-	
-	private SelectItemDialog(final List<String> aItems, final String aTitle, final Context aContext, final StringSelectionListener aAction)
-	{
-		sDialogOpen = true;
-		mNames = aItems.toArray(new String[aItems.size()]);
-		Arrays.sort(mNames);
-		mTitle = aTitle;
-		mContext = aContext;
-		mItemAction = null;
-		mStringAction = aAction;
-		mItemsSelection = false;
+		mAction = aAction;
 	}
 	
 	@Override
 	public Dialog onCreateDialog(final Bundle aSavedInstanceState)
 	{
 		final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-		builder.setTitle(mTitle).setItems(mNames, new DialogInterface.OnClickListener()
+		builder.setTitle(mTitle).setItems(mNamables, new DialogInterface.OnClickListener()
 		{
 			@Override
 			public void onClick(final DialogInterface dialog, final int which)
 			{
-				if (mItemsSelection)
-				{
-					mItemAction.select(mItems.get(mNames[which]));
-				}
-				else
-				{
-					mStringAction.select(mNames[which]);
-				}
+				mAction.select(mNamables[which]);
 			}
 		});
 		return builder.create();
@@ -120,6 +76,7 @@ public class SelectItemDialog extends DialogFragment
 	 */
 	public static boolean isDialogOpen()
 	{
+		// TODO Check occurrences of showDialog
 		return sDialogOpen;
 	}
 	
@@ -136,22 +93,13 @@ public class SelectItemDialog extends DialogFragment
 	 * @param aAction
 	 *            The selection action.
 	 */
-	public static void showSelectionDialog(final List<Item> aItems, final String aTitle, final Context aContext, final ItemSelectionListener aAction)
+	public static <R extends Nameable> void showSelectionDialog(final R[] aItems, final String aTitle, final Context aContext,
+			final NamableSelectionListener<R> aAction)
 	{
 		if (sDialogOpen)
 		{
 			return;
 		}
-		new SelectItemDialog(aItems, aTitle, aContext, aAction).show(((Activity) aContext).getFragmentManager(), aTitle);
-	}
-	
-	public static void showSelectionDialog(final List<String> aItems, final String aTitle, final Context aContext,
-			final StringSelectionListener aAction)
-	{
-		if (sDialogOpen)
-		{
-			return;
-		}
-		new SelectItemDialog(aItems, aTitle, aContext, aAction).show(((Activity) aContext).getFragmentManager(), aTitle);
+		new SelectItemDialog<R>(aItems, aTitle, aContext, aAction).show(((Activity) aContext).getFragmentManager(), aTitle);
 	}
 }

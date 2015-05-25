@@ -1,9 +1,9 @@
 package com.deepercreeper.vampireapp.lists;
 
 import java.util.List;
-import com.deepercreeper.vampireapp.items.interfaces.Namable;
+import com.deepercreeper.vampireapp.items.interfaces.Nameable;
 
-public interface ListController <T extends Namable>
+public interface ListController <T extends Nameable>
 {
 	public T getItemAtPosition(int aPos);
 	

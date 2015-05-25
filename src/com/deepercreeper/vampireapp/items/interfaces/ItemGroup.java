@@ -7,7 +7,7 @@ import java.util.List;
  * 
  * @author Vincent
  */
-public interface ItemGroup extends Namable
+public interface ItemGroup extends Nameable
 {
 	public void addItem(Item aItem);
 	

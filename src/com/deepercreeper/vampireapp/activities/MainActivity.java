@@ -21,8 +21,11 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.controllers.CharController;
 import com.deepercreeper.vampireapp.character.instance.CharacterCompound;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
+import com.deepercreeper.vampireapp.connection.ConnectedDevice;
+import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageListener;
+import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
 import com.deepercreeper.vampireapp.connection.ConnectionController;
-import com.deepercreeper.vampireapp.connection.ConnectionController.ConnectionListener;
+import com.deepercreeper.vampireapp.connection.ConnectionController.ConnectionStateListener;
 import com.deepercreeper.vampireapp.host.Host;
 import com.deepercreeper.vampireapp.host.HostController;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
@@ -35,7 +38,7 @@ import com.deepercreeper.vampireapp.util.ConnectionUtil;
  * 
  * @author vrl
  */
-public class MainActivity extends Activity implements ItemConsumer, ConnectionListener
+public class MainActivity extends Activity implements ItemConsumer, ConnectionStateListener, MessageListener
 {
 	private class PlaceholderFragment extends Fragment
 	{
@@ -189,6 +192,12 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 	}
 	
 	@Override
+	public void receiveMessage(final ConnectedDevice aDevice, final MessageType aType, final String[] aArgs)
+	{
+		// TODO Implement for non game messages
+	}
+	
+	@Override
 	protected void onActivityResult(final int aRequestCode, final int aResultCode, final Intent aData)
 	{
 		if (aRequestCode == CreateCharActivity.CREATE_CHAR_REQUEST && aResultCode == RESULT_OK)
@@ -248,7 +257,7 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 	@Override
 	protected void onDestroy()
 	{
-		mConnection.close();
+		mConnection.unregister();
 		super.onDestroy();
 	}
 	
@@ -257,7 +266,7 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 	{
 		if (mConnection != null)
 		{
-			mConnection.checkConnection();
+			mConnection.checkConnectionState();
 		}
 		super.onResume();
 	}
@@ -272,8 +281,8 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 	
 	private void init()
 	{
-		mConnection = new ConnectionController(this);
-		mConnection.addListener(this);
+		mConnection = new ConnectionController(this, this);
+		mConnection.addConnectionListener(this);
 		
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
 		
@@ -311,7 +320,6 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 		
 		mChars.setCharsList((LinearLayout) aRoot.findViewById(R.id.characters_list));
 		mChars.loadCharCompounds();
-		// mChars.sortChars();
 	}
 	
 	private void initHosts(final ViewGroup aRoot)

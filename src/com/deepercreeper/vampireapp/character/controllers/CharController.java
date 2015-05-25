@@ -13,7 +13,6 @@ import com.deepercreeper.vampireapp.activities.PlayActivity;
 import com.deepercreeper.vampireapp.character.instance.CharacterCompound;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.connection.ConnectionController;
-import com.deepercreeper.vampireapp.connection.ConnectionController.BluetoothConnectionListener;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.util.FilesUtil;
 import com.deepercreeper.vampireapp.util.Log;
@@ -50,7 +49,7 @@ public class CharController implements CharacterListener
 	 * @param aContext
 	 *            The underlying context.
 	 * @param aItems
-	 *            The item provider of this vampire.
+	 *            The item provider of this Vampire.
 	 * @param aConnection
 	 *            The connection controller. Needed to make sure that characters can be played.
 	 */
@@ -72,7 +71,7 @@ public class CharController implements CharacterListener
 		saveChar(aCharacter);
 		
 		final CharacterCompound charCompound = new CharacterCompound(aCharacter, this, mContext);
-		charCompound.setPlayingEnabled(mConnection.isActive());
+		charCompound.setPlayingEnabled(mConnection.isEnabled());
 		mCharacterCompoundsList.add(charCompound);
 		mCharacterCompounds.put(charCompound.getName(), charCompound);
 		sortChars();
@@ -183,21 +182,12 @@ public class CharController implements CharacterListener
 	@Override
 	public void play(final String aName)
 	{
-		final BluetoothConnectionListener listener = new BluetoothConnectionListener()
-		{
-			@Override
-			public void connectedTo(final String aDevice)
-			{
-				final CharacterInstance character = loadChar(aName);
-				
-				final Intent intent = new Intent(mContext, PlayActivity.class);
-				intent.putExtra(PlayActivity.CHARACTER, character.serialize());
-				
-				mContext.startActivityForResult(intent, PlayActivity.PLAY_CHAR_REQUEST);
-			}
-		};
+		final CharacterInstance character = loadChar(aName);
 		
-		mConnection.connect(listener);
+		final Intent intent = new Intent(mContext, PlayActivity.class);
+		intent.putExtra(PlayActivity.CHARACTER, character.serialize());
+		
+		mContext.startActivityForResult(intent, PlayActivity.PLAY_CHAR_REQUEST);
 	}
 	
 	/**

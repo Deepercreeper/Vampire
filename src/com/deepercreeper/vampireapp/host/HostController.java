@@ -61,7 +61,7 @@ public class HostController implements HostListener
 	 * @param aConnection
 	 *            The connection controller.
 	 */
-	public HostController(final Activity aContext, final ItemProvider aItems, ConnectionController aConnection)
+	public HostController(final Activity aContext, final ItemProvider aItems, final ConnectionController aConnection)
 	{
 		mItems = aItems;
 		mContext = aContext;
@@ -162,11 +162,11 @@ public class HostController implements HostListener
 	 * @param aEnabled
 	 *            Whether any connection is able to make hosts be played.
 	 */
-	public void setHostsEnabled(boolean aEnabled)
+	public void setHostsEnabled(final boolean aEnabled)
 	{
 		for (int i = 0; i < mHostsList.getChildCount(); i++ )
 		{
-			View view = mHostsList.getChildAt(i);
+			final View view = mHostsList.getChildAt(i);
 			if (view instanceof TextView)
 			{
 				view.setEnabled(aEnabled);
@@ -204,7 +204,7 @@ public class HostController implements HostListener
 			hostView.setText(host);
 			hostView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
 			hostView.setLongClickable(true);
-			hostView.setEnabled(mConnection.isActive());
+			hostView.setEnabled(mConnection.isEnabled());
 			hostView.setOnLongClickListener(new OnLongClickListener()
 			{
 				@Override

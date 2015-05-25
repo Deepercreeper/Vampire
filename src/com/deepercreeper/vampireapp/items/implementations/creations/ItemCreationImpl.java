@@ -26,7 +26,7 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.Crea
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.SelectItemDialog;
-import com.deepercreeper.vampireapp.util.view.SelectItemDialog.ItemSelectionListener;
+import com.deepercreeper.vampireapp.util.view.SelectItemDialog.NamableSelectionListener;
 
 public class ItemCreationImpl extends CreationRestrictionableImpl implements ItemCreation
 {
@@ -218,7 +218,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		{
 			return;
 		}
-		final ItemSelectionListener action = new ItemSelectionListener()
+		final NamableSelectionListener<Item> action = new NamableSelectionListener<Item>()
 		{
 			@Override
 			public void select(final Item aChoosenItem)
@@ -226,7 +226,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 				addChild(aChoosenItem);
 			}
 		};
-		SelectItemDialog.showSelectionDialog(items, getContext().getString(R.string.add_item), getContext(), action);
+		SelectItemDialog.showSelectionDialog(items.toArray(new Item[items.size()]), getContext().getString(R.string.add_item), getContext(), action);
 	}
 	
 	@Override
@@ -414,7 +414,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		{
 			return;
 		}
-		final ItemSelectionListener action = new ItemSelectionListener()
+		final NamableSelectionListener<Item> action = new NamableSelectionListener<Item>()
 		{
 			@Override
 			public void select(final Item aChoosenItem)
@@ -422,7 +422,8 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 				setChildAt(index, aChoosenItem);
 			}
 		};
-		SelectItemDialog.showSelectionDialog(children, getContext().getString(R.string.edit_item) + aItem.getName(), getContext(), action);
+		SelectItemDialog.showSelectionDialog(children.toArray(new Item[children.size()]),
+				getContext().getString(R.string.edit_item) + aItem.getName(), getContext(), action);
 	}
 	
 	@Override

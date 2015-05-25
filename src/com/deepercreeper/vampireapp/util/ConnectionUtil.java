@@ -8,23 +8,15 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import com.deepercreeper.vampireapp.activities.ItemProviderService;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
-import com.deepercreeper.vampireapp.items.ItemProviderImpl;
 
 public class ConnectionUtil
 {
-	private static final boolean	SERVICE_ITEMS	= true;
-	
 	public static void loadItems(final Activity aContext, final ItemConsumer aConsumer)
 	{
-		if (SERVICE_ITEMS)
-		{
-			final ItemConnection connection = new ItemConnection(aConsumer, aContext);
-			final Intent itemProvider = new Intent(aContext, ItemProviderService.class);
-			aContext.startService(itemProvider);
-			aContext.bindService(itemProvider, connection, Context.BIND_AUTO_CREATE);
-			return;
-		}
-		aConsumer.consumeItems(new ItemProviderImpl(aContext));
+		final ItemConnection connection = new ItemConnection(aConsumer, aContext);
+		final Intent itemProvider = new Intent(aContext, ItemProviderService.class);
+		aContext.startService(itemProvider);
+		aContext.bindService(itemProvider, connection, Context.BIND_AUTO_CREATE);
 	}
 	
 	private static class ItemConnection implements ServiceConnection

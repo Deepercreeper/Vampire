@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.deepercreeper.vampireapp.items.interfaces.Namable;
+import com.deepercreeper.vampireapp.items.interfaces.Nameable;
 
 /**
  * An implementation for list controllers.
@@ -14,7 +14,7 @@ import com.deepercreeper.vampireapp.items.interfaces.Namable;
  * @param <T>
  *            The list element type.
  */
-public abstract class ListControllerImpl <T extends Namable> implements ListController<T>
+public abstract class ListControllerImpl <T extends Nameable> implements ListController<T>
 {
 	private final Map<String, T>	mValues			= new HashMap<String, T>();
 	

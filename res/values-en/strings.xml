@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
     <string name="app_name">VampireApp</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="no_paired_device">You have no paired devices!</string>
@@ -62,5 +64,6 @@
     <string name="hosts">Hosts</string>
     <string name="delete_host">Delete</string>
     <string name="play_host">Play</string>
+    <string name="new_player">A new player wants to join your game. Accept?</string>
 
 </resources>

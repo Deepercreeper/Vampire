@@ -8,7 +8,7 @@ import com.deepercreeper.vampireapp.mechanics.Action;
  * 
  * @author Vincent
  */
-public interface Item extends Namable
+public interface Item extends Nameable
 {
 	/**
 	 * Adds the given action to the list of item specific actions.

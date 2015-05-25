@@ -11,6 +11,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
+import com.deepercreeper.vampireapp.connection.ConnectedDevice;
+import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageListener;
+import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
+import com.deepercreeper.vampireapp.connection.ConnectionController;
+import com.deepercreeper.vampireapp.connection.ConnectionController.BluetoothConnectionListener;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
@@ -22,23 +27,32 @@ import com.deepercreeper.vampireapp.util.ConnectionUtil;
  * 
  * @author vrl
  */
-public class PlayActivity extends Activity implements ItemConsumer
+public class PlayActivity extends Activity implements ItemConsumer, BluetoothConnectionListener, MessageListener
 {
-	private static final String	TAG					= "PlayActivity";
+	private static final String		TAG					= "PlayActivity";
 	
 	/**
 	 * The extra key for the character that is going to be played.
 	 */
-	public static final String	CHARACTER			= "CHARACTER";
+	public static final String		CHARACTER			= "CHARACTER";
 	
 	/**
 	 * The request code for playing a character.
 	 */
-	public static final int		PLAY_CHAR_REQUEST	= 2;
+	public static final int			PLAY_CHAR_REQUEST	= 2;
 	
-	private ItemProvider		mItems;
+	private ConnectionController	mConnection;
 	
-	private CharacterInstance	mChar;
+	private ItemProvider			mItems;
+	
+	private CharacterInstance		mChar;
+	
+	@Override
+	public void connectedTo(final ConnectedDevice aDevice)
+	{
+		aDevice.send(MessageType.LOGIN, mChar.getName());
+		// TODO Check sent messages
+	}
 	
 	@Override
 	public void consumeItems(final ItemProvider aItems)
@@ -46,6 +60,21 @@ public class PlayActivity extends Activity implements ItemConsumer
 		mItems = aItems;
 		
 		init();
+	}
+	
+	@Override
+	public void receiveMessage(final ConnectedDevice aDevice, final MessageType aType, final String[] aArgs)
+	{
+		switch (aType)
+		{
+			case DECLINE :
+				exit();
+				break;
+			
+			default :
+				break;
+		}
+		// TODO Implement
 	}
 	
 	@Override
@@ -58,6 +87,7 @@ public class PlayActivity extends Activity implements ItemConsumer
 	
 	private void exit()
 	{
+		// TODO Maybe add a negative exit
 		final Intent intent = new Intent();
 		intent.putExtra(CHARACTER, mChar.serialize());
 		setResult(RESULT_OK, intent);
@@ -66,6 +96,9 @@ public class PlayActivity extends Activity implements ItemConsumer
 	
 	private void init()
 	{
+		mConnection = new ConnectionController(this, this);
+		mConnection.connect(this);
+		
 		final String xml = getIntent().getStringExtra(CreateCharActivity.CHARACTER);
 		CharacterInstance character = null;
 		try

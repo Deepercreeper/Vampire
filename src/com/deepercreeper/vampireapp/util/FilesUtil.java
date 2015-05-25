@@ -28,19 +28,50 @@ public class FilesUtil
 	private FilesUtil()
 	{}
 	
-	public static void saveFile(final String aData, final String aFile, final Context aContext)
+	public static Document createDocument()
 	{
+		Document doc = null;
 		try
 		{
-			final PrintWriter writer = new PrintWriter(aContext.openFileOutput(aFile, Context.MODE_PRIVATE));
-			writer.append(aData);
-			writer.flush();
-			writer.close();
+			doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 		}
-		catch (final IOException e)
+		catch (final ParserConfigurationException e)
 		{
-			Log.e(TAG, "Could not open file stream.");
+			Log.e(TAG, "Could not create a XML document.");
 		}
+		return doc;
+	}
+	
+	public static Document loadDocument(final Context aContext, final String aName, final boolean aLocale)
+	{
+		Document doc = null;
+		try
+		{
+			final DocumentBuilderFactory DOMfactory = DocumentBuilderFactory.newInstance();
+			final DocumentBuilder DOMbuilder = DOMfactory.newDocumentBuilder();
+			final String postfix = aLocale ? "-" + Locale.getDefault().getLanguage() : "";
+			doc = DOMbuilder.parse(aContext.getAssets().open(aName + postfix + FILE_ENDING));
+		}
+		catch (final Exception e)
+		{
+			return null;
+		}
+		return doc;
+	}
+	
+	public static Document loadDocument(final String aXML)
+	{
+		final InputStream stream = new ByteArrayInputStream(aXML.getBytes(Charset.defaultCharset()));
+		Document doc = null;
+		try
+		{
+			doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(stream);
+		}
+		catch (final Exception e)
+		{
+			Log.e(TAG, "Could not read input stream.");
+		}
+		return doc;
 	}
 	
 	public static String loadFile(final String aFile, final Context aContext)
@@ -104,49 +135,18 @@ public class FilesUtil
 		return new String(stream.toByteArray(), Charset.defaultCharset());
 	}
 	
-	public static Document createDocument()
+	public static void saveFile(final String aData, final String aFile, final Context aContext)
 	{
-		Document doc = null;
 		try
 		{
-			doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+			final PrintWriter writer = new PrintWriter(aContext.openFileOutput(aFile, Context.MODE_PRIVATE));
+			writer.append(aData);
+			writer.flush();
+			writer.close();
 		}
-		catch (final ParserConfigurationException e)
+		catch (final IOException e)
 		{
-			Log.e(TAG, "Could not create a XML document.");
+			Log.e(TAG, "Could not open file stream.");
 		}
-		return doc;
-	}
-	
-	public static Document loadDocument(final String aXML)
-	{
-		final InputStream stream = new ByteArrayInputStream(aXML.getBytes(Charset.defaultCharset()));
-		Document doc = null;
-		try
-		{
-			doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(stream);
-		}
-		catch (final Exception e)
-		{
-			Log.e(TAG, "Could not read input stream.");
-		}
-		return doc;
-	}
-	
-	public static Document loadDocument(final Context aContext, final String aName, final boolean aLocale)
-	{
-		Document doc = null;
-		try
-		{
-			final DocumentBuilderFactory DOMfactory = DocumentBuilderFactory.newInstance();
-			final DocumentBuilder DOMbuilder = DOMfactory.newDocumentBuilder();
-			final String postfix = aLocale ? "-" + Locale.getDefault().getLanguage() : "";
-			doc = DOMbuilder.parse(aContext.getAssets().open(aName + postfix + FILE_ENDING));
-		}
-		catch (final Exception e)
-		{
-			return null;
-		}
-		return doc;
 	}
 }
