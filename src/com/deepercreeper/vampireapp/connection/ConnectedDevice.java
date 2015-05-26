@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.net.Uri;
 
@@ -17,36 +18,87 @@ public class ConnectedDevice
 	
 	public static enum MessageType
 	{
-		LOGIN, ACCEPT, DECLINE, WAIT, NAME_IN_USE
+		/**
+		 * First connection to a host
+		 */
+		LOGIN,
+		
+		/**
+		 * Accepting a player
+		 */
+		ACCEPT,
+		
+		/**
+		 * Declining a player
+		 */
+		DECLINE,
+		
+		/**
+		 * The host is busy and the player needs to wait
+		 */
+		WAIT,
+		
+		/**
+		 * The player has chosen a name that was already in use
+		 */
+		NAME_IN_USE,
+		
+		/**
+		 * The host has closed the game
+		 */
+		CLOSED,
+		
+		/**
+		 * The player was kicked
+		 */
+		KICKED,
+		
+		/**
+		 * The player left the game
+		 */
+		LEFT_GAME,
+		
+		/**
+		 * The player took the focus from his application
+		 */
+		REMOVED_FOCUS
 	}
 	
-	private static final String		ARGS_DELIM		= ",";
+	private static final String					ARGS_DELIM		= ",";
 	
-	private static final char		MESSAGES_DELIM	= '\n';
+	private static final char					MESSAGES_DELIM	= '\n';
 	
-	private final OutputStream		mOut;
+	private final BluetoothSocket				mSocket;
 	
-	private final InputStream		mIn;
+	private final OutputStream					mOut;
 	
-	private final MessageListener	mListener;
+	private final InputStream					mIn;
 	
-	private boolean					mListeningForMessages;
+	private final MessageListener				mMessageListener;
+	
+	// TODO Use the Bluetooth listener to notify for disconnection
+	private final BluetoothConnectionListener	mBluetoothListener;
+	
+	private boolean								mListeningForMessages;
 	
 	/**
 	 * Creates a new connected device, that listens for messages.
 	 * 
 	 * @param aSocket
-	 *            The bluetooth socket.
-	 * @param aListener
+	 *            The Bluetooth socket.
+	 * @param aMessageListener
 	 *            The message listener.
 	 * @throws IOException
 	 *             if the in-/ or output stream could not be resolved.
 	 */
-	public ConnectedDevice(final BluetoothSocket aSocket, final MessageListener aListener) throws IOException
+	public ConnectedDevice(final BluetoothSocket aSocket, final MessageListener aMessageListener, BluetoothConnectionListener aBluetoothListener)
+			throws IOException
 	{
+		mSocket = aSocket;
 		mOut = aSocket.getOutputStream();
 		mIn = aSocket.getInputStream();
-		mListener = aListener;
+		mMessageListener = aMessageListener;
+		mBluetoothListener = aBluetoothListener;
 		
 		new Thread()
 		{
@@ -124,7 +176,7 @@ public class ConnectedDevice
 						{
 							args[i] = Uri.decode(args[i]);
 						}
-						mListener.receiveMessage(this, MessageType.valueOf(message[0]), args);
+						mMessageListener.receiveMessage(this, MessageType.valueOf(message[0]), args);
 						messageBuilder.delete(0, messageBuilder.length());
 					}
 					else
@@ -136,5 +188,10 @@ public class ConnectedDevice
 			catch (final IOException e)
 			{}
 		}
+	}
+	
+	public BluetoothDevice getDevice()
+	{
+		return mSocket.getRemoteDevice();
 	}
 }

@@ -1,9 +1,11 @@
 package com.deepercreeper.vampireapp.host;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.util.CodingUtil;
 import com.deepercreeper.vampireapp.util.FilesUtil;
@@ -65,6 +67,18 @@ public class Host
 		final Element meta = (Element) root.getElementsByTagName("meta").item(0);
 		mName = CodingUtil.decode(meta.getAttribute("name"));
 		mLocation = meta.getAttribute("location");
+	}
+	
+	public void removePlayer(ConnectedDevice aDevice)
+	{
+		for (Iterator<Player> it = mPlayers.iterator(); it.hasNext();)
+		{
+			Player player = it.next();
+			if (player.getDevice().getDevice().equals(aDevice))
+			{
+				it.remove();
+			}
+		}
 	}
 	
 	public boolean addPlayer(Player aPlayer)

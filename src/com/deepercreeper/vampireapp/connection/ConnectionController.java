@@ -27,24 +27,8 @@ import com.deepercreeper.vampireapp.util.view.SelectItemDialog.NamableSelectionL
  * 
  * @author vrl
  */
-public class ConnectionController
+public class ConnectionController implements BluetoothConnectionListener
 {
-	/**
-	 * This listener is used to react to Bluetooth events.
-	 * 
-	 * @author vrl
-	 */
-	public interface BluetoothConnectionListener
-	{
-		/**
-		 * Called when this device was connected to another device with the given name.
-		 * 
-		 * @param aDevice
-		 *            The connected device name.
-		 */
-		public void connectedTo(ConnectedDevice aDevice);
-	}
-	
 	/**
 	 * This listener is used to react to connection events.
 	 * 
@@ -84,6 +68,18 @@ public class ConnectionController
 	private boolean								mBluetooth			= true;
 	
 	private boolean								mCheckingForDevies	= false;
+	
+	@Override
+	public void connectedTo(ConnectedDevice aDevice)
+	{}
+	
+	@Override
+	public void disconnectedFrom(ConnectedDevice aDevice)
+	{
+		// TODO Implement
+		aDevice.stopListening();
+		mDevices.remove(aDevice);
+	}
 	
 	/**
 	 * Creates a new connection controller for the given activity.
@@ -139,16 +135,16 @@ public class ConnectionController
 		final NamableSelectionListener<Device> listener = new NamableSelectionListener<Device>()
 		{
 			@Override
+			public void cancel()
+			{
+				mReceiver.removeDeviceListener(BluetoothDevice.ACTION_FOUND);
+			}
+			
+			@Override
 			public void select(final Device aDevice)
 			{
 				mReceiver.removeDeviceListener(BluetoothDevice.ACTION_FOUND);
 				connectTo(aDevice, aListener);
-			}
-			
-			@Override
-			public void cancel()
-			{
-				mReceiver.removeDeviceListener(BluetoothDevice.ACTION_FOUND);
 			}
 		};
 		final SelectItemDialog<Device> dialog = SelectItemDialog.createSelectionDialog(devices, mContext.getString(R.string.choose_host), mContext,
@@ -216,7 +212,7 @@ public class ConnectionController
 			{
 				try
 				{
-					final ConnectedDevice connectedDevice = new ConnectedDevice(socket, mMessageListener);
+					final ConnectedDevice connectedDevice = new ConnectedDevice(socket, mMessageListener, this);
 					mDevices.add(connectedDevice);
 					aListener.connectedTo(connectedDevice);
 					connected = true;
@@ -249,16 +245,16 @@ public class ConnectionController
 		if (mBluetoothAdapter != null)
 		{
 			// TODO Remove all unnecessary receivers
-			final IntentFilter filter1 = new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED);
-			final IntentFilter filter2 = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
-			final IntentFilter filter3 = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+			// final IntentFilter filter1 = new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED);
+			// final IntentFilter filter2 = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
+			// final IntentFilter filter3 = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED);
 			final IntentFilter filter4 = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-			final IntentFilter filter5 = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-			mContext.registerReceiver(mReceiver, filter1);
-			mContext.registerReceiver(mReceiver, filter2);
-			mContext.registerReceiver(mReceiver, filter3);
+			// final IntentFilter filter5 = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+			// mContext.registerReceiver(mReceiver, filter1);
+			// mContext.registerReceiver(mReceiver, filter2);
+			// mContext.registerReceiver(mReceiver, filter3);
 			mContext.registerReceiver(mReceiver, filter4);
-			mContext.registerReceiver(mReceiver, filter5);
+			// mContext.registerReceiver(mReceiver, filter5);
 			
 			final BluetoothListener listener = new BluetoothListener()
 			{
@@ -410,7 +406,7 @@ public class ConnectionController
 				boolean connected = false;
 				try
 				{
-					final ConnectedDevice connectedDevice = new ConnectedDevice(socket, mMessageListener);
+					final ConnectedDevice connectedDevice = new ConnectedDevice(socket, mMessageListener, this);
 					aListener.connectedTo(connectedDevice);
 					connected = true;
 				}

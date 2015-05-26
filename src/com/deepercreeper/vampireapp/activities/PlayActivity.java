@@ -12,11 +12,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
+import com.deepercreeper.vampireapp.connection.BluetoothConnectionListener;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageListener;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
 import com.deepercreeper.vampireapp.connection.ConnectionController;
-import com.deepercreeper.vampireapp.connection.ConnectionController.BluetoothConnectionListener;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
@@ -24,7 +24,7 @@ import com.deepercreeper.vampireapp.util.ConnectionUtil;
 
 /**
  * This activity is used to play a character, that was created before and connect to a host.<br>
- * This is the real play process that a non master user can do with this app.
+ * This is the real play process that a non master user can do with this application.
  * 
  * @author vrl
  */
@@ -53,6 +53,13 @@ public class PlayActivity extends Activity implements ItemConsumer, BluetoothCon
 	{
 		aDevice.send(MessageType.LOGIN, mChar.getName());
 		// TODO Check sent messages
+	}
+	
+	@Override
+	public void disconnectedFrom(ConnectedDevice aDevice)
+	{
+		// TODO Tell user that he was disconnected
+		exit();
 	}
 	
 	@Override

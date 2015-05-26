@@ -8,11 +8,11 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.connection.BluetoothConnectionListener;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageListener;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
 import com.deepercreeper.vampireapp.connection.ConnectionController;
-import com.deepercreeper.vampireapp.connection.ConnectionController.BluetoothConnectionListener;
 import com.deepercreeper.vampireapp.connection.ConnectionController.ConnectionStateListener;
 import com.deepercreeper.vampireapp.host.Host;
 import com.deepercreeper.vampireapp.host.Player;
@@ -50,6 +50,13 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionSt
 	public void connectedTo(final ConnectedDevice aDevice)
 	{
 		// TODO Implement
+	}
+	
+	@Override
+	public void disconnectedFrom(ConnectedDevice aDevice)
+	{
+		mHost.removePlayer(aDevice);
+		// TODO Auto-generated method stub
 	}
 	
 	@Override
