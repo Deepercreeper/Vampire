@@ -8,6 +8,7 @@ import java.util.Arrays;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.net.Uri;
+import com.deepercreeper.vampireapp.util.Log;
 
 public class ConnectedDevice
 {
@@ -58,6 +59,8 @@ public class ConnectedDevice
 		 */
 		REMOVED_FOCUS
 	}
+	
+	private static final String			TAG				= "ConnectedDevice";
 	
 	private static final String			ARGS_DELIM		= ",";
 	
@@ -142,14 +145,6 @@ public class ConnectedDevice
 		// TODO Check whether message has been sent
 	}
 	
-	/**
-	 * Stops listening for messages by other devices.
-	 */
-	public void stopListening()
-	{
-		mListeningForMessages = false;
-	}
-	
 	private void listenForMessages()
 	{
 		mListeningForMessages = true;
@@ -157,8 +152,7 @@ public class ConnectedDevice
 		{
 			if ( !mSocket.isConnected())
 			{
-				mConnectionListener.disconnectedFrom(this);
-				stopListening();
+				exit();
 			}
 			final StringBuilder messageBuilder = new StringBuilder();
 			int c;
@@ -187,5 +181,22 @@ public class ConnectedDevice
 			catch (final IOException e)
 			{}
 		}
+	}
+	
+	public void exit()
+	{
+		mListeningForMessages = false;
+		if (mSocket.isConnected())
+		{
+			try
+			{
+				mSocket.close();
+			}
+			catch (final IOException e)
+			{
+				Log.e(TAG, "Could not close the socket.");
+			}
+		}
+		mConnectionListener.disconnectedFrom(this);
 	}
 }

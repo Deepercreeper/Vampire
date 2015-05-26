@@ -2,7 +2,9 @@ package com.deepercreeper.vampireapp.connection;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -199,6 +201,7 @@ public class ConnectionController implements ConnectionListener
 		}
 		if ( !connected)
 		{
+			cancel();
 			Log.w(TAG, "Could not connect to device.");
 		}
 	}
@@ -206,9 +209,13 @@ public class ConnectionController implements ConnectionListener
 	@Override
 	public void disconnectedFrom(final ConnectedDevice aDevice)
 	{
-		aDevice.stopListening();
 		mDevices.remove(aDevice);
 		mConnectionListener.disconnectedFrom(aDevice);
+	}
+	
+	public void disconnect(final ConnectedDevice aDevice)
+	{
+		aDevice.exit();
 	}
 	
 	/**
@@ -216,8 +223,20 @@ public class ConnectionController implements ConnectionListener
 	 */
 	public void exit()
 	{
+		final Set<ConnectedDevice> devices = new HashSet<ConnectedDevice>();
+		devices.addAll(mDevices);
+		mDevices.clear();
+		for (final ConnectedDevice device : devices)
+		{
+			disconnect(device);
+		}
 		stopServer();
-		mContext.unregisterReceiver(mReceiver);
+		try
+		{
+			mContext.unregisterReceiver(mReceiver);
+		}
+		catch (final IllegalArgumentException e)
+		{}
 	}
 	
 	/**
@@ -237,17 +256,8 @@ public class ConnectionController implements ConnectionListener
 		
 		if (mBluetoothAdapter != null)
 		{
-			// TODO Remove all unnecessary receivers
-			// final IntentFilter filter1 = new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED);
-			// final IntentFilter filter2 = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
-			// final IntentFilter filter3 = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED);
-			final IntentFilter filter4 = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-			// final IntentFilter filter5 = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-			// mContext.registerReceiver(mReceiver, filter1);
-			// mContext.registerReceiver(mReceiver, filter2);
-			// mContext.registerReceiver(mReceiver, filter3);
-			mContext.registerReceiver(mReceiver, filter4);
-			// mContext.registerReceiver(mReceiver, filter5);
+			final IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+			mContext.registerReceiver(mReceiver, filter);
 			
 			final BluetoothListener listener = new BluetoothListener()
 			{
@@ -390,6 +400,28 @@ public class ConnectionController implements ConnectionListener
 				{
 					Log.i(TAG, "Connection listening failed.");
 				}
+			}
+		}
+		if (mInsecureSocket != null)
+		{
+			try
+			{
+				mInsecureSocket.close();
+			}
+			catch (final IOException e)
+			{
+				Log.e(TAG, "Could not close insecure socket.");
+			}
+		}
+		if (mSecureSocket != null)
+		{
+			try
+			{
+				mSecureSocket.close();
+			}
+			catch (final IOException e)
+			{
+				Log.e(TAG, "Could not close secure socket.");
 			}
 		}
 		mInsecureSocket = null;

@@ -41,8 +41,8 @@ public final class R {
         public static final int basic_info_label=0x7f090019;
         public static final int behavior_label=0x7f090008;
         public static final int behavior_spinner=0x7f09001d;
-        public static final int bluetooth=0x7f090044;
-        public static final int char_name=0x7f09003e;
+        public static final int bluetooth=0x7f090045;
+        public static final int char_name=0x7f09003f;
         public static final int char_name_text=0x7f09001a;
         public static final int characters_list=0x7f09000b;
         public static final int clan_label=0x7f090020;
@@ -54,8 +54,8 @@ public final class R {
         public static final int create_character_button=0x7f090009;
         public static final int create_character_free_button=0x7f09000a;
         public static final int create_host_button=0x7f09002b;
-        public static final int decrease_button=0x7f090042;
-        public static final int delete_chars=0x7f090043;
+        public static final int decrease_button=0x7f090043;
+        public static final int delete_chars=0x7f090044;
         public static final int description_values_panel=0x7f09000d;
         public static final int ep=0x7f090024;
         public static final int ep_label=0x7f090006;
@@ -70,7 +70,7 @@ public final class R {
         public static final int health_label=0x7f090025;
         public static final int host_name=0x7f090029;
         public static final int hosts_list=0x7f09002c;
-        public static final int increase_button=0x7f090041;
+        public static final int increase_button=0x7f090042;
         public static final int insanities_panel=0x7f09000f;
         public static final int inventory_button=0x7f09002d;
         public static final int inventory_panel=0x7f09002e;
@@ -89,19 +89,20 @@ public final class R {
         public static final int name_label=0x7f090003;
         public static final int nature_label=0x7f090007;
         public static final int nature_spinner=0x7f09001c;
-        public static final int network=0x7f090045;
+        public static final int network=0x7f090046;
         public static final int next_to_2_button=0x7f090023;
         public static final int next_to_3_button=0x7f090018;
         public static final int next_to_4_button=0x7f090011;
         public static final int pager=0x7f090000;
         public static final int play_button=0x7f090005;
+        public static final int play_container=0x7f09003e;
         public static final int relative_item_container=0x7f090034;
-        public static final int remove_button=0x7f09003f;
+        public static final int remove_button=0x7f090040;
         public static final int remove_item=0x7f090031;
         public static final int reset_temp_points_button=0x7f090017;
         public static final int step_value=0x7f090028;
         public static final int trimmer=0x7f090001;
-        public static final int value_label=0x7f090040;
+        public static final int value_label=0x7f090041;
         public static final int weight=0x7f090030;
     }
     public static final class layout {

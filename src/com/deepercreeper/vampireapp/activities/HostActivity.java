@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
@@ -73,6 +74,8 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 	@Override
 	public void disconnectedFrom(final ConnectedDevice aDevice)
 	{
+		// FIXME Why is here sometimes a wrong ConnectedDevice?
+		Toast.makeText(this, mHost.getPlayer(aDevice).getName() + " left the game.", Toast.LENGTH_SHORT).show();
 		mHost.removePlayer(aDevice);
 		// TODO clean up
 	}
@@ -150,6 +153,7 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 		if (YesNoDialog.isDialogOpen())
 		{
 			aDevice.send(MessageType.WAIT);
+			mConnection.disconnect(aDevice);
 			return;
 		}
 		
@@ -163,6 +167,7 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 					if ( !mHost.addPlayer(new Player(aPlayer, aDevice)))
 					{
 						aDevice.send(MessageType.NAME_IN_USE);
+						mConnection.disconnect(aDevice);
 					}
 					else
 					{
@@ -172,6 +177,7 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 				else
 				{
 					aDevice.send(MessageType.DECLINE);
+					mConnection.disconnect(aDevice);
 				}
 			}
 		};

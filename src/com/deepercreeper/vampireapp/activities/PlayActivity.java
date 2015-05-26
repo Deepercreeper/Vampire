@@ -2,10 +2,13 @@ package com.deepercreeper.vampireapp.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -40,6 +43,8 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	 * The request code for playing a character.
 	 */
 	public static final int			PLAY_CHAR_REQUEST	= 2;
+	
+	private Handler					mHandler;
 	
 	private ConnectionController	mConnection;
 	
@@ -104,6 +109,9 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	{
 		switch (aType)
 		{
+			case ACCEPT :
+				setEnabled(true);
+				break;
 			case DECLINE :
 				exit(true);
 				break;
@@ -126,7 +134,37 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	{
 		super.onCreate(aSavedInstanceState);
 		
+		mHandler = new Handler();
+		
 		ConnectionUtil.loadItems(this, this);
+	}
+	
+	public void setEnabled(final boolean aEnabled)
+	{
+		if ( !aEnabled)
+		{
+			mHandler.post(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+					findViewById(R.id.play_container).setBackgroundColor(Color.GRAY);
+				}
+			});
+		}
+		else
+		{
+			mHandler.post(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+					findViewById(R.id.play_container).setBackgroundColor(Color.BLACK);
+				}
+			});
+		}
 	}
 	
 	private void init()
@@ -188,5 +226,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 				exit(true);
 			}
 		});
+		
+		setEnabled(false);
 	}
 }

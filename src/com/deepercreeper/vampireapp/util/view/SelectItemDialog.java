@@ -70,6 +70,7 @@ public class SelectItemDialog <T extends Nameable> extends DialogFragment
 			public void onItemClick(final AdapterView<?> aParent, final View aView, final int aPosition, final long aId)
 			{
 				mAction.select(mNamables.get(aPosition));
+				dismiss();
 			}
 		});
 		mView.setAdapter(mAdapter);

@@ -69,11 +69,11 @@ public class Host
 		mLocation = meta.getAttribute("location");
 	}
 	
-	public void removePlayer(ConnectedDevice aDevice)
+	public void removePlayer(final ConnectedDevice aDevice)
 	{
-		for (Iterator<Player> it = mPlayers.iterator(); it.hasNext();)
+		for (final Iterator<Player> it = mPlayers.iterator(); it.hasNext();)
 		{
-			Player player = it.next();
+			final Player player = it.next();
 			if (player.getDevice().getDevice().equals(aDevice))
 			{
 				it.remove();
@@ -81,7 +81,19 @@ public class Host
 		}
 	}
 	
-	public boolean addPlayer(Player aPlayer)
+	public Player getPlayer(final ConnectedDevice aDevice)
+	{
+		for (final Player player : mPlayers)
+		{
+			if (player.getDevice().equals(aDevice))
+			{
+				return player;
+			}
+		}
+		return null;
+	}
+	
+	public boolean addPlayer(final Player aPlayer)
 	{
 		if (mPlayers.contains(aPlayer))
 		{
