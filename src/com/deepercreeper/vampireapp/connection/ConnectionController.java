@@ -135,26 +135,45 @@ public class ConnectionController
 	public void connect(final BluetoothConnectionListener aListener)
 	{
 		// TODO Make this whole fuck'n thing stable
-		final Set<Device> pairedDevices = new HashSet<Device>();
-		for (final BluetoothDevice device : mBluetoothAdapter.getBondedDevices())
-		{
-			pairedDevices.add(new Device(device));
-		}
-		if (pairedDevices.isEmpty())
-		{
-			Toast.makeText(mContext, R.string.no_paired_device, Toast.LENGTH_SHORT).show();
-			return;
-		}
+		final List<Device> devices = new ArrayList<Device>();
 		final NamableSelectionListener<Device> listener = new NamableSelectionListener<Device>()
 		{
 			@Override
 			public void select(final Device aDevice)
 			{
+				mReceiver.removeDeviceListener(BluetoothDevice.ACTION_FOUND);
 				connectTo(aDevice, aListener);
 			}
+			
+			@Override
+			public void cancel()
+			{
+				mReceiver.removeDeviceListener(BluetoothDevice.ACTION_FOUND);
+			}
 		};
-		SelectItemDialog.showSelectionDialog(pairedDevices.toArray(new Device[pairedDevices.size()]), mContext.getString(R.string.choose_host),
-				mContext, listener);
+		final SelectItemDialog<Device> dialog = SelectItemDialog.createSelectionDialog(devices, mContext.getString(R.string.choose_host), mContext,
+				listener);
+		mReceiver.setDeviceListener(BluetoothDevice.ACTION_FOUND, new BluetoothListener()
+		{
+			@Override
+			public void action(BluetoothDevice aDevice)
+			{
+				dialog.addOption(new Device(aDevice));
+			}
+		});
+		if ( !mBluetoothAdapter.startDiscovery())
+		{
+			for (final BluetoothDevice device : mBluetoothAdapter.getBondedDevices())
+			{
+				devices.add(new Device(device));
+			}
+			if (devices.isEmpty())
+			{
+				Toast.makeText(mContext, R.string.no_paired_device, Toast.LENGTH_SHORT).show();
+				return;
+			}
+		}
+		dialog.show(mContext.getFragmentManager(), mContext.getString(R.string.choose_host));
 	}
 	
 	/**
@@ -167,7 +186,6 @@ public class ConnectionController
 	 */
 	public void connectTo(final Device aDevice, final BluetoothConnectionListener aListener)
 	{
-		Log.i(TAG, "Tried to connect to " + aDevice);
 		final BluetoothDevice device = aDevice.getDevice();
 		BluetoothSocket socket = null;
 		try
@@ -178,7 +196,6 @@ public class ConnectionController
 		{}
 		if (socket == null)
 		{
-			Log.i(TAG, "Could not connect via insecure Rfcomm.");
 			try
 			{
 				socket = device.createRfcommSocketToServiceRecord(DEFAULT_UUID);
@@ -186,7 +203,7 @@ public class ConnectionController
 			catch (final IOException e)
 			{}
 		}
-		Log.i(TAG, "Socket was created and the connection state is " + (socket == null ? null : socket.isConnected()));
+		boolean connected = false;
 		if (socket != null)
 		{
 			try
@@ -202,10 +219,15 @@ public class ConnectionController
 					final ConnectedDevice connectedDevice = new ConnectedDevice(socket, mMessageListener);
 					mDevices.add(connectedDevice);
 					aListener.connectedTo(connectedDevice);
+					connected = true;
 				}
 				catch (final IOException e)
 				{}
 			}
+		}
+		if ( !connected)
+		{
+			Log.w(TAG, "Could not connect to device.");
 		}
 	}
 	
@@ -226,14 +248,17 @@ public class ConnectionController
 		
 		if (mBluetoothAdapter != null)
 		{
+			// TODO Remove all unnecessary receivers
 			final IntentFilter filter1 = new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED);
 			final IntentFilter filter2 = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
 			final IntentFilter filter3 = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED);
 			final IntentFilter filter4 = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+			final IntentFilter filter5 = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
 			mContext.registerReceiver(mReceiver, filter1);
 			mContext.registerReceiver(mReceiver, filter2);
 			mContext.registerReceiver(mReceiver, filter3);
 			mContext.registerReceiver(mReceiver, filter4);
+			mContext.registerReceiver(mReceiver, filter5);
 			
 			final BluetoothListener listener = new BluetoothListener()
 			{
@@ -370,28 +395,31 @@ public class ConnectionController
 			BluetoothSocket socket = null;
 			if (mInsecureSocket != null) try
 			{
-				Log.i(TAG, "Trying to accept insecure socket.");
 				socket = mInsecureSocket.accept(10);
 			}
 			catch (final IOException e)
 			{}
 			if (mSecureSocket != null && socket != null) try
 			{
-				Log.i(TAG, "Trying to accept secure socket.");
 				socket = mSecureSocket.accept(10);
 			}
 			catch (final IOException e)
 			{}
 			if (socket != null)
 			{
+				boolean connected = false;
 				try
 				{
-					// TODO Remove most of all info logs
 					final ConnectedDevice connectedDevice = new ConnectedDevice(socket, mMessageListener);
 					aListener.connectedTo(connectedDevice);
+					connected = true;
 				}
 				catch (final IOException e)
 				{}
+				if ( !connected)
+				{
+					Log.i(TAG, "Connection listening failed.");
+				}
 			}
 		}
 		mInsecureSocket = null;

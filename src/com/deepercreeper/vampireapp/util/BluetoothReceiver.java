@@ -51,6 +51,11 @@ public class BluetoothReceiver extends BroadcastReceiver
 		mListeners.put(aAction, aListener);
 	}
 	
+	public void removeDeviceListener(String aAction)
+	{
+		mListeners.remove(aAction);
+	}
+	
 	public void setBluetoothListener(int aState, BluetoothListener aListener)
 	{
 		mListeners.put("" + aState, aListener);

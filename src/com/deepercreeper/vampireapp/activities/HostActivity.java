@@ -15,6 +15,7 @@ import com.deepercreeper.vampireapp.connection.ConnectionController;
 import com.deepercreeper.vampireapp.connection.ConnectionController.BluetoothConnectionListener;
 import com.deepercreeper.vampireapp.connection.ConnectionController.ConnectionStateListener;
 import com.deepercreeper.vampireapp.host.Host;
+import com.deepercreeper.vampireapp.host.Player;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.util.ConnectionUtil;
@@ -75,27 +76,45 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionSt
 		switch (aType)
 		{
 			case LOGIN :
-				if (YesNoDialog.isDialogOpen())
-				{
-					aDevice.send(MessageType.WAIT);
-				}
-				else
-				{
-					final YesNoListener listener = new YesNoListener()
-					{
-						@Override
-						public void select(final boolean aYes)
-						{
-							aDevice.send(aYes ? MessageType.ACCEPT : MessageType.DECLINE);
-						}
-					};
-					YesNoDialog.showYesNoDialog(aArgs[0], getString(R.string.new_player), this, listener);
-				}
+				login(aDevice, aArgs[0]);
 				break;
 			
 			default :
 				break;
 		}
+	}
+	
+	private void login(final ConnectedDevice aDevice, final String aPlayer)
+	{
+		if (YesNoDialog.isDialogOpen())
+		{
+			aDevice.send(MessageType.WAIT);
+			return;
+		}
+		
+		final YesNoListener listener = new YesNoListener()
+		{
+			@Override
+			public void select(final boolean aYes)
+			{
+				if (aYes)
+				{
+					if ( !mHost.addPlayer(new Player(aPlayer, aDevice)))
+					{
+						aDevice.send(MessageType.NAME_IN_USE);
+					}
+					else
+					{
+						aDevice.send(MessageType.ACCEPT);
+					}
+				}
+				else
+				{
+					aDevice.send(MessageType.DECLINE);
+				}
+			}
+		};
+		YesNoDialog.showYesNoDialog(aPlayer, getString(R.string.new_player), this, listener);
 	}
 	
 	@Override

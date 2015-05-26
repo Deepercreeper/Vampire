@@ -116,8 +116,12 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 			{
 				addItem(aChoosenItem);
 			}
+			
+			@Override
+			public void cancel()
+			{}
 		};
-		SelectItemDialog.showSelectionDialog(items.toArray(new Item[items.size()]), getContext().getString(R.string.add_item), getContext(), action);
+		SelectItemDialog.showSelectionDialog(items, getContext().getString(R.string.add_item), getContext(), action);
 	}
 	
 	@Override
@@ -205,9 +209,12 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 			{
 				setItemAt(index, aChoosenItem);
 			}
+			
+			@Override
+			public void cancel()
+			{}
 		};
-		SelectItemDialog.showSelectionDialog(items.toArray(new Item[items.size()]), getContext().getString(R.string.edit_item) + aItem.getName(),
-				getContext(), action);
+		SelectItemDialog.showSelectionDialog(items, getContext().getString(R.string.edit_item) + aItem.getName(), getContext(), action);
 	}
 	
 	@Override

@@ -1,9 +1,6 @@
 package com.deepercreeper.vampireapp.util.view;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -28,14 +25,16 @@ public class HostContextMenu extends DialogFragment
 	
 	private enum Action
 	{
-		// TODO Action position
-		PLAY(R.string.play_host), DELETE(R.string.delete_host);
+		PLAY(R.string.play_host, 0), DELETE(R.string.delete_host, 1);
 		
 		private final int	mResId;
 		
-		private Action(final int aResId)
+		private final int	mIndex;
+		
+		private Action(final int aResId, int aIndex)
 		{
 			mResId = aResId;
+			mIndex = aIndex;
 		}
 		
 		public int getResId()
@@ -63,23 +62,23 @@ public class HostContextMenu extends DialogFragment
 	@Override
 	public Dialog onCreateDialog(final Bundle aSavedInstanceState)
 	{
-		final List<String> items = new ArrayList<String>();
+		final String[] actionNames = new String[Action.values().length];
+		
 		final Map<String, Action> actions = new HashMap<String, Action>();
 		for (final Action action : Action.values())
 		{
 			final String item = mContext.getString(action.getResId());
-			items.add(item);
+			actionNames[action.mIndex] = item;
 			actions.put(item, action);
 		}
-		Collections.sort(items);
 		
 		final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-		builder.setTitle(mName).setItems(items.toArray(new String[items.size()]), new DialogInterface.OnClickListener()
+		builder.setTitle(mName).setItems(actionNames, new DialogInterface.OnClickListener()
 		{
 			@Override
 			public void onClick(final DialogInterface dialog, final int which)
 			{
-				selectItem(actions.get(items.get(which)));
+				selectItem(actions.get(actionNames[which]));
 			}
 		});
 		return builder.create();

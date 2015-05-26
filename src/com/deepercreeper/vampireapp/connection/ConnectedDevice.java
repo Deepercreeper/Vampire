@@ -17,7 +17,7 @@ public class ConnectedDevice
 	
 	public static enum MessageType
 	{
-		LOGIN, ACCEPT, DECLINE, WAIT
+		LOGIN, ACCEPT, DECLINE, WAIT, NAME_IN_USE
 	}
 	
 	private static final String		ARGS_DELIM		= ",";

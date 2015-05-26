@@ -1,5 +1,7 @@
 package com.deepercreeper.vampireapp.host;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import com.deepercreeper.vampireapp.items.ItemProvider;
@@ -16,6 +18,8 @@ public class Host
 	private final String		mName;
 	
 	private final ItemProvider	mItems;
+	
+	private final List<Player>	mPlayers	= new ArrayList<Player>();
 	
 	private final String		mLocation;
 	
@@ -61,6 +65,16 @@ public class Host
 		final Element meta = (Element) root.getElementsByTagName("meta").item(0);
 		mName = CodingUtil.decode(meta.getAttribute("name"));
 		mLocation = meta.getAttribute("location");
+	}
+	
+	public boolean addPlayer(Player aPlayer)
+	{
+		if (mPlayers.contains(aPlayer))
+		{
+			return false;
+		}
+		mPlayers.add(aPlayer);
+		return true;
 	}
 	
 	/**

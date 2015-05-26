@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <string name="name_in_use">Der gewählte Charakter Name ist bereits an einen anderen Spieler vergeben.</string>
+    <string name="host_busy">Der gewählte host ist zur Zeit beschäftigt. Versuchen Sie es später nochmal.</string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
     <string name="app_name">VampireApp</string>

@@ -225,8 +225,12 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			{
 				addChild(aChoosenItem);
 			}
+			
+			@Override
+			public void cancel()
+			{}
 		};
-		SelectItemDialog.showSelectionDialog(items.toArray(new Item[items.size()]), getContext().getString(R.string.add_item), getContext(), action);
+		SelectItemDialog.showSelectionDialog(items, getContext().getString(R.string.add_item), getContext(), action);
 	}
 	
 	@Override
@@ -421,9 +425,12 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			{
 				setChildAt(index, aChoosenItem);
 			}
+			
+			@Override
+			public void cancel()
+			{}
 		};
-		SelectItemDialog.showSelectionDialog(children.toArray(new Item[children.size()]),
-				getContext().getString(R.string.edit_item) + aItem.getName(), getContext(), action);
+		SelectItemDialog.showSelectionDialog(children, getContext().getString(R.string.edit_item) + aItem.getName(), getContext(), action);
 	}
 	
 	@Override

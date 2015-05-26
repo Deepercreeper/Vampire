@@ -9,6 +9,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
@@ -70,7 +71,14 @@ public class PlayActivity extends Activity implements ItemConsumer, BluetoothCon
 			case DECLINE :
 				exit();
 				break;
-			
+			case WAIT :
+				Toast.makeText(this, R.string.host_busy, Toast.LENGTH_SHORT).show();
+				exit();
+				break;
+			case NAME_IN_USE :
+				Toast.makeText(this, R.string.name_in_use, Toast.LENGTH_SHORT).show();
+				exit();
+				break;
 			default :
 				break;
 		}
