@@ -22,10 +22,9 @@ import com.deepercreeper.vampireapp.character.controllers.CharController;
 import com.deepercreeper.vampireapp.character.instance.CharacterCompound;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
-import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageListener;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
 import com.deepercreeper.vampireapp.connection.ConnectionController;
-import com.deepercreeper.vampireapp.connection.ConnectionController.ConnectionStateListener;
+import com.deepercreeper.vampireapp.connection.ConnectionListener;
 import com.deepercreeper.vampireapp.host.Host;
 import com.deepercreeper.vampireapp.host.HostController;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
@@ -38,7 +37,7 @@ import com.deepercreeper.vampireapp.util.ConnectionUtil;
  * 
  * @author vrl
  */
-public class MainActivity extends Activity implements ItemConsumer, ConnectionStateListener, MessageListener
+public class MainActivity extends Activity implements ItemConsumer, ConnectionListener
 {
 	private class PlaceholderFragment extends Fragment
 	{
@@ -122,6 +121,16 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionSt
 	private ViewPager				mViewPager;
 	
 	@Override
+	public void cancel()
+	{}
+	
+	@Override
+	public void connectedTo(final ConnectedDevice aDevice)
+	{
+		// TODO Use when non game communication is needed
+	}
+	
+	@Override
 	public void connectionEnabled(final boolean aEnabled)
 	{
 		if (mChars != null)
@@ -143,9 +152,21 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionSt
 	}
 	
 	@Override
+	public void disconnectedFrom(final ConnectedDevice aDevice)
+	{
+		// TODO Use when non game communication is needed
+	}
+	
+	public void exit()
+	{
+		mConnection.exit();
+		finish();
+	}
+	
+	@Override
 	public void onBackPressed()
 	{
-		finish();
+		exit();
 	}
 	
 	@Override
@@ -153,11 +174,6 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionSt
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
-		if ( !mConnection.hasBluetooth())
-		{
-			menu.findItem(R.id.bluetooth).setEnabled(false).setChecked(false);
-			menu.findItem(R.id.network).setChecked(true);
-		}
 		return true;
 	}
 	
@@ -194,7 +210,7 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionSt
 	@Override
 	public void receiveMessage(final ConnectedDevice aDevice, final MessageType aType, final String[] aArgs)
 	{
-		// TODO Implement for non game messages
+		// TODO Use when non game communication is needed
 	}
 	
 	@Override
@@ -255,13 +271,6 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionSt
 	}
 	
 	@Override
-	protected void onDestroy()
-	{
-		mConnection.unregister();
-		super.onDestroy();
-	}
-	
-	@Override
 	protected void onResume()
 	{
 		if (mConnection != null)
@@ -282,7 +291,12 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionSt
 	private void init()
 	{
 		mConnection = new ConnectionController(this, this);
-		mConnection.addConnectionListener(this);
+		
+		if ( !mConnection.hasBluetooth())
+		{
+			mOptionsMenu.findItem(R.id.bluetooth).setEnabled(false).setChecked(false);
+			mOptionsMenu.findItem(R.id.network).setChecked(true);
+		}
 		
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
 		

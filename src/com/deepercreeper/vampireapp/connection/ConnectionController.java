@@ -2,9 +2,7 @@ package com.deepercreeper.vampireapp.connection;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -14,7 +12,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.IntentFilter;
 import android.widget.Toast;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageListener;
+import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
 import com.deepercreeper.vampireapp.util.BluetoothReceiver;
 import com.deepercreeper.vampireapp.util.BluetoothReceiver.BluetoothListener;
 import com.deepercreeper.vampireapp.util.Log;
@@ -27,84 +25,47 @@ import com.deepercreeper.vampireapp.util.view.SelectItemDialog.NamableSelectionL
  * 
  * @author vrl
  */
-public class ConnectionController implements BluetoothConnectionListener
+public class ConnectionController implements ConnectionListener
 {
-	/**
-	 * This listener is used to react to connection events.
-	 * 
-	 * @author vrl
-	 */
-	public interface ConnectionStateListener
-	{
-		/**
-		 * Called when the connection state has changed.
-		 * 
-		 * @param aEnabled
-		 *            Whether the connection is enabled.
-		 */
-		public void connectionEnabled(boolean aEnabled);
-	}
+	private static final String			TAG					= "ConnectionController";
 	
-	private static final String					TAG					= "ConnectionController";
+	private static final UUID			DEFAULT_UUID		= UUID.fromString("c155da2d-302d-4f10-bc3b-fa277af3599d");
 	
-	private static final UUID					DEFAULT_UUID		= UUID.fromString("c155da2d-302d-4f10-bc3b-fa277af3599d");
+	private final BluetoothReceiver		mReceiver			= new BluetoothReceiver();
 	
-	private final BluetoothReceiver				mReceiver			= new BluetoothReceiver();
+	private final Activity				mContext;
 	
-	private final Activity						mContext;
+	private final List<ConnectedDevice>	mDevices			= new ArrayList<ConnectedDevice>();
 	
-	private final Set<ConnectionStateListener>	mListeners			= new HashSet<ConnectionStateListener>();
+	private final ConnectionListener	mConnectionListener;
 	
-	private final List<ConnectedDevice>			mDevices			= new ArrayList<ConnectedDevice>();
+	private BluetoothAdapter			mBluetoothAdapter;
 	
-	private final MessageListener				mMessageListener;
+	private BluetoothServerSocket		mInsecureSocket		= null;
 	
-	private BluetoothAdapter					mBluetoothAdapter;
+	private BluetoothServerSocket		mSecureSocket		= null;
 	
-	private BluetoothServerSocket				mInsecureSocket		= null;
+	private boolean						mBluetooth			= true;
 	
-	private BluetoothServerSocket				mSecureSocket		= null;
-	
-	private boolean								mBluetooth			= true;
-	
-	private boolean								mCheckingForDevies	= false;
-	
-	@Override
-	public void connectedTo(ConnectedDevice aDevice)
-	{}
-	
-	@Override
-	public void disconnectedFrom(ConnectedDevice aDevice)
-	{
-		// TODO Implement
-		aDevice.stopListening();
-		mDevices.remove(aDevice);
-	}
+	private boolean						mCheckingForDevies	= false;
 	
 	/**
 	 * Creates a new connection controller for the given activity.
 	 * 
 	 * @param aContext
 	 *            The underlying context.
-	 * @param aMessageListener
-	 *            The listener for incoming messages.
 	 */
-	public ConnectionController(final Activity aContext, final MessageListener aMessageListener)
+	public ConnectionController(final Activity aContext, final ConnectionListener aConnectionListener)
 	{
 		mContext = aContext;
-		mMessageListener = aMessageListener;
+		mConnectionListener = aConnectionListener;
 		init();
 	}
 	
-	/**
-	 * Adds the given connection listener.
-	 * 
-	 * @param aListener
-	 *            The listener that should be called when the connection state changes.
-	 */
-	public void addConnectionListener(final ConnectionStateListener aListener)
+	@Override
+	public void cancel()
 	{
-		mListeners.add(aListener);
+		mConnectionListener.cancel();
 	}
 	
 	/**
@@ -128,16 +89,21 @@ public class ConnectionController implements BluetoothConnectionListener
 	 * @param aListener
 	 *            The listener that is called if the connection was successful.
 	 */
-	public void connect(final BluetoothConnectionListener aListener)
+	public void connect(final ConnectionListener aListener)
 	{
 		// TODO Make this whole fuck'n thing stable
 		final List<Device> devices = new ArrayList<Device>();
+		for (final BluetoothDevice device : mBluetoothAdapter.getBondedDevices())
+		{
+			devices.add(new Device(device));
+		}
 		final NamableSelectionListener<Device> listener = new NamableSelectionListener<Device>()
 		{
 			@Override
 			public void cancel()
 			{
 				mReceiver.removeDeviceListener(BluetoothDevice.ACTION_FOUND);
+				ConnectionController.this.cancel();
 			}
 			
 			@Override
@@ -152,7 +118,7 @@ public class ConnectionController implements BluetoothConnectionListener
 		mReceiver.setDeviceListener(BluetoothDevice.ACTION_FOUND, new BluetoothListener()
 		{
 			@Override
-			public void action(BluetoothDevice aDevice)
+			public void action(final BluetoothDevice aDevice)
 			{
 				dialog.addOption(new Device(aDevice));
 			}
@@ -172,6 +138,16 @@ public class ConnectionController implements BluetoothConnectionListener
 		dialog.show(mContext.getFragmentManager(), mContext.getString(R.string.choose_host));
 	}
 	
+	@Override
+	public void connectedTo(final ConnectedDevice aDevice)
+	{}
+	
+	@Override
+	public void connectionEnabled(final boolean aEnabled)
+	{
+		mConnectionListener.connectionEnabled(aEnabled);
+	}
+	
 	/**
 	 * Connects to the device with the given name.
 	 * 
@@ -180,7 +156,7 @@ public class ConnectionController implements BluetoothConnectionListener
 	 * @param aListener
 	 *            The Bluetooth listener that is called if the device was connected.
 	 */
-	public void connectTo(final Device aDevice, final BluetoothConnectionListener aListener)
+	public void connectTo(final Device aDevice, final ConnectionListener aListener)
 	{
 		final BluetoothDevice device = aDevice.getDevice();
 		BluetoothSocket socket = null;
@@ -212,7 +188,7 @@ public class ConnectionController implements BluetoothConnectionListener
 			{
 				try
 				{
-					final ConnectedDevice connectedDevice = new ConnectedDevice(socket, mMessageListener, this);
+					final ConnectedDevice connectedDevice = new ConnectedDevice(socket, this);
 					mDevices.add(connectedDevice);
 					aListener.connectedTo(connectedDevice);
 					connected = true;
@@ -225,6 +201,23 @@ public class ConnectionController implements BluetoothConnectionListener
 		{
 			Log.w(TAG, "Could not connect to device.");
 		}
+	}
+	
+	@Override
+	public void disconnectedFrom(final ConnectedDevice aDevice)
+	{
+		aDevice.stopListening();
+		mDevices.remove(aDevice);
+		mConnectionListener.disconnectedFrom(aDevice);
+	}
+	
+	/**
+	 * Unregisters all receivers and stops the connection.
+	 */
+	public void exit()
+	{
+		stopServer();
+		mContext.unregisterReceiver(mReceiver);
 	}
 	
 	/**
@@ -290,15 +283,10 @@ public class ConnectionController implements BluetoothConnectionListener
 		return false;
 	}
 	
-	/**
-	 * Removes the given listener.
-	 * 
-	 * @param aListener
-	 *            The listener to remove.
-	 */
-	public void removeConnectionListener(final ConnectionStateListener aListener)
+	@Override
+	public void receiveMessage(final ConnectedDevice aDevice, final MessageType aType, final String[] aArgs)
 	{
-		mListeners.remove(aListener);
+		mConnectionListener.receiveMessage(aDevice, aType, aArgs);
 	}
 	
 	/**
@@ -319,7 +307,7 @@ public class ConnectionController implements BluetoothConnectionListener
 	 * @param aListener
 	 *            The listener for devices that are being connected.
 	 */
-	public void startServer(final BluetoothConnectionListener aListener)
+	public void startServer(final ConnectionListener aListener)
 	{
 		mCheckingForDevies = true;
 		try
@@ -352,30 +340,16 @@ public class ConnectionController implements BluetoothConnectionListener
 		mCheckingForDevies = false;
 	}
 	
-	/**
-	 * Unregisters all receivers and stops the connection.
-	 */
-	public void unregister()
-	{
-		mContext.unregisterReceiver(mReceiver);
-	}
-	
 	private void checkBluetoothState()
 	{
 		if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled())
 		{
 			Toast.makeText(mContext, "Bluetooth is not enabled! Activate Bluetooth!", Toast.LENGTH_SHORT).show();
-			for (final ConnectionStateListener listener : mListeners)
-			{
-				listener.connectionEnabled(false);
-			}
+			connectionEnabled(false);
 		}
 		else
 		{
-			for (final ConnectionStateListener listener : mListeners)
-			{
-				listener.connectionEnabled(true);
-			}
+			connectionEnabled(true);
 		}
 	}
 	
@@ -384,7 +358,7 @@ public class ConnectionController implements BluetoothConnectionListener
 		Toast.makeText(mContext, "Network connections are not enabled yet!", Toast.LENGTH_SHORT).show();
 	}
 	
-	private void listenForDevices(final BluetoothConnectionListener aListener)
+	private void listenForDevices(final ConnectionListener aListener)
 	{
 		while (mCheckingForDevies)
 		{
@@ -406,7 +380,7 @@ public class ConnectionController implements BluetoothConnectionListener
 				boolean connected = false;
 				try
 				{
-					final ConnectedDevice connectedDevice = new ConnectedDevice(socket, mMessageListener, this);
+					final ConnectedDevice connectedDevice = new ConnectedDevice(socket, this);
 					aListener.connectedTo(connectedDevice);
 					connected = true;
 				}

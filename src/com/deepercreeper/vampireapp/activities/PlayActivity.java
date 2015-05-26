@@ -12,11 +12,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
-import com.deepercreeper.vampireapp.connection.BluetoothConnectionListener;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
-import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageListener;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
 import com.deepercreeper.vampireapp.connection.ConnectionController;
+import com.deepercreeper.vampireapp.connection.ConnectionListener;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
@@ -28,7 +27,7 @@ import com.deepercreeper.vampireapp.util.ConnectionUtil;
  * 
  * @author vrl
  */
-public class PlayActivity extends Activity implements ItemConsumer, BluetoothConnectionListener, MessageListener
+public class PlayActivity extends Activity implements ItemConsumer, ConnectionListener
 {
 	private static final String		TAG					= "PlayActivity";
 	
@@ -49,17 +48,24 @@ public class PlayActivity extends Activity implements ItemConsumer, BluetoothCon
 	private CharacterInstance		mChar;
 	
 	@Override
-	public void connectedTo(final ConnectedDevice aDevice)
+	public void cancel()
 	{
-		aDevice.send(MessageType.LOGIN, mChar.getName());
-		// TODO Check sent messages
+		exit(true);
 	}
 	
 	@Override
-	public void disconnectedFrom(ConnectedDevice aDevice)
+	public void connectedTo(final ConnectedDevice aDevice)
 	{
-		// TODO Tell user that he was disconnected
-		exit();
+		aDevice.send(MessageType.LOGIN, mChar.getName());
+	}
+	
+	@Override
+	public void connectionEnabled(final boolean aEnabled)
+	{
+		if ( !aEnabled)
+		{
+			exit(true);
+		}
 	}
 	
 	@Override
@@ -71,20 +77,43 @@ public class PlayActivity extends Activity implements ItemConsumer, BluetoothCon
 	}
 	
 	@Override
+	public void disconnectedFrom(final ConnectedDevice aDevice)
+	{
+		// TODO Tell user that he was disconnected
+		exit(true);
+	}
+	
+	public void exit(final boolean aSaveCharacter)
+	{
+		// TODO Maybe add a negative exit
+		mConnection.exit();
+		final Intent intent = new Intent();
+		intent.putExtra(CHARACTER, mChar.serialize());
+		setResult(aSaveCharacter ? RESULT_OK : RESULT_CANCELED, intent);
+		finish();
+	}
+	
+	@Override
+	public void onBackPressed()
+	{
+		exit(true);
+	}
+	
+	@Override
 	public void receiveMessage(final ConnectedDevice aDevice, final MessageType aType, final String[] aArgs)
 	{
 		switch (aType)
 		{
 			case DECLINE :
-				exit();
+				exit(true);
 				break;
 			case WAIT :
 				Toast.makeText(this, R.string.host_busy, Toast.LENGTH_SHORT).show();
-				exit();
+				exit(true);
 				break;
 			case NAME_IN_USE :
 				Toast.makeText(this, R.string.name_in_use, Toast.LENGTH_SHORT).show();
-				exit();
+				exit(true);
 				break;
 			default :
 				break;
@@ -98,15 +127,6 @@ public class PlayActivity extends Activity implements ItemConsumer, BluetoothCon
 		super.onCreate(aSavedInstanceState);
 		
 		ConnectionUtil.loadItems(this, this);
-	}
-	
-	private void exit()
-	{
-		// TODO Maybe add a negative exit
-		final Intent intent = new Intent();
-		intent.putExtra(CHARACTER, mChar.serialize());
-		setResult(RESULT_OK, intent);
-		finish();
 	}
 	
 	private void init()
@@ -123,8 +143,7 @@ public class PlayActivity extends Activity implements ItemConsumer, BluetoothCon
 		catch (final IllegalArgumentException e)
 		{
 			Log.e(TAG, "Could not create character from xml.");
-			setResult(RESULT_CANCELED);
-			finish();
+			exit(false);
 		}
 		if (character != null)
 		{
@@ -166,7 +185,7 @@ public class PlayActivity extends Activity implements ItemConsumer, BluetoothCon
 			@Override
 			public void onClick(final View aV)
 			{
-				exit();
+				exit(true);
 			}
 		});
 	}

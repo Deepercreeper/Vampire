@@ -11,11 +11,6 @@ import android.net.Uri;
 
 public class ConnectedDevice
 {
-	public interface MessageListener
-	{
-		public void receiveMessage(ConnectedDevice aDevice, MessageType aType, String[] aArgs);
-	}
-	
 	public static enum MessageType
 	{
 		/**
@@ -64,41 +59,34 @@ public class ConnectedDevice
 		REMOVED_FOCUS
 	}
 	
-	private static final String					ARGS_DELIM		= ",";
+	private static final String			ARGS_DELIM		= ",";
 	
-	private static final char					MESSAGES_DELIM	= '\n';
+	private static final char			MESSAGES_DELIM	= '\n';
 	
-	private final BluetoothSocket				mSocket;
+	private final BluetoothSocket		mSocket;
 	
-	private final OutputStream					mOut;
+	private final OutputStream			mOut;
 	
-	private final InputStream					mIn;
+	private final InputStream			mIn;
 	
-	private final MessageListener				mMessageListener;
+	private final ConnectionListener	mConnectionListener;
 	
-	// TODO Use the Bluetooth listener to notify for disconnection
-	private final BluetoothConnectionListener	mBluetoothListener;
-	
-	private boolean								mListeningForMessages;
+	private boolean						mListeningForMessages;
 	
 	/**
 	 * Creates a new connected device, that listens for messages.
 	 * 
 	 * @param aSocket
 	 *            The Bluetooth socket.
-	 * @param aMessageListener
-	 *            The message listener.
 	 * @throws IOException
 	 *             if the in-/ or output stream could not be resolved.
 	 */
-	public ConnectedDevice(final BluetoothSocket aSocket, final MessageListener aMessageListener, BluetoothConnectionListener aBluetoothListener)
-			throws IOException
+	public ConnectedDevice(final BluetoothSocket aSocket, final ConnectionListener aConnectionListener) throws IOException
 	{
 		mSocket = aSocket;
 		mOut = aSocket.getOutputStream();
 		mIn = aSocket.getInputStream();
-		mMessageListener = aMessageListener;
-		mBluetoothListener = aBluetoothListener;
+		mConnectionListener = aConnectionListener;
 		
 		new Thread()
 		{
@@ -108,6 +96,11 @@ public class ConnectedDevice
 				listenForMessages();
 			}
 		}.start();
+	}
+	
+	public BluetoothDevice getDevice()
+	{
+		return mSocket.getRemoteDevice();
 	}
 	
 	/**
@@ -146,6 +139,7 @@ public class ConnectedDevice
 			success = false;
 		}
 		return success;
+		// TODO Check whether message has been sent
 	}
 	
 	/**
@@ -161,6 +155,11 @@ public class ConnectedDevice
 		mListeningForMessages = true;
 		while (mListeningForMessages)
 		{
+			if ( !mSocket.isConnected())
+			{
+				mConnectionListener.disconnectedFrom(this);
+				stopListening();
+			}
 			final StringBuilder messageBuilder = new StringBuilder();
 			int c;
 			try
@@ -176,7 +175,7 @@ public class ConnectedDevice
 						{
 							args[i] = Uri.decode(args[i]);
 						}
-						mMessageListener.receiveMessage(this, MessageType.valueOf(message[0]), args);
+						mConnectionListener.receiveMessage(this, MessageType.valueOf(message[0]), args);
 						messageBuilder.delete(0, messageBuilder.length());
 					}
 					else
@@ -188,10 +187,5 @@ public class ConnectedDevice
 			catch (final IOException e)
 			{}
 		}
-	}
-	
-	public BluetoothDevice getDevice()
-	{
-		return mSocket.getRemoteDevice();
 	}
 }

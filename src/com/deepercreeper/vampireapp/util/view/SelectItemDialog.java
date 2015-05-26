@@ -2,7 +2,6 @@ package com.deepercreeper.vampireapp.util.view;
 
 import java.util.Collections;
 import java.util.List;
-import android.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -33,10 +32,12 @@ public class SelectItemDialog <T extends Nameable> extends DialogFragment
 	 */
 	public static interface NamableSelectionListener <S extends Nameable>
 	{
-		public void select(S aDevice);
-		
 		public void cancel();
+		
+		public void select(S aDevice);
 	}
+	
+	private static final String					TAG			= "SelectItemDialog";
 	
 	private static boolean						sDialogOpen	= false;
 	
@@ -62,16 +63,28 @@ public class SelectItemDialog <T extends Nameable> extends DialogFragment
 		mAction = aAction;
 		
 		mView = new ListView(aContext);
-		mAdapter = new ArrayAdapter<T>(mContext, R.layout.simple_list_item_1, mNamables);
+		mAdapter = new ArrayAdapter<T>(mContext, android.R.layout.simple_list_item_1, mNamables);
 		mView.setOnItemClickListener(new OnItemClickListener()
 		{
 			@Override
-			public void onItemClick(AdapterView<?> aParent, View aView, int aPosition, long aId)
+			public void onItemClick(final AdapterView<?> aParent, final View aView, final int aPosition, final long aId)
 			{
 				mAction.select(mNamables.get(aPosition));
 			}
 		});
 		mView.setAdapter(mAdapter);
+	}
+	
+	public void addOption(final T aOption)
+	{
+		mAdapter.add(aOption);
+	}
+	
+	@Override
+	public void onCancel(final DialogInterface aDialog)
+	{
+		mAction.cancel();
+		super.onCancel(aDialog);
 	}
 	
 	@Override
@@ -83,36 +96,15 @@ public class SelectItemDialog <T extends Nameable> extends DialogFragment
 	}
 	
 	@Override
-	public void onCancel(DialogInterface aDialog)
-	{
-		
-		super.onCancel(aDialog);
-	}
-	
-	public void addOption(T aOption)
-	{
-		mAdapter.add(aOption);
-	}
-	
-	public void removeOption(T aOption)
-	{
-		mAdapter.remove(aOption);
-	}
-	
-	@Override
 	public void onDestroy()
 	{
 		super.onDestroy();
 		sDialogOpen = false;
 	}
 	
-	/**
-	 * @return whether any dialog is open at this time.
-	 */
-	public static boolean isDialogOpen()
+	public void removeOption(final T aOption)
 	{
-		// TODO Check occurrences of showDialog
-		return sDialogOpen;
+		mAdapter.remove(aOption);
 	}
 	
 	/**
@@ -140,6 +132,15 @@ public class SelectItemDialog <T extends Nameable> extends DialogFragment
 	}
 	
 	/**
+	 * @return whether any dialog is open at this time.
+	 */
+	public static boolean isDialogOpen()
+	{
+		// TODO Check occurrences of showDialog
+		return sDialogOpen;
+	}
+	
+	/**
 	 * Shows an item selection dialog that invokes the selection listener when any item was selected.<br>
 	 * Only one dialog can be shown at one time.
 	 * 
@@ -160,7 +161,7 @@ public class SelectItemDialog <T extends Nameable> extends DialogFragment
 		{
 			return null;
 		}
-		SelectItemDialog<R> dialog = new SelectItemDialog<R>(aItems, aTitle, aContext, aAction);
+		final SelectItemDialog<R> dialog = new SelectItemDialog<R>(aItems, aTitle, aContext, aAction);
 		dialog.show(((Activity) aContext).getFragmentManager(), aTitle);
 		return dialog;
 	}

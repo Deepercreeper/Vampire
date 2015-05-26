@@ -172,6 +172,7 @@ public class CharController implements CharacterListener
 			for (final String character : data.split("\n"))
 			{
 				final CharacterCompound charCompound = new CharacterCompound(character, this, mContext);
+				charCompound.setPlayingEnabled(mConnection.isEnabled());
 				mCharacterCompoundsList.add(charCompound);
 				mCharacterCompounds.put(charCompound.getName(), charCompound);
 			}

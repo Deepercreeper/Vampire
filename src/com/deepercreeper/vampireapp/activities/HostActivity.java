@@ -8,12 +8,10 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.connection.BluetoothConnectionListener;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
-import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageListener;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
 import com.deepercreeper.vampireapp.connection.ConnectionController;
-import com.deepercreeper.vampireapp.connection.ConnectionController.ConnectionStateListener;
+import com.deepercreeper.vampireapp.connection.ConnectionListener;
 import com.deepercreeper.vampireapp.host.Host;
 import com.deepercreeper.vampireapp.host.Player;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
@@ -28,7 +26,7 @@ import com.deepercreeper.vampireapp.util.view.YesNoDialog.YesNoListener;
  * 
  * @author Vincent
  */
-public class HostActivity extends Activity implements ItemConsumer, ConnectionStateListener, BluetoothConnectionListener, MessageListener
+public class HostActivity extends Activity implements ItemConsumer, ConnectionListener
 {
 	/**
 	 * The request code for starting a host game.
@@ -47,17 +45,12 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionSt
 	private ItemProvider			mItems;
 	
 	@Override
-	public void connectedTo(final ConnectedDevice aDevice)
-	{
-		// TODO Implement
-	}
+	public void cancel()
+	{}
 	
 	@Override
-	public void disconnectedFrom(ConnectedDevice aDevice)
-	{
-		mHost.removePlayer(aDevice);
-		// TODO Auto-generated method stub
-	}
+	public void connectedTo(final ConnectedDevice aDevice)
+	{}
 	
 	@Override
 	public void connectionEnabled(final boolean aEnabled)
@@ -78,6 +71,28 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionSt
 	}
 	
 	@Override
+	public void disconnectedFrom(final ConnectedDevice aDevice)
+	{
+		mHost.removePlayer(aDevice);
+		// TODO clean up
+	}
+	
+	public void exit()
+	{
+		mConnection.exit();
+		final Intent intent = new Intent();
+		intent.putExtra(HOST, mHost.serialize());
+		setResult(RESULT_OK, intent);
+		finish();
+	}
+	
+	@Override
+	public void onBackPressed()
+	{
+		exit();
+	}
+	
+	@Override
 	public void receiveMessage(final ConnectedDevice aDevice, final MessageType aType, final String[] aArgs)
 	{
 		switch (aType)
@@ -89,6 +104,45 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionSt
 			default :
 				break;
 		}
+	}
+	
+	@Override
+	protected void onCreate(final Bundle aSavedInstanceState)
+	{
+		super.onCreate(aSavedInstanceState);
+		
+		ConnectionUtil.loadItems(this, this);
+	}
+	
+	@Override
+	protected void onResume()
+	{
+		if (mConnection != null)
+		{
+			mConnection.checkConnectionState();
+		}
+		super.onResume();
+	}
+	
+	private void init()
+	{
+		mConnection = new ConnectionController(this, this);
+		mConnection.startServer(this);
+		
+		setContentView(R.layout.host);
+		
+		final TextView name = (TextView) findViewById(R.id.host_name);
+		final Button exit = (Button) findViewById(R.id.exit);
+		
+		name.setText(mHost.getName());
+		exit.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				exit();
+			}
+		});
 	}
 	
 	private void login(final ConnectedDevice aDevice, final String aPlayer)
@@ -122,62 +176,5 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionSt
 			}
 		};
 		YesNoDialog.showYesNoDialog(aPlayer, getString(R.string.new_player), this, listener);
-	}
-	
-	@Override
-	protected void onCreate(final Bundle aSavedInstanceState)
-	{
-		super.onCreate(aSavedInstanceState);
-		
-		ConnectionUtil.loadItems(this, this);
-	}
-	
-	@Override
-	protected void onDestroy()
-	{
-		mConnection.unregister();
-		super.onDestroy();
-	}
-	
-	@Override
-	protected void onResume()
-	{
-		if (mConnection != null)
-		{
-			mConnection.checkConnectionState();
-		}
-		super.onResume();
-	}
-	
-	private void exit()
-	{
-		mConnection.stopServer();
-		mConnection.unregister();
-		final Intent intent = new Intent();
-		intent.putExtra(HOST, mHost.serialize());
-		setResult(RESULT_OK, intent);
-		finish();
-	}
-	
-	private void init()
-	{
-		mConnection = new ConnectionController(this, this);
-		mConnection.addConnectionListener(this);
-		mConnection.startServer(this);
-		
-		setContentView(R.layout.host);
-		
-		final TextView name = (TextView) findViewById(R.id.host_name);
-		final Button exit = (Button) findViewById(R.id.exit);
-		
-		name.setText(mHost.getName());
-		exit.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(final View aV)
-			{
-				exit();
-			}
-		});
 	}
 }
