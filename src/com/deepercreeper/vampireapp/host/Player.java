@@ -2,23 +2,42 @@ package com.deepercreeper.vampireapp.host;
 
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 
+/**
+ * A host side represented character player.
+ * 
+ * @author vrl
+ */
 public class Player
 {
 	private final ConnectedDevice	mDevice;
 	
 	private final String			mName;
 	
+	/**
+	 * Creates a new player that caches all needed data of the remote character.
+	 * 
+	 * @param aName
+	 *            The player name.
+	 * @param aDevice
+	 *            The connected player device.
+	 */
 	public Player(String aName, ConnectedDevice aDevice)
 	{
 		mName = aName;
 		mDevice = aDevice;
 	}
 	
+	/**
+	 * @return the players name.
+	 */
 	public String getName()
 	{
 		return mName;
 	}
 	
+	/**
+	 * @return the players device.
+	 */
 	public ConnectedDevice getDevice()
 	{
 		return mDevice;

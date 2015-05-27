@@ -80,6 +80,9 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 		// TODO clean up
 	}
 	
+	/**
+	 * Closes the host activity after cleaning up connections.
+	 */
 	public void exit()
 	{
 		mConnection.exit();

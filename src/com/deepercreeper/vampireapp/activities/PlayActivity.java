@@ -88,6 +88,12 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		exit(true);
 	}
 	
+	/**
+	 * Closes the play activity after closing the connection.
+	 * 
+	 * @param aSaveCharacter
+	 *            Whether the current character should be saved.
+	 */
 	public void exit(final boolean aSaveCharacter)
 	{
 		// TODO Maybe add a negative exit
@@ -144,6 +150,12 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		ConnectionUtil.loadItems(this, this);
 	}
 	
+	/**
+	 * Disables or enables the whole activity.
+	 * 
+	 * @param aEnabled
+	 *            Whether the user should be able to do anything.
+	 */
 	public void setEnabled(final boolean aEnabled)
 	{
 		if ( !aEnabled)
@@ -154,7 +166,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 				public void run()
 				{
 					getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-					findViewById(R.id.play_container).setBackgroundColor(Color.GRAY);
+					findViewById(R.id.play_container).setBackgroundColor(Color.DKGRAY);
 				}
 			});
 		}

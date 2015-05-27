@@ -10,8 +10,18 @@ import android.bluetooth.BluetoothSocket;
 import android.net.Uri;
 import com.deepercreeper.vampireapp.util.Log;
 
+/**
+ * Each device that was connected and is able to send and receive messages is stored inside a ConnectedDevice.
+ * 
+ * @author vrl
+ */
 public class ConnectedDevice
 {
+	/**
+	 * Each message that is sent has a type. The type tells, what information is transferred.
+	 * 
+	 * @author vrl
+	 */
 	public static enum MessageType
 	{
 		/**
@@ -83,6 +93,10 @@ public class ConnectedDevice
 	 * 
 	 * @param aSocket
 	 *            The Bluetooth socket.
+	 * @param aConnectionListener
+	 *            The listener for Bluetooth, connection and message events.
+	 * @param aHost
+	 *            Whether this is a host device or not.
 	 * @throws IOException
 	 *             if the in-/ or output stream could not be resolved.
 	 */
@@ -104,11 +118,37 @@ public class ConnectedDevice
 		}.start();
 	}
 	
+	/**
+	 * Stops listening for messages and closes the socket. Afterwards {@link ConnectionListener#disconnectedFrom(ConnectedDevice)} is invoked.
+	 */
+	public void exit()
+	{
+		mListeningForMessages = false;
+		if (mSocket.isConnected())
+		{
+			try
+			{
+				mSocket.close();
+			}
+			catch (final IOException e)
+			{
+				Log.e(TAG, "Could not close the socket.");
+			}
+		}
+		mConnectionListener.disconnectedFrom(this);
+	}
+	
+	/**
+	 * @return the underlying Bluetooth device.
+	 */
 	public BluetoothDevice getDevice()
 	{
 		return mSocket.getRemoteDevice();
 	}
 	
+	/**
+	 * @return whether this is a host device.
+	 */
 	public boolean isHost()
 	{
 		return mHost;
@@ -189,22 +229,5 @@ public class ConnectedDevice
 			catch (final IOException e)
 			{}
 		}
-	}
-	
-	public void exit()
-	{
-		mListeningForMessages = false;
-		if (mSocket.isConnected())
-		{
-			try
-			{
-				mSocket.close();
-			}
-			catch (final IOException e)
-			{
-				Log.e(TAG, "Could not close the socket.");
-			}
-		}
-		mConnectionListener.disconnectedFrom(this);
 	}
 }

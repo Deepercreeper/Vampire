@@ -56,6 +56,8 @@ public class ConnectionController implements ConnectionListener
 	 * 
 	 * @param aContext
 	 *            The underlying context.
+	 * @param aConnectionListener
+	 *            The listener for message, Bluetooth and connection events.
 	 */
 	public ConnectionController(final Activity aContext, final ConnectionListener aConnectionListener)
 	{
@@ -213,6 +215,12 @@ public class ConnectionController implements ConnectionListener
 		mConnectionListener.disconnectedFrom(aDevice);
 	}
 	
+	/**
+	 * Disconnects the given device.
+	 * 
+	 * @param aDevice
+	 *            The device to disconnect.
+	 */
 	public void disconnect(final ConnectedDevice aDevice)
 	{
 		aDevice.exit();

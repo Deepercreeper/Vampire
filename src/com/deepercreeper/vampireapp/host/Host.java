@@ -1,7 +1,6 @@
 package com.deepercreeper.vampireapp.host;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -19,6 +18,10 @@ public class Host
 {
 	private final String		mName;
 	
+	@SuppressWarnings("unused")
+	/**
+	 * TODO Use this member
+	 */
 	private final ItemProvider	mItems;
 	
 	private final List<Player>	mPlayers	= new ArrayList<Player>();
@@ -69,18 +72,22 @@ public class Host
 		mLocation = meta.getAttribute("location");
 	}
 	
+	/**
+	 * Finds the player with the given device and removes it from the players list.
+	 * 
+	 * @param aDevice
+	 *            The players device.
+	 */
 	public void removePlayer(final ConnectedDevice aDevice)
 	{
-		for (final Iterator<Player> it = mPlayers.iterator(); it.hasNext();)
-		{
-			final Player player = it.next();
-			if (player.getDevice().getDevice().equals(aDevice))
-			{
-				it.remove();
-			}
-		}
+		mPlayers.remove(getPlayer(aDevice));
 	}
 	
+	/**
+	 * @param aDevice
+	 *            The players device.
+	 * @return the player with the given device.
+	 */
 	public Player getPlayer(final ConnectedDevice aDevice)
 	{
 		for (final Player player : mPlayers)
@@ -93,6 +100,13 @@ public class Host
 		return null;
 	}
 	
+	/**
+	 * Adds a player to the players list.
+	 * 
+	 * @param aPlayer
+	 *            The player to add.
+	 * @return {@code true} if the player was added and {@code false} if the name was taken already.
+	 */
 	public boolean addPlayer(final Player aPlayer)
 	{
 		if (mPlayers.contains(aPlayer))

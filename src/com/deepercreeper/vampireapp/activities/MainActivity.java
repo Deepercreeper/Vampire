@@ -157,6 +157,9 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 		// TODO Use when non game communication is needed
 	}
 	
+	/**
+	 * Closes the main activity after closing the connection.
+	 */
 	public void exit()
 	{
 		mConnection.exit();

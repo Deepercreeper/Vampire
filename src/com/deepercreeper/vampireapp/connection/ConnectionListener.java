@@ -9,6 +9,10 @@ import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
  */
 public interface ConnectionListener
 {
+	/**
+	 * Sometimes the connection is cancelled by a user action.<br>
+	 * This method is invoked if the user doesn't allow a socket connection.
+	 */
 	public void cancel();
 	
 	/**
@@ -35,5 +39,15 @@ public interface ConnectionListener
 	 */
 	public void disconnectedFrom(ConnectedDevice aDevice);
 	
+	/**
+	 * A message was sent.
+	 * 
+	 * @param aDevice
+	 *            The device that sent the message.
+	 * @param aType
+	 *            The message type.
+	 * @param aArgs
+	 *            All optional arguments.
+	 */
 	public void receiveMessage(ConnectedDevice aDevice, MessageType aType, String[] aArgs);
 }
