@@ -160,48 +160,6 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 	}
 	
 	@Override
-	public boolean hasOrder()
-	{
-		return getItem().hasOrder();
-	}
-	
-	@Override
-	public int getValueId()
-	{
-		if ( !isValueItem())
-		{
-			Log.w(TAG, "Tried to get the value id of a non valule item.");
-			return 0;
-		}
-		return mValueId;
-	}
-	
-	@Override
-	public boolean isImportant()
-	{
-		// TODO Add if this is only a non value item?
-		if (isValueItem() && getValue() != 0)
-		{
-			return true;
-		}
-		if (hasChildren())
-		{
-			if ( !isMutableParent())
-			{
-				return true;
-			}
-			for (final ItemCreation item : getChildrenList())
-			{
-				if (item.isImportant())
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-	
-	@Override
 	public void addChild()
 	{
 		if ( !isMutableParent())
@@ -221,14 +179,14 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		final SelectionListener<Item> action = new SelectionListener<Item>()
 		{
 			@Override
+			public void cancel()
+			{}
+			
+			@Override
 			public void select(final Item aChoosenItem)
 			{
 				addChild(aChoosenItem);
 			}
-			
-			@Override
-			public void cancel()
-			{}
 		};
 		SelectItemDialog.showSelectionDialog(items, getContext().getString(R.string.add_item), getContext(), action);
 	}
@@ -421,14 +379,14 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		final SelectionListener<Item> action = new SelectionListener<Item>()
 		{
 			@Override
+			public void cancel()
+			{}
+			
+			@Override
 			public void select(final Item aChoosenItem)
 			{
 				setChildAt(index, aChoosenItem);
 			}
-			
-			@Override
-			public void cancel()
-			{}
 		};
 		SelectItemDialog.showSelectionDialog(children, getContext().getString(R.string.edit_item) + aItem.getName(), getContext(), action);
 	}
@@ -664,6 +622,17 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 	}
 	
 	@Override
+	public int getValueId()
+	{
+		if ( !isValueItem())
+		{
+			Log.w(TAG, "Tried to get the value id of a non valule item.");
+			return 0;
+		}
+		return mValueId;
+	}
+	
+	@Override
 	public boolean hasChild(final Item aItem)
 	{
 		if ( !isParent())
@@ -690,6 +659,12 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 	public boolean hasEnoughPoints()
 	{
 		return getItem().getItemGroup().getFreePointsCost() <= getPoints().getPoints();
+	}
+	
+	@Override
+	public boolean hasOrder()
+	{
+		return getItem().hasOrder();
 	}
 	
 	@Override
@@ -907,6 +882,31 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 				}
 			}
 		}
+	}
+	
+	@Override
+	public boolean isImportant()
+	{
+		// TODO Add if this is only a non value item?
+		if (isValueItem() && getValue() != 0)
+		{
+			return true;
+		}
+		if (hasChildren())
+		{
+			if ( !isMutableParent())
+			{
+				return true;
+			}
+			for (final ItemCreation item : getChildrenList())
+			{
+				if (item.isImportant())
+				{
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 	@Override
@@ -1183,6 +1183,19 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		getContainer().addView(aItem.getContainer());
 	}
 	
+	private List<Item> getAddableItems()
+	{
+		final List<Item> children = new ArrayList<Item>();
+		for (final Item item : getItem().getChildrenList())
+		{
+			if ( !hasChild(item))
+			{
+				children.add(item);
+			}
+		}
+		return children;
+	}
+	
 	private void sortChildren()
 	{
 		for (final ItemCreation item : getChildrenList())
@@ -1195,19 +1208,6 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			item.init();
 			getContainer().addView(item.getContainer());
 		}
-	}
-	
-	private List<Item> getAddableItems()
-	{
-		final List<Item> children = new ArrayList<Item>();
-		for (final Item item : getItem().getChildrenList())
-		{
-			if ( !hasChild(item))
-			{
-				children.add(item);
-			}
-		}
-		return children;
 	}
 	
 	private void updateAddButton()
