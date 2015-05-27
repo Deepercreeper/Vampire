@@ -123,6 +123,11 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 				Toast.makeText(this, R.string.name_in_use, Toast.LENGTH_SHORT).show();
 				exit(true);
 				break;
+			case CLOSED :
+				Toast.makeText(this, R.string.host_closed, Toast.LENGTH_SHORT).show();
+				disconnectedFrom(aDevice);
+				exit(true);
+				break;
 			default :
 				break;
 		}

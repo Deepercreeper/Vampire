@@ -190,7 +190,7 @@ public class ConnectionController implements ConnectionListener
 			{
 				try
 				{
-					final ConnectedDevice connectedDevice = new ConnectedDevice(socket, this);
+					final ConnectedDevice connectedDevice = new ConnectedDevice(socket, this, true);
 					mDevices.add(connectedDevice);
 					aListener.connectedTo(connectedDevice);
 					connected = true;
@@ -228,6 +228,14 @@ public class ConnectionController implements ConnectionListener
 		mDevices.clear();
 		for (final ConnectedDevice device : devices)
 		{
+			if (device.isHost())
+			{
+				device.send(MessageType.LEFT_GAME);
+			}
+			else
+			{
+				device.send(MessageType.CLOSED);
+			}
 			disconnect(device);
 		}
 		stopServer();
@@ -390,7 +398,7 @@ public class ConnectionController implements ConnectionListener
 				boolean connected = false;
 				try
 				{
-					final ConnectedDevice connectedDevice = new ConnectedDevice(socket, this);
+					final ConnectedDevice connectedDevice = new ConnectedDevice(socket, this, false);
 					aListener.connectedTo(connectedDevice);
 					connected = true;
 				}

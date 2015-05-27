@@ -103,7 +103,10 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 			case LOGIN :
 				login(aDevice, aArgs[0]);
 				break;
-			
+			case LEFT_GAME :
+				Toast.makeText(this, mHost.getPlayer(aDevice).getName() + getString(R.string.left_game), Toast.LENGTH_SHORT).show();
+				mConnection.disconnect(aDevice);
+				break;
 			default :
 				break;
 		}

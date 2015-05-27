@@ -74,6 +74,8 @@ public class ConnectedDevice
 	
 	private final ConnectionListener	mConnectionListener;
 	
+	private final boolean				mHost;
+	
 	private boolean						mListeningForMessages;
 	
 	/**
@@ -84,11 +86,12 @@ public class ConnectedDevice
 	 * @throws IOException
 	 *             if the in-/ or output stream could not be resolved.
 	 */
-	public ConnectedDevice(final BluetoothSocket aSocket, final ConnectionListener aConnectionListener) throws IOException
+	public ConnectedDevice(final BluetoothSocket aSocket, final ConnectionListener aConnectionListener, boolean aHost) throws IOException
 	{
 		mSocket = aSocket;
 		mOut = aSocket.getOutputStream();
 		mIn = aSocket.getInputStream();
+		mHost = aHost;
 		mConnectionListener = aConnectionListener;
 		
 		new Thread()
@@ -104,6 +107,11 @@ public class ConnectedDevice
 	public BluetoothDevice getDevice()
 	{
 		return mSocket.getRemoteDevice();
+	}
+	
+	public boolean isHost()
+	{
+		return mHost;
 	}
 	
 	/**
