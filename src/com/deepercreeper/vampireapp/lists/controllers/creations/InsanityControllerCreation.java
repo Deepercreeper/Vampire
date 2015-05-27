@@ -153,6 +153,9 @@ public class InsanityControllerCreation extends CreationRestrictionableImpl
 		updateRestrictions();
 	}
 	
+	/**
+	 * @return whether the number of insanities is possible for creation currently.
+	 */
 	public boolean isOk()
 	{
 		return isValueOk(mInsanities.size(), CreationRestrictionType.INSANITY);

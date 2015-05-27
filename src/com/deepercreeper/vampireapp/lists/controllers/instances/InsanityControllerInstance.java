@@ -13,12 +13,23 @@ import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.CodingUtil;
 import com.deepercreeper.vampireapp.util.Saveable;
 
+/**
+ * A controller for all insanity instances.
+ * 
+ * @author vrl
+ */
 public class InsanityControllerInstance implements TimeListener, Saveable
 {
 	private final List<String>			mInsanities			= new ArrayList<String>();
 	
 	private final Map<String, Duration>	mInsanityDurations	= new HashMap<String, Duration>();
 	
+	/**
+	 * Creates a new insanity controller out of the given XML data.
+	 * 
+	 * @param aElement
+	 *            The XML data.
+	 */
 	public InsanityControllerInstance(final Element aElement)
 	{
 		for (int i = 0; i < aElement.getChildNodes().getLength(); i++ )
@@ -35,6 +46,12 @@ public class InsanityControllerInstance implements TimeListener, Saveable
 		}
 	}
 	
+	/**
+	 * Creates a new insanity controller out of the given insanity controller creation.
+	 * 
+	 * @param aController
+	 *            The insanity controller creation.
+	 */
 	public InsanityControllerInstance(final InsanityControllerCreation aController)
 	{
 		for (final String insanity : aController.getInsanities())
@@ -43,16 +60,32 @@ public class InsanityControllerInstance implements TimeListener, Saveable
 		}
 	}
 	
+	/**
+	 * @return a list of all insanities.
+	 */
 	public List<String> getInsanities()
 	{
 		return mInsanities;
 	}
 	
+	/**
+	 * @param aInsanity
+	 *            The insanity.
+	 * @return the duration left for the given insanity.
+	 */
 	public Duration getDurationOf(final String aInsanity)
 	{
 		return mInsanityDurations.get(aInsanity);
 	}
 	
+	/**
+	 * Adds an insanity and the duration for it.
+	 * 
+	 * @param aInsanity
+	 *            The insanity.
+	 * @param aDuration
+	 *            The insanity duration.
+	 */
 	public void addInsanity(final String aInsanity, final Duration aDuration)
 	{
 		aDuration.addListener(new InsanityDurationListener(aInsanity));
@@ -60,6 +93,12 @@ public class InsanityControllerInstance implements TimeListener, Saveable
 		mInsanityDurations.put(aInsanity, aDuration);
 	}
 	
+	/**
+	 * Removes the given insanity.
+	 * 
+	 * @param aInsanity
+	 *            The insanity to remove.
+	 */
 	public void removeInsanity(final String aInsanity)
 	{
 		mInsanities.remove(aInsanity);

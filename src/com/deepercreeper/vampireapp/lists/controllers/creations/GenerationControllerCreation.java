@@ -44,6 +44,8 @@ public class GenerationControllerCreation extends CreationRestrictionableImpl
 	 * 
 	 * @param aLayout
 	 *            The layout.
+	 * @param aFreeMode
+	 *            Whether the generation can be chosen in a free interval.
 	 */
 	public void init(final LinearLayout aLayout, final boolean aFreeMode)
 	{
