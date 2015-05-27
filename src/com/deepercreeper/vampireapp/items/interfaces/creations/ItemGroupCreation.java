@@ -2,28 +2,56 @@ package com.deepercreeper.vampireapp.items.interfaces.creations;
 
 import java.util.List;
 import android.content.Context;
-import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.character.creation.CreationMode;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation.PointHandler;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestrictionable;
+import com.deepercreeper.vampireapp.util.view.Viewable;
 
-public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, CreationRestrictionable
+/**
+ * Used to create item groups.
+ * 
+ * @author vrl
+ */
+public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, CreationRestrictionable, Viewable
 {
+	/**
+	 * Asks the user to choose an item that should be added to this group.
+	 */
 	public void addItem();
 	
+	/**
+	 * Adds an item creation with the given item type.
+	 * 
+	 * @param aItem
+	 *            The item type.
+	 */
 	public void addItem(Item aItem);
 	
+	/**
+	 * @param aValue
+	 *            The value.
+	 * @return whether this groups value can be changed by the given value.
+	 */
 	public boolean canChangeBy(int aValue);
 	
+	/**
+	 * @return whether the child items of this group have a specific order.
+	 */
 	public boolean hasOrder();
 	
+	/**
+	 * Clears all child items and properties of this group.
+	 */
 	public void clear();
 	
+	/**
+	 * Replaces the given child item with an user chosen one.
+	 * 
+	 * @param aItem
+	 */
 	public void editItem(Item aItem);
-	
-	public LinearLayout getContainer();
 	
 	/**
 	 * @return the context of this value group.
@@ -40,6 +68,11 @@ public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, Creati
 	 */
 	public List<ItemCreation> getDescriptionItems();
 	
+	/**
+	 * @param aItem
+	 *            The item type.
+	 * @return the child item with the given item type.
+	 */
 	public ItemCreation getItem(Item aItem);
 	
 	/**
@@ -64,8 +97,16 @@ public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, Creati
 	 */
 	public List<ItemCreation> getItemsList();
 	
+	/**
+	 * @param aName
+	 *            The item name.
+	 * @return the value of the given child item name.
+	 */
 	public int getItemValue(String aName);
 	
+	/**
+	 * @return the group name.
+	 */
 	public String getName();
 	
 	/**
@@ -83,8 +124,18 @@ public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, Creati
 	 */
 	public int getValue();
 	
+	/**
+	 * @param aItem
+	 *            The item type.
+	 * @return whether this group contains an item with the given item type.
+	 */
 	public boolean hasItem(Item aItem);
 	
+	/**
+	 * @param aItem
+	 *            The item.
+	 * @return whether this group contains the given item.
+	 */
 	public boolean hasItem(ItemCreation aItem);
 	
 	/**
@@ -94,19 +145,29 @@ public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, Creati
 	 */
 	public boolean hasItem(String aName);
 	
+	/**
+	 * @param aItem
+	 *            The item child.
+	 * @return the index of the given item child.
+	 */
 	public int indexOfItem(ItemCreation aItem);
 	
-	public void init();
-	
+	/**
+	 * @return whether this group is mutable.
+	 */
 	public boolean isMutable();
 	
+	/**
+	 * @return whether this is a value group.
+	 */
 	public boolean isValueGroup();
 	
 	/**
-	 * Removes all widgets from their parent containers.
+	 * Removes the item with the given item type from this group.
+	 * 
+	 * @param aItem
+	 *            The item type.
 	 */
-	public void release();
-	
 	public void removeItem(Item aItem);
 	
 	/**
@@ -122,6 +183,14 @@ public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, Creati
 	 */
 	public void setCreationMode(CreationMode aMode);
 	
+	/**
+	 * Replaces the item child at the given index with the given item.
+	 * 
+	 * @param aIndex
+	 *            The item index.
+	 * @param aItem
+	 *            The new item.
+	 */
 	public void setItemAt(int aIndex, Item aItem);
 	
 	/**
@@ -132,17 +201,18 @@ public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, Creati
 	 */
 	public void setPoints(PointHandler aPoints);
 	
+	/**
+	 * Updates whether the add child button is enabled.
+	 */
 	public void updateAddButton();
 	
+	/**
+	 * Updates the item controller.
+	 */
 	public void updateController();
 	
 	/**
 	 * Updates all values and whether they can be increased and decreased.
-	 * 
-	 * @param aCanIncrease
-	 *            Whether values can be increased.
-	 * @param aCanDecrease
-	 *            Whether values can be decreased.
 	 */
 	public void updateItems();
 }
