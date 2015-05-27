@@ -12,14 +12,36 @@ import android.os.Bundle;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.util.Log;
 
+/**
+ * Each host has a context menu that contains options that can be done.
+ * 
+ * @author vrl
+ */
 public class HostContextMenu extends DialogFragment
 {
 	private static final String	TAG	= "HostContextMenu";
 	
+	/**
+	 * A listener that is invoked, when host context menu events occur.
+	 * 
+	 * @author vrl
+	 */
 	public static interface HostListener
 	{
+		/**
+		 * The selected host is going to be deleted.
+		 * 
+		 * @param aName
+		 *            The host name.
+		 */
 		public void deleteHost(String aName);
 		
+		/**
+		 * The host is going to be started.
+		 * 
+		 * @param aName
+		 *            The host name.
+		 */
 		public void playHost(String aName);
 	}
 	
@@ -112,6 +134,16 @@ public class HostContextMenu extends DialogFragment
 		}
 	}
 	
+	/**
+	 * Shows the context menu for the given host.
+	 * 
+	 * @param aListener
+	 *            The event listener.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aName
+	 *            The host name.
+	 */
 	public static void showCharacterContextMenu(final HostListener aListener, final Activity aContext, final String aName)
 	{
 		if (sDialogOpen)

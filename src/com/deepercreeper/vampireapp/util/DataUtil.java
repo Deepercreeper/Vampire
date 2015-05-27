@@ -33,6 +33,11 @@ import com.deepercreeper.vampireapp.mechanics.Action;
 import com.deepercreeper.vampireapp.mechanics.Action.ActionType;
 import com.deepercreeper.vampireapp.mechanics.ActionImpl;
 
+/**
+ * Used to load all needed information for the item provider from the local data.
+ * 
+ * @author vrl
+ */
 public class DataUtil
 {
 	private static final String	TAG				= "DataUtil";
@@ -55,22 +60,42 @@ public class DataUtil
 	
 	private static Document		sData;
 	
+	/**
+	 * @param aContext
+	 *            The underlying context.
+	 * @return the name of the generation item.
+	 */
 	public static String loadGenerationItem(final Context aContext)
 	{
 		return getSpecialItems(aContext).getAttribute("generationItem");
 	}
 	
+	/**
+	 * @param aContext
+	 *            The underlying context.
+	 * @return the clan controller.
+	 */
 	public static ClanController loadClans(final Context aContext)
 	{
 		return loadClans(getData(aContext));
 	}
 	
+	/**
+	 * @param aContext
+	 *            The underlying context.
+	 * @return the health settings.
+	 */
 	public static Health loadHealth(final Context aContext)
 	{
 		final Element element = getSpecialItems(aContext);
 		return new Health(parseValues(element.getAttribute("defaultHealth")), element.getAttribute("healthCost"));
 	}
 	
+	/**
+	 * @param aContext
+	 *            The underlying context.
+	 * @return the inventory settings.
+	 */
 	public static Inventory loadInventory(final Context aContext)
 	{
 		final Element element = getSpecialItems(aContext);
@@ -78,22 +103,47 @@ public class DataUtil
 		return inventory;
 	}
 	
+	/**
+	 * @param aContext
+	 *            The underlying context.
+	 * @return a list of all item controllers.
+	 */
 	public static List<ItemController> loadItems(final Context aContext)
 	{
+		// TODO Add information about errors inside the data file.
 		return loadControllers(getData(aContext));
 	}
 	
+	/**
+	 * @param aContext
+	 *            The underlying context.
+	 * @return the money settings.
+	 */
 	public static Money loadMoney(final Context aContext)
 	{
 		final Money money = new Money(parseArray(getSpecialItems(aContext).getAttribute("currencies")));
 		return money;
 	}
 	
+	/**
+	 * Parses the given string into a list of strings.
+	 * 
+	 * @param aList
+	 *            The string to parse.
+	 * @return a list of all strings contained inside the given string.
+	 */
 	public static List<String> parseList(final String aList)
 	{
 		return Arrays.asList(parseArray(aList));
 	}
 	
+	/**
+	 * Writes all string of the given list into one string.
+	 * 
+	 * @param aList
+	 *            The string list.
+	 * @return one string containing all strings inside the list.
+	 */
 	public static String parseList(final List<String> aList)
 	{
 		final StringBuilder list = new StringBuilder();
@@ -108,6 +158,13 @@ public class DataUtil
 		return list.toString();
 	}
 	
+	/**
+	 * Writes all string inside the given array into one string.
+	 * 
+	 * @param aList
+	 *            The array of strings.
+	 * @return one string containing all strings of the given array.
+	 */
 	public static String parseArray(final String[] aList)
 	{
 		final StringBuilder list = new StringBuilder();
@@ -122,11 +179,25 @@ public class DataUtil
 		return list.toString();
 	}
 	
+	/**
+	 * Creates an array of string out of the given string.
+	 * 
+	 * @param aList
+	 *            The string that should be parsed into an array.
+	 * @return an array of strings, contained inside the given string.
+	 */
 	public static String[] parseArray(final String aList)
 	{
 		return aList.split(",");
 	}
 	
+	/**
+	 * Writes the given integer array into one string.
+	 * 
+	 * @param aValues
+	 *            The array of integers.
+	 * @return a string, containing all integers.
+	 */
 	public static String parseValues(final int[] aValues)
 	{
 		final StringBuilder values = new StringBuilder();
@@ -141,6 +212,13 @@ public class DataUtil
 		return values.toString();
 	}
 	
+	/**
+	 * Parses the given string into an array of integers.
+	 * 
+	 * @param aValues
+	 *            The string to parse.
+	 * @return an array of integers, contained inside the given string.
+	 */
 	public static int[] parseValues(final String aValues)
 	{
 		final String[] integers = aValues.split(",");

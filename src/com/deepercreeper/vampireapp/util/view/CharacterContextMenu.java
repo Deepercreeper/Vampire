@@ -15,14 +15,36 @@ import android.os.Bundle;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.util.Log;
 
+/**
+ * Each character has a context menu that contains several options.
+ * 
+ * @author vrl
+ */
 public class CharacterContextMenu extends DialogFragment
 {
 	private static final String	TAG	= "CharacterContextMenu";
 	
+	/**
+	 * Each context menu needs a context menu listener, that is called, if any option is selected.
+	 * 
+	 * @author vrl
+	 */
 	public static interface CharacterListener
 	{
+		/**
+		 * The character is going to be deleted.
+		 * 
+		 * @param aName
+		 *            The character name.
+		 */
 		public void deleteChar(String aName);
 		
+		/**
+		 * The character is going to be played.
+		 * 
+		 * @param aName
+		 *            The character name.
+		 */
 		public void play(String aName);
 	}
 	
@@ -109,6 +131,16 @@ public class CharacterContextMenu extends DialogFragment
 		}
 	}
 	
+	/**
+	 * Shows the character context menu.
+	 * 
+	 * @param aListener
+	 *            The event listener.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aName
+	 *            The character name.
+	 */
 	public static void showCharacterContextMenu(final CharacterListener aListener, final Activity aContext, final String aName)
 	{
 		if (sDialogOpen)

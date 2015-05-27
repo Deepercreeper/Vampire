@@ -20,6 +20,8 @@ import com.deepercreeper.vampireapp.items.interfaces.Nameable;
  * Used for selecting items from a list and then invoking the given action.
  * 
  * @author Vincent
+ * @param <T>
+ *            The type of all items that can be selected.
  */
 public class SelectItemDialog <T extends Nameable> extends DialogFragment
 {
@@ -30,52 +32,65 @@ public class SelectItemDialog <T extends Nameable> extends DialogFragment
 	 * @param <S>
 	 *            The type of nameable that is selected.
 	 */
-	public static interface NamableSelectionListener <S extends Nameable>
+	public static interface SelectionListener <S extends Nameable>
 	{
+		/**
+		 * Invoked when the user hit the back button or has touched beside the dialog.
+		 */
 		public void cancel();
 		
-		public void select(S aDevice);
+		/**
+		 * Invoked when any option was selected.
+		 * 
+		 * @param aItem
+		 *            The selected item.
+		 */
+		public void select(S aItem);
 	}
 	
-	private static final String					TAG			= "SelectItemDialog";
+	private static boolean				sDialogOpen	= false;
 	
-	private static boolean						sDialogOpen	= false;
+	private final List<T>				mItems;
 	
-	private final List<T>						mNamables;
+	private final ArrayAdapter<T>		mAdapter;
 	
-	private final ArrayAdapter<T>				mAdapter;
+	private final ListView				mView;
 	
-	private final ListView						mView;
+	private final String				mTitle;
 	
-	private final String						mTitle;
+	private final Context				mContext;
 	
-	private final Context						mContext;
+	private final SelectionListener<T>	mAction;
 	
-	private final NamableSelectionListener<T>	mAction;
-	
-	private SelectItemDialog(final List<T> aItems, final String aTitle, final Context aContext, final NamableSelectionListener<T> aAction)
+	private SelectItemDialog(final List<T> aItems, final String aTitle, final Context aContext, final SelectionListener<T> aAction)
 	{
 		sDialogOpen = true;
-		mNamables = aItems;
-		Collections.sort(mNamables);
+		mItems = aItems;
+		Collections.sort(mItems);
 		mTitle = aTitle;
 		mContext = aContext;
 		mAction = aAction;
 		
 		mView = new ListView(aContext);
-		mAdapter = new ArrayAdapter<T>(mContext, android.R.layout.simple_list_item_1, mNamables);
+		mAdapter = new ArrayAdapter<T>(mContext, android.R.layout.simple_list_item_1, mItems);
 		mView.setOnItemClickListener(new OnItemClickListener()
 		{
 			@Override
 			public void onItemClick(final AdapterView<?> aParent, final View aView, final int aPosition, final long aId)
 			{
-				mAction.select(mNamables.get(aPosition));
+				mAction.select(mItems.get(aPosition));
 				dismiss();
 			}
 		});
 		mView.setAdapter(mAdapter);
 	}
 	
+	/**
+	 * Adds the given option to the list of items.
+	 * 
+	 * @param aOption
+	 *            The option to add.
+	 */
 	public void addOption(final T aOption)
 	{
 		mAdapter.add(aOption);
@@ -103,6 +118,12 @@ public class SelectItemDialog <T extends Nameable> extends DialogFragment
 		sDialogOpen = false;
 	}
 	
+	/**
+	 * Removes the given option from the items list.
+	 * 
+	 * @param aOption
+	 *            The ooption to remove.
+	 */
 	public void removeOption(final T aOption)
 	{
 		mAdapter.remove(aOption);
@@ -123,7 +144,7 @@ public class SelectItemDialog <T extends Nameable> extends DialogFragment
 	 * @return the created dialog.
 	 */
 	public static <R extends Nameable> SelectItemDialog<R> createSelectionDialog(final List<R> aItems, final String aTitle, final Context aContext,
-			final NamableSelectionListener<R> aAction)
+			final SelectionListener<R> aAction)
 	{
 		if (sDialogOpen)
 		{
@@ -156,7 +177,7 @@ public class SelectItemDialog <T extends Nameable> extends DialogFragment
 	 * @return the created dialog.
 	 */
 	public static <R extends Nameable> SelectItemDialog<R> showSelectionDialog(final List<R> aItems, final String aTitle, final Context aContext,
-			final NamableSelectionListener<R> aAction)
+			final SelectionListener<R> aAction)
 	{
 		if (sDialogOpen)
 		{

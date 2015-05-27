@@ -7,7 +7,7 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.net.Uri;
+import com.deepercreeper.vampireapp.util.CodingUtil;
 import com.deepercreeper.vampireapp.util.Log;
 
 /**
@@ -169,7 +169,7 @@ public class ConnectedDevice
 		message.append(aType);
 		for (final String arg : aArgs)
 		{
-			message.append(ARGS_DELIM + Uri.encode(arg));
+			message.append(ARGS_DELIM + CodingUtil.encode(arg));
 		}
 		message.append(MESSAGES_DELIM);
 		boolean success = true;
@@ -215,7 +215,7 @@ public class ConnectedDevice
 						final String[] args = Arrays.copyOfRange(message, 1, message.length);
 						for (int i = 0; i < args.length; i++ )
 						{
-							args[i] = Uri.decode(args[i]);
+							args[i] = CodingUtil.decode(args[i]);
 						}
 						mConnectionListener.receiveMessage(this, MessageType.valueOf(message[0]), args);
 						messageBuilder.delete(0, messageBuilder.length());

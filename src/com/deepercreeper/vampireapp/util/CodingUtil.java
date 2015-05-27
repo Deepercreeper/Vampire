@@ -4,6 +4,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 
+/**
+ * This utility is used to encode and decode any string so that it is able to be sent or received.
+ * 
+ * @author vrl
+ */
 public class CodingUtil
 {
 	private static final String	TAG	= "CodingUtil";
@@ -11,6 +16,13 @@ public class CodingUtil
 	private CodingUtil()
 	{}
 	
+	/**
+	 * Encodes the given string using UTF-8.
+	 * 
+	 * @param aString
+	 *            The string to encode.
+	 * @return the encoded string.
+	 */
 	public static String encode(final String aString)
 	{
 		try
@@ -24,6 +36,13 @@ public class CodingUtil
 		return null;
 	}
 	
+	/**
+	 * Decodes the given encoded string using UTF-8.
+	 * 
+	 * @param aString
+	 *            The encoded string to decode.
+	 * @return the decoded string.
+	 */
 	public static String decode(final String aString)
 	{
 		try

@@ -19,7 +19,7 @@ import com.deepercreeper.vampireapp.util.BluetoothReceiver;
 import com.deepercreeper.vampireapp.util.BluetoothReceiver.BluetoothListener;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.view.SelectItemDialog;
-import com.deepercreeper.vampireapp.util.view.SelectItemDialog.NamableSelectionListener;
+import com.deepercreeper.vampireapp.util.view.SelectItemDialog.SelectionListener;
 
 /**
  * This controller handles all connection actions like creating an open Bluetooth port<br>
@@ -101,7 +101,7 @@ public class ConnectionController implements ConnectionListener
 		{
 			devices.add(new Device(device));
 		}
-		final NamableSelectionListener<Device> listener = new NamableSelectionListener<Device>()
+		final SelectionListener<Device> listener = new SelectionListener<Device>()
 		{
 			@Override
 			public void cancel()

@@ -8,6 +8,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import android.content.Context;
 
+/**
+ * This utility is used to translate all defined keywords.
+ * 
+ * @author vrl
+ */
 public class LanguageUtil
 {
 	private static final String				TAG				= "LanguageUtil";
@@ -85,6 +90,12 @@ public class LanguageUtil
 		mInitialized = true;
 	}
 	
+	/**
+	 * @param aKey
+	 * @return the display string if different from the given one.<br>
+	 *         Otherwise it just returns the given one.
+	 * @note {@link LanguageUtil#init(Context)} needs to be invoked before any string can be translated.
+	 */
 	public String getValue(final String aKey)
 	{
 		final String value = mValues.get(aKey);
@@ -95,11 +106,20 @@ public class LanguageUtil
 		return value;
 	}
 	
+	/**
+	 * Loads all needed data from the local language file depending on the current locale.
+	 * 
+	 * @param aContext
+	 *            The underlying context.
+	 */
 	public static void init(final Context aContext)
 	{
 		INSTANCE.setContext(aContext);
 	}
 	
+	/**
+	 * @return the current language instance.
+	 */
 	public static LanguageUtil instance()
 	{
 		if ( !mInitialized)

@@ -19,6 +19,11 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import android.content.Context;
 
+/**
+ * This utility is used to load files, create documents and save both of them.
+ * 
+ * @author vrl
+ */
 public class FilesUtil
 {
 	private static final String	TAG			= "FilesUtil";
@@ -28,6 +33,9 @@ public class FilesUtil
 	private FilesUtil()
 	{}
 	
+	/**
+	 * @return a new empty XML document.
+	 */
 	public static Document createDocument()
 	{
 		Document doc = null;
@@ -42,6 +50,17 @@ public class FilesUtil
 		return doc;
 	}
 	
+	/**
+	 * Loads the given document from the file system.
+	 * 
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aName
+	 *            The file name.
+	 * @param aLocale
+	 *            The language type of the file if existing.
+	 * @return the language depending document.
+	 */
 	public static Document loadDocument(final Context aContext, final String aName, final boolean aLocale)
 	{
 		Document doc = null;
@@ -59,6 +78,11 @@ public class FilesUtil
 		return doc;
 	}
 	
+	/**
+	 * @param aXML
+	 *            The XML data.
+	 * @return a document created out of the given XML data.
+	 */
 	public static Document loadDocument(final String aXML)
 	{
 		final InputStream stream = new ByteArrayInputStream(aXML.getBytes(Charset.defaultCharset()));
@@ -74,6 +98,15 @@ public class FilesUtil
 		return doc;
 	}
 	
+	/**
+	 * Loads the given file and returns it as a string.
+	 * 
+	 * @param aFile
+	 *            The file name.
+	 * @param aContext
+	 *            The underlying context.
+	 * @return a string containing all contents of the given file.
+	 */
 	public static String loadFile(final String aFile, final Context aContext)
 	{
 		String data = null;
@@ -111,6 +144,11 @@ public class FilesUtil
 		return data;
 	}
 	
+	/**
+	 * @param aDoc
+	 *            A XML document.
+	 * @return a string containing the whole document.
+	 */
 	public static String readDocument(final Document aDoc)
 	{
 		final ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -135,6 +173,16 @@ public class FilesUtil
 		return new String(stream.toByteArray(), Charset.defaultCharset());
 	}
 	
+	/**
+	 * Saves the given data to the given file.
+	 * 
+	 * @param aData
+	 *            The data that should be saved.
+	 * @param aFile
+	 *            The file where to store the data.
+	 * @param aContext
+	 *            The underlying context.
+	 */
 	public static void saveFile(final String aData, final String aFile, final Context aContext)
 	{
 		try

@@ -10,10 +10,26 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import com.deepercreeper.vampireapp.R;
 
+/**
+ * Sometimes the user has to answer a yes no question. This dialog allows to ask those questions.
+ * 
+ * @author vrl
+ */
 public class YesNoDialog extends DialogFragment
 {
+	/**
+	 * This listener listens for the answer of the user.
+	 * 
+	 * @author vrl
+	 */
 	public static interface YesNoListener
 	{
+		/**
+		 * Invoked when the user hits the yes or the no button.
+		 * 
+		 * @param aYes
+		 *            Whether yes or no was hit.
+		 */
 		public void select(boolean aYes);
 	}
 	
@@ -27,7 +43,7 @@ public class YesNoDialog extends DialogFragment
 	
 	private final YesNoListener	mAction;
 	
-	public YesNoDialog(final String aTitle, final String aMessage, final Context aContext, final YesNoListener aAction)
+	private YesNoDialog(final String aTitle, final String aMessage, final Context aContext, final YesNoListener aAction)
 	{
 		mTitle = aTitle;
 		mMessage = aMessage;
@@ -73,6 +89,18 @@ public class YesNoDialog extends DialogFragment
 		sDialogOpen = false;
 	}
 	
+	/**
+	 * Shows a yes no dialog with the given specifications.
+	 * 
+	 * @param aTitle
+	 *            The dialog title.
+	 * @param aMessage
+	 *            The message that should be shown.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aAction
+	 *            The result action.
+	 */
 	public static void showYesNoDialog(final String aTitle, final String aMessage, final Context aContext, final YesNoListener aAction)
 	{
 		if (sDialogOpen)

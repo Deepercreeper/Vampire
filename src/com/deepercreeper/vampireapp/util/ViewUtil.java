@@ -18,23 +18,22 @@ import android.widget.TableRow;
  */
 public class ViewUtil
 {
-	private static int	sId	= 1;
-	
 	private ViewUtil()
 	{}
 	
-	public static int generateId(final View aView)
-	{
-		aView.setId(sId);
-		return sId++ ;
-	}
-	
+	/**
+	 * @param aContext
+	 *            The underlying context.
+	 * @return layout parameters for a small line.
+	 */
 	public static LinearLayout.LayoutParams getLine(final Context aContext)
 	{
 		return new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, calcPx(1, aContext));
 	}
 	
 	/**
+	 * @param aContext
+	 *            The underlying context.
 	 * @return layout parameters for table row buttons.
 	 */
 	public static TableRow.LayoutParams getRowButtonSize(final Context aContext)
@@ -43,6 +42,8 @@ public class ViewUtil
 	}
 	
 	/**
+	 * @param aContext
+	 *            The underlying context.
 	 * @return layout parameters for long table row name text views.
 	 */
 	public static TableRow.LayoutParams getRowNameVeryLong(final Context aContext)
@@ -51,6 +52,8 @@ public class ViewUtil
 	}
 	
 	/**
+	 * @param aContext
+	 *            The underlying context.
 	 * @return layout parameters for short table row name text views.
 	 */
 	public static TableRow.LayoutParams getRowNameShort(final Context aContext)
@@ -59,6 +62,8 @@ public class ViewUtil
 	}
 	
 	/**
+	 * @param aContext
+	 *            The underlying context.
 	 * @return layout parameters for table row text views.
 	 */
 	public static TableRow.LayoutParams getRowTextSize(final Context aContext)
@@ -131,6 +136,8 @@ public class ViewUtil
 	 * 
 	 * @param aDp
 	 *            The number of device independent pixels to transform.
+	 * @param aContext
+	 *            The underlying context.
 	 * @return the number of pixels that corresponds to the given value.
 	 */
 	public static int calcPx(final int aDp, final Context aContext)
@@ -138,17 +145,39 @@ public class ViewUtil
 		return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, aDp, aContext.getResources().getDisplayMetrics()));
 	}
 	
+	/**
+	 * Enables or disables the given image button and sets its opacity to a corresponding value.
+	 * 
+	 * @param aButton
+	 *            The image button.
+	 * @param aEnabled
+	 *            Whether the button should be enabled.
+	 */
 	public static void setEnabled(final ImageButton aButton, final boolean aEnabled)
 	{
 		aButton.setEnabled(aEnabled);
 		aButton.setAlpha(aEnabled ? 1f : 0.4f);
 	}
 	
+	/**
+	 * Hides the given view by setting the width to {@code 0}.
+	 * 
+	 * @param aView
+	 *            The view.
+	 */
 	public static void hideWidth(final View aView)
 	{
 		setWidth(aView, 0);
 	}
 	
+	/**
+	 * Sets the width of the given view to the given value.
+	 * 
+	 * @param aView
+	 *            The view.
+	 * @param aWidth
+	 *            The new width.
+	 */
 	public static void setWidth(final View aView, final int aWidth)
 	{
 		final LayoutParams params = aView.getLayoutParams();

@@ -9,8 +9,22 @@ import android.os.IBinder;
 import com.deepercreeper.vampireapp.activities.ItemProviderService;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
 
+/**
+ * This utility is used to find a service that provides all the needed items.
+ * 
+ * @author vrl
+ */
 public class ConnectionUtil
 {
+	/**
+	 * Loads all items by binding a service. When a service is found and bound<br>
+	 * the connector will invoke the {@link ItemConsumer#consumeItems(com.deepercreeper.vampireapp.items.ItemProvider)} with the found provider.
+	 * 
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aConsumer
+	 *            The item consumer that requests the item provider.
+	 */
 	public static void loadItems(final Activity aContext, final ItemConsumer aConsumer)
 	{
 		final ItemConnection connection = new ItemConnection(aConsumer, aContext);
@@ -41,8 +55,6 @@ public class ConnectionUtil
 		
 		@Override
 		public void onServiceDisconnected(final ComponentName aName)
-		{
-			// Do nothing
-		}
+		{}
 	}
 }
