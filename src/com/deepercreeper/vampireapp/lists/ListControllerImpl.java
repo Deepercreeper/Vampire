@@ -27,27 +27,15 @@ public abstract class ListControllerImpl <T extends Nameable> implements ListCon
 	private final List<T>			mValuesList		= new ArrayList<T>();
 	
 	@Override
-	public T getItemAtPosition(final int aPos)
+	public int displayIndexOf(final T aValue)
 	{
-		return mValues.get(getNames().get(aPos));
+		return getDisplayNames().indexOf(aValue.getDisplayName());
 	}
 	
 	@Override
-	public T getItemAtDisplayNamePosition(final int aPos)
+	public List<String> getDisplayNames()
 	{
-		return getItemWithDisplayName(getDisplayNames().get(aPos));
-	}
-	
-	@Override
-	public T getItemWithName(final String aName)
-	{
-		return mValues.get(aName);
-	}
-	
-	@Override
-	public T getItemWithDisplayName(final String aName)
-	{
-		return mDisplayValues.get(aName);
+		return mDisplayNames;
 	}
 	
 	@Override
@@ -57,15 +45,33 @@ public abstract class ListControllerImpl <T extends Nameable> implements ListCon
 	}
 	
 	@Override
-	public List<String> getNames()
+	public T getItemAtDisplayNamePosition(final int aPos)
 	{
-		return mNames;
+		return getItemWithDisplayName(getDisplayNames().get(aPos));
 	}
 	
 	@Override
-	public List<String> getDisplayNames()
+	public T getItemAtPosition(final int aPos)
 	{
-		return mDisplayNames;
+		return mValues.get(getNames().get(aPos));
+	}
+	
+	@Override
+	public T getItemWithDisplayName(final String aName)
+	{
+		return mDisplayValues.get(aName);
+	}
+	
+	@Override
+	public T getItemWithName(final String aName)
+	{
+		return mValues.get(aName);
+	}
+	
+	@Override
+	public List<String> getNames()
+	{
+		return mNames;
 	}
 	
 	@Override
@@ -78,12 +84,6 @@ public abstract class ListControllerImpl <T extends Nameable> implements ListCon
 	public int indexOf(final T aValue)
 	{
 		return getNames().indexOf(aValue.getName());
-	}
-	
-	@Override
-	public int displayIndexOf(final T aValue)
-	{
-		return getDisplayNames().indexOf(aValue.getDisplayName());
 	}
 	
 	@Override

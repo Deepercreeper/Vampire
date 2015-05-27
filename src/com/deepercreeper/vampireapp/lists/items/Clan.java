@@ -13,15 +13,25 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.Crea
  */
 public class Clan extends Named
 {
-	private static final String					NAME_DELIM		= ":", GENERATION_DELIM = ";", CLAN_DISCIPLIN_DELIM = ",";
-	
 	private final HashSet<CreationRestriction>	mRestrictions	= new HashSet<CreationRestriction>();
 	
+	/**
+	 * Creates a new clan with the given name.
+	 * 
+	 * @param aName
+	 *            The caln name.
+	 */
 	public Clan(final String aName)
 	{
 		super(aName);
 	}
 	
+	/**
+	 * Adds a restriction to this clan.
+	 * 
+	 * @param aRestriction
+	 *            The clan restriction.
+	 */
 	public void addRestriction(final CreationRestriction aRestriction)
 	{
 		mRestrictions.add(aRestriction);
