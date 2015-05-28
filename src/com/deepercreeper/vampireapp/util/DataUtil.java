@@ -24,7 +24,7 @@ import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationCondition;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationCondition.ConditionQuery;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationCondition.CreationConditionQuery;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
 import com.deepercreeper.vampireapp.lists.controllers.ClanController;
@@ -333,7 +333,7 @@ public class DataUtil
 			final Element child = (Element) (children.item(i));
 			if (child.getTagName().equals(CONDITION))
 			{
-				final ConditionQuery query = ConditionQuery.getQuery(child.getAttribute("query"));
+				final CreationConditionQuery query = CreationConditionQuery.getQuery(child.getAttribute("query"));
 				String itemName = null;
 				int minimum = Integer.MIN_VALUE;
 				int maximum = Integer.MAX_VALUE;

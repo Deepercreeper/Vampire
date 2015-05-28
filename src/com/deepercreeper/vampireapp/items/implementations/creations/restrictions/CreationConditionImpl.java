@@ -5,7 +5,7 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.Crea
 
 public class CreationConditionImpl implements CreationCondition
 {
-	private final ConditionQuery	mQuery;
+	private final CreationConditionQuery	mQuery;
 	
 	private final String			mItemName;
 	
@@ -15,7 +15,7 @@ public class CreationConditionImpl implements CreationCondition
 	
 	private final int				mIndex;
 	
-	public CreationConditionImpl(final ConditionQuery aQuery, final String aItemName, final int aMinimum, final int aMaximum, final int aIndex)
+	public CreationConditionImpl(final CreationConditionQuery aQuery, final String aItemName, final int aMinimum, final int aMaximum, final int aIndex)
 	{
 		mQuery = aQuery;
 		mItemName = aItemName;

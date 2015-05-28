@@ -8,11 +8,11 @@ import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 
 public interface InstanceCondition
 {
-	public abstract class ConditionQuery
+	public abstract class InstanceConditionQuery
 	{
-		private static final Map<String, ConditionQuery>	CONDITION_QUERIES			= new HashMap<String, ConditionQuery>();
+		private static final Map<String, InstanceConditionQuery>	CONDITION_QUERIES			= new HashMap<String, InstanceConditionQuery>();
 		
-		public static final ConditionQuery					ITEM_VALUE					= new ConditionQuery("ItemValue")
+		public static final InstanceConditionQuery					ITEM_VALUE					= new InstanceConditionQuery("ItemValue")
 																						{
 																							
 																							@Override
@@ -31,7 +31,7 @@ public interface InstanceCondition
 																							}
 																						};
 		
-		public static final ConditionQuery					NOT_ITEM_VALUE				= new ConditionQuery("NotItemVale")
+		public static final InstanceConditionQuery					NOT_ITEM_VALUE				= new InstanceConditionQuery("NotItemVale")
 																						{
 																							@Override
 																							public boolean complied(
@@ -42,7 +42,7 @@ public interface InstanceCondition
 																							}
 																						};
 		
-		public static final ConditionQuery					HAS_ITEM					= new ConditionQuery("HasItem")
+		public static final InstanceConditionQuery					HAS_ITEM					= new InstanceConditionQuery("HasItem")
 																						{
 																							
 																							@Override
@@ -54,7 +54,7 @@ public interface InstanceCondition
 																							}
 																						};
 		
-		public static final ConditionQuery					NOT_HAS_ITEM				= new ConditionQuery("NotHasItem")
+		public static final InstanceConditionQuery					NOT_HAS_ITEM				= new InstanceConditionQuery("NotHasItem")
 																						{
 																							@Override
 																							public boolean complied(
@@ -65,7 +65,7 @@ public interface InstanceCondition
 																							}
 																						};
 		
-		public static final ConditionQuery					ITEM_CHILD_VALUE_AT			= new ConditionQuery("ItemChildValueAt")
+		public static final InstanceConditionQuery					ITEM_CHILD_VALUE_AT			= new InstanceConditionQuery("ItemChildValueAt")
 																						{
 																							@Override
 																							public boolean complied(
@@ -89,7 +89,7 @@ public interface InstanceCondition
 																							}
 																						};
 		
-		public static final ConditionQuery					NOT_ITEM_CHILD_VALUE_AT		= new ConditionQuery("NotItemChildValueAt")
+		public static final InstanceConditionQuery					NOT_ITEM_CHILD_VALUE_AT		= new InstanceConditionQuery("NotItemChildValueAt")
 																						{
 																							@Override
 																							public boolean complied(
@@ -101,7 +101,7 @@ public interface InstanceCondition
 																							}
 																						};
 		
-		public static final ConditionQuery					ITEM_HAS_CHILD_VALUE		= new ConditionQuery("ItemHasChildValue")
+		public static final InstanceConditionQuery					ITEM_HAS_CHILD_VALUE		= new InstanceConditionQuery("ItemHasChildValue")
 																						{
 																							
 																							@Override
@@ -128,7 +128,7 @@ public interface InstanceCondition
 																							}
 																						};
 		
-		public static final ConditionQuery					NOT_ITEM_HAS_CHILD_VALUE	= new ConditionQuery("NotItemHasChildValue")
+		public static final InstanceConditionQuery					NOT_ITEM_HAS_CHILD_VALUE	= new InstanceConditionQuery("NotItemHasChildValue")
 																						{
 																							@Override
 																							public boolean complied(
@@ -140,7 +140,7 @@ public interface InstanceCondition
 																							}
 																						};
 		
-		public static final ConditionQuery					GROUP_HAS_CHILD_VALUE		= new ConditionQuery("GroupHasChildValue")
+		public static final InstanceConditionQuery					GROUP_HAS_CHILD_VALUE		= new InstanceConditionQuery("GroupHasChildValue")
 																						{
 																							
 																							@Override
@@ -162,7 +162,7 @@ public interface InstanceCondition
 																							}
 																						};
 		
-		public static final ConditionQuery					NOT_GROUP_HAS_CHILD_VALUE	= new ConditionQuery("NotGroupHasChildValue")
+		public static final InstanceConditionQuery					NOT_GROUP_HAS_CHILD_VALUE	= new InstanceConditionQuery("NotGroupHasChildValue")
 																						{
 																							@Override
 																							public boolean complied(
@@ -176,13 +176,13 @@ public interface InstanceCondition
 		
 		private final String								mName;
 		
-		public ConditionQuery(final String aName)
+		public InstanceConditionQuery(final String aName)
 		{
 			mName = aName;
 			CONDITION_QUERIES.put(mName, this);
 		}
 		
-		public static ConditionQuery getQuery(final String aName)
+		public static InstanceConditionQuery getQuery(final String aName)
 		{
 			return CONDITION_QUERIES.get(aName);
 		}

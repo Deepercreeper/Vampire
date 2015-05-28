@@ -6,195 +6,272 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCre
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemGroupCreation;
 
+/**
+ * Restrictions sometimes have conditions. these are represented by this interface.
+ * 
+ * @author vrl
+ */
 public interface CreationCondition
 {
-	public abstract class ConditionQuery
+	/**
+	 * Each condition makes a query that tells whether something is positive of not.
+	 * 
+	 * @author vrl
+	 */
+	public abstract class CreationConditionQuery
 	{
-		private static final Map<String, ConditionQuery>	CONDITION_QUERIES			= new HashMap<String, ConditionQuery>();
+		/**
+		 * @param aName
+		 *            The query name.
+		 * @return the query with the given name.
+		 */
+		public static CreationConditionQuery getQuery(final String aName)
+		{
+			return CONDITION_QUERIES.get(aName);
+		}
 		
-		public static final ConditionQuery					ITEM_VALUE					= new ConditionQuery("ItemValue")
-																						{
-																							
-																							@Override
-																							public boolean complied(
-																									final ItemControllerCreation aController,
-																									final CreationCondition aCondition)
-																							{
-																								final ItemCreation item = aController
-																										.getItem(aCondition.getItemName());
-																								if (item.isValueItem()
-																										&& aCondition.isInRange(item.getValue()))
+		private static final Map<String, CreationConditionQuery>	CONDITION_QUERIES			= new HashMap<String, CreationConditionQuery>();
+		
+		/**
+		 * Complies if the value of the item with name {@link CreationCondition#getItemName()} has a value that approves {@link CreationCondition#isInRange(int)}.
+		 */
+		public static final CreationConditionQuery					ITEM_VALUE					= new CreationConditionQuery("ItemValue")
 																								{
-																									return true;
-																								}
-																								return false;
-																							}
-																						};
-		
-		public static final ConditionQuery					NOT_ITEM_VALUE				= new ConditionQuery("NotItemVale")
-																						{
-																							@Override
-																							public boolean complied(
-																									final ItemControllerCreation aController,
-																									final CreationCondition aCondition)
-																							{
-																								return !ITEM_VALUE.complied(aController, aCondition);
-																							}
-																						};
-		
-		public static final ConditionQuery					HAS_ITEM					= new ConditionQuery("HasItem")
-																						{
-																							
-																							@Override
-																							public boolean complied(
-																									final ItemControllerCreation aController,
-																									final CreationCondition aCondition)
-																							{
-																								return aController.hasItem(aCondition.getItemName());
-																							}
-																						};
-		
-		public static final ConditionQuery					NOT_HAS_ITEM				= new ConditionQuery("NotHasItem")
-																						{
-																							@Override
-																							public boolean complied(
-																									final ItemControllerCreation aController,
-																									final CreationCondition aCondition)
-																							{
-																								return !HAS_ITEM.complied(aController, aCondition);
-																							}
-																						};
-		
-		public static final ConditionQuery					ITEM_CHILD_VALUE_AT			= new ConditionQuery("ItemChildValueAt")
-																						{
-																							@Override
-																							public boolean complied(
-																									final ItemControllerCreation aController,
-																									final CreationCondition aCondition)
-																							{
-																								final ItemCreation item = aController
-																										.getItem(aCondition.getItemName());
-																								if ( !item.isParent())
-																								{
-																									return false;
-																								}
-																								if ( !item.hasChildAt(aCondition.getIndex()))
-																								{
-																									return false;
-																								}
-																								final ItemCreation child = item.getChildAt(aCondition
-																										.getIndex());
-																								return child.isValueItem()
-																										&& aCondition.isInRange(child.getValue());
-																							}
-																						};
-		
-		public static final ConditionQuery					NOT_ITEM_CHILD_VALUE_AT		= new ConditionQuery("NotItemChildValueAt")
-																						{
-																							@Override
-																							public boolean complied(
-																									final ItemControllerCreation aController,
-																									final CreationCondition aCondition)
-																							{
-																								return !ITEM_CHILD_VALUE_AT.complied(aController,
-																										aCondition);
-																							}
-																						};
-		
-		public static final ConditionQuery					ITEM_HAS_CHILD_VALUE		= new ConditionQuery("ItemHasChildValue")
-																						{
-																							
-																							@Override
-																							public boolean complied(
-																									final ItemControllerCreation aController,
-																									final CreationCondition aCondition)
-																							{
-																								final ItemCreation item = aController
-																										.getItem(aCondition.getItemName());
-																								if ( !item.isParent())
-																								{
-																									return false;
-																								}
-																								for (final ItemCreation child : item
-																										.getChildrenList())
-																								{
-																									if (child.isValueItem()
-																											&& aCondition.isInRange(child.getValue()))
+																									
+																									@Override
+																									public boolean complied(
+																											final ItemControllerCreation aController,
+																											final CreationCondition aCondition)
 																									{
-																										return true;
+																										final ItemCreation item = aController
+																												.getItem(aCondition.getItemName());
+																										if (item.isValueItem()
+																												&& aCondition.isInRange(item
+																														.getValue()))
+																										{
+																											return true;
+																										}
+																										return false;
 																									}
-																								}
-																								return false;
-																							}
-																						};
+																								};
 		
-		public static final ConditionQuery					NOT_ITEM_HAS_CHILD_VALUE	= new ConditionQuery("NotItemHasChildValue")
-																						{
-																							@Override
-																							public boolean complied(
-																									final ItemControllerCreation aController,
-																									final CreationCondition aCondition)
-																							{
-																								return !ITEM_HAS_CHILD_VALUE.complied(aController,
-																										aCondition);
-																							}
-																						};
-		
-		public static final ConditionQuery					GROUP_HAS_CHILD_VALUE		= new ConditionQuery("GroupHasChildValue")
-																						{
-																							
-																							@Override
-																							public boolean complied(
-																									final ItemControllerCreation aController,
-																									final CreationCondition aCondition)
-																							{
-																								final ItemGroupCreation group = aController
-																										.getGroup(aCondition.getItemName());
-																								for (final ItemCreation item : group.getItemsList())
+		/**
+		 * Complies if {@link CreationConditionQuery#ITEM_VALUE} does not comply.
+		 */
+		public static final CreationConditionQuery					NOT_ITEM_VALUE				= new CreationConditionQuery("NotItemVale")
 																								{
-																									if (item.isValueItem()
-																											&& aCondition.isInRange(item.getValue()))
+																									@Override
+																									public boolean complied(
+																											final ItemControllerCreation aController,
+																											final CreationCondition aCondition)
 																									{
-																										return true;
+																										return !ITEM_VALUE.complied(aController,
+																												aCondition);
 																									}
-																								}
-																								return false;
-																							}
-																						};
+																								};
 		
-		public static final ConditionQuery					NOT_GROUP_HAS_CHILD_VALUE	= new ConditionQuery("NotGroupHasChildValue")
-																						{
-																							@Override
-																							public boolean complied(
-																									final ItemControllerCreation aController,
-																									final CreationCondition aCondition)
-																							{
-																								return !GROUP_HAS_CHILD_VALUE.complied(aController,
-																										aCondition);
-																							}
-																						};
+		/**
+		 * Complies if the given controller has an item with name {@link CreationCondition#getItemName()}.
+		 */
+		public static final CreationConditionQuery					HAS_ITEM					= new CreationConditionQuery("HasItem")
+																								{
+																									
+																									@Override
+																									public boolean complied(
+																											final ItemControllerCreation aController,
+																											final CreationCondition aCondition)
+																									{
+																										return aController.hasItem(aCondition
+																												.getItemName());
+																									}
+																								};
 		
-		private final String								mName;
+		/**
+		 * Complies if {@link CreationConditionQuery#HAS_ITEM} does not comply.
+		 */
+		public static final CreationConditionQuery					NOT_HAS_ITEM				= new CreationConditionQuery("NotHasItem")
+																								{
+																									@Override
+																									public boolean complied(
+																											final ItemControllerCreation aController,
+																											final CreationCondition aCondition)
+																									{
+																										return !HAS_ITEM.complied(aController,
+																												aCondition);
+																									}
+																								};
 		
-		public ConditionQuery(final String aName)
+		/**
+		 * Complies if the item with name {@link CreationCondition#getItemName()} has a child at index {@link CreationCondition#getIndex()} and that child has a value that approves
+		 * {@link CreationCondition#isInRange(int)}.
+		 */
+		public static final CreationConditionQuery					ITEM_CHILD_VALUE_AT			= new CreationConditionQuery("ItemChildValueAt")
+																								{
+																									@Override
+																									public boolean complied(
+																											final ItemControllerCreation aController,
+																											final CreationCondition aCondition)
+																									{
+																										final ItemCreation item = aController
+																												.getItem(aCondition.getItemName());
+																										if ( !item.isParent())
+																										{
+																											return false;
+																										}
+																										if ( !item.hasChildAt(aCondition.getIndex()))
+																										{
+																											return false;
+																										}
+																										final ItemCreation child = item
+																												.getChildAt(aCondition.getIndex());
+																										return child.isValueItem()
+																												&& aCondition.isInRange(child
+																														.getValue());
+																									}
+																								};
+		
+		/**
+		 * Complies if {@link CreationConditionQuery#ITEM_CHILD_VALUE_AT} does not comply.
+		 */
+		public static final CreationConditionQuery					NOT_ITEM_CHILD_VALUE_AT		= new CreationConditionQuery("NotItemChildValueAt")
+																								{
+																									@Override
+																									public boolean complied(
+																											final ItemControllerCreation aController,
+																											final CreationCondition aCondition)
+																									{
+																										return !ITEM_CHILD_VALUE_AT.complied(
+																												aController, aCondition);
+																									}
+																								};
+		
+		/**
+		 * Complies if the item with name {@link CreationCondition#getItemName()} has a child item with a value that approves {@link CreationCondition#isInRange(int)}.
+		 */
+		public static final CreationConditionQuery					ITEM_HAS_CHILD_VALUE		= new CreationConditionQuery("ItemHasChildValue")
+																								{
+																									
+																									@Override
+																									public boolean complied(
+																											final ItemControllerCreation aController,
+																											final CreationCondition aCondition)
+																									{
+																										final ItemCreation item = aController
+																												.getItem(aCondition.getItemName());
+																										if ( !item.isParent())
+																										{
+																											return false;
+																										}
+																										for (final ItemCreation child : item
+																												.getChildrenList())
+																										{
+																											if (child.isValueItem()
+																													&& aCondition.isInRange(child
+																															.getValue()))
+																											{
+																												return true;
+																											}
+																										}
+																										return false;
+																									}
+																								};
+		
+		/**
+		 * Complies if {@link CreationConditionQuery#ITEM_HAS_CHILD_VALUE} does not comply.
+		 */
+		public static final CreationConditionQuery					NOT_ITEM_HAS_CHILD_VALUE	= new CreationConditionQuery("NotItemHasChildValue")
+																								{
+																									@Override
+																									public boolean complied(
+																											final ItemControllerCreation aController,
+																											final CreationCondition aCondition)
+																									{
+																										return !ITEM_HAS_CHILD_VALUE.complied(
+																												aController, aCondition);
+																									}
+																								};
+		
+		/**
+		 * Complies if the group with name {@link CreationCondition#getItemName()} has a child item with a value that approves {@link CreationCondition#isInRange(int)}.
+		 */
+		public static final CreationConditionQuery					GROUP_HAS_CHILD_VALUE		= new CreationConditionQuery("GroupHasChildValue")
+																								{
+																									
+																									@Override
+																									public boolean complied(
+																											final ItemControllerCreation aController,
+																											final CreationCondition aCondition)
+																									{
+																										final ItemGroupCreation group = aController
+																												.getGroup(aCondition.getItemName());
+																										for (final ItemCreation item : group
+																												.getItemsList())
+																										{
+																											if (item.isValueItem()
+																													&& aCondition.isInRange(item
+																															.getValue()))
+																											{
+																												return true;
+																											}
+																										}
+																										return false;
+																									}
+																								};
+		
+		/**
+		 * Complies if {@link CreationConditionQuery#GROUP_HAS_CHILD_VALUE} does not comply.
+		 */
+		public static final CreationConditionQuery					NOT_GROUP_HAS_CHILD_VALUE	= new CreationConditionQuery("NotGroupHasChildValue")
+																								{
+																									@Override
+																									public boolean complied(
+																											final ItemControllerCreation aController,
+																											final CreationCondition aCondition)
+																									{
+																										return !GROUP_HAS_CHILD_VALUE.complied(
+																												aController, aCondition);
+																									}
+																								};
+		
+		private final String										mName;
+		
+		private CreationConditionQuery(final String aName)
 		{
 			mName = aName;
 			CONDITION_QUERIES.put(mName, this);
 		}
 		
-		public static ConditionQuery getQuery(final String aName)
-		{
-			return CONDITION_QUERIES.get(aName);
-		}
-		
+		/**
+		 * @param aController
+		 *            The item controller.
+		 * @param aCondition
+		 *            The condition that starts this query.
+		 * @return {@code true} if this query complies and {@code false} if not.
+		 */
 		public abstract boolean complied(ItemControllerCreation aController, CreationCondition aCondition);
 	}
 	
+	/**
+	 * @param aController
+	 *            The item controller.
+	 * @return {@code true} if the query of this condition complies and {@code false} if not.
+	 */
+	public boolean complied(ItemControllerCreation aController);
+	
+	/**
+	 * @return the item index defined by this condition.
+	 */
 	public int getIndex();
 	
+	/**
+	 * @return the item name defined by this condition.
+	 */
 	public String getItemName();
 	
+	/**
+	 * @param aValue
+	 *            The value.
+	 * @return whether the given value is inside the range defined by this condition.
+	 */
 	public boolean isInRange(int aValue);
-	
-	public boolean complied(ItemControllerCreation aController);
 }
