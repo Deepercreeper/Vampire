@@ -28,25 +28,49 @@ public interface InstanceRestrictionable
 	public void addRestriction(InstanceRestriction aRestriction);
 	
 	/**
-	 * @return whether restrictions are currently added to this field.
+	 * @param aTypes
+	 *            The restriction types.
+	 * @return whether restrictions with one of the given types are currently added to this field.
 	 */
 	public boolean hasRestrictions(InstanceRestrictionType... aTypes);
 	
+	/**
+	 * @return the character.
+	 */
 	public CharacterInstance getCharacter();
 	
+	/**
+	 * @param aTypes
+	 *            The restriction types.
+	 * @return a set of restrictions that have one of the given types.
+	 */
 	public Set<InstanceRestriction> getRestrictions(InstanceRestrictionType... aTypes);
 	
+	/**
+	 * Updates all restrictions.
+	 */
 	public void updateRestrictions();
 	
+	/**
+	 * @param aValue
+	 *            The value to approve.
+	 * @param aTypes
+	 *            The restriction types.
+	 * @return whether the given value can be approved by all restriction with one of the given restriction types.
+	 */
 	public boolean isValueOk(int aValue, InstanceRestrictionType... aTypes);
 	
 	/**
-	 * @return the minimum value calculated out of all restrictions of this field.
+	 * @param aTypes
+	 *            The restriction types.
+	 * @return the minimum value calculated out of all restrictions with one of the given restriction types of this field.
 	 */
 	public int getMinValue(InstanceRestrictionType... aTypes);
 	
 	/**
-	 * @return the maximum value calculated out of all restrictions of this field.
+	 * @param aTypes
+	 *            The restriction types.
+	 * @return the maximum value calculated out of all restrictions with one of the given restriction types of this field.
 	 */
 	public int getMaxValue(InstanceRestrictionType... aTypes);
 }
