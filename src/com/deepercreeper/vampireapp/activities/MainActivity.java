@@ -173,27 +173,13 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 	@Override
 	public void makeText(final int aResId, final int aDuration)
 	{
-		mHandler.post(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				Toast.makeText(MainActivity.this, aResId, aDuration).show();
-			}
-		});
+		Toast.makeText(MainActivity.this, aResId, aDuration).show();
 	}
 	
 	@Override
 	public void makeText(final String aText, final int aDuration)
 	{
-		mHandler.post(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				Toast.makeText(MainActivity.this, aText, aDuration).show();
-			}
-		});
+		Toast.makeText(MainActivity.this, aText, aDuration).show();
 	}
 	
 	@Override
@@ -325,7 +311,7 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 	
 	private void init()
 	{
-		mConnection = new ConnectionController(this, this);
+		mConnection = new ConnectionController(this, this, mHandler);
 		
 		if ( !mConnection.hasBluetooth())
 		{

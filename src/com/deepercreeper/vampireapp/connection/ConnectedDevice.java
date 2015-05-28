@@ -30,19 +30,19 @@ public class ConnectedDevice
 		LOGIN,
 		
 		/**
+		 * The player has paused his activity.
+		 */
+		AFK,
+		
+		/**
+		 * The player has opened his activity again.
+		 */
+		BACK,
+		
+		/**
 		 * Accepting a player
 		 */
 		ACCEPT,
-		
-		/**
-		 * Declining a player
-		 */
-		DECLINE,
-		
-		/**
-		 * The host is busy and the player needs to wait
-		 */
-		WAIT,
 		
 		/**
 		 * The player has chosen a name that was already in use
@@ -62,12 +62,7 @@ public class ConnectedDevice
 		/**
 		 * The player left the game
 		 */
-		LEFT_GAME,
-		
-		/**
-		 * The player took the focus from his application
-		 */
-		REMOVED_FOCUS
+		LEFT_GAME
 	}
 	
 	private static final String			TAG				= "ConnectedDevice";

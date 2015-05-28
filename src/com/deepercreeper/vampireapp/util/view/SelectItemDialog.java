@@ -1,11 +1,13 @@
 package com.deepercreeper.vampireapp.util.view;
 
+import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.List;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -116,6 +118,26 @@ public class SelectItemDialog <T extends Nameable> extends DialogFragment
 	{
 		super.onDestroy();
 		sDialogOpen = false;
+	}
+	
+	@Override
+	public void onDetach()
+	{
+		super.onDetach();
+		try
+		{
+			final Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+			childFragmentManager.setAccessible(true);
+			childFragmentManager.set(this, null);
+		}
+		catch (final NoSuchFieldException e)
+		{
+			throw new RuntimeException(e);
+		}
+		catch (final IllegalAccessException e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
 	
 	/**

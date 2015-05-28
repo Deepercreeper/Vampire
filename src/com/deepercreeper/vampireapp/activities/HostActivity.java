@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.deepercreeper.vampireapp.R;
@@ -19,8 +20,6 @@ import com.deepercreeper.vampireapp.host.Player;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.util.ConnectionUtil;
-import com.deepercreeper.vampireapp.util.view.YesNoDialog;
-import com.deepercreeper.vampireapp.util.view.YesNoDialog.YesNoListener;
 
 /**
  * This activity represents the running host game. It is able to accept new players<br>
@@ -94,6 +93,18 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 	}
 	
 	@Override
+	public void makeText(final int aResId, final int aDuration)
+	{
+		Toast.makeText(HostActivity.this, aResId, aDuration).show();
+	}
+	
+	@Override
+	public void makeText(final String aText, final int aDuration)
+	{
+		Toast.makeText(HostActivity.this, aText, aDuration).show();
+	}
+	
+	@Override
 	public void onBackPressed()
 	{
 		exit();
@@ -110,6 +121,12 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 			case LEFT_GAME :
 				makeText(mHost.getPlayer(aDevice).getName() + " " + getString(R.string.left_game), Toast.LENGTH_SHORT);
 				mConnection.disconnect(aDevice);
+				break;
+			case AFK :
+				mHost.getPlayer(aDevice).setAFK(true);
+				break;
+			case BACK :
+				mHost.getPlayer(aDevice).setAFK(false);
 				break;
 			default :
 				break;
@@ -138,12 +155,13 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 	
 	private void init()
 	{
-		mConnection = new ConnectionController(this, this);
+		mConnection = new ConnectionController(this, this, mHandler);
 		mConnection.startServer(this);
 		
 		setContentView(R.layout.host);
 		
 		final TextView name = (TextView) findViewById(R.id.host_name);
+		mHost.setPlayersList((LinearLayout) findViewById(R.id.players_list));
 		final Button exit = (Button) findViewById(R.id.exit);
 		
 		name.setText(mHost.getName());
@@ -159,63 +177,14 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 	
 	private void login(final ConnectedDevice aDevice, final String aPlayer)
 	{
-		if (YesNoDialog.isDialogOpen())
+		if ( !mHost.addPlayer(new Player(aPlayer, aDevice, HostActivity.this)))
 		{
-			aDevice.send(MessageType.WAIT);
+			aDevice.send(MessageType.NAME_IN_USE);
 			mConnection.disconnect(aDevice);
-			return;
 		}
-		
-		final YesNoListener listener = new YesNoListener()
+		else
 		{
-			@Override
-			public void select(final boolean aYes)
-			{
-				if (aYes)
-				{
-					if ( !mHost.addPlayer(new Player(aPlayer, aDevice)))
-					{
-						aDevice.send(MessageType.NAME_IN_USE);
-						mConnection.disconnect(aDevice);
-					}
-					else
-					{
-						aDevice.send(MessageType.ACCEPT);
-					}
-				}
-				else
-				{
-					aDevice.send(MessageType.DECLINE);
-					mConnection.disconnect(aDevice);
-				}
-			}
-		};
-		YesNoDialog.showYesNoDialog(aPlayer, getString(R.string.new_player), this, listener);
-	}
-	
-	@Override
-	public void makeText(final String aText, final int aDuration)
-	{
-		mHandler.post(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				Toast.makeText(HostActivity.this, aText, aDuration).show();
-			}
-		});
-	}
-	
-	@Override
-	public void makeText(final int aResId, final int aDuration)
-	{
-		mHandler.post(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				Toast.makeText(HostActivity.this, aResId, aDuration).show();
-			}
-		});
+			aDevice.send(MessageType.ACCEPT);
+		}
 	}
 }

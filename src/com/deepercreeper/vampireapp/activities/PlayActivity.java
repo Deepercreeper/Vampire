@@ -118,26 +118,44 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 			case ACCEPT :
 				setEnabled(true);
 				break;
-			case DECLINE :
-				exit(true);
-				break;
-			case WAIT :
-				makeText(R.string.host_busy, Toast.LENGTH_SHORT);
-				exit(true);
-				break;
 			case NAME_IN_USE :
 				makeText(R.string.name_in_use, Toast.LENGTH_SHORT);
 				exit(true);
 				break;
+			case KICKED :
+				makeText(R.string.kicked, Toast.LENGTH_SHORT);
+				exit(true);
+				break;
 			case CLOSED :
 				makeText(R.string.host_closed, Toast.LENGTH_SHORT);
-				disconnectedFrom(aDevice);
 				exit(true);
 				break;
 			default :
 				break;
 		}
 		// TODO Implement
+	}
+	
+	@Override
+	protected void onPause()
+	{
+		if (mConnection != null && mConnection.hasHost())
+		{
+			mConnection.getHost().send(MessageType.AFK);
+		}
+		
+		super.onPause();
+	}
+	
+	@Override
+	protected void onResume()
+	{
+		if (mConnection != null && mConnection.hasHost())
+		{
+			mConnection.getHost().send(MessageType.BACK);
+		}
+		
+		super.onResume();
 	}
 	
 	@Override
@@ -186,7 +204,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	
 	private void init()
 	{
-		mConnection = new ConnectionController(this, this);
+		mConnection = new ConnectionController(this, this, mHandler);
 		mConnection.connect(this);
 		
 		final String xml = getIntent().getStringExtra(CreateCharActivity.CHARACTER);
@@ -250,26 +268,12 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	@Override
 	public void makeText(final String aText, final int aDuration)
 	{
-		mHandler.post(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				Toast.makeText(PlayActivity.this, aText, aDuration).show();
-			}
-		});
+		Toast.makeText(PlayActivity.this, aText, aDuration).show();
 	}
 	
 	@Override
 	public void makeText(final int aResId, final int aDuration)
 	{
-		mHandler.post(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				Toast.makeText(PlayActivity.this, aResId, aDuration).show();
-			}
-		});
+		Toast.makeText(PlayActivity.this, aResId, aDuration).show();
 	}
 }

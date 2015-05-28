@@ -18,6 +18,13 @@
             android:layout_height="wrap_content"
             android:textSize="20sp" />
 
+        <LinearLayout 
+            android:id="@+id/players_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            />
+        
         <Button
             android:id="@+id/exit"
             android:layout_width="match_parent"

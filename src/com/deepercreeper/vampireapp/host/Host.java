@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.util.CodingUtil;
@@ -27,6 +28,8 @@ public class Host
 	private final List<Player>	mPlayers	= new ArrayList<Player>();
 	
 	private final String		mLocation;
+	
+	private LinearLayout		mPlayersList;
 	
 	/**
 	 * Creates a new host with the given name and location.
@@ -73,6 +76,17 @@ public class Host
 	}
 	
 	/**
+	 * Sets the list, all players are displayed inside.
+	 * 
+	 * @param aPlayersList
+	 *            The players list.
+	 */
+	public void setPlayersList(final LinearLayout aPlayersList)
+	{
+		mPlayersList = aPlayersList;
+	}
+	
+	/**
 	 * Finds the player with the given device and removes it from the players list.
 	 * 
 	 * @param aDevice
@@ -80,7 +94,10 @@ public class Host
 	 */
 	public void removePlayer(final ConnectedDevice aDevice)
 	{
-		mPlayers.remove(getPlayer(aDevice));
+		final Player player = getPlayer(aDevice);
+		player.release();
+		mPlayers.remove(player);
+		
 	}
 	
 	/**
@@ -114,6 +131,7 @@ public class Host
 			return false;
 		}
 		mPlayers.add(aPlayer);
+		mPlayersList.addView(aPlayer.getContainer());
 		return true;
 	}
 	

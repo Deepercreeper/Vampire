@@ -12,6 +12,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.IntentFilter;
+import android.os.Handler;
 import android.widget.Toast;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
@@ -41,6 +42,8 @@ public class ConnectionController implements ConnectionListener
 	
 	private final ConnectionListener	mConnectionListener;
 	
+	private final Handler				mHandler;
+	
 	private BluetoothAdapter			mBluetoothAdapter;
 	
 	private BluetoothServerSocket		mInsecureSocket		= null;
@@ -58,30 +61,58 @@ public class ConnectionController implements ConnectionListener
 	 *            The underlying context.
 	 * @param aConnectionListener
 	 *            The listener for message, Bluetooth and connection events.
+	 * @param aHandler
+	 *            A UI handler.
 	 */
-	public ConnectionController(final Activity aContext, final ConnectionListener aConnectionListener)
+	public ConnectionController(final Activity aContext, final ConnectionListener aConnectionListener, final Handler aHandler)
 	{
 		mContext = aContext;
+		mHandler = aHandler;
 		mConnectionListener = aConnectionListener;
 		init();
 	}
 	
-	@Override
-	public void makeText(final int aResId, final int aDuration)
+	/**
+	 * @return the connected host or {@code null} if no host is connected.
+	 */
+	public ConnectedDevice getHost()
 	{
-		mConnectionListener.makeText(aResId, aDuration);
+		for (final ConnectedDevice device : mDevices)
+		{
+			if (device.isHost())
+			{
+				return device;
+			}
+		}
+		return null;
 	}
 	
-	@Override
-	public void makeText(final String aText, final int aDuration)
+	/**
+	 * @return whether this connection controller is connected to a host.
+	 */
+	public boolean hasHost()
 	{
-		mConnectionListener.makeText(aText, aDuration);
+		for (final ConnectedDevice device : mDevices)
+		{
+			if (device.isHost())
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	@Override
 	public void cancel()
 	{
-		mConnectionListener.cancel();
+		mHandler.post(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				mConnectionListener.cancel();
+			}
+		});
 	}
 	
 	/**
@@ -156,12 +187,28 @@ public class ConnectionController implements ConnectionListener
 	
 	@Override
 	public void connectedTo(final ConnectedDevice aDevice)
-	{}
+	{
+		mHandler.post(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				mConnectionListener.connectedTo(aDevice);
+			}
+		});
+	}
 	
 	@Override
 	public void connectionEnabled(final boolean aEnabled)
 	{
-		mConnectionListener.connectionEnabled(aEnabled);
+		mHandler.post(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				mConnectionListener.connectionEnabled(aEnabled);
+			}
+		});
 	}
 	
 	/**
@@ -220,15 +267,8 @@ public class ConnectionController implements ConnectionListener
 		}
 	}
 	
-	@Override
-	public void disconnectedFrom(final ConnectedDevice aDevice)
-	{
-		mDevices.remove(aDevice);
-		mConnectionListener.disconnectedFrom(aDevice);
-	}
-	
 	/**
-	 * Disconnects the given device.
+	 * Disconnects the given device. Just invokes {@link ConnectedDevice#exit()}.
 	 * 
 	 * @param aDevice
 	 *            The device to disconnect.
@@ -236,6 +276,20 @@ public class ConnectionController implements ConnectionListener
 	public void disconnect(final ConnectedDevice aDevice)
 	{
 		aDevice.exit();
+	}
+	
+	@Override
+	public void disconnectedFrom(final ConnectedDevice aDevice)
+	{
+		mDevices.remove(aDevice);
+		mHandler.post(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				mConnectionListener.disconnectedFrom(aDevice);
+			}
+		});
 	}
 	
 	/**
@@ -322,9 +376,42 @@ public class ConnectionController implements ConnectionListener
 	}
 	
 	@Override
+	public void makeText(final int aResId, final int aDuration)
+	{
+		mHandler.post(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				mConnectionListener.makeText(aResId, aDuration);
+			}
+		});
+	}
+	
+	@Override
+	public void makeText(final String aText, final int aDuration)
+	{
+		mHandler.post(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				mConnectionListener.makeText(aText, aDuration);
+			}
+		});
+	}
+	
+	@Override
 	public void receiveMessage(final ConnectedDevice aDevice, final MessageType aType, final String[] aArgs)
 	{
-		mConnectionListener.receiveMessage(aDevice, aType, aArgs);
+		mHandler.post(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				mConnectionListener.receiveMessage(aDevice, aType, aArgs);
+			}
+		});
 	}
 	
 	/**
@@ -422,6 +509,7 @@ public class ConnectionController implements ConnectionListener
 				try
 				{
 					final ConnectedDevice connectedDevice = new ConnectedDevice(socket, this, false);
+					mDevices.add(connectedDevice);
 					aListener.connectedTo(connectedDevice);
 					connected = true;
 				}
