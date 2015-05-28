@@ -31,6 +31,11 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.SelectItemDialog;
 import com.deepercreeper.vampireapp.util.view.SelectItemDialog.SelectionListener;
 
+/**
+ * A group creation implementation.
+ * 
+ * @author vrl
+ */
 public class ItemGroupCreationImpl extends CreationRestrictionableImpl implements ItemGroupCreation
 {
 	private static final String				TAG				= "ItemGroupCreation";
@@ -57,13 +62,27 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 	
 	private PointHandler					mPoints;
 	
+	/**
+	 * Creates a new group creation.
+	 * 
+	 * @param aGroup
+	 *            The group type.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aController
+	 *            The item controller.
+	 * @param aMode
+	 *            The creation mode.
+	 * @param aPoints
+	 *            The points handler.
+	 */
 	public ItemGroupCreationImpl(final ItemGroup aGroup, final Context aContext, final ItemControllerCreation aController, final CreationMode aMode,
 			final PointHandler aPoints)
 	{
+		super(aController);
 		mItemGroup = aGroup;
 		mContext = aContext;
 		mItemController = aController;
-		setController(mItemController);
 		mMode = aMode;
 		mPoints = aPoints;
 		mContainer = new LinearLayout(getContext());
@@ -87,12 +106,6 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 	}
 	
 	@Override
-	public boolean hasOrder()
-	{
-		return getItemGroup().hasOrder();
-	}
-	
-	@Override
 	public void addItem()
 	{
 		if ( !isMutable())
@@ -112,14 +125,14 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		final SelectionListener<Item> action = new SelectionListener<Item>()
 		{
 			@Override
+			public void cancel()
+			{}
+			
+			@Override
 			public void select(final Item aChoosenItem)
 			{
 				addItem(aChoosenItem);
 			}
-			
-			@Override
-			public void cancel()
-			{}
 		};
 		SelectItemDialog.showSelectionDialog(items, getContext().getString(R.string.add_item), getContext(), action);
 	}
@@ -205,14 +218,14 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		final SelectionListener<Item> action = new SelectionListener<Item>()
 		{
 			@Override
+			public void cancel()
+			{}
+			
+			@Override
 			public void select(final Item aChoosenItem)
 			{
 				setItemAt(index, aChoosenItem);
 			}
-			
-			@Override
-			public void cancel()
-			{}
 		};
 		SelectItemDialog.showSelectionDialog(items, getContext().getString(R.string.edit_item) + aItem.getName(), getContext(), action);
 	}
@@ -350,6 +363,12 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 	}
 	
 	@Override
+	public int hashCode()
+	{
+		return getItemGroup().hashCode();
+	}
+	
+	@Override
 	public boolean hasItem(final Item aItem)
 	{
 		return mItems.containsKey(aItem);
@@ -369,6 +388,12 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 			return hasItem(getItemGroup().getItem(aName));
 		}
 		return false;
+	}
+	
+	@Override
+	public boolean hasOrder()
+	{
+		return getItemGroup().hasOrder();
 	}
 	
 	@Override
@@ -623,20 +648,6 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		updateController();
 	}
 	
-	private void sortItems()
-	{
-		for (final ItemCreation item : getItemsList())
-		{
-			item.release();
-		}
-		Collections.sort(getItemsList());
-		for (final ItemCreation item : getItemsList())
-		{
-			item.init();
-			getContainer().addView(item.getContainer());
-		}
-	}
-	
 	private List<Item> getAddableItems()
 	{
 		final List<Item> items = new ArrayList<Item>();
@@ -675,5 +686,19 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		getItemsList().remove(aItem);
 		getItemController().resize();
 		updateController();
+	}
+	
+	private void sortItems()
+	{
+		for (final ItemCreation item : getItemsList())
+		{
+			item.release();
+		}
+		Collections.sort(getItemsList());
+		for (final ItemCreation item : getItemsList())
+		{
+			item.init();
+			getContainer().addView(item.getContainer());
+		}
 	}
 }

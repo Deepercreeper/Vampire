@@ -25,6 +25,11 @@ import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.ResizeHeightAnimation;
 
+/**
+ * A group option instance implementation.
+ * 
+ * @author vrl
+ */
 public class GroupOptionInstanceImpl implements GroupOptionInstance
 {
 	private static final String						TAG				= "GroupOptionInstance";
@@ -49,6 +54,18 @@ public class GroupOptionInstanceImpl implements GroupOptionInstance
 	
 	private boolean									mOpen			= false;
 	
+	/**
+	 * Creates a new group option out of the given XML data.
+	 * 
+	 * @param aElement
+	 *            The XML data.
+	 * @param aItemController
+	 *            The item controller.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aCharacter
+	 *            The character.
+	 */
 	public GroupOptionInstanceImpl(final Element aElement, final ItemControllerInstance aItemController, final Context aContext,
 			final CharacterInstance aCharacter)
 	{
@@ -77,6 +94,18 @@ public class GroupOptionInstanceImpl implements GroupOptionInstance
 		sortGroups();
 	}
 	
+	/**
+	 * Creates a new group option out of the given group option creation.
+	 * 
+	 * @param aGroupOption
+	 *            The group option creation.
+	 * @param aItemController
+	 *            The item controller.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aCharacter
+	 *            The character.
+	 */
 	public GroupOptionInstanceImpl(final GroupOptionCreation aGroupOption, final ItemControllerInstance aItemController, final Context aContext,
 			final CharacterInstance aCharacter)
 	{
@@ -111,23 +140,11 @@ public class GroupOptionInstanceImpl implements GroupOptionInstance
 	}
 	
 	@Override
-	public CharacterInstance getCharacter()
-	{
-		return mCharacter;
-	}
-	
-	@Override
 	public void close()
 	{
 		mOpen = false;
 		mGroupButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
 		resize();
-	}
-	
-	@Override
-	public LinearLayout getContainer()
-	{
-		return mContainer;
 	}
 	
 	@Override
@@ -138,6 +155,18 @@ public class GroupOptionInstanceImpl implements GroupOptionInstance
 			return getGroupOption().compareTo(null);
 		}
 		return getGroupOption().compareTo(aAnother.getGroupOption());
+	}
+	
+	@Override
+	public CharacterInstance getCharacter()
+	{
+		return mCharacter;
+	}
+	
+	@Override
+	public LinearLayout getContainer()
+	{
+		return mContainer;
 	}
 	
 	@Override
@@ -168,6 +197,23 @@ public class GroupOptionInstanceImpl implements GroupOptionInstance
 	public String getName()
 	{
 		return getGroupOption().getName();
+	}
+	
+	@Override
+	public boolean hasAnyItem()
+	{
+		if (getGroupsList().isEmpty())
+		{
+			return false;
+		}
+		for (final ItemGroupInstance group : getGroupsList())
+		{
+			if ( !group.getItemsList().isEmpty())
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	@Override
@@ -303,20 +349,9 @@ public class GroupOptionInstanceImpl implements GroupOptionInstance
 	}
 	
 	@Override
-	public boolean hasAnyItem()
+	public String toString()
 	{
-		if (getGroupsList().isEmpty())
-		{
-			return false;
-		}
-		for (final ItemGroupInstance group : getGroupsList())
-		{
-			if ( !group.getItemsList().isEmpty())
-			{
-				return true;
-			}
-		}
-		return false;
+		return getGroupOption().getDisplayName();
 	}
 	
 	@Override
@@ -327,12 +362,6 @@ public class GroupOptionInstanceImpl implements GroupOptionInstance
 			group.updateItems();
 		}
 		setEnabled(hasAnyItem());
-	}
-	
-	@Override
-	public String toString()
-	{
-		return getGroupOption().getDisplayName();
 	}
 	
 	private void addGroupSilent(final ItemGroupInstance aGroup)

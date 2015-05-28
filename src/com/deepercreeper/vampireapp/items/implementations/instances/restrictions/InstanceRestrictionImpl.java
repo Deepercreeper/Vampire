@@ -40,6 +40,12 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 	
 	private InstanceRestrictionable			mParent;
 	
+	/**
+	 * Creates a new restriction out of the given XML data.
+	 * 
+	 * @param aElement
+	 *            The XML data.
+	 */
 	public InstanceRestrictionImpl(final Element aElement)
 	{
 		mType = InstanceRestrictionType.get(aElement.getAttribute("type"));
@@ -67,6 +73,26 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 		mDuration.addListener(this);
 	}
 	
+	/**
+	 * Creates a new restriction.
+	 * 
+	 * @param aType
+	 *            The restriction type.
+	 * @param aItemName
+	 *            The item name.
+	 * @param aMinimum
+	 *            The minimum value.
+	 * @param aMaximum
+	 *            The maximum value.
+	 * @param aItems
+	 *            A list of item names.
+	 * @param aIndex
+	 *            The index.
+	 * @param aValue
+	 *            The value.
+	 * @param aDuration
+	 *            The restriction duration.
+	 */
 	public InstanceRestrictionImpl(final InstanceRestrictionType aType, final String aItemName, final int aMinimum, final int aMaximum,
 			final List<String> aItems, final int aIndex, final int aValue, final Duration aDuration)
 	{
@@ -108,36 +134,6 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 		return element;
 	}
 	
-	@Override
-	public void onDue()
-	{
-		clear();
-	}
-	
-	@Override
-	public Duration getDuration()
-	{
-		return mDuration;
-	}
-	
-	@Override
-	public void day()
-	{
-		mDuration.day();
-	}
-	
-	@Override
-	public void hour()
-	{
-		mDuration.hour();
-	}
-	
-	@Override
-	public void round()
-	{
-		mDuration.round();
-	}
-	
 	/**
 	 * Removes this restriction from each restricted parent.
 	 */
@@ -149,6 +145,12 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 			mParent.removeRestriction(this);
 			mParent = null;
 		}
+	}
+	
+	@Override
+	public void day()
+	{
+		mDuration.day();
 	}
 	
 	@Override
@@ -237,6 +239,12 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 	}
 	
 	@Override
+	public Duration getDuration()
+	{
+		return mDuration;
+	}
+	
+	@Override
 	public int getIndex()
 	{
 		return mIndex;
@@ -307,6 +315,12 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 	}
 	
 	@Override
+	public void hour()
+	{
+		mDuration.hour();
+	}
+	
+	@Override
 	public boolean isActive(final ItemControllerInstance aController)
 	{
 		for (final InstanceCondition condition : mConditions)
@@ -325,6 +339,18 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 		return mMinimum <= aValue && aValue <= mMaximum;
 	}
 	
+	@Override
+	public void onDue()
+	{
+		clear();
+	}
+	
+	@Override
+	public void round()
+	{
+		mDuration.round();
+	}
+	
 	/**
 	 * Adds a restricted parent to this restriction. That makes sure,<br>
 	 * that the removal of restrictions is done for each restricted value of this restriction.
@@ -336,12 +362,6 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 	public void setParent(final InstanceRestrictionable aParent)
 	{
 		mParent = aParent;
-	}
-	
-	@Override
-	public void update()
-	{
-		getParent().updateRestrictions();
 	}
 	
 	@Override
@@ -382,5 +402,11 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 		string.append(", Index = " + getIndex()).append(", Value = " + getValue());
 		string.append(", " + getDuration());
 		return string.toString();
+	}
+	
+	@Override
+	public void update()
+	{
+		getParent().updateRestrictions();
 	}
 }

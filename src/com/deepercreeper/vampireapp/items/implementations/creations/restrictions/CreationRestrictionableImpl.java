@@ -4,14 +4,19 @@ import java.util.HashSet;
 import java.util.Set;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestrictionable;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestrictionable;
 
+/**
+ * A creation restrictionable implementation.
+ * 
+ * @author vrl
+ */
 public abstract class CreationRestrictionableImpl implements CreationRestrictionable
 {
 	private final Set<CreationRestriction>	mRestrictions		= new HashSet<CreationRestriction>();
 	
-	private ItemControllerCreation	mControllerCreation	= null;
+	private ItemControllerCreation			mControllerCreation	= null;
 	
 	@Override
 	public final void addRestriction(final CreationRestriction aRestriction)
@@ -21,9 +26,23 @@ public abstract class CreationRestrictionableImpl implements CreationRestriction
 		updateRestrictions();
 	}
 	
-	public final void setController(final ItemControllerCreation aController)
+	/**
+	 * Creates a new creation restrictionable.
+	 * 
+	 * @param aController
+	 *            The item controller.
+	 */
+	public CreationRestrictionableImpl(ItemControllerCreation aController)
 	{
 		mControllerCreation = aController;
+	}
+	
+	/**
+	 * Creates a new creation restrictionable without controller.
+	 */
+	public CreationRestrictionableImpl()
+	{
+		this(null);
 	}
 	
 	@Override

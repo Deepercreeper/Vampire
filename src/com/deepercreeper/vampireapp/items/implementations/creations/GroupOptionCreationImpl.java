@@ -20,6 +20,11 @@ import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.ResizeHeightAnimation;
 
+/**
+ * A group option creation implementation.
+ * 
+ * @author vrl
+ */
 public class GroupOptionCreationImpl implements GroupOptionCreation
 {
 	private static final String						TAG				= "GroupOptionCreation";
@@ -42,6 +47,16 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 	
 	private boolean									mOpen			= false;
 	
+	/**
+	 * Creates a new group option creation.
+	 * 
+	 * @param aGroupOption
+	 *            The group option type.
+	 * @param aItemController
+	 *            The item controller.
+	 * @param aContext
+	 *            The underlying context
+	 */
 	public GroupOptionCreationImpl(final GroupOption aGroupOption, final ItemControllerCreation aItemController, final Context aContext)
 	{
 		mGroupOption = aGroupOption;
@@ -57,6 +72,12 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 			addGroupSilent(aItemController.getGroup(group));
 		}
 		sortGroups();
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return getGroupOption().hashCode();
 	}
 	
 	@Override

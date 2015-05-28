@@ -6,16 +6,27 @@ import java.util.Map;
 import com.deepercreeper.vampireapp.items.interfaces.GroupOption;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 
+/**
+ * A group option implementation.
+ * 
+ * @author vrl
+ */
 public class GroupOptionImpl extends Named implements GroupOption
 {
-	private static final String				TAG		= "GroupOption";
-	
 	private final Map<String, ItemGroup>	mGroups	= new HashMap<String, ItemGroup>();
 	
 	private final int[]						mMaxValues;
 	
 	private final boolean					mValueGroupOption;
 	
+	/**
+	 * Creates a new group option.
+	 * 
+	 * @param aName
+	 *            The group option name.
+	 * @param aMaxValues
+	 *            The maximum group values.
+	 */
 	public GroupOptionImpl(final String aName, final int[] aMaxValues)
 	{
 		super(aName);
@@ -32,12 +43,9 @@ public class GroupOptionImpl extends Named implements GroupOption
 	@Override
 	public boolean equals(final Object aO)
 	{
-		if (aO instanceof GroupOption)
-		{
-			final GroupOption groupOption = (GroupOption) aO;
-			return getName().equals(groupOption.getName());
-		}
-		return false;
+		// TODO Default items should inherit the equals and hashcode methods from Named
+		// TODO Go through all classes and sort the members
+		return super.equals(aO);
 	}
 	
 	@Override

@@ -28,12 +28,28 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.SelectItemDialog;
 import com.deepercreeper.vampireapp.util.view.SelectItemDialog.SelectionListener;
 
+/**
+ * An item creation implementation.
+ * 
+ * @author vrl
+ */
 public class ItemCreationImpl extends CreationRestrictionableImpl implements ItemCreation
 {
+	/**
+	 * The change action tells, what to change, wen increasing or decreasing an item.
+	 * 
+	 * @author vrl
+	 */
 	public interface ChangeAction
 	{
+		/**
+		 * Invoked, when the item is decreased.
+		 */
 		void decrease();
 		
+		/**
+		 * Invoked, when the item is increased.
+		 */
 		void increase();
 	}
 	
@@ -113,13 +129,29 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 	
 	private int								mTempPoints;
 	
+	/**
+	 * Creates a new item creation.
+	 * 
+	 * @param aItem
+	 *            The item type.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aGroup
+	 *            The parent item group.
+	 * @param aMode
+	 *            The creation mode.
+	 * @param aPoints
+	 *            The points handler.
+	 * @param aParentItem
+	 *            The parent item.
+	 */
 	public ItemCreationImpl(final Item aItem, final Context aContext, final ItemGroupCreation aGroup, final CreationMode aMode,
 			final PointHandler aPoints, final ItemCreation aParentItem)
 	{
+		super(aGroup.getItemController());
 		mItem = aItem;
 		mContext = aContext;
 		mItemGroup = aGroup;
-		setController(aGroup.getItemController());
 		mMode = aMode;
 		mContainer = new LinearLayout(getContext());
 		if (isValueItem())
@@ -659,6 +691,12 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 	public boolean hasEnoughPoints()
 	{
 		return getItem().getItemGroup().getFreePointsCost() <= getPoints().getPoints();
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return getItem().hashCode();
 	}
 	
 	@Override

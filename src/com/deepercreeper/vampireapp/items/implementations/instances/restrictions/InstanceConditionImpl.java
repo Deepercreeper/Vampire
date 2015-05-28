@@ -3,18 +3,37 @@ package com.deepercreeper.vampireapp.items.implementations.instances.restriction
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceCondition;
 
+/**
+ * An instance condition implementation.
+ * 
+ * @author vrl
+ */
 public class InstanceConditionImpl implements InstanceCondition
 {
 	private final InstanceConditionQuery	mQuery;
 	
-	private final String			mItemName;
+	private final String					mItemName;
 	
-	private final int				mMinimum;
+	private final int						mMinimum;
 	
-	private final int				mMaximum;
+	private final int						mMaximum;
 	
-	private final int				mIndex;
+	private final int						mIndex;
 	
+	/**
+	 * Creates a new condition.
+	 * 
+	 * @param aQuery
+	 *            The condition query.
+	 * @param aItemName
+	 *            The item name.
+	 * @param aMinimum
+	 *            The minimum value.
+	 * @param aMaximum
+	 *            The maximum value.
+	 * @param aIndex
+	 *            The index.
+	 */
 	public InstanceConditionImpl(final InstanceConditionQuery aQuery, final String aItemName, final int aMinimum, final int aMaximum, final int aIndex)
 	{
 		mQuery = aQuery;

@@ -39,6 +39,26 @@ public class CreationRestrictionImpl implements CreationRestriction
 	
 	private CreationRestrictionable			mParent;
 	
+	/**
+	 * Creates a new creation restriction.
+	 * 
+	 * @param aType
+	 *            The restriction type.
+	 * @param aItemName
+	 *            The item name.
+	 * @param aMinimum
+	 *            The minimum value.
+	 * @param aMaximum
+	 *            The maximum value.
+	 * @param aItems
+	 *            aList of item names.
+	 * @param aIndex
+	 *            The index.
+	 * @param aValue
+	 *            The value.
+	 * @param aCreationRestriction
+	 *            Whether this is a creation only restriction.
+	 */
 	public CreationRestrictionImpl(final CreationRestrictionType aType, final String aItemName, final int aMinimum, final int aMaximum,
 			final List<String> aItems, final int aIndex, final int aValue, final boolean aCreationRestriction)
 	{

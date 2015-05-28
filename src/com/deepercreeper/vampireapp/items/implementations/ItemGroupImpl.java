@@ -50,6 +50,30 @@ public class ItemGroupImpl extends Named implements ItemGroup
 	 * 
 	 * @param aName
 	 *            The group name.
+	 * @param aMutable
+	 *            Whether this group is mutable.
+	 * @param aOrder
+	 *            Whether the child items of this group have a specific order.
+	 * @param aFreeMutable
+	 *            Whether this group is mutable inside the free character creation.
+	 * @param aMaxLowLevelValue
+	 *            The group default maximum low level item value.
+	 * @param aStartValue
+	 *            The group default item start value.
+	 * @param aMaxValue
+	 *            The group default maximum item value.
+	 * @param aFreePointsCost
+	 *            The group default free points cost.
+	 * @param aValueGroup
+	 *            Whether this is a value group.
+	 * @param aMaxItems
+	 *            The maximum number of items inside this group.
+	 * @param aEPCost
+	 *            The group default item experience cost.
+	 * @param aEPCostNew
+	 *            The group default new item experience cost.
+	 * @param aEPCostMultiplicator
+	 *            The group default item value dependent experience cost.
 	 */
 	public ItemGroupImpl(final String aName, final boolean aMutable, final boolean aOrder, final boolean aFreeMutable, final int aMaxLowLevelValue,
 			final int aStartValue, final int aMaxValue, final int aFreePointsCost, final boolean aValueGroup, final int aMaxItems, final int aEPCost,
@@ -76,17 +100,6 @@ public class ItemGroupImpl extends Named implements ItemGroup
 		getItemsList().add(aItem);
 		mItems.put(aItem.getName(), aItem);
 		Collections.sort(getItemsList());
-	}
-	
-	@Override
-	public boolean equals(final Object aO)
-	{
-		if (aO instanceof ItemGroup)
-		{
-			final ItemGroup group = (ItemGroup) aO;
-			return getName().equals(group.getName());
-		}
-		return false;
 	}
 	
 	@Override

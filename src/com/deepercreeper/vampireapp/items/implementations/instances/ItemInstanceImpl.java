@@ -36,9 +36,14 @@ import com.deepercreeper.vampireapp.util.ItemFinder;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
+/**
+ * An item instance implementation.
+ * 
+ * @author vrl
+ */
 public class ItemInstanceImpl extends InstanceRestrictionableImpl implements ItemInstance
 {
-	public static final String				TAG				= "ItemInstance";
+	private static final String				TAG				= "ItemInstance";
 	
 	private final List<ItemInstance>		mChildrenList;
 	
@@ -78,10 +83,28 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	
 	private int								mValueId		= 0;
 	
+	/**
+	 * Creates a new item out of the given XML data.
+	 * 
+	 * @param aElement
+	 *            The XML data.
+	 * @param aItemGroup
+	 *            The parent item group.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aMode
+	 *            The character mode.
+	 * @param aEP
+	 *            The experience controller.
+	 * @param aParentItem
+	 *            The parent item.
+	 * @param aCharacter
+	 *            The character.
+	 */
 	public ItemInstanceImpl(final Element aElement, final ItemGroupInstance aItemGroup, final Context aContext, final Mode aMode,
 			final EPController aEP, final ItemInstance aParentItem, final CharacterInstance aCharacter)
 	{
-		super(aCharacter);
+		super(aCharacter, aItemGroup.getItemController());
 		if (aParentItem == null)
 		{
 			mItem = aItemGroup.getItemGroup().getItem(aElement.getAttribute("name"));
@@ -101,7 +124,6 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		{
 			mDescription = null;
 		}
-		setController(getItemGroup().getItemController());
 		mMode = aMode;
 		mContainer = new LinearLayout(getContext());
 		
@@ -152,16 +174,31 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		}
 	}
 	
+	/**
+	 * Creates a new item out of the given item creation.
+	 * 
+	 * @param aItem
+	 *            The item creation.
+	 * @param aItemGroup
+	 *            The parent item group.
+	 * @param aMode
+	 *            The character mode.
+	 * @param aEP
+	 *            The experience controller.
+	 * @param aParentItem
+	 *            The parent item.
+	 * @param aCharacter
+	 *            The character.
+	 */
 	public ItemInstanceImpl(final ItemCreation aItem, final ItemGroupInstance aItemGroup, final Mode aMode, final EPController aEP,
 			final ItemInstance aParentItem, final CharacterInstance aCharacter)
 	{
-		super(aCharacter);
+		super(aCharacter, aItemGroup.getItemController());
 		mItem = aItem.getItem();
 		mItemGroup = aItemGroup;
 		mContext = aItem.getContext();
 		mDescription = aItem.getDescription();
 		mEP = aEP;
-		setController(aItemGroup.getItemController());
 		mMode = aMode;
 		mContainer = new LinearLayout(getContext());
 		mRelativeContainer = new RelativeLayout(getContext());

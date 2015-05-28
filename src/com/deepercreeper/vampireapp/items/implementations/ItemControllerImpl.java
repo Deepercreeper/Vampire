@@ -10,6 +10,11 @@ import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 
+/**
+ * A item controller implementation.
+ * 
+ * @author vrl
+ */
 public class ItemControllerImpl extends Named implements ItemController
 {
 	private final Map<String, ItemGroup>	mGroups				= new HashMap<String, ItemGroup>();
@@ -20,6 +25,12 @@ public class ItemControllerImpl extends Named implements ItemController
 	
 	private final List<GroupOption>			mGroupOptionList	= new ArrayList<GroupOption>();
 	
+	/**
+	 * Creates a new item controller.
+	 * 
+	 * @param aName
+	 *            The item controller name.
+	 */
 	public ItemControllerImpl(final String aName)
 	{
 		super(aName);
@@ -39,17 +50,6 @@ public class ItemControllerImpl extends Named implements ItemController
 		mGroupOptions.put(aGroupOption.getName(), aGroupOption);
 		mGroupOptionList.add(aGroupOption);
 		Collections.sort(mGroupOptionList);
-	}
-	
-	@Override
-	public boolean equals(final Object aO)
-	{
-		if (aO instanceof ItemController)
-		{
-			final ItemController controller = (ItemController) aO;
-			return getName().equals(controller.getName());
-		}
-		return false;
 	}
 	
 	@Override

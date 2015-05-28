@@ -3,18 +3,37 @@ package com.deepercreeper.vampireapp.items.implementations.creations.restriction
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationCondition;
 
+/**
+ * A creation condition implementation.
+ * 
+ * @author vrl
+ */
 public class CreationConditionImpl implements CreationCondition
 {
 	private final CreationConditionQuery	mQuery;
 	
-	private final String			mItemName;
+	private final String					mItemName;
 	
-	private final int				mMinimum;
+	private final int						mMinimum;
 	
-	private final int				mMaximum;
+	private final int						mMaximum;
 	
-	private final int				mIndex;
+	private final int						mIndex;
 	
+	/**
+	 * Creates a new creation condition.
+	 * 
+	 * @param aQuery
+	 *            The condition query.
+	 * @param aItemName
+	 *            The item name.
+	 * @param aMinimum
+	 *            The minimum value.
+	 * @param aMaximum
+	 *            The maximum value.
+	 * @param aIndex
+	 *            The index.
+	 */
 	public CreationConditionImpl(final CreationConditionQuery aQuery, final String aItemName, final int aMinimum, final int aMaximum, final int aIndex)
 	{
 		mQuery = aQuery;

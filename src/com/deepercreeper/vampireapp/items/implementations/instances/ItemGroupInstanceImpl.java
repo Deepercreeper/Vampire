@@ -26,6 +26,11 @@ import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
+/**
+ * A group instance implementation.
+ * 
+ * @author vrl
+ */
 public class ItemGroupInstanceImpl implements ItemGroupInstance
 {
 	private static final String				TAG				= "ItemGroupInstance";
@@ -52,6 +57,22 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 	
 	private final EPController				mEP;
 	
+	/**
+	 * Creates a new group out of the given XML data.
+	 * 
+	 * @param aElement
+	 *            The XML data.
+	 * @param aItemController
+	 *            The item controller.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aMode
+	 *            The character mode.
+	 * @param aEP
+	 *            The experience controller.
+	 * @param aCharacter
+	 *            The character.
+	 */
 	public ItemGroupInstanceImpl(final Element aElement, final ItemControllerInstance aItemController, final Context aContext, final Mode aMode,
 			final EPController aEP, final CharacterInstance aCharacter)
 	{
@@ -90,6 +111,22 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 		}
 	}
 	
+	/**
+	 * Creates a new group out of the given group creation.
+	 * 
+	 * @param aItemGroup
+	 *            The group creation.
+	 * @param aItemController
+	 *            The item controller.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aMode
+	 *            The character mode.
+	 * @param aEP
+	 *            The experience controller.
+	 * @param aCharacter
+	 *            The character.
+	 */
 	public ItemGroupInstanceImpl(final ItemGroupCreation aItemGroup, final ItemControllerInstance aItemController, final Context aContext,
 			final Mode aMode, final EPController aEP, final CharacterInstance aCharacter)
 	{

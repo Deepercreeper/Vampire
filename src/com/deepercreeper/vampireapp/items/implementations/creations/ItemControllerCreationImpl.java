@@ -21,10 +21,13 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.Crea
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
+/**
+ * An item controller creation implementation.
+ * 
+ * @author vrl
+ */
 public class ItemControllerCreationImpl implements ItemControllerCreation
 {
-	private static final String									TAG						= "ItemControllerCreation";
-	
 	private final ItemController								mItemController;
 	
 	private final Context										mContext;
@@ -49,6 +52,18 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 	
 	private CreationMode										mMode;
 	
+	/**
+	 * Creates a new item controller.
+	 * 
+	 * @param aController
+	 *            The item controller type.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aMode
+	 *            The creation mode.
+	 * @param aPoints
+	 *            The points handler.
+	 */
 	public ItemControllerCreationImpl(final ItemController aController, final Context aContext, final CreationMode aMode, final PointHandler aPoints)
 	{
 		mItemController = aController;
@@ -320,6 +335,12 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 	public boolean hasGroup(final String aName)
 	{
 		return mGroups.containsKey(aName);
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return getItemController().hashCode();
 	}
 	
 	@Override

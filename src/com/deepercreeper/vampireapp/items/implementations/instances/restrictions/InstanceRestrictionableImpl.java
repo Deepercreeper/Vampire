@@ -8,6 +8,11 @@ import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.Inst
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction.InstanceRestrictionType;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestrictionable;
 
+/**
+ * A restrictionable implementation.
+ * 
+ * @author vrl
+ */
 public abstract class InstanceRestrictionableImpl implements InstanceRestrictionable
 {
 	private final Set<InstanceRestriction>	mRestrictions		= new HashSet<InstanceRestriction>();
@@ -16,9 +21,29 @@ public abstract class InstanceRestrictionableImpl implements InstanceRestriction
 	
 	private ItemControllerInstance			mControllerInstance	= null;
 	
-	public InstanceRestrictionableImpl(final CharacterInstance aCharacter)
+	/**
+	 * Creates a new restrictionable.
+	 * 
+	 * @param aCharacter
+	 *            The character.
+	 * @param aController
+	 *            The item controller.
+	 */
+	public InstanceRestrictionableImpl(final CharacterInstance aCharacter, ItemControllerInstance aController)
 	{
 		mCharacter = aCharacter;
+		mControllerInstance = aController;
+	}
+	
+	/**
+	 * Creates a new restrictionable with no item controller.
+	 * 
+	 * @param aCharacter
+	 *            The character.
+	 */
+	public InstanceRestrictionableImpl(final CharacterInstance aCharacter)
+	{
+		this(aCharacter, null);
 	}
 	
 	@Override
@@ -106,10 +131,5 @@ public abstract class InstanceRestrictionableImpl implements InstanceRestriction
 		getRestrictions().remove(aRestriction);
 		getCharacter().removeRestriction(aRestriction);
 		updateRestrictions();
-	}
-	
-	public final void setController(final ItemControllerInstance aController)
-	{
-		mControllerInstance = aController;
 	}
 }

@@ -26,10 +26,13 @@ import com.deepercreeper.vampireapp.items.interfaces.instances.ItemGroupInstance
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
+/**
+ * An item controller implementation.
+ * 
+ * @author vrl
+ */
 public class ItemControllerInstanceImpl implements ItemControllerInstance
 {
-	private static final String									TAG					= "ItemControllerInstance";
-	
 	private final ItemController								mItemController;
 	
 	private final Context										mContext;
@@ -54,6 +57,22 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	
 	private final EPController									mEP;
 	
+	/**
+	 * Creates a new item controller out of the given XML data.
+	 * 
+	 * @param aElement
+	 *            The XML data.
+	 * @param aItems
+	 *            The item provider.
+	 * @param aContext
+	 *            the underlying context.
+	 * @param aMode
+	 *            The character mode.
+	 * @param aEP
+	 *            the experience controller.
+	 * @param aCharacter
+	 *            The character
+	 */
 	public ItemControllerInstanceImpl(final Element aElement, final ItemProvider aItems, final Context aContext, final Mode aMode,
 			final EPController aEP, final CharacterInstance aCharacter)
 	{
@@ -93,6 +112,20 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 		}
 	}
 	
+	/**
+	 * Creates a new item controller out of the given item controller creation.
+	 * 
+	 * @param aItemController
+	 *            The item controller creation.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aMode
+	 *            The character mode.
+	 * @param aEP
+	 *            The experience controller.
+	 * @param aCharacter
+	 *            The character.
+	 */
 	public ItemControllerInstanceImpl(final ItemControllerCreation aItemController, final Context aContext, final Mode aMode, final EPController aEP,
 			final CharacterInstance aCharacter)
 	{

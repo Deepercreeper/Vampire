@@ -51,6 +51,34 @@ public class ItemImpl extends Named implements Item
 	
 	private final Map<String, Item>		mChildren;
 	
+	/**
+	 * Creates a new item.
+	 * 
+	 * @param aName
+	 *            The item name.
+	 * @param aGroup
+	 *            The item group.
+	 * @param aNeedsDescription
+	 *            Whether this item needs a description.
+	 * @param aParent
+	 *            Whether this is a parent item.
+	 * @param aMutableParent
+	 *            Whether this is a mutable parent item.
+	 * @param aOrder
+	 *            whether the child items of this item have a specific order.
+	 * @param aValues
+	 *            The values this item can get.
+	 * @param aStartValue
+	 *            The start value for this item.
+	 * @param aEPCost
+	 *            The experience cost for increasing this item.
+	 * @param aEPCostNew
+	 *            The experience cost for adding the first point to this item.
+	 * @param aEPCostMultiplicator
+	 *            The experience cost that is multiplied with the current item value.
+	 * @param aParentItem
+	 *            The parent item or {@code null} if this is no child item.
+	 */
 	public ItemImpl(final String aName, final ItemGroup aGroup, final boolean aNeedsDescription, final boolean aParent, final boolean aMutableParent,
 			final boolean aOrder, final int[] aValues, final int aStartValue, final int aEPCost, final int aEPCostNew,
 			final int aEPCostMultiplicator, final Item aParentItem)
@@ -356,11 +384,6 @@ public class ItemImpl extends Named implements Item
 	
 	@Override
 	public String toString()
-	{
-		return getName();
-	}
-	
-	private String createDisplayName()
 	{
 		return getName();
 	}
