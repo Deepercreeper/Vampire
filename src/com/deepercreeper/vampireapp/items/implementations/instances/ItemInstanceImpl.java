@@ -10,6 +10,7 @@ import java.util.Set;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -43,15 +44,17 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class ItemInstanceImpl extends InstanceRestrictionableImpl implements ItemInstance
 {
-	private static final String				TAG				= "ItemInstance";
+	private static final String				TAG					= "ItemInstance";
+	
+	private static final int				VALUE_MULTIPLICATOR	= 20;
 	
 	private final List<ItemInstance>		mChildrenList;
 	
 	private final Map<String, ItemInstance>	mChildren;
 	
-	private final Set<Action>				mActions		= new HashSet<Action>();
+	private final Set<Action>				mActions			= new HashSet<Action>();
 	
-	private final List<ItemValueListener>	mValueListeners	= new ArrayList<ItemValueListener>();
+	private final List<ItemValueListener>	mValueListeners		= new ArrayList<ItemValueListener>();
 	
 	private final Item						mItem;
 	
@@ -67,6 +70,8 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	
 	private final EPController				mEP;
 	
+	private final ValueAnimator				mAnimator;
+	
 	private ImageButton						mIncreaseButton;
 	
 	private ProgressBar						mValueBar;
@@ -77,11 +82,11 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	
 	private TextView						mNameText;
 	
-	private boolean							mInitialized	= false;
+	private boolean							mInitialized		= false;
 	
 	private Mode							mMode;
 	
-	private int								mValueId		= 0;
+	private int								mValueId			= 0;
 	
 	/**
 	 * Creates a new item out of the given XML data.
@@ -130,6 +135,12 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		if (isValueItem())
 		{
 			mValueId = Integer.parseInt(aElement.getAttribute("value"));
+			mAnimator = new ValueAnimator();
+			mAnimator.addUpdateListener(this);
+		}
+		else
+		{
+			mAnimator = null;
 		}
 		if (isParent())
 		{
@@ -224,6 +235,12 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		if (isValueItem())
 		{
 			mValueId = aItem.getValueId();
+			mAnimator = new ValueAnimator();
+			mAnimator.addUpdateListener(this);
+		}
+		else
+		{
+			mAnimator = null;
 		}
 		
 		init();
@@ -254,6 +271,12 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	public void removeValueListener(final ItemValueListener aListener)
 	{
 		mValueListeners.remove(aListener);
+	}
+	
+	@Override
+	public void onAnimationUpdate(final ValueAnimator aAnimation)
+	{
+		mValueBar.setProgress((Integer) aAnimation.getAnimatedValue());
 	}
 	
 	@Override
@@ -769,8 +792,13 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		}
 		if (isValueItem())
 		{
-			mValueBar.setMax(Math.abs(getItem().getValues()[getItem().getMaxValue()]));
-			mValueBar.setProgress(getAbsoluteValue());
+			if (mAnimator.isRunning())
+			{
+				mAnimator.cancel();
+			}
+			mValueBar.setMax(VALUE_MULTIPLICATOR * Math.abs(getItem().getValues()[getItem().getMaxValue()]));
+			mAnimator.setIntValues(mValueBar.getProgress(), VALUE_MULTIPLICATOR * getAbsoluteValue());
+			mAnimator.start();
 			mValueText.setText("" + getValue());
 		}
 	}

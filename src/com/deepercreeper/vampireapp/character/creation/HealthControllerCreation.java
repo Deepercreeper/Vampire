@@ -63,6 +63,7 @@ public class HealthControllerCreation implements Viewable
 					{
 						mValue++ ;
 						value.setText("" + mValue);
+						ViewUtil.setEnabled(decrease, mValue > 0);
 					}
 				});
 				decrease.setOnClickListener(new OnClickListener()

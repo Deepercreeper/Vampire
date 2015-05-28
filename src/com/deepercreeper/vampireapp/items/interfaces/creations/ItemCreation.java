@@ -1,6 +1,7 @@
 package com.deepercreeper.vampireapp.items.interfaces.creations;
 
 import java.util.List;
+import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.Context;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.character.creation.CreationMode;
@@ -16,7 +17,7 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.Crea
  * @author Vincent
  *         The parent item type.
  */
-public interface ItemCreation extends Comparable<ItemCreation>, CreationRestrictionable
+public interface ItemCreation extends Comparable<ItemCreation>, CreationRestrictionable, AnimatorUpdateListener
 {
 	/**
 	 * Asks the user to choose a child item that is going to be added to this item.

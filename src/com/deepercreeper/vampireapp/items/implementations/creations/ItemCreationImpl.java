@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,7 +37,7 @@ import com.deepercreeper.vampireapp.util.view.SelectItemDialog.SelectionListener
 public class ItemCreationImpl extends CreationRestrictionableImpl implements ItemCreation
 {
 	/**
-	 * The change action tells, what to change, wen increasing or decreasing an item.
+	 * The change action tells, what to change, when increasing or decreasing an item.
 	 * 
 	 * @author vrl
 	 */
@@ -54,6 +55,8 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 	}
 	
 	private static final String				TAG					= "ItemCreation";
+	
+	private static final int				VALUE_MULTIPLICATOR	= 20;
 	
 	private final ChangeAction				mChangeValue		= new ChangeAction()
 																{
@@ -90,6 +93,8 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 	private final Context					mContext;
 	
 	private final ItemGroupCreation			mItemGroup;
+	
+	private final ValueAnimator				mAnimator;
 	
 	private ImageButton						mIncreaseButton;
 	
@@ -156,8 +161,14 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		mContainer = new LinearLayout(getContext());
 		if (isValueItem())
 		{
+			mAnimator = new ValueAnimator();
+			mAnimator.addUpdateListener(this);
 			mValueId = getItem().getStartValue();
 			mPoints = aPoints;
+		}
+		else
+		{
+			mAnimator = null;
 		}
 		if (isParent())
 		{
@@ -988,10 +999,21 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		}
 		if (isValueItem())
 		{
-			mValueBar.setMax(Math.abs(getItem().getValues()[getItem().getMaxValue()]));
-			mValueBar.setProgress(getAbsoluteValue());
+			if (mAnimator.isRunning())
+			{
+				mAnimator.cancel();
+			}
+			mValueBar.setMax(VALUE_MULTIPLICATOR * Math.abs(getItem().getValues()[getItem().getMaxValue()]));
+			mAnimator.setIntValues(mValueBar.getProgress(), VALUE_MULTIPLICATOR * getAbsoluteValue());
+			mAnimator.start();
 			mValueText.setText("" + getValue());
 		}
+	}
+	
+	@Override
+	public void onAnimationUpdate(final ValueAnimator aAnimation)
+	{
+		mValueBar.setProgress((Integer) aAnimation.getAnimatedValue());
 	}
 	
 	@Override

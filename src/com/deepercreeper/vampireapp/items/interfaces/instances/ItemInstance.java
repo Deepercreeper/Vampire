@@ -2,6 +2,7 @@ package com.deepercreeper.vampireapp.items.interfaces.instances;
 
 import java.util.List;
 import java.util.Set;
+import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.Context;
 import com.deepercreeper.vampireapp.character.controllers.EPController;
 import com.deepercreeper.vampireapp.character.instance.Mode;
@@ -17,7 +18,7 @@ import com.deepercreeper.vampireapp.util.view.Viewable;
  * 
  * @author vrl
  */
-public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemInstance>, Saveable, Viewable
+public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemInstance>, Saveable, Viewable, AnimatorUpdateListener
 {
 	/**
 	 * If something depends on the value of any item this listener can be attached to an item.
