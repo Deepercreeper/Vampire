@@ -3,6 +3,7 @@ package com.deepercreeper.vampireapp.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -39,6 +40,8 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 	 */
 	public static final String		HOST				= "HOST";
 	
+	private Handler					mHandler;
+	
 	private ConnectionController	mConnection;
 	
 	private Host					mHost;
@@ -74,8 +77,6 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 	@Override
 	public void disconnectedFrom(final ConnectedDevice aDevice)
 	{
-		// FIXME Why is here sometimes a wrong ConnectedDevice?
-		Toast.makeText(this, mHost.getPlayer(aDevice).getName() + " left the game.", Toast.LENGTH_SHORT).show();
 		mHost.removePlayer(aDevice);
 		// TODO clean up
 	}
@@ -107,7 +108,7 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 				login(aDevice, aArgs[0]);
 				break;
 			case LEFT_GAME :
-				Toast.makeText(this, mHost.getPlayer(aDevice).getName() + getString(R.string.left_game), Toast.LENGTH_SHORT).show();
+				makeText(mHost.getPlayer(aDevice).getName() + " " + getString(R.string.left_game), Toast.LENGTH_SHORT);
 				mConnection.disconnect(aDevice);
 				break;
 			default :
@@ -119,6 +120,8 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 	protected void onCreate(final Bundle aSavedInstanceState)
 	{
 		super.onCreate(aSavedInstanceState);
+		
+		mHandler = new Handler();
 		
 		ConnectionUtil.loadItems(this, this);
 	}
@@ -188,5 +191,31 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 			}
 		};
 		YesNoDialog.showYesNoDialog(aPlayer, getString(R.string.new_player), this, listener);
+	}
+	
+	@Override
+	public void makeText(final String aText, final int aDuration)
+	{
+		mHandler.post(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				Toast.makeText(HostActivity.this, aText, aDuration).show();
+			}
+		});
+	}
+	
+	@Override
+	public void makeText(final int aResId, final int aDuration)
+	{
+		mHandler.post(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				Toast.makeText(HostActivity.this, aResId, aDuration).show();
+			}
+		});
 	}
 }

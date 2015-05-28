@@ -67,6 +67,18 @@ public class ConnectionController implements ConnectionListener
 	}
 	
 	@Override
+	public void makeText(final int aResId, final int aDuration)
+	{
+		mConnectionListener.makeText(aResId, aDuration);
+	}
+	
+	@Override
+	public void makeText(final String aText, final int aDuration)
+	{
+		mConnectionListener.makeText(aText, aDuration);
+	}
+	
+	@Override
 	public void cancel()
 	{
 		mConnectionListener.cancel();
@@ -135,7 +147,7 @@ public class ConnectionController implements ConnectionListener
 			}
 			if (devices.isEmpty())
 			{
-				Toast.makeText(mContext, R.string.no_paired_device, Toast.LENGTH_SHORT).show();
+				mConnectionListener.makeText(R.string.no_paired_device, Toast.LENGTH_SHORT);
 				return;
 			}
 		}
@@ -353,7 +365,15 @@ public class ConnectionController implements ConnectionListener
 			@Override
 			public void run()
 			{
-				listenForDevices(aListener);
+				listenForDevices(aListener, true);
+			}
+		}.start();
+		new Thread()
+		{
+			@Override
+			public void run()
+			{
+				listenForDevices(aListener, false);
 			}
 		}.start();
 	}
@@ -370,7 +390,7 @@ public class ConnectionController implements ConnectionListener
 	{
 		if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled())
 		{
-			Toast.makeText(mContext, "Bluetooth is not enabled! Activate Bluetooth!", Toast.LENGTH_SHORT).show();
+			mConnectionListener.makeText("Bluetooth is not enabled! Activate Bluetooth!", Toast.LENGTH_SHORT);
 			connectionEnabled(false);
 		}
 		else
@@ -381,23 +401,18 @@ public class ConnectionController implements ConnectionListener
 	
 	private void checkNetworkState()
 	{
-		Toast.makeText(mContext, "Network connections are not enabled yet!", Toast.LENGTH_SHORT).show();
+		mConnectionListener.makeText("Network connections are not enabled yet!", Toast.LENGTH_SHORT);
 	}
 	
-	private void listenForDevices(final ConnectionListener aListener)
+	private void listenForDevices(final ConnectionListener aListener, final boolean aSecure)
 	{
-		while (mCheckingForDevies)
+		final BluetoothServerSocket server = aSecure ? mSecureSocket : mInsecureSocket;
+		while (mCheckingForDevies && server != null)
 		{
 			BluetoothSocket socket = null;
-			if (mInsecureSocket != null) try
+			try
 			{
-				socket = mInsecureSocket.accept(10);
-			}
-			catch (final IOException e)
-			{}
-			if (mSecureSocket != null && socket != null) try
-			{
-				socket = mSecureSocket.accept(10);
+				socket = server.accept();
 			}
 			catch (final IOException e)
 			{}
@@ -418,29 +433,24 @@ public class ConnectionController implements ConnectionListener
 				}
 			}
 		}
-		if (mInsecureSocket != null)
+		if (server != null)
 		{
 			try
 			{
-				mInsecureSocket.close();
+				server.close();
 			}
 			catch (final IOException e)
 			{
 				Log.e(TAG, "Could not close insecure socket.");
 			}
 		}
-		if (mSecureSocket != null)
+		if (aSecure)
 		{
-			try
-			{
-				mSecureSocket.close();
-			}
-			catch (final IOException e)
-			{
-				Log.e(TAG, "Could not close secure socket.");
-			}
+			mSecureSocket = null;
 		}
-		mInsecureSocket = null;
-		mSecureSocket = null;
+		else
+		{
+			mInsecureSocket = null;
+		}
 	}
 }

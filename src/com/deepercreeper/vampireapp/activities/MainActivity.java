@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.controllers.CharController;
 import com.deepercreeper.vampireapp.character.instance.CharacterCompound;
@@ -106,6 +108,8 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 	
 	private static final String		ARG_SECTION_NUMBER	= "section_number";
 	
+	private Handler					mHandler;
+	
 	private ConnectionController	mConnection;
 	
 	private Menu					mOptionsMenu;
@@ -164,6 +168,32 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 	{
 		mConnection.exit();
 		finish();
+	}
+	
+	@Override
+	public void makeText(final int aResId, final int aDuration)
+	{
+		mHandler.post(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				Toast.makeText(MainActivity.this, aResId, aDuration).show();
+			}
+		});
+	}
+	
+	@Override
+	public void makeText(final String aText, final int aDuration)
+	{
+		mHandler.post(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				Toast.makeText(MainActivity.this, aText, aDuration).show();
+			}
+		});
 	}
 	
 	@Override
@@ -269,6 +299,8 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 	protected void onCreate(final Bundle aSavedInstanceState)
 	{
 		super.onCreate(aSavedInstanceState);
+		
+		mHandler = new Handler();
 		
 		ConnectionUtil.loadItems(this, this);
 	}

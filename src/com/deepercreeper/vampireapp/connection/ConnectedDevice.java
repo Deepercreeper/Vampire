@@ -100,7 +100,7 @@ public class ConnectedDevice
 	 * @throws IOException
 	 *             if the in-/ or output stream could not be resolved.
 	 */
-	public ConnectedDevice(final BluetoothSocket aSocket, final ConnectionListener aConnectionListener, boolean aHost) throws IOException
+	public ConnectedDevice(final BluetoothSocket aSocket, final ConnectionListener aConnectionListener, final boolean aHost) throws IOException
 	{
 		mSocket = aSocket;
 		mOut = aSocket.getOutputStream();

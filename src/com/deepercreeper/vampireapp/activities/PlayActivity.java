@@ -122,15 +122,15 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 				exit(true);
 				break;
 			case WAIT :
-				Toast.makeText(this, R.string.host_busy, Toast.LENGTH_SHORT).show();
+				makeText(R.string.host_busy, Toast.LENGTH_SHORT);
 				exit(true);
 				break;
 			case NAME_IN_USE :
-				Toast.makeText(this, R.string.name_in_use, Toast.LENGTH_SHORT).show();
+				makeText(R.string.name_in_use, Toast.LENGTH_SHORT);
 				exit(true);
 				break;
 			case CLOSED :
-				Toast.makeText(this, R.string.host_closed, Toast.LENGTH_SHORT).show();
+				makeText(R.string.host_closed, Toast.LENGTH_SHORT);
 				disconnectedFrom(aDevice);
 				exit(true);
 				break;
@@ -245,5 +245,31 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		});
 		
 		setEnabled(false);
+	}
+	
+	@Override
+	public void makeText(final String aText, final int aDuration)
+	{
+		mHandler.post(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				Toast.makeText(PlayActivity.this, aText, aDuration).show();
+			}
+		});
+	}
+	
+	@Override
+	public void makeText(final int aResId, final int aDuration)
+	{
+		mHandler.post(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				Toast.makeText(PlayActivity.this, aResId, aDuration).show();
+			}
+		});
 	}
 }

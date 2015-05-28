@@ -1,13 +1,14 @@
 package com.deepercreeper.vampireapp.connection;
 
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
+import com.deepercreeper.vampireapp.util.view.Toaster;
 
 /**
  * This listener is used to react to Bluetooth events.
  * 
  * @author vrl
  */
-public interface ConnectionListener
+public interface ConnectionListener extends Toaster
 {
 	/**
 	 * Sometimes the connection is cancelled by a user action.<br>

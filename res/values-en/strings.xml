@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <string name="left_game"> left the game.</string>
+    <string name="left_game">left the game.</string>
     <string name="host_closed">The host has stopped his game.</string>
     <string name="name_in_use">The chosen character name is already given to another player.</string>
     <string name="host_busy">The chosen host is currently busy. Try again later.</string>
