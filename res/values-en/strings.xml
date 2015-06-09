@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <string name="ban">Ban</string>
     <string name="kick">Kick</string>
     <string name="afk">(AFK)</string>
     <string name="left_game">left the game.</string>

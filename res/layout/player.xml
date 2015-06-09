@@ -20,6 +20,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/kick" />
+        
+        <Button
+            android:id="@+id/ban_player"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ban" />
     </LinearLayout>
 
 </LinearLayout>
