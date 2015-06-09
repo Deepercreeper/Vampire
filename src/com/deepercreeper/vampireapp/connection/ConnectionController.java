@@ -72,35 +72,9 @@ public class ConnectionController implements ConnectionListener
 		init();
 	}
 	
-	/**
-	 * @return the connected host or {@code null} if no host is connected.
-	 */
-	public ConnectedDevice getHost()
-	{
-		for (final ConnectedDevice device : mDevices)
-		{
-			if (device.isHost())
-			{
-				return device;
-			}
-		}
-		return null;
-	}
-	
-	/**
-	 * @return whether this connection controller is connected to a host.
-	 */
-	public boolean hasHost()
-	{
-		for (final ConnectedDevice device : mDevices)
-		{
-			if (device.isHost())
-			{
-				return true;
-			}
-		}
-		return false;
-	}
+	@Override
+	public void banned(final ConnectedDevice aDevice)
+	{}
 	
 	@Override
 	public void cancel()
@@ -322,11 +296,41 @@ public class ConnectionController implements ConnectionListener
 	}
 	
 	/**
+	 * @return the connected host or {@code null} if no host is connected.
+	 */
+	public ConnectedDevice getHost()
+	{
+		for (final ConnectedDevice device : mDevices)
+		{
+			if (device.isHost())
+			{
+				return device;
+			}
+		}
+		return null;
+	}
+	
+	/**
 	 * @return whether this device is able to create Bluetooth connections.
 	 */
 	public boolean hasBluetooth()
 	{
 		return mBluetoothAdapter != null;
+	}
+	
+	/**
+	 * @return whether this connection controller is connected to a host.
+	 */
+	public boolean hasHost()
+	{
+		for (final ConnectedDevice device : mDevices)
+		{
+			if (device.isHost())
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**

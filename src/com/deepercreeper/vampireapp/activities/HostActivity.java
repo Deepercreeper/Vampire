@@ -48,6 +48,14 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 	private ItemProvider			mItems;
 	
 	@Override
+	public void banned(final ConnectedDevice aDevice)
+	{
+		mHost.ban(aDevice);
+		aDevice.send(MessageType.BANNED);
+		aDevice.exit();
+	}
+	
+	@Override
 	public void cancel()
 	{}
 	
@@ -177,9 +185,16 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 	
 	private void login(final ConnectedDevice aDevice, final String aPlayer)
 	{
-		if ( !mHost.addPlayer(new Player(aPlayer, aDevice, HostActivity.this)))
+		if ( !mHost.addPlayer(new Player(aPlayer, aDevice, this, this)))
 		{
-			aDevice.send(MessageType.NAME_IN_USE);
+			if (mHost.isBanned(aDevice))
+			{
+				aDevice.send(MessageType.BANNED);
+			}
+			else
+			{
+				aDevice.send(MessageType.NAME_IN_USE);
+			}
 			mConnection.disconnect(aDevice);
 		}
 		else

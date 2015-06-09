@@ -27,26 +27,11 @@ public class Host
 	
 	private final List<Player>	mPlayers	= new ArrayList<Player>();
 	
+	private final List<String>	mBanned		= new ArrayList<String>();
+	
 	private final String		mLocation;
 	
 	private LinearLayout		mPlayersList;
-	
-	/**
-	 * Creates a new host with the given name and location.
-	 * 
-	 * @param aName
-	 *            The host name.
-	 * @param aItems
-	 *            The item provider.
-	 * @param aLocation
-	 *            The host location.
-	 */
-	public Host(final String aName, final ItemProvider aItems, final String aLocation)
-	{
-		mName = aName;
-		mItems = aItems;
-		mLocation = aLocation;
-	}
 	
 	/**
 	 * Creates a host out of the given XML data.
@@ -76,28 +61,57 @@ public class Host
 	}
 	
 	/**
-	 * Sets the list, all players are displayed inside.
+	 * Creates a new host with the given name and location.
 	 * 
-	 * @param aPlayersList
-	 *            The players list.
+	 * @param aName
+	 *            The host name.
+	 * @param aItems
+	 *            The item provider.
+	 * @param aLocation
+	 *            The host location.
 	 */
-	public void setPlayersList(final LinearLayout aPlayersList)
+	public Host(final String aName, final ItemProvider aItems, final String aLocation)
 	{
-		mPlayersList = aPlayersList;
+		mName = aName;
+		mItems = aItems;
+		mLocation = aLocation;
 	}
 	
 	/**
-	 * Finds the player with the given device and removes it from the players list.
+	 * Adds a player to the players list.
+	 * 
+	 * @param aPlayer
+	 *            The player to add.
+	 * @return {@code true} if the player was added and {@code false} if the name was taken already.
+	 */
+	public boolean addPlayer(final Player aPlayer)
+	{
+		if (mPlayers.contains(aPlayer) || isBanned(aPlayer.getDevice()))
+		{
+			return false;
+		}
+		mPlayers.add(aPlayer);
+		mPlayersList.addView(aPlayer.getContainer());
+		return true;
+	}
+	
+	/**
+	 * Adds the given device to the list of banned devices.
 	 * 
 	 * @param aDevice
-	 *            The players device.
+	 *            The banned device.
 	 */
-	public void removePlayer(final ConnectedDevice aDevice)
+	public void ban(final ConnectedDevice aDevice)
 	{
-		final Player player = getPlayer(aDevice);
-		player.release();
-		mPlayers.remove(player);
-		
+		mBanned.add(aDevice.getDevice().getAddress());
+	}
+	
+	/**
+	 * @return the host name.
+	 */
+	public String getName()
+	{
+		return mName;
 	}
 	
 	/**
@@ -118,21 +132,27 @@ public class Host
 	}
 	
 	/**
-	 * Adds a player to the players list.
-	 * 
-	 * @param aPlayer
-	 *            The player to add.
-	 * @return {@code true} if the player was added and {@code false} if the name was taken already.
+	 * @param aDevice
+	 *            The device.
+	 * @return whether the given device is banned.
 	 */
-	public boolean addPlayer(final Player aPlayer)
+	public boolean isBanned(final ConnectedDevice aDevice)
 	{
-		if (mPlayers.contains(aPlayer))
-		{
-			return false;
-		}
-		mPlayers.add(aPlayer);
-		mPlayersList.addView(aPlayer.getContainer());
-		return true;
+		return mBanned.contains(aDevice.getDevice().getAddress());
+	}
+	
+	/**
+	 * Finds the player with the given device and removes it from the players list.
+	 * 
+	 * @param aDevice
+	 *            The players device.
+	 */
+	public void removePlayer(final ConnectedDevice aDevice)
+	{
+		final Player player = getPlayer(aDevice);
+		player.release();
+		mPlayers.remove(player);
+		
 	}
 	
 	/**
@@ -160,10 +180,24 @@ public class Host
 	}
 	
 	/**
-	 * @return the host name.
+	 * Sets the list, all players are displayed inside.
+	 * 
+	 * @param aPlayersList
+	 *            The players list.
 	 */
-	public String getName()
+	public void setPlayersList(final LinearLayout aPlayersList)
 	{
-		return mName;
+		mPlayersList = aPlayersList;
+	}
+	
+	/**
+	 * Removes the given device from the banned devices list.
+	 * 
+	 * @param aDevice
+	 *            The device.
+	 */
+	public void unban(final ConnectedDevice aDevice)
+	{
+		mBanned.remove(aDevice.getDevice().getAddress());
 	}
 }

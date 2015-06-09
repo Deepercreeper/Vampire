@@ -11,6 +11,14 @@ import com.deepercreeper.vampireapp.util.view.Toaster;
 public interface ConnectionListener extends Toaster
 {
 	/**
+	 * The given device has been banned or this device has been banned by the given device.
+	 * 
+	 * @param aDevice
+	 *            The banning or banned device.
+	 */
+	public void banned(ConnectedDevice aDevice);
+	
+	/**
 	 * Sometimes the connection is cancelled by a user action.<br>
 	 * This method is invoked if the user doesn't allow a socket connection.
 	 */

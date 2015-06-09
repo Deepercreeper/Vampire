@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
+import com.deepercreeper.vampireapp.connection.ConnectionListener;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.ResizeHeightAnimation;
 import com.deepercreeper.vampireapp.util.view.Viewable;
@@ -19,19 +20,21 @@ import com.deepercreeper.vampireapp.util.view.Viewable;
  */
 public class Player implements Viewable
 {
-	private final ConnectedDevice	mDevice;
+	private final ConnectedDevice		mDevice;
 	
-	private final String			mName;
+	private final String				mName;
 	
-	private final Context			mContext;
+	private final Context				mContext;
 	
-	private boolean					mOpen	= false;
+	private final ConnectionListener	mListener;
 	
-	private LinearLayout			mContainer;
+	private boolean						mOpen	= false;
 	
-	private LinearLayout			mPlayerContainer;
+	private LinearLayout				mContainer;
 	
-	private Button					mButton;
+	private LinearLayout				mPlayerContainer;
+	
+	private Button						mButton;
 	
 	/**
 	 * Creates a new player that caches all needed data of the remote character.
@@ -40,56 +43,74 @@ public class Player implements Viewable
 	 *            The player name.
 	 * @param aDevice
 	 *            The connected player device.
+	 * @param aListener
+	 *            The connection listener.
 	 * @param aContext
 	 *            The underlying context.
 	 */
-	public Player(final String aName, final ConnectedDevice aDevice, final Context aContext)
+	public Player(final String aName, final ConnectedDevice aDevice, final ConnectionListener aListener, final Context aContext)
 	{
 		mName = aName;
 		mDevice = aDevice;
 		mContext = aContext;
+		mListener = aListener;
 		init();
 	}
 	
 	/**
-	 * Starts a animation, that resizes the player container to the right size.
+	 * Closes this player.
 	 */
-	public void resize()
+	public void close()
 	{
-		if (mPlayerContainer.getAnimation() != null && !mPlayerContainer.getAnimation().hasEnded())
+		mOpen = false;
+		mButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
+		resize();
+	}
+	
+	@Override
+	public boolean equals(final Object obj)
+	{
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		final Player other = (Player) obj;
+		if (mName == null)
 		{
-			mPlayerContainer.getAnimation().cancel();
+			if (other.mName != null) return false;
 		}
-		int height = 0;
-		if (isOpen())
-		{
-			height = ViewUtil.calcHeight(mPlayerContainer);
-		}
-		if (height != mPlayerContainer.getHeight())
-		{
-			mPlayerContainer.startAnimation(new ResizeHeightAnimation(mPlayerContainer, height));
-		}
+		else if ( !mName.equals(other.mName)) return false;
+		return true;
+	}
+	
+	@Override
+	public LinearLayout getContainer()
+	{
+		return mContainer;
 	}
 	
 	/**
-	 * @return whether this player is open.
+	 * @return the players device.
 	 */
-	public boolean isOpen()
+	public ConnectedDevice getDevice()
 	{
-		return mOpen;
+		return mDevice;
 	}
 	
 	/**
-	 * Sets the display of this player to AFK or active.
-	 * 
-	 * @param aAFK
-	 *            whether the player is AFK.
+	 * @return the players name.
 	 */
-	public void setAFK(final boolean aAFK)
+	public String getName()
 	{
-		mButton.setText(getName() + (aAFK ? " " + mContext.getString(R.string.afk) : ""));
-		if (aAFK) close();
-		mButton.setEnabled( !aAFK);
+		return mName;
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((mName == null) ? 0 : mName.hashCode());
+		return result;
 	}
 	
 	@Override
@@ -99,6 +120,7 @@ public class Player implements Viewable
 		mPlayerContainer = (LinearLayout) mContainer.findViewById(R.id.player_container);
 		mButton = (Button) mContainer.findViewById(R.id.player_button);
 		final Button kick = (Button) mContainer.findViewById(R.id.kick_player);
+		final Button ban = (Button) mContainer.findViewById(R.id.ban_player);
 		
 		if (mOpen)
 		{
@@ -126,16 +148,61 @@ public class Player implements Viewable
 				mDevice.exit();
 			}
 		});
+		ban.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				mListener.banned(mDevice);
+			}
+		});
 	}
 	
 	/**
-	 * Closes this player.
+	 * @return whether this player is open.
 	 */
-	public void close()
+	public boolean isOpen()
 	{
-		mOpen = false;
-		mButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
-		resize();
+		return mOpen;
+	}
+	
+	@Override
+	public void release()
+	{
+		ViewUtil.release(mContainer);
+	}
+	
+	/**
+	 * Starts a animation, that resizes the player container to the right size.
+	 */
+	public void resize()
+	{
+		if (mPlayerContainer.getAnimation() != null && !mPlayerContainer.getAnimation().hasEnded())
+		{
+			mPlayerContainer.getAnimation().cancel();
+		}
+		int height = 0;
+		if (isOpen())
+		{
+			height = ViewUtil.calcHeight(mPlayerContainer);
+		}
+		if (height != mPlayerContainer.getHeight())
+		{
+			mPlayerContainer.startAnimation(new ResizeHeightAnimation(mPlayerContainer, height));
+		}
+	}
+	
+	/**
+	 * Sets the display of this player to AFK or active.
+	 * 
+	 * @param aAFK
+	 *            whether the player is AFK.
+	 */
+	public void setAFK(final boolean aAFK)
+	{
+		mButton.setText(getName() + (aAFK ? " " + mContext.getString(R.string.afk) : ""));
+		if (aAFK) close();
+		mButton.setEnabled( !aAFK);
 	}
 	
 	/**
@@ -153,58 +220,6 @@ public class Player implements Viewable
 			mButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
 		}
 		resize();
-	}
-	
-	@Override
-	public void release()
-	{
-		ViewUtil.release(mContainer);
-	}
-	
-	@Override
-	public LinearLayout getContainer()
-	{
-		return mContainer;
-	}
-	
-	/**
-	 * @return the players name.
-	 */
-	public String getName()
-	{
-		return mName;
-	}
-	
-	/**
-	 * @return the players device.
-	 */
-	public ConnectedDevice getDevice()
-	{
-		return mDevice;
-	}
-	
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((mName == null) ? 0 : mName.hashCode());
-		return result;
-	}
-	
-	@Override
-	public boolean equals(final Object obj)
-	{
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
-		final Player other = (Player) obj;
-		if (mName == null)
-		{
-			if (other.mName != null) return false;
-		}
-		else if ( !mName.equals(other.mName)) return false;
-		return true;
 	}
 	
 }

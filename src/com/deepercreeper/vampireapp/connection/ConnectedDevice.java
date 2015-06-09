@@ -55,6 +55,11 @@ public class ConnectedDevice
 		CLOSED,
 		
 		/**
+		 * The player was banned
+		 */
+		BANNED,
+		
+		/**
 		 * The player was kicked
 		 */
 		KICKED,

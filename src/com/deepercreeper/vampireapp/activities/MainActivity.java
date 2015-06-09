@@ -125,6 +125,10 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 	private ViewPager				mViewPager;
 	
 	@Override
+	public void banned(final ConnectedDevice aDevice)
+	{}
+	
+	@Override
 	public void cancel()
 	{}
 	

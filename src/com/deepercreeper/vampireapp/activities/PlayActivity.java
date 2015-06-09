@@ -53,6 +53,13 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	private CharacterInstance		mChar;
 	
 	@Override
+	public void banned(final ConnectedDevice aDevice)
+	{
+		makeText(R.string.banned, Toast.LENGTH_SHORT);
+		exit(true);
+	}
+	
+	@Override
 	public void cancel()
 	{
 		exit(true);
@@ -105,6 +112,18 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	}
 	
 	@Override
+	public void makeText(final int aResId, final int aDuration)
+	{
+		Toast.makeText(PlayActivity.this, aResId, aDuration).show();
+	}
+	
+	@Override
+	public void makeText(final String aText, final int aDuration)
+	{
+		Toast.makeText(PlayActivity.this, aText, aDuration).show();
+	}
+	
+	@Override
 	public void onBackPressed()
 	{
 		exit(true);
@@ -130,42 +149,13 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 				makeText(R.string.host_closed, Toast.LENGTH_SHORT);
 				exit(true);
 				break;
+			case BANNED :
+				banned(aDevice);
+				break;
 			default :
 				break;
 		}
 		// TODO Implement
-	}
-	
-	@Override
-	protected void onPause()
-	{
-		if (mConnection != null && mConnection.hasHost())
-		{
-			mConnection.getHost().send(MessageType.AFK);
-		}
-		
-		super.onPause();
-	}
-	
-	@Override
-	protected void onResume()
-	{
-		if (mConnection != null && mConnection.hasHost())
-		{
-			mConnection.getHost().send(MessageType.BACK);
-		}
-		
-		super.onResume();
-	}
-	
-	@Override
-	protected void onCreate(final Bundle aSavedInstanceState)
-	{
-		super.onCreate(aSavedInstanceState);
-		
-		mHandler = new Handler();
-		
-		ConnectionUtil.loadItems(this, this);
 	}
 	
 	/**
@@ -200,6 +190,38 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 				}
 			});
 		}
+	}
+	
+	@Override
+	protected void onCreate(final Bundle aSavedInstanceState)
+	{
+		super.onCreate(aSavedInstanceState);
+		
+		mHandler = new Handler();
+		
+		ConnectionUtil.loadItems(this, this);
+	}
+	
+	@Override
+	protected void onPause()
+	{
+		if (mConnection != null && mConnection.hasHost())
+		{
+			mConnection.getHost().send(MessageType.AFK);
+		}
+		
+		super.onPause();
+	}
+	
+	@Override
+	protected void onResume()
+	{
+		if (mConnection != null && mConnection.hasHost())
+		{
+			mConnection.getHost().send(MessageType.BACK);
+		}
+		
+		super.onResume();
 	}
 	
 	private void init()
@@ -263,17 +285,5 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		});
 		
 		setEnabled(false);
-	}
-	
-	@Override
-	public void makeText(final String aText, final int aDuration)
-	{
-		Toast.makeText(PlayActivity.this, aText, aDuration).show();
-	}
-	
-	@Override
-	public void makeText(final int aResId, final int aDuration)
-	{
-		Toast.makeText(PlayActivity.this, aResId, aDuration).show();
 	}
 }
