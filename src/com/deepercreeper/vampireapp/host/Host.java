@@ -65,6 +65,20 @@ public class Host
 		final Element meta = (Element) root.getElementsByTagName("meta").item(0);
 		mName = CodingUtil.decode(meta.getAttribute("name"));
 		mLocation = meta.getAttribute("location");
+		
+		// Banned players
+		final Element bans = (Element) root.getElementsByTagName("bans").item(0);
+		for (int i = 0; i < bans.getChildNodes().getLength(); i++ )
+		{
+			if (bans.getChildNodes().item(i) instanceof Element)
+			{
+				final Element banned = (Element) bans.getChildNodes().item(i);
+				if (banned.getTagName().equals("banned"))
+				{
+					mBanned.add(new BannedPlayer(banned, mContext));
+				}
+			}
+		}
 	}
 	
 	/**
@@ -113,8 +127,8 @@ public class Host
 	 */
 	public void ban(final Player aPlayer)
 	{
-		mBanned.add(new BannedPlayer(aPlayer.getName(), aPlayer.getDevice().getDevice().getAddress(), aPlayer.getNumber(), mContext));
-		Collections.sort(mBanned);
+		getBannedPlayers().add(new BannedPlayer(aPlayer.getName(), aPlayer.getDevice().getDevice().getAddress(), aPlayer.getNumber(), mContext));
+		Collections.sort(getBannedPlayers());
 	}
 	
 	/**
@@ -157,7 +171,7 @@ public class Host
 	 */
 	public boolean isBanned(final Player aPlayer)
 	{
-		for (final BannedPlayer player : mBanned)
+		for (final BannedPlayer player : getBannedPlayers())
 		{
 			if (player.getAddress().equals(aPlayer.getDevice().getDevice().getAddress()))
 			{
@@ -203,6 +217,14 @@ public class Host
 		meta.setAttribute("location", mLocation);
 		root.appendChild(meta);
 		
+		// Banned players
+		final Element bans = doc.createElement("bans");
+		for (final BannedPlayer player : getBannedPlayers())
+		{
+			bans.appendChild(player.asElement(doc));
+		}
+		root.appendChild(bans);
+		
 		return FilesUtil.readDocument(doc);
 	}
 	
@@ -225,6 +247,6 @@ public class Host
 	 */
 	public void unban(final BannedPlayer aPlayer)
 	{
-		mBanned.remove(aPlayer);
+		getBannedPlayers().remove(aPlayer);
 	}
 }
