@@ -101,7 +101,7 @@ public class HostController implements HostListener
 				}
 				else
 				{
-					saveHost(new Host(aString.trim(), mItems, DEFAULT_LOCATION));
+					saveHost(new Host(aString.trim(), mItems, DEFAULT_LOCATION, mContext));
 				}
 			}
 		};
@@ -233,7 +233,7 @@ public class HostController implements HostListener
 			final String data = FilesUtil.loadFile(aName + ".hst", mContext);
 			if (data != null)
 			{
-				host = new Host(data, mItems);
+				host = new Host(data, mItems, mContext);
 			}
 		}
 		if (host == null)

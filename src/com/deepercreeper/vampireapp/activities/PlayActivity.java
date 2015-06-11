@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -19,10 +20,12 @@ import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
 import com.deepercreeper.vampireapp.connection.ConnectionController;
 import com.deepercreeper.vampireapp.connection.ConnectionListener;
+import com.deepercreeper.vampireapp.host.Player;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
 import com.deepercreeper.vampireapp.util.ConnectionUtil;
+import com.deepercreeper.vampireapp.util.ContactsUtil;
 
 /**
  * This activity is used to play a character, that was created before and connect to a host.<br>
@@ -53,7 +56,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	private CharacterInstance		mChar;
 	
 	@Override
-	public void banned(final ConnectedDevice aDevice)
+	public void banned(final Player aPlayer)
 	{
 		makeText(R.string.banned, Toast.LENGTH_SHORT);
 		exit(true);
@@ -68,7 +71,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	@Override
 	public void connectedTo(final ConnectedDevice aDevice)
 	{
-		aDevice.send(MessageType.LOGIN, mChar.getName());
+		aDevice.send(MessageType.LOGIN, mChar.getName(), ContactsUtil.getPhoneNumber(this));
 	}
 	
 	@Override
@@ -130,6 +133,13 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	}
 	
 	@Override
+	public boolean onCreateOptionsMenu(final Menu aMenu)
+	{
+		getMenuInflater().inflate(R.menu.play, aMenu);
+		return true;
+	}
+	
+	@Override
 	public void receiveMessage(final ConnectedDevice aDevice, final MessageType aType, final String[] aArgs)
 	{
 		switch (aType)
@@ -150,7 +160,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 				exit(true);
 				break;
 			case BANNED :
-				banned(aDevice);
+				banned(null);
 				break;
 			default :
 				break;

@@ -29,6 +29,7 @@ import com.deepercreeper.vampireapp.connection.ConnectionController;
 import com.deepercreeper.vampireapp.connection.ConnectionListener;
 import com.deepercreeper.vampireapp.host.Host;
 import com.deepercreeper.vampireapp.host.HostController;
+import com.deepercreeper.vampireapp.host.Player;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.util.ConnectionUtil;
@@ -125,7 +126,7 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 	private ViewPager				mViewPager;
 	
 	@Override
-	public void banned(final ConnectedDevice aDevice)
+	public void banned(final Player aPlayer)
 	{}
 	
 	@Override
@@ -193,20 +194,16 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 	}
 	
 	@Override
-	public boolean onCreateOptionsMenu(final Menu menu)
+	public boolean onCreateOptionsMenu(final Menu aMenu)
 	{
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
+		getMenuInflater().inflate(R.menu.main, aMenu);
 		return true;
 	}
 	
 	@Override
-	public boolean onOptionsItemSelected(final MenuItem item)
+	public boolean onOptionsItemSelected(final MenuItem aItem)
 	{
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		final int id = item.getItemId();
+		final int id = aItem.getItemId();
 		switch (id)
 		{
 			case R.id.delete_chars :
@@ -220,7 +217,7 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 				return true;
 		}
 		
-		return super.onOptionsItemSelected(item);
+		return super.onOptionsItemSelected(aItem);
 	}
 	
 	@Override
@@ -276,7 +273,7 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 		else if (aRequestCode == HostActivity.PLAY_HOST_REQUEST && aRequestCode == RESULT_OK)
 		{
 			final String xml = aData.getStringExtra(HostActivity.HOST);
-			final Host host = new Host(xml, mItems);
+			final Host host = new Host(xml, mItems, this);
 			mHosts.updateHost(host);
 		}
 		else

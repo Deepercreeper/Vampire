@@ -1,9 +1,11 @@
 package com.deepercreeper.vampireapp.host;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import android.content.Context;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.items.ItemProvider;
@@ -17,21 +19,23 @@ import com.deepercreeper.vampireapp.util.FilesUtil;
  */
 public class Host
 {
-	private final String		mName;
+	private final String				mName;
 	
 	@SuppressWarnings("unused")
 	/**
 	 * TODO Use this member
 	 */
-	private final ItemProvider	mItems;
+	private final ItemProvider			mItems;
 	
-	private final List<Player>	mPlayers	= new ArrayList<Player>();
+	private final List<Player>			mPlayers	= new ArrayList<Player>();
 	
-	private final List<String>	mBanned		= new ArrayList<String>();
+	private final List<BannedPlayer>	mBanned		= new ArrayList<BannedPlayer>();
 	
-	private final String		mLocation;
+	private final String				mLocation;
 	
-	private LinearLayout		mPlayersList;
+	private final Context				mContext;
+	
+	private LinearLayout				mPlayersList;
 	
 	/**
 	 * Creates a host out of the given XML data.
@@ -40,10 +44,13 @@ public class Host
 	 *            The XML data.
 	 * @param aItems
 	 *            The item provider.
+	 * @param aContext
+	 *            The underlying context.
 	 */
-	public Host(final String aXML, final ItemProvider aItems)
+	public Host(final String aXML, final ItemProvider aItems, final Context aContext)
 	{
 		mItems = aItems;
+		mContext = aContext;
 		
 		final Document doc = FilesUtil.loadDocument(aXML);
 		if (doc == null)
@@ -67,12 +74,15 @@ public class Host
 	 *            The host name.
 	 * @param aItems
 	 *            The item provider.
+	 * @param aContext
+	 *            The underlying context.
 	 * @param aLocation
 	 *            The host location.
 	 */
-	public Host(final String aName, final ItemProvider aItems, final String aLocation)
+	public Host(final String aName, final ItemProvider aItems, final String aLocation, final Context aContext)
 	{
 		mName = aName;
+		mContext = aContext;
 		mItems = aItems;
 		mLocation = aLocation;
 	}
@@ -86,7 +96,7 @@ public class Host
 	 */
 	public boolean addPlayer(final Player aPlayer)
 	{
-		if (mPlayers.contains(aPlayer) || isBanned(aPlayer.getDevice()))
+		if (mPlayers.contains(aPlayer) || isBanned(aPlayer))
 		{
 			return false;
 		}
@@ -96,14 +106,23 @@ public class Host
 	}
 	
 	/**
-	 * Adds the given device to the list of banned devices.
+	 * Adds the given player to the list of banned players.
 	 * 
-	 * @param aDevice
-	 *            The banned device.
+	 * @param aPlayer
+	 *            The player to ban.
 	 */
-	public void ban(final ConnectedDevice aDevice)
+	public void ban(final Player aPlayer)
 	{
-		mBanned.add(aDevice.getDevice().getAddress());
+		mBanned.add(new BannedPlayer(aPlayer.getName(), aPlayer.getDevice().getDevice().getAddress(), aPlayer.getNumber(), mContext));
+		Collections.sort(mBanned);
+	}
+	
+	/**
+	 * @return a list of all currently banned players.
+	 */
+	public List<BannedPlayer> getBannedPlayers()
+	{
+		return mBanned;
 	}
 	
 	/**
@@ -132,13 +151,21 @@ public class Host
 	}
 	
 	/**
-	 * @param aDevice
-	 *            The device.
-	 * @return whether the given device is banned.
+	 * @param aPlayer
+	 *            The player.
+	 * @return whether the given player is banned.
 	 */
-	public boolean isBanned(final ConnectedDevice aDevice)
+	public boolean isBanned(final Player aPlayer)
 	{
-		return mBanned.contains(aDevice.getDevice().getAddress());
+		for (final BannedPlayer player : mBanned)
+		{
+			if (player.getAddress().equals(aPlayer.getDevice().getDevice().getAddress()))
+			{
+				player.setPlayer(aPlayer.getName());
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
@@ -191,13 +218,13 @@ public class Host
 	}
 	
 	/**
-	 * Removes the given device from the banned devices list.
+	 * Removes the given player from the banned players list.
 	 * 
-	 * @param aDevice
-	 *            The device.
+	 * @param aPlayer
+	 *            The player to remove from the banned players list.
 	 */
-	public void unban(final ConnectedDevice aDevice)
+	public void unban(final BannedPlayer aPlayer)
 	{
-		mBanned.remove(aDevice.getDevice().getAddress());
+		mBanned.remove(aPlayer);
 	}
 }

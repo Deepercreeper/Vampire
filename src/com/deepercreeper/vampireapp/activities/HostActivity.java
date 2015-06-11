@@ -1,9 +1,12 @@
 package com.deepercreeper.vampireapp.activities;
 
+import java.util.List;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -15,11 +18,14 @@ import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
 import com.deepercreeper.vampireapp.connection.ConnectionController;
 import com.deepercreeper.vampireapp.connection.ConnectionListener;
+import com.deepercreeper.vampireapp.host.BannedPlayer;
 import com.deepercreeper.vampireapp.host.Host;
 import com.deepercreeper.vampireapp.host.Player;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.util.ConnectionUtil;
+import com.deepercreeper.vampireapp.util.view.SelectItemDialog;
+import com.deepercreeper.vampireapp.util.view.SelectItemDialog.SelectionListener;
 
 /**
  * This activity represents the running host game. It is able to accept new players<br>
@@ -48,11 +54,12 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 	private ItemProvider			mItems;
 	
 	@Override
-	public void banned(final ConnectedDevice aDevice)
+	public void banned(final Player aPlayer)
 	{
-		mHost.ban(aDevice);
-		aDevice.send(MessageType.BANNED);
-		aDevice.exit();
+		mHost.ban(aPlayer);
+		final ConnectedDevice device = aPlayer.getDevice();
+		device.send(MessageType.BANNED);
+		device.exit();
 	}
 	
 	@Override
@@ -76,7 +83,7 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 	public void consumeItems(final ItemProvider aItems)
 	{
 		mItems = aItems;
-		mHost = new Host(getIntent().getStringExtra(HOST), mItems);
+		mHost = new Host(getIntent().getStringExtra(HOST), mItems, this);
 		
 		init();
 	}
@@ -119,12 +126,56 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 	}
 	
 	@Override
+	public boolean onCreateOptionsMenu(final Menu aMenu)
+	{
+		getMenuInflater().inflate(R.menu.host, aMenu);
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(final MenuItem aItem)
+	{
+		final int id = aItem.getItemId();
+		switch (id)
+		{
+			case R.id.unban :
+				unban();
+				return true;
+		}
+		
+		return super.onOptionsItemSelected(aItem);
+	}
+	
+	private void unban()
+	{
+		final List<BannedPlayer> players = mHost.getBannedPlayers();
+		if (players.isEmpty())
+		{
+			makeText(R.string.no_banned_players, Toast.LENGTH_SHORT);
+			return;
+		}
+		final SelectionListener<BannedPlayer> action = new SelectionListener<BannedPlayer>()
+		{
+			@Override
+			public void select(final BannedPlayer aPlayer)
+			{
+				mHost.unban(aPlayer);
+			}
+			
+			@Override
+			public void cancel()
+			{}
+		};
+		SelectItemDialog.<BannedPlayer> showSelectionDialog(players, getString(R.string.unban), this, action);
+	}
+	
+	@Override
 	public void receiveMessage(final ConnectedDevice aDevice, final MessageType aType, final String[] aArgs)
 	{
 		switch (aType)
 		{
 			case LOGIN :
-				login(aDevice, aArgs[0]);
+				login(aDevice, aArgs[0], aArgs[1]);
 				break;
 			case LEFT_GAME :
 				makeText(mHost.getPlayer(aDevice).getName() + " " + getString(R.string.left_game), Toast.LENGTH_SHORT);
@@ -183,11 +234,12 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 		});
 	}
 	
-	private void login(final ConnectedDevice aDevice, final String aPlayer)
+	private void login(final ConnectedDevice aDevice, final String aPlayer, final String aNumber)
 	{
-		if ( !mHost.addPlayer(new Player(aPlayer, aDevice, this, this)))
+		final Player player = new Player(aPlayer, aNumber, aDevice, this, this);
+		if ( !mHost.addPlayer(player))
 		{
-			if (mHost.isBanned(aDevice))
+			if (mHost.isBanned(player))
 			{
 				aDevice.send(MessageType.BANNED);
 			}

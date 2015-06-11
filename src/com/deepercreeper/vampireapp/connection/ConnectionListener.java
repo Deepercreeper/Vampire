@@ -1,6 +1,7 @@
 package com.deepercreeper.vampireapp.connection;
 
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
+import com.deepercreeper.vampireapp.host.Player;
 import com.deepercreeper.vampireapp.util.view.Toaster;
 
 /**
@@ -13,10 +14,10 @@ public interface ConnectionListener extends Toaster
 	/**
 	 * The given device has been banned or this device has been banned by the given device.
 	 * 
-	 * @param aDevice
-	 *            The banning or banned device.
+	 * @param aPlayer
+	 *            The banned player.
 	 */
-	public void banned(ConnectedDevice aDevice);
+	public void banned(Player aPlayer);
 	
 	/**
 	 * Sometimes the connection is cancelled by a user action.<br>

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <string name="no_banned_players">Sie haben derzeit keine Spieler gebannt.</string>
+    <string name="unban">Entbannen</string>
     <string name="banned">Du wurdest vom Host gebannt.</string>
     <string name="ban">Bannen</string>
     <string name="kick">Rauswerfen</string>

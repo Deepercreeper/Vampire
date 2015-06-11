@@ -8,9 +8,9 @@ import com.deepercreeper.vampireapp.util.LanguageUtil;
  * 
  * @author Vincent
  */
-public abstract class Named implements Nameable
+public class Named implements Nameable
 {
-	private final String	mName;
+	private String	mName;
 	
 	/**
 	 * Creates a new named entity.
@@ -35,6 +35,17 @@ public abstract class Named implements Nameable
 		return LanguageUtil.instance().getValue(getName());
 	}
 	
+	/**
+	 * Sets the name of this.
+	 * 
+	 * @param aName
+	 *            The new name.
+	 */
+	public void setName(final String aName)
+	{
+		mName = aName;
+	}
+	
 	@Override
 	public String getName()
 	{
@@ -51,12 +62,12 @@ public abstract class Named implements Nameable
 	}
 	
 	@Override
-	public boolean equals(Object obj)
+	public boolean equals(final Object obj)
 	{
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		Named other = (Named) obj;
+		final Named other = (Named) obj;
 		if (mName == null)
 		{
 			if (other.mName != null) return false;

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -107,6 +108,13 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 				}
 				break;
 		}
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(final Menu aMenu)
+	{
+		getMenuInflater().inflate(R.menu.create_char, aMenu);
+		return true;
 	}
 	
 	@Override

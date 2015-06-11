@@ -24,6 +24,8 @@ public class Player implements Viewable
 	
 	private final String				mName;
 	
+	private final String				mNumber;
+	
 	private final Context				mContext;
 	
 	private final ConnectionListener	mListener;
@@ -41,6 +43,8 @@ public class Player implements Viewable
 	 * 
 	 * @param aName
 	 *            The player name.
+	 * @param aNumber
+	 *            The players phone number.
 	 * @param aDevice
 	 *            The connected player device.
 	 * @param aListener
@@ -48,9 +52,10 @@ public class Player implements Viewable
 	 * @param aContext
 	 *            The underlying context.
 	 */
-	public Player(final String aName, final ConnectedDevice aDevice, final ConnectionListener aListener, final Context aContext)
+	public Player(final String aName, final String aNumber, final ConnectedDevice aDevice, final ConnectionListener aListener, final Context aContext)
 	{
 		mName = aName;
+		mNumber = aNumber;
 		mDevice = aDevice;
 		mContext = aContext;
 		mListener = aListener;
@@ -104,6 +109,14 @@ public class Player implements Viewable
 		return mName;
 	}
 	
+	/**
+	 * @return the players phone number.
+	 */
+	public String getNumber()
+	{
+		return mNumber;
+	}
+	
 	@Override
 	public int hashCode()
 	{
@@ -153,7 +166,7 @@ public class Player implements Viewable
 			@Override
 			public void onClick(final View aV)
 			{
-				mListener.banned(mDevice);
+				mListener.banned(Player.this);
 			}
 		});
 	}

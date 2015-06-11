@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.widget.Toast;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
+import com.deepercreeper.vampireapp.host.Player;
 import com.deepercreeper.vampireapp.util.BluetoothReceiver;
 import com.deepercreeper.vampireapp.util.BluetoothReceiver.BluetoothListener;
 import com.deepercreeper.vampireapp.util.Log;
@@ -73,7 +74,7 @@ public class ConnectionController implements ConnectionListener
 	}
 	
 	@Override
-	public void banned(final ConnectedDevice aDevice)
+	public void banned(final Player aPlayer)
 	{}
 	
 	@Override

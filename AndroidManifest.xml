@@ -12,6 +12,10 @@
     
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/> 
+    
     <application
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"

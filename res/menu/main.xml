@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/delete_chars"
-        android:orderInCategory="100"
+        android:orderInCategory="1"
         android:showAsAction="always"
         android:title="@string/delete_chars"/>
     <item android:title="@string/connection">
