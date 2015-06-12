@@ -30,7 +30,7 @@ public class BannedPlayer extends Named implements Saveable
 	 */
 	public BannedPlayer(final Element aXML, final Context aContext)
 	{
-		super(ContactsUtil.getContactName(aContext, aXML.getAttribute("number")));
+		super(ContactsUtil.getContactOrBluetoothName(aContext, aXML.getAttribute("number"), aXML.getAttribute("address")));
 		mNumber = aXML.getAttribute("number");
 		mAddress = aXML.getAttribute("address");
 		mPlayer = aXML.getAttribute("player");
@@ -50,7 +50,7 @@ public class BannedPlayer extends Named implements Saveable
 	 */
 	public BannedPlayer(final String aPlayer, final String aAddress, final String aNumber, final Context aContext)
 	{
-		super(ContactsUtil.getContactName(aContext, aNumber));
+		super(ContactsUtil.getContactOrBluetoothName(aContext, aNumber, aAddress));
 		mNumber = aNumber;
 		mAddress = aAddress;
 		mPlayer = aPlayer;
@@ -75,7 +75,7 @@ public class BannedPlayer extends Named implements Saveable
 	public void setNumber(final String aNumber, final Context aContext)
 	{
 		mNumber = aNumber;
-		setName(ContactsUtil.getContactName(aContext, aNumber));
+		setName(ContactsUtil.getContactOrBluetoothName(aContext, aNumber, getAddress()));
 	}
 	
 	/**

@@ -191,9 +191,11 @@ public class Host
 	public void removePlayer(final ConnectedDevice aDevice)
 	{
 		final Player player = getPlayer(aDevice);
-		player.release();
-		mPlayers.remove(player);
-		
+		if (player != null)
+		{
+			player.release();
+			mPlayers.remove(player);
+		}
 	}
 	
 	/**
