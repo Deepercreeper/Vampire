@@ -74,7 +74,12 @@ public class ContactsUtil
 		return phoneNumber;
 	}
 	
-	private static String getBluetoothName(String aAddress)
+	/**
+	 * @param aAddress
+	 *            The device address.
+	 * @return the Bluetooth name of the given address if bonded or the address itself otherwise.
+	 */
+	public static String getBluetoothName(String aAddress)
 	{
 		BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		if (bluetoothAdapter == null)
