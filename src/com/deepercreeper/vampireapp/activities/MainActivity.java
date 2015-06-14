@@ -270,7 +270,7 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 				mChars.updateChar(character);
 			}
 		}
-		else if (aRequestCode == HostActivity.PLAY_HOST_REQUEST && aRequestCode == RESULT_OK)
+		else if (aRequestCode == HostActivity.PLAY_HOST_REQUEST && aResultCode == RESULT_OK)
 		{
 			final String xml = aData.getStringExtra(HostActivity.HOST);
 			final Host host = new Host(xml, mItems, this);

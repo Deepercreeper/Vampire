@@ -67,7 +67,12 @@ public class ConnectedDevice
 		/**
 		 * The player left the game
 		 */
-		LEFT_GAME
+		LEFT_GAME,
+		
+		/**
+		 * The given time has passed
+		 */
+		TIME
 	}
 	
 	private static final String			TAG				= "ConnectedDevice";

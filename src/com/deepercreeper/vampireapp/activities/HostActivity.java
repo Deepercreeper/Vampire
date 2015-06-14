@@ -23,6 +23,7 @@ import com.deepercreeper.vampireapp.host.Host;
 import com.deepercreeper.vampireapp.host.Player;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
+import com.deepercreeper.vampireapp.mechanics.TimeListener.Type;
 import com.deepercreeper.vampireapp.util.ConnectionUtil;
 import com.deepercreeper.vampireapp.util.view.SelectItemDialog;
 import com.deepercreeper.vampireapp.util.view.SelectItemDialog.SelectionListener;
@@ -221,9 +222,37 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 		
 		final TextView name = (TextView) findViewById(R.id.host_name);
 		mHost.setPlayersList((LinearLayout) findViewById(R.id.players_list));
+		mHost.setPlayersTimeList((LinearLayout) findViewById(R.id.players_time_list));
+		final Button day = (Button) findViewById(R.id.day);
+		final Button hour = (Button) findViewById(R.id.hour);
+		final Button round = (Button) findViewById(R.id.round);
 		final Button exit = (Button) findViewById(R.id.exit);
 		
 		name.setText(mHost.getName());
+		day.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				mHost.time(Type.DAY, 1);
+			}
+		});
+		hour.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				mHost.time(Type.HOUR, 1);
+			}
+		});
+		round.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				mHost.time(Type.ROUND, 1);
+			}
+		});
 		exit.setOnClickListener(new OnClickListener()
 		{
 			@Override

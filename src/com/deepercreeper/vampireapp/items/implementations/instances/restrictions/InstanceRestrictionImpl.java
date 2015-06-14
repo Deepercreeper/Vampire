@@ -114,6 +114,12 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 	}
 	
 	@Override
+	public void time(final Type aType, final int aAmount)
+	{
+		mDuration.time(aType, aAmount);
+	}
+	
+	@Override
 	public Element asElement(final Document aDoc)
 	{
 		final Element element = aDoc.createElement("restriction");
@@ -145,12 +151,6 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 			mParent.removeRestriction(this);
 			mParent = null;
 		}
-	}
-	
-	@Override
-	public void day()
-	{
-		mDuration.day();
 	}
 	
 	@Override
@@ -315,12 +315,6 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 	}
 	
 	@Override
-	public void hour()
-	{
-		mDuration.hour();
-	}
-	
-	@Override
 	public boolean isActive(final ItemControllerInstance aController)
 	{
 		for (final InstanceCondition condition : mConditions)
@@ -343,12 +337,6 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 	public void onDue()
 	{
 		clear();
-	}
-	
-	@Override
-	public void round()
-	{
-		mDuration.round();
 	}
 	
 	/**

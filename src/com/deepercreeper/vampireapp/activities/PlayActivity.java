@@ -24,6 +24,7 @@ import com.deepercreeper.vampireapp.host.Player;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
+import com.deepercreeper.vampireapp.mechanics.TimeListener.Type;
 import com.deepercreeper.vampireapp.util.ConnectionUtil;
 import com.deepercreeper.vampireapp.util.ContactsUtil;
 
@@ -170,6 +171,9 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 				break;
 			case BANNED :
 				banned(null);
+				break;
+			case TIME :
+				mChar.time(Type.valueOf(aArgs[0]), Integer.parseInt(aArgs[1]));
 				break;
 			default :
 				break;

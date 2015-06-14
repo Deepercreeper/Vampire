@@ -4,11 +4,15 @@ import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
 import com.deepercreeper.vampireapp.connection.ConnectionListener;
+import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.ResizeHeightAnimation;
 import com.deepercreeper.vampireapp.util.view.Viewable;
@@ -18,7 +22,7 @@ import com.deepercreeper.vampireapp.util.view.Viewable;
  * 
  * @author vrl
  */
-public class Player implements Viewable
+public class Player implements Viewable, TimeListener
 {
 	private final ConnectedDevice		mDevice;
 	
@@ -30,11 +34,15 @@ public class Player implements Viewable
 	
 	private final ConnectionListener	mListener;
 	
+	private boolean						mTimeEnabled;
+	
 	private boolean						mOpen	= false;
 	
 	private LinearLayout				mContainer;
 	
 	private LinearLayout				mPlayerContainer;
+	
+	private CheckBox					mTimeCheckBox;
 	
 	private Button						mButton;
 	
@@ -60,6 +68,15 @@ public class Player implements Viewable
 		mContext = aContext;
 		mListener = aListener;
 		init();
+	}
+	
+	@Override
+	public void time(final Type aType, final int aAmount)
+	{
+		if (mTimeEnabled)
+		{
+			mDevice.send(MessageType.TIME, aType.toString(), "" + aAmount);
+		}
 	}
 	
 	/**
@@ -91,6 +108,14 @@ public class Player implements Viewable
 	public LinearLayout getContainer()
 	{
 		return mContainer;
+	}
+	
+	/**
+	 * @return the checkbox used for enabling the time management.
+	 */
+	public CheckBox getPlayerCheckBox()
+	{
+		return mTimeCheckBox;
 	}
 	
 	/**
@@ -134,6 +159,19 @@ public class Player implements Viewable
 		mButton = (Button) mContainer.findViewById(R.id.player_button);
 		final Button kick = (Button) mContainer.findViewById(R.id.kick_player);
 		final Button ban = (Button) mContainer.findViewById(R.id.ban_player);
+		
+		mTimeCheckBox = new CheckBox(mContext);
+		mTimeCheckBox.setLayoutParams(ViewUtil.getWrapHeight());
+		mTimeCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener()
+		{
+			@Override
+			public void onCheckedChanged(final CompoundButton aButtonView, final boolean aIsChecked)
+			{
+				mTimeEnabled = aIsChecked;
+			}
+		});
+		mTimeCheckBox.setText(getName());
+		mTimeCheckBox.setChecked(true);
 		
 		if (mOpen)
 		{
@@ -183,6 +221,7 @@ public class Player implements Viewable
 	public void release()
 	{
 		ViewUtil.release(mContainer);
+		ViewUtil.release(mTimeCheckBox);
 	}
 	
 	/**

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <string name="round">Runde</string>
+    <string name="hour">Stunde</string>
+    <string name="day">Tag</string>
     <string name="no_banned_players">Sie haben derzeit keine Spieler gebannt.</string>
     <string name="unban">Entbannen</string>
     <string name="banned">Du wurdest vom Host gebannt.</string>
@@ -10,7 +13,7 @@
     <string name="left_game">hat das Spiel verlassen.</string>
     <string name="host_closed">Der Host hat sein Spiel beendet.</string>
     <string name="name_in_use">Der gewählte Charakter Name ist bereits an einen anderen Spieler vergeben.</string>
-    <string name="kicked">Der host hat dich rausgeworfen.</string>
+    <string name="kicked">Der Host hat dich rausgeworfen.</string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
     <string name="app_name">VampireApp</string>
@@ -20,7 +23,7 @@
     <string name="connection">Verbindung</string>
     <string name="create_char">Charaktererstellung</string>
     <string name="button_create_character">Neuen Charakter erstellen</string>
-    <string name="button_create_character_free">Character frei erstellen</string>
+    <string name="button_create_character_free">Charakter frei erstellen</string>
     <string name="delete_chars">Alle löschen</string>
     <string name="char_name">Charakter Name</string>
     <string name="concept">Konzept</string>

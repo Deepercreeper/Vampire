@@ -110,7 +110,7 @@ public class BannedPlayer extends Named implements Saveable
 	{
 		final Element element = aDoc.createElement("banned");
 		element.setAttribute("address", getAddress());
-		element.setAttribute("number", getName());
+		element.setAttribute("number", getNumber());
 		element.setAttribute("player", getPlayer());
 		return element;
 	}

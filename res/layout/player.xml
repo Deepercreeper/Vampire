@@ -19,9 +19,9 @@
         <Button
             android:id="@+id/kick_player"
             style="?android:attr/buttonBarButtonStyle"
+            android:textColor="@android:color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
             android:text="@string/kick" />
 
         <Button

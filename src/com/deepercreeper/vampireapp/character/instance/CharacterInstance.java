@@ -34,7 +34,7 @@ import com.deepercreeper.vampireapp.util.Log;
  * 
  * @author vrl
  */
-public class CharacterInstance implements ItemFinder
+public class CharacterInstance implements ItemFinder, TimeListener
 {
 	private static final String					TAG				= "CharacterInstance";
 	
@@ -240,6 +240,15 @@ public class CharacterInstance implements ItemFinder
 				mRestrictions.add(aRestriction);
 				mTimeListeners.add(aRestriction);
 			}
+		}
+	}
+	
+	@Override
+	public void time(final Type aType, final int aAmount)
+	{
+		for (final TimeListener listener : mTimeListeners)
+		{
+			listener.time(aType, aAmount);
 		}
 	}
 	

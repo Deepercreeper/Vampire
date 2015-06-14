@@ -9,6 +9,7 @@ import android.content.Context;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.items.ItemProvider;
+import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.CodingUtil;
 import com.deepercreeper.vampireapp.util.FilesUtil;
 
@@ -17,7 +18,7 @@ import com.deepercreeper.vampireapp.util.FilesUtil;
  * 
  * @author vrl
  */
-public class Host
+public class Host implements TimeListener
 {
 	private final String				mName;
 	
@@ -36,6 +37,8 @@ public class Host
 	private final Context				mContext;
 	
 	private LinearLayout				mPlayersList;
+	
+	private LinearLayout				mPlayersTimeList;
 	
 	/**
 	 * Creates a host out of the given XML data.
@@ -116,6 +119,7 @@ public class Host
 		}
 		mPlayers.add(aPlayer);
 		mPlayersList.addView(aPlayer.getContainer());
+		mPlayersTimeList.addView(aPlayer.getPlayerCheckBox());
 		return true;
 	}
 	
@@ -239,6 +243,26 @@ public class Host
 	public void setPlayersList(final LinearLayout aPlayersList)
 	{
 		mPlayersList = aPlayersList;
+	}
+	
+	@Override
+	public void time(final Type aType, final int aAmount)
+	{
+		for (final Player player : mPlayers)
+		{
+			player.time(aType, aAmount);
+		}
+	}
+	
+	/**
+	 * Sets the list of player checkboxes for time management.
+	 * 
+	 * @param aList
+	 *            The list.
+	 */
+	public void setPlayersTimeList(final LinearLayout aList)
+	{
+		mPlayersTimeList = aList;
 	}
 	
 	/**

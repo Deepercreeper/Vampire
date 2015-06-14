@@ -27,30 +27,6 @@ public class Duration implements TimeListener, Saveable
 	}
 	
 	/**
-	 * There are different duration types.
-	 * 
-	 * @author vrl
-	 */
-	public enum Type
-	{
-		/**
-		 * A round is equal to a very short time, that is used to make the game flow.<br>
-		 * Typically a round is around a second, but does not count up to hours.
-		 */
-		ROUND,
-		
-		/**
-		 * Represents an hour.
-		 */
-		HOUR,
-		
-		/**
-		 * Represents a day. By default a day is around 10 hours long.
-		 */
-		DAY
-	}
-	
-	/**
 	 * This duration won't end.
 	 */
 	public static final Duration			FOREVER		= new Duration();
@@ -60,12 +36,6 @@ public class Duration implements TimeListener, Saveable
 	private final List<DurationListener>	mListeners	= new ArrayList<DurationListener>();
 	
 	private int								mValue;
-	
-	private Duration()
-	{
-		mType = null;
-		mValue = -1;
-	}
 	
 	/**
 	 * Creates a new duration.
@@ -89,6 +59,12 @@ public class Duration implements TimeListener, Saveable
 		mValue = aValue;
 	}
 	
+	private Duration()
+	{
+		mType = null;
+		mValue = -1;
+	}
+	
 	private Duration(final Element aElement)
 	{
 		mType = Type.valueOf(aElement.getAttribute("durationType"));
@@ -96,19 +72,14 @@ public class Duration implements TimeListener, Saveable
 	}
 	
 	/**
-	 * Creates a duration out of the given XML data.
+	 * Adds a duration listener to this duration.
 	 * 
-	 * @param aElement
-	 *            The XML data.
-	 * @return a new duration that matches the data.
+	 * @param aListener
+	 *            The listener that should be called, when this duration ends.
 	 */
-	public static Duration create(final Element aElement)
+	public void addListener(final DurationListener aListener)
 	{
-		if (aElement.getAttribute("type").equals("forever"))
-		{
-			return FOREVER;
-		}
-		return new Duration(aElement);
+		mListeners.add(aListener);
 	}
 	
 	@Override
@@ -127,6 +98,60 @@ public class Duration implements TimeListener, Saveable
 		return element;
 	}
 	
+	@Override
+	public void time(final Type aType, final int aAmount)
+	{
+		switch (aType)
+		{
+			case DAY :
+				day(aAmount);
+				break;
+			case HOUR :
+				hour(aAmount);
+				break;
+			case ROUND :
+				round(aAmount);
+			default :
+				break;
+		}
+	}
+	
+	private void day(final int aAmount)
+	{
+		switch (mType)
+		{
+			case DAY :
+				if (mValue >= aAmount)
+				{
+					mValue -= aAmount;
+				}
+				else
+				{
+					mValue = 0;
+				}
+				break;
+			case ROUND :
+				mValue = 0;
+				break;
+			case HOUR :
+				if (mValue >= 10 * aAmount)
+				{
+					mValue -= 10 * aAmount;
+				}
+				else
+				{
+					mValue = 0;
+				}
+				break;
+			default :
+				return;
+		}
+		if (mValue == 0)
+		{
+			onDue();
+		}
+	}
+	
 	/**
 	 * @return the duration type.
 	 */
@@ -143,66 +168,25 @@ public class Duration implements TimeListener, Saveable
 		return mValue;
 	}
 	
-	/**
-	 * Adds a duration listener to this duration.
-	 * 
-	 * @param aListener
-	 *            The listener that should be called, when this duration ends.
-	 */
-	public void addListener(final DurationListener aListener)
-	{
-		mListeners.add(aListener);
-	}
-	
-	@Override
-	public void day()
+	private void hour(final int aAmount)
 	{
 		switch (mType)
 		{
-			case DAY :
-				mValue-- ;
-				break;
-			case ROUND :
-				mValue = 0;
-				break;
 			case HOUR :
-				if (mValue >= 10)
+				if (mValue >= aAmount)
 				{
-					mValue -= 10;
+					mValue -= aAmount;
 				}
 				else
 				{
 					mValue = 0;
 				}
 				break;
-			default :
-				return;
-		}
-		if (mValue == 0)
-		{
-			onDue();
-		}
-	}
-	
-	private void onDue()
-	{
-		for (final DurationListener listener : mListeners)
-		{
-			listener.onDue();
-		}
-	}
-	
-	@Override
-	public void hour()
-	{
-		switch (mType)
-		{
-			case HOUR :
-				mValue-- ;
-				break;
 			case ROUND :
-				mValue = 0;
-				break;
+				if (aAmount > 0)
+				{
+					mValue = 0;
+				}
 			default :
 				return;
 		}
@@ -212,14 +196,20 @@ public class Duration implements TimeListener, Saveable
 		}
 	}
 	
-	@Override
-	public void round()
+	private void round(final int aAmount)
 	{
 		if (mType != Type.ROUND)
 		{
 			return;
 		}
-		mValue-- ;
+		if (mValue >= aAmount)
+		{
+			mValue -= aAmount;
+		}
+		else
+		{
+			mValue = 0;
+		}
 		if (mValue == 0)
 		{
 			onDue();
@@ -234,5 +224,29 @@ public class Duration implements TimeListener, Saveable
 			return "Forever";
 		}
 		return getType().name() + ": " + getValue();
+	}
+	
+	private void onDue()
+	{
+		for (final DurationListener listener : mListeners)
+		{
+			listener.onDue();
+		}
+	}
+	
+	/**
+	 * Creates a duration out of the given XML data.
+	 * 
+	 * @param aElement
+	 *            The XML data.
+	 * @return a new duration that matches the data.
+	 */
+	public static Duration create(final Element aElement)
+	{
+		if (aElement.getAttribute("type").equals("forever"))
+		{
+			return FOREVER;
+		}
+		return new Duration(aElement);
 	}
 }

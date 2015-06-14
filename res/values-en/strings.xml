@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <string name="round">Round</string>
+    <string name="hour">Hour</string>
+    <string name="day">Day</string>
     <string name="no_banned_players">There are currently no banned players.</string>
     <string name="unban">Unban</string>
     <string name="banned">The host has banned you.</string>

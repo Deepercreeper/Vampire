@@ -141,12 +141,6 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	}
 	
 	@Override
-	public void day()
-	{
-		mCanHeal = true;
-	}
-	
-	@Override
 	public RelativeLayout getContainer()
 	{
 		return mContainer;
@@ -182,10 +176,6 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 			mValue = 0;
 		}
 	}
-	
-	@Override
-	public void hour()
-	{}
 	
 	/**
 	 * Adds the given amount of damage to the characters health.
@@ -251,8 +241,13 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	}
 	
 	@Override
-	public void round()
-	{}
+	public void time(final Type aType, final int aAmount)
+	{
+		if (aType == Type.DAY)
+		{
+			mCanHeal = true;
+		}
+	}
 	
 	/**
 	 * Updates the displayed health value and the heal button.

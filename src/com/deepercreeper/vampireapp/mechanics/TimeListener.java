@@ -1,5 +1,6 @@
 package com.deepercreeper.vampireapp.mechanics;
 
+
 /**
  * Everything that is affected by the game time should implement this interface.
  * 
@@ -8,17 +9,36 @@ package com.deepercreeper.vampireapp.mechanics;
 public interface TimeListener
 {
 	/**
-	 * Called when a day has passed.
+	 * There are different duration types.
+	 * 
+	 * @author vrl
 	 */
-	public void day();
+	public enum Type
+	{
+		/**
+		 * A round is equal to a very short time, that is used to make the game flow.<br>
+		 * Typically a round is around a second, but does not count up to hours.
+		 */
+		ROUND,
+		
+		/**
+		 * Represents an hour.
+		 */
+		HOUR,
+		
+		/**
+		 * Represents a day. By default a day is around 10 hours long.
+		 */
+		DAY
+	}
 	
 	/**
-	 * Called when an hour has passed.
+	 * The given time has passed.
+	 * 
+	 * @param aType
+	 *            The time type.
+	 * @param aAmount
+	 *            The amount of time that has passed.
 	 */
-	public void hour();
-	
-	/**
-	 * Called when a round has passed.
-	 */
-	public void round();
+	public void time(Type aType, int aAmount);
 }

@@ -68,6 +68,15 @@ public class InsanityControllerInstance implements TimeListener, Saveable
 		return mInsanities;
 	}
 	
+	@Override
+	public void time(final Type aType, final int aAmount)
+	{
+		for (final Duration duration : mInsanityDurations.values())
+		{
+			duration.time(aType, aAmount);
+		}
+	}
+	
 	/**
 	 * @param aInsanity
 	 *            The insanity.
@@ -103,33 +112,6 @@ public class InsanityControllerInstance implements TimeListener, Saveable
 	{
 		mInsanities.remove(aInsanity);
 		mInsanityDurations.remove(aInsanity);
-	}
-	
-	@Override
-	public void day()
-	{
-		for (final Duration duration : mInsanityDurations.values())
-		{
-			duration.day();
-		}
-	}
-	
-	@Override
-	public void hour()
-	{
-		for (final Duration duration : mInsanityDurations.values())
-		{
-			duration.hour();
-		}
-	}
-	
-	@Override
-	public void round()
-	{
-		for (final Duration duration : mInsanityDurations.values())
-		{
-			duration.round();
-		}
 	}
 	
 	@Override

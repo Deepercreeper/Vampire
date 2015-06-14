@@ -150,7 +150,11 @@ public class HostController implements HostListener
 	 */
 	public void saveHost(final Host aHost)
 	{
-		mHostNames.add(aHost.getName());
+		mHostsCache.put(aHost.getName(), aHost);
+		if ( !mHostNames.contains(aHost.getName()))
+		{
+			mHostNames.add(aHost.getName());
+		}
 		FilesUtil.saveFile(aHost.serialize(), aHost.getName() + ".hst", mContext);
 		sortHosts();
 		saveHostsList();
