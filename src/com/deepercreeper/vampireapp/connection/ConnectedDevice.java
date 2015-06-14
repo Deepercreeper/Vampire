@@ -86,7 +86,7 @@ public class ConnectedDevice
 	
 	private final boolean				mHost;
 	
-	private boolean						mListeningForMessages;
+	private boolean						mClosing		= false;
 	
 	/**
 	 * Creates a new connected device, that listens for messages.
@@ -123,7 +123,7 @@ public class ConnectedDevice
 	 */
 	public void exit()
 	{
-		mListeningForMessages = false;
+		mClosing = true;
 		if (mSocket.isConnected())
 		{
 			try
@@ -195,13 +195,8 @@ public class ConnectedDevice
 	
 	private void listenForMessages()
 	{
-		mListeningForMessages = true;
-		while (mListeningForMessages)
+		while (mSocket.isConnected())
 		{
-			if ( !mSocket.isConnected())
-			{
-				exit();
-			}
 			final StringBuilder messageBuilder = new StringBuilder();
 			int c;
 			try
@@ -228,6 +223,10 @@ public class ConnectedDevice
 			}
 			catch (final IOException e)
 			{}
+		}
+		if ( !mClosing)
+		{
+			exit();
 		}
 	}
 }

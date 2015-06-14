@@ -92,7 +92,6 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 	public void disconnectedFrom(final ConnectedDevice aDevice)
 	{
 		mHost.removePlayer(aDevice);
-		// TODO clean up
 	}
 	
 	/**
@@ -100,6 +99,7 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 	 */
 	public void exit()
 	{
+		mConnection.sendToAll(MessageType.CLOSED);
 		mConnection.exit();
 		final Intent intent = new Intent();
 		intent.putExtra(HOST, mHost.serialize());
@@ -215,7 +215,7 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 	private void init()
 	{
 		mConnection = new ConnectionController(this, this, mHandler);
-		mConnection.startServer(this);
+		mConnection.startServer();
 		
 		setContentView(R.layout.host);
 		

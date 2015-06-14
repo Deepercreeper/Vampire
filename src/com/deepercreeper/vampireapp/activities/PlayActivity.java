@@ -65,6 +65,10 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	@Override
 	public void cancel()
 	{
+		if (mConnection.hasHost())
+		{
+			mConnection.sendToAll(MessageType.LEFT_GAME);
+		}
 		exit(true);
 	}
 	
@@ -79,6 +83,10 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	{
 		if ( !aEnabled)
 		{
+			if (mConnection.hasHost())
+			{
+				mConnection.sendToAll(MessageType.LEFT_GAME);
+			}
 			exit(true);
 		}
 	}
@@ -93,10 +101,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	
 	@Override
 	public void disconnectedFrom(final ConnectedDevice aDevice)
-	{
-		// TODO Tell user that he was disconnected
-		exit(true);
-	}
+	{}
 	
 	/**
 	 * Closes the play activity after closing the connection.
@@ -129,6 +134,10 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	@Override
 	public void onBackPressed()
 	{
+		if (mConnection.hasHost())
+		{
+			mConnection.sendToAll(MessageType.LEFT_GAME);
+		}
 		exit(true);
 	}
 	
@@ -248,11 +257,14 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		catch (final IllegalArgumentException e)
 		{
 			Log.e(TAG, "Could not create character from xml.");
-			exit(false);
 		}
 		if (character != null)
 		{
 			mChar = character;
+		}
+		else
+		{
+			exit(false);
 		}
 		
 		mChar.release();
@@ -290,6 +302,10 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 			@Override
 			public void onClick(final View aV)
 			{
+				if (mConnection.hasHost())
+				{
+					mConnection.sendToAll(MessageType.LEFT_GAME);
+				}
 				exit(true);
 			}
 		});

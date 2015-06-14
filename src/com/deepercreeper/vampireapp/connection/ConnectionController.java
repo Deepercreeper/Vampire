@@ -164,6 +164,7 @@ public class ConnectionController implements ConnectionListener
 	@Override
 	public void connectedTo(final ConnectedDevice aDevice)
 	{
+		mDevices.add(aDevice);
 		mHandler.post(new Runnable()
 		{
 			@Override
@@ -227,9 +228,7 @@ public class ConnectionController implements ConnectionListener
 			{
 				try
 				{
-					final ConnectedDevice connectedDevice = new ConnectedDevice(socket, this, true);
-					mDevices.add(connectedDevice);
-					aListener.connectedTo(connectedDevice);
+					connectedTo(new ConnectedDevice(socket, this, true));
 					connected = true;
 				}
 				catch (final IOException e)
@@ -275,17 +274,8 @@ public class ConnectionController implements ConnectionListener
 	{
 		final Set<ConnectedDevice> devices = new HashSet<ConnectedDevice>();
 		devices.addAll(mDevices);
-		mDevices.clear();
 		for (final ConnectedDevice device : devices)
 		{
-			if (device.isHost())
-			{
-				device.send(MessageType.LEFT_GAME);
-			}
-			else
-			{
-				device.send(MessageType.CLOSED);
-			}
 			disconnect(device);
 		}
 		stopServer();
@@ -295,6 +285,22 @@ public class ConnectionController implements ConnectionListener
 		}
 		catch (final IllegalArgumentException e)
 		{}
+	}
+	
+	/**
+	 * Sends the given message to all connected devices.
+	 * 
+	 * @param aType
+	 *            The message type.
+	 * @param aArgs
+	 *            The message arguments.
+	 */
+	public void sendToAll(final MessageType aType, final String... aArgs)
+	{
+		for (final ConnectedDevice device : mDevices)
+		{
+			device.send(aType, aArgs);
+		}
 	}
 	
 	/**
@@ -434,11 +440,8 @@ public class ConnectionController implements ConnectionListener
 	
 	/**
 	 * Allows other devices to connect to this device.
-	 * 
-	 * @param aListener
-	 *            The listener for devices that are being connected.
 	 */
-	public void startServer(final ConnectionListener aListener)
+	public void startServer()
 	{
 		mCheckingForDevies = true;
 		try
@@ -458,7 +461,7 @@ public class ConnectionController implements ConnectionListener
 			@Override
 			public void run()
 			{
-				listenForDevices(aListener, true);
+				listenForDevices(true);
 			}
 		}.start();
 		new Thread()
@@ -466,7 +469,7 @@ public class ConnectionController implements ConnectionListener
 			@Override
 			public void run()
 			{
-				listenForDevices(aListener, false);
+				listenForDevices(false);
 			}
 		}.start();
 	}
@@ -497,7 +500,7 @@ public class ConnectionController implements ConnectionListener
 		mConnectionListener.makeText("Network connections are not enabled yet!", Toast.LENGTH_SHORT);
 	}
 	
-	private void listenForDevices(final ConnectionListener aListener, final boolean aSecure)
+	private void listenForDevices(final boolean aSecure)
 	{
 		final BluetoothServerSocket server = aSecure ? mSecureSocket : mInsecureSocket;
 		while (mCheckingForDevies && server != null)
@@ -505,7 +508,7 @@ public class ConnectionController implements ConnectionListener
 			BluetoothSocket socket = null;
 			try
 			{
-				socket = server.accept();
+				socket = server.accept(1);
 			}
 			catch (final IOException e)
 			{}
@@ -514,9 +517,7 @@ public class ConnectionController implements ConnectionListener
 				boolean connected = false;
 				try
 				{
-					final ConnectedDevice connectedDevice = new ConnectedDevice(socket, this, false);
-					mDevices.add(connectedDevice);
-					aListener.connectedTo(connectedDevice);
+					connectedTo(new ConnectedDevice(socket, this, false));
 					connected = true;
 				}
 				catch (final IOException e)
