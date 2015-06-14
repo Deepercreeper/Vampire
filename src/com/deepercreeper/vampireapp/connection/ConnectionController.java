@@ -508,7 +508,7 @@ public class ConnectionController implements ConnectionListener
 			BluetoothSocket socket = null;
 			try
 			{
-				socket = server.accept(1);
+				socket = server.accept(1000);
 			}
 			catch (final IOException e)
 			{}

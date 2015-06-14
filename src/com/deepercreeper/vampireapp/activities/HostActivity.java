@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -221,8 +222,10 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 		setContentView(R.layout.host);
 		
 		final TextView name = (TextView) findViewById(R.id.host_name);
+		final EditText timeSetter = (EditText) findViewById(R.id.time_setter);
 		mHost.setPlayersList((LinearLayout) findViewById(R.id.players_list));
 		mHost.setPlayersTimeList((LinearLayout) findViewById(R.id.players_time_list));
+		final Button applyTime = (Button) findViewById(R.id.apply_time);
 		final Button day = (Button) findViewById(R.id.day);
 		final Button hour = (Button) findViewById(R.id.hour);
 		final Button round = (Button) findViewById(R.id.round);
@@ -251,6 +254,28 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 			public void onClick(final View aV)
 			{
 				mHost.time(Type.ROUND, 1);
+			}
+		});
+		applyTime.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				int value = -1;
+				try
+				{
+					value = Integer.parseInt(timeSetter.getText().toString());
+				}
+				catch (final NumberFormatException e)
+				{}
+				if (value >= 0 && value <= 23)
+				{
+					mHost.time(Type.SET, value);
+				}
+				else
+				{
+					timeSetter.setText("");
+				}
 			}
 		});
 		exit.setOnClickListener(new OnClickListener()

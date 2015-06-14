@@ -38,6 +38,8 @@ public class Player implements Viewable, TimeListener
 	
 	private boolean						mOpen	= false;
 	
+	private int							mTime	= TimeListener.EVENING;
+	
 	private LinearLayout				mContainer;
 	
 	private LinearLayout				mPlayerContainer;
@@ -75,8 +77,39 @@ public class Player implements Viewable, TimeListener
 	{
 		if (mTimeEnabled)
 		{
-			mDevice.send(MessageType.TIME, aType.toString(), "" + aAmount);
+			if (aType != Type.SET)
+			{
+				mDevice.send(MessageType.TIME, aType.toString(), "" + aAmount);
+			}
+			else
+			{
+				final int difference = (aAmount + 24 - mTime) % 24;
+				mDevice.send(MessageType.TIME, Type.HOUR.toString(), "" + difference);
+			}
+			switch (aType)
+			{
+				case DAY :
+					mTime = TimeListener.EVENING;
+					break;
+				case HOUR :
+					mTime = (mTime + aAmount) % 24;
+					break;
+				case SET :
+					mTime = aAmount;
+					break;
+				default :
+					break;
+			}
 		}
+		updateTime();
+	}
+	
+	/**
+	 * Updates the checkbox and displays the current player time behind it.
+	 */
+	public void updateTime()
+	{
+		mTimeCheckBox.setText(getName() + "\t" + mTime + ":00");
 	}
 	
 	/**
@@ -170,7 +203,7 @@ public class Player implements Viewable, TimeListener
 				mTimeEnabled = aIsChecked;
 			}
 		});
-		mTimeCheckBox.setText(getName());
+		updateTime();
 		mTimeCheckBox.setChecked(true);
 		
 		if (mOpen)

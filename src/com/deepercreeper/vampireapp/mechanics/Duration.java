@@ -134,13 +134,24 @@ public class Duration implements TimeListener, Saveable
 				mValue = 0;
 				break;
 			case HOUR :
-				if (mValue >= 10 * aAmount)
+				if (mValue >= TimeListener.HOURS_PER_DAY)
 				{
-					mValue -= 10 * aAmount;
+					mValue -= TimeListener.HOURS_PER_DAY;
 				}
 				else
 				{
 					mValue = 0;
+				}
+				if (aAmount > 1)
+				{
+					if (mValue >= 24 * (aAmount - 1))
+					{
+						mValue -= 24 * (aAmount - 1);
+					}
+					else
+					{
+						mValue = 0;
+					}
 				}
 				break;
 			default :

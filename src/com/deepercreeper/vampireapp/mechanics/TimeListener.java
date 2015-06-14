@@ -1,6 +1,5 @@
 package com.deepercreeper.vampireapp.mechanics;
 
-
 /**
  * Everything that is affected by the game time should implement this interface.
  * 
@@ -8,6 +7,21 @@ package com.deepercreeper.vampireapp.mechanics;
  */
 public interface TimeListener
 {
+	/**
+	 * The number of hours, a day has.
+	 */
+	public static final int	HOURS_PER_DAY	= 10;
+	
+	/**
+	 * The hour when the sun sets.
+	 */
+	public static final int	EVENING			= 21;
+	
+	/**
+	 * The hour when the sun rises.
+	 */
+	public static final int	MORNING			= 5;
+	
 	/**
 	 * There are different duration types.
 	 * 
@@ -29,7 +43,12 @@ public interface TimeListener
 		/**
 		 * Represents a day. By default a day is around 10 hours long.
 		 */
-		DAY
+		DAY,
+		
+		/**
+		 * Sets the given hour and calculates the difference.
+		 */
+		SET
 	}
 	
 	/**
