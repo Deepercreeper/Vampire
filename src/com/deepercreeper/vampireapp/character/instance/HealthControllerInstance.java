@@ -250,6 +250,14 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	}
 	
 	/**
+	 * @return the number of steps the current health has.
+	 */
+	public int getStepsCount()
+	{
+		return mSteps.length;
+	}
+	
+	/**
 	 * Updates the displayed health value and the heal button.
 	 */
 	public void updateValue()

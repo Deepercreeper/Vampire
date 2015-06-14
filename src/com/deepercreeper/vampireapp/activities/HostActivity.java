@@ -288,9 +288,9 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 		});
 	}
 	
-	private void login(final ConnectedDevice aDevice, final String aPlayer, final String aNumber)
+	private void login(final ConnectedDevice aDevice, final String aNumber, final String aCharacter)
 	{
-		final Player player = new Player(aPlayer, aNumber, aDevice, this, this);
+		final Player player = new Player(aCharacter, aNumber, aDevice, this, this, mItems);
 		if ( !mHost.addPlayer(player))
 		{
 			if (mHost.isBanned(player))

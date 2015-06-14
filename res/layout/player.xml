@@ -11,26 +11,32 @@
 
     <LinearLayout
         android:id="@+id/player_container"
-        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="horizontal" >
+        android:orientation="vertical" >
 
-        <Button
-            android:id="@+id/kick_player"
-            style="?android:attr/buttonBarButtonStyle"
-            android:textColor="@android:color/white"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/kick" />
+            android:orientation="horizontal" >
 
-        <Button
-            android:id="@+id/ban_player"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            android:text="@string/ban" />
+            <Button
+                android:id="@+id/kick_player"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/kick"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/ban_player"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ban"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

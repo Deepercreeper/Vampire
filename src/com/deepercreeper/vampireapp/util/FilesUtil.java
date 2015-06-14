@@ -51,6 +51,24 @@ public class FilesUtil
 	}
 	
 	/**
+	 * @param aSaveable
+	 *            The item to serialize.
+	 * @return a string containing the given saveable.
+	 */
+	public static String serialize(final Saveable aSaveable)
+	{
+		final Document doc = FilesUtil.createDocument();
+		if (doc == null)
+		{
+			return null;
+		}
+		
+		doc.appendChild(aSaveable.asElement(doc));
+		
+		return readDocument(doc);
+	}
+	
+	/**
 	 * Loads the given document from the file system.
 	 * 
 	 * @param aContext

@@ -9,9 +9,12 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
 import com.deepercreeper.vampireapp.connection.ConnectionListener;
+import com.deepercreeper.vampireapp.host.controllers.PlayerHealth;
+import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.ResizeHeightAnimation;
@@ -26,7 +29,7 @@ public class Player implements Viewable, TimeListener
 {
 	private final ConnectedDevice		mDevice;
 	
-	private final String				mName;
+	private final CharacterInstance		mChar;
 	
 	private final String				mNumber;
 	
@@ -40,6 +43,8 @@ public class Player implements Viewable, TimeListener
 	
 	private int							mTime	= TimeListener.EVENING;
 	
+	private final PlayerHealth			mHealth;
+	
 	private LinearLayout				mContainer;
 	
 	private LinearLayout				mPlayerContainer;
@@ -51,8 +56,8 @@ public class Player implements Viewable, TimeListener
 	/**
 	 * Creates a new player that caches all needed data of the remote character.
 	 * 
-	 * @param aName
-	 *            The player name.
+	 * @param aCharacter
+	 *            The character.
 	 * @param aNumber
 	 *            The players phone number.
 	 * @param aDevice
@@ -61,10 +66,13 @@ public class Player implements Viewable, TimeListener
 	 *            The connection listener.
 	 * @param aContext
 	 *            The underlying context.
+	 * @param aItems
 	 */
-	public Player(final String aName, final String aNumber, final ConnectedDevice aDevice, final ConnectionListener aListener, final Context aContext)
+	public Player(final String aCharacter, final String aNumber, final ConnectedDevice aDevice, final ConnectionListener aListener,
+			final Context aContext, final ItemProvider aItems)
 	{
-		mName = aName;
+		mChar = new CharacterInstance(aCharacter, aItems, aContext);
+		mHealth = new PlayerHealth(mChar.getHealth(), aContext);
 		mNumber = aNumber;
 		mDevice = aDevice;
 		mContext = aContext;
@@ -129,11 +137,11 @@ public class Player implements Viewable, TimeListener
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		final Player other = (Player) obj;
-		if (mName == null)
+		if (mChar == null)
 		{
-			if (other.mName != null) return false;
+			if (other.mChar != null) return false;
 		}
-		else if ( !mName.equals(other.mName)) return false;
+		else if ( !mChar.equals(other.mChar)) return false;
 		return true;
 	}
 	
@@ -164,7 +172,7 @@ public class Player implements Viewable, TimeListener
 	 */
 	public String getName()
 	{
-		return mName;
+		return mChar.getName();
 	}
 	
 	/**
@@ -180,7 +188,7 @@ public class Player implements Viewable, TimeListener
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((mName == null) ? 0 : mName.hashCode());
+		result = prime * result + ((mChar == null) ? 0 : mChar.hashCode());
 		return result;
 	}
 	
@@ -190,8 +198,11 @@ public class Player implements Viewable, TimeListener
 		mContainer = (LinearLayout) View.inflate(mContext, R.layout.player, null);
 		mPlayerContainer = (LinearLayout) mContainer.findViewById(R.id.player_container);
 		mButton = (Button) mContainer.findViewById(R.id.player_button);
+		
 		final Button kick = (Button) mContainer.findViewById(R.id.kick_player);
 		final Button ban = (Button) mContainer.findViewById(R.id.ban_player);
+		
+		mPlayerContainer.addView(mHealth.getHealthContainer(), 0);
 		
 		mTimeCheckBox = new CheckBox(mContext);
 		mTimeCheckBox.setLayoutParams(ViewUtil.getWrapHeight());

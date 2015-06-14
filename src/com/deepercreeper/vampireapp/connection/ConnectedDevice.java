@@ -72,7 +72,12 @@ public class ConnectedDevice
 		/**
 		 * The given time has passed
 		 */
-		TIME
+		TIME,
+		
+		/**
+		 * Updates the players health
+		 */
+		UPDATE_HEALTH
 	}
 	
 	private static final String			TAG				= "ConnectedDevice";

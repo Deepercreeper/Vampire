@@ -76,7 +76,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	@Override
 	public void connectedTo(final ConnectedDevice aDevice)
 	{
-		aDevice.send(MessageType.LOGIN, mChar.getName(), ContactsUtil.getPhoneNumber(this));
+		aDevice.send(MessageType.LOGIN, ContactsUtil.getPhoneNumber(this), mChar.serialize());
 	}
 	
 	@Override
