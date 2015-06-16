@@ -29,6 +29,7 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCre
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.lists.items.DescriptionCreation;
 import com.deepercreeper.vampireapp.util.ConnectionUtil;
+import com.deepercreeper.vampireapp.util.FilesUtil;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.CreateStringDialog;
 import com.deepercreeper.vampireapp.util.view.CreateStringDialog.CreationListener;
@@ -269,9 +270,9 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 			@Override
 			public void onClick(final View aV)
 			{
-				final CharacterInstance character = new CharacterInstance(mChar);
+				final CharacterInstance character = new CharacterInstance(mChar, null);
 				final Intent intent = new Intent();
-				intent.putExtra(CHARACTER, character.serialize());
+				intent.putExtra(CHARACTER, FilesUtil.serialize(character));
 				setResult(RESULT_OK, intent);
 				finish();
 			}

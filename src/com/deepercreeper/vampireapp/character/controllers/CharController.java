@@ -150,7 +150,7 @@ public class CharController implements CharacterListener
 			final String data = FilesUtil.loadFile(aName + ".chr", mContext);
 			if (data != null)
 			{
-				character = new CharacterInstance(data, mItems, mContext);
+				character = new CharacterInstance(data, mItems, mContext, null);
 			}
 		}
 		if (character == null)
@@ -186,7 +186,7 @@ public class CharController implements CharacterListener
 		final CharacterInstance character = loadChar(aName);
 		
 		final Intent intent = new Intent(mContext, PlayActivity.class);
-		intent.putExtra(PlayActivity.CHARACTER, character.serialize());
+		intent.putExtra(PlayActivity.CHARACTER, FilesUtil.serialize(character));
 		
 		mContext.startActivityForResult(intent, PlayActivity.PLAY_CHAR_REQUEST);
 	}
@@ -199,7 +199,7 @@ public class CharController implements CharacterListener
 	 */
 	public void saveChar(final CharacterInstance aCharacter)
 	{
-		FilesUtil.saveFile(aCharacter.serialize(), aCharacter.getName() + ".chr", mContext);
+		FilesUtil.saveFile(FilesUtil.serialize(aCharacter), aCharacter.getName() + ".chr", mContext);
 		mCharacterCache.put(aCharacter.getName(), aCharacter);
 	}
 	

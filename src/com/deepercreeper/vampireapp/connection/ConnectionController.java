@@ -118,7 +118,7 @@ public class ConnectionController implements ConnectionListener
 		for (final BluetoothDevice device : mBluetoothAdapter.getBondedDevices())
 		{
 			devices.add(new Device(device));
-			// TODO Render the given bluetooth name
+			// TODO Render the given Bluetooth name
 		}
 		final SelectionListener<Device> listener = new SelectionListener<Device>()
 		{

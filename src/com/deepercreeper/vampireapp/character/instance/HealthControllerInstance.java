@@ -12,6 +12,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.creation.HealthControllerCreation;
+import com.deepercreeper.vampireapp.host.connection.change.ChangeListener;
+import com.deepercreeper.vampireapp.host.connection.change.HealthChange;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.DataUtil;
@@ -38,6 +40,8 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	
 	private final ItemFinder		mItems;
 	
+	private final ChangeListener	mChangeListener;
+	
 	private ImageButton				mHealButton;
 	
 	private ProgressBar				mValueBar;
@@ -63,8 +67,10 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	 *            the underlying context.
 	 * @param aItems
 	 *            The item finder.
+	 * @param aChangeListener
+	 *            The listener that is called, when changes happen.
 	 */
-	public HealthControllerInstance(final Element aElement, final Context aContext, final ItemFinder aItems)
+	public HealthControllerInstance(final Element aElement, final Context aContext, final ItemFinder aItems, ChangeListener aChangeListener)
 	{
 		mContext = aContext;
 		mItems = aItems;
@@ -74,6 +80,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		mCanHeal = Boolean.valueOf(aElement.getAttribute("canHeal"));
 		mValue = Integer.parseInt(aElement.getAttribute("value"));
 		mCost = mItems.findItem(aElement.getAttribute("cost"));
+		mChangeListener = aChangeListener;
 		init();
 	}
 	
@@ -86,14 +93,18 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	 *            The underlying context.
 	 * @param aItems
 	 *            The item finder.
+	 * @param aChangeListener
+	 *            The listener that is called, when changes happen.
 	 */
-	public HealthControllerInstance(final HealthControllerCreation aHealth, final Context aContext, final ItemFinder aItems)
+	public HealthControllerInstance(final HealthControllerCreation aHealth, final Context aContext, final ItemFinder aItems,
+			ChangeListener aChangeListener)
 	{
 		mContext = aContext;
 		mItems = aItems;
 		mContainer = (RelativeLayout) View.inflate(aContext, R.layout.health, null);
 		mSteps = aHealth.getSteps();
 		mCost = mItems.findItem(aHealth.getCost());
+		mChangeListener = aChangeListener;
 		init();
 	}
 	
@@ -109,6 +120,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 			steps[i + 1] = mSteps[i];
 		}
 		mSteps = steps;
+		mChangeListener.sendChange(new HealthChange(mSteps));
 	}
 	
 	@Override
@@ -132,10 +144,58 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	}
 	
 	/**
+	 * Updates the can heal flag.
+	 * 
+	 * @param aCanHeal
+	 *            Whether the character can heal now.
+	 */
+	public void updateCanHeal(boolean aCanHeal)
+	{
+		mCanHeal = aCanHeal;
+		updateValue();
+	}
+	
+	/**
+	 * Updates the heavy wounds flag.
+	 * 
+	 * @param aHeavyWounds
+	 *            Whether the character has heavy wounds.
+	 */
+	public void updateHeavyWounds(boolean aHeavyWounds)
+	{
+		mHeavyWounds = aHeavyWounds;
+		updateValue();
+	}
+	
+	/**
+	 * Updates the health steps.
+	 * 
+	 * @param aSteps
+	 *            The new health steps.
+	 */
+	public void updateSteps(int[] aSteps)
+	{
+		mSteps = aSteps;
+		updateValue();
+	}
+	
+	/**
+	 * Sets the current health level.
+	 * 
+	 * @param aValue
+	 *            The new health level.
+	 */
+	public void updateValue(int aValue)
+	{
+		mValue = aValue;
+	}
+	
+	/**
 	 * @return whether the character is able to heal himself.
 	 */
 	public boolean canHeal()
 	{
+		// TODO Remove
 		Log.i(TAG, "" + (mCost.getValue() > 0));
 		return mCanHeal && mValue > 0 && mCost.getValue() > 0;
 	}
@@ -175,6 +235,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		{
 			mValue = 0;
 		}
+		mChangeListener.sendChange(new HealthChange(mValue));
 	}
 	
 	/**
@@ -195,12 +256,14 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		if (aHeavy)
 		{
 			mHeavyWounds = true;
+			mChangeListener.sendChange(new HealthChange(true, mHeavyWounds));
 		}
 		mCanHeal = true;
 		if (mHeavyWounds)
 		{
 			mCanHeal = false;
 		}
+		mChangeListener.sendChange(new HealthChange(false, mCanHeal));
 	}
 	
 	@Override
@@ -223,14 +286,12 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 				}
 			});
 			
-			mValueBar.setMax(mSteps.length - 1);
 			mValueBar.getLayoutParams().width = ViewUtil.calcPx(70, mContext)
 					+ Math.round(mContext.getResources().getDimension(R.dimen.item_value_bar_width));
 			
 			mInitialized = true;
 		}
 		
-		ViewUtil.setEnabled(mHealButton, canHeal());
 		updateValue();
 	}
 	
@@ -245,7 +306,10 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	{
 		if (aType == Type.DAY)
 		{
+			mHeavyWounds = false;
 			mCanHeal = true;
+			mChangeListener.sendChange(new HealthChange(true, mHeavyWounds));
+			mChangeListener.sendChange(new HealthChange(false, mCanHeal));
 		}
 	}
 	
@@ -262,6 +326,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	 */
 	public void updateValue()
 	{
+		mValueBar.setMax(mSteps.length - 1);
 		mValueBar.setProgress(mSteps.length - mValue - 1);
 		mStepLabel.setText("" + -getStep());
 		ViewUtil.setEnabled(mHealButton, canHeal());

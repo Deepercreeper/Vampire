@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.host.controllers;
+package com.deepercreeper.vampireapp.host.connection;
 
 import android.content.Context;
 import android.view.View;

@@ -26,6 +26,7 @@ import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.mechanics.TimeListener.Type;
 import com.deepercreeper.vampireapp.util.ConnectionUtil;
+import com.deepercreeper.vampireapp.util.FilesUtil;
 import com.deepercreeper.vampireapp.util.view.SelectItemDialog;
 import com.deepercreeper.vampireapp.util.view.SelectItemDialog.SelectionListener;
 
@@ -104,7 +105,7 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 		mConnection.sendToAll(MessageType.CLOSED);
 		mConnection.exit();
 		final Intent intent = new Intent();
-		intent.putExtra(HOST, mHost.serialize());
+		intent.putExtra(HOST, FilesUtil.serialize(mHost));
 		setResult(RESULT_OK, intent);
 		finish();
 	}
@@ -189,6 +190,8 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 			case BACK :
 				mHost.getPlayer(aDevice).setAFK(false);
 				break;
+			case UPDATE :
+				mHost.getPlayer(aDevice).applyChange(aArgs[0], aArgs[1]);
 			default :
 				break;
 		}

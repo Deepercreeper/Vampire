@@ -10,6 +10,7 @@ import com.deepercreeper.vampireapp.character.controllers.EPController;
 import com.deepercreeper.vampireapp.character.controllers.InventoryController;
 import com.deepercreeper.vampireapp.character.controllers.MoneyController;
 import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
+import com.deepercreeper.vampireapp.host.connection.change.ChangeListener;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.implementations.instances.ItemControllerInstanceImpl;
 import com.deepercreeper.vampireapp.items.implementations.instances.restrictions.InstanceRestrictionImpl;
@@ -28,13 +29,14 @@ import com.deepercreeper.vampireapp.util.CodingUtil;
 import com.deepercreeper.vampireapp.util.FilesUtil;
 import com.deepercreeper.vampireapp.util.ItemFinder;
 import com.deepercreeper.vampireapp.util.Log;
+import com.deepercreeper.vampireapp.util.Saveable;
 
 /**
  * This represents an existing character that can be played, saved and loaded.
  * 
  * @author vrl
  */
-public class CharacterInstance implements ItemFinder, TimeListener
+public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 {
 	private static final String					TAG				= "CharacterInstance";
 	
@@ -79,8 +81,10 @@ public class CharacterInstance implements ItemFinder, TimeListener
 	 * 
 	 * @param aCreator
 	 *            The character creation.
+	 * @param aChangeListener
+	 *            The listener for changes that occur for this character.
 	 */
-	public CharacterInstance(final CharacterCreation aCreator)
+	public CharacterInstance(final CharacterCreation aCreator, ChangeListener aChangeListener)
 	{
 		mItems = aCreator.getItems();
 		mContext = aCreator.getContext();
@@ -104,7 +108,7 @@ public class CharacterInstance implements ItemFinder, TimeListener
 		}
 		
 		mInventory = new InventoryController(mItems.getInventory(), this, mContext);
-		mHealth = new HealthControllerInstance(aCreator.getHealth(), getContext(), this);
+		mHealth = new HealthControllerInstance(aCreator.getHealth(), getContext(), this, aChangeListener);
 		
 		for (final InstanceRestriction restriction : aCreator.getRestrictions())
 		{
@@ -123,10 +127,13 @@ public class CharacterInstance implements ItemFinder, TimeListener
 	 *            The item provider.
 	 * @param aContext
 	 *            The underlying context.
+	 * @param aChangeListener
+	 *            The listener for changes that occur for this character.
 	 * @throws IllegalArgumentException
 	 *             if the XML document can't be parsed.
 	 */
-	public CharacterInstance(final String aXML, final ItemProvider aItems, final Context aContext) throws IllegalArgumentException
+	public CharacterInstance(final String aXML, final ItemProvider aItems, final Context aContext, ChangeListener aChangeListener)
+			throws IllegalArgumentException
 	{
 		Log.i(TAG, "Starting to load character xml.");
 		mItems = aItems;
@@ -176,7 +183,7 @@ public class CharacterInstance implements ItemFinder, TimeListener
 		}
 		
 		// Health
-		mHealth = new HealthControllerInstance((Element) root.getElementsByTagName("health").item(0), mContext, this);
+		mHealth = new HealthControllerInstance((Element) root.getElementsByTagName("health").item(0), mContext, this, aChangeListener);
 		mTimeListeners.add(mHealth);
 		
 		// Money
@@ -427,23 +434,14 @@ public class CharacterInstance implements ItemFinder, TimeListener
 		mTimeListeners.remove(aRestriction);
 	}
 	
-	/**
-	 * @return a XML that contains all data of this character, so it can be recreated out of it.
-	 */
-	public String serialize()
+	@Override
+	public Element asElement(Document aDoc)
 	{
-		final Document doc = FilesUtil.createDocument();
-		if (doc == null)
-		{
-			return null;
-		}
-		
-		// Root element
-		final Element root = doc.createElement("character");
-		doc.appendChild(root);
+		final Element root = aDoc.createElement("character");
+		aDoc.appendChild(root);
 		
 		// Meta data
-		final Element meta = doc.createElement("meta");
+		final Element meta = aDoc.createElement("meta");
 		meta.setAttribute("name", CodingUtil.encode(getName()));
 		meta.setAttribute("concept", CodingUtil.encode(getConcept()));
 		meta.setAttribute("nature", getNature().getName());
@@ -455,37 +453,36 @@ public class CharacterInstance implements ItemFinder, TimeListener
 		root.appendChild(meta);
 		
 		// Health
-		root.appendChild(mHealth.asElement(doc));
+		root.appendChild(mHealth.asElement(aDoc));
 		
 		// Money
-		root.appendChild(mMoney.asElement(doc));
+		root.appendChild(mMoney.asElement(aDoc));
 		
 		// Inventory
-		root.appendChild(mInventory.asElement(doc));
+		root.appendChild(mInventory.asElement(aDoc));
 		
 		// Insanities
-		root.appendChild(mInsanities.asElement(doc));
+		root.appendChild(mInsanities.asElement(aDoc));
 		
 		// Descriptions
-		root.appendChild(mDescriptions.asElement(doc));
+		root.appendChild(mDescriptions.asElement(aDoc));
 		
 		// Controllers
-		final Element controllers = doc.createElement("controllers");
+		final Element controllers = aDoc.createElement("controllers");
 		for (final ItemControllerInstance controller : mControllers)
 		{
-			controllers.appendChild(controller.asElement(doc));
+			controllers.appendChild(controller.asElement(aDoc));
 		}
 		root.appendChild(controllers);
 		
 		// Restrictions
-		final Element restrictionElement = doc.createElement("restrictions");
+		final Element restrictionElement = aDoc.createElement("restrictions");
 		for (final InstanceRestriction restriction : getRestrictions())
 		{
-			restrictionElement.appendChild(restriction.asElement(doc));
+			restrictionElement.appendChild(restriction.asElement(aDoc));
 		}
 		root.appendChild(restrictionElement);
-		
-		return FilesUtil.readDocument(doc);
+		return root;
 	}
 	
 	/**

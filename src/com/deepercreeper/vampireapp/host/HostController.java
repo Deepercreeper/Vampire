@@ -155,7 +155,7 @@ public class HostController implements HostListener
 		{
 			mHostNames.add(aHost.getName());
 		}
-		FilesUtil.saveFile(aHost.serialize(), aHost.getName() + ".hst", mContext);
+		FilesUtil.saveFile(FilesUtil.serialize(aHost), aHost.getName() + ".hst", mContext);
 		sortHosts();
 		saveHostsList();
 	}
@@ -254,7 +254,7 @@ public class HostController implements HostListener
 		final Host host = loadHost(aName);
 		
 		final Intent intent = new Intent(mContext, HostActivity.class);
-		intent.putExtra(HostActivity.HOST, host.serialize());
+		intent.putExtra(HostActivity.HOST, FilesUtil.serialize(host));
 		
 		mContext.startActivityForResult(intent, HostActivity.PLAY_HOST_REQUEST);
 	}

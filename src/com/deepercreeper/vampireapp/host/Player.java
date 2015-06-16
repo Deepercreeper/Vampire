@@ -1,5 +1,7 @@
 package com.deepercreeper.vampireapp.host;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,9 +15,13 @@ import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
 import com.deepercreeper.vampireapp.connection.ConnectionListener;
-import com.deepercreeper.vampireapp.host.controllers.PlayerHealth;
+import com.deepercreeper.vampireapp.host.connection.PlayerHealth;
+import com.deepercreeper.vampireapp.host.connection.change.ChangeListener;
+import com.deepercreeper.vampireapp.host.connection.change.CharacterChange;
+import com.deepercreeper.vampireapp.host.connection.change.HealthChange;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
+import com.deepercreeper.vampireapp.util.FilesUtil;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.ResizeHeightAnimation;
 import com.deepercreeper.vampireapp.util.view.Viewable;
@@ -25,7 +31,7 @@ import com.deepercreeper.vampireapp.util.view.Viewable;
  * 
  * @author vrl
  */
-public class Player implements Viewable, TimeListener
+public class Player implements Viewable, TimeListener, ChangeListener
 {
 	private final ConnectedDevice		mDevice;
 	
@@ -71,7 +77,7 @@ public class Player implements Viewable, TimeListener
 	public Player(final String aCharacter, final String aNumber, final ConnectedDevice aDevice, final ConnectionListener aListener,
 			final Context aContext, final ItemProvider aItems)
 	{
-		mChar = new CharacterInstance(aCharacter, aItems, aContext);
+		mChar = new CharacterInstance(aCharacter, aItems, aContext, this);
 		mHealth = new PlayerHealth(mChar.getHealth(), aContext);
 		mNumber = aNumber;
 		mDevice = aDevice;
@@ -81,18 +87,24 @@ public class Player implements Viewable, TimeListener
 	}
 	
 	@Override
+	public void sendChange(CharacterChange aChange)
+	{
+		mDevice.send(MessageType.UPDATE, FilesUtil.serialize(aChange), aChange.getType());
+	}
+	
+	@Override
 	public void time(final Type aType, final int aAmount)
 	{
 		if (mTimeEnabled)
 		{
 			if (aType != Type.SET)
 			{
-				mDevice.send(MessageType.TIME, aType.toString(), "" + aAmount);
+				mDevice.send(MessageType.TIME, aType.name(), "" + aAmount);
 			}
 			else
 			{
 				final int difference = (aAmount + 24 - mTime) % 24;
-				mDevice.send(MessageType.TIME, Type.HOUR.toString(), "" + difference);
+				mDevice.send(MessageType.TIME, Type.HOUR.name(), "" + difference);
 			}
 			switch (aType)
 			{
@@ -173,6 +185,25 @@ public class Player implements Viewable, TimeListener
 	public String getName()
 	{
 		return mChar.getName();
+	}
+	
+	public void applyChange(String aChange, String aType)
+	{
+		Document doc = FilesUtil.loadDocument(aChange);
+		Element element;
+		CharacterChange change = null;
+		if (aType.equals(HealthChange.TAG_NAME))
+		{
+			element = (Element) doc.getElementsByTagName(HealthChange.TAG_NAME).item(0);
+			change = new HealthChange(element);
+		}
+		
+		// TODO Add other changes
+		
+		if (change != null)
+		{
+			change.applyChange(mChar);
+		}
 	}
 	
 	/**

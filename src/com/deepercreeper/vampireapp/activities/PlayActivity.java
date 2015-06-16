@@ -1,5 +1,7 @@
 package com.deepercreeper.vampireapp.activities;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -21,12 +23,16 @@ import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
 import com.deepercreeper.vampireapp.connection.ConnectionController;
 import com.deepercreeper.vampireapp.connection.ConnectionListener;
 import com.deepercreeper.vampireapp.host.Player;
+import com.deepercreeper.vampireapp.host.connection.change.ChangeListener;
+import com.deepercreeper.vampireapp.host.connection.change.CharacterChange;
+import com.deepercreeper.vampireapp.host.connection.change.HealthChange;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
 import com.deepercreeper.vampireapp.mechanics.TimeListener.Type;
 import com.deepercreeper.vampireapp.util.ConnectionUtil;
 import com.deepercreeper.vampireapp.util.ContactsUtil;
+import com.deepercreeper.vampireapp.util.FilesUtil;
 
 /**
  * This activity is used to play a character, that was created before and connect to a host.<br>
@@ -34,7 +40,7 @@ import com.deepercreeper.vampireapp.util.ContactsUtil;
  * 
  * @author vrl
  */
-public class PlayActivity extends Activity implements ItemConsumer, ConnectionListener
+public class PlayActivity extends Activity implements ItemConsumer, ConnectionListener, ChangeListener
 {
 	private static final String		TAG					= "PlayActivity";
 	
@@ -76,7 +82,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	@Override
 	public void connectedTo(final ConnectedDevice aDevice)
 	{
-		aDevice.send(MessageType.LOGIN, ContactsUtil.getPhoneNumber(this), mChar.serialize());
+		aDevice.send(MessageType.LOGIN, ContactsUtil.getPhoneNumber(this), FilesUtil.serialize(mChar));
 	}
 	
 	@Override
@@ -115,7 +121,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		// TODO Maybe add a negative exit
 		mConnection.exit();
 		final Intent intent = new Intent();
-		intent.putExtra(CHARACTER, mChar.serialize());
+		intent.putExtra(CHARACTER, FilesUtil.serialize(mChar));
 		setResult(aSaveCharacter ? RESULT_OK : RESULT_CANCELED, intent);
 		finish();
 	}
@@ -176,10 +182,31 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 				makeText("Time changed: " + aArgs[0] + " " + aArgs[1], Toast.LENGTH_SHORT);
 				mChar.time(Type.valueOf(aArgs[0]), Integer.parseInt(aArgs[1]));
 				break;
+			case UPDATE :
+				applyChange(aArgs[0], aArgs[1]);
 			default :
 				break;
 		}
 		// TODO Implement
+	}
+	
+	public void applyChange(String aChange, String aType)
+	{
+		Document doc = FilesUtil.loadDocument(aChange);
+		Element element;
+		CharacterChange change = null;
+		if (aType.equals(HealthChange.TAG_NAME))
+		{
+			element = (Element) doc.getElementsByTagName(HealthChange.TAG_NAME).item(0);
+			change = new HealthChange(element);
+		}
+		
+		// TODO Add other changes
+		
+		if (change != null)
+		{
+			change.applyChange(mChar);
+		}
 	}
 	
 	/**
@@ -248,6 +275,12 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		super.onResume();
 	}
 	
+	@Override
+	public void sendChange(CharacterChange aChange)
+	{
+		mConnection.getHost().send(MessageType.UPDATE, FilesUtil.serialize(aChange), aChange.getType());
+	}
+	
 	private void init()
 	{
 		mConnection = new ConnectionController(this, this, mHandler);
@@ -257,7 +290,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		CharacterInstance character = null;
 		try
 		{
-			character = new CharacterInstance(xml, mItems, this);
+			character = new CharacterInstance(xml, mItems, this, this);
 		}
 		catch (final IllegalArgumentException e)
 		{

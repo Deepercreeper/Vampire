@@ -12,20 +12,21 @@ import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.CodingUtil;
 import com.deepercreeper.vampireapp.util.FilesUtil;
+import com.deepercreeper.vampireapp.util.Saveable;
 
 /**
  * This host represents a whole vampire game, that accepts users and handles the game flow.
  * 
  * @author vrl
  */
-public class Host implements TimeListener
+public class Host implements TimeListener, Saveable
 {
 	private final String				mName;
 	
-	@SuppressWarnings("unused")
 	/**
-	 * TODO Use this member
+	 * TODO Is this really used?
 	 */
+	@SuppressWarnings("unused")
 	private final ItemProvider			mItems;
 	
 	private final List<Player>			mPlayers	= new ArrayList<Player>();
@@ -202,36 +203,26 @@ public class Host implements TimeListener
 		}
 	}
 	
-	/**
-	 * @return a serialized version of this host, that is possible to be sent and saved.
-	 */
-	public String serialize()
+	@Override
+	public Element asElement(Document aDoc)
 	{
-		final Document doc = FilesUtil.createDocument();
-		if (doc == null)
-		{
-			return null;
-		}
-		
-		// Root element
-		final Element root = doc.createElement("host");
-		doc.appendChild(root);
+		final Element root = aDoc.createElement("host");
+		aDoc.appendChild(root);
 		
 		// Meta data
-		final Element meta = doc.createElement("meta");
+		final Element meta = aDoc.createElement("meta");
 		meta.setAttribute("name", CodingUtil.encode(getName()));
 		meta.setAttribute("location", mLocation);
 		root.appendChild(meta);
 		
 		// Banned players
-		final Element bans = doc.createElement("bans");
+		final Element bans = aDoc.createElement("bans");
 		for (final BannedPlayer player : getBannedPlayers())
 		{
-			bans.appendChild(player.asElement(doc));
+			bans.appendChild(player.asElement(aDoc));
 		}
 		root.appendChild(bans);
-		
-		return FilesUtil.readDocument(doc);
+		return root;
 	}
 	
 	/**
