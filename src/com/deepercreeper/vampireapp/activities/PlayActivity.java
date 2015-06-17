@@ -190,6 +190,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		// TODO Implement
 	}
 	
+	@Override
 	public void applyChange(String aChange, String aType)
 	{
 		Document doc = FilesUtil.loadDocument(aChange);
@@ -290,7 +291,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		CharacterInstance character = null;
 		try
 		{
-			character = new CharacterInstance(xml, mItems, this, this);
+			character = new CharacterInstance(xml, mItems, this, this, false);
 		}
 		catch (final IllegalArgumentException e)
 		{

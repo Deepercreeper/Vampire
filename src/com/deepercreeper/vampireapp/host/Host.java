@@ -207,7 +207,6 @@ public class Host implements TimeListener, Saveable
 	public Element asElement(Document aDoc)
 	{
 		final Element root = aDoc.createElement("host");
-		aDoc.appendChild(root);
 		
 		// Meta data
 		final Element meta = aDoc.createElement("meta");

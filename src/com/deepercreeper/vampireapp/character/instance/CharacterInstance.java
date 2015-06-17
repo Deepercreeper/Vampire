@@ -84,7 +84,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	 * @param aChangeListener
 	 *            The listener for changes that occur for this character.
 	 */
-	public CharacterInstance(final CharacterCreation aCreator, ChangeListener aChangeListener)
+	public CharacterInstance(final CharacterCreation aCreator, ChangeListener aChangeListener, boolean aHost)
 	{
 		mItems = aCreator.getItems();
 		mContext = aCreator.getContext();
@@ -108,7 +108,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		}
 		
 		mInventory = new InventoryController(mItems.getInventory(), this, mContext);
-		mHealth = new HealthControllerInstance(aCreator.getHealth(), getContext(), this, aChangeListener);
+		mHealth = new HealthControllerInstance(aCreator.getHealth(), getContext(), this, aChangeListener, aHost);
 		
 		for (final InstanceRestriction restriction : aCreator.getRestrictions())
 		{
@@ -132,7 +132,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	 * @throws IllegalArgumentException
 	 *             if the XML document can't be parsed.
 	 */
-	public CharacterInstance(final String aXML, final ItemProvider aItems, final Context aContext, ChangeListener aChangeListener)
+	public CharacterInstance(final String aXML, final ItemProvider aItems, final Context aContext, ChangeListener aChangeListener, boolean aHost)
 			throws IllegalArgumentException
 	{
 		Log.i(TAG, "Starting to load character xml.");
@@ -183,7 +183,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		}
 		
 		// Health
-		mHealth = new HealthControllerInstance((Element) root.getElementsByTagName("health").item(0), mContext, this, aChangeListener);
+		mHealth = new HealthControllerInstance((Element) root.getElementsByTagName("health").item(0), mContext, this, aChangeListener, aHost);
 		mTimeListeners.add(mHealth);
 		
 		// Money
@@ -438,7 +438,6 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	public Element asElement(Document aDoc)
 	{
 		final Element root = aDoc.createElement("character");
-		aDoc.appendChild(root);
 		
 		// Meta data
 		final Element meta = aDoc.createElement("meta");

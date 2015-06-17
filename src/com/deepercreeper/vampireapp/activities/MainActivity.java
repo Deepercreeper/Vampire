@@ -242,7 +242,7 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 			CharacterInstance character = null;
 			try
 			{
-				character = new CharacterInstance(xml, mItems, this, null);
+				character = new CharacterInstance(xml, mItems, this, null, false);
 			}
 			catch (final IllegalArgumentException e)
 			{
@@ -259,7 +259,7 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 			CharacterInstance character = null;
 			try
 			{
-				character = new CharacterInstance(xml, mItems, this, null);
+				character = new CharacterInstance(xml, mItems, this, null, false);
 			}
 			catch (final IllegalArgumentException e)
 			{

@@ -77,7 +77,7 @@ public class Player implements Viewable, TimeListener, ChangeListener
 	public Player(final String aCharacter, final String aNumber, final ConnectedDevice aDevice, final ConnectionListener aListener,
 			final Context aContext, final ItemProvider aItems)
 	{
-		mChar = new CharacterInstance(aCharacter, aItems, aContext, this);
+		mChar = new CharacterInstance(aCharacter, aItems, aContext, this, true);
 		mHealth = new PlayerHealth(mChar.getHealth(), aContext);
 		mNumber = aNumber;
 		mDevice = aDevice;
@@ -129,7 +129,7 @@ public class Player implements Viewable, TimeListener, ChangeListener
 	 */
 	public void updateTime()
 	{
-		mTimeCheckBox.setText(getName() + "\t" + mTime + ":00");
+		mTimeCheckBox.setText(getName() + " - " + mTime + ":00");
 	}
 	
 	/**
@@ -187,6 +187,7 @@ public class Player implements Viewable, TimeListener, ChangeListener
 		return mChar.getName();
 	}
 	
+	@Override
 	public void applyChange(String aChange, String aType)
 	{
 		Document doc = FilesUtil.loadDocument(aChange);

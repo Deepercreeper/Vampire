@@ -42,6 +42,8 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	
 	private final ChangeListener	mChangeListener;
 	
+	private final boolean			mHost;
+	
 	private ImageButton				mHealButton;
 	
 	private ProgressBar				mValueBar;
@@ -69,12 +71,17 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	 *            The item finder.
 	 * @param aChangeListener
 	 *            The listener that is called, when changes happen.
+	 * @param aHost
+	 *            Whether this controller is displayed at the host.
 	 */
-	public HealthControllerInstance(final Element aElement, final Context aContext, final ItemFinder aItems, ChangeListener aChangeListener)
+	public HealthControllerInstance(final Element aElement, final Context aContext, final ItemFinder aItems, ChangeListener aChangeListener,
+			boolean aHost)
 	{
 		mContext = aContext;
+		mHost = aHost;
 		mItems = aItems;
-		mContainer = (RelativeLayout) View.inflate(aContext, R.layout.health, null);
+		int id = mHost ? R.layout.host_health : R.layout.client_health;
+		mContainer = (RelativeLayout) View.inflate(aContext, id, null);
 		mSteps = DataUtil.parseValues(aElement.getAttribute("steps"));
 		mHeavyWounds = Boolean.valueOf(aElement.getAttribute("heavy"));
 		mCanHeal = Boolean.valueOf(aElement.getAttribute("canHeal"));
@@ -95,13 +102,17 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	 *            The item finder.
 	 * @param aChangeListener
 	 *            The listener that is called, when changes happen.
+	 * @param aHost
+	 *            Whether this controller is displayed at the host.
 	 */
 	public HealthControllerInstance(final HealthControllerCreation aHealth, final Context aContext, final ItemFinder aItems,
-			ChangeListener aChangeListener)
+			ChangeListener aChangeListener, boolean aHost)
 	{
 		mContext = aContext;
+		mHost = aHost;
 		mItems = aItems;
-		mContainer = (RelativeLayout) View.inflate(aContext, R.layout.health, null);
+		int id = mHost ? R.layout.host_health : R.layout.client_health;
+		mContainer = (RelativeLayout) View.inflate(aContext, id, null);
 		mSteps = aHealth.getSteps();
 		mCost = mItems.findItem(aHealth.getCost());
 		mChangeListener = aChangeListener;
@@ -282,6 +293,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 				@Override
 				public void onClick(final View aV)
 				{
+					// TODO Ask if host present
 					heal(1);
 				}
 			});

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:orientation="horizontal"
+    >
+
+    <TextView
+        android:id="@+id/health_label"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:gravity="center_vertical"
+        android:text="@string/health"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/step_value"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:gravity="center_vertical"
+        android:text="@string/health"
+        android:textSize="20sp" />
+    
+    <ImageButton
+        android:id="@+id/heal_button"
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        android:contentDescription="@string/content_description"
+        android:src="@android:drawable/ic_menu_add" />
+
+    <ProgressBar
+        android:id="@+id/health_bar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:progressDrawable="@drawable/progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+         />
+
+    <ImageButton
+        android:id="@+id/hurt_button"
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        android:contentDescription="@string/content_description"
+        android:src="@android:drawable/ic_menu_add" />
+    
+</LinearLayout>

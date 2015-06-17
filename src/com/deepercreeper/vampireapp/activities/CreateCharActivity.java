@@ -270,7 +270,7 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 			@Override
 			public void onClick(final View aV)
 			{
-				final CharacterInstance character = new CharacterInstance(mChar, null);
+				final CharacterInstance character = new CharacterInstance(mChar, null, false);
 				final Intent intent = new Intent();
 				intent.putExtra(CHARACTER, FilesUtil.serialize(character));
 				setResult(RESULT_OK, intent);
