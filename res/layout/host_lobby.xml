@@ -70,6 +70,8 @@
                 android:id="@+id/time_setter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:maxLength="2"
                 android:hint="@string/hour" />
         </LinearLayout>
 

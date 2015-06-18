@@ -222,7 +222,7 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 		mConnection = new ConnectionController(this, this, mHandler);
 		mConnection.startServer();
 		
-		setContentView(R.layout.host);
+		setContentView(R.layout.host_lobby);
 		
 		final TextView name = (TextView) findViewById(R.id.host_name);
 		final EditText timeSetter = (EditText) findViewById(R.id.time_setter);

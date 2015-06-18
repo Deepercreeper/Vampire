@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <string name="heavy">Schwer heilbar</string>
     <string name="apply">Annehmen</string>
     <string name="round">Runde</string>
     <string name="hour">Stunde</string>

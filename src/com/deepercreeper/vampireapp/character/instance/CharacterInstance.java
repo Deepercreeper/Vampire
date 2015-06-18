@@ -83,8 +83,10 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	 *            The character creation.
 	 * @param aChangeListener
 	 *            The listener for changes that occur for this character.
+	 * @param aHost
+	 *            Whether this character is a host side character.
 	 */
-	public CharacterInstance(final CharacterCreation aCreator, ChangeListener aChangeListener, boolean aHost)
+	public CharacterInstance(final CharacterCreation aCreator, final ChangeListener aChangeListener, final boolean aHost)
 	{
 		mItems = aCreator.getItems();
 		mContext = aCreator.getContext();
@@ -129,11 +131,13 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	 *            The underlying context.
 	 * @param aChangeListener
 	 *            The listener for changes that occur for this character.
+	 * @param aHost
+	 *            Whether this character is a host side character.
 	 * @throws IllegalArgumentException
 	 *             if the XML document can't be parsed.
 	 */
-	public CharacterInstance(final String aXML, final ItemProvider aItems, final Context aContext, ChangeListener aChangeListener, boolean aHost)
-			throws IllegalArgumentException
+	public CharacterInstance(final String aXML, final ItemProvider aItems, final Context aContext, final ChangeListener aChangeListener,
+			final boolean aHost) throws IllegalArgumentException
 	{
 		Log.i(TAG, "Starting to load character xml.");
 		mItems = aItems;
@@ -435,7 +439,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	}
 	
 	@Override
-	public Element asElement(Document aDoc)
+	public Element asElement(final Document aDoc)
 	{
 		final Element root = aDoc.createElement("character");
 		

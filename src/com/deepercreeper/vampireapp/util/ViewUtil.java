@@ -155,6 +155,10 @@ public class ViewUtil
 	 */
 	public static void setEnabled(final ImageButton aButton, final boolean aEnabled)
 	{
+		if (aButton == null)
+		{
+			return;
+		}
 		aButton.setEnabled(aEnabled);
 		aButton.setAlpha(aEnabled ? 1f : 0.4f);
 	}

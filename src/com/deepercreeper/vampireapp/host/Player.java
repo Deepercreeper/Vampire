@@ -15,7 +15,6 @@ import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
 import com.deepercreeper.vampireapp.connection.ConnectionListener;
-import com.deepercreeper.vampireapp.host.connection.PlayerHealth;
 import com.deepercreeper.vampireapp.host.connection.change.ChangeListener;
 import com.deepercreeper.vampireapp.host.connection.change.CharacterChange;
 import com.deepercreeper.vampireapp.host.connection.change.HealthChange;
@@ -49,8 +48,6 @@ public class Player implements Viewable, TimeListener, ChangeListener
 	
 	private int							mTime	= TimeListener.EVENING;
 	
-	private final PlayerHealth			mHealth;
-	
 	private LinearLayout				mContainer;
 	
 	private LinearLayout				mPlayerContainer;
@@ -78,7 +75,6 @@ public class Player implements Viewable, TimeListener, ChangeListener
 			final Context aContext, final ItemProvider aItems)
 	{
 		mChar = new CharacterInstance(aCharacter, aItems, aContext, this, true);
-		mHealth = new PlayerHealth(mChar.getHealth(), aContext);
 		mNumber = aNumber;
 		mDevice = aDevice;
 		mContext = aContext;
@@ -87,7 +83,7 @@ public class Player implements Viewable, TimeListener, ChangeListener
 	}
 	
 	@Override
-	public void sendChange(CharacterChange aChange)
+	public void sendChange(final CharacterChange aChange)
 	{
 		mDevice.send(MessageType.UPDATE, FilesUtil.serialize(aChange), aChange.getType());
 	}
@@ -188,9 +184,9 @@ public class Player implements Viewable, TimeListener, ChangeListener
 	}
 	
 	@Override
-	public void applyChange(String aChange, String aType)
+	public void applyChange(final String aChange, final String aType)
 	{
-		Document doc = FilesUtil.loadDocument(aChange);
+		final Document doc = FilesUtil.loadDocument(aChange);
 		Element element;
 		CharacterChange change = null;
 		if (aType.equals(HealthChange.TAG_NAME))
@@ -234,7 +230,7 @@ public class Player implements Viewable, TimeListener, ChangeListener
 		final Button kick = (Button) mContainer.findViewById(R.id.kick_player);
 		final Button ban = (Button) mContainer.findViewById(R.id.ban_player);
 		
-		mPlayerContainer.addView(mHealth.getHealthContainer(), 0);
+		mPlayerContainer.addView(mChar.getHealth().getContainer(), 0);
 		
 		mTimeCheckBox = new CheckBox(mContext);
 		mTimeCheckBox.setLayoutParams(ViewUtil.getWrapHeight());

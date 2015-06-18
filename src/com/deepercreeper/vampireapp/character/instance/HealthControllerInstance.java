@@ -6,9 +6,12 @@ import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.creation.HealthControllerCreation;
@@ -32,9 +35,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 {
 	private static final String		TAG				= "HealthControllerInstance";
 	
-	private final RelativeLayout	mContainer;
-	
-	private final Context			mContext;
+	private final LinearLayout		mContainer;
 	
 	private final ItemInstance		mCost;
 	
@@ -46,11 +47,17 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	
 	private ImageButton				mHealButton;
 	
+	private ImageButton				mHurtButton;
+	
+	private CheckBox				mHeavyHurt;
+	
 	private ProgressBar				mValueBar;
 	
 	private TextView				mStepLabel;
 	
 	private boolean					mInitialized	= false;
+	
+	private boolean					mHeavy;
 	
 	private int[]					mSteps;
 	
@@ -74,14 +81,13 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	 * @param aHost
 	 *            Whether this controller is displayed at the host.
 	 */
-	public HealthControllerInstance(final Element aElement, final Context aContext, final ItemFinder aItems, ChangeListener aChangeListener,
-			boolean aHost)
+	public HealthControllerInstance(final Element aElement, final Context aContext, final ItemFinder aItems, final ChangeListener aChangeListener,
+			final boolean aHost)
 	{
-		mContext = aContext;
 		mHost = aHost;
 		mItems = aItems;
-		int id = mHost ? R.layout.host_health : R.layout.client_health;
-		mContainer = (RelativeLayout) View.inflate(aContext, id, null);
+		final int id = mHost ? R.layout.host_health : R.layout.client_health;
+		mContainer = (LinearLayout) View.inflate(aContext, id, null);
 		mSteps = DataUtil.parseValues(aElement.getAttribute("steps"));
 		mHeavyWounds = Boolean.valueOf(aElement.getAttribute("heavy"));
 		mCanHeal = Boolean.valueOf(aElement.getAttribute("canHeal"));
@@ -106,13 +112,12 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	 *            Whether this controller is displayed at the host.
 	 */
 	public HealthControllerInstance(final HealthControllerCreation aHealth, final Context aContext, final ItemFinder aItems,
-			ChangeListener aChangeListener, boolean aHost)
+			final ChangeListener aChangeListener, final boolean aHost)
 	{
-		mContext = aContext;
 		mHost = aHost;
 		mItems = aItems;
-		int id = mHost ? R.layout.host_health : R.layout.client_health;
-		mContainer = (RelativeLayout) View.inflate(aContext, id, null);
+		final int id = mHost ? R.layout.host_health : R.layout.client_health;
+		mContainer = (LinearLayout) View.inflate(aContext, id, null);
 		mSteps = aHealth.getSteps();
 		mCost = mItems.findItem(aHealth.getCost());
 		mChangeListener = aChangeListener;
@@ -160,7 +165,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	 * @param aCanHeal
 	 *            Whether the character can heal now.
 	 */
-	public void updateCanHeal(boolean aCanHeal)
+	public void updateCanHeal(final boolean aCanHeal)
 	{
 		mCanHeal = aCanHeal;
 		updateValue();
@@ -172,7 +177,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	 * @param aHeavyWounds
 	 *            Whether the character has heavy wounds.
 	 */
-	public void updateHeavyWounds(boolean aHeavyWounds)
+	public void updateHeavyWounds(final boolean aHeavyWounds)
 	{
 		mHeavyWounds = aHeavyWounds;
 		updateValue();
@@ -184,7 +189,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	 * @param aSteps
 	 *            The new health steps.
 	 */
-	public void updateSteps(int[] aSteps)
+	public void updateSteps(final int[] aSteps)
 	{
 		mSteps = aSteps;
 		updateValue();
@@ -196,9 +201,10 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	 * @param aValue
 	 *            The new health level.
 	 */
-	public void updateValue(int aValue)
+	public void updateValue(final int aValue)
 	{
 		mValue = aValue;
+		updateValue();
 	}
 	
 	/**
@@ -206,13 +212,27 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	 */
 	public boolean canHeal()
 	{
+		if (mHost)
+		{
+			return mValue > 0;
+		}
+		
 		// TODO Remove
 		Log.i(TAG, "" + (mCost.getValue() > 0));
+		
 		return mCanHeal && mValue > 0 && mCost.getValue() > 0;
 	}
 	
+	/**
+	 * @return whether the host can hurt the character.
+	 */
+	public boolean canHurt()
+	{
+		return mValue < getStepsCount() - 1;
+	}
+	
 	@Override
-	public RelativeLayout getContainer()
+	public LinearLayout getContainer()
 	{
 		return mContainer;
 	}
@@ -237,15 +257,12 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	 */
 	public void heal(final int aValue)
 	{
-		if ( !canHeal())
-		{
-			return;
-		}
 		mValue -= aValue;
 		if (mValue < 0)
 		{
 			mValue = 0;
 		}
+		updateValue();
 		mChangeListener.sendChange(new HealthChange(mValue));
 	}
 	
@@ -264,6 +281,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		{
 			mValue = mSteps.length - 1;
 		}
+		mChangeListener.sendChange(new HealthChange(mValue));
 		if (aHeavy)
 		{
 			mHeavyWounds = true;
@@ -274,6 +292,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		{
 			mCanHeal = false;
 		}
+		updateValue();
 		mChangeListener.sendChange(new HealthChange(false, mCanHeal));
 	}
 	
@@ -285,6 +304,8 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 			getContainer().setLayoutParams(ViewUtil.getWrapHeight());
 			
 			mHealButton = (ImageButton) getContainer().findViewById(R.id.heal_button);
+			mHurtButton = mHost ? (ImageButton) getContainer().findViewById(R.id.hurt_button) : null;
+			mHeavyHurt = mHost ? (CheckBox) getContainer().findViewById(R.id.heavy_hurt) : null;
 			mValueBar = (ProgressBar) getContainer().findViewById(R.id.health_bar);
 			mStepLabel = (TextView) getContainer().findViewById(R.id.step_value);
 			
@@ -293,13 +314,33 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 				@Override
 				public void onClick(final View aV)
 				{
-					// TODO Ask if host present
 					heal(1);
 				}
 			});
 			
-			mValueBar.getLayoutParams().width = ViewUtil.calcPx(70, mContext)
-					+ Math.round(mContext.getResources().getDimension(R.dimen.item_value_bar_width));
+			if (mHost)
+			{
+				mHeavyHurt.setOnCheckedChangeListener(new OnCheckedChangeListener()
+				{
+					@Override
+					public void onCheckedChanged(final CompoundButton aButtonView, final boolean aIsChecked)
+					{
+						mHeavy = aIsChecked;
+					}
+				});
+				mHurtButton.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(final View aV)
+					{
+						hurt(1, mHeavy);
+					}
+				});
+			}
+			
+			// TODO Remove
+			// mValueBar.getLayoutParams().width = ViewUtil.calcPx(70, mContext)
+			// + Math.round(mContext.getResources().getDimension(R.dimen.item_value_bar_width));
 			
 			mInitialized = true;
 		}
@@ -340,7 +381,15 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	{
 		mValueBar.setMax(mSteps.length - 1);
 		mValueBar.setProgress(mSteps.length - mValue - 1);
-		mStepLabel.setText("" + -getStep());
+		if (mValue == getStepsCount() - 1)
+		{
+			mStepLabel.setText("K.O.");
+		}
+		else
+		{
+			mStepLabel.setText("" + -getStep());
+		}
 		ViewUtil.setEnabled(mHealButton, canHeal());
+		ViewUtil.setEnabled(mHurtButton, canHurt());
 	}
 }
