@@ -8,14 +8,16 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:contentDescription="@string/content_description"
-        android:src="@android:drawable/ic_menu_delete" />
+        android:src="@drawable/ic_remove" />
 
     <TextView
         android:id="@+id/item_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/remove_item"
+        android:layout_toEndOf="@id/remove_item"
         android:textSize="18sp" />
 
     <ImageButton
@@ -23,6 +25,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:contentDescription="@string/content_description"
         android:src="@android:drawable/ic_menu_help" />
 

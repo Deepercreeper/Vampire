@@ -2012,6 +2012,6 @@
         generationItem="Generation"
         healthCost="Blood pool"
         maxWeightItem="Strength"
-        maxWeightSteps="10,20,50,100,150,500" />
+        maxWeightSteps="0,10,20,50,100,150,500" />
 
 </data>

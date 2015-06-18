@@ -23,9 +23,10 @@ import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
 import com.deepercreeper.vampireapp.connection.ConnectionController;
 import com.deepercreeper.vampireapp.connection.ConnectionListener;
 import com.deepercreeper.vampireapp.host.Player;
-import com.deepercreeper.vampireapp.host.connection.change.ChangeListener;
-import com.deepercreeper.vampireapp.host.connection.change.CharacterChange;
-import com.deepercreeper.vampireapp.host.connection.change.HealthChange;
+import com.deepercreeper.vampireapp.host.change.ChangeListener;
+import com.deepercreeper.vampireapp.host.change.CharacterChange;
+import com.deepercreeper.vampireapp.host.change.EPChange;
+import com.deepercreeper.vampireapp.host.change.HealthChange;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
@@ -191,15 +192,20 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	}
 	
 	@Override
-	public void applyChange(String aChange, String aType)
+	public void applyChange(final String aChange, final String aType)
 	{
-		Document doc = FilesUtil.loadDocument(aChange);
+		final Document doc = FilesUtil.loadDocument(aChange);
 		Element element;
 		CharacterChange change = null;
 		if (aType.equals(HealthChange.TAG_NAME))
 		{
 			element = (Element) doc.getElementsByTagName(HealthChange.TAG_NAME).item(0);
 			change = new HealthChange(element);
+		}
+		else if (aType.equals(EPChange.TAG_NAME))
+		{
+			element = (Element) doc.getElementsByTagName(EPChange.TAG_NAME).item(0);
+			change = new EPChange(element);
 		}
 		
 		// TODO Add other changes
@@ -277,7 +283,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	}
 	
 	@Override
-	public void sendChange(CharacterChange aChange)
+	public void sendChange(final CharacterChange aChange)
 	{
 		mConnection.getHost().send(MessageType.UPDATE, FilesUtil.serialize(aChange), aChange.getType());
 	}
@@ -317,7 +323,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		mChar.update();
 		mChar.init();
 		
-		controllersPanel.addView(mChar.getEPHandler().getContainer());
+		controllersPanel.addView(mChar.getEPController().getContainer());
 		
 		controllersPanel.addView(mChar.getHealth().getContainer());
 		

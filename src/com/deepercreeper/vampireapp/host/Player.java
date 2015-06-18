@@ -15,9 +15,10 @@ import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
 import com.deepercreeper.vampireapp.connection.ConnectionListener;
-import com.deepercreeper.vampireapp.host.connection.change.ChangeListener;
-import com.deepercreeper.vampireapp.host.connection.change.CharacterChange;
-import com.deepercreeper.vampireapp.host.connection.change.HealthChange;
+import com.deepercreeper.vampireapp.host.change.ChangeListener;
+import com.deepercreeper.vampireapp.host.change.CharacterChange;
+import com.deepercreeper.vampireapp.host.change.EPChange;
+import com.deepercreeper.vampireapp.host.change.HealthChange;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.FilesUtil;
@@ -194,6 +195,11 @@ public class Player implements Viewable, TimeListener, ChangeListener
 			element = (Element) doc.getElementsByTagName(HealthChange.TAG_NAME).item(0);
 			change = new HealthChange(element);
 		}
+		else if (aType.equals(EPChange.TAG_NAME))
+		{
+			element = (Element) doc.getElementsByTagName(EPChange.TAG_NAME).item(0);
+			change = new EPChange(element);
+		}
 		
 		// TODO Add other changes
 		
@@ -231,6 +237,7 @@ public class Player implements Viewable, TimeListener, ChangeListener
 		final Button ban = (Button) mContainer.findViewById(R.id.ban_player);
 		
 		mPlayerContainer.addView(mChar.getHealth().getContainer(), 0);
+		mPlayerContainer.addView(mChar.getEPController().getContainer(), 1);
 		
 		mTimeCheckBox = new CheckBox(mContext);
 		mTimeCheckBox.setLayoutParams(ViewUtil.getWrapHeight());

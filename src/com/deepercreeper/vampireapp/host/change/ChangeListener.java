@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.host.connection.change;
+package com.deepercreeper.vampireapp.host.change;
 
 /**
  * A listener for changes that are created by the character and changes that have to be applied to the character.

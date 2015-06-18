@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.host.connection.change;
+package com.deepercreeper.vampireapp.host.change;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

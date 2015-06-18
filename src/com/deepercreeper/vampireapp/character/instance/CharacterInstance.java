@@ -10,7 +10,7 @@ import com.deepercreeper.vampireapp.character.controllers.EPController;
 import com.deepercreeper.vampireapp.character.controllers.InventoryController;
 import com.deepercreeper.vampireapp.character.controllers.MoneyController;
 import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
-import com.deepercreeper.vampireapp.host.connection.change.ChangeListener;
+import com.deepercreeper.vampireapp.host.change.ChangeListener;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.implementations.instances.ItemControllerInstanceImpl;
 import com.deepercreeper.vampireapp.items.implementations.instances.restrictions.InstanceRestrictionImpl;
@@ -93,7 +93,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		mGeneration = new GenerationControllerInstance(aCreator.getGenerationValue(), this);
 		mDescriptions = new DescriptionControllerInstance(aCreator.getDescriptions());
 		mInsanities = new InsanityControllerInstance(aCreator.getInsanities());
-		mEP = new EPController(getContext());
+		mEP = new EPController(getContext(), aChangeListener, aHost, this);
 		mMoney = new MoneyController(mItems.getMoney(), getContext());
 		mTimeListeners.add(mInsanities);
 		
@@ -164,7 +164,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		mBehavior = mItems.getNatures().getItemWithName(meta.getAttribute("behavior"));
 		mGeneration = new GenerationControllerInstance(Integer.parseInt(meta.getAttribute("generation")), this);
 		mClan = mItems.getClans().getItemWithName(meta.getAttribute("clan"));
-		mEP = new EPController(Integer.parseInt(meta.getAttribute("ep")), getContext());
+		mEP = new EPController(Integer.parseInt(meta.getAttribute("ep")), getContext(), aChangeListener, aHost, this);
 		mMode = Mode.valueOf(meta.getAttribute("mode"));
 		
 		// Insanities
@@ -329,7 +329,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	/**
 	 * @return the experience controller of this character.
 	 */
-	public EPController getEPHandler()
+	public EPController getEPController()
 	{
 		return mEP;
 	}

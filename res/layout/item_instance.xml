@@ -17,11 +17,12 @@
         android:id="@+id/item_value"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:layout_toEndOf="@id/item_name"
         android:layout_toRightOf="@id/item_name"
         android:ellipsize="end"
         android:gravity="center_vertical"
-        android:paddingRight="5dp"
         android:paddingLeft="5dp"
+        android:paddingRight="5dp"
         android:singleLine="true" />
 
     <ProgressBar
@@ -29,15 +30,17 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="100dp"
         android:layout_height="30dp"
-        android:progressDrawable="@drawable/progress_bar"
-        android:layout_toRightOf="@id/item_value" />
+        android:layout_toEndOf="@id/item_value"
+        android:layout_toRightOf="@id/item_value"
+        android:progressDrawable="@drawable/progress_bar" />
 
     <ImageButton
         android:id="@+id/item_increase_button"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:layout_toEndOf="@id/item_value_bar"
         android:layout_toRightOf="@id/item_value_bar"
         android:contentDescription="@string/content_description"
-        android:src="@android:drawable/ic_media_next" />
+        android:src="@drawable/ic_right" />
 
 </RelativeLayout>

@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.host.connection.change;
+package com.deepercreeper.vampireapp.host.change;
 
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.util.Saveable;

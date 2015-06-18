@@ -17,8 +17,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.creation.HealthControllerCreation;
-import com.deepercreeper.vampireapp.host.connection.change.ChangeListener;
-import com.deepercreeper.vampireapp.host.connection.change.HealthChange;
+import com.deepercreeper.vampireapp.host.change.ChangeListener;
+import com.deepercreeper.vampireapp.host.change.HealthChange;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.DataUtil;
@@ -317,6 +317,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	{
 		if ( !mInitialized)
 		{
+			// TODO Needed? Elsewhere?
 			getContainer().setLayoutParams(ViewUtil.getWrapHeight());
 			
 			mHealButton = (ImageButton) getContainer().findViewById(R.id.heal_button);

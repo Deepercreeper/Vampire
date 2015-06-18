@@ -543,7 +543,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		{
 			mValueId++ ;
 		}
-		getEP().decreaseBy(getEPCost());
+		getEP().decreaseBy(calcEPCost());
 		refreshValue();
 		updateCharacter();
 		updateValueListeners();
