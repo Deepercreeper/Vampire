@@ -35,8 +35,6 @@ public class CharacterCompound implements Comparable<CharacterCompound>, Viewabl
 	
 	private final int				mEP;
 	
-	private final String			mData;
-	
 	private final CharacterListener	mListener;
 	
 	private Button					mPlay;
@@ -68,7 +66,6 @@ public class CharacterCompound implements Comparable<CharacterCompound>, Viewabl
 		mEP = aCharacter.getEP();
 		mLastUsed = 0;
 		
-		mData = createData();
 		mListener = aListener;
 		init();
 	}
@@ -95,14 +92,13 @@ public class CharacterCompound implements Comparable<CharacterCompound>, Viewabl
 		mEP = Integer.parseInt(data[5]);
 		if (data.length >= 7)
 		{
-			mLastUsed = Integer.parseInt(data[6]);
+			mLastUsed = Long.parseLong(data[6]);
 		}
 		else
 		{
 			mLastUsed = 0;
 		}
 		
-		mData = createData();
 		mListener = aListener;
 		init();
 	}
@@ -183,7 +179,7 @@ public class CharacterCompound implements Comparable<CharacterCompound>, Viewabl
 	 * @param aEnabled
 	 *            Whether this character can be played.
 	 */
-	public void setPlayingEnabled(boolean aEnabled)
+	public void setPlayingEnabled(final boolean aEnabled)
 	{
 		mPlay.setEnabled(aEnabled);
 	}
@@ -279,19 +275,6 @@ public class CharacterCompound implements Comparable<CharacterCompound>, Viewabl
 	@Override
 	public String toString()
 	{
-		return mData;
-	}
-	
-	/**
-	 * Sets the last used time to the current system time.
-	 */
-	public void use()
-	{
-		mLastUsed = System.currentTimeMillis();
-	}
-	
-	private String createData()
-	{
 		final StringBuilder character = new StringBuilder();
 		character.append(mName + "\t");
 		character.append(mConcept + "\t");
@@ -301,5 +284,13 @@ public class CharacterCompound implements Comparable<CharacterCompound>, Viewabl
 		character.append(mEP + "\t");
 		character.append(mLastUsed);
 		return character.toString();
+	}
+	
+	/**
+	 * Sets the last used time to the current system time.
+	 */
+	public void use()
+	{
+		mLastUsed = System.currentTimeMillis();
 	}
 }
