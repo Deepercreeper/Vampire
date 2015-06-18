@@ -95,6 +95,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		mInsanities = new InsanityControllerInstance(aCreator.getInsanities());
 		mEP = new EPController(getContext());
 		mMoney = new MoneyController(mItems.getMoney(), getContext());
+		mTimeListeners.add(mInsanities);
 		
 		mName = aCreator.getName();
 		mConcept = aCreator.getConcept();
@@ -111,6 +112,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		
 		mInventory = new InventoryController(mItems.getInventory(), this, mContext);
 		mHealth = new HealthControllerInstance(aCreator.getHealth(), getContext(), this, aChangeListener, aHost);
+		mTimeListeners.add(mHealth);
 		
 		for (final InstanceRestriction restriction : aCreator.getRestrictions())
 		{

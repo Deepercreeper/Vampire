@@ -2,6 +2,8 @@ package com.deepercreeper.vampireapp.character.instance;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import android.animation.ValueAnimator;
+import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
@@ -31,9 +33,11 @@ import com.deepercreeper.vampireapp.util.view.Viewable;
  * 
  * @author vrl
  */
-public class HealthControllerInstance implements TimeListener, Saveable, Viewable
+public class HealthControllerInstance implements TimeListener, Saveable, Viewable, AnimatorUpdateListener
 {
-	private static final String		TAG				= "HealthControllerInstance";
+	private static final int		VALUE_MULTIPLICATOR	= 20;
+	
+	private static final String		TAG					= "HealthControllerInstance";
 	
 	private final LinearLayout		mContainer;
 	
@@ -45,6 +49,8 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	
 	private final boolean			mHost;
 	
+	private final ValueAnimator		mAnimator;
+	
 	private ImageButton				mHealButton;
 	
 	private ImageButton				mHurtButton;
@@ -55,17 +61,20 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	
 	private TextView				mStepLabel;
 	
-	private boolean					mInitialized	= false;
+	private boolean					mInitialized		= false;
 	
 	private boolean					mHeavy;
 	
 	private int[]					mSteps;
 	
-	private boolean					mHeavyWounds	= false;
+	private boolean					mHeavyWounds		= false;
 	
-	private boolean					mCanHeal		= false;
+	/**
+	 * TODO Remove this field.
+	 */
+	private boolean					mCanHeal			= false;
 	
-	private int						mValue			= 0;
+	private int						mValue				= 0;
 	
 	/**
 	 * Creates a new health controller out of the given XML data.
@@ -94,6 +103,8 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		mValue = Integer.parseInt(aElement.getAttribute("value"));
 		mCost = mItems.findItem(aElement.getAttribute("cost"));
 		mChangeListener = aChangeListener;
+		mAnimator = new ValueAnimator();
+		mAnimator.addUpdateListener(this);
 		init();
 	}
 	
@@ -121,6 +132,8 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		mSteps = aHealth.getSteps();
 		mCost = mItems.findItem(aHealth.getCost());
 		mChangeListener = aChangeListener;
+		mAnimator = new ValueAnimator();
+		mAnimator.addUpdateListener(this);
 		init();
 	}
 	
@@ -257,10 +270,13 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	 */
 	public void heal(final int aValue)
 	{
-		mValue -= aValue;
-		if (mValue < 0)
+		for (int i = aValue; i > 0; i-- )
 		{
-			mValue = 0;
+			if (mValue > 0)
+			{
+				mValue-- ;
+				mCost.masterDecrease();
+			}
 		}
 		updateValue();
 		mChangeListener.sendChange(new HealthChange(mValue));
@@ -361,6 +377,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		{
 			mHeavyWounds = false;
 			mCanHeal = true;
+			updateValue();
 			mChangeListener.sendChange(new HealthChange(true, mHeavyWounds));
 			mChangeListener.sendChange(new HealthChange(false, mCanHeal));
 		}
@@ -374,13 +391,25 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		return mSteps.length;
 	}
 	
+	@Override
+	public void onAnimationUpdate(final ValueAnimator aAnimation)
+	{
+		mValueBar.setProgress((Integer) aAnimation.getAnimatedValue());
+	}
+	
 	/**
 	 * Updates the displayed health value and the heal button.
 	 */
 	public void updateValue()
 	{
-		mValueBar.setMax(mSteps.length - 1);
-		mValueBar.setProgress(mSteps.length - mValue - 1);
+		if (mAnimator.isRunning())
+		{
+			mAnimator.cancel();
+		}
+		mValueBar.setMax(VALUE_MULTIPLICATOR * (mSteps.length - 1));
+		mAnimator.setIntValues(mValueBar.getProgress(), VALUE_MULTIPLICATOR * (mSteps.length - mValue - 1));
+		mAnimator.start();
+		
 		if (mValue == getStepsCount() - 1)
 		{
 			mStepLabel.setText("K.O.");

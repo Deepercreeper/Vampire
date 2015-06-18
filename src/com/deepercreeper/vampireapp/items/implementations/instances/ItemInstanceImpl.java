@@ -759,8 +759,13 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			Log.w(TAG, "Tried to decrease a non value item.");
 			return;
 		}
-		// TODO Implement
-		return;
+		if (mValueId > 0)
+		{
+			mValueId-- ;
+		}
+		refreshValue();
+		updateCharacter();
+		updateValueListeners();
 	}
 	
 	@Override
