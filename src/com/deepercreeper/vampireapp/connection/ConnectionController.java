@@ -143,7 +143,18 @@ public class ConnectionController implements ConnectionListener
 			@Override
 			public void action(final BluetoothDevice aDevice)
 			{
-				dialog.addOption(new Device(aDevice));
+				mHandler.post(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						if (aDevice.getName() == null)
+						{
+							Log.i(TAG, "Tried to add no name device.");
+						}
+						dialog.addOption(new Device(aDevice));
+					}
+				});
 			}
 		});
 		if ( !mBluetoothAdapter.startDiscovery())
@@ -351,7 +362,9 @@ public class ConnectionController implements ConnectionListener
 		if (mBluetoothAdapter != null)
 		{
 			final IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+			final IntentFilter deviceFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
 			mContext.registerReceiver(mReceiver, filter);
+			mContext.registerReceiver(mReceiver, deviceFilter);
 			
 			final BluetoothListener listener = new BluetoothListener()
 			{

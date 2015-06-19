@@ -20,8 +20,25 @@ public class Device extends Named
 	 */
 	public Device(final BluetoothDevice aDevice)
 	{
-		super(aDevice.getName());
+		super(aDevice.getName() == null ? aDevice.getAddress() : aDevice.getName());
 		mDevice = aDevice;
+	}
+	
+	@Override
+	public boolean equals(Object aObj)
+	{
+		if (aObj instanceof Device)
+		{
+			Device dev = (Device) aObj;
+			return dev.getAddress().equals(getAddress());
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return getAddress().hashCode();
 	}
 	
 	/**

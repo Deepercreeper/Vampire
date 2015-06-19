@@ -95,7 +95,10 @@ public class SelectItemDialog <T extends Nameable> extends DialogFragment
 	 */
 	public void addOption(final T aOption)
 	{
-		mAdapter.add(aOption);
+		if ( !mItems.contains(aOption))
+		{
+			mAdapter.add(aOption);
+		}
 	}
 	
 	@Override
@@ -124,6 +127,7 @@ public class SelectItemDialog <T extends Nameable> extends DialogFragment
 	public void onDetach()
 	{
 		super.onDetach();
+		// TODO Remove when not necessary anymore
 		try
 		{
 			final Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
@@ -144,7 +148,7 @@ public class SelectItemDialog <T extends Nameable> extends DialogFragment
 	 * Removes the given option from the items list.
 	 * 
 	 * @param aOption
-	 *            The ooption to remove.
+	 *            The option to remove.
 	 */
 	public void removeOption(final T aOption)
 	{

@@ -2,6 +2,7 @@ package com.deepercreeper.vampireapp.items.implementations;
 
 import com.deepercreeper.vampireapp.items.interfaces.Nameable;
 import com.deepercreeper.vampireapp.util.LanguageUtil;
+import com.deepercreeper.vampireapp.util.Log;
 
 /**
  * Anything that has a name should extends this class.
@@ -20,6 +21,10 @@ public class Named implements Nameable
 	 */
 	public Named(final String aName)
 	{
+		if (aName == null)
+		{
+			Log.e("Named", "String must not be null!");
+		}
 		mName = aName;
 	}
 	
