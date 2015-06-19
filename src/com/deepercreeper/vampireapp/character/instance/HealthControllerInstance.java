@@ -5,7 +5,6 @@ import org.w3c.dom.Element;
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CheckBox;
@@ -37,8 +36,6 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 {
 	private static final int		VALUE_MULTIPLICATOR	= 20;
 	
-	private static final String		TAG					= "HealthControllerInstance";
-	
 	private final LinearLayout		mContainer;
 	
 	private final ItemInstance		mCost;
@@ -69,11 +66,6 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	
 	private boolean					mHeavyWounds		= false;
 	
-	/**
-	 * TODO Remove this field.
-	 */
-	private boolean					mCanHeal			= false;
-	
 	private int						mValue				= 0;
 	
 	/**
@@ -99,7 +91,6 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		mContainer = (LinearLayout) View.inflate(aContext, id, null);
 		mSteps = DataUtil.parseValues(aElement.getAttribute("steps"));
 		mHeavyWounds = Boolean.valueOf(aElement.getAttribute("heavy"));
-		mCanHeal = Boolean.valueOf(aElement.getAttribute("canHeal"));
 		mValue = Integer.parseInt(aElement.getAttribute("value"));
 		mCost = mItems.findItem(aElement.getAttribute("cost"));
 		mChangeListener = aChangeListener;
@@ -158,7 +149,6 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		final Element element = aDoc.createElement("health");
 		element.setAttribute("steps", DataUtil.parseValues(mSteps));
 		element.setAttribute("value", "" + mValue);
-		element.setAttribute("canHeal", "" + mCanHeal);
 		element.setAttribute("heavy", "" + mHeavyWounds);
 		element.setAttribute("cost", mCost.getName());
 		return element;
@@ -170,18 +160,6 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	public boolean canAct()
 	{
 		return mSteps[mValue] != -1;
-	}
-	
-	/**
-	 * Updates the can heal flag.
-	 * 
-	 * @param aCanHeal
-	 *            Whether the character can heal now.
-	 */
-	public void updateCanHeal(final boolean aCanHeal)
-	{
-		mCanHeal = aCanHeal;
-		updateValue();
 	}
 	
 	/**
@@ -230,10 +208,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 			return mValue > 0;
 		}
 		
-		// TODO Remove
-		Log.i(TAG, "" + (mCost.getValue() > 0));
-		
-		return mCanHeal && mValue > 0 && mCost.getValue() > 0;
+		return !mHeavyWounds && mValue > 0 && mCost.getValue() > 0;
 	}
 	
 	/**
@@ -301,15 +276,9 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		if (aHeavy)
 		{
 			mHeavyWounds = true;
-			mChangeListener.sendChange(new HealthChange(true, mHeavyWounds));
-		}
-		mCanHeal = true;
-		if (mHeavyWounds)
-		{
-			mCanHeal = false;
+			mChangeListener.sendChange(new HealthChange(mHeavyWounds));
 		}
 		updateValue();
-		mChangeListener.sendChange(new HealthChange(false, mCanHeal));
 	}
 	
 	@Override
@@ -317,9 +286,6 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	{
 		if ( !mInitialized)
 		{
-			// TODO Needed? Elsewhere?
-			getContainer().setLayoutParams(ViewUtil.getWrapHeight());
-			
 			mHealButton = (ImageButton) getContainer().findViewById(R.id.heal_button);
 			mHurtButton = mHost ? (ImageButton) getContainer().findViewById(R.id.hurt_button) : null;
 			mHeavyHurt = mHost ? (CheckBox) getContainer().findViewById(R.id.heavy_hurt) : null;
@@ -355,10 +321,6 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 				});
 			}
 			
-			// TODO Remove
-			// mValueBar.getLayoutParams().width = ViewUtil.calcPx(70, mContext)
-			// + Math.round(mContext.getResources().getDimension(R.dimen.item_value_bar_width));
-			
 			mInitialized = true;
 		}
 		
@@ -377,10 +339,8 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		if (aType == Type.DAY)
 		{
 			mHeavyWounds = false;
-			mCanHeal = true;
 			updateValue();
-			mChangeListener.sendChange(new HealthChange(true, mHeavyWounds));
-			mChangeListener.sendChange(new HealthChange(false, mCanHeal));
+			mChangeListener.sendChange(new HealthChange(mHeavyWounds));
 		}
 	}
 	

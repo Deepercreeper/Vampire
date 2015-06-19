@@ -210,8 +210,6 @@ public class InventoryController implements Saveable, ItemValueListener, Viewabl
 	{
 		if ( !mInitialized)
 		{
-			getContainer().setLayoutParams(ViewUtil.getWrapHeight());
-			
 			mInventoryButton = (Button) getContainer().findViewById(R.id.inventory_button);
 			mWeightLabel = (TextView) getContainer().findViewById(R.id.weight);
 			mMaxWeightLabel = (TextView) getContainer().findViewById(R.id.max_weight);

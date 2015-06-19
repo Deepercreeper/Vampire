@@ -28,7 +28,7 @@ public class HealthChange implements CharacterChange
 	
 	private enum Type
 	{
-		VALUE, CAN_HEAL, HEAVY_WOUNDS, STEPS
+		VALUE, HEAVY_WOUNDS, STEPS
 	}
 	
 	/**
@@ -50,16 +50,14 @@ public class HealthChange implements CharacterChange
 	}
 	
 	/**
-	 * Creates a heavy wounds or can heal health change.
+	 * Creates a heavy wounds change.
 	 * 
-	 * @param aWoundsOrHeal
-	 *            Whether heavy wounds or can heal has changed.
 	 * @param aValue
 	 *            The new value.
 	 */
-	public HealthChange(boolean aWoundsOrHeal, boolean aValue)
+	public HealthChange(boolean aValue)
 	{
-		mType = aWoundsOrHeal ? Type.HEAVY_WOUNDS : Type.CAN_HEAL;
+		mType = Type.HEAVY_WOUNDS;
 		mBooleanValue = aValue;
 	}
 	
@@ -87,7 +85,6 @@ public class HealthChange implements CharacterChange
 		String value = aElement.getAttribute("value");
 		switch (mType)
 		{
-			case CAN_HEAL :
 			case HEAVY_WOUNDS :
 				mBooleanValue = Boolean.valueOf(value);
 				break;
@@ -106,9 +103,6 @@ public class HealthChange implements CharacterChange
 		HealthControllerInstance health = aCharacter.getHealth();
 		switch (mType)
 		{
-			case CAN_HEAL :
-				health.updateCanHeal(mBooleanValue);
-				break;
 			case HEAVY_WOUNDS :
 				health.updateHeavyWounds(mBooleanValue);
 				break;
@@ -133,7 +127,6 @@ public class HealthChange implements CharacterChange
 			case VALUE :
 				value = "" + mIntegerValue;
 				break;
-			case CAN_HEAL :
 			case HEAVY_WOUNDS :
 				value = "" + mBooleanValue;
 				break;

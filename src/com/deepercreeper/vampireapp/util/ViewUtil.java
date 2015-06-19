@@ -84,6 +84,7 @@ public class ViewUtil
 	 */
 	public static LinearLayout.LayoutParams getWrapHeight()
 	{
+		// TODO Get away from programmatically created views
 		return new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 	}
 	

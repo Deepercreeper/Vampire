@@ -113,12 +113,10 @@ public class ConnectionController implements ConnectionListener
 	 */
 	public void connect(final ConnectionListener aListener)
 	{
-		// TODO Make this whole fuck'n thing stable
 		final List<Device> devices = new ArrayList<Device>();
 		for (final BluetoothDevice device : mBluetoothAdapter.getBondedDevices())
 		{
 			devices.add(new Device(device));
-			// TODO Render the given Bluetooth name
 		}
 		final SelectionListener<Device> listener = new SelectionListener<Device>()
 		{
