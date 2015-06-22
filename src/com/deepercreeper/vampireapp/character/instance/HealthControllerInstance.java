@@ -64,7 +64,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	
 	private int[]					mSteps;
 	
-	private boolean					mHeavyWounds		= false;
+	private int						mHeavyWounds		= 0;
 	
 	private int						mValue				= 0;
 	
@@ -90,7 +90,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		final int id = mHost ? R.layout.host_health : R.layout.client_health;
 		mContainer = (LinearLayout) View.inflate(aContext, id, null);
 		mSteps = DataUtil.parseValues(aElement.getAttribute("steps"));
-		mHeavyWounds = Boolean.valueOf(aElement.getAttribute("heavy"));
+		mHeavyWounds = Integer.parseInt(aElement.getAttribute("heavy"));
 		mValue = Integer.parseInt(aElement.getAttribute("value"));
 		mCost = mItems.findItem(aElement.getAttribute("cost"));
 		mChangeListener = aChangeListener;
@@ -168,7 +168,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	 * @param aHeavyWounds
 	 *            Whether the character has heavy wounds.
 	 */
-	public void updateHeavyWounds(final boolean aHeavyWounds)
+	public void updateHeavyWounds(final int aHeavyWounds)
 	{
 		mHeavyWounds = aHeavyWounds;
 		updateValue();
@@ -208,7 +208,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 			return mValue > 0;
 		}
 		
-		return !mHeavyWounds && mValue > 0 && mCost.getValue() > 0;
+		return mHeavyWounds <= mValue && mValue > 0 && mCost.getValue() > 0;
 	}
 	
 	/**
@@ -254,7 +254,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 			}
 		}
 		updateValue();
-		mChangeListener.sendChange(new HealthChange(mValue));
+		mChangeListener.sendChange(new HealthChange(false, mValue));
 	}
 	
 	/**
@@ -272,11 +272,15 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		{
 			mValue = mSteps.length - 1;
 		}
-		mChangeListener.sendChange(new HealthChange(mValue));
+		mChangeListener.sendChange(new HealthChange(false, mValue));
 		if (aHeavy)
 		{
-			mHeavyWounds = true;
-			mChangeListener.sendChange(new HealthChange(mHeavyWounds));
+			mHeavyWounds += aValue;
+			if (mHeavyWounds > mValue)
+			{
+				mHeavyWounds = mValue;
+			}
+			mChangeListener.sendChange(new HealthChange(true, mHeavyWounds));
 		}
 		updateValue();
 	}
@@ -338,9 +342,12 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	{
 		if (aType == Type.DAY)
 		{
-			mHeavyWounds = false;
+			if (mHeavyWounds > 0)
+			{
+				mHeavyWounds-- ;
+			}
 			updateValue();
-			mChangeListener.sendChange(new HealthChange(mHeavyWounds));
+			mChangeListener.sendChange(new HealthChange(true, mHeavyWounds));
 		}
 	}
 	

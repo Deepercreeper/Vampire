@@ -22,8 +22,6 @@ public class HealthChange implements CharacterChange
 	
 	private int					mIntegerValue	= -1;
 	
-	private boolean				mBooleanValue	= false;
-	
 	private int[]				mSteps			= null;
 	
 	private enum Type
@@ -34,12 +32,14 @@ public class HealthChange implements CharacterChange
 	/**
 	 * Creates a health value change.
 	 * 
+	 * @param aWoundsOrValue
+	 *            Whether this is a heavy wounds count or health value change.
 	 * @param aValue
 	 *            The new health value.
 	 */
-	public HealthChange(int aValue)
+	public HealthChange(final boolean aWoundsOrValue, final int aValue)
 	{
-		mType = Type.VALUE;
+		mType = aWoundsOrValue ? Type.HEAVY_WOUNDS : Type.VALUE;
 		mIntegerValue = aValue;
 	}
 	
@@ -50,24 +50,12 @@ public class HealthChange implements CharacterChange
 	}
 	
 	/**
-	 * Creates a heavy wounds change.
-	 * 
-	 * @param aValue
-	 *            The new value.
-	 */
-	public HealthChange(boolean aValue)
-	{
-		mType = Type.HEAVY_WOUNDS;
-		mBooleanValue = aValue;
-	}
-	
-	/**
 	 * Creates a health steps change.
 	 * 
 	 * @param aSteps
 	 *            The new health steps.
 	 */
-	public HealthChange(int[] aSteps)
+	public HealthChange(final int[] aSteps)
 	{
 		mType = Type.STEPS;
 		mSteps = aSteps;
@@ -79,15 +67,13 @@ public class HealthChange implements CharacterChange
 	 * @param aElement
 	 *            The data.
 	 */
-	public HealthChange(Element aElement)
+	public HealthChange(final Element aElement)
 	{
 		mType = Type.valueOf(aElement.getAttribute("type"));
-		String value = aElement.getAttribute("value");
+		final String value = aElement.getAttribute("value");
 		switch (mType)
 		{
 			case HEAVY_WOUNDS :
-				mBooleanValue = Boolean.valueOf(value);
-				break;
 			case VALUE :
 				mIntegerValue = Integer.parseInt(value);
 			case STEPS :
@@ -98,13 +84,13 @@ public class HealthChange implements CharacterChange
 	}
 	
 	@Override
-	public void applyChange(CharacterInstance aCharacter)
+	public void applyChange(final CharacterInstance aCharacter)
 	{
-		HealthControllerInstance health = aCharacter.getHealth();
+		final HealthControllerInstance health = aCharacter.getHealth();
 		switch (mType)
 		{
 			case HEAVY_WOUNDS :
-				health.updateHeavyWounds(mBooleanValue);
+				health.updateHeavyWounds(mIntegerValue);
 				break;
 			case STEPS :
 				health.updateSteps(mSteps);
@@ -117,18 +103,16 @@ public class HealthChange implements CharacterChange
 	}
 	
 	@Override
-	public Element asElement(Document aDoc)
+	public Element asElement(final Document aDoc)
 	{
-		Element element = aDoc.createElement(TAG_NAME);
+		final Element element = aDoc.createElement(TAG_NAME);
 		element.setAttribute("type", mType.name());
 		String value = "";
 		switch (mType)
 		{
 			case VALUE :
-				value = "" + mIntegerValue;
-				break;
 			case HEAVY_WOUNDS :
-				value = "" + mBooleanValue;
+				value = "" + mIntegerValue;
 				break;
 			case STEPS :
 				value = DataUtil.parseValues(mSteps);
