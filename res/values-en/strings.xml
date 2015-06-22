@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <string name="generation">Generation:</string>
     <string name="amount">EP amount</string>
     <string name="heavy">Heavy</string>
     <string name="apply">Apply</string>

@@ -327,6 +327,8 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		
 		controllersPanel.addView(mChar.getHealth().getContainer());
 		
+		controllersPanel.addView(mChar.getGenerationController().getContainer());
+		
 		controllersPanel.addView(mChar.getMoney().getContainer());
 		
 		for (final ItemControllerInstance controller : mChar.getControllers())

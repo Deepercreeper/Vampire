@@ -90,7 +90,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	{
 		mItems = aCreator.getItems();
 		mContext = aCreator.getContext();
-		mGeneration = new GenerationControllerInstance(aCreator.getGenerationValue(), this);
+		mGeneration = new GenerationControllerInstance(aCreator.getGenerationValue(), this, aHost);
 		mDescriptions = new DescriptionControllerInstance(aCreator.getDescriptions());
 		mInsanities = new InsanityControllerInstance(aCreator.getInsanities());
 		mEP = new EPController(getContext(), aChangeListener, aHost, this);
@@ -162,10 +162,12 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		mConcept = CodingUtil.decode(meta.getAttribute("concept"));
 		mNature = mItems.getNatures().getItemWithName(meta.getAttribute("nature"));
 		mBehavior = mItems.getNatures().getItemWithName(meta.getAttribute("behavior"));
-		mGeneration = new GenerationControllerInstance(Integer.parseInt(meta.getAttribute("generation")), this);
 		mClan = mItems.getClans().getItemWithName(meta.getAttribute("clan"));
 		mEP = new EPController(Integer.parseInt(meta.getAttribute("ep")), getContext(), aChangeListener, aHost, this);
 		mMode = Mode.valueOf(meta.getAttribute("mode"));
+		
+		// Generation
+		mGeneration = new GenerationControllerInstance((Element) root.getElementsByTagName("generation").item(0), this, aHost);
 		
 		// Insanities
 		mInsanities = new InsanityControllerInstance((Element) root.getElementsByTagName("insanities").item(0));
@@ -335,6 +337,14 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	}
 	
 	/**
+	 * @return the generation controller.
+	 */
+	public GenerationControllerInstance getGenerationController()
+	{
+		return mGeneration;
+	}
+	
+	/**
 	 * @return The current character generation.
 	 */
 	public int getGeneration()
@@ -451,11 +461,13 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		meta.setAttribute("concept", CodingUtil.encode(getConcept()));
 		meta.setAttribute("nature", getNature().getName());
 		meta.setAttribute("behavior", getBehavior().getName());
-		meta.setAttribute("generation", "" + mGeneration.getGeneration());
 		meta.setAttribute("clan", getClan().getName());
 		meta.setAttribute("ep", "" + mEP.getExperience());
 		meta.setAttribute("mode", mMode.name());
 		root.appendChild(meta);
+		
+		// Generation
+		root.appendChild(mGeneration.asElement(aDoc));
 		
 		// Health
 		root.appendChild(mHealth.asElement(aDoc));

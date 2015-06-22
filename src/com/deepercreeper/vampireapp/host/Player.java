@@ -238,6 +238,7 @@ public class Player implements Viewable, TimeListener, ChangeListener
 		
 		mPlayerContainer.addView(mChar.getHealth().getContainer(), 0);
 		mPlayerContainer.addView(mChar.getEPController().getContainer(), 1);
+		mPlayerContainer.addView(mChar.getGenerationController().getContainer(), 2);
 		
 		mTimeCheckBox = new CheckBox(mContext);
 		mTimeCheckBox.setLayoutParams(ViewUtil.getWrapHeight());
