@@ -26,6 +26,7 @@ import com.deepercreeper.vampireapp.host.Player;
 import com.deepercreeper.vampireapp.host.change.ChangeListener;
 import com.deepercreeper.vampireapp.host.change.CharacterChange;
 import com.deepercreeper.vampireapp.host.change.EPChange;
+import com.deepercreeper.vampireapp.host.change.GenerationChange;
 import com.deepercreeper.vampireapp.host.change.HealthChange;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
@@ -195,17 +196,19 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	public void applyChange(final String aChange, final String aType)
 	{
 		final Document doc = FilesUtil.loadDocument(aChange);
-		Element element;
+		final Element element = (Element) doc.getElementsByTagName(aType).item(0);
 		CharacterChange change = null;
 		if (aType.equals(HealthChange.TAG_NAME))
 		{
-			element = (Element) doc.getElementsByTagName(HealthChange.TAG_NAME).item(0);
 			change = new HealthChange(element);
 		}
 		else if (aType.equals(EPChange.TAG_NAME))
 		{
-			element = (Element) doc.getElementsByTagName(EPChange.TAG_NAME).item(0);
 			change = new EPChange(element);
+		}
+		else if (aType.equals(GenerationChange.TAG_NAME))
+		{
+			change = new GenerationChange(element);
 		}
 		
 		// TODO Add other changes

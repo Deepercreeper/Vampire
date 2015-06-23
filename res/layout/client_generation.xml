@@ -17,7 +17,7 @@
         android:id="@+id/generation_label"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:gravity="end"
+        android:gravity="end|center_vertical"
         android:textSize="20sp" />
 
 </LinearLayout>

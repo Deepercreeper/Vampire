@@ -90,11 +90,11 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	{
 		mItems = aCreator.getItems();
 		mContext = aCreator.getContext();
-		mGeneration = new GenerationControllerInstance(aCreator.getGenerationValue(), this, aHost);
+		mGeneration = new GenerationControllerInstance(aCreator.getGenerationValue(), this, aHost, aChangeListener);
 		mDescriptions = new DescriptionControllerInstance(aCreator.getDescriptions());
 		mInsanities = new InsanityControllerInstance(aCreator.getInsanities());
 		mEP = new EPController(getContext(), aChangeListener, aHost, this);
-		mMoney = new MoneyController(mItems.getMoney(), getContext());
+		mMoney = new MoneyController(mItems.getMoney(), getContext(), aHost);
 		mTimeListeners.add(mInsanities);
 		
 		mName = aCreator.getName();
@@ -167,7 +167,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		mMode = Mode.valueOf(meta.getAttribute("mode"));
 		
 		// Generation
-		mGeneration = new GenerationControllerInstance((Element) root.getElementsByTagName("generation").item(0), this, aHost);
+		mGeneration = new GenerationControllerInstance((Element) root.getElementsByTagName("generation").item(0), this, aHost, aChangeListener);
 		
 		// Insanities
 		mInsanities = new InsanityControllerInstance((Element) root.getElementsByTagName("insanities").item(0));
@@ -195,7 +195,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		mTimeListeners.add(mHealth);
 		
 		// Money
-		mMoney = new MoneyController(mItems.getMoney(), (Element) root.getElementsByTagName("money").item(0), getContext());
+		mMoney = new MoneyController(mItems.getMoney(), (Element) root.getElementsByTagName("money").item(0), getContext(), aHost);
 		
 		// Inventory
 		mInventory = new InventoryController((Element) root.getElementsByTagName("inventory").item(0), mItems.getInventory(), this, getContext());

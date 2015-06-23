@@ -7,8 +7,11 @@ import org.w3c.dom.Element;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
-import android.widget.RelativeLayout;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.Money;
 import com.deepercreeper.vampireapp.util.DataUtil;
@@ -30,9 +33,15 @@ public class MoneyController implements Saveable, Viewable
 	
 	private final Map<String, Integer>	mValues			= new HashMap<String, Integer>();
 	
-	private final RelativeLayout		mContainer;
+	private final LinearLayout			mContainer;
 	
 	private final Context				mContext;
+	
+	private final boolean				mHost;
+	
+	private ImageButton					mAddMoney;
+	
+	private ImageButton					mRemoveMoney;
 	
 	private TextView					mMoneyDisplay;
 	
@@ -45,16 +54,20 @@ public class MoneyController implements Saveable, Viewable
 	 *            the default money settings.
 	 * @param aContext
 	 *            The underlying context.
+	 * @param aHost
+	 *            Whether this controller is host sided.
 	 */
-	public MoneyController(final Money aMoney, final Context aContext)
+	public MoneyController(final Money aMoney, final Context aContext, final boolean aHost)
 	{
 		mMoney = aMoney;
+		mHost = aHost;
 		for (final String currency : mMoney.getCurrencies())
 		{
 			mValues.put(currency, 0);
 		}
 		mContext = aContext;
-		mContainer = (RelativeLayout) View.inflate(mContext, R.layout.money, null);
+		final int id = mHost ? R.layout.host_money : R.layout.client_money;
+		mContainer = (LinearLayout) View.inflate(mContext, id, null);
 		init();
 	}
 	
@@ -67,17 +80,21 @@ public class MoneyController implements Saveable, Viewable
 	 *            The XML document.
 	 * @param aContext
 	 *            The underlying context.
+	 * @param aHost
+	 *            Whether this controller is host sided.
 	 */
-	public MoneyController(final Money aMoney, final Element aElement, final Context aContext)
+	public MoneyController(final Money aMoney, final Element aElement, final Context aContext, final boolean aHost)
 	{
 		mMoney = aMoney;
+		mHost = aHost;
 		for (final String value : DataUtil.parseArray(aElement.getAttribute("values")))
 		{
 			final String[] currencyAndValue = value.split(":");
 			mValues.put(currencyAndValue[1], Integer.parseInt(currencyAndValue[0]));
 		}
 		mContext = aContext;
-		mContainer = (RelativeLayout) View.inflate(mContext, R.layout.money, null);
+		final int id = mHost ? R.layout.host_money : R.layout.client_money;
+		mContainer = (LinearLayout) View.inflate(mContext, id, null);
 		init();
 	}
 	
@@ -103,7 +120,7 @@ public class MoneyController implements Saveable, Viewable
 	}
 	
 	@Override
-	public RelativeLayout getContainer()
+	public LinearLayout getContainer()
 	{
 		return mContainer;
 	}
@@ -134,11 +151,51 @@ public class MoneyController implements Saveable, Viewable
 			getContainer().setLayoutParams(ViewUtil.getWrapHeight());
 			
 			mMoneyDisplay = (TextView) getContainer().findViewById(R.id.money);
+			mAddMoney = mHost ? (ImageButton) getContainer().findViewById(R.id.add_money) : null;
+			mRemoveMoney = mHost ? (ImageButton) getContainer().findViewById(R.id.remove_money) : null;
+			
+			if (mHost)
+			{
+				mAddMoney.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(final View aV)
+					{
+						addMoney();
+					}
+				});
+				mRemoveMoney.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(final View aV)
+					{
+						removeMoney();
+					}
+				});
+			}
 			
 			mInitialized = true;
 		}
 		
 		updateValue();
+	}
+	
+	/**
+	 * Asks the user how much money to add.
+	 */
+	public void addMoney()
+	{
+		// TODO Implement activity
+		Toast.makeText(mContext, "Adding money not implemented yet.", Toast.LENGTH_SHORT).show();
+	}
+	
+	/**
+	 * Asks the user how much money to remove.
+	 */
+	public void removeMoney()
+	{
+		// TODO Implement activity
+		Toast.makeText(mContext, "Removing money not implemented yet.", Toast.LENGTH_SHORT).show();
 	}
 	
 	@Override

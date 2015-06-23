@@ -3,10 +3,14 @@ package com.deepercreeper.vampireapp.lists.controllers.instances;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
+import com.deepercreeper.vampireapp.host.change.ChangeListener;
+import com.deepercreeper.vampireapp.host.change.GenerationChange;
 import com.deepercreeper.vampireapp.util.Saveable;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.Viewable;
@@ -28,6 +32,10 @@ public class GenerationControllerInstance implements Viewable, Saveable
 	
 	private final boolean			mHost;
 	
+	private final ChangeListener	mChangeListener;
+	
+	private ImageButton				mIncreaseButton;
+	
 	private TextView				mGenerationText;
 	
 	private boolean					mInitialized		= false;
@@ -43,11 +51,15 @@ public class GenerationControllerInstance implements Viewable, Saveable
 	 *            The character.
 	 * @param aHost
 	 *            whether this is a host side controller.
+	 * @param aChangeListener
+	 *            A listener for generation changes.
 	 */
-	public GenerationControllerInstance(final int aGeneration, final CharacterInstance aChar, final boolean aHost)
+	public GenerationControllerInstance(final int aGeneration, final CharacterInstance aChar, final boolean aHost,
+			final ChangeListener aChangeListener)
 	{
 		mChar = aChar;
 		mGeneration = aGeneration;
+		mChangeListener = aChangeListener;
 		mHost = aHost;
 		final int id = mHost ? R.layout.host_generation : R.layout.client_generation;
 		mContainer = (LinearLayout) View.inflate(mChar.getContext(), id, null);
@@ -63,10 +75,14 @@ public class GenerationControllerInstance implements Viewable, Saveable
 	 *            The character.
 	 * @param aHost
 	 *            Whether this is a host sided controller.
+	 * @param aChangeListener
+	 *            A listener for generation changes.
 	 */
-	public GenerationControllerInstance(final Element aElement, final CharacterInstance aChar, final boolean aHost)
+	public GenerationControllerInstance(final Element aElement, final CharacterInstance aChar, final boolean aHost,
+			final ChangeListener aChangeListener)
 	{
 		mChar = aChar;
+		mChangeListener = aChangeListener;
 		mGeneration = Integer.parseInt(aElement.getAttribute("generation"));
 		mHost = aHost;
 		final int id = mHost ? R.layout.host_generation : R.layout.client_generation;
@@ -79,7 +95,20 @@ public class GenerationControllerInstance implements Viewable, Saveable
 	{
 		if ( !mInitialized)
 		{
-			mGenerationText = (TextView) mContainer.findViewById(R.id.generation_label);
+			mGenerationText = (TextView) getContainer().findViewById(R.id.generation_label);
+			mIncreaseButton = mHost ? (ImageButton) getContainer().findViewById(R.id.increase_generation) : null;
+			
+			if (mHost)
+			{
+				mIncreaseButton.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(final View aV)
+					{
+						increase();
+					}
+				});
+			}
 			
 			mInitialized = true;
 		}
@@ -112,10 +141,12 @@ public class GenerationControllerInstance implements Viewable, Saveable
 	 */
 	public void increase()
 	{
+		// TODO Maybe add a button to request generation increase
 		if (mGeneration > MIN_GENERATION)
 		{
 			mGeneration-- ;
 		}
+		mChangeListener.sendChange(new GenerationChange(mGeneration));
 		updateValue();
 	}
 	
@@ -133,7 +164,7 @@ public class GenerationControllerInstance implements Viewable, Saveable
 	 * @param aGeneration
 	 *            The new generation.
 	 */
-	public void setGeneration(final int aGeneration)
+	public void updateGeneration(final int aGeneration)
 	{
 		mGeneration = aGeneration;
 		updateValue();

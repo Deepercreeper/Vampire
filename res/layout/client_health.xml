@@ -31,7 +31,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:contentDescription="@string/content_description"
-            android:src="@drawable/ic_heal" />
+            android:src="@drawable/ic_increase" />
 
         <ProgressBar
             android:id="@+id/health_bar"

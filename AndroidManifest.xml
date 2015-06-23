@@ -8,14 +8,11 @@
         android:minSdkVersion="16"
         android:targetSdkVersion="22" />
 
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-    
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-    
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/> 
-    
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
     <application
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
@@ -68,4 +65,5 @@
             </intent-filter>
         </activity>
     </application>
+
 </manifest>

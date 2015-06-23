@@ -18,6 +18,7 @@ import com.deepercreeper.vampireapp.connection.ConnectionListener;
 import com.deepercreeper.vampireapp.host.change.ChangeListener;
 import com.deepercreeper.vampireapp.host.change.CharacterChange;
 import com.deepercreeper.vampireapp.host.change.EPChange;
+import com.deepercreeper.vampireapp.host.change.GenerationChange;
 import com.deepercreeper.vampireapp.host.change.HealthChange;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
@@ -188,17 +189,19 @@ public class Player implements Viewable, TimeListener, ChangeListener
 	public void applyChange(final String aChange, final String aType)
 	{
 		final Document doc = FilesUtil.loadDocument(aChange);
-		Element element;
+		final Element element = (Element) doc.getElementsByTagName(aType).item(0);
 		CharacterChange change = null;
 		if (aType.equals(HealthChange.TAG_NAME))
 		{
-			element = (Element) doc.getElementsByTagName(HealthChange.TAG_NAME).item(0);
 			change = new HealthChange(element);
 		}
 		else if (aType.equals(EPChange.TAG_NAME))
 		{
-			element = (Element) doc.getElementsByTagName(EPChange.TAG_NAME).item(0);
 			change = new EPChange(element);
+		}
+		else if (aType.equals(GenerationChange.TAG_NAME))
+		{
+			change = new GenerationChange(element);
 		}
 		
 		// TODO Add other changes
@@ -239,6 +242,7 @@ public class Player implements Viewable, TimeListener, ChangeListener
 		mPlayerContainer.addView(mChar.getHealth().getContainer(), 0);
 		mPlayerContainer.addView(mChar.getEPController().getContainer(), 1);
 		mPlayerContainer.addView(mChar.getGenerationController().getContainer(), 2);
+		mPlayerContainer.addView(mChar.getMoney().getContainer(), 3);
 		
 		mTimeCheckBox = new CheckBox(mContext);
 		mTimeCheckBox.setLayoutParams(ViewUtil.getWrapHeight());
