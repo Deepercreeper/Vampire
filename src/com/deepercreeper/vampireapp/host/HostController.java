@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import android.R.color;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.TypedValue;
@@ -69,23 +68,6 @@ public class HostController implements HostListener
 	}
 	
 	/**
-	 * Loads all saved hosts from stored files.
-	 */
-	public void loadHosts()
-	{
-		final String data = FilesUtil.loadFile(HOSTS_LIST, mContext);
-		if (data != null && !data.trim().isEmpty())
-		{
-			mHostNames.clear();
-			for (final String host : data.split("\n"))
-			{
-				mHostNames.add(host);
-			}
-			sortHosts();
-		}
-	}
-	
-	/**
 	 * Creates a new host by asking the user.
 	 */
 	public void createHost()
@@ -109,27 +91,6 @@ public class HostController implements HostListener
 				listener);
 	}
 	
-	/**
-	 * Updates the data of the given host.
-	 * 
-	 * @param aHost
-	 *            The host to update.
-	 */
-	public void updateHost(final Host aHost)
-	{
-		saveHost(aHost);
-	}
-	
-	/**
-	 * Sets the hosts list view.
-	 * 
-	 * @param aHostsList
-	 */
-	public void setHostsList(final LinearLayout aHostsList)
-	{
-		mHostsList = aHostsList;
-	}
-	
 	@Override
 	public void deleteHost(final String aName)
 	{
@@ -144,82 +105,11 @@ public class HostController implements HostListener
 	}
 	
 	/**
-	 * Saves the given host to a file.
-	 * 
-	 * @param aHost
+	 * @return a list of all host names.
 	 */
-	public void saveHost(final Host aHost)
+	public List<String> getHostNames()
 	{
-		mHostsCache.put(aHost.getName(), aHost);
-		if ( !mHostNames.contains(aHost.getName()))
-		{
-			mHostNames.add(aHost.getName());
-		}
-		FilesUtil.saveFile(FilesUtil.serialize(aHost), aHost.getName() + ".hst", mContext);
-		sortHosts();
-		saveHostsList();
-	}
-	
-	/**
-	 * Sets whether hosts can be played.
-	 * 
-	 * @param aEnabled
-	 *            Whether any connection is able to make hosts be played.
-	 */
-	public void setHostsEnabled(final boolean aEnabled)
-	{
-		for (int i = 0; i < mHostsList.getChildCount(); i++ )
-		{
-			final View view = mHostsList.getChildAt(i);
-			if (view instanceof TextView)
-			{
-				view.setEnabled(aEnabled);
-			}
-		}
-	}
-	
-	/**
-	 * Sorts the display position of all hosts.
-	 */
-	public void sortHosts()
-	{
-		mHostsList.removeAllViews();
-		
-		Collections.sort(mHostNames);
-		
-		boolean first = true;
-		
-		for (final String host : mHostNames)
-		{
-			if (first)
-			{
-				first = false;
-			}
-			else
-			{
-				final View line = new View(mContext);
-				line.setLayoutParams(ViewUtil.getLine(mContext));
-				line.setBackgroundColor(mContext.getResources().getColor(color.darker_gray));
-				mHostsList.addView(line);
-			}
-			
-			final TextView hostView = new TextView(mContext);
-			hostView.setLayoutParams(ViewUtil.getWrapHeight());
-			hostView.setText(host);
-			hostView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-			hostView.setLongClickable(true);
-			hostView.setEnabled(mConnection.isEnabled());
-			hostView.setOnLongClickListener(new OnLongClickListener()
-			{
-				@Override
-				public boolean onLongClick(final View aV)
-				{
-					HostContextMenu.showCharacterContextMenu(HostController.this, mContext, host);
-					return false;
-				}
-			});
-			mHostsList.addView(hostView);
-		}
+		return mHostNames;
 	}
 	
 	/**
@@ -248,6 +138,23 @@ public class HostController implements HostListener
 		return host;
 	}
 	
+	/**
+	 * Loads all saved hosts from stored files.
+	 */
+	public void loadHosts()
+	{
+		final String data = FilesUtil.loadFile(HOSTS_LIST, mContext);
+		if (data != null && !data.trim().isEmpty())
+		{
+			mHostNames.clear();
+			for (final String host : data.split("\n"))
+			{
+				mHostNames.add(host);
+			}
+			sortHosts();
+		}
+	}
+	
 	@Override
 	public void playHost(final String aName)
 	{
@@ -257,6 +164,23 @@ public class HostController implements HostListener
 		intent.putExtra(HostActivity.HOST, FilesUtil.serialize(host));
 		
 		mContext.startActivityForResult(intent, HostActivity.PLAY_HOST_REQUEST);
+	}
+	
+	/**
+	 * Saves the given host to a file.
+	 * 
+	 * @param aHost
+	 */
+	public void saveHost(final Host aHost)
+	{
+		mHostsCache.put(aHost.getName(), aHost);
+		if ( !mHostNames.contains(aHost.getName()))
+		{
+			mHostNames.add(aHost.getName());
+		}
+		FilesUtil.saveFile(FilesUtil.serialize(aHost), aHost.getName() + ".hst", mContext);
+		sortHosts();
+		saveHostsList();
 	}
 	
 	/**
@@ -278,10 +202,82 @@ public class HostController implements HostListener
 	}
 	
 	/**
-	 * @return a list of all host names.
+	 * Sets whether hosts can be played.
+	 * 
+	 * @param aEnabled
+	 *            Whether any connection is able to make hosts be played.
 	 */
-	public List<String> getHostNames()
+	public void setHostsEnabled(final boolean aEnabled)
 	{
-		return mHostNames;
+		for (int i = 0; i < mHostsList.getChildCount(); i++ )
+		{
+			final View view = mHostsList.getChildAt(i);
+			if (view instanceof TextView)
+			{
+				view.setEnabled(aEnabled);
+			}
+		}
+	}
+	
+	/**
+	 * Sets the hosts list view.
+	 * 
+	 * @param aHostsList
+	 */
+	public void setHostsList(final LinearLayout aHostsList)
+	{
+		mHostsList = aHostsList;
+	}
+	
+	/**
+	 * Sorts the display position of all hosts.
+	 */
+	public void sortHosts()
+	{
+		mHostsList.removeAllViews();
+		
+		Collections.sort(mHostNames);
+		
+		boolean first = true;
+		
+		for (final String host : mHostNames)
+		{
+			if (first)
+			{
+				first = false;
+			}
+			else
+			{
+				mHostsList.addView(View.inflate(mContext, R.layout.horizontal_line, null));
+			}
+			
+			final TextView hostView = new TextView(mContext);
+			hostView.setLayoutParams(ViewUtil.getWrapHeight());
+			hostView.setText(host);
+			hostView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+			hostView.setLongClickable(true);
+			hostView.setEnabled(mConnection.isEnabled());
+			hostView.setOnLongClickListener(new OnLongClickListener()
+			{
+				@Override
+				public boolean onLongClick(final View aV)
+				{
+					HostContextMenu.showCharacterContextMenu(HostController.this, mContext, host);
+					return false;
+				}
+			});
+			mHostsList.addView(hostView);
+		}
+	}
+	
+	/**
+	 * Updates the data of the given host.
+	 * 
+	 * @param aHost
+	 *            The host to update.
+	 */
+	public void updateHost(final Host aHost)
+	{
+		saveHost(aHost);
 	}
 }

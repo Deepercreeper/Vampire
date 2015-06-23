@@ -20,18 +20,6 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class CreateStringDialog extends DialogFragment
 {
-	private static boolean			sDialogOpen	= false;
-	
-	private final String			mTitle;
-	
-	private final String			mMessage;
-	
-	private final EditText			mValue;
-	
-	private final Context			mContext;
-	
-	private final CreationListener	mListener;
-	
 	/**
 	 * A listener that is invoked when a string was created.
 	 * 
@@ -48,8 +36,51 @@ public class CreateStringDialog extends DialogFragment
 		public void create(String aString);
 	}
 	
+	/**
+	 * @return whether any dialog is open at this time.
+	 */
+	public static boolean isDialogOpen()
+	{
+		return sDialogOpen;
+	}
+	
+	/**
+	 * Shows a create string dialog that returns the new created string to the listener.<br>
+	 * Only one dialog can be shown at one time.
+	 * 
+	 * @param aTitle
+	 *            The dialog title.
+	 * @param aMessage
+	 *            The dialog message.
+	 * @param aContext
+	 *            The context.
+	 * @param aListener
+	 *            The string creation listener.
+	 */
+	public static void showCreateStringDialog(final String aTitle, final String aMessage, final Context aContext, final CreationListener aListener)
+	{
+		if (sDialogOpen)
+		{
+			return;
+		}
+		new CreateStringDialog(aTitle, aMessage, aContext, aListener).show(((Activity) aContext).getFragmentManager(), aTitle);
+	}
+	
+	private static boolean			sDialogOpen	= false;
+	
+	private final String			mTitle;
+	
+	private final String			mMessage;
+	
+	private final EditText			mValue;
+	
+	private final Context			mContext;
+	
+	private final CreationListener	mListener;
+	
 	private CreateStringDialog(final String aTitle, final String aMessage, final Context aContext, final CreationListener aListener)
 	{
+		// TODO Will be replaced by a create host activity
 		sDialogOpen = true;
 		mTitle = aTitle;
 		mMessage = aMessage;
@@ -101,35 +132,5 @@ public class CreateStringDialog extends DialogFragment
 		{
 			throw new RuntimeException(e);
 		}
-	}
-	
-	/**
-	 * @return whether any dialog is open at this time.
-	 */
-	public static boolean isDialogOpen()
-	{
-		return sDialogOpen;
-	}
-	
-	/**
-	 * Shows a create string dialog that returns the new created string to the listener.<br>
-	 * Only one dialog can be shown at one time.
-	 * 
-	 * @param aTitle
-	 *            The dialog title.
-	 * @param aMessage
-	 *            The dialog message.
-	 * @param aContext
-	 *            The context.
-	 * @param aListener
-	 *            The string creation listener.
-	 */
-	public static void showCreateStringDialog(final String aTitle, final String aMessage, final Context aContext, final CreationListener aListener)
-	{
-		if (sDialogOpen)
-		{
-			return;
-		}
-		new CreateStringDialog(aTitle, aMessage, aContext, aListener).show(((Activity) aContext).getFragmentManager(), aTitle);
 	}
 }

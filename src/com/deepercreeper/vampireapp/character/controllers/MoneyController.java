@@ -111,6 +111,15 @@ public class MoneyController implements Saveable, Viewable
 		mValues.put(aCurrency, getValue(aCurrency) + aValue);
 	}
 	
+	/**
+	 * Asks the user how much money to add.
+	 */
+	public void addMoney()
+	{
+		// TODO Implement activity
+		Toast.makeText(mContext, "Adding money not implemented yet.", Toast.LENGTH_SHORT).show();
+	}
+	
 	@Override
 	public Element asElement(final Document aDoc)
 	{
@@ -180,24 +189,6 @@ public class MoneyController implements Saveable, Viewable
 		updateValue();
 	}
 	
-	/**
-	 * Asks the user how much money to add.
-	 */
-	public void addMoney()
-	{
-		// TODO Implement activity
-		Toast.makeText(mContext, "Adding money not implemented yet.", Toast.LENGTH_SHORT).show();
-	}
-	
-	/**
-	 * Asks the user how much money to remove.
-	 */
-	public void removeMoney()
-	{
-		// TODO Implement activity
-		Toast.makeText(mContext, "Removing money not implemented yet.", Toast.LENGTH_SHORT).show();
-	}
-	
 	@Override
 	public void release()
 	{
@@ -220,6 +211,15 @@ public class MoneyController implements Saveable, Viewable
 			return;
 		}
 		mValues.put(aCurrency, getValue(aCurrency) - aValue);
+	}
+	
+	/**
+	 * Asks the user how much money to remove.
+	 */
+	public void removeMoney()
+	{
+		// TODO Implement activity
+		Toast.makeText(mContext, "Removing money not implemented yet.", Toast.LENGTH_SHORT).show();
 	}
 	
 	/**
