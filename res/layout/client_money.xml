@@ -12,12 +12,10 @@
         android:text="@string/money"
         android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/money"
+    <LinearLayout
+        android:id="@+id/depot_list"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:gravity="end|center_vertical"
-        android:text="@string/money"
-        android:textSize="20sp" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
 
 </LinearLayout>
