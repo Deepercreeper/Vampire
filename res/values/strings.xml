@@ -4,7 +4,6 @@
     <string name="bag">Tasche</string>
     <string name="generation">Generation:</string>
     <string name="amount">EP Menge</string>
-    <string name="heavy">Schwer</string>
     <string name="apply">Annehmen</string>
     <string name="round">Runde</string>
     <string name="hour">Stunde</string>
@@ -83,6 +82,5 @@
     <string name="hosts">Hosts</string>
     <string name="delete_host">Löschen</string>
     <string name="play_host">Starten</string>
-    <string name="new_player">Ein neuer Spieler will Ihrem Spiel beitreten. Akzeptieren?</string>
 
 </resources>

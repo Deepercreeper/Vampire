@@ -20,20 +20,20 @@
         android:text="@string/health"
         android:textSize="16sp" />
 
-    <CheckBox
+    <ImageButton
         android:id="@+id/heavy_hurt"
-        android:layout_width="wrap_content"
+        android:layout_width="50dp"
         android:layout_height="30dp"
-        android:gravity="center_vertical"
-        android:text="@string/heavy"
-        android:textSize="16sp" />
+		android:contentDescription="@string/content_description"
+		android:src="@drawable/ic_heavy"
+        />
 
     <ImageButton
         android:id="@+id/hurt_button"
         android:layout_width="50dp"
         android:layout_height="30dp"
         android:contentDescription="@string/content_description"
-        android:src="@drawable/ic_decrease" />
+        android:src="@drawable/ic_damage" />
 
     <RelativeLayout
         android:layout_width="match_parent"

@@ -4,7 +4,6 @@
     <string name="bag">Bag</string>
     <string name="generation">Generation:</string>
     <string name="amount">EP amount</string>
-    <string name="heavy">Heavy</string>
     <string name="apply">Apply</string>
     <string name="round">Round</string>
     <string name="hour">Hour</string>
@@ -82,6 +81,5 @@
     <string name="hosts">Hosts</string>
     <string name="delete_host">Delete</string>
     <string name="play_host">Play</string>
-    <string name="new_player">A new player wants to join your game. Accept?</string>
 
 </resources>

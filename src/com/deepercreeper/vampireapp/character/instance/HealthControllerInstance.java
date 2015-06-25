@@ -7,9 +7,6 @@ import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -52,15 +49,13 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	
 	private ImageButton				mHurtButton;
 	
-	private CheckBox				mHeavyHurt;
+	private ImageButton				mHeavyHurt;
 	
 	private ProgressBar				mValueBar;
 	
 	private TextView				mStepLabel;
 	
 	private boolean					mInitialized		= false;
-	
-	private boolean					mHeavy;
 	
 	private int[]					mSteps;
 	
@@ -292,7 +287,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		{
 			mHealButton = (ImageButton) getContainer().findViewById(R.id.heal_button);
 			mHurtButton = mHost ? (ImageButton) getContainer().findViewById(R.id.hurt_button) : null;
-			mHeavyHurt = mHost ? (CheckBox) getContainer().findViewById(R.id.heavy_hurt) : null;
+			mHeavyHurt = mHost ? (ImageButton) getContainer().findViewById(R.id.heavy_hurt) : null;
 			mValueBar = (ProgressBar) getContainer().findViewById(R.id.health_bar);
 			mStepLabel = (TextView) getContainer().findViewById(R.id.step_value);
 			
@@ -307,12 +302,13 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 			
 			if (mHost)
 			{
-				mHeavyHurt.setOnCheckedChangeListener(new OnCheckedChangeListener()
+				mHeavyHurt.setOnClickListener(new OnClickListener()
 				{
+					
 					@Override
-					public void onCheckedChanged(final CompoundButton aButtonView, final boolean aIsChecked)
+					public void onClick(final View aV)
 					{
-						mHeavy = aIsChecked;
+						hurt(1, true);
 					}
 				});
 				mHurtButton.setOnClickListener(new OnClickListener()
@@ -320,7 +316,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 					@Override
 					public void onClick(final View aV)
 					{
-						hurt(1, mHeavy);
+						hurt(1, false);
 					}
 				});
 			}
