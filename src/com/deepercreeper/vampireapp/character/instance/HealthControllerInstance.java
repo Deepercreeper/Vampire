@@ -203,7 +203,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 			return mValue > 0;
 		}
 		
-		return mHeavyWounds <= mValue && mValue > 0 && mCost.getValue() > 0;
+		return mHeavyWounds < mValue && mValue > 0 && mCost.getValue() > 0;
 	}
 	
 	/**
@@ -240,16 +240,26 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	 */
 	public void heal(final int aValue)
 	{
+		boolean heavyWoundsChanged = false;
 		for (int i = aValue; i > 0; i-- )
 		{
 			if (mValue > 0)
 			{
+				if (mHost && mHeavyWounds == mValue)
+				{
+					mHeavyWounds-- ;
+					heavyWoundsChanged = true;
+				}
 				mValue-- ;
 				mCost.masterDecrease();
 			}
 		}
-		updateValue();
 		mChangeListener.sendChange(new HealthChange(false, mValue));
+		if (heavyWoundsChanged)
+		{
+			mChangeListener.sendChange(new HealthChange(true, mHeavyWounds));
+		}
+		updateValue();
 	}
 	
 	/**
@@ -267,7 +277,6 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		{
 			mValue = mSteps.length - 1;
 		}
-		mChangeListener.sendChange(new HealthChange(false, mValue));
 		if (aHeavy)
 		{
 			mHeavyWounds += aValue;
@@ -277,6 +286,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 			}
 			mChangeListener.sendChange(new HealthChange(true, mHeavyWounds));
 		}
+		mChangeListener.sendChange(new HealthChange(false, mValue));
 		updateValue();
 	}
 	
@@ -384,5 +394,6 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		}
 		ViewUtil.setEnabled(mHealButton, canHeal());
 		ViewUtil.setEnabled(mHurtButton, canHurt());
+		ViewUtil.setEnabled(mHeavyHurt, canHurt());
 	}
 }
