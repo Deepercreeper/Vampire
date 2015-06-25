@@ -13,8 +13,8 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.deepercreeper.vampireapp.character.controllers.EPController;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
+import com.deepercreeper.vampireapp.character.instance.EPControllerInstance;
 import com.deepercreeper.vampireapp.character.instance.Mode;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
@@ -55,7 +55,7 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 	
 	private Mode							mMode;
 	
-	private final EPController				mEP;
+	private final EPControllerInstance				mEP;
 	
 	/**
 	 * Creates a new group out of the given XML data.
@@ -74,7 +74,7 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 	 *            The character.
 	 */
 	public ItemGroupInstanceImpl(final Element aElement, final ItemControllerInstance aItemController, final Context aContext, final Mode aMode,
-			final EPController aEP, final CharacterInstance aCharacter)
+			final EPControllerInstance aEP, final CharacterInstance aCharacter)
 	{
 		mItemGroup = aItemController.getItemController().getGroup(aElement.getAttribute("name"));
 		mItemController = aItemController;
@@ -128,7 +128,7 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 	 *            The character.
 	 */
 	public ItemGroupInstanceImpl(final ItemGroupCreation aItemGroup, final ItemControllerInstance aItemController, final Context aContext,
-			final Mode aMode, final EPController aEP, final CharacterInstance aCharacter)
+			final Mode aMode, final EPControllerInstance aEP, final CharacterInstance aCharacter)
 	{
 		mItemGroup = aItemGroup.getItemGroup();
 		mContext = aContext;
@@ -224,7 +224,7 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 	}
 	
 	@Override
-	public EPController getEP()
+	public EPControllerInstance getEP()
 	{
 		return mEP;
 	}

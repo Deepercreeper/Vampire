@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Set;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.Context;
-import com.deepercreeper.vampireapp.character.controllers.EPController;
+import com.deepercreeper.vampireapp.character.instance.EPControllerInstance;
 import com.deepercreeper.vampireapp.character.instance.Mode;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestrictionable;
@@ -101,7 +101,7 @@ public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemIn
 	/**
 	 * @return the experience manager of the character.
 	 */
-	public EPController getEP();
+	public EPControllerInstance getEP();
 	
 	/**
 	 * @return the default experience cost, each increase of this item costs.

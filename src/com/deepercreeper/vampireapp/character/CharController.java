@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.character.controllers;
+package com.deepercreeper.vampireapp.character;
 
 import java.io.File;
 import java.util.ArrayList;

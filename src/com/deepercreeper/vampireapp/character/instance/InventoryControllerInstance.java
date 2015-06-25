@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.character.controllers;
+package com.deepercreeper.vampireapp.character.instance;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ import com.deepercreeper.vampireapp.util.view.Viewable;
  * 
  * @author vrl
  */
-public class InventoryController implements Saveable, ItemValueListener, Viewable
+public class InventoryControllerInstance implements Saveable, ItemValueListener, Viewable
 {
 	private static final String			TAG				= "InventoryController";
 	
@@ -73,7 +73,7 @@ public class InventoryController implements Saveable, ItemValueListener, Viewabl
 	 * @param aContext
 	 *            The underlying context.
 	 */
-	public InventoryController(final Element aElement, final Inventory aInventory, final ItemFinder aItems, final Context aContext)
+	public InventoryControllerInstance(final Element aElement, final Inventory aInventory, final ItemFinder aItems, final Context aContext)
 	{
 		mInventory = aInventory;
 		mItems = aItems;
@@ -115,7 +115,7 @@ public class InventoryController implements Saveable, ItemValueListener, Viewabl
 	 * @param aContext
 	 *            The underlying context.
 	 */
-	public InventoryController(final Inventory aInventory, final ItemFinder aItems, final Context aContext)
+	public InventoryControllerInstance(final Inventory aInventory, final ItemFinder aItems, final Context aContext)
 	{
 		mInventory = aInventory;
 		mItems = aItems;

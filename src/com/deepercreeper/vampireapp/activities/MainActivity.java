@@ -20,7 +20,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.character.controllers.CharController;
+import com.deepercreeper.vampireapp.character.CharController;
 import com.deepercreeper.vampireapp.character.instance.CharacterCompound;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;

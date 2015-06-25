@@ -10,8 +10,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import android.content.Context;
 import android.widget.LinearLayout;
-import com.deepercreeper.vampireapp.character.controllers.EPController;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
+import com.deepercreeper.vampireapp.character.instance.EPControllerInstance;
 import com.deepercreeper.vampireapp.character.instance.Mode;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.interfaces.GroupOption;
@@ -55,7 +55,7 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	
 	private Mode												mMode;
 	
-	private final EPController									mEP;
+	private final EPControllerInstance									mEP;
 	
 	/**
 	 * Creates a new item controller out of the given XML data.
@@ -74,7 +74,7 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	 *            The character
 	 */
 	public ItemControllerInstanceImpl(final Element aElement, final ItemProvider aItems, final Context aContext, final Mode aMode,
-			final EPController aEP, final CharacterInstance aCharacter)
+			final EPControllerInstance aEP, final CharacterInstance aCharacter)
 	{
 		mItemController = aItems.getController(aElement.getAttribute("name"));
 		mContext = aContext;
@@ -126,7 +126,7 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	 * @param aCharacter
 	 *            The character.
 	 */
-	public ItemControllerInstanceImpl(final ItemControllerCreation aItemController, final Context aContext, final Mode aMode, final EPController aEP,
+	public ItemControllerInstanceImpl(final ItemControllerCreation aItemController, final Context aContext, final Mode aMode, final EPControllerInstance aEP,
 			final CharacterInstance aCharacter)
 	{
 		mItemController = aItemController.getItemController();
@@ -227,7 +227,7 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	}
 	
 	@Override
-	public EPController getEP()
+	public EPControllerInstance getEP()
 	{
 		return mEP;
 	}

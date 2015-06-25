@@ -6,9 +6,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import android.content.Context;
-import com.deepercreeper.vampireapp.character.controllers.EPController;
-import com.deepercreeper.vampireapp.character.controllers.InventoryController;
-import com.deepercreeper.vampireapp.character.controllers.MoneyController;
 import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
 import com.deepercreeper.vampireapp.host.change.ChangeListener;
 import com.deepercreeper.vampireapp.items.ItemProvider;
@@ -56,7 +53,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	
 	private final InsanityControllerInstance	mInsanities;
 	
-	private final EPController					mEP;
+	private final EPControllerInstance					mEP;
 	
 	private final String						mName;
 	
@@ -70,9 +67,9 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	
 	private final HealthControllerInstance		mHealth;
 	
-	private final MoneyController				mMoney;
+	private final MoneyControllerInstance				mMoney;
 	
-	private final InventoryController			mInventory;
+	private final InventoryControllerInstance			mInventory;
 	
 	private Mode								mMode;
 	
@@ -93,8 +90,8 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		mGeneration = new GenerationControllerInstance(aCreator.getGenerationValue(), this, aHost, aChangeListener);
 		mDescriptions = new DescriptionControllerInstance(aCreator.getDescriptions());
 		mInsanities = new InsanityControllerInstance(aCreator.getInsanities());
-		mEP = new EPController(getContext(), aChangeListener, aHost, this);
-		mMoney = new MoneyController(mItems.getMoney(), getContext(), aHost);
+		mEP = new EPControllerInstance(getContext(), aChangeListener, aHost, this);
+		mMoney = new MoneyControllerInstance(mItems.getMoney(), getContext(), aHost);
 		mTimeListeners.add(mInsanities);
 		
 		mName = aCreator.getName();
@@ -110,7 +107,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 			mControllers.add(new ItemControllerInstanceImpl(controller, getContext(), mMode, mEP, this));
 		}
 		
-		mInventory = new InventoryController(mItems.getInventory(), this, mContext);
+		mInventory = new InventoryControllerInstance(mItems.getInventory(), this, mContext);
 		mHealth = new HealthControllerInstance(aCreator.getHealth(), getContext(), this, aChangeListener, aHost);
 		mTimeListeners.add(mHealth);
 		
@@ -163,7 +160,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		mNature = mItems.getNatures().getItemWithName(meta.getAttribute("nature"));
 		mBehavior = mItems.getNatures().getItemWithName(meta.getAttribute("behavior"));
 		mClan = mItems.getClans().getItemWithName(meta.getAttribute("clan"));
-		mEP = new EPController(Integer.parseInt(meta.getAttribute("ep")), getContext(), aChangeListener, aHost, this);
+		mEP = new EPControllerInstance(Integer.parseInt(meta.getAttribute("ep")), getContext(), aChangeListener, aHost, this);
 		mMode = Mode.valueOf(meta.getAttribute("mode"));
 		
 		// Generation
@@ -195,10 +192,10 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		mTimeListeners.add(mHealth);
 		
 		// Money
-		mMoney = new MoneyController(mItems.getMoney(), (Element) root.getElementsByTagName("money").item(0), getContext(), aHost);
+		mMoney = new MoneyControllerInstance(mItems.getMoney(), (Element) root.getElementsByTagName("money").item(0), getContext(), aHost);
 		
 		// Inventory
-		mInventory = new InventoryController((Element) root.getElementsByTagName("inventory").item(0), mItems.getInventory(), this, getContext());
+		mInventory = new InventoryControllerInstance((Element) root.getElementsByTagName("inventory").item(0), mItems.getInventory(), this, getContext());
 		
 		// Restrictions
 		final Element restrictions = (Element) root.getElementsByTagName("restrictions").item(0);
@@ -331,7 +328,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	/**
 	 * @return the experience controller of this character.
 	 */
-	public EPController getEPController()
+	public EPControllerInstance getEPController()
 	{
 		return mEP;
 	}
@@ -363,7 +360,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	/**
 	 * @return the characters inventory controller.
 	 */
-	public InventoryController getInventory()
+	public InventoryControllerInstance getInventory()
 	{
 		return mInventory;
 	}
@@ -371,7 +368,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	/**
 	 * @return the characters money controller.
 	 */
-	public MoneyController getMoney()
+	public MoneyControllerInstance getMoney()
 	{
 		return mMoney;
 	}

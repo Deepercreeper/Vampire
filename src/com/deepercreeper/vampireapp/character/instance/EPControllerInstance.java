@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.character.controllers;
+package com.deepercreeper.vampireapp.character.instance;
 
 import android.content.Context;
 import android.text.Editable;
@@ -10,7 +10,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.host.change.ChangeListener;
 import com.deepercreeper.vampireapp.host.change.EPChange;
 import com.deepercreeper.vampireapp.util.ViewUtil;
@@ -22,7 +21,7 @@ import com.deepercreeper.vampireapp.util.view.Viewable;
  * 
  * @author vrl
  */
-public class EPController implements Viewable
+public class EPControllerInstance implements Viewable
 {
 	private final LinearLayout		mContainer;
 	
@@ -54,7 +53,7 @@ public class EPController implements Viewable
 	 * @param aChar
 	 *            The character.
 	 */
-	public EPController(final Context aContext, final ChangeListener aChangeListener, final boolean aHost, final CharacterInstance aChar)
+	public EPControllerInstance(final Context aContext, final ChangeListener aChangeListener, final boolean aHost, final CharacterInstance aChar)
 	{
 		mEP = 0;
 		mChar = aChar;
@@ -79,7 +78,7 @@ public class EPController implements Viewable
 	 * @param aChar
 	 *            The character.
 	 */
-	public EPController(final int aEP, final Context aContext, final ChangeListener aChangeListener, final boolean aHost,
+	public EPControllerInstance(final int aEP, final Context aContext, final ChangeListener aChangeListener, final boolean aHost,
 			final CharacterInstance aChar)
 	{
 		mEP = aEP;

@@ -137,7 +137,7 @@ public class InsanityControllerCreation extends CreationRestrictionableImpl
 				remove(insanity);
 			}
 		});
-		((TextView) View.inflate(mContext, R.id.insanity_text, null)).setText(insanity);
+		((TextView) row.findViewById(R.id.insanity_text)).setText(insanity);
 		
 		return row;
 	}

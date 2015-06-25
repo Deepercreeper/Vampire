@@ -2,8 +2,8 @@ package com.deepercreeper.vampireapp.items.interfaces.instances;
 
 import java.util.List;
 import android.content.Context;
-import com.deepercreeper.vampireapp.character.controllers.EPController;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
+import com.deepercreeper.vampireapp.character.instance.EPControllerInstance;
 import com.deepercreeper.vampireapp.character.instance.Mode;
 import com.deepercreeper.vampireapp.items.interfaces.GroupOption;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
@@ -41,7 +41,7 @@ public interface ItemControllerInstance extends Saveable, Viewable
 	/**
 	 * @return the experience controller.
 	 */
-	public EPController getEP();
+	public EPControllerInstance getEP();
 	
 	/**
 	 * Adds the given item to this controller to create a shortcut.

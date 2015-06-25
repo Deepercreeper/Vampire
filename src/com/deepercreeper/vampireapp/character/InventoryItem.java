@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.character.controllers.InventoryController;
+import com.deepercreeper.vampireapp.character.instance.InventoryControllerInstance;
 import com.deepercreeper.vampireapp.util.Saveable;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.Viewable;
@@ -31,7 +31,7 @@ public class InventoryItem implements Saveable, Viewable
 	
 	private final RelativeLayout	mContainer;
 	
-	private InventoryController		mController;
+	private InventoryControllerInstance		mController;
 	
 	private boolean					mInitialized	= false;
 	
@@ -45,7 +45,7 @@ public class InventoryItem implements Saveable, Viewable
 	 * @param aController
 	 *            The parent inventory controller.
 	 */
-	public InventoryItem(final Element aElement, final Context aContext, final InventoryController aController)
+	public InventoryItem(final Element aElement, final Context aContext, final InventoryControllerInstance aController)
 	{
 		mContext = aContext;
 		mController = aController;
@@ -69,7 +69,7 @@ public class InventoryItem implements Saveable, Viewable
 	 * @param aController
 	 *            the parent inventory controller.
 	 */
-	public InventoryItem(final String aName, final int aWeight, final Context aContext, final InventoryController aController)
+	public InventoryItem(final String aName, final int aWeight, final Context aContext, final InventoryControllerInstance aController)
 	{
 		mContext = aContext;
 		mController = aController;
@@ -129,7 +129,7 @@ public class InventoryItem implements Saveable, Viewable
 	/**
 	 * @return The parent inventory controller.
 	 */
-	public InventoryController getController()
+	public InventoryControllerInstance getController()
 	{
 		return mController;
 	}
@@ -172,7 +172,7 @@ public class InventoryItem implements Saveable, Viewable
 	 * @param aController
 	 *            The new parent inventory controller.
 	 */
-	public void addTo(InventoryController aController)
+	public void addTo(InventoryControllerInstance aController)
 	{
 		mController = aController;
 	}

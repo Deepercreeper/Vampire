@@ -21,8 +21,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.character.controllers.EPController;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
+import com.deepercreeper.vampireapp.character.instance.EPControllerInstance;
 import com.deepercreeper.vampireapp.character.instance.Mode;
 import com.deepercreeper.vampireapp.items.implementations.instances.restrictions.InstanceRestrictionableImpl;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
@@ -68,7 +68,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	
 	private final String					mDescription;
 	
-	private final EPController				mEP;
+	private final EPControllerInstance				mEP;
 	
 	private final ValueAnimator				mAnimator;
 	
@@ -107,7 +107,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	 *            The character.
 	 */
 	public ItemInstanceImpl(final Element aElement, final ItemGroupInstance aItemGroup, final Context aContext, final Mode aMode,
-			final EPController aEP, final ItemInstance aParentItem, final CharacterInstance aCharacter)
+			final EPControllerInstance aEP, final ItemInstance aParentItem, final CharacterInstance aCharacter)
 	{
 		super(aCharacter, aItemGroup.getItemController());
 		if (aParentItem == null)
@@ -201,7 +201,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	 * @param aCharacter
 	 *            The character.
 	 */
-	public ItemInstanceImpl(final ItemCreation aItem, final ItemGroupInstance aItemGroup, final Mode aMode, final EPController aEP,
+	public ItemInstanceImpl(final ItemCreation aItem, final ItemGroupInstance aItemGroup, final Mode aMode, final EPControllerInstance aEP,
 			final ItemInstance aParentItem, final CharacterInstance aCharacter)
 	{
 		super(aCharacter, aItemGroup.getItemController());
@@ -436,7 +436,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	}
 	
 	@Override
-	public EPController getEP()
+	public EPControllerInstance getEP()
 	{
 		if (mEP == null)
 		{

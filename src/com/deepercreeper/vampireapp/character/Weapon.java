@@ -4,7 +4,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import android.content.Context;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.character.controllers.InventoryController;
+import com.deepercreeper.vampireapp.character.instance.InventoryControllerInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.util.ItemFinder;
 
@@ -65,7 +65,7 @@ public class Weapon extends InventoryItem
 	 */
 	public Weapon(final String aName, final int aWeight, final int aDifficulty, final int aDamage, final String aAdditionalDamage,
 			final String aStash, final int aDistance, final int aReloadTime, final int aMagazine, final String aAmmo, final ItemFinder aItems,
-			final Context aContext, final InventoryController aController)
+			final Context aContext, final InventoryControllerInstance aController)
 	{
 		super(aName, aWeight, aContext, aController);
 		mDifficulty = aDifficulty;
@@ -109,7 +109,7 @@ public class Weapon extends InventoryItem
 	 *            The parent inventory controller.
 	 */
 	public Weapon(final String aName, final int aWeight, final int aDifficulty, final int aDamage, final String aAdditionalDamage,
-			final String aStash, final ItemFinder aItems, final Context aContext, final InventoryController aController)
+			final String aStash, final ItemFinder aItems, final Context aContext, final InventoryControllerInstance aController)
 	{
 		this(aName, aWeight, aDifficulty, aDamage, aAdditionalDamage, aStash, -1, -1, -1, null, aItems, aContext, aController);
 	}
@@ -126,7 +126,7 @@ public class Weapon extends InventoryItem
 	 * @param aController
 	 *            The parent inventory controller.
 	 */
-	public Weapon(final Element aElement, final ItemFinder aItems, final Context aContext, final InventoryController aController)
+	public Weapon(final Element aElement, final ItemFinder aItems, final Context aContext, final InventoryControllerInstance aController)
 	{
 		super(aElement.getAttribute("name"), Integer.parseInt(aElement.getAttribute("weight")), aContext, aController);
 		mItems = aItems;
