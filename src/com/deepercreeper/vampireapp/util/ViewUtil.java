@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewParent;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 /**
@@ -116,19 +115,19 @@ public class ViewUtil
 	/**
 	 * Enables or disables the given image button and sets its opacity to a corresponding value.
 	 * 
-	 * @param aButton
+	 * @param aView
 	 *            The image button.
 	 * @param aEnabled
 	 *            Whether the button should be enabled.
 	 */
-	public static void setEnabled(final ImageButton aButton, final boolean aEnabled)
+	public static void setEnabled(final View aView, final boolean aEnabled)
 	{
-		if (aButton == null)
+		if (aView == null)
 		{
 			return;
 		}
-		aButton.setEnabled(aEnabled);
-		aButton.setAlpha(aEnabled ? 1f : 0.4f);
+		aView.setEnabled(aEnabled);
+		aView.setAlpha(aEnabled ? 1f : 0.4f);
 	}
 	
 	/**

@@ -14,14 +14,13 @@ import android.view.View.OnLongClickListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.activities.CreateHostActivity;
 import com.deepercreeper.vampireapp.activities.HostActivity;
 import com.deepercreeper.vampireapp.connection.ConnectionController;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.util.FilesUtil;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
-import com.deepercreeper.vampireapp.util.view.CreateStringDialog;
-import com.deepercreeper.vampireapp.util.view.CreateStringDialog.CreationListener;
 import com.deepercreeper.vampireapp.util.view.HostContextMenu;
 import com.deepercreeper.vampireapp.util.view.HostContextMenu.HostListener;
 
@@ -32,11 +31,14 @@ import com.deepercreeper.vampireapp.util.view.HostContextMenu.HostListener;
  */
 public class HostController implements HostListener
 {
+	/**
+	 * The default host location. TODO Maybe remove this field since it won't be used.
+	 */
+	public static final String			DEFAULT_LOCATION	= "Germany";
+	
 	private static final String			TAG					= "HostController";
 	
 	private static final String			HOSTS_LIST			= "Hosts.lst";
-	
-	private static final String			DEFAULT_LOCATION	= "Germany";
 	
 	private final ConnectionController	mConnection;
 	
@@ -72,23 +74,9 @@ public class HostController implements HostListener
 	 */
 	public void createHost()
 	{
-		final CreationListener listener = new CreationListener()
-		{
-			@Override
-			public void create(final String aString)
-			{
-				if (getHostNames().contains(aString.trim()) || aString.trim().isEmpty())
-				{
-					createHost();
-				}
-				else
-				{
-					saveHost(new Host(aString.trim(), mItems, DEFAULT_LOCATION, mContext));
-				}
-			}
-		};
-		CreateStringDialog.showCreateStringDialog(mContext.getString(R.string.create_host_title), mContext.getString(R.string.create_host), mContext,
-				listener);
+		final Intent intent = new Intent(mContext, CreateHostActivity.class);
+		intent.putExtra(CreateHostActivity.HOST_NAMES, getHostNames().toArray(new String[getHostNames().size()]));
+		mContext.startActivityForResult(intent, CreateHostActivity.CREATE_HOST_REQUEST);
 	}
 	
 	@Override

@@ -276,9 +276,10 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 			final Host host = new Host(xml, mItems, this);
 			mHosts.updateHost(host);
 		}
-		else
+		else if (aRequestCode == CreateHostActivity.CREATE_HOST_REQUEST && aResultCode == RESULT_OK)
 		{
-			System.out.println("Unknown request code: " + aRequestCode + " " + aResultCode);
+			final String name = aData.getStringExtra(CreateHostActivity.HOST_NAME);
+			mHosts.saveHost(new Host(name, mItems, HostController.DEFAULT_LOCATION, this));
 		}
 	}
 	

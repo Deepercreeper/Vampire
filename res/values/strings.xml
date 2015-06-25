@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <string name="host_name">Host Name</string>
     <string name="bag">Tasche</string>
     <string name="generation">Generation:</string>
     <string name="amount">EP Menge</string>
@@ -72,8 +73,7 @@
     <string name="magazine">Magazin</string>
     <string name="ammo">Munition</string>
     <string name="inventory">Inventar</string>
-    <string name="create_host_title">Host erstellen</string>
-    <string name="create_host">Gib einen namen für den neuen Host ein:</string>
+    <string name="create_host">Host erstellen</string>
     <string name="create_host_button">Neuen Host erstellen</string>
     <string name="play_host_button">Host starten</string>
     <string name="choose_host">Host auswählen</string>
