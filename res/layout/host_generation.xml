@@ -13,7 +13,7 @@
 
     <ImageButton
         android:id="@+id/increase_generation"
-        android:layout_width="50dp"
+        android:layout_width="@dimen/big_button_width"
         android:layout_height="30dp"
         android:contentDescription="@string/content_description"
         android:src="@drawable/ic_increase" />

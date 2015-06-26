@@ -27,6 +27,7 @@ import com.deepercreeper.vampireapp.util.FilesUtil;
 import com.deepercreeper.vampireapp.util.ItemFinder;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.Saveable;
+import com.deepercreeper.vampireapp.util.view.ResizeListener;
 
 /**
  * This represents an existing character that can be played, saved and loaded.
@@ -53,7 +54,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	
 	private final InsanityControllerInstance	mInsanities;
 	
-	private final EPControllerInstance					mEP;
+	private final EPControllerInstance			mEP;
 	
 	private final String						mName;
 	
@@ -67,9 +68,13 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	
 	private final HealthControllerInstance		mHealth;
 	
-	private final MoneyControllerInstance				mMoney;
+	private final MoneyControllerInstance		mMoney;
 	
-	private final InventoryControllerInstance			mInventory;
+	private final InventoryControllerInstance	mInventory;
+	
+	private final boolean						mHost;
+	
+	private final ResizeListener				mResizeListener;
 	
 	private Mode								mMode;
 	
@@ -80,18 +85,23 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	 *            The character creation.
 	 * @param aChangeListener
 	 *            The listener for changes that occur for this character.
+	 * @param aResizeListener
+	 *            The parent resize listener.
 	 * @param aHost
 	 *            Whether this character is a host side character.
 	 */
-	public CharacterInstance(final CharacterCreation aCreator, final ChangeListener aChangeListener, final boolean aHost)
+	public CharacterInstance(final CharacterCreation aCreator, final ChangeListener aChangeListener, final ResizeListener aResizeListener,
+			final boolean aHost)
 	{
+		mHost = aHost;
+		mResizeListener = aResizeListener;
 		mItems = aCreator.getItems();
 		mContext = aCreator.getContext();
-		mGeneration = new GenerationControllerInstance(aCreator.getGenerationValue(), this, aHost, aChangeListener);
+		mGeneration = new GenerationControllerInstance(aCreator.getGenerationValue(), this, mHost, aChangeListener);
 		mDescriptions = new DescriptionControllerInstance(aCreator.getDescriptions());
 		mInsanities = new InsanityControllerInstance(aCreator.getInsanities());
-		mEP = new EPControllerInstance(getContext(), aChangeListener, aHost, this);
-		mMoney = new MoneyControllerInstance(mItems.getMoney(), getContext(), aHost);
+		mEP = new EPControllerInstance(getContext(), aChangeListener, mHost, this);
+		mMoney = new MoneyControllerInstance(mItems.getCurrency(), getContext(), mHost, aChangeListener, mResizeListener);
 		mTimeListeners.add(mInsanities);
 		
 		mName = aCreator.getName();
@@ -108,7 +118,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		}
 		
 		mInventory = new InventoryControllerInstance(mItems.getInventory(), this, mContext);
-		mHealth = new HealthControllerInstance(aCreator.getHealth(), getContext(), this, aChangeListener, aHost);
+		mHealth = new HealthControllerInstance(aCreator.getHealth(), getContext(), this, aChangeListener, mHost);
 		mTimeListeners.add(mHealth);
 		
 		for (final InstanceRestriction restriction : aCreator.getRestrictions())
@@ -130,17 +140,21 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	 *            The underlying context.
 	 * @param aChangeListener
 	 *            The listener for changes that occur for this character.
+	 * @param aResizeListener
+	 *            The parent resize listener.
 	 * @param aHost
 	 *            Whether this character is a host side character.
 	 * @throws IllegalArgumentException
 	 *             if the XML document can't be parsed.
 	 */
 	public CharacterInstance(final String aXML, final ItemProvider aItems, final Context aContext, final ChangeListener aChangeListener,
-			final boolean aHost) throws IllegalArgumentException
+			final ResizeListener aResizeListener, final boolean aHost) throws IllegalArgumentException
 	{
 		Log.i(TAG, "Starting to load character xml.");
 		mItems = aItems;
 		mContext = aContext;
+		mHost = aHost;
+		mResizeListener = aResizeListener;
 		
 		final Document doc = FilesUtil.loadDocument(aXML);
 		if (doc == null)
@@ -160,11 +174,11 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		mNature = mItems.getNatures().getItemWithName(meta.getAttribute("nature"));
 		mBehavior = mItems.getNatures().getItemWithName(meta.getAttribute("behavior"));
 		mClan = mItems.getClans().getItemWithName(meta.getAttribute("clan"));
-		mEP = new EPControllerInstance(Integer.parseInt(meta.getAttribute("ep")), getContext(), aChangeListener, aHost, this);
+		mEP = new EPControllerInstance(Integer.parseInt(meta.getAttribute("ep")), getContext(), aChangeListener, mHost, this);
 		mMode = Mode.valueOf(meta.getAttribute("mode"));
 		
 		// Generation
-		mGeneration = new GenerationControllerInstance((Element) root.getElementsByTagName("generation").item(0), this, aHost, aChangeListener);
+		mGeneration = new GenerationControllerInstance((Element) root.getElementsByTagName("generation").item(0), this, mHost, aChangeListener);
 		
 		// Insanities
 		mInsanities = new InsanityControllerInstance((Element) root.getElementsByTagName("insanities").item(0));
@@ -188,14 +202,16 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		}
 		
 		// Health
-		mHealth = new HealthControllerInstance((Element) root.getElementsByTagName("health").item(0), mContext, this, aChangeListener, aHost);
+		mHealth = new HealthControllerInstance((Element) root.getElementsByTagName("health").item(0), mContext, this, aChangeListener, mHost);
 		mTimeListeners.add(mHealth);
 		
 		// Money
-		mMoney = new MoneyControllerInstance(mItems.getMoney(), (Element) root.getElementsByTagName("money").item(0), getContext(), aHost);
+		mMoney = new MoneyControllerInstance(mItems.getCurrency(), (Element) root.getElementsByTagName("money").item(0), getContext(), mHost,
+				aChangeListener, mResizeListener);
 		
 		// Inventory
-		mInventory = new InventoryControllerInstance((Element) root.getElementsByTagName("inventory").item(0), mItems.getInventory(), this, getContext());
+		mInventory = new InventoryControllerInstance((Element) root.getElementsByTagName("inventory").item(0), mItems.getInventory(), this,
+				getContext());
 		
 		// Restrictions
 		final Element restrictions = (Element) root.getElementsByTagName("restrictions").item(0);
@@ -213,6 +229,22 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		}
 		
 		Log.i(TAG, "Finished loading character.");
+	}
+	
+	/**
+	 * @return the resize listener of this character.
+	 */
+	public ResizeListener getResizeListener()
+	{
+		return mResizeListener;
+	}
+	
+	/**
+	 * @return whether this character is host sided.
+	 */
+	public boolean isHost()
+	{
+		return mHost;
 	}
 	
 	/**

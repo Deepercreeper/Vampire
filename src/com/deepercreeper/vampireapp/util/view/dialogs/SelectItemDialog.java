@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.util.view;
+package com.deepercreeper.vampireapp.util.view.dialogs;
 
 import java.lang.reflect.Field;
 import java.util.Collections;

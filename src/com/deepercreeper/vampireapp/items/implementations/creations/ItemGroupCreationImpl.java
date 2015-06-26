@@ -28,8 +28,8 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.Crea
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
-import com.deepercreeper.vampireapp.util.view.SelectItemDialog;
-import com.deepercreeper.vampireapp.util.view.SelectItemDialog.SelectionListener;
+import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog;
+import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog.SelectionListener;
 
 /**
  * A group creation implementation.

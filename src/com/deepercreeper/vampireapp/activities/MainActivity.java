@@ -242,7 +242,7 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 			CharacterInstance character = null;
 			try
 			{
-				character = new CharacterInstance(xml, mItems, this, null, false);
+				character = new CharacterInstance(xml, mItems, this, null, null, false);
 			}
 			catch (final IllegalArgumentException e)
 			{
@@ -259,7 +259,7 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 			CharacterInstance character = null;
 			try
 			{
-				character = new CharacterInstance(xml, mItems, this, null, false);
+				character = new CharacterInstance(xml, mItems, this, null, null, false);
 			}
 			catch (final IllegalArgumentException e)
 			{
@@ -332,6 +332,8 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		
 		mViewPager.setCurrentItem(1);
+		
+		mConnection.checkConnectionState();
 	}
 	
 	private void initChars(final ViewGroup aRoot)

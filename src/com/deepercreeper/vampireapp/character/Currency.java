@@ -1,11 +1,11 @@
 package com.deepercreeper.vampireapp.character;
 
 /**
- * Repersents default money settings.
+ * Represents default money settings.
  * 
  * @author vrl
  */
-public class Money
+public class Currency
 {
 	private final String[]	mCurrencies;
 	
@@ -15,7 +15,7 @@ public class Money
 	 * @param aCurrencies
 	 *            The list of currencies.
 	 */
-	public Money(final String[] aCurrencies)
+	public Currency(final String[] aCurrencies)
 	{
 		mCurrencies = aCurrencies;
 	}

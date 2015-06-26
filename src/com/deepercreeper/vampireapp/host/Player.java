@@ -20,11 +20,13 @@ import com.deepercreeper.vampireapp.host.change.CharacterChange;
 import com.deepercreeper.vampireapp.host.change.EPChange;
 import com.deepercreeper.vampireapp.host.change.GenerationChange;
 import com.deepercreeper.vampireapp.host.change.HealthChange;
+import com.deepercreeper.vampireapp.host.change.MoneyChange;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.FilesUtil;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.ResizeHeightAnimation;
+import com.deepercreeper.vampireapp.util.view.ResizeListener;
 import com.deepercreeper.vampireapp.util.view.Viewable;
 
 /**
@@ -32,7 +34,7 @@ import com.deepercreeper.vampireapp.util.view.Viewable;
  * 
  * @author vrl
  */
-public class Player implements Viewable, TimeListener, ChangeListener
+public class Player implements Viewable, TimeListener, ChangeListener, ResizeListener
 {
 	private final ConnectedDevice		mDevice;
 	
@@ -76,7 +78,7 @@ public class Player implements Viewable, TimeListener, ChangeListener
 	public Player(final String aCharacter, final String aNumber, final ConnectedDevice aDevice, final ConnectionListener aListener,
 			final Context aContext, final ItemProvider aItems)
 	{
-		mChar = new CharacterInstance(aCharacter, aItems, aContext, this, true);
+		mChar = new CharacterInstance(aCharacter, aItems, aContext, this, this, true);
 		mNumber = aNumber;
 		mDevice = aDevice;
 		mContext = aContext;
@@ -203,6 +205,10 @@ public class Player implements Viewable, TimeListener, ChangeListener
 		{
 			change = new GenerationChange(element);
 		}
+		else if (aType.equals(MoneyChange.TAG_NAME))
+		{
+			change = new MoneyChange(element);
+		}
 		
 		// TODO Add other changes
 		
@@ -308,11 +314,13 @@ public class Player implements Viewable, TimeListener, ChangeListener
 		ViewUtil.release(mTimeCheckBox);
 	}
 	
-	/**
-	 * Starts a animation, that resizes the player container to the right size.
-	 */
+	@Override
 	public void resize()
 	{
+		if (mPlayerContainer == null)
+		{
+			return;
+		}
 		if (mPlayerContainer.getAnimation() != null && !mPlayerContainer.getAnimation().hasEnded())
 		{
 			mPlayerContainer.getAnimation().cancel();

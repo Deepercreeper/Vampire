@@ -22,7 +22,12 @@
             android:id="@+id/players_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical" >
+
+            <requestFocus />
+        </LinearLayout>
 
         <LinearLayout
             style="?android:attr/buttonBarStyle"
@@ -70,9 +75,9 @@
                 android:id="@+id/time_setter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
+                android:hint="@string/hour"
                 android:maxLength="2"
-                android:hint="@string/hour" />
+                android:singleLine="true" />
         </LinearLayout>
 
         <LinearLayout

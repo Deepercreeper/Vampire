@@ -27,8 +27,8 @@ import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.mechanics.TimeListener.Type;
 import com.deepercreeper.vampireapp.util.ConnectionUtil;
 import com.deepercreeper.vampireapp.util.FilesUtil;
-import com.deepercreeper.vampireapp.util.view.SelectItemDialog;
-import com.deepercreeper.vampireapp.util.view.SelectItemDialog.SelectionListener;
+import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog;
+import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog.SelectionListener;
 
 /**
  * This activity represents the running host game. It is able to accept new players<br>

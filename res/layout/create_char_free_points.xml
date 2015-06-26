@@ -12,15 +12,14 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin" >
 
-        <TextView 
+        <TextView
             android:id="@+id/free_points_info_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/free_points_info"
-            android:textSize="20sp"
             android:gravity="center_horizontal"
-            />
-        
+            android:text="@string/free_points_info"
+            android:textSize="20sp" />
+
         <TextView
             android:id="@+id/free_points_text"
             android:layout_width="match_parent"
@@ -56,6 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/controllers_2_panel"
             android:layout_toRightOf="@id/back_to_1_button"
+            android:layout_toEndOf="@id/back_to_1_button"
             android:text="@string/reset" />
 
         <Button
@@ -64,6 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/controllers_2_panel"
             android:layout_toRightOf="@id/reset_temp_points_button"
+            android:layout_toEndOf="@id/reset_temp_points_button"
             android:text="@string/next" />
     </RelativeLayout>
 

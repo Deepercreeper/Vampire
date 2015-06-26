@@ -150,7 +150,7 @@ public class CharController implements CharacterListener
 			final String data = FilesUtil.loadFile(aName + ".chr", mContext);
 			if (data != null)
 			{
-				character = new CharacterInstance(data, mItems, mContext, null, false);
+				character = new CharacterInstance(data, mItems, mContext, null, null, false);
 			}
 		}
 		if (character == null)

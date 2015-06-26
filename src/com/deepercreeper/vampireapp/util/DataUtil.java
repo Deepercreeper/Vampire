@@ -2,17 +2,19 @@ package com.deepercreeper.vampireapp.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import android.content.Context;
+import com.deepercreeper.vampireapp.character.Currency;
 import com.deepercreeper.vampireapp.character.Health;
 import com.deepercreeper.vampireapp.character.Inventory;
-import com.deepercreeper.vampireapp.character.Money;
 import com.deepercreeper.vampireapp.items.implementations.GroupOptionImpl;
 import com.deepercreeper.vampireapp.items.implementations.ItemControllerImpl;
 import com.deepercreeper.vampireapp.items.implementations.ItemGroupImpl;
@@ -119,10 +121,51 @@ public class DataUtil
 	 *            The underlying context.
 	 * @return the money settings.
 	 */
-	public static Money loadMoney(final Context aContext)
+	public static Currency loadCurrency(final Context aContext)
 	{
-		final Money money = new Money(parseArray(getSpecialItems(aContext).getAttribute("currencies")));
+		final Currency money = new Currency(parseArray(getSpecialItems(aContext).getAttribute("currencies")));
 		return money;
+	}
+	
+	/**
+	 * @param aMap
+	 *            The string to integer map.
+	 * @return a string representing the given map.
+	 */
+	public static String parseMap(final Map<String, Integer> aMap)
+	{
+		final StringBuilder string = new StringBuilder();
+		boolean first = true;
+		for (final String key : aMap.keySet())
+		{
+			if (first)
+			{
+				first = false;
+			}
+			else
+			{
+				string.append(",");
+			}
+			string.append(CodingUtil.encode(key) + "=" + aMap.get(key));
+		}
+		return string.toString();
+	}
+	
+	/**
+	 * @param aMap
+	 *            A string that represents a string to integer map.
+	 * @return a map out of the given string.
+	 */
+	public static Map<String, Integer> parseMap(final String aMap)
+	{
+		final Map<String, Integer> map = new HashMap<String, Integer>();
+		final String[] entries = aMap.split(",");
+		for (final String entry : entries)
+		{
+			final String[] keyAndValue = entry.split("=");
+			map.put(CodingUtil.decode(keyAndValue[0]), Integer.parseInt(keyAndValue[1]));
+		}
+		return map;
 	}
 	
 	/**

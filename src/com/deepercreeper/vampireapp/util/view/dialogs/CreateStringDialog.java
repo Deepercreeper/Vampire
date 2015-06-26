@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.util.view;
+package com.deepercreeper.vampireapp.util.view.dialogs;
 
 import java.lang.reflect.Field;
 import android.app.Activity;
@@ -80,7 +80,6 @@ public class CreateStringDialog extends DialogFragment
 	
 	private CreateStringDialog(final String aTitle, final String aMessage, final Context aContext, final CreationListener aListener)
 	{
-		// TODO Will be replaced by a create host activity
 		sDialogOpen = true;
 		mTitle = aTitle;
 		mMessage = aMessage;

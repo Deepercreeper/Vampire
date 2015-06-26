@@ -22,7 +22,7 @@
 
     <ImageButton
         android:id="@+id/heavy_hurt"
-        android:layout_width="50dp"
+        android:layout_width="@dimen/big_button_width"
         android:layout_height="30dp"
 		android:contentDescription="@string/content_description"
 		android:src="@drawable/ic_heavy"
@@ -30,7 +30,7 @@
 
     <ImageButton
         android:id="@+id/hurt_button"
-        android:layout_width="50dp"
+        android:layout_width="@dimen/big_button_width"
         android:layout_height="30dp"
         android:contentDescription="@string/content_description"
         android:src="@drawable/ic_damage" />
@@ -41,7 +41,7 @@
 
         <ImageButton
             android:id="@+id/heal_button"
-            android:layout_width="50dp"
+            android:layout_width="@dimen/big_button_width"
             android:layout_height="30dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"

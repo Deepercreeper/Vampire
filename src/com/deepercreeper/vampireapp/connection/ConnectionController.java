@@ -20,8 +20,8 @@ import com.deepercreeper.vampireapp.host.Player;
 import com.deepercreeper.vampireapp.util.BluetoothReceiver;
 import com.deepercreeper.vampireapp.util.BluetoothReceiver.BluetoothListener;
 import com.deepercreeper.vampireapp.util.Log;
-import com.deepercreeper.vampireapp.util.view.SelectItemDialog;
-import com.deepercreeper.vampireapp.util.view.SelectItemDialog.SelectionListener;
+import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog;
+import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog.SelectionListener;
 
 /**
  * This controller handles all connection actions like creating an open Bluetooth port<br>

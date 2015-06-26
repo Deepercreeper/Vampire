@@ -28,6 +28,7 @@ import com.deepercreeper.vampireapp.host.change.CharacterChange;
 import com.deepercreeper.vampireapp.host.change.EPChange;
 import com.deepercreeper.vampireapp.host.change.GenerationChange;
 import com.deepercreeper.vampireapp.host.change.HealthChange;
+import com.deepercreeper.vampireapp.host.change.MoneyChange;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
@@ -35,6 +36,7 @@ import com.deepercreeper.vampireapp.mechanics.TimeListener.Type;
 import com.deepercreeper.vampireapp.util.ConnectionUtil;
 import com.deepercreeper.vampireapp.util.ContactsUtil;
 import com.deepercreeper.vampireapp.util.FilesUtil;
+import com.deepercreeper.vampireapp.util.view.ResizeListener;
 
 /**
  * This activity is used to play a character, that was created before and connect to a host.<br>
@@ -42,7 +44,7 @@ import com.deepercreeper.vampireapp.util.FilesUtil;
  * 
  * @author vrl
  */
-public class PlayActivity extends Activity implements ItemConsumer, ConnectionListener, ChangeListener
+public class PlayActivity extends Activity implements ItemConsumer, ConnectionListener, ChangeListener, ResizeListener
 {
 	private static final String		TAG					= "PlayActivity";
 	
@@ -210,6 +212,10 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		{
 			change = new GenerationChange(element);
 		}
+		else if (aType.equals(MoneyChange.TAG_NAME))
+		{
+			change = new MoneyChange(element);
+		}
 		
 		// TODO Add other changes
 		
@@ -291,6 +297,10 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		mConnection.getHost().send(MessageType.UPDATE, FilesUtil.serialize(aChange), aChange.getType());
 	}
 	
+	@Override
+	public void resize()
+	{}
+	
 	private void init()
 	{
 		mConnection = new ConnectionController(this, this, mHandler);
@@ -300,7 +310,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		CharacterInstance character = null;
 		try
 		{
-			character = new CharacterInstance(xml, mItems, this, this, false);
+			character = new CharacterInstance(xml, mItems, this, this, null, false);
 		}
 		catch (final IllegalArgumentException e)
 		{

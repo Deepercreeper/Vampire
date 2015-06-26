@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <string name="ok">OK</string>
+    <string name="choose_money_amount">Choose the money amount</string>
+    <string name="create_depot_title">Create depot</string>
+    <string name="create_depot">Please enter the name of the new depot:</string>
     <string name="host_name">Host name</string>
     <string name="bag">Bag</string>
     <string name="generation">Generation:</string>
-    <string name="amount">EP amount</string>
+    <string name="amount">Amount</string>
+    <string name="ep_amount">EP amount</string>
     <string name="apply">Apply</string>
     <string name="round">Round</string>
     <string name="hour">Hour</string>

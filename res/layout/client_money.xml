@@ -24,7 +24,7 @@
 
             <ImageButton
                 android:id="@+id/add_depot"
-                android:layout_width="50dp"
+                android:layout_width="@dimen/big_button_width"
                 android:layout_height="30dp"
                 android:layout_gravity="end"
                 android:contentDescription="@string/content_description"

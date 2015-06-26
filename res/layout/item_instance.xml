@@ -36,7 +36,7 @@
 
     <ImageButton
         android:id="@+id/item_increase_button"
-        android:layout_width="30dp"
+        android:layout_width="@dimen/small_button_width"
         android:layout_height="30dp"
         android:layout_toEndOf="@id/item_value_bar"
         android:layout_toRightOf="@id/item_value_bar"
