@@ -37,7 +37,7 @@
 
             <Button
                 android:id="@+id/day"
-                style="?android:attr/buttonBarButtonStyle"
+                style="@style/BarButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/day"
@@ -45,7 +45,7 @@
 
             <Button
                 android:id="@+id/hour"
-                style="?android:attr/buttonBarButtonStyle"
+                style="@style/BarButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/hour"
@@ -53,7 +53,7 @@
 
             <Button
                 android:id="@+id/round"
-                style="?android:attr/buttonBarButtonStyle"
+                style="@style/BarButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/round"

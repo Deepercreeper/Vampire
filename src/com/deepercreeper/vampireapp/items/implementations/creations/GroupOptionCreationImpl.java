@@ -350,7 +350,7 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 	@Override
 	public void setEnabled(final boolean aEnabled)
 	{
-		mGroupButton.setEnabled(aEnabled);
+		ViewUtil.setEnabled(mGroupButton, aEnabled);
 		if ( !aEnabled && isOpen())
 		{
 			close();

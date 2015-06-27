@@ -144,7 +144,7 @@ public class CharacterCreation
 		}
 		mDescriptions = new DescriptionControllerCreation(mItems.getDescriptions());
 		mInsanities = new InsanityControllerCreation(mContext, this);
-		mGeneration = new GenerationControllerCreation(mContext, this);
+		mGeneration = new GenerationControllerCreation();
 		mHealth = new HealthControllerCreation(mContext, mItems);
 		mBehavior = mNature = mItems.getNatures().getFirst();
 		setClan(mItems.getClans().getFirst());

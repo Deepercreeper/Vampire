@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.Button;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.util.ViewUtil;
@@ -41,7 +41,7 @@ public class CharacterCompound implements Comparable<CharacterCompound>, Viewabl
 	
 	private View					mTrimmer;
 	
-	private RelativeLayout			mContainer;
+	private LinearLayout			mContainer;
 	
 	private long					mLastUsed;
 	
@@ -152,7 +152,7 @@ public class CharacterCompound implements Comparable<CharacterCompound>, Viewabl
 	}
 	
 	@Override
-	public RelativeLayout getContainer()
+	public LinearLayout getContainer()
 	{
 		return mContainer;
 	}
@@ -181,7 +181,7 @@ public class CharacterCompound implements Comparable<CharacterCompound>, Viewabl
 	 */
 	public void setPlayingEnabled(final boolean aEnabled)
 	{
-		mPlay.setEnabled(aEnabled);
+		ViewUtil.setEnabled(mPlay, aEnabled);
 	}
 	
 	@Override
@@ -204,12 +204,12 @@ public class CharacterCompound implements Comparable<CharacterCompound>, Viewabl
 	@Override
 	public void init()
 	{
-		mContainer = (RelativeLayout) View.inflate(mContext, R.layout.character_compound, null);
+		mContainer = (LinearLayout) View.inflate(mContext, R.layout.character_compound, null);
 		
 		mTrimmer = mContainer.findViewById(R.id.trimmer);
 		
 		final TextView concept = (TextView) mContainer.findViewById(R.id.concept_label);
-		concept.setText(mConcept);
+		concept.setText(mContext.getString(R.string.concept_colon) + " " + mConcept);
 		
 		final TextView name = (TextView) mContainer.findViewById(R.id.name_label);
 		mContainer.setLongClickable(true);
@@ -225,7 +225,7 @@ public class CharacterCompound implements Comparable<CharacterCompound>, Viewabl
 		name.setText(mName);
 		
 		final TextView generation = (TextView) mContainer.findViewById(R.id.generation_label);
-		generation.setText("" + mGeneration);
+		generation.setText(mContext.getString(R.string.generation_colon) + " " + mGeneration);
 		
 		mPlay = (Button) mContainer.findViewById(R.id.play_button);
 		mPlay.setOnClickListener(new OnClickListener()
@@ -242,10 +242,10 @@ public class CharacterCompound implements Comparable<CharacterCompound>, Viewabl
 		ep.setText("EP: " + mEP);
 		
 		final TextView behavior = (TextView) mContainer.findViewById(R.id.behavior_label);
-		behavior.setText(mContext.getString(R.string.behavior_text) + " " + mBehavior);
+		behavior.setText(mContext.getString(R.string.behavior_colon) + " " + mBehavior);
 		
 		final TextView nature = (TextView) mContainer.findViewById(R.id.nature_label);
-		nature.setText(mContext.getString(R.string.nature_text) + " " + mNature);
+		nature.setText(mContext.getString(R.string.nature_colon) + " " + mNature);
 	}
 	
 	@Override

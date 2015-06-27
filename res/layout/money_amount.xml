@@ -5,7 +5,7 @@
     android:orientation="vertical" >
 
     <Button android:id="@+id/ok_button"
-        style="?android:attr/buttonBarButtonStyle"
+        style="@style/BarButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"

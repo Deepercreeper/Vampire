@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TableLayout;
@@ -125,7 +126,7 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 		{
 			((TextView) findViewById(R.id.free_points_text)).setText("" + aValue);
 			((ProgressBar) findViewById(R.id.free_points_bar)).setProgress(aValue);
-			((Button) findViewById(R.id.next_to_3_button)).setEnabled(aValue == 0);
+			ViewUtil.setEnabled((findViewById(R.id.next_to_3_button)), aValue == 0);
 		}
 	}
 	
@@ -134,7 +135,7 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 	{
 		if (mState == State.DESCRIPTIONS)
 		{
-			findViewById(R.id.next_to_4_button).setEnabled(aOk);
+			ViewUtil.setEnabled(findViewById(R.id.next_to_4_button), aOk);
 		}
 	}
 	
@@ -357,7 +358,7 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 		final TextView conceptTextView = (TextView) findViewById(R.id.concept_text);
 		final Spinner natureSpinner = (Spinner) findViewById(R.id.nature_spinner);
 		final Spinner behaviorSpinner = (Spinner) findViewById(R.id.behavior_spinner);
-		final LinearLayout generationPanel = (LinearLayout) findViewById(R.id.generation_panel);
+		final NumberPicker generationPicker = (NumberPicker) findViewById(R.id.generation_picker);
 		final Spinner clanSpinner = (Spinner) findViewById(R.id.clan_spinner);
 		final LinearLayout controllersPanel = (LinearLayout) findViewById(R.id.controllers_panel);
 		final Button nextButton = (Button) findViewById(R.id.next_to_2_button);
@@ -372,7 +373,7 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 			public void afterTextChanged(final Editable aS)
 			{
 				mChar.setName(nameTextView.getText().toString());
-				nextButton.setEnabled(isNameOk(mChar.getName()) && isConceptOk(mChar.getConcept()));
+				ViewUtil.setEnabled(nextButton, isNameOk(mChar.getName()) && isConceptOk(mChar.getConcept()));
 			}
 			
 			@Override
@@ -395,7 +396,7 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 			public void afterTextChanged(final Editable aS)
 			{
 				mChar.setConcept(conceptTextView.getText().toString());
-				nextButton.setEnabled(isNameOk(mChar.getName()) && isConceptOk(mChar.getConcept()));
+				ViewUtil.setEnabled(nextButton, isNameOk(mChar.getName()) && isConceptOk(mChar.getConcept()));
 			}
 			
 			@Override
@@ -447,7 +448,7 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 		});
 		behaviorSpinner.setSelection(mItems.getNatures().displayIndexOf(mChar.getBehavior()));
 		
-		mChar.getGeneration().init(generationPanel, mFreeCreation);
+		mChar.getGeneration().init(generationPicker, mFreeCreation);
 		
 		clanSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, mItems.getClans().getDisplayNames()));
 		clanSpinner.setOnItemSelectedListener(new OnItemSelectedListener()
@@ -480,7 +481,7 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 			controllersPanel.addView(mChar.getHealth().getContainer());
 		}
 		
-		nextButton.setEnabled(isNameOk(mChar.getName()));
+		ViewUtil.setEnabled(nextButton, isNameOk(mChar.getName()));
 		nextButton.setOnClickListener(new OnClickListener()
 		{
 			@Override

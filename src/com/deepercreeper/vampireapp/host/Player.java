@@ -346,7 +346,7 @@ public class Player implements Viewable, TimeListener, ChangeListener, ResizeLis
 	{
 		mButton.setText(getName() + (aAFK ? " " + mContext.getString(R.string.afk) : ""));
 		if (aAFK) close();
-		mButton.setEnabled( !aAFK);
+		ViewUtil.setEnabled(mButton, !aAFK);
 	}
 	
 	/**

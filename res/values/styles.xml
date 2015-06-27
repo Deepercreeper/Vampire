@@ -6,4 +6,7 @@
 
     <style name="AppTheme" parent="@style/AppBaseTheme" />
 
-</resources>
+    <style name="BarButton" parent="@android:style/Widget.Holo.Button.Borderless">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+</resources>

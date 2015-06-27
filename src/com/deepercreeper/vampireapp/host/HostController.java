@@ -202,7 +202,7 @@ public class HostController implements HostListener
 			final View view = mHostsList.getChildAt(i);
 			if (view instanceof TextView)
 			{
-				view.setEnabled(aEnabled);
+				ViewUtil.setEnabled(view, aEnabled);
 			}
 		}
 	}

@@ -7,7 +7,7 @@
         android:id="@+id/ep_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/ep"
+        android:text="@string/ep_colon"
         android:gravity="center_vertical"
         android:textSize="20sp" />
 

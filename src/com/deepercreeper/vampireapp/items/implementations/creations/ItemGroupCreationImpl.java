@@ -420,9 +420,10 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		if (getCreationMode().canAddItem(this))
 		{
 			mAddButton.setLayoutParams(ViewUtil.getWrapHeight());
+			
 			if ( !mInitialized)
 			{
-				mAddButton.setText(R.string.add);
+				mAddButton.setText(mContext.getString(R.string.add) + "...");
 				mAddButton.setOnClickListener(new OnClickListener()
 				{
 					@Override
@@ -581,7 +582,8 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 	{
 		if (isMutable())
 		{
-			mAddButton.setEnabled( !getAddableItems().isEmpty() && getItemsList().size() < getMaxValue(CreationRestrictionType.GROUP_CHILDREN_COUNT)
+			ViewUtil.setEnabled(mAddButton, !getAddableItems().isEmpty()
+					&& getItemsList().size() < getMaxValue(CreationRestrictionType.GROUP_CHILDREN_COUNT)
 					&& getItemsList().size() < getItemGroup().getMaxItems());
 		}
 	}
