@@ -5,8 +5,7 @@ import java.util.List;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.TableLayout;
-import android.widget.TableRow;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
@@ -22,7 +21,7 @@ public class InsanityControllerCreation extends CreationRestrictionableImpl
 {
 	private final List<String>		mInsanities	= new ArrayList<String>();
 	
-	private TableLayout				mTable;
+	private LinearLayout			mPanel;
 	
 	private final Context			mContext;
 	
@@ -54,7 +53,7 @@ public class InsanityControllerCreation extends CreationRestrictionableImpl
 		{
 			mInsanities.add(aInsanity);
 			final int index = mInsanities.indexOf(aInsanity);
-			mTable.addView(createRow(index), index);
+			mPanel.addView(createInsanityPanel(index), index);
 			updateRestrictions();
 		}
 	}
@@ -64,7 +63,7 @@ public class InsanityControllerCreation extends CreationRestrictionableImpl
 	 */
 	public void clear()
 	{
-		mTable.removeAllViews();
+		mPanel.removeAllViews();
 		mInsanities.clear();
 	}
 	
@@ -79,12 +78,12 @@ public class InsanityControllerCreation extends CreationRestrictionableImpl
 	/**
 	 * Uses the given table as UI container and adds insanity representing view to it.
 	 * 
-	 * @param aTable
+	 * @param aPanel
 	 *            The table.
 	 */
-	public void init(final TableLayout aTable)
+	public void init(final LinearLayout aPanel)
 	{
-		mTable = aTable;
+		mPanel = aPanel;
 	}
 	
 	/**
@@ -101,7 +100,7 @@ public class InsanityControllerCreation extends CreationRestrictionableImpl
 	public void release()
 	{
 		clear();
-		mTable = null;
+		mPanel = null;
 	}
 	
 	/**
@@ -124,12 +123,12 @@ public class InsanityControllerCreation extends CreationRestrictionableImpl
 		mCreator.setInsanitiesOk(isOk());
 	}
 	
-	private TableRow createRow(final int aIndex)
+	private LinearLayout createInsanityPanel(final int aIndex)
 	{
 		final String insanity = mInsanities.get(aIndex);
 		
-		final TableRow row = (TableRow) View.inflate(mContext, R.layout.insanity_row, null);
-		row.findViewById(R.id.remove_button).setOnClickListener(new OnClickListener()
+		final LinearLayout insanityPanel = (LinearLayout) View.inflate(mContext, R.layout.insanity, null);
+		insanityPanel.findViewById(R.id.remove_button).setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(final View aV)
@@ -137,15 +136,15 @@ public class InsanityControllerCreation extends CreationRestrictionableImpl
 				remove(insanity);
 			}
 		});
-		((TextView) row.findViewById(R.id.insanity_text)).setText(insanity);
+		((TextView) insanityPanel.findViewById(R.id.insanity_text)).setText(insanity);
 		
-		return row;
+		return insanityPanel;
 	}
 	
 	private void remove(final int aIndex)
 	{
 		mInsanities.remove(aIndex);
-		mTable.removeViewAt(aIndex);
+		mPanel.removeViewAt(aIndex);
 		updateRestrictions();
 	}
 }

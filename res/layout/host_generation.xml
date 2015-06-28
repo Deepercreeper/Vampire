@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal" >
+    android:layout_height="match_parent" >
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
+        android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:text="@string/generation_colon"
-        android:textSize="16sp" />
+        android:textSize="@dimen/small_text_size" />
 
     <ImageButton
         android:id="@+id/increase_generation"
-        android:layout_width="@dimen/big_button_width"
-        android:layout_height="30dp"
+        android:layout_width="@dimen/button_width"
+        android:layout_height="@dimen/button_height"
         android:contentDescription="@string/content_description"
         android:src="@drawable/ic_increase" />
 
     <TextView
         android:id="@+id/generation_label"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="match_parent"
         android:gravity="end|center_vertical"
-        android:textSize="16sp" />
+        android:textSize="@dimen/small_text_size" />
 
 </LinearLayout>

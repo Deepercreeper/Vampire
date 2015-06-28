@@ -6,7 +6,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.deepercreeper.vampireapp.R;
@@ -23,17 +23,17 @@ import com.deepercreeper.vampireapp.util.view.Viewable;
  */
 public class InventoryItem implements Saveable, Viewable
 {
-	private final int				mWeight;
+	private final int					mWeight;
 	
-	private final String			mName;
+	private final String				mName;
 	
-	private final Context			mContext;
+	private final Context				mContext;
 	
-	private final RelativeLayout	mContainer;
+	private final LinearLayout			mContainer;
 	
-	private InventoryControllerInstance		mController;
+	private InventoryControllerInstance	mController;
 	
-	private boolean					mInitialized	= false;
+	private boolean						mInitialized	= false;
 	
 	/**
 	 * Creates a new inventory item out of the given XML data.
@@ -52,7 +52,7 @@ public class InventoryItem implements Saveable, Viewable
 		mName = aElement.getAttribute("name");
 		mWeight = Integer.parseInt(aElement.getAttribute("weight"));
 		
-		mContainer = (RelativeLayout) View.inflate(mContext, R.layout.inventory_item, null);
+		mContainer = (LinearLayout) View.inflate(mContext, R.layout.inventory_item, null);
 		
 		init();
 	}
@@ -76,13 +76,13 @@ public class InventoryItem implements Saveable, Viewable
 		mName = aName;
 		mWeight = aWeight;
 		
-		mContainer = (RelativeLayout) View.inflate(mContext, R.layout.inventory_item, null);
+		mContainer = (LinearLayout) View.inflate(mContext, R.layout.inventory_item, null);
 		
 		init();
 	}
 	
 	@Override
-	public RelativeLayout getContainer()
+	public LinearLayout getContainer()
 	{
 		return mContainer;
 	}
@@ -172,7 +172,7 @@ public class InventoryItem implements Saveable, Viewable
 	 * @param aController
 	 *            The new parent inventory controller.
 	 */
-	public void addTo(InventoryControllerInstance aController)
+	public void addTo(final InventoryControllerInstance aController)
 	{
 		mController = aController;
 	}

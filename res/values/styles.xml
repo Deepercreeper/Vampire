@@ -9,4 +9,11 @@
     <style name="BarButton" parent="@android:style/Widget.Holo.Button.Borderless">
         <item name="android:textColor">@android:color/white</item>
     </style>
+    
+    <style name="BigButton" parent="@android:style/Widget.Holo.Button">
+        <item name="android:inputType">text</item>
+    </style>
+    
+    <style name="SmallButton" parent="@android:style/Widget.Holo.ImageButton">
+    </style>
 </resources>

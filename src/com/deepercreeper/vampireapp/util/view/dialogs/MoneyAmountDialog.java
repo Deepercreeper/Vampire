@@ -81,7 +81,7 @@ public class MoneyAmountDialog extends DialogFragment
 	public Dialog onCreateDialog(final Bundle aSavedInstanceState)
 	{
 		final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-		final LinearLayout container = (LinearLayout) View.inflate(mContext, R.layout.money_amount, null);
+		final LinearLayout container = (LinearLayout) View.inflate(mContext, R.layout.money_amount_dialog, null);
 		for (final String currency : mCurrency.getCurrencies())
 		{
 			final LinearLayout currencyView = (LinearLayout) View.inflate(mContext, R.layout.currency_spinner, null);

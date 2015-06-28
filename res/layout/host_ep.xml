@@ -6,34 +6,35 @@
     <TextView
         android:id="@+id/ep_label"
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
+        android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:text="@string/ep_colon"
-        android:textSize="16sp" />
+        android:textSize="@dimen/small_text_size" />
 
     <TextView
         android:id="@+id/ep"
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
+        android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
-        android:textSize="16sp" />
+        android:textSize="@dimen/small_text_size" />
 
     <ImageButton
         android:id="@+id/give_ep"
-        android:layout_width="@dimen/big_button_width"
-        android:layout_height="30dp"
+        android:layout_width="@dimen/button_width"
+        android:layout_height="@dimen/button_height"
+        android:layout_gravity="center_vertical"
         android:contentDescription="@string/content_description"
         android:src="@drawable/ic_ep" />
 
     <EditText
         android:id="@+id/ep_amount"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
         android:hint="@string/ep_amount"
         android:maxLength="4"
         android:singleLine="true"
-        android:textSize="16sp" />
+        android:textSize="@dimen/small_text_size" />
 
 </LinearLayout>

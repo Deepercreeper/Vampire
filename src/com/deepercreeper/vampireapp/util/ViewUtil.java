@@ -24,6 +24,7 @@ public class ViewUtil
 	 */
 	public static int calcHeight(final ViewGroup aLayout)
 	{
+		// TODO Remove all unnecessary gravity attributes
 		final LayoutParams params = aLayout.getLayoutParams();
 		final int height = params.height;
 		params.height = LayoutParams.WRAP_CONTENT;

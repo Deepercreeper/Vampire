@@ -8,7 +8,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.items.ItemProvider;
@@ -25,14 +24,14 @@ public class HealthControllerCreation implements Viewable
 {
 	private class Step
 	{
-		private final RelativeLayout	mStepContainer;
+		private final LinearLayout	mStepContainer;
 		
-		private int						mValue;
+		private int					mValue;
 		
 		public Step(final int aValue)
 		{
 			mValue = aValue;
-			mStepContainer = (RelativeLayout) View.inflate(mContext, R.layout.step, null);
+			mStepContainer = (LinearLayout) View.inflate(mContext, R.layout.step, null);
 			final TextView value = ((TextView) mStepContainer.findViewById(R.id.value_label));
 			final ImageButton remove = ((ImageButton) mStepContainer.findViewById(R.id.remove_button));
 			final ImageButton increase = ((ImageButton) mStepContainer.findViewById(R.id.increase_button));
@@ -89,7 +88,7 @@ public class HealthControllerCreation implements Viewable
 			return this == aO;
 		}
 		
-		public RelativeLayout getContainer()
+		public LinearLayout getContainer()
 		{
 			return mStepContainer;
 		}

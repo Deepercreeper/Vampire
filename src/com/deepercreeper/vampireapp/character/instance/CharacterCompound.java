@@ -39,8 +39,6 @@ public class CharacterCompound implements Comparable<CharacterCompound>, Viewabl
 	
 	private Button					mPlay;
 	
-	private View					mTrimmer;
-	
 	private LinearLayout			mContainer;
 	
 	private long					mLastUsed;
@@ -206,8 +204,6 @@ public class CharacterCompound implements Comparable<CharacterCompound>, Viewabl
 	{
 		mContainer = (LinearLayout) View.inflate(mContext, R.layout.character_compound, null);
 		
-		mTrimmer = mContainer.findViewById(R.id.trimmer);
-		
 		final TextView concept = (TextView) mContainer.findViewById(R.id.concept_label);
 		concept.setText(mContext.getString(R.string.concept_colon) + " " + mConcept);
 		
@@ -252,24 +248,6 @@ public class CharacterCompound implements Comparable<CharacterCompound>, Viewabl
 	public void release()
 	{
 		ViewUtil.release(getContainer());
-	}
-	
-	/**
-	 * Sets whether this character is the first character inside the characters list.
-	 * 
-	 * @param aFirst
-	 *            Whether the first or not.
-	 */
-	public void setFirst(final boolean aFirst)
-	{
-		if (aFirst)
-		{
-			mTrimmer.setVisibility(View.INVISIBLE);
-		}
-		else
-		{
-			mTrimmer.setVisibility(View.VISIBLE);
-		}
 	}
 	
 	@Override

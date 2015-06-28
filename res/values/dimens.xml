@@ -1,9 +1,11 @@
 <resources>
 
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="item_value_bar_width">30dp</dimen>
-	<dimen name="big_button_width">35dp</dimen>
-	<dimen name="small_button_width">30dp</dimen>
+	<dimen name="button_width">35dp</dimen>
+	<dimen name="button_height">30dp</dimen>
+	<dimen name="host_text_size">16sp</dimen>
+	<dimen name="normal_text_size">20sp</dimen>
+	<dimen name="small_text_size">16sp</dimen> 
+	<dimen name="activity_margin">16dp</dimen>
     
 </resources>

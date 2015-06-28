@@ -17,7 +17,6 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.deepercreeper.vampireapp.R;
@@ -68,17 +67,17 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	
 	private final String					mDescription;
 	
-	private final EPControllerInstance				mEP;
+	private final EPControllerInstance		mEP;
 	
 	private final ValueAnimator				mAnimator;
+	
+	private LinearLayout					mChildrenContainer;
 	
 	private ImageButton						mIncreaseButton;
 	
 	private ProgressBar						mValueBar;
 	
 	private TextView						mValueText;
-	
-	private RelativeLayout					mRelativeContainer;
 	
 	private TextView						mNameText;
 	
@@ -130,7 +129,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			mDescription = null;
 		}
 		mMode = aMode;
-		mContainer = new LinearLayout(getContext());
+		mContainer = (LinearLayout) View.inflate(mContext, R.layout.item_instance, null);
 		
 		if (isValueItem())
 		{
@@ -211,8 +210,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		mDescription = aItem.getDescription();
 		mEP = aEP;
 		mMode = aMode;
-		mContainer = new LinearLayout(getContext());
-		mRelativeContainer = new RelativeLayout(getContext());
+		mContainer = (LinearLayout) View.inflate(mContext, R.layout.item_instance, null);
 		mNameText = new TextView(getContext());
 		
 		if (isParent())
@@ -614,11 +612,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	{
 		if ( !mInitialized)
 		{
-			getContainer().setLayoutParams(ViewUtil.getWrapHeight());
-			getContainer().setOrientation(LinearLayout.VERTICAL);
-			View.inflate(getContext(), R.layout.item_instance, getContainer());
-			
-			mRelativeContainer = (RelativeLayout) getContainer().findViewById(R.id.relative_item_container);
+			mChildrenContainer = (LinearLayout) getContainer().findViewById(R.id.children_container);
 			mValueText = (TextView) getContainer().findViewById(R.id.item_value);
 			mValueBar = (ProgressBar) getContainer().findViewById(R.id.item_value_bar);
 			mIncreaseButton = (ImageButton) getContainer().findViewById(R.id.item_increase_button);
@@ -653,17 +647,9 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			
 			mInitialized = true;
 		}
-		else
-		{
-			if (mRelativeContainer.getParent() == null)
-			{
-				getContainer().addView(mRelativeContainer, 0);
-			}
-		}
 		
 		if (isValueItem())
 		{
-			int additionalBarWidth = 120;
 			if (canEPIncrease())
 			{
 				ViewUtil.setWidth(mIncreaseButton, 30);
@@ -671,11 +657,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			else
 			{
 				ViewUtil.hideWidth(mIncreaseButton);
-				additionalBarWidth += 30;
 			}
-			
-			mValueBar.getLayoutParams().width = ViewUtil.calcPx(additionalBarWidth, getContext())
-					+ Math.round(getContext().getResources().getDimension(R.dimen.item_value_bar_width));
 			
 			refreshValue();
 		}
@@ -692,7 +674,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 				{
 					item.release();
 					item.init();
-					getContainer().addView(item.getContainer());
+					mChildrenContainer.addView(item.getContainer());
 				}
 			}
 		}
@@ -819,7 +801,6 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			}
 		}
 		ViewUtil.release(getContainer());
-		ViewUtil.release(mRelativeContainer);
 	}
 	
 	@Override
@@ -901,7 +882,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		for (final ItemInstance item : getChildrenList())
 		{
 			item.init();
-			getContainer().addView(item.getContainer());
+			mChildrenContainer.addView(item.getContainer());
 		}
 	}
 	
@@ -921,12 +902,12 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		if (aPos != -1)
 		{
 			getChildrenList().add(aPos, aItem);
-			getContainer().addView(aItem.getContainer(), aPos);
+			mChildrenContainer.addView(aItem.getContainer(), aPos);
 		}
 		else
 		{
 			getChildrenList().add(aItem);
-			getContainer().addView(aItem.getContainer());
+			mChildrenContainer.addView(aItem.getContainer());
 		}
 		getItemGroup().getItemController().addItem(aItem);
 	}

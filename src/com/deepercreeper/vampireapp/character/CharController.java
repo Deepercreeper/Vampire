@@ -227,15 +227,8 @@ public class CharController implements CharacterListener
 		
 		Collections.sort(mCharacterCompoundsList);
 		
-		boolean first = true;
-		
 		for (final CharacterCompound charCompound : mCharacterCompoundsList)
 		{
-			charCompound.setFirst(first);
-			if (first)
-			{
-				first = false;
-			}
 			mCharsList.addView(charCompound.getContainer());
 		}
 	}

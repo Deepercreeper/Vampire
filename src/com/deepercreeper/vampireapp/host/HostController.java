@@ -8,9 +8,10 @@ import java.util.List;
 import java.util.Map;
 import android.app.Activity;
 import android.content.Intent;
-import android.util.TypedValue;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
@@ -226,35 +227,33 @@ public class HostController implements HostListener
 		
 		Collections.sort(mHostNames);
 		
-		boolean first = true;
-		
 		for (final String host : mHostNames)
 		{
-			if (first)
-			{
-				first = false;
-			}
-			else
-			{
-				mHostsList.addView(View.inflate(mContext, R.layout.horizontal_line, null));
-			}
+			final LinearLayout hostCompound = (LinearLayout) View.inflate(mContext, R.layout.host_compound, null);
 			
-			final TextView hostView = new TextView(mContext);
-			hostView.setLayoutParams(ViewUtil.getWrapHeight());
-			hostView.setText(host);
-			hostView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-			hostView.setLongClickable(true);
-			hostView.setEnabled(mConnection.isEnabled());
-			hostView.setOnLongClickListener(new OnLongClickListener()
+			final TextView hostName = (TextView) hostCompound.findViewById(R.id.host_name);
+			final Button playHost = (Button) hostCompound.findViewById(R.id.play_button);
+			
+			hostName.setText(host);
+			hostCompound.setOnLongClickListener(new OnLongClickListener()
 			{
 				@Override
 				public boolean onLongClick(final View aV)
 				{
 					HostContextMenu.showCharacterContextMenu(HostController.this, mContext, host);
-					return false;
+					return true;
 				}
 			});
-			mHostsList.addView(hostView);
+			playHost.setEnabled(mConnection.isEnabled());
+			playHost.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					playHost(host);
+				}
+			});
+			mHostsList.addView(hostCompound);
 		}
 	}
 	

@@ -18,30 +18,29 @@
         <LinearLayout
             style="?android:attr/buttonBarStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:layout_height="wrap_content" >
 
             <Button
                 android:id="@+id/kick_player"
                 style="@style/BarButton"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/kick"
-                android:textColor="@android:color/white" />
+                android:layout_weight="1"
+                android:text="@string/kick" />
 
             <Button
                 android:id="@+id/ban_player"
                 style="@style/BarButton"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/ban"
-                android:textColor="@android:color/white" />
+                android:layout_weight="1"
+                android:text="@string/ban" />
         </LinearLayout>
-        
-        <View 
+
+        <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@android:color/white"/>
+            android:background="@android:color/white" />
     </LinearLayout>
 
 </LinearLayout>

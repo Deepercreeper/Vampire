@@ -3,7 +3,7 @@ package com.deepercreeper.vampireapp.character.creation;
 import java.util.ArrayList;
 import java.util.List;
 import android.content.Context;
-import android.widget.TableLayout;
+import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.implementations.creations.ItemControllerCreationImpl;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
@@ -354,12 +354,12 @@ public class CharacterCreation
 	/**
 	 * Initializes the insanities table into the given one.
 	 * 
-	 * @param aTable
+	 * @param aPanel
 	 *            The table.
 	 */
-	public void initInsanities(final TableLayout aTable)
+	public void initInsanities(final LinearLayout aPanel)
 	{
-		mInsanities.init(aTable);
+		mInsanities.init(aPanel);
 	}
 	
 	/**

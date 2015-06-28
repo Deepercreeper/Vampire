@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
@@ -164,7 +163,7 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 		mChar.setCreationMode(CreationMode.DESCRIPTIONS);
 		
 		final LinearLayout descriptionsPanel = (LinearLayout) findViewById(R.id.description_values_panel);
-		final TableLayout insanitiesTable = (TableLayout) findViewById(R.id.insanities_panel);
+		final LinearLayout insanitiesPanel = (LinearLayout) findViewById(R.id.insanities_panel);
 		final Button addInsanity = (Button) findViewById(R.id.add_insanity_button);
 		final Button backButton = (Button) findViewById(R.id.back_to_2_button);
 		final Button nextButton = (Button) findViewById(R.id.next_to_4_button);
@@ -232,7 +231,7 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 			descriptionsPanel.addView(value);
 		}
 		
-		mChar.initInsanities(insanitiesTable);
+		mChar.initInsanities(insanitiesPanel);
 		
 		addInsanity.setOnClickListener(new OnClickListener()
 		{

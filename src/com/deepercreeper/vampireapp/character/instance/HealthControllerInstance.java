@@ -166,7 +166,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	public void updateHeavyWounds(final int aHeavyWounds)
 	{
 		mHeavyWounds = aHeavyWounds;
-		updateValue();
+		updateButtons();
 	}
 	
 	/**
@@ -352,7 +352,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 			{
 				mHeavyWounds-- ;
 			}
-			updateValue();
+			updateButtons();
 			mChangeListener.sendChange(new HealthChange(true, mHeavyWounds));
 		}
 	}
@@ -369,6 +369,16 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	public void onAnimationUpdate(final ValueAnimator aAnimation)
 	{
 		mValueBar.setProgress((Integer) aAnimation.getAnimatedValue());
+	}
+	
+	/**
+	 * Updates all buttons.
+	 */
+	public void updateButtons()
+	{
+		ViewUtil.setEnabled(mHealButton, canHeal());
+		ViewUtil.setEnabled(mHurtButton, canHurt());
+		ViewUtil.setEnabled(mHeavyHurt, canHurt());
 	}
 	
 	/**
@@ -392,8 +402,6 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		{
 			mStepLabel.setText("" + -getStep());
 		}
-		ViewUtil.setEnabled(mHealButton, canHeal());
-		ViewUtil.setEnabled(mHurtButton, canHurt());
-		ViewUtil.setEnabled(mHeavyHurt, canHurt());
+		updateButtons();
 	}
 }

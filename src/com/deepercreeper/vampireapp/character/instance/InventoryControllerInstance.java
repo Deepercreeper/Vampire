@@ -45,6 +45,8 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	
 	private final ItemInstance			mMaxWeightItem;
 	
+	private LinearLayout				mInventoryList;
+	
 	private TextView					mWeightLabel;
 	
 	private TextView					mMaxWeightLabel;
@@ -147,7 +149,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 		mWeight += aItem.getWeight();
 		setWeight();
 		aItem.init();
-		mInventoryContainer.addView(aItem.getContainer());
+		mInventoryList.addView(aItem.getContainer());
 		resize();
 	}
 	
@@ -210,6 +212,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	{
 		if ( !mInitialized)
 		{
+			mInventoryList = (LinearLayout) getContainer().findViewById(R.id.inventory_list);
 			mInventoryButton = (Button) getContainer().findViewById(R.id.inventory_button);
 			mWeightLabel = (TextView) getContainer().findViewById(R.id.weight);
 			mMaxWeightLabel = (TextView) getContainer().findViewById(R.id.max_weight);
@@ -236,7 +239,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 		for (final InventoryItem item : mItemsList)
 		{
 			item.init();
-			mInventoryContainer.addView(item.getContainer());
+			mInventoryList.addView(item.getContainer());
 		}
 		
 		close();
