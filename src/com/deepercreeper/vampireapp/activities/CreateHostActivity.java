@@ -63,7 +63,7 @@ public class CreateHostActivity extends Activity
 	{
 		mHostNames = getIntent().getStringArrayExtra(HOST_NAMES);
 		
-		setContentView(R.layout.create_host);
+		setContentView(R.layout.create_host_activity);
 		
 		final EditText name = (EditText) findViewById(R.id.host_name);
 		final Button finish = (Button) findViewById(R.id.finish);

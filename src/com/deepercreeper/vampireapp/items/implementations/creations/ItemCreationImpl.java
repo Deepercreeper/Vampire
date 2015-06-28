@@ -157,7 +157,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		mContext = aContext;
 		mItemGroup = aGroup;
 		mMode = aMode;
-		mContainer = (LinearLayout) View.inflate(mContext, R.layout.item_creation, null);
+		mContainer = (LinearLayout) View.inflate(mContext, R.layout.item_creation_view, null);
 		if (isValueItem())
 		{
 			mAnimator = new ValueAnimator();

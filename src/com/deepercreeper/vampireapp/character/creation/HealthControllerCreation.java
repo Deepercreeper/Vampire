@@ -31,7 +31,7 @@ public class HealthControllerCreation implements Viewable
 		public Step(final int aValue)
 		{
 			mValue = aValue;
-			mStepContainer = (LinearLayout) View.inflate(mContext, R.layout.step, null);
+			mStepContainer = (LinearLayout) View.inflate(mContext, R.layout.step_view, null);
 			final TextView value = ((TextView) mStepContainer.findViewById(R.id.value_label));
 			final ImageButton remove = ((ImageButton) mStepContainer.findViewById(R.id.remove_button));
 			final ImageButton increase = ((ImageButton) mStepContainer.findViewById(R.id.increase_button));

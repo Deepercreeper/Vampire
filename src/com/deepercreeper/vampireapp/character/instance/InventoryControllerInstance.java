@@ -86,7 +86,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 		
 		updateMaxWeight();
 		
-		mContainer = (LinearLayout) View.inflate(mContext, R.layout.inventory, null);
+		mContainer = (LinearLayout) View.inflate(mContext, R.layout.client_inventory, null);
 		
 		init();
 		
@@ -128,7 +128,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 		
 		updateMaxWeight();
 		
-		mContainer = (LinearLayout) View.inflate(mContext, R.layout.inventory, null);
+		mContainer = (LinearLayout) View.inflate(mContext, R.layout.client_inventory, null);
 		
 		init();
 	}

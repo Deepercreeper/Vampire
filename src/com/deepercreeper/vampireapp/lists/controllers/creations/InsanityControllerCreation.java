@@ -127,7 +127,7 @@ public class InsanityControllerCreation extends CreationRestrictionableImpl
 	{
 		final String insanity = mInsanities.get(aIndex);
 		
-		final LinearLayout insanityPanel = (LinearLayout) View.inflate(mContext, R.layout.insanity, null);
+		final LinearLayout insanityPanel = (LinearLayout) View.inflate(mContext, R.layout.insanity_view, null);
 		insanityPanel.findViewById(R.id.remove_button).setOnClickListener(new OnClickListener()
 		{
 			@Override

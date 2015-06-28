@@ -52,7 +52,7 @@ public class InventoryItem implements Saveable, Viewable
 		mName = aElement.getAttribute("name");
 		mWeight = Integer.parseInt(aElement.getAttribute("weight"));
 		
-		mContainer = (LinearLayout) View.inflate(mContext, R.layout.inventory_item, null);
+		mContainer = (LinearLayout) View.inflate(mContext, R.layout.inventory_item_view, null);
 		
 		init();
 	}
@@ -76,7 +76,7 @@ public class InventoryItem implements Saveable, Viewable
 		mName = aName;
 		mWeight = aWeight;
 		
-		mContainer = (LinearLayout) View.inflate(mContext, R.layout.inventory_item, null);
+		mContainer = (LinearLayout) View.inflate(mContext, R.layout.inventory_item_view, null);
 		
 		init();
 	}

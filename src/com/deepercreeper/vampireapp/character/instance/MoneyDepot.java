@@ -237,9 +237,9 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 		{
 			mTakeButton = (ImageButton) getContainer().findViewById(R.id.take_button);
 			mDepotButton = (ImageButton) getContainer().findViewById(R.id.depot_button);
-			mDeleteButton = (ImageButton) getContainer().findViewById(R.id.delete_button);
-			mNameText = (TextView) getContainer().findViewById(R.id.depot_name);
-			mValueText = (TextView) getContainer().findViewById(R.id.depot_value);
+			mDeleteButton = (ImageButton) getContainer().findViewById(R.id.delete_depot_button);
+			mNameText = (TextView) getContainer().findViewById(R.id.depot_name_label);
+			mValueText = (TextView) getContainer().findViewById(R.id.depot_value_text);
 			
 			mTakeButton.setOnClickListener(new OnClickListener()
 			{

@@ -129,7 +129,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			mDescription = null;
 		}
 		mMode = aMode;
-		mContainer = (LinearLayout) View.inflate(mContext, R.layout.item_instance, null);
+		mContainer = (LinearLayout) View.inflate(mContext, R.layout.item_instance_view, null);
 		
 		if (isValueItem())
 		{
@@ -210,7 +210,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		mDescription = aItem.getDescription();
 		mEP = aEP;
 		mMode = aMode;
-		mContainer = (LinearLayout) View.inflate(mContext, R.layout.item_instance, null);
+		mContainer = (LinearLayout) View.inflate(mContext, R.layout.item_instance_view, null);
 		mNameText = new TextView(getContext());
 		
 		if (isParent())

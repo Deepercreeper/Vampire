@@ -327,7 +327,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		
 		mChar.release();
 		
-		setContentView(R.layout.play_lobby);
+		setContentView(R.layout.play_activity);
 		
 		final TextView charName = (TextView) findViewById(R.id.char_name);
 		final LinearLayout controllersPanel = (LinearLayout) findViewById(R.id.controllers_panel);

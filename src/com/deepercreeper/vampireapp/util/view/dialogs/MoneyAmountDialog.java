@@ -81,10 +81,10 @@ public class MoneyAmountDialog extends DialogFragment
 	public Dialog onCreateDialog(final Bundle aSavedInstanceState)
 	{
 		final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-		final LinearLayout container = (LinearLayout) View.inflate(mContext, R.layout.money_amount_dialog, null);
+		final LinearLayout container = (LinearLayout) View.inflate(mContext, R.layout.money_choose_view, null);
 		for (final String currency : mCurrency.getCurrencies())
 		{
-			final LinearLayout currencyView = (LinearLayout) View.inflate(mContext, R.layout.currency_spinner, null);
+			final LinearLayout currencyView = (LinearLayout) View.inflate(mContext, R.layout.currency_chooser_view, null);
 			final EditText amount = (EditText) currencyView.findViewById(R.id.currency_picker);
 			amount.addTextChangedListener(new TextWatcher()
 			{

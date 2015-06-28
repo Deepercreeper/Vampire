@@ -238,7 +238,7 @@ public class Player implements Viewable, TimeListener, ChangeListener, ResizeLis
 	@Override
 	public void init()
 	{
-		mContainer = (LinearLayout) View.inflate(mContext, R.layout.player, null);
+		mContainer = (LinearLayout) View.inflate(mContext, R.layout.player_view, null);
 		mPlayerContainer = (LinearLayout) mContainer.findViewById(R.id.player_container);
 		mButton = (Button) mContainer.findViewById(R.id.player_button);
 		

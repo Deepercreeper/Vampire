@@ -54,14 +54,14 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 			switch (getArguments().getInt(ARG_SECTION_NUMBER))
 			{
 				case 1 :
-					rootView = (ViewGroup) inflater.inflate(R.layout.friends_fragment, container, false);
+					rootView = (ViewGroup) inflater.inflate(R.layout.main_fragment_friends, container, false);
 					break;
 				case 2 :
-					rootView = (ViewGroup) inflater.inflate(R.layout.characters_fragment, container, false);
+					rootView = (ViewGroup) inflater.inflate(R.layout.main_fragment_characters, container, false);
 					initChars(rootView);
 					break;
 				case 3 :
-					rootView = (ViewGroup) inflater.inflate(R.layout.hosts_fragment, container, false);
+					rootView = (ViewGroup) inflater.inflate(R.layout.main_fragment_hosts, container, false);
 					initHosts(rootView);
 					break;
 			}
@@ -326,7 +326,7 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 		mChars = new CharController(this, mItems, mConnection);
 		mHosts = new HostController(this, mItems, mConnection);
 		
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.main_activity);
 		
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);

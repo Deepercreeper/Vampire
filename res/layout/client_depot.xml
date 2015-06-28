@@ -18,21 +18,21 @@
         android:src="@drawable/ic_depot" />
 
     <ImageButton
-        android:id="@+id/delete_button"
+        android:id="@+id/delete_depot_button"
         android:layout_width="@dimen/button_width"
         android:layout_height="match_parent"
         android:contentDescription="@string/content_description"
         android:src="@drawable/ic_remove" />
 
     <TextView
-        android:id="@+id/depot_name"
+        android:id="@+id/depot_name_label"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:textSize="@dimen/normal_text_size" />
-
+ 
     <TextView
-        android:id="@+id/depot_value"
+        android:id="@+id/depot_value_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="end"

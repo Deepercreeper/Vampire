@@ -174,7 +174,7 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 		
 		for (final ItemCreation item : mChar.getDescriptionValues())
 		{
-			final EditText description = (EditText) View.inflate(this, R.layout.description, null);
+			final EditText description = (EditText) View.inflate(this, R.layout.description_view, null);
 			description.setHint(item.getItem().getDisplayName());
 			description.addTextChangedListener(new TextWatcher()
 			{
