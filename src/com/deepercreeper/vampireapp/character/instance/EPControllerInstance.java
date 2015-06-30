@@ -154,9 +154,9 @@ public class EPControllerInstance implements Viewable
 	{
 		if ( !mInitialized)
 		{
-			mEPAmount = mHost ? (EditText) getContainer().findViewById(R.id.ep_amount) : null;
-			mGiveEP = mHost ? (ImageButton) getContainer().findViewById(R.id.give_ep) : null;
-			mEPLabel = (TextView) getContainer().findViewById(R.id.ep);
+			mEPAmount = mHost ? (EditText) getContainer().findViewById(R.id.h_ep_amount_text) : null;
+			mGiveEP = mHost ? (ImageButton) getContainer().findViewById(R.id.h_give_ep_button) : null;
+			mEPLabel = (TextView) getContainer().findViewById(mHost ? R.id.h_ep_label : R.id.c_ep_label);
 			
 			if (mHost)
 			{

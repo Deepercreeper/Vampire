@@ -612,11 +612,11 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	{
 		if ( !mInitialized)
 		{
-			mChildrenContainer = (LinearLayout) getContainer().findViewById(R.id.children_container);
-			mValueText = (TextView) getContainer().findViewById(R.id.item_value);
-			mValueBar = (ProgressBar) getContainer().findViewById(R.id.item_value_bar);
-			mIncreaseButton = (ImageButton) getContainer().findViewById(R.id.item_increase_button);
-			mNameText = (TextView) getContainer().findViewById(R.id.item_name);
+			mChildrenContainer = (LinearLayout) getContainer().findViewById(R.id.view_item_instance_children_list);
+			mValueText = (TextView) getContainer().findViewById(R.id.view_item_instance_value_text);
+			mValueBar = (ProgressBar) getContainer().findViewById(R.id.view_item_instance_value_bar);
+			mIncreaseButton = (ImageButton) getContainer().findViewById(R.id.view_increase_item_instance_button);
+			mNameText = (TextView) getContainer().findViewById(R.id.view_item_instance_name_label);
 			
 			mNameText.setText(getItem().getDisplayName());
 			mNameText.setOnClickListener(new OnClickListener()

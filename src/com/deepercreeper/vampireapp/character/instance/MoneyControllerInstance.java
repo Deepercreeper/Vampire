@@ -257,8 +257,8 @@ public class MoneyControllerInstance implements Saveable, Viewable
 	{
 		if ( !mInitialized)
 		{
-			mDepotsList = (LinearLayout) getContainer().findViewById(R.id.depot_list);
-			final ImageButton addDepot = (ImageButton) getContainer().findViewById(R.id.add_depot);
+			mDepotsList = (LinearLayout) getContainer().findViewById(mHost ? R.id.h_depot_list : R.id.c_depot_list);
+			final ImageButton addDepot = (ImageButton) getContainer().findViewById(mHost ? R.id.h_add_depot_button : R.id.c_add_depot_button);
 			addDepot.setOnClickListener(new OnClickListener()
 			{
 				@Override

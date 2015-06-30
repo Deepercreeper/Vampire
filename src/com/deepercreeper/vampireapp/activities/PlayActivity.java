@@ -241,7 +241,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 				public void run()
 				{
 					getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-					findViewById(R.id.play_container).setBackgroundColor(Color.DKGRAY);
+					findViewById(android.R.id.content).setBackgroundColor(Color.DKGRAY);
 				}
 			});
 		}
@@ -253,7 +253,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 				public void run()
 				{
 					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-					findViewById(R.id.play_container).setBackgroundColor(Color.BLACK);
+					findViewById(android.R.id.content).setBackgroundColor(Color.BLACK);
 				}
 			});
 		}
@@ -329,9 +329,9 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		
 		setContentView(R.layout.play_activity);
 		
-		final TextView charName = (TextView) findViewById(R.id.char_name);
-		final LinearLayout controllersPanel = (LinearLayout) findViewById(R.id.controllers_panel);
-		final Button exit = (Button) findViewById(R.id.exit);
+		final TextView charName = (TextView) findViewById(R.id.pa_char_name_label);
+		final LinearLayout controllersPanel = (LinearLayout) findViewById(R.id.pa_controllers_list);
+		final Button exit = (Button) findViewById(R.id.pa_exit_button);
 		
 		mChar.update();
 		mChar.init();

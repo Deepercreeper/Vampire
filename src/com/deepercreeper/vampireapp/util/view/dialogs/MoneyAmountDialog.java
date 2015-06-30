@@ -85,7 +85,7 @@ public class MoneyAmountDialog extends DialogFragment
 		for (final String currency : mCurrency.getCurrencies())
 		{
 			final LinearLayout currencyView = (LinearLayout) View.inflate(mContext, R.layout.currency_chooser_view, null);
-			final EditText amount = (EditText) currencyView.findViewById(R.id.currency_picker);
+			final EditText amount = (EditText) currencyView.findViewById(R.id.view_currency_value_text);
 			amount.addTextChangedListener(new TextWatcher()
 			{
 				@Override
@@ -115,10 +115,10 @@ public class MoneyAmountDialog extends DialogFragment
 				}
 			});
 			amount.setText("0");
-			((TextView) currencyView.findViewById(R.id.currency_name)).setText(currency + " (0 - " + mMaxValues.get(currency) + "):");
+			((TextView) currencyView.findViewById(R.id.view_currency_label)).setText(currency + " (0 - " + mMaxValues.get(currency) + "):");
 			container.addView(currencyView, container.getChildCount() - 1);
 		}
-		mOK = (Button) container.findViewById(R.id.ok_button);
+		mOK = (Button) container.findViewById(R.id.view_ok_button);
 		mOK.setOnClickListener(new OnClickListener()
 		{
 			@Override

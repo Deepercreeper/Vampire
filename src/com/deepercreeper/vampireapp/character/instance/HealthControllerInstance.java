@@ -295,11 +295,11 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	{
 		if ( !mInitialized)
 		{
-			mHealButton = (ImageButton) getContainer().findViewById(R.id.heal_button);
-			mHurtButton = mHost ? (ImageButton) getContainer().findViewById(R.id.hurt_button) : null;
-			mHeavyHurt = mHost ? (ImageButton) getContainer().findViewById(R.id.heavy_hurt) : null;
-			mValueBar = (ProgressBar) getContainer().findViewById(R.id.health_bar);
-			mStepLabel = (TextView) getContainer().findViewById(R.id.step_value);
+			mHealButton = (ImageButton) getContainer().findViewById(mHost ? R.id.h_heal_button : R.id.c_heal_button);
+			mHurtButton = mHost ? (ImageButton) getContainer().findViewById(R.id.h_hurt_button) : null;
+			mHeavyHurt = mHost ? (ImageButton) getContainer().findViewById(R.id.h_heavy_hurt_button) : null;
+			mValueBar = (ProgressBar) getContainer().findViewById(mHost ? R.id.h_health_bar : R.id.c_health_bar);
+			mStepLabel = (TextView) getContainer().findViewById(mHost ? R.id.h_step_label : R.id.c_step_label);
 			
 			mHealButton.setOnClickListener(new OnClickListener()
 			{

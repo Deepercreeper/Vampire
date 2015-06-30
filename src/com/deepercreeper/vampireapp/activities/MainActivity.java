@@ -338,8 +338,8 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 	
 	private void initChars(final ViewGroup aRoot)
 	{
-		final Button createChar = (Button) aRoot.findViewById(R.id.create_character_button);
-		final Button createFreeChar = (Button) aRoot.findViewById(R.id.create_character_free_button);
+		final Button createChar = (Button) aRoot.findViewById(R.id.f_create_char_button);
+		final Button createFreeChar = (Button) aRoot.findViewById(R.id.f_create_free_char_button);
 		createChar.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -357,13 +357,13 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 			}
 		});
 		
-		mChars.setCharsList((LinearLayout) aRoot.findViewById(R.id.characters_list));
+		mChars.setCharsList((LinearLayout) aRoot.findViewById(R.id.f_chars_list));
 		mChars.loadCharCompounds();
 	}
 	
 	private void initHosts(final ViewGroup aRoot)
 	{
-		final Button createHost = (Button) aRoot.findViewById(R.id.create_host_button);
+		final Button createHost = (Button) aRoot.findViewById(R.id.f_create_host_button);
 		
 		createHost.setOnClickListener(new OnClickListener()
 		{
@@ -374,7 +374,7 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 			}
 		});
 		
-		mHosts.setHostsList((LinearLayout) aRoot.findViewById(R.id.hosts_list));
+		mHosts.setHostsList((LinearLayout) aRoot.findViewById(R.id.f_hosts_list));
 		mHosts.loadHosts();
 	}
 	

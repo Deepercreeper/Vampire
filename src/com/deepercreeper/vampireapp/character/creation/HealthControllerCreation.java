@@ -32,10 +32,10 @@ public class HealthControllerCreation implements Viewable
 		{
 			mValue = aValue;
 			mStepContainer = (LinearLayout) View.inflate(mContext, R.layout.step_view, null);
-			final TextView value = ((TextView) mStepContainer.findViewById(R.id.value_label));
-			final ImageButton remove = ((ImageButton) mStepContainer.findViewById(R.id.remove_button));
-			final ImageButton increase = ((ImageButton) mStepContainer.findViewById(R.id.increase_button));
-			final ImageButton decrease = ((ImageButton) mStepContainer.findViewById(R.id.decrease_button));
+			final TextView value = ((TextView) mStepContainer.findViewById(R.id.view_step_value_label));
+			final ImageButton remove = ((ImageButton) mStepContainer.findViewById(R.id.view_remove_step_button));
+			final ImageButton increase = ((ImageButton) mStepContainer.findViewById(R.id.view_increase_step_button));
+			final ImageButton decrease = ((ImageButton) mStepContainer.findViewById(R.id.view_decrease_step_button));
 			if (aValue == -1)
 			{
 				value.setText(R.string.ko);

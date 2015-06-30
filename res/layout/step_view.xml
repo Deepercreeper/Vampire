@@ -4,28 +4,28 @@
     android:layout_height="wrap_content" >
 
     <ImageButton
-        android:id="@+id/remove_button"
+        android:id="@+id/view_remove_step_button"
         android:layout_width="@dimen/button_width"
         android:layout_height="@dimen/button_height"
         android:contentDescription="@string/content_description"
         android:src="@drawable/ic_remove" />
 
     <TextView
-        android:id="@+id/value_label"
+        android:id="@+id/view_step_value_label"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center_vertical" />
 
     <ImageButton
-        android:id="@+id/increase_button"
+        android:id="@+id/view_increase_step_button"
         android:layout_width="80dp"
         android:layout_height="match_parent"
         android:contentDescription="@string/content_description"
         android:src="@android:drawable/arrow_up_float" />
 
     <ImageButton
-        android:id="@+id/decrease_button"
+        android:id="@+id/view_decrease_step_button"
         android:layout_width="80dp"
         android:layout_height="@dimen/button_height"
         android:contentDescription="@string/content_description"

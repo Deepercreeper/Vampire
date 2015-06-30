@@ -6,7 +6,7 @@
     android:padding="@dimen/activity_margin" >
 
     <Button
-        android:id="@+id/create_host_button"
+        android:id="@+id/f_create_host_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/create_host_button" />
@@ -16,7 +16,7 @@
         android:layout_height="wrap_content" >
 
         <LinearLayout
-            android:id="@+id/hosts_list"
+            android:id="@+id/f_hosts_list"
             style="?android:attr/buttonBarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -128,7 +128,7 @@ public class InsanityControllerCreation extends CreationRestrictionableImpl
 		final String insanity = mInsanities.get(aIndex);
 		
 		final LinearLayout insanityPanel = (LinearLayout) View.inflate(mContext, R.layout.insanity_view, null);
-		insanityPanel.findViewById(R.id.remove_button).setOnClickListener(new OnClickListener()
+		insanityPanel.findViewById(R.id.view_remove_insanity_button).setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(final View aV)
@@ -136,7 +136,7 @@ public class InsanityControllerCreation extends CreationRestrictionableImpl
 				remove(insanity);
 			}
 		});
-		((TextView) insanityPanel.findViewById(R.id.insanity_text)).setText(insanity);
+		((TextView) insanityPanel.findViewById(R.id.view_insanity_label)).setText(insanity);
 		
 		return insanityPanel;
 	}

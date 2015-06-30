@@ -9,21 +9,21 @@
         android:layout_height="wrap_content" >
 
         <ImageButton
-            android:id="@+id/item_edit_button"
+            android:id="@+id/view_edit_item_creation_button"
             android:layout_width="@dimen/button_width"
             android:layout_height="@dimen/button_height"
             android:contentDescription="@string/content_description"
             android:src="@drawable/ic_edit" />
 
         <ImageButton
-            android:id="@+id/item_remove_button"
+            android:id="@+id/view_remove_item_creation_button"
             android:layout_width="@dimen/button_width"
             android:layout_height="@dimen/button_height"
             android:contentDescription="@string/content_description"
             android:src="@drawable/ic_remove" />
 
         <TextView
-            android:id="@+id/item_name"
+            android:id="@+id/view_item_creation_name_label"
             android:layout_width="80dp"
             android:layout_height="match_parent"
             android:clickable="true"
@@ -32,14 +32,14 @@
             android:singleLine="true" />
 
         <ImageButton
-            android:id="@+id/item_decrease_button"
+            android:id="@+id/view_decrease_item_creation_button"
             android:layout_width="@dimen/button_width"
             android:layout_height="@dimen/button_height"
             android:contentDescription="@string/content_description"
             android:src="@drawable/ic_left" />
 
         <TextView
-            android:id="@+id/item_value"
+            android:id="@+id/view_item_creation_value_text"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:ellipsize="end"
@@ -49,7 +49,7 @@
             android:singleLine="true" />
 
         <ProgressBar
-            android:id="@+id/item_value_bar"
+            android:id="@+id/view_item_creation_value_bar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -57,14 +57,14 @@
             android:progressDrawable="@drawable/progress_bar" />
 
         <ImageButton
-            android:id="@+id/item_increase_button"
+            android:id="@+id/view_increase_item_creation_button"
             android:layout_width="@dimen/button_width"
             android:layout_height="@dimen/button_height"
             android:contentDescription="@string/content_description"
             android:src="@drawable/ic_right" />
 
         <ImageButton
-            android:id="@+id/item_add_button"
+            android:id="@+id/view_add_item_creation_child_button"
             android:layout_width="@dimen/button_width"
             android:layout_height="@dimen/button_height"
             android:contentDescription="@string/content_description"
@@ -72,7 +72,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/children_container"
+        android:id="@+id/view_item_creation_children_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" />

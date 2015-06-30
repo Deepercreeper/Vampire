@@ -5,12 +5,12 @@
     android:orientation="vertical" >
 
     <Button
-        android:id="@+id/player_button"
+        android:id="@+id/view_player_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <LinearLayout
-        android:id="@+id/player_container"
+        android:id="@+id/view_player_panel"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical" >
@@ -21,7 +21,7 @@
             android:layout_height="wrap_content" >
 
             <Button
-                android:id="@+id/kick_player"
+                android:id="@+id/view_kick_button"
                 style="@style/BarButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
                 android:text="@string/kick" />
 
             <Button
-                android:id="@+id/ban_player"
+                android:id="@+id/view_ban_button"
                 style="@style/BarButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

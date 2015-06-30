@@ -123,9 +123,9 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 	{
 		if (mState == State.FREE_POINTS)
 		{
-			((TextView) findViewById(R.id.free_points_text)).setText("" + aValue);
-			((ProgressBar) findViewById(R.id.free_points_bar)).setProgress(aValue);
-			ViewUtil.setEnabled((findViewById(R.id.next_to_3_button)), aValue == 0);
+			((TextView) findViewById(R.id.cc_free_points_label)).setText("" + aValue);
+			((ProgressBar) findViewById(R.id.cc_free_points_bar)).setProgress(aValue);
+			ViewUtil.setEnabled((findViewById(R.id.cc_free_points_next_button)), aValue == 0);
 		}
 	}
 	
@@ -134,7 +134,7 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 	{
 		if (mState == State.DESCRIPTIONS)
 		{
-			ViewUtil.setEnabled(findViewById(R.id.next_to_4_button), aOk);
+			ViewUtil.setEnabled(findViewById(R.id.cc_descriptions_next_button), aOk);
 		}
 	}
 	
@@ -162,11 +162,11 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 		
 		mChar.setCreationMode(CreationMode.DESCRIPTIONS);
 		
-		final LinearLayout descriptionsPanel = (LinearLayout) findViewById(R.id.description_values_panel);
-		final LinearLayout insanitiesPanel = (LinearLayout) findViewById(R.id.insanities_panel);
-		final Button addInsanity = (Button) findViewById(R.id.add_insanity_button);
-		final Button backButton = (Button) findViewById(R.id.back_to_2_button);
-		final Button nextButton = (Button) findViewById(R.id.next_to_4_button);
+		final LinearLayout descriptionsPanel = (LinearLayout) findViewById(R.id.cc_descriptions_list);
+		final LinearLayout insanitiesPanel = (LinearLayout) findViewById(R.id.cc_insanities_list);
+		final Button addInsanity = (Button) findViewById(R.id.cc_add_insanity_button);
+		final Button backButton = (Button) findViewById(R.id.cc_descriptions_back_button);
+		final Button nextButton = (Button) findViewById(R.id.cc_descriptions_next_button);
 		
 		backButton.requestFocus();
 		
@@ -286,11 +286,11 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 		
 		setFreePoints(mChar.getFreePoints());
 		
-		final ProgressBar pointsBar = (ProgressBar) findViewById(R.id.free_points_bar);
-		final LinearLayout controllersPanel = (LinearLayout) findViewById(R.id.controllers_2_panel);
-		final Button resetTempPoints = (Button) findViewById(R.id.reset_temp_points_button);
-		final Button backButton = (Button) findViewById(R.id.back_to_1_button);
-		final Button nextButton = (Button) findViewById(R.id.next_to_3_button);
+		final ProgressBar pointsBar = (ProgressBar) findViewById(R.id.cc_free_points_bar);
+		final LinearLayout controllersPanel = (LinearLayout) findViewById(R.id.cc_free_points_controllers_list);
+		final Button resetTempPoints = (Button) findViewById(R.id.cc_reset_temp_points_button);
+		final Button backButton = (Button) findViewById(R.id.cc_free_points_back_button);
+		final Button nextButton = (Button) findViewById(R.id.cc_free_points_next_button);
 		
 		backButton.requestFocus();
 		
@@ -353,15 +353,15 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 		
 		mChar.setCreationMode(mode);
 		
-		final TextView nameTextView = (TextView) findViewById(R.id.char_name_text);
-		final TextView conceptTextView = (TextView) findViewById(R.id.concept_text);
-		final Spinner natureSpinner = (Spinner) findViewById(R.id.nature_spinner);
-		final Spinner behaviorSpinner = (Spinner) findViewById(R.id.behavior_spinner);
-		final NumberPicker generationPicker = (NumberPicker) findViewById(R.id.generation_picker);
-		final Spinner clanSpinner = (Spinner) findViewById(R.id.clan_spinner);
-		final LinearLayout controllersPanel = (LinearLayout) findViewById(R.id.controllers_panel);
-		final Button nextButton = (Button) findViewById(R.id.next_to_2_button);
-		final Button backButton = (Button) findViewById(R.id.back_to_main_button);
+		final TextView nameTextView = (TextView) findViewById(R.id.cc_name_text);
+		final TextView conceptTextView = (TextView) findViewById(R.id.cc_concept_text);
+		final Spinner natureSpinner = (Spinner) findViewById(R.id.cc_nature_spinner);
+		final Spinner behaviorSpinner = (Spinner) findViewById(R.id.cc_behavior_spinner);
+		final NumberPicker generationPicker = (NumberPicker) findViewById(R.id.cc_generation_picker);
+		final Spinner clanSpinner = (Spinner) findViewById(R.id.cc_clan_spinner);
+		final LinearLayout controllersPanel = (LinearLayout) findViewById(R.id.cc_controllers_list);
+		final Button nextButton = (Button) findViewById(R.id.cc_general_next_button);
+		final Button backButton = (Button) findViewById(R.id.cc_general_back_button);
 		
 		nameTextView.requestFocus();
 		

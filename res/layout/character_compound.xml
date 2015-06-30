@@ -16,13 +16,13 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/concept_label"
+                android:id="@+id/compound_concept_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="12sp" />
 
             <TextView
-                android:id="@+id/nature_label"
+                android:id="@+id/compound_nature_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
@@ -34,13 +34,13 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/name_label"
+                android:id="@+id/compound_name_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/normal_text_size" />
 
             <TextView
-                android:id="@+id/ep_label"
+                android:id="@+id/compound_ep_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
@@ -52,13 +52,13 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/generation_label"
+                android:id="@+id/compound_generation_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="12sp" />
 
             <TextView
-                android:id="@+id/behavior_label"
+                android:id="@+id/compound_behavior_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
@@ -67,7 +67,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/play_button"
+        android:id="@+id/compound_play_char_button"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:text="@string/play"

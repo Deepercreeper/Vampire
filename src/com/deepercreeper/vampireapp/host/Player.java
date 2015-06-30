@@ -239,11 +239,11 @@ public class Player implements Viewable, TimeListener, ChangeListener, ResizeLis
 	public void init()
 	{
 		mContainer = (LinearLayout) View.inflate(mContext, R.layout.player_view, null);
-		mPlayerContainer = (LinearLayout) mContainer.findViewById(R.id.player_container);
-		mButton = (Button) mContainer.findViewById(R.id.player_button);
+		mPlayerContainer = (LinearLayout) mContainer.findViewById(R.id.view_player_panel);
+		mButton = (Button) mContainer.findViewById(R.id.view_player_button);
 		
-		final Button kick = (Button) mContainer.findViewById(R.id.kick_player);
-		final Button ban = (Button) mContainer.findViewById(R.id.ban_player);
+		final Button kick = (Button) mContainer.findViewById(R.id.view_kick_button);
+		final Button ban = (Button) mContainer.findViewById(R.id.view_ban_button);
 		
 		mPlayerContainer.addView(mChar.getHealth().getContainer(), 0);
 		mPlayerContainer.addView(mChar.getEPController().getContainer(), 1);

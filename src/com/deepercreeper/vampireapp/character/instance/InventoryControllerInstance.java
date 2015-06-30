@@ -212,11 +212,11 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	{
 		if ( !mInitialized)
 		{
-			mInventoryList = (LinearLayout) getContainer().findViewById(R.id.inventory_list);
-			mInventoryButton = (Button) getContainer().findViewById(R.id.inventory_button);
-			mWeightLabel = (TextView) getContainer().findViewById(R.id.weight);
-			mMaxWeightLabel = (TextView) getContainer().findViewById(R.id.max_weight);
-			mInventoryContainer = (LinearLayout) getContainer().findViewById(R.id.inventory_panel);
+			mInventoryList = (LinearLayout) getContainer().findViewById(R.id.c_inventory_list);
+			mInventoryButton = (Button) getContainer().findViewById(R.id.c_inventory_button);
+			mWeightLabel = (TextView) getContainer().findViewById(R.id.c_weight_label);
+			mMaxWeightLabel = (TextView) getContainer().findViewById(R.id.c_max_weight_label);
+			mInventoryContainer = (LinearLayout) getContainer().findViewById(R.id.c_inventory_panel);
 			
 			mInventoryButton.setOnClickListener(new OnClickListener()
 			{

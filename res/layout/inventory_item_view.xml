@@ -4,14 +4,14 @@
     android:layout_height="wrap_content" >
 
     <ImageButton
-        android:id="@+id/remove_item"
+        android:id="@+id/view_remove_inv_item_button"
         android:layout_width="@dimen/button_width"
         android:layout_height="@dimen/button_height"
         android:contentDescription="@string/content_description"
         android:src="@drawable/ic_remove" />
 
     <TextView
-        android:id="@+id/item_name"
+        android:id="@+id/view_inv_item_name_label"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
@@ -19,7 +19,7 @@
         android:textSize="@dimen/small_text_size" />
 
     <ImageButton
-        android:id="@+id/item_info"
+        android:id="@+id/view_inv_item_info_button"
         android:layout_width="@dimen/button_width"
         android:layout_height="@dimen/button_height"
         android:contentDescription="@string/content_description"

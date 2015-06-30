@@ -207,7 +207,7 @@ public class HostController implements HostListener
 			final View view = mHostsList.getChildAt(i);
 			if (view instanceof LinearLayout)
 			{
-				final Button button = (Button) view.findViewById(R.id.play_button);
+				final Button button = (Button) view.findViewById(R.id.compound_play_host_button);
 				ViewUtil.setEnabled(button, aEnabled);
 			}
 		}
@@ -236,8 +236,8 @@ public class HostController implements HostListener
 		{
 			final LinearLayout hostCompound = (LinearLayout) View.inflate(mContext, R.layout.host_compound, null);
 			
-			final TextView hostName = (TextView) hostCompound.findViewById(R.id.host_name);
-			final Button playHost = (Button) hostCompound.findViewById(R.id.play_button);
+			final TextView hostName = (TextView) hostCompound.findViewById(R.id.compound_host_name_label);
+			final Button playHost = (Button) hostCompound.findViewById(R.id.compound_play_host_button);
 			
 			hostName.setText(host);
 			hostCompound.setOnLongClickListener(new OnLongClickListener()

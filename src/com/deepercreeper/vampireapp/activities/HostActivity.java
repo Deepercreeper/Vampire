@@ -222,17 +222,17 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 		mConnection = new ConnectionController(this, this, mHandler);
 		mConnection.startServer();
 		
-		setContentView(R.layout.host_lobby);
+		setContentView(R.layout.host_activity);
 		
-		final TextView name = (TextView) findViewById(R.id.host_name);
-		final EditText timeSetter = (EditText) findViewById(R.id.time_setter);
-		mHost.setPlayersList((LinearLayout) findViewById(R.id.players_list));
-		mHost.setPlayersTimeList((LinearLayout) findViewById(R.id.players_time_list));
-		final Button applyTime = (Button) findViewById(R.id.apply_time);
-		final Button day = (Button) findViewById(R.id.day);
-		final Button hour = (Button) findViewById(R.id.hour);
-		final Button round = (Button) findViewById(R.id.round);
-		final Button exit = (Button) findViewById(R.id.exit);
+		final TextView name = (TextView) findViewById(R.id.ha_name_text);
+		final EditText timeSetter = (EditText) findViewById(R.id.ha_time_text);
+		mHost.setPlayersList((LinearLayout) findViewById(R.id.ha_players_list));
+		mHost.setPlayersTimeList((LinearLayout) findViewById(R.id.ha_players_time_list));
+		final Button applyTime = (Button) findViewById(R.id.ha_apply_time_button);
+		final Button day = (Button) findViewById(R.id.ha_day_button);
+		final Button hour = (Button) findViewById(R.id.ha_hour_button);
+		final Button round = (Button) findViewById(R.id.ha_round_button);
+		final Button exit = (Button) findViewById(R.id.ha_exit_button);
 		
 		name.setText(mHost.getName());
 		day.setOnClickListener(new OnClickListener()

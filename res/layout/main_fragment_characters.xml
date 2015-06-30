@@ -8,13 +8,13 @@
     tools:context="com.deepercreeper.vampireapp.activities.MainActivity" >
 
     <Button
-        android:id="@+id/create_character_button"
+        android:id="@+id/f_create_char_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/button_create_character" />
 
     <Button
-        android:id="@+id/create_character_free_button"
+        android:id="@+id/f_create_free_char_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/button_create_character_free" />
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content" >
 
         <LinearLayout
-            android:id="@+id/characters_list"
+            android:id="@+id/f_chars_list"
             style="?android:attr/buttonBarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

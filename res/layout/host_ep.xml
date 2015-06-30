@@ -11,7 +11,7 @@
         android:textSize="@dimen/small_text_size" />
 
     <TextView
-        android:id="@+id/ep"
+        android:id="@+id/h_ep_label"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
@@ -20,7 +20,7 @@
         android:textSize="@dimen/small_text_size" />
 
     <ImageButton
-        android:id="@+id/give_ep"
+        android:id="@+id/h_give_ep_button"
         android:layout_width="@dimen/button_width"
         android:layout_height="@dimen/button_height"
         android:layout_gravity="center_vertical"
@@ -28,7 +28,7 @@
         android:src="@drawable/ic_ep" />
 
     <EditText
-        android:id="@+id/ep_amount"
+        android:id="@+id/h_ep_amount_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/ep_amount"

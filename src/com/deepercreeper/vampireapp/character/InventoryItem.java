@@ -98,9 +98,9 @@ public class InventoryItem implements Saveable, Viewable
 	{
 		if ( !mInitialized)
 		{
-			final TextView itemName = (TextView) getContainer().findViewById(R.id.item_name);
-			final ImageButton infoButton = (ImageButton) getContainer().findViewById(R.id.item_info);
-			final ImageButton removeButton = (ImageButton) getContainer().findViewById(R.id.remove_item);
+			final TextView itemName = (TextView) getContainer().findViewById(R.id.view_inv_item_name_label);
+			final ImageButton infoButton = (ImageButton) getContainer().findViewById(R.id.view_inv_item_info_button);
+			final ImageButton removeButton = (ImageButton) getContainer().findViewById(R.id.view_remove_inv_item_button);
 			
 			itemName.setText(getName());
 			

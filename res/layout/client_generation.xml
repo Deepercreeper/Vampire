@@ -12,7 +12,7 @@
     <!-- Maybe add a button to request generation increasure -->
 
     <TextView
-        android:id="@+id/generation_label"
+        android:id="@+id/c_generation_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="end"

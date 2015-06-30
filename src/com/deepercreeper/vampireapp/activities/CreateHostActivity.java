@@ -65,9 +65,9 @@ public class CreateHostActivity extends Activity
 		
 		setContentView(R.layout.create_host_activity);
 		
-		final EditText name = (EditText) findViewById(R.id.host_name);
-		final Button finish = (Button) findViewById(R.id.finish);
-		final Button back = (Button) findViewById(R.id.back);
+		final EditText name = (EditText) findViewById(R.id.ch_name_text);
+		final Button finish = (Button) findViewById(R.id.ch_finish_button);
+		final Button back = (Button) findViewById(R.id.ch_back_button);
 		
 		name.addTextChangedListener(new TextWatcher()
 		{
@@ -108,7 +108,7 @@ public class CreateHostActivity extends Activity
 	private void updateButtons()
 	{
 		boolean enabled = true;
-		final String name = ((EditText) findViewById(R.id.host_name)).getText().toString().trim();
+		final String name = ((EditText) findViewById(R.id.ch_name_text)).getText().toString().trim();
 		if (name.isEmpty())
 		{
 			enabled = false;
@@ -121,7 +121,7 @@ public class CreateHostActivity extends Activity
 				break;
 			}
 		}
-		ViewUtil.setEnabled(findViewById(R.id.finish), enabled);
+		ViewUtil.setEnabled(findViewById(R.id.ch_finish_button), enabled);
 	}
 	
 	@Override

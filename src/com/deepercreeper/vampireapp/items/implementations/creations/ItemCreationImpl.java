@@ -752,15 +752,15 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		
 		if ( !mInitialized)
 		{
-			mEditButton = (ImageButton) getContainer().findViewById(R.id.item_edit_button);
-			mRemoveButton = (ImageButton) getContainer().findViewById(R.id.item_remove_button);
-			mNameText = (TextView) getContainer().findViewById(R.id.item_name);
-			mDecreaseButton = (ImageButton) getContainer().findViewById(R.id.item_decrease_button);
-			mValueText = (TextView) getContainer().findViewById(R.id.item_value);
-			mValueBar = (ProgressBar) getContainer().findViewById(R.id.item_value_bar);
-			mIncreaseButton = (ImageButton) getContainer().findViewById(R.id.item_increase_button);
-			mAddButton = (ImageButton) getContainer().findViewById(R.id.item_add_button);
-			mChildrenContainer = (LinearLayout) getContainer().findViewById(R.id.children_container);
+			mEditButton = (ImageButton) getContainer().findViewById(R.id.view_edit_item_creation_button);
+			mRemoveButton = (ImageButton) getContainer().findViewById(R.id.view_remove_item_creation_button);
+			mNameText = (TextView) getContainer().findViewById(R.id.view_item_creation_name_label);
+			mDecreaseButton = (ImageButton) getContainer().findViewById(R.id.view_decrease_item_creation_button);
+			mValueText = (TextView) getContainer().findViewById(R.id.view_item_creation_value_text);
+			mValueBar = (ProgressBar) getContainer().findViewById(R.id.view_item_creation_value_bar);
+			mIncreaseButton = (ImageButton) getContainer().findViewById(R.id.view_increase_item_creation_button);
+			mAddButton = (ImageButton) getContainer().findViewById(R.id.view_add_item_creation_child_button);
+			mChildrenContainer = (LinearLayout) getContainer().findViewById(R.id.view_item_creation_children_list);
 			
 			mNameText.setText(getItem().getDisplayName());
 			mNameText.setOnClickListener(new OnClickListener()

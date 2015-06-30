@@ -95,8 +95,8 @@ public class GenerationControllerInstance implements Viewable, Saveable
 	{
 		if ( !mInitialized)
 		{
-			mGenerationText = (TextView) getContainer().findViewById(R.id.generation_label);
-			mIncreaseButton = mHost ? (ImageButton) getContainer().findViewById(R.id.increase_generation) : null;
+			mGenerationText = (TextView) getContainer().findViewById(mHost ? R.id.h_generation_label : R.id.c_generation_label);
+			mIncreaseButton = mHost ? (ImageButton) getContainer().findViewById(R.id.h_increase_generation_button) : null;
 			
 			if (mHost)
 			{
