@@ -22,12 +22,13 @@ import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
 import com.deepercreeper.vampireapp.connection.ConnectionController;
 import com.deepercreeper.vampireapp.connection.ConnectionListener;
+import com.deepercreeper.vampireapp.host.Message;
 import com.deepercreeper.vampireapp.host.Player;
-import com.deepercreeper.vampireapp.host.change.ChangeListener;
 import com.deepercreeper.vampireapp.host.change.CharacterChange;
 import com.deepercreeper.vampireapp.host.change.EPChange;
 import com.deepercreeper.vampireapp.host.change.GenerationChange;
 import com.deepercreeper.vampireapp.host.change.HealthChange;
+import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.host.change.MoneyChange;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
@@ -44,7 +45,7 @@ import com.deepercreeper.vampireapp.util.view.ResizeListener;
  * 
  * @author vrl
  */
-public class PlayActivity extends Activity implements ItemConsumer, ConnectionListener, ChangeListener, ResizeListener
+public class PlayActivity extends Activity implements ItemConsumer, ConnectionListener, MessageListener, ResizeListener
 {
 	private static final String		TAG					= "PlayActivity";
 	
@@ -63,6 +64,8 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	private ConnectionController	mConnection;
 	
 	private ItemProvider			mItems;
+	
+	private LinearLayout			mMessageList;
 	
 	private CharacterInstance		mChar;
 	
@@ -100,6 +103,18 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 			}
 			exit(true);
 		}
+	}
+	
+	@Override
+	public void sendMessage(final Message aMessage)
+	{
+		mConnection.getHost().send(MessageType.MESSAGE, FilesUtil.serialize(aMessage));
+	}
+	
+	@Override
+	public void applyMessage(final Message aMessage)
+	{
+		// TODO Implement
 	}
 	
 	@Override
@@ -188,6 +203,11 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 				break;
 			case UPDATE :
 				applyChange(aArgs[0], aArgs[1]);
+				break;
+			case MESSAGE :
+				final Message message = Message.deserialize(aArgs[0], this, this);
+				mMessageList.addView(message.getContainer());
+				applyMessage(message);
 			default :
 				break;
 		}
@@ -330,6 +350,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		setContentView(R.layout.play_activity);
 		
 		final TextView charName = (TextView) findViewById(R.id.pa_char_name_label);
+		mMessageList = (LinearLayout) findViewById(R.id.pa_message_list);
 		final LinearLayout controllersPanel = (LinearLayout) findViewById(R.id.pa_controllers_list);
 		final Button exit = (Button) findViewById(R.id.pa_exit_button);
 		

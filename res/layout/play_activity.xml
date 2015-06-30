@@ -1,32 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:padding="@dimen/activity_margin" >
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/pa_char_name_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:gravity="center_horizontal"
+        android:textSize="@dimen/normal_text_size" />
 
-        <TextView
-            android:id="@+id/pa_char_name_label"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@android:color/darker_gray"
+        android:layout_weight="1" >
+
+        <LinearLayout
+            android:id="@+id/pa_message_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:textSize="@dimen/normal_text_size" />
+            android:orientation="vertical" >
+        </LinearLayout>
+    </ScrollView>
+    
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
 
         <LinearLayout
             android:id="@+id/pa_controllers_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" />
+    </ScrollView>
 
-        <Button
-            android:id="@+id/pa_exit_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/exit" />
-    </LinearLayout>
+    <Button
+        android:id="@+id/pa_exit_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/exit" />
 
-</ScrollView>
+</LinearLayout>

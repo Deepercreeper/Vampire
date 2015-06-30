@@ -14,7 +14,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.Currency;
-import com.deepercreeper.vampireapp.host.change.ChangeListener;
+import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.host.change.MoneyChange;
 import com.deepercreeper.vampireapp.util.CodingUtil;
 import com.deepercreeper.vampireapp.util.Saveable;
@@ -44,9 +44,11 @@ public class MoneyControllerInstance implements Saveable, Viewable
 	
 	private final MoneyDepot		mDefaultDepot;
 	
-	private final ChangeListener	mChangeListener;
+	private final MessageListener	mChangeListener;
 	
 	private final ResizeListener	mResizeListener;
+	
+	private final CharacterInstance	mChar;
 	
 	private LinearLayout			mDepotsList;
 	
@@ -65,15 +67,18 @@ public class MoneyControllerInstance implements Saveable, Viewable
 	 *            The change listener.
 	 * @param aResizeListener
 	 *            The resize listener.
+	 * @param aChar
+	 *            The parent character.
 	 */
-	public MoneyControllerInstance(final Currency aCurrency, final Context aContext, final boolean aHost, final ChangeListener aChangeListener,
-			final ResizeListener aResizeListener)
+	public MoneyControllerInstance(final Currency aCurrency, final Context aContext, final boolean aHost, final MessageListener aChangeListener,
+			final ResizeListener aResizeListener, final CharacterInstance aChar)
 	{
 		mCurrency = aCurrency;
 		mHost = aHost;
 		mContext = aContext;
 		mChangeListener = aChangeListener;
 		mResizeListener = aResizeListener;
+		mChar = aChar;
 		final int id = mHost ? R.layout.host_money : R.layout.client_money;
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
 		init();
@@ -97,15 +102,18 @@ public class MoneyControllerInstance implements Saveable, Viewable
 	 *            The change listener.
 	 * @param aResizeListener
 	 *            The resize listener.
+	 * @param aChar
+	 *            The parent character.
 	 */
 	public MoneyControllerInstance(final Currency aCurrency, final Element aElement, final Context aContext, final boolean aHost,
-			final ChangeListener aChangeListener, final ResizeListener aResizeListener)
+			final MessageListener aChangeListener, final ResizeListener aResizeListener, final CharacterInstance aChar)
 	{
 		mCurrency = aCurrency;
 		mHost = aHost;
 		mContext = aContext;
 		mChangeListener = aChangeListener;
 		mResizeListener = aResizeListener;
+		mChar = aChar;
 		final int id = mHost ? R.layout.host_money : R.layout.client_money;
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
 		init();
@@ -132,9 +140,17 @@ public class MoneyControllerInstance implements Saveable, Viewable
 	/**
 	 * @return the change listener.
 	 */
-	public ChangeListener getChangeListener()
+	public MessageListener getChangeListener()
 	{
 		return mChangeListener;
+	}
+	
+	/**
+	 * @return the parent char.
+	 */
+	public CharacterInstance getChar()
+	{
+		return mChar;
 	}
 	
 	/**

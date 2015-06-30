@@ -217,7 +217,7 @@ public class DataUtil
 			{
 				list.append(",");
 			}
-			list.append(aList[i]);
+			list.append(CodingUtil.encode(aList[i]));
 		}
 		return list.toString();
 	}
@@ -231,7 +231,12 @@ public class DataUtil
 	 */
 	public static String[] parseArray(final String aList)
 	{
-		return aList.split(",");
+		final String[] result = aList.split(",");
+		for (int i = 0; i < result.length; i++ )
+		{
+			result[i] = CodingUtil.decode(result[i]);
+		}
+		return result;
 	}
 	
 	/**

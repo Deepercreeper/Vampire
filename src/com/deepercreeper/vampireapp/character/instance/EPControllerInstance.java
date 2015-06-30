@@ -10,7 +10,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.host.change.ChangeListener;
+import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.host.change.EPChange;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.Viewable;
@@ -27,7 +27,7 @@ public class EPControllerInstance implements Viewable
 	
 	private final boolean			mHost;
 	
-	private final ChangeListener	mChangeListener;
+	private final MessageListener	mChangeListener;
 	
 	private final CharacterInstance	mChar;
 	
@@ -53,7 +53,7 @@ public class EPControllerInstance implements Viewable
 	 * @param aChar
 	 *            The character.
 	 */
-	public EPControllerInstance(final Context aContext, final ChangeListener aChangeListener, final boolean aHost, final CharacterInstance aChar)
+	public EPControllerInstance(final Context aContext, final MessageListener aChangeListener, final boolean aHost, final CharacterInstance aChar)
 	{
 		mEP = 0;
 		mChar = aChar;
@@ -78,7 +78,7 @@ public class EPControllerInstance implements Viewable
 	 * @param aChar
 	 *            The character.
 	 */
-	public EPControllerInstance(final int aEP, final Context aContext, final ChangeListener aChangeListener, final boolean aHost,
+	public EPControllerInstance(final int aEP, final Context aContext, final MessageListener aChangeListener, final boolean aHost,
 			final CharacterInstance aChar)
 	{
 		mEP = aEP;

@@ -37,6 +37,8 @@ public class Host implements TimeListener, Saveable
 	
 	private final Context				mContext;
 	
+	private LinearLayout				mMessageList;
+	
 	private LinearLayout				mPlayersList;
 	
 	private LinearLayout				mPlayersTimeList;
@@ -204,7 +206,7 @@ public class Host implements TimeListener, Saveable
 	}
 	
 	@Override
-	public Element asElement(Document aDoc)
+	public Element asElement(final Document aDoc)
 	{
 		final Element root = aDoc.createElement("host");
 		
@@ -233,6 +235,28 @@ public class Host implements TimeListener, Saveable
 	public void setPlayersList(final LinearLayout aPlayersList)
 	{
 		mPlayersList = aPlayersList;
+	}
+	
+	/**
+	 * Sets the list, all messages from players are displayed in.
+	 * 
+	 * @param aMessageList
+	 *            The message list.
+	 */
+	public void setMessageList(final LinearLayout aMessageList)
+	{
+		mMessageList = aMessageList;
+	}
+	
+	/**
+	 * A player message was sent.
+	 * 
+	 * @param aMessage
+	 *            The message.
+	 */
+	public void addMessage(final Message aMessage)
+	{
+		mMessageList.addView(aMessage.getContainer());
 	}
 	
 	@Override

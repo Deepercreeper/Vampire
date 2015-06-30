@@ -1,5 +1,22 @@
-LinearLayout: _list
-*Layout: _panel
-EditText: _text
-TextView: _label
-ProgressBar: _bar
+ - View XML files: view_*
+ - Any dialog XML file: dialog_*
+ - Compound XML file: compound_*
+ - Message XML file: m_<message type>_*
+ - Host/Client XML file:
+  - Host: h_*
+  - Client: c_*
+ - Activity XML file:
+  - Main: ma_*
+  - CreateChar: cc_*
+  - CreateHost: ch_*
+  - Play: pa_*
+  - Host: ha_*
+ - Fragment XML file: f_*
+ - TextView: *_label
+ - EditText: *_text
+ - ProgressBar: *_bar
+ - Button: *_button
+ - Spinner: *_spinner
+ - NumberPicker: *_picker
+ - LinearLayout: *_list
+ - *Layout: *_panel

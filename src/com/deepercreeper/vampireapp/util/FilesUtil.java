@@ -117,6 +117,25 @@ public class FilesUtil
 	}
 	
 	/**
+	 * @param aMessageId
+	 *            The message id.
+	 * @param aArgs
+	 *            The arguments.
+	 * @param aContext
+	 *            The underlying context.
+	 * @return the given string with <code>{0}, {1}, ...</code> replaced with the given arguments.
+	 */
+	public static String buildMessage(final int aMessageId, final String[] aArgs, final Context aContext)
+	{
+		String result = aContext.getString(aMessageId);
+		for (int i = 0; i < aArgs.length; i++ )
+		{
+			result = result.replace("{" + i + "}", aArgs[i]);
+		}
+		return result;
+	}
+	
+	/**
 	 * Loads the given file and returns it as a string.
 	 * 
 	 * @param aFile

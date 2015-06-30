@@ -77,7 +77,12 @@ public class ConnectedDevice
 		/**
 		 * Updates the player
 		 */
-		UPDATE
+		UPDATE,
+		
+		/**
+		 * All player messages and requests
+		 */
+		MESSAGE
 	}
 	
 	private static final String			TAG				= "ConnectedDevice";

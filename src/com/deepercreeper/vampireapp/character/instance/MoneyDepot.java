@@ -13,7 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.Currency;
-import com.deepercreeper.vampireapp.host.change.ChangeListener;
+import com.deepercreeper.vampireapp.host.Message;
+import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.host.change.MoneyChange;
 import com.deepercreeper.vampireapp.items.implementations.Named;
 import com.deepercreeper.vampireapp.util.CodingUtil;
@@ -150,7 +151,7 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 	{
 		for (final String currency : aValues.keySet())
 		{
-			mValues.put(currency, mValues.get(currency) + aValues.get(currency));
+			getValues().put(currency, getValues().get(currency) + aValues.get(currency));
 		}
 		mController.updateValues();
 		getChangeListener().sendChange(new MoneyChange(getName(), getValues()));
@@ -160,7 +161,7 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 	public Element asElement(final Document aDoc)
 	{
 		final Element element = aDoc.createElement(CodingUtil.encode(getName()));
-		element.setAttribute("values", serializeValues(",", ":"));
+		element.setAttribute("values", serializeValues(",", ":", getValues(), false));
 		element.setAttribute("default", "" + mDefault);
 		return element;
 	}
@@ -184,7 +185,15 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 			@Override
 			public void amountSelected(final Map<String, Integer> aMap)
 			{
-				defaultDepot.remove(aMap);
+				final String[] args = new String[] { serializeValues(" ", ", ", aMap, true) };
+				if (mDefault)
+				{
+					getChangeListener().sendMessage(new Message("", R.string.money_sent, args, mContext, null));
+				}
+				else
+				{
+					defaultDepot.remove(aMap);
+				}
 				add(aMap);
 			}
 		};
@@ -195,7 +204,7 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 	/**
 	 * @return the change listener of the parent controller.
 	 */
-	public ChangeListener getChangeListener()
+	public MessageListener getChangeListener()
 	{
 		return mController.getChangeListener();
 	}
@@ -219,7 +228,7 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 	 */
 	public int getValue(final String aCurrency)
 	{
-		return mValues.get(aCurrency);
+		return getValues().get(aCurrency);
 	}
 	
 	/**
@@ -249,6 +258,14 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 					take();
 				}
 			});
+			mDepotButton.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					depot();
+				}
+			});
 			mNameText.setText(getName() + ":");
 			if ( !mDefault)
 			{
@@ -260,18 +277,17 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 						delete();
 					}
 				});
-				mDepotButton.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(final View aV)
-					{
-						depot();
-					}
-				});
 			}
 			else
 			{
-				ViewUtil.hideWidth(mDepotButton);
+				if (mHost)
+				{
+					ViewUtil.hideWidth(mTakeButton);
+				}
+				else
+				{
+					ViewUtil.hideWidth(mDepotButton);
+				}
 				ViewUtil.hideWidth(mDeleteButton);
 			}
 			
@@ -294,7 +310,7 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 	 */
 	public boolean isEmpty()
 	{
-		for (final int value : mValues.values())
+		for (final int value : getValues().values())
 		{
 			if (value > 0)
 			{
@@ -320,12 +336,12 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 	{
 		for (final String currency : aValues.keySet())
 		{
-			int newValue = mValues.get(currency) - aValues.get(currency);
+			int newValue = getValues().get(currency) - aValues.get(currency);
 			if (newValue < 0)
 			{
 				newValue = 0;
 			}
-			mValues.put(currency, newValue);
+			getValues().put(currency, newValue);
 		}
 		mController.updateValues();
 		getChangeListener().sendChange(new MoneyChange(getName(), getValues()));
@@ -342,8 +358,16 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 			@Override
 			public void amountSelected(final Map<String, Integer> aMap)
 			{
+				final String[] args = new String[] { serializeValues(" ", ", ", aMap, true) };
 				remove(aMap);
-				defaultDepot.add(aMap);
+				if (mDefault)
+				{
+					getChangeListener().sendMessage(new Message(mController.getChar().getName(), R.string.money_sent, args, mContext, null));
+				}
+				else
+				{
+					defaultDepot.add(aMap);
+				}
 			}
 		};
 		MoneyAmountDialog.showMoneyAmountDialog(mCurrency, getValues(), mContext.getString(R.string.choose_money_amount), mContext, listener);
@@ -372,7 +396,7 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 				ViewUtil.setEnabled(mDepotButton, !defaultDepot.isEmpty());
 			}
 		}
-		mValueText.setText(serializeValues("\n", " "));
+		mValueText.setText(serializeValues("\n", " ", getValues(), false));
 		ViewUtil.setEnabled(mTakeButton, !isEmpty());
 	}
 	
@@ -384,7 +408,7 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 	 */
 	public void updateValues(final Map<String, Integer> aMap)
 	{
-		mValues.putAll(aMap);
+		getValues().putAll(aMap);
 		mController.updateValues();
 	}
 	
@@ -399,12 +423,17 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 		return map;
 	}
 	
-	private String serializeValues(final String aValueDelimiter, final String aCurrencyDelimiter)
+	private String serializeValues(final String aValueDelimiter, final String aCurrencyDelimiter, final Map<String, Integer> aValues,
+			final boolean aHideEmpty)
 	{
 		final StringBuilder money = new StringBuilder();
 		boolean first = true;
 		for (final String currency : mCurrency.getCurrencies())
 		{
+			if (aHideEmpty && aValues.get(currency) == 0)
+			{
+				continue;
+			}
 			if (first)
 			{
 				first = false;
@@ -413,7 +442,7 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 			{
 				money.append(aValueDelimiter);
 			}
-			money.append(getValue(currency) + aCurrencyDelimiter + currency);
+			money.append(aValues.get(currency) + aCurrencyDelimiter + currency);
 		}
 		return money.toString();
 	}

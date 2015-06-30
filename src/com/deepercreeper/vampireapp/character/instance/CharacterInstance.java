@@ -7,7 +7,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import android.content.Context;
 import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
-import com.deepercreeper.vampireapp.host.change.ChangeListener;
+import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.implementations.instances.ItemControllerInstanceImpl;
 import com.deepercreeper.vampireapp.items.implementations.instances.restrictions.InstanceRestrictionImpl;
@@ -90,7 +90,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	 * @param aHost
 	 *            Whether this character is a host side character.
 	 */
-	public CharacterInstance(final CharacterCreation aCreator, final ChangeListener aChangeListener, final ResizeListener aResizeListener,
+	public CharacterInstance(final CharacterCreation aCreator, final MessageListener aChangeListener, final ResizeListener aResizeListener,
 			final boolean aHost)
 	{
 		mHost = aHost;
@@ -101,7 +101,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		mDescriptions = new DescriptionControllerInstance(aCreator.getDescriptions());
 		mInsanities = new InsanityControllerInstance(aCreator.getInsanities());
 		mEP = new EPControllerInstance(getContext(), aChangeListener, mHost, this);
-		mMoney = new MoneyControllerInstance(mItems.getCurrency(), getContext(), mHost, aChangeListener, mResizeListener);
+		mMoney = new MoneyControllerInstance(mItems.getCurrency(), getContext(), mHost, aChangeListener, mResizeListener, this);
 		mTimeListeners.add(mInsanities);
 		
 		mName = aCreator.getName();
@@ -147,7 +147,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	 * @throws IllegalArgumentException
 	 *             if the XML document can't be parsed.
 	 */
-	public CharacterInstance(final String aXML, final ItemProvider aItems, final Context aContext, final ChangeListener aChangeListener,
+	public CharacterInstance(final String aXML, final ItemProvider aItems, final Context aContext, final MessageListener aChangeListener,
 			final ResizeListener aResizeListener, final boolean aHost) throws IllegalArgumentException
 	{
 		Log.i(TAG, "Starting to load character xml.");
@@ -207,7 +207,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		
 		// Money
 		mMoney = new MoneyControllerInstance(mItems.getCurrency(), (Element) root.getElementsByTagName("money").item(0), getContext(), mHost,
-				aChangeListener, mResizeListener);
+				aChangeListener, mResizeListener, this);
 		
 		// Inventory
 		mInventory = new InventoryControllerInstance((Element) root.getElementsByTagName("inventory").item(0), mItems.getInventory(), this,

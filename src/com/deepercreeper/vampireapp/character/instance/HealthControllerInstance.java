@@ -13,7 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.creation.HealthControllerCreation;
-import com.deepercreeper.vampireapp.host.change.ChangeListener;
+import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.host.change.HealthChange;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
@@ -39,7 +39,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	
 	private final ItemFinder		mItems;
 	
-	private final ChangeListener	mChangeListener;
+	private final MessageListener	mChangeListener;
 	
 	private final boolean			mHost;
 	
@@ -77,7 +77,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	 * @param aHost
 	 *            Whether this controller is displayed at the host.
 	 */
-	public HealthControllerInstance(final Element aElement, final Context aContext, final ItemFinder aItems, final ChangeListener aChangeListener,
+	public HealthControllerInstance(final Element aElement, final Context aContext, final ItemFinder aItems, final MessageListener aChangeListener,
 			final boolean aHost)
 	{
 		mHost = aHost;
@@ -109,7 +109,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	 *            Whether this controller is displayed at the host.
 	 */
 	public HealthControllerInstance(final HealthControllerCreation aHealth, final Context aContext, final ItemFinder aItems,
-			final ChangeListener aChangeListener, final boolean aHost)
+			final MessageListener aChangeListener, final boolean aHost)
 	{
 		mHost = aHost;
 		mItems = aItems;

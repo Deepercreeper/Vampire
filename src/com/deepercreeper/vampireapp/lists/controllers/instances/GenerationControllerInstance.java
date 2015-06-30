@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
-import com.deepercreeper.vampireapp.host.change.ChangeListener;
+import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.host.change.GenerationChange;
 import com.deepercreeper.vampireapp.util.Saveable;
 import com.deepercreeper.vampireapp.util.ViewUtil;
@@ -32,7 +32,7 @@ public class GenerationControllerInstance implements Viewable, Saveable
 	
 	private final boolean			mHost;
 	
-	private final ChangeListener	mChangeListener;
+	private final MessageListener	mChangeListener;
 	
 	private ImageButton				mIncreaseButton;
 	
@@ -55,7 +55,7 @@ public class GenerationControllerInstance implements Viewable, Saveable
 	 *            A listener for generation changes.
 	 */
 	public GenerationControllerInstance(final int aGeneration, final CharacterInstance aChar, final boolean aHost,
-			final ChangeListener aChangeListener)
+			final MessageListener aChangeListener)
 	{
 		mChar = aChar;
 		mGeneration = aGeneration;
@@ -79,7 +79,7 @@ public class GenerationControllerInstance implements Viewable, Saveable
 	 *            A listener for generation changes.
 	 */
 	public GenerationControllerInstance(final Element aElement, final CharacterInstance aChar, final boolean aHost,
-			final ChangeListener aChangeListener)
+			final MessageListener aChangeListener)
 	{
 		mChar = aChar;
 		mChangeListener = aChangeListener;

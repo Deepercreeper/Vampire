@@ -15,7 +15,7 @@ import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
 import com.deepercreeper.vampireapp.connection.ConnectionListener;
-import com.deepercreeper.vampireapp.host.change.ChangeListener;
+import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.host.change.CharacterChange;
 import com.deepercreeper.vampireapp.host.change.EPChange;
 import com.deepercreeper.vampireapp.host.change.GenerationChange;
@@ -34,7 +34,7 @@ import com.deepercreeper.vampireapp.util.view.Viewable;
  * 
  * @author vrl
  */
-public class Player implements Viewable, TimeListener, ChangeListener, ResizeListener
+public class Player implements Viewable, TimeListener, MessageListener, ResizeListener
 {
 	private final ConnectedDevice		mDevice;
 	
@@ -87,9 +87,33 @@ public class Player implements Viewable, TimeListener, ChangeListener, ResizeLis
 	}
 	
 	@Override
+	public void makeText(final int aResId, final int aDuration)
+	{
+		mListener.makeText(aResId, aDuration);
+	}
+	
+	@Override
+	public void makeText(final String aText, final int aDuration)
+	{
+		mListener.makeText(aText, aDuration);
+	}
+	
+	@Override
 	public void sendChange(final CharacterChange aChange)
 	{
 		mDevice.send(MessageType.UPDATE, FilesUtil.serialize(aChange), aChange.getType());
+	}
+	
+	@Override
+	public void sendMessage(final Message aMessage)
+	{
+		mDevice.send(MessageType.MESSAGE, FilesUtil.serialize(aMessage));
+	}
+	
+	@Override
+	public void applyMessage(final Message aMessage)
+	{
+		// TODO Implement
 	}
 	
 	@Override

@@ -66,6 +66,7 @@
     <string name="magazine">Magazin</string>
     <string name="max_weight">Maximales Gewicht</string>
     <string name="money_colon">Geld:</string>
+    <string name="money_sent">Du hast {0} erhalten.</string>
     <string name="name_in_use">Der gewählte Charakter Name ist bereits an einen anderen Spieler vergeben.</string>
     <string name="nature_colon">Wesen:</string>
     <string name="network">Internet</string>

@@ -21,6 +21,7 @@ import com.deepercreeper.vampireapp.connection.ConnectionController;
 import com.deepercreeper.vampireapp.connection.ConnectionListener;
 import com.deepercreeper.vampireapp.host.BannedPlayer;
 import com.deepercreeper.vampireapp.host.Host;
+import com.deepercreeper.vampireapp.host.Message;
 import com.deepercreeper.vampireapp.host.Player;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
@@ -175,23 +176,30 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 	@Override
 	public void receiveMessage(final ConnectedDevice aDevice, final MessageType aType, final String[] aArgs)
 	{
+		final Player player = mHost.getPlayer(aDevice);
 		switch (aType)
 		{
 			case LOGIN :
 				login(aDevice, aArgs[0], aArgs[1]);
 				break;
 			case LEFT_GAME :
-				makeText(mHost.getPlayer(aDevice).getName() + " " + getString(R.string.left_game), Toast.LENGTH_SHORT);
+				makeText(player.getName() + " " + getString(R.string.left_game), Toast.LENGTH_SHORT);
 				mConnection.disconnect(aDevice);
 				break;
 			case AFK :
-				mHost.getPlayer(aDevice).setAFK(true);
+				player.setAFK(true);
 				break;
 			case BACK :
-				mHost.getPlayer(aDevice).setAFK(false);
+				player.setAFK(false);
 				break;
 			case UPDATE :
-				mHost.getPlayer(aDevice).applyChange(aArgs[0], aArgs[1]);
+				player.applyChange(aArgs[0], aArgs[1]);
+				break;
+			case MESSAGE :
+				final Message message = Message.deserialize(aArgs[0], this, player);
+				mHost.addMessage(message);
+				player.applyMessage(message);
+				break;
 			default :
 				break;
 		}
@@ -228,6 +236,7 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 		final EditText timeSetter = (EditText) findViewById(R.id.ha_time_text);
 		mHost.setPlayersList((LinearLayout) findViewById(R.id.ha_players_list));
 		mHost.setPlayersTimeList((LinearLayout) findViewById(R.id.ha_players_time_list));
+		mHost.setMessageList((LinearLayout) findViewById(R.id.ha_message_list));
 		final Button applyTime = (Button) findViewById(R.id.ha_apply_time_button);
 		final Button day = (Button) findViewById(R.id.ha_day_button);
 		final Button hour = (Button) findViewById(R.id.ha_hour_button);
