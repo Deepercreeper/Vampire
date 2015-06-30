@@ -47,13 +47,13 @@ public class HostContextMenu extends DialogFragment
 	
 	private enum Action
 	{
-		PLAY(R.string.play_host, 0), DELETE(R.string.delete_host, 1);
+		DELETE(R.string.delete_host, 0);
 		
 		private final int	mResId;
 		
 		private final int	mIndex;
 		
-		private Action(final int aResId, int aIndex)
+		private Action(final int aResId, final int aIndex)
 		{
 			mResId = aResId;
 			mIndex = aIndex;
@@ -127,9 +127,6 @@ public class HostContextMenu extends DialogFragment
 		{
 			case DELETE :
 				mListener.deleteHost(mName);
-				break;
-			case PLAY :
-				mListener.playHost(mName);
 				break;
 		}
 	}

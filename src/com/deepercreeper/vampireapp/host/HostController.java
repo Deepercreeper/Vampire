@@ -198,12 +198,17 @@ public class HostController implements HostListener
 	 */
 	public void setHostsEnabled(final boolean aEnabled)
 	{
+		if (mHostsList == null)
+		{
+			return;
+		}
 		for (int i = 0; i < mHostsList.getChildCount(); i++ )
 		{
 			final View view = mHostsList.getChildAt(i);
-			if (view instanceof TextView)
+			if (view instanceof LinearLayout)
 			{
-				ViewUtil.setEnabled(view, aEnabled);
+				final Button button = (Button) view.findViewById(R.id.play_button);
+				ViewUtil.setEnabled(button, aEnabled);
 			}
 		}
 	}
