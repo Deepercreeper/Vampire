@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.Currency;
 import com.deepercreeper.vampireapp.host.Message;
+import com.deepercreeper.vampireapp.host.Message.ButtonAction;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.host.change.MoneyChange;
 import com.deepercreeper.vampireapp.items.implementations.Named;
@@ -188,7 +189,7 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 				final String[] args = new String[] { serializeValues(", ", " ", aMap, true) };
 				if (mDefault)
 				{
-					getChangeListener().sendMessage(new Message("", R.string.money_sent, args, mContext, null));
+					getChangeListener().sendMessage(new Message("", R.string.money_sent, args, mContext, null, ButtonAction.NOTHING));
 				}
 				else
 				{
@@ -367,13 +368,17 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 			public void amountSelected(final Map<String, Integer> aMap)
 			{
 				final String[] args = new String[] { serializeValues(", ", " ", aMap, true) };
-				remove(aMap);
 				if (mDefault)
 				{
-					getChangeListener().sendMessage(new Message(mController.getChar().getName(), R.string.money_sent, args, mContext, null));
+					remove(aMap);
+					getChangeListener().sendMessage(
+							new Message(mController.getChar().getName(), R.string.money_sent, args, mContext, null, ButtonAction.NOTHING));
 				}
 				else
 				{
+					getChangeListener().sendMessage(
+							new Message(mController.getChar().getName(), R.string.ask_take_money, args, aContext, aListener, aYesAction, aNoAction,
+									aSaveables));
 					defaultDepot.add(aMap);
 				}
 			}
@@ -427,6 +432,20 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 		{
 			final String[] currencyAndValue = value.split(":");
 			map.put(currencyAndValue[1], Integer.parseInt(currencyAndValue[0]));
+		}
+		return map;
+	}
+	
+	private Map<String, Integer> deserializeValues(String aValueDelimiter, String aCurrencyDelimiter, String aValues)
+	{
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		for (String currencyValue : aValues.split(aValueDelimiter))
+		{
+			String[] valueAndCurrency = currencyValue.split(aCurrencyDelimiter);
+			if (mCurrency.contains(valueAndCurrency[1]))
+			{
+				map.put(valueAndCurrency[1], Integer.parseInt(valueAndCurrency[0]));
+			}
 		}
 		return map;
 	}

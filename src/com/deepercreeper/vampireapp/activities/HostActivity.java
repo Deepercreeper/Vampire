@@ -197,7 +197,6 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 			case MESSAGE :
 				final Message message = Message.deserialize(aArgs[0], this, player);
 				mHost.addMessage(message);
-				player.applyMessage(message);
 				break;
 			default :
 				break;

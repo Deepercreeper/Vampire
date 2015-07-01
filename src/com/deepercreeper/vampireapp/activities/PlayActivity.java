@@ -22,6 +22,7 @@ import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
 import com.deepercreeper.vampireapp.connection.ConnectionController;
 import com.deepercreeper.vampireapp.connection.ConnectionListener;
 import com.deepercreeper.vampireapp.host.Message;
+import com.deepercreeper.vampireapp.host.Message.ButtonAction;
 import com.deepercreeper.vampireapp.host.Player;
 import com.deepercreeper.vampireapp.host.change.CharacterChange;
 import com.deepercreeper.vampireapp.host.change.EPChange;
@@ -111,9 +112,16 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	}
 	
 	@Override
-	public void applyMessage(final Message aMessage)
+	public void applyMessage(final Message aMessage, ButtonAction aAction)
 	{
-		// TODO Implement
+		switch (aAction)
+		{
+			case NOTHING :
+				break;
+			default :
+				break;
+		}
+		// TODO Implement other button actions
 	}
 	
 	@Override
@@ -206,7 +214,6 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 			case MESSAGE :
 				final Message message = Message.deserialize(aArgs[0], this, this);
 				mMessageList.addView(message.getContainer());
-				applyMessage(message);
 			default :
 				break;
 		}

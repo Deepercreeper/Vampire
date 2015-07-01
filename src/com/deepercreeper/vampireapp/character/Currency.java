@@ -32,6 +32,23 @@ public class Currency
 	}
 	
 	/**
+	 * @param aCurrency
+	 *            The currency.
+	 * @return whether this currency contains the given one.
+	 */
+	public boolean contains(String aCurrency)
+	{
+		for (String currency : getCurrencies())
+		{
+			if (currency.trim().equals(aCurrency.trim()))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
 	 * @return the maximum value, that can be transmitted per money transmission.
 	 */
 	public Map<String, Integer> getMaxAmounts()

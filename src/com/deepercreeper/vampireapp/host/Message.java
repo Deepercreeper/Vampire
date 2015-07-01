@@ -25,6 +25,19 @@ import com.deepercreeper.vampireapp.util.view.Viewable;
 public class Message implements Saveable, Viewable
 {
 	/**
+	 * Each button has to have an action, that will be processed, when the button is clicked.
+	 * 
+	 * @author vrl
+	 */
+	public static enum ButtonAction
+	{
+		/**
+		 * No operation
+		 */
+		NOTHING
+	}
+	
+	/**
 	 * All types of host client messages.
 	 * 
 	 * @author Vincent
@@ -34,7 +47,12 @@ public class Message implements Saveable, Viewable
 		/**
 		 * One of them is informed about something.
 		 */
-		INFO
+		INFO,
+		
+		/**
+		 * Asks the host or the player to approve something.
+		 */
+		YES_NO
 	}
 	
 	/**
@@ -53,10 +71,15 @@ public class Message implements Saveable, Viewable
 		final int messageId = Integer.parseInt(messageElement.getAttribute("message"));
 		final String[] arguments = DataUtil.parseArray(messageElement.getAttribute("arguments"));
 		final String sender = messageElement.getAttribute("sender");
+		ButtonAction yesAction = ButtonAction.valueOf(messageElement.getAttribute("yes-action"));
+		ButtonAction noAction = ButtonAction.valueOf(messageElement.getAttribute("no-action"));
+		String[] saveables = DataUtil.parseArray(messageElement.getAttribute("saveables"));
 		switch (type)
 		{
 			case INFO :
-				return new Message(sender, messageId, arguments, aContext, aListener);
+				return new Message(sender, messageId, arguments, aContext, aListener, yesAction, saveables);
+			case YES_NO :
+				return new Message(sender, messageId, arguments, aContext, aListener, yesAction, noAction, saveables);
 			default :
 				return null;
 		}
@@ -72,11 +95,17 @@ public class Message implements Saveable, Viewable
 	
 	private final String[]			mArguments;
 	
+	private final String[]			mSaveables;
+	
 	private final MessageListener	mListener;
 	
 	private final Context			mContext;
 	
 	private final LinearLayout		mContainer;
+	
+	private final ButtonAction		mYesAction;
+	
+	private final ButtonAction		mNoAction;
 	
 	/**
 	 * Creates a info message.
@@ -91,15 +120,48 @@ public class Message implements Saveable, Viewable
 	 *            The underlying context.
 	 * @param aListener
 	 *            The message listener.
+	 * @param aOkAction
+	 *            When the message is approved, this action happens.
+	 * @param aSaveables
+	 *            Saveable objects.
 	 */
-	public Message(final String aSender, final int aMessageId, final String[] aArguments, final Context aContext, final MessageListener aListener)
+	public Message(final String aSender, final int aMessageId, final String[] aArguments, final Context aContext, final MessageListener aListener,
+			ButtonAction aOkAction, String... aSaveables)
 	{
-		this(MessageType.INFO, aSender, aMessageId, aArguments, aContext, aListener, R.layout.message_info);
+		this(MessageType.INFO, aSender, aMessageId, aArguments, aContext, aListener, R.layout.message_info, aOkAction, ButtonAction.NOTHING,
+				aSaveables);
+		init();
+	}
+	
+	/**
+	 * Creates a yes/no message.
+	 * 
+	 * @param aSender
+	 *            The message sender.
+	 * @param aMessageId
+	 *            The message text.
+	 * @param aArguments
+	 *            The message arguments.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aListener
+	 *            The message listener.
+	 * @param aYesAction
+	 *            The yes action.
+	 * @param aNoAction
+	 *            The no action.
+	 * @param aSaveables
+	 *            Saveable objects.
+	 */
+	public Message(final String aSender, final int aMessageId, final String[] aArguments, final Context aContext, final MessageListener aListener,
+			ButtonAction aYesAction, ButtonAction aNoAction, String... aSaveables)
+	{
+		this(MessageType.YES_NO, aSender, aMessageId, aArguments, aContext, aListener, R.layout.message_yes_no, aYesAction, aNoAction, aSaveables);
 		init();
 	}
 	
 	private Message(final MessageType aType, final String aSender, final int aMessageId, final String[] aArguments, final Context aContext,
-			final MessageListener aListener, final int aViewId)
+			final MessageListener aListener, final int aViewId, ButtonAction aYesAction, ButtonAction aNoAction, String... aSaveables)
 	{
 		mType = aType;
 		mSender = aSender;
@@ -107,6 +169,9 @@ public class Message implements Saveable, Viewable
 		mArguments = aArguments;
 		mListener = aListener;
 		mContext = aContext;
+		mYesAction = aYesAction;
+		mNoAction = aNoAction;
+		mSaveables = aSaveables;
 		mContainer = (LinearLayout) View.inflate(mContext, aViewId, null);
 	}
 	
@@ -118,13 +183,9 @@ public class Message implements Saveable, Viewable
 		element.setAttribute("message", "" + mMessageId);
 		element.setAttribute("arguments", DataUtil.parseArray(mArguments));
 		element.setAttribute("sender", mSender);
-		switch (mType)
-		{
-			case INFO :
-				break;
-			default :
-				break;
-		}
+		element.setAttribute("yes-action", mYesAction.name());
+		element.setAttribute("no-action", mNoAction.name());
+		element.setAttribute("saveables", DataUtil.parseArray(mSaveables));
 		return element;
 	}
 	
@@ -149,7 +210,12 @@ public class Message implements Saveable, Viewable
 		{
 			case INFO :
 				initMessageText(R.id.m_info_message_label);
-				initOkButton(R.id.m_info_ok_button);
+				initButton(R.id.m_info_ok_button, mYesAction);
+				break;
+			case YES_NO :
+				initMessageText(R.id.m_yes_no_message_label);
+				initButton(R.id.m_yes_no_positive_button, mYesAction);
+				initButton(R.id.m_yes_no_negative_button, mNoAction);
 				break;
 			default :
 				break;
@@ -171,6 +237,20 @@ public class Message implements Saveable, Viewable
 		return mSender + ": " + FilesUtil.buildMessage(mMessageId, mArguments, mContext);
 	}
 	
+	private void initButton(final int aButtonId, final ButtonAction aAction)
+	{
+		final Button button = (Button) getContainer().findViewById(aButtonId);
+		button.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				release();
+				mListener.applyMessage(Message.this, aAction);
+			}
+		});
+	}
+	
 	private void initMessageText(final int aTextId)
 	{
 		final TextView message = (TextView) getContainer().findViewById(aTextId);
@@ -181,19 +261,6 @@ public class Message implements Saveable, Viewable
 			public void onClick(final View aV)
 			{
 				mListener.makeText(getText(), Toast.LENGTH_LONG);
-			}
-		});
-	}
-	
-	private void initOkButton(final int aButtonId)
-	{
-		final Button button = (Button) getContainer().findViewById(aButtonId);
-		button.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(final View aV)
-			{
-				release();
 			}
 		});
 	}

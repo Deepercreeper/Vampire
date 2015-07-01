@@ -15,11 +15,12 @@ import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
 import com.deepercreeper.vampireapp.connection.ConnectionListener;
-import com.deepercreeper.vampireapp.host.change.MessageListener;
+import com.deepercreeper.vampireapp.host.Message.ButtonAction;
 import com.deepercreeper.vampireapp.host.change.CharacterChange;
 import com.deepercreeper.vampireapp.host.change.EPChange;
 import com.deepercreeper.vampireapp.host.change.GenerationChange;
 import com.deepercreeper.vampireapp.host.change.HealthChange;
+import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.host.change.MoneyChange;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
@@ -111,9 +112,16 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 	}
 	
 	@Override
-	public void applyMessage(final Message aMessage)
+	public void applyMessage(final Message aMessage, ButtonAction aAction)
 	{
-		// TODO Implement
+		switch (aAction)
+		{
+			case NOTHING :
+				break;
+			default :
+				break;
+		}
+		// TODO Implement other button actions
 	}
 	
 	@Override

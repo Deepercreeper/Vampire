@@ -1,6 +1,7 @@
 package com.deepercreeper.vampireapp.host.change;
 
 import com.deepercreeper.vampireapp.host.Message;
+import com.deepercreeper.vampireapp.host.Message.ButtonAction;
 import com.deepercreeper.vampireapp.util.view.Toaster;
 
 /**
@@ -29,12 +30,14 @@ public interface MessageListener extends Toaster
 	public void applyChange(String aChange, String aType);
 	
 	/**
-	 * A message was sent by another device and needs to be approved.
+	 * The given message has been approved by the message receiver.
 	 * 
 	 * @param aMessage
 	 *            The sent message.
+	 * @param aAction
+	 *            The message button action.
 	 */
-	public void applyMessage(Message aMessage);
+	public void applyMessage(Message aMessage, ButtonAction aAction);
 	
 	/**
 	 * Sends the given message to the other connection side.
