@@ -14,6 +14,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -64,6 +65,8 @@ public class MoneyAmountDialog extends DialogFragment
 	
 	private final Currency				mCurrency;
 	
+	private final Map<String, EditText>	mAmounts	= new HashMap<String, EditText>();
+	
 	private Button						mOK;
 	
 	private MoneyAmountDialog(final Currency aCurrency, final Map<String, Integer> aMaxValues, final String aTitle, final Context aContext,
@@ -86,6 +89,8 @@ public class MoneyAmountDialog extends DialogFragment
 		{
 			final LinearLayout currencyView = (LinearLayout) View.inflate(mContext, R.layout.currency_chooser_view, null);
 			final EditText amount = (EditText) currencyView.findViewById(R.id.view_currency_value_text);
+			final Button max = (Button) currencyView.findViewById(R.id.view_max_currency_value_button);
+			
 			amount.addTextChangedListener(new TextWatcher()
 			{
 				@Override
@@ -99,22 +104,33 @@ public class MoneyAmountDialog extends DialogFragment
 				@Override
 				public void afterTextChanged(final Editable aS)
 				{
-					int value = -1;
-					try
+					updateOkButton();
+				}
+			});
+			amount.setOnFocusChangeListener(new OnFocusChangeListener()
+			{
+				
+				@Override
+				public void onFocusChange(final View aV, final boolean aHasFocus)
+				{
+					if (aHasFocus)
 					{
-						value = Integer.parseInt(aS.toString());
-					}
-					catch (final NumberFormatException e)
-					{}
-					final boolean enabled = value >= 0 && value <= mMaxValues.get(currency);
-					ViewUtil.setEnabled(mOK, enabled);
-					if (enabled)
-					{
-						mValues.put(currency, value);
+						amount.setText("");
 					}
 				}
 			});
 			amount.setText("0");
+			mAmounts.put(currency, amount);
+			max.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					final int maxValue = mMaxValues.get(currency);
+					amount.setText("" + maxValue);
+					mValues.put(currency, maxValue);
+				}
+			});
 			((TextView) currencyView.findViewById(R.id.view_currency_label)).setText(currency + " (0 - " + mMaxValues.get(currency) + "):");
 			container.addView(currencyView, container.getChildCount() - 1);
 		}
@@ -131,6 +147,29 @@ public class MoneyAmountDialog extends DialogFragment
 		builder.setTitle(mTitle).setView(container);
 		final AlertDialog dialog = builder.create();
 		return dialog;
+	}
+	
+	private void updateOkButton()
+	{
+		boolean enabled = true;
+		for (final String currency : mAmounts.keySet())
+		{
+			int value = -1;
+			try
+			{
+				value = Integer.parseInt(mAmounts.get(currency).getText().toString());
+			}
+			catch (final NumberFormatException e)
+			{}
+			
+			if (value < 0 || value > mMaxValues.get(currency))
+			{
+				enabled = false;
+				break;
+			}
+			mValues.put(currency, value);
+		}
+		ViewUtil.setEnabled(mOK, enabled);
 	}
 	
 	@Override

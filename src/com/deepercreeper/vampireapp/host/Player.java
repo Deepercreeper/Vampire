@@ -112,11 +112,35 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 	}
 	
 	@Override
-	public void applyMessage(final Message aMessage, ButtonAction aAction)
+	public void applyMessage(final Message aMessage, final ButtonAction aAction)
 	{
 		switch (aAction)
 		{
 			case NOTHING :
+				break;
+			case ACCEPT_DELETE :
+				sendMessage(new Message("", R.string.accept_delete, aMessage.getArguments(), mContext, null, ButtonAction.ACCEPT_DELETE,
+						aMessage.getSaveables()));
+				break;
+			case DENY_DELETE :
+				sendMessage(new Message("", R.string.deny_take_depot, new String[] { aMessage.getArgument(0) }, mContext, null, ButtonAction.NOTHING,
+						aMessage.getSaveables()));
+				break;
+			case ACCEPT_TAKE :
+				sendMessage(new Message("", R.string.accept_take, aMessage.getArguments(), mContext, null, ButtonAction.ACCEPT_TAKE,
+						aMessage.getSaveables()));
+				break;
+			case DENY_TAKE :
+				sendMessage(new Message("", R.string.deny_take_depot, new String[] { aMessage.getArgument(1) }, mContext, null, ButtonAction.NOTHING,
+						aMessage.getSaveables()));
+				break;
+			case ACCEPT_DEPOT :
+				sendMessage(new Message("", R.string.accept_depot, aMessage.getArguments(), mContext, null, ButtonAction.ACCEPT_DEPOT,
+						aMessage.getSaveables()));
+				break;
+			case DENY_DEPOT :
+				sendMessage(new Message("", R.string.deny_take_depot, new String[] { aMessage.getArgument(1) }, mContext, null, ButtonAction.NOTHING,
+						aMessage.getSaveables()));
 				break;
 			default :
 				break;

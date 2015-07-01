@@ -155,14 +155,14 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 			getValues().put(currency, getValues().get(currency) + aValues.get(currency));
 		}
 		mController.updateValues();
-		getChangeListener().sendChange(new MoneyChange(getName(), getValues()));
+		getMessageListener().sendChange(new MoneyChange(getName(), getValues()));
 	}
 	
 	@Override
 	public Element asElement(final Document aDoc)
 	{
 		final Element element = aDoc.createElement(CodingUtil.encode(getName()));
-		element.setAttribute("values", serializeValues(",", ":", getValues(), false));
+		element.setAttribute("values", serializeValues(",", ":", getValues(), false, mCurrency));
 		element.setAttribute("default", "" + mDefault);
 		return element;
 	}
@@ -186,16 +186,29 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 			@Override
 			public void amountSelected(final Map<String, Integer> aMap)
 			{
-				final String[] args = new String[] { serializeValues(", ", " ", aMap, true) };
+				final String[] args;
 				if (mDefault)
 				{
-					getChangeListener().sendMessage(new Message("", R.string.money_sent, args, mContext, null, ButtonAction.NOTHING));
+					args = new String[] { serializeValues(", ", " ", aMap, true, mCurrency) };
+					getMessageListener().sendMessage(new Message("", R.string.money_sent, args, mContext, null, ButtonAction.NOTHING));
+					add(aMap);
 				}
 				else
 				{
-					defaultDepot.remove(aMap);
+					if (mHost)
+					{
+						mController.getDefaultDepot().remove(aMap);
+						add(aMap);
+					}
+					else
+					{
+						args = new String[] { serializeValues(", ", " ", aMap, true, mCurrency), getName() };
+						getMessageListener().sendMessage(
+								new Message(mController.getChar().getName(), R.string.ask_depot_money, args, mContext, null,
+										ButtonAction.ACCEPT_DEPOT, ButtonAction.DENY_DEPOT, serializeValues(",", " ", aMap, false, mCurrency),
+										getName()));
+					}
 				}
-				add(aMap);
 			}
 		};
 		Map<String, Integer> maxValues;
@@ -211,11 +224,11 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 	}
 	
 	/**
-	 * @return the change listener of the parent controller.
+	 * @return the message listener of the parent controller.
 	 */
-	public MessageListener getChangeListener()
+	public MessageListener getMessageListener()
 	{
-		return mController.getChangeListener();
+		return mController.getMessageListener();
 	}
 	
 	@Override
@@ -353,7 +366,7 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 			getValues().put(currency, newValue);
 		}
 		mController.updateValues();
-		getChangeListener().sendChange(new MoneyChange(getName(), getValues()));
+		getMessageListener().sendChange(new MoneyChange(getName(), getValues()));
 	}
 	
 	/**
@@ -361,25 +374,33 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 	 */
 	public void take()
 	{
-		final MoneyDepot defaultDepot = mController.getDefaultDepot();
 		final MoneyAmountListener listener = new MoneyAmountListener()
 		{
 			@Override
 			public void amountSelected(final Map<String, Integer> aMap)
 			{
-				final String[] args = new String[] { serializeValues(", ", " ", aMap, true) };
+				final String[] args;
 				if (mDefault)
 				{
+					args = new String[] { serializeValues(", ", " ", aMap, true, mCurrency) };
 					remove(aMap);
-					getChangeListener().sendMessage(
+					getMessageListener().sendMessage(
 							new Message(mController.getChar().getName(), R.string.money_sent, args, mContext, null, ButtonAction.NOTHING));
 				}
 				else
 				{
-					getChangeListener().sendMessage(
-							new Message(mController.getChar().getName(), R.string.ask_take_money, args, aContext, aListener, aYesAction, aNoAction,
-									aSaveables));
-					defaultDepot.add(aMap);
+					if (mHost)
+					{
+						remove(aMap);
+						mController.getDefaultDepot().add(aMap);
+					}
+					else
+					{
+						args = new String[] { serializeValues(", ", " ", aMap, true, mCurrency), getName() };
+						getMessageListener().sendMessage(
+								new Message(mController.getChar().getName(), R.string.ask_take_money, args, mContext, null, ButtonAction.ACCEPT_TAKE,
+										ButtonAction.DENY_TAKE, serializeValues(",", " ", aMap, false, mCurrency), getName()));
+					}
 				}
 			}
 		};
@@ -393,7 +414,7 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 	{
 		mController.getDefaultDepot().add(getValues());
 		remove(getValues());
-		getChangeListener().sendChange(new MoneyChange(getName(), getValues()));
+		getMessageListener().sendChange(new MoneyChange(getName(), getValues()));
 	}
 	
 	/**
@@ -409,7 +430,7 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 				ViewUtil.setEnabled(mDepotButton, !defaultDepot.isEmpty());
 			}
 		}
-		mValueText.setText(serializeValues("\n", " ", getValues(), false));
+		mValueText.setText(serializeValues("\n", " ", getValues(), false, mCurrency));
 		ViewUtil.setEnabled(mTakeButton, !isEmpty());
 	}
 	
@@ -436,13 +457,25 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 		return map;
 	}
 	
-	private Map<String, Integer> deserializeValues(String aValueDelimiter, String aCurrencyDelimiter, String aValues)
+	/**
+	 * @param aValueDelimiter
+	 *            The delimiter, that splits all value currency pairs.
+	 * @param aCurrencyDelimiter
+	 *            The delimiter, that splits each value from its currency.
+	 * @param aValues
+	 *            The money string.
+	 * @param aCurrency
+	 *            The currency.
+	 * @return a money amount out of the given string.
+	 */
+	public static Map<String, Integer> deserializeValues(final String aValueDelimiter, final String aCurrencyDelimiter, final String aValues,
+			final Currency aCurrency)
 	{
-		Map<String, Integer> map = new HashMap<String, Integer>();
-		for (String currencyValue : aValues.split(aValueDelimiter))
+		final Map<String, Integer> map = new HashMap<String, Integer>();
+		for (final String currencyValue : aValues.split(aValueDelimiter))
 		{
-			String[] valueAndCurrency = currencyValue.split(aCurrencyDelimiter);
-			if (mCurrency.contains(valueAndCurrency[1]))
+			final String[] valueAndCurrency = currencyValue.split(aCurrencyDelimiter);
+			if (aCurrency.contains(valueAndCurrency[1]))
 			{
 				map.put(valueAndCurrency[1], Integer.parseInt(valueAndCurrency[0]));
 			}
@@ -450,12 +483,25 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 		return map;
 	}
 	
-	private String serializeValues(final String aValueDelimiter, final String aCurrencyDelimiter, final Map<String, Integer> aValues,
-			final boolean aHideEmpty)
+	/**
+	 * @param aValueDelimiter
+	 *            The delimiter, that splits all value currency pairs.
+	 * @param aCurrencyDelimiter
+	 *            The delimiter, that splits each value from its currency.
+	 * @param aValues
+	 *            The money amount.
+	 * @param aHideEmpty
+	 *            Whether empty amounts should be hidden.
+	 * @param aCurrency
+	 *            The currency.
+	 * @return a string, representing the given amount of money.
+	 */
+	public static String serializeValues(final String aValueDelimiter, final String aCurrencyDelimiter, final Map<String, Integer> aValues,
+			final boolean aHideEmpty, final Currency aCurrency)
 	{
 		final StringBuilder money = new StringBuilder();
 		boolean first = true;
-		for (final String currency : mCurrency.getCurrencies())
+		for (final String currency : aCurrency.getCurrencies())
 		{
 			if (aHideEmpty && aValues.get(currency) == 0)
 			{

@@ -14,6 +14,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.Currency;
+import com.deepercreeper.vampireapp.host.Message;
+import com.deepercreeper.vampireapp.host.Message.ButtonAction;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.host.change.MoneyChange;
 import com.deepercreeper.vampireapp.util.CodingUtil;
@@ -44,7 +46,7 @@ public class MoneyControllerInstance implements Saveable, Viewable
 	
 	private final MoneyDepot		mDefaultDepot;
 	
-	private final MessageListener	mChangeListener;
+	private final MessageListener	mMessageListener;
 	
 	private final ResizeListener	mResizeListener;
 	
@@ -76,7 +78,7 @@ public class MoneyControllerInstance implements Saveable, Viewable
 		mCurrency = aCurrency;
 		mHost = aHost;
 		mContext = aContext;
-		mChangeListener = aChangeListener;
+		mMessageListener = aChangeListener;
 		mResizeListener = aResizeListener;
 		mChar = aChar;
 		final int id = mHost ? R.layout.host_money : R.layout.client_money;
@@ -111,7 +113,7 @@ public class MoneyControllerInstance implements Saveable, Viewable
 		mCurrency = aCurrency;
 		mHost = aHost;
 		mContext = aContext;
-		mChangeListener = aChangeListener;
+		mMessageListener = aChangeListener;
 		mResizeListener = aResizeListener;
 		mChar = aChar;
 		final int id = mHost ? R.layout.host_money : R.layout.client_money;
@@ -138,11 +140,11 @@ public class MoneyControllerInstance implements Saveable, Viewable
 	}
 	
 	/**
-	 * @return the change listener.
+	 * @return the message listener.
 	 */
-	public MessageListener getChangeListener()
+	public MessageListener getMessageListener()
 	{
-		return mChangeListener;
+		return mMessageListener;
 	}
 	
 	/**
@@ -236,11 +238,10 @@ public class MoneyControllerInstance implements Saveable, Viewable
 		{
 			mDepotsList.addView(depot.getContainer());
 		}
-		// TODO Needs a updateValues()?
 		resize();
 		if ( !aSilent)
 		{
-			mChangeListener.sendChange(new MoneyChange(aDepot.getName(), true));
+			mMessageListener.sendChange(new MoneyChange(aDepot.getName(), true));
 		}
 	}
 	
@@ -338,15 +339,20 @@ public class MoneyControllerInstance implements Saveable, Viewable
 		final MoneyDepot depot = getDepot(aName);
 		if ( !depot.isEmpty())
 		{
-			depot.takeAll();
+			getMessageListener().sendMessage(
+					new Message(getChar().getName(), R.string.ask_delete_depot, new String[] { depot.getName() }, mContext, null,
+							ButtonAction.ACCEPT_DELETE, ButtonAction.DENY_DELETE, depot.getName()));
 		}
-		mDepots.remove(depot);
-		depot.release();
-		// TODO Same here: Needs updatevalues()?
-		resize();
-		if ( !aSilent)
+		else
 		{
-			mChangeListener.sendChange(new MoneyChange(aName, false));
+			mDepots.remove(depot);
+			depot.release();
+			resize();
+			if ( !aSilent)
+			{
+				// TODO Replace the field by its getter
+				mMessageListener.sendChange(new MoneyChange(aName, false));
+			}
 		}
 	}
 }

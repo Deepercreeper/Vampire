@@ -34,7 +34,37 @@ public class Message implements Saveable, Viewable
 		/**
 		 * No operation
 		 */
-		NOTHING
+		NOTHING,
+		
+		/**
+		 * Taking money from a depot was accepted
+		 */
+		ACCEPT_TAKE,
+		
+		/**
+		 * Depot of money was accepted
+		 */
+		ACCEPT_DEPOT,
+		
+		/**
+		 * Deletion of depot was accepted
+		 */
+		ACCEPT_DELETE,
+		
+		/**
+		 * Taking money from a depot was denied
+		 */
+		DENY_TAKE,
+		
+		/**
+		 * Depot of money was denied
+		 */
+		DENY_DEPOT,
+		
+		/**
+		 * Deletion of depot was denied
+		 */
+		DENY_DELETE
 	}
 	
 	/**
@@ -53,36 +83,6 @@ public class Message implements Saveable, Viewable
 		 * Asks the host or the player to approve something.
 		 */
 		YES_NO
-	}
-	
-	/**
-	 * @param aXML
-	 *            The data, the message is serialized to.
-	 * @param aContext
-	 *            The underlying context.
-	 * @param aListener
-	 *            The message listener.
-	 * @return the serialized message.
-	 */
-	public static Message deserialize(final String aXML, final Context aContext, final MessageListener aListener)
-	{
-		final Element messageElement = (Element) FilesUtil.loadDocument(aXML).getElementsByTagName(TAG_NAME).item(0);
-		final MessageType type = MessageType.valueOf(messageElement.getAttribute("type"));
-		final int messageId = Integer.parseInt(messageElement.getAttribute("message"));
-		final String[] arguments = DataUtil.parseArray(messageElement.getAttribute("arguments"));
-		final String sender = messageElement.getAttribute("sender");
-		ButtonAction yesAction = ButtonAction.valueOf(messageElement.getAttribute("yes-action"));
-		ButtonAction noAction = ButtonAction.valueOf(messageElement.getAttribute("no-action"));
-		String[] saveables = DataUtil.parseArray(messageElement.getAttribute("saveables"));
-		switch (type)
-		{
-			case INFO :
-				return new Message(sender, messageId, arguments, aContext, aListener, yesAction, saveables);
-			case YES_NO :
-				return new Message(sender, messageId, arguments, aContext, aListener, yesAction, noAction, saveables);
-			default :
-				return null;
-		}
 	}
 	
 	private static final String		TAG_NAME	= "message";
@@ -108,32 +108,6 @@ public class Message implements Saveable, Viewable
 	private final ButtonAction		mNoAction;
 	
 	/**
-	 * Creates a info message.
-	 * 
-	 * @param aSender
-	 *            The message sender.
-	 * @param aMessageId
-	 *            The message text.
-	 * @param aArguments
-	 *            The message arguments.
-	 * @param aContext
-	 *            The underlying context.
-	 * @param aListener
-	 *            The message listener.
-	 * @param aOkAction
-	 *            When the message is approved, this action happens.
-	 * @param aSaveables
-	 *            Saveable objects.
-	 */
-	public Message(final String aSender, final int aMessageId, final String[] aArguments, final Context aContext, final MessageListener aListener,
-			ButtonAction aOkAction, String... aSaveables)
-	{
-		this(MessageType.INFO, aSender, aMessageId, aArguments, aContext, aListener, R.layout.message_info, aOkAction, ButtonAction.NOTHING,
-				aSaveables);
-		init();
-	}
-	
-	/**
 	 * Creates a yes/no message.
 	 * 
 	 * @param aSender
@@ -154,14 +128,41 @@ public class Message implements Saveable, Viewable
 	 *            Saveable objects.
 	 */
 	public Message(final String aSender, final int aMessageId, final String[] aArguments, final Context aContext, final MessageListener aListener,
-			ButtonAction aYesAction, ButtonAction aNoAction, String... aSaveables)
+			final ButtonAction aYesAction, final ButtonAction aNoAction, final String... aSaveables)
 	{
 		this(MessageType.YES_NO, aSender, aMessageId, aArguments, aContext, aListener, R.layout.message_yes_no, aYesAction, aNoAction, aSaveables);
 		init();
 	}
 	
+	/**
+	 * Creates a info message.
+	 * 
+	 * @param aSender
+	 *            The message sender.
+	 * @param aMessageId
+	 *            The message text.
+	 * @param aArguments
+	 *            The message arguments.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aListener
+	 *            The message listener.
+	 * @param aOkAction
+	 *            When the message is approved, this action happens.
+	 * @param aSaveables
+	 *            Saveable objects.
+	 */
+	public Message(final String aSender, final int aMessageId, final String[] aArguments, final Context aContext, final MessageListener aListener,
+			final ButtonAction aOkAction, final String... aSaveables)
+	{
+		this(MessageType.INFO, aSender, aMessageId, aArguments, aContext, aListener, R.layout.message_info, aOkAction, ButtonAction.NOTHING,
+				aSaveables);
+		init();
+	}
+	
 	private Message(final MessageType aType, final String aSender, final int aMessageId, final String[] aArguments, final Context aContext,
-			final MessageListener aListener, final int aViewId, ButtonAction aYesAction, ButtonAction aNoAction, String... aSaveables)
+			final MessageListener aListener, final int aViewId, final ButtonAction aYesAction, final ButtonAction aNoAction,
+			final String... aSaveables)
 	{
 		mType = aType;
 		mSender = aSender;
@@ -189,10 +190,46 @@ public class Message implements Saveable, Viewable
 		return element;
 	}
 	
+	/**
+	 * @return the list of message arguments for the message text.
+	 */
+	public String[] getArguments()
+	{
+		return mArguments;
+	}
+	
 	@Override
 	public LinearLayout getContainer()
 	{
 		return mContainer;
+	}
+	
+	/**
+	 * @return a list of all stored saveables.
+	 */
+	public String[] getSaveables()
+	{
+		return mSaveables;
+	}
+	
+	/**
+	 * @param aIndex
+	 *            The index.
+	 * @return the text argument at the given index.
+	 */
+	public String getArgument(final int aIndex)
+	{
+		return mArguments[aIndex];
+	}
+	
+	/**
+	 * @param aIndex
+	 *            The index.
+	 * @return the serialized saveable at the given index.
+	 */
+	public String getSaveable(final int aIndex)
+	{
+		return mSaveables[aIndex];
 	}
 	
 	/**
@@ -263,5 +300,35 @@ public class Message implements Saveable, Viewable
 				mListener.makeText(getText(), Toast.LENGTH_LONG);
 			}
 		});
+	}
+	
+	/**
+	 * @param aXML
+	 *            The data, the message is serialized to.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aListener
+	 *            The message listener.
+	 * @return the serialized message.
+	 */
+	public static Message deserialize(final String aXML, final Context aContext, final MessageListener aListener)
+	{
+		final Element messageElement = (Element) FilesUtil.loadDocument(aXML).getElementsByTagName(TAG_NAME).item(0);
+		final MessageType type = MessageType.valueOf(messageElement.getAttribute("type"));
+		final int messageId = Integer.parseInt(messageElement.getAttribute("message"));
+		final String[] arguments = DataUtil.parseArray(messageElement.getAttribute("arguments"));
+		final String sender = messageElement.getAttribute("sender");
+		final ButtonAction yesAction = ButtonAction.valueOf(messageElement.getAttribute("yes-action"));
+		final ButtonAction noAction = ButtonAction.valueOf(messageElement.getAttribute("no-action"));
+		final String[] saveables = DataUtil.parseArray(messageElement.getAttribute("saveables"));
+		switch (type)
+		{
+			case INFO :
+				return new Message(sender, messageId, arguments, aContext, aListener, yesAction, saveables);
+			case YES_NO :
+				return new Message(sender, messageId, arguments, aContext, aListener, yesAction, noAction, saveables);
+			default :
+				return null;
+		}
 	}
 }

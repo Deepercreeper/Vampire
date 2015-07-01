@@ -1,5 +1,6 @@
 package com.deepercreeper.vampireapp.activities;
 
+import java.util.Map;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import android.app.Activity;
@@ -17,6 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
+import com.deepercreeper.vampireapp.character.instance.MoneyControllerInstance;
+import com.deepercreeper.vampireapp.character.instance.MoneyDepot;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
 import com.deepercreeper.vampireapp.connection.ConnectionController;
@@ -112,12 +115,27 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	}
 	
 	@Override
-	public void applyMessage(final Message aMessage, ButtonAction aAction)
+	public void applyMessage(final Message aMessage, final ButtonAction aAction)
 	{
+		final MoneyControllerInstance money = mChar.getMoney();
 		switch (aAction)
 		{
-			case NOTHING :
+			case ACCEPT_TAKE :
+				final Map<String, Integer> takeValues = MoneyDepot.deserializeValues(",", " ", aMessage.getSaveable(0), money.getCurrency());
+				final String takeDepotName = aMessage.getSaveable(1);
+				money.getDepot(takeDepotName).remove(takeValues);
+				money.getDefaultDepot().add(takeValues);
 				break;
+			case ACCEPT_DEPOT :
+				final Map<String, Integer> depotValues = MoneyDepot.deserializeValues(",", " ", aMessage.getSaveable(0), money.getCurrency());
+				final String depotDepotName = aMessage.getSaveable(1);
+				money.getDefaultDepot().remove(depotValues);
+				money.getDepot(depotDepotName).add(depotValues);
+				break;
+			case ACCEPT_DELETE :
+				final String deletedDepot = aMessage.getSaveable(0);
+				money.getDepot(deletedDepot).takeAll();
+				money.removeDepot(deletedDepot, false);
 			default :
 				break;
 		}
