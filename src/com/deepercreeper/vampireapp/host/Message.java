@@ -37,6 +37,31 @@ public class Message implements Saveable, Viewable
 		INFO
 	}
 	
+	/**
+	 * @param aXML
+	 *            The data, the message is serialized to.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aListener
+	 *            The message listener.
+	 * @return the serialized message.
+	 */
+	public static Message deserialize(final String aXML, final Context aContext, final MessageListener aListener)
+	{
+		final Element messageElement = (Element) FilesUtil.loadDocument(aXML).getElementsByTagName(TAG_NAME).item(0);
+		final MessageType type = MessageType.valueOf(messageElement.getAttribute("type"));
+		final int messageId = Integer.parseInt(messageElement.getAttribute("message"));
+		final String[] arguments = DataUtil.parseArray(messageElement.getAttribute("arguments"));
+		final String sender = messageElement.getAttribute("sender");
+		switch (type)
+		{
+			case INFO :
+				return new Message(sender, messageId, arguments, aContext, aListener);
+			default :
+				return null;
+		}
+	}
+	
 	private static final String		TAG_NAME	= "message";
 	
 	private final MessageType		mType;
@@ -52,18 +77,6 @@ public class Message implements Saveable, Viewable
 	private final Context			mContext;
 	
 	private final LinearLayout		mContainer;
-	
-	private Message(final MessageType aType, final String aSender, final int aMessageId, final String[] aArguments, final Context aContext,
-			final MessageListener aListener, final int aViewId)
-	{
-		mType = aType;
-		mSender = aSender;
-		mMessageId = aMessageId;
-		mArguments = aArguments;
-		mListener = aListener;
-		mContext = aContext;
-		mContainer = (LinearLayout) View.inflate(mContext, aViewId, null);
-	}
 	
 	/**
 	 * Creates a info message.
@@ -83,6 +96,18 @@ public class Message implements Saveable, Viewable
 	{
 		this(MessageType.INFO, aSender, aMessageId, aArguments, aContext, aListener, R.layout.message_info);
 		init();
+	}
+	
+	private Message(final MessageType aType, final String aSender, final int aMessageId, final String[] aArguments, final Context aContext,
+			final MessageListener aListener, final int aViewId)
+	{
+		mType = aType;
+		mSender = aSender;
+		mMessageId = aMessageId;
+		mArguments = aArguments;
+		mListener = aListener;
+		mContext = aContext;
+		mContainer = (LinearLayout) View.inflate(mContext, aViewId, null);
 	}
 	
 	@Override
@@ -171,30 +196,5 @@ public class Message implements Saveable, Viewable
 				release();
 			}
 		});
-	}
-	
-	/**
-	 * @param aXML
-	 *            The data, the message is serialized to.
-	 * @param aContext
-	 *            The underlying context.
-	 * @param aListener
-	 *            The message listener.
-	 * @return the serialized message.
-	 */
-	public static Message deserialize(final String aXML, final Context aContext, final MessageListener aListener)
-	{
-		final Element messageElement = (Element) FilesUtil.loadDocument(aXML).getElementsByTagName(TAG_NAME).item(0);
-		final MessageType type = MessageType.valueOf(messageElement.getAttribute("type"));
-		final int messageId = Integer.parseInt(messageElement.getAttribute("message"));
-		final String[] arguments = DataUtil.parseArray(messageElement.getAttribute("arguments"));
-		final String sender = messageElement.getAttribute("sender");
-		switch (type)
-		{
-			case INFO :
-				return new Message(sender, messageId, arguments, aContext, aListener);
-			default :
-				return null;
-		}
 	}
 }

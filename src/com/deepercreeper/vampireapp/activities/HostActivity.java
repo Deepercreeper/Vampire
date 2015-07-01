@@ -12,7 +12,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
@@ -232,7 +231,7 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 		
 		setContentView(R.layout.host_activity);
 		
-		final TextView name = (TextView) findViewById(R.id.ha_name_text);
+		setTitle(mHost.getName());
 		final EditText timeSetter = (EditText) findViewById(R.id.ha_time_text);
 		mHost.setPlayersList((LinearLayout) findViewById(R.id.ha_players_list));
 		mHost.setPlayersTimeList((LinearLayout) findViewById(R.id.ha_players_time_list));
@@ -243,7 +242,6 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 		final Button round = (Button) findViewById(R.id.ha_round_button);
 		final Button exit = (Button) findViewById(R.id.ha_exit_button);
 		
-		name.setText(mHost.getName());
 		day.setOnClickListener(new OnClickListener()
 		{
 			@Override

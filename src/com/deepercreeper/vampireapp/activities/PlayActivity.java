@@ -14,7 +14,6 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
@@ -349,7 +348,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		
 		setContentView(R.layout.play_activity);
 		
-		final TextView charName = (TextView) findViewById(R.id.pa_char_name_label);
+		setTitle(mChar.getName());
 		mMessageList = (LinearLayout) findViewById(R.id.pa_message_list);
 		final LinearLayout controllersPanel = (LinearLayout) findViewById(R.id.pa_controllers_list);
 		final Button exit = (Button) findViewById(R.id.pa_exit_button);
@@ -358,11 +357,8 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		mChar.init();
 		
 		controllersPanel.addView(mChar.getEPController().getContainer());
-		
 		controllersPanel.addView(mChar.getHealth().getContainer());
-		
 		controllersPanel.addView(mChar.getGenerationController().getContainer());
-		
 		controllersPanel.addView(mChar.getMoney().getContainer());
 		
 		for (final ItemControllerInstance controller : mChar.getControllers())
@@ -375,8 +371,6 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		}
 		
 		controllersPanel.addView(mChar.getInventory().getContainer());
-		
-		charName.setText(mChar.getName());
 		
 		exit.setOnClickListener(new OnClickListener()
 		{
