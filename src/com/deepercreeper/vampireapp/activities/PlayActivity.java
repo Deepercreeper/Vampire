@@ -385,6 +385,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		controllersPanel.addView(mChar.getHealth().getContainer());
 		controllersPanel.addView(mChar.getGenerationController().getContainer());
 		controllersPanel.addView(mChar.getMoney().getContainer());
+		controllersPanel.addView(mChar.getInventory().getContainer());
 		
 		for (final ItemControllerInstance controller : mChar.getControllers())
 		{
@@ -394,8 +395,6 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 				controller.close();
 			}
 		}
-		
-		controllersPanel.addView(mChar.getInventory().getContainer());
 		
 		exit.setOnClickListener(new OnClickListener()
 		{
