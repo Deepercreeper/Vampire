@@ -73,7 +73,7 @@
     <string name="magazine">Magazine</string>
     <string name="max">Max</string>
     <string name="max_weight">Maximum weight</string>
-    <string name="money_colon">Money:</string>
+    <string name="money">Money</string>
     <string name="money_sent">You got {0}.</string>
     <string name="name_in_use">The chosen character name is already given to another player.</string>
     <string name="nature_colon">Nature:</string>

@@ -4,30 +4,33 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <LinearLayout
+    <Button
+        android:id="@+id/h_money_button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:drawableEnd="@android:drawable/arrow_down_float"
+        android:drawableRight="@android:drawable/arrow_down_float"
+        android:text="@string/money" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="@string/money_colon"
-            android:textSize="@dimen/small_text_size" />
+    <LinearLayout
+        android:id="@+id/h_money_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/h_depot_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
 
         <ImageButton
             android:id="@+id/h_add_depot_button"
             android:layout_width="@dimen/button_width"
             android:layout_height="@dimen/button_height"
+            android:layout_gravity="center_horizontal"
             android:contentDescription="@string/content_description"
             android:src="@drawable/ic_increase" />
     </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/h_depot_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" />
 
 </LinearLayout>
