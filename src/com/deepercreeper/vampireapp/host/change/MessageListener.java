@@ -28,7 +28,19 @@ public interface MessageListener extends Toaster
 	 */
 	public void applyChange(String aChange, String aType);
 	
+	/**
+	 * A message was sent by another device and needs to be approved.
+	 * 
+	 * @param aMessage
+	 *            The sent message.
+	 */
 	public void applyMessage(Message aMessage);
 	
+	/**
+	 * Sends the given message to the other connection side.
+	 * 
+	 * @param aMessage
+	 *            The message to send.
+	 */
 	public void sendMessage(Message aMessage);
 }

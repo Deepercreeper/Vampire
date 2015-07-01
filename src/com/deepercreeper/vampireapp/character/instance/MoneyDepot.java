@@ -185,7 +185,7 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 			@Override
 			public void amountSelected(final Map<String, Integer> aMap)
 			{
-				final String[] args = new String[] { serializeValues(" ", ", ", aMap, true) };
+				final String[] args = new String[] { serializeValues(", ", " ", aMap, true) };
 				if (mDefault)
 				{
 					getChangeListener().sendMessage(new Message("", R.string.money_sent, args, mContext, null));
@@ -197,8 +197,16 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 				add(aMap);
 			}
 		};
-		MoneyAmountDialog.showMoneyAmountDialog(mCurrency, defaultDepot.getValues(), mContext.getString(R.string.choose_money_amount), mContext,
-				listener);
+		Map<String, Integer> maxValues;
+		if (mDefault)
+		{
+			maxValues = mCurrency.getMaxAmounts();
+		}
+		else
+		{
+			maxValues = defaultDepot.getValues();
+		}
+		MoneyAmountDialog.showMoneyAmountDialog(mCurrency, maxValues, mContext.getString(R.string.choose_money_amount), mContext, listener);
 	}
 	
 	/**
@@ -358,7 +366,7 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 			@Override
 			public void amountSelected(final Map<String, Integer> aMap)
 			{
-				final String[] args = new String[] { serializeValues(" ", ", ", aMap, true) };
+				final String[] args = new String[] { serializeValues(", ", " ", aMap, true) };
 				remove(aMap);
 				if (mDefault)
 				{

@@ -139,6 +139,10 @@ public class Message implements Saveable, Viewable
 	
 	private String getText()
 	{
+		if (mSender.isEmpty())
+		{
+			return FilesUtil.buildMessage(mMessageId, mArguments, mContext);
+		}
 		return mSender + ": " + FilesUtil.buildMessage(mMessageId, mArguments, mContext);
 	}
 	

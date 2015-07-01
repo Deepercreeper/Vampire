@@ -236,7 +236,8 @@ public class MoneyControllerInstance implements Saveable, Viewable
 		{
 			mDepotsList.addView(depot.getContainer());
 		}
-		updateValues();
+		// TODO Needs a updateValues()?
+		resize();
 		if ( !aSilent)
 		{
 			mChangeListener.sendChange(new MoneyChange(aDepot.getName(), true));
@@ -305,6 +306,13 @@ public class MoneyControllerInstance implements Saveable, Viewable
 		{
 			depot.updateValue();
 		}
+	}
+	
+	/**
+	 * Resizes the depot list.
+	 */
+	public void resize()
+	{
 		if (mResizeListener != null)
 		{
 			mResizeListener.resize();
@@ -334,7 +342,8 @@ public class MoneyControllerInstance implements Saveable, Viewable
 		}
 		mDepots.remove(depot);
 		depot.release();
-		updateValues();
+		// TODO Same here: Needs updatevalues()?
+		resize();
 		if ( !aSilent)
 		{
 			mChangeListener.sendChange(new MoneyChange(aName, false));
