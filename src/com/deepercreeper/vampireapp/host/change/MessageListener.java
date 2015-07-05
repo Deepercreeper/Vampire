@@ -36,8 +36,9 @@ public interface MessageListener extends Toaster
 	 *            The sent message.
 	 * @param aAction
 	 *            The message button action.
+	 * @return whether the message should be released.
 	 */
-	public void applyMessage(Message aMessage, ButtonAction aAction);
+	public boolean applyMessage(Message aMessage, ButtonAction aAction);
 	
 	/**
 	 * Sends the given message to the other connection side.

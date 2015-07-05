@@ -43,6 +43,7 @@
     <string name="create_depot_title">Depot erstellen</string>
     <string name="create_host">Host erstellen</string>
     <string name="create_host_button">Neuen Host erstellen</string>
+    <string name="create_item">Neues Item erstellen</string>
     <string name="damage">Schaden</string>
     <string name="day">Tag</string>
     <string name="delete_char">Löschen</string>
@@ -60,16 +61,20 @@
     <string name="free_points_info">Freie Zusatzpunkte</string>
     <string name="friends">Freunde</string>
     <string name="generation_colon">Generation:</string>
+    <string name="got_item">Sie haben folgenden Gegenstand erhalten: {0}</string>
     <string name="health_colon">Leben:</string>
     <string name="host_closed">Der Host hat sein Spiel beendet.</string>
     <string name="host_name">Host Name</string>
     <string name="hosts">Hosts</string>
     <string name="hour">Stunde</string>
+    <string name="item_name">Item Name</string>
+    <string name="item_weight">Item Gewicht</string>
     <string name="inventory">Inventar</string>
     <string name="kick">Rauswerfen</string>
     <string name="kicked">Der Host hat dich rausgeworfen.</string>
     <string name="ko">Außer Gefecht</string>
     <string name="left_game">hat das Spiel verlassen.</string>
+    <string name="left_item">Hat folgenden Gegenstand liegen lassen: {0}</string>
     <string name="magazine">Magazin</string>
     <string name="max">Max</string>
     <string name="max_weight">Maximales Gewicht</string>
@@ -92,6 +97,7 @@
     <string name="round">Runde</string>
     <string name="service_name">Item Provider</string>
     <string name="stash">Versteck</string>
+    <string name="to_much_weight">Der Gegenstand wiegt zu viel.</string>
     <string name="unban">Entbannen</string>
     <string name="weight">Gewicht</string>
     <string name="weight_unit">kg</string>

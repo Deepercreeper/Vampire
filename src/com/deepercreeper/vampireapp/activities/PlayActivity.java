@@ -17,7 +17,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.character.InventoryItem;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
+import com.deepercreeper.vampireapp.character.instance.InventoryControllerInstance;
 import com.deepercreeper.vampireapp.character.instance.MoneyControllerInstance;
 import com.deepercreeper.vampireapp.character.instance.MoneyDepot;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
@@ -31,6 +33,7 @@ import com.deepercreeper.vampireapp.host.change.CharacterChange;
 import com.deepercreeper.vampireapp.host.change.EPChange;
 import com.deepercreeper.vampireapp.host.change.GenerationChange;
 import com.deepercreeper.vampireapp.host.change.HealthChange;
+import com.deepercreeper.vampireapp.host.change.InventoryChange;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.host.change.MoneyChange;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
@@ -115,9 +118,11 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	}
 	
 	@Override
-	public void applyMessage(final Message aMessage, final ButtonAction aAction)
+	public boolean applyMessage(final Message aMessage, final ButtonAction aAction)
 	{
+		boolean release = true;
 		final MoneyControllerInstance money = mChar.getMoney();
+		final InventoryControllerInstance inventory = mChar.getInventory();
 		switch (aAction)
 		{
 			case ACCEPT_TAKE :
@@ -136,10 +141,28 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 				final String deletedDepot = aMessage.getSaveable(0);
 				money.getDepot(deletedDepot).takeAll();
 				money.removeDepot(deletedDepot, false);
+				break;
+			case TAKE_ITEM :
+				final Element itemElement = (Element) FilesUtil.loadDocument(aMessage.getSaveables()[0]).getElementsByTagName("item").item(0);
+				final InventoryItem item = new InventoryItem(itemElement, this, null);
+				if (inventory.canAddItem(item))
+				{
+					inventory.addItem(item, false);
+				}
+				else
+				{
+					makeText(R.string.to_much_weight, Toast.LENGTH_SHORT);
+					release = false;
+				}
+				break;
+			case IGNORE_ITEM :
+				sendMessage(new Message(mChar.getName(), R.string.left_item, aMessage.getArguments(), this, null, ButtonAction.NOTHING));
+				break;
 			default :
 				break;
 		}
 		// TODO Implement other button actions
+		return release;
 	}
 	
 	@Override
@@ -259,6 +282,10 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		else if (aType.equals(MoneyChange.TAG_NAME))
 		{
 			change = new MoneyChange(element);
+		}
+		else if (aType.equals(InventoryChange.TAG_NAME))
+		{
+			change = new InventoryChange(element, this);
 		}
 		
 		// TODO Add other changes

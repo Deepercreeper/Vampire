@@ -67,6 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:hint="@string/hour"
+                android:inputType="numberSigned"
                 android:maxLength="2"
                 android:singleLine="true" />
         </LinearLayout>

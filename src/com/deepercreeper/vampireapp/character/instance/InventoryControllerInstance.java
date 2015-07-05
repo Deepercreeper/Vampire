@@ -8,20 +8,28 @@ import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.Inventory;
 import com.deepercreeper.vampireapp.character.InventoryItem;
 import com.deepercreeper.vampireapp.character.Weapon;
+import com.deepercreeper.vampireapp.host.Message;
+import com.deepercreeper.vampireapp.host.Message.ButtonAction;
+import com.deepercreeper.vampireapp.host.change.InventoryChange;
+import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance.ItemValueListener;
+import com.deepercreeper.vampireapp.util.FilesUtil;
 import com.deepercreeper.vampireapp.util.ItemFinder;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.Saveable;
 import com.deepercreeper.vampireapp.util.ViewUtil;
-import com.deepercreeper.vampireapp.util.view.ResizeHeightAnimation;
+import com.deepercreeper.vampireapp.util.view.ResizeListener;
 import com.deepercreeper.vampireapp.util.view.Viewable;
+import com.deepercreeper.vampireapp.util.view.dialogs.CreateInventoryItemDialog;
+import com.deepercreeper.vampireapp.util.view.dialogs.CreateInventoryItemDialog.ItemCreationListener;
 
 /**
  * This controller is used to control the whole character inventory.<br>
@@ -29,7 +37,7 @@ import com.deepercreeper.vampireapp.util.view.Viewable;
  * 
  * @author vrl
  */
-public class InventoryControllerInstance implements Saveable, ItemValueListener, Viewable
+public class InventoryControllerInstance implements Saveable, ItemValueListener, Viewable, ResizeListener
 {
 	private static final String			TAG				= "InventoryController";
 	
@@ -45,6 +53,14 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	
 	private final ItemInstance			mMaxWeightItem;
 	
+	private final boolean				mHost;
+	
+	private final ResizeListener		mResizeListener;
+	
+	private final MessageListener		mMessageListener;
+	
+	private final CharacterInstance		mChar;
+	
 	private LinearLayout				mInventoryList;
 	
 	private TextView					mWeightLabel;
@@ -52,6 +68,8 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	private TextView					mMaxWeightLabel;
 	
 	private Button						mInventoryButton;
+	
+	private ImageButton					mAddItemButton;
 	
 	private LinearLayout				mInventoryContainer;
 	
@@ -74,19 +92,33 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	 *            An item finder, that provides items by search name.
 	 * @param aContext
 	 *            The underlying context.
+	 * @param aResizeListener
+	 *            The parent resize listener.
+	 * @param aMessageListener
+	 *            The message listener.
+	 * @param aChar
+	 *            The character.
+	 * @param aHost
+	 *            Whether this is a host sided controller.
 	 */
-	public InventoryControllerInstance(final Element aElement, final Inventory aInventory, final ItemFinder aItems, final Context aContext)
+	public InventoryControllerInstance(final Element aElement, final Inventory aInventory, final ItemFinder aItems, final Context aContext,
+			final ResizeListener aResizeListener, final MessageListener aMessageListener, final CharacterInstance aChar, final boolean aHost)
 	{
 		mInventory = aInventory;
 		mItems = aItems;
 		mContext = aContext;
+		mResizeListener = aResizeListener;
+		mMessageListener = aMessageListener;
+		mChar = aChar;
+		mHost = aHost;
 		
 		mMaxWeightItem = mItems.findItem(mInventory.getMaxWeightItem());
 		mMaxWeightItem.addValueListener(this);
 		
 		updateMaxWeight();
 		
-		mContainer = (LinearLayout) View.inflate(mContext, R.layout.client_inventory, null);
+		final int id = mHost ? R.layout.host_inventory : R.layout.client_inventory;
+		mContainer = (LinearLayout) View.inflate(mContext, id, null);
 		
 		init();
 		
@@ -97,11 +129,11 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 				final Element child = (Element) aElement.getChildNodes().item(i);
 				if (child.getTagName().equals("item"))
 				{
-					addItem(new InventoryItem(child, mContext, this));
+					addItem(new InventoryItem(child, mContext, this), true);
 				}
 				else if (child.getTagName().equals("weapon"))
 				{
-					addItem(new Weapon(child, mItems, mContext, this));
+					addItem(new Weapon(child, mItems, mContext, this), true);
 				}
 			}
 		}
@@ -116,21 +148,52 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	 *            An item finder, that provides all items by their name.
 	 * @param aContext
 	 *            The underlying context.
+	 * @param aResizeListener
+	 *            The parent resize listener.
+	 * @param aMessageListener
+	 *            The message listener.
+	 * @param aChar
+	 *            The character.
+	 * @param aHost
+	 *            Whether this is a host sided controller.
 	 */
-	public InventoryControllerInstance(final Inventory aInventory, final ItemFinder aItems, final Context aContext)
+	public InventoryControllerInstance(final Inventory aInventory, final ItemFinder aItems, final Context aContext,
+			final ResizeListener aResizeListener, final MessageListener aMessageListener, final CharacterInstance aChar, final boolean aHost)
 	{
 		mInventory = aInventory;
 		mItems = aItems;
 		mContext = aContext;
+		mResizeListener = aResizeListener;
+		mMessageListener = aMessageListener;
+		mChar = aChar;
+		mHost = aHost;
 		
 		mMaxWeightItem = mItems.findItem(mInventory.getMaxWeightItem());
 		mMaxWeightItem.addValueListener(this);
 		
 		updateMaxWeight();
 		
-		mContainer = (LinearLayout) View.inflate(mContext, R.layout.client_inventory, null);
+		final int id = mHost ? R.layout.host_inventory : R.layout.client_inventory;
+		mContainer = (LinearLayout) View.inflate(mContext, id, null);
 		
 		init();
+	}
+	
+	/**
+	 * Asks the user to create a new inventory item.
+	 */
+	public void addItem()
+	{
+		final ItemCreationListener listener = new ItemCreationListener()
+		{
+			@Override
+			public void itemCreated(final InventoryItem aItem)
+			{
+				mMessageListener.sendMessage(new Message(mChar.getName(), R.string.got_item, new String[] { aItem.getInfo() }, mContext, null,
+						ButtonAction.TAKE_ITEM, ButtonAction.IGNORE_ITEM, FilesUtil.serialize(aItem)));
+			}
+		};
+		CreateInventoryItemDialog.showCreateInventoryItemDialog(mContext.getString(R.string.create_item), mContext, listener);
 	}
 	
 	/**
@@ -138,19 +201,34 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	 * 
 	 * @param aItem
 	 *            The item to add.
+	 * @param aSilent
+	 *            Whether this is a silent addition.
 	 */
-	public void addItem(final InventoryItem aItem)
+	public void addItem(final InventoryItem aItem, final boolean aSilent)
 	{
 		if ( !canAddItem(aItem))
 		{
 			Log.w(TAG, "Tried to add an item that weights too much.");
 		}
-		mItemsList.add(aItem);
-		mWeight += aItem.getWeight();
-		setWeight();
-		aItem.init();
-		mInventoryList.addView(aItem.getContainer());
-		resize();
+		if (mItemsList.contains(aItem))
+		{
+			final InventoryItem existingItem = mItemsList.get(mItemsList.indexOf(aItem));
+			existingItem.increase(aItem.getQuantity());
+		}
+		else
+		{
+			mItemsList.add(aItem);
+			mWeight += aItem.getWeight() * aItem.getQuantity();
+			setWeight();
+			aItem.init();
+			mInventoryList.addView(aItem.getContainer());
+			aItem.addTo(this);
+			resize();
+		}
+		if ( !aSilent)
+		{
+			mMessageListener.sendChange(new InventoryChange(aItem, true));
+		}
 	}
 	
 	@Override
@@ -172,7 +250,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	 */
 	public boolean canAddItem(final InventoryItem aItem)
 	{
-		return getWeight() + aItem.getWeight() <= getMaxWeight();
+		return getWeight() + aItem.getWeight() * aItem.getQuantity() <= getMaxWeight();
 	}
 	
 	/**
@@ -212,11 +290,12 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	{
 		if ( !mInitialized)
 		{
-			mInventoryList = (LinearLayout) getContainer().findViewById(R.id.c_inventory_list);
-			mInventoryButton = (Button) getContainer().findViewById(R.id.c_inventory_button);
-			mWeightLabel = (TextView) getContainer().findViewById(R.id.c_weight_label);
-			mMaxWeightLabel = (TextView) getContainer().findViewById(R.id.c_max_weight_label);
-			mInventoryContainer = (LinearLayout) getContainer().findViewById(R.id.c_inventory_panel);
+			mInventoryList = (LinearLayout) getContainer().findViewById(mHost ? R.id.h_inventory_list : R.id.c_inventory_list);
+			mInventoryButton = (Button) getContainer().findViewById(mHost ? R.id.h_inventory_button : R.id.c_inventory_button);
+			mWeightLabel = (TextView) getContainer().findViewById(mHost ? R.id.h_weight_label : R.id.c_weight_label);
+			mMaxWeightLabel = (TextView) getContainer().findViewById(mHost ? R.id.h_max_weight_label : R.id.c_max_weight_label);
+			mInventoryContainer = (LinearLayout) getContainer().findViewById(mHost ? R.id.h_inventory_panel : R.id.c_inventory_panel);
+			mAddItemButton = mHost ? (ImageButton) getContainer().findViewById(R.id.h_add_item_button) : null;
 			
 			mInventoryButton.setOnClickListener(new OnClickListener()
 			{
@@ -226,6 +305,17 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 					toggleOpen();
 				}
 			});
+			if (mHost)
+			{
+				mAddItemButton.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(final View aV)
+					{
+						addItem();
+					}
+				});
+			}
 			
 			setWeight();
 			
@@ -260,34 +350,42 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	 * 
 	 * @param aItem
 	 *            The item to remove.
+	 * @param aSilent
+	 *            Whether this is a silent remove.
 	 */
-	public void removeItem(final InventoryItem aItem)
+	public void removeItem(final InventoryItem aItem, final boolean aSilent)
 	{
-		mItemsList.remove(aItem);
-		mWeight -= aItem.getWeight();
-		setWeight();
-		aItem.release();
-		resize();
+		final InventoryItem existingItem = mItemsList.get(mItemsList.indexOf(aItem));
+		if (existingItem.getQuantity() > 1)
+		{
+			existingItem.decrease();
+		}
+		else
+		{
+			mItemsList.remove(existingItem);
+			mWeight -= existingItem.getWeight();
+			setWeight();
+			existingItem.release();
+			resize();
+		}
+		if ( !aSilent)
+		{
+			mMessageListener.sendChange(new InventoryChange(aItem, false));
+		}
+		if ( !mHost)
+		{
+			mMessageListener.sendMessage(new Message(mChar.getName(), R.string.left_item, new String[] { aItem.getInfo() }, mContext, null,
+					ButtonAction.NOTHING));
+		}
 	}
 	
 	/**
 	 * Resizes the inventory display if necessary.
 	 */
+	@Override
 	public void resize()
 	{
-		if (mInventoryContainer.getAnimation() != null && !mInventoryContainer.getAnimation().hasEnded())
-		{
-			mInventoryContainer.getAnimation().cancel();
-		}
-		int height = 0;
-		if (mOpen)
-		{
-			height = ViewUtil.calcHeight(mInventoryContainer);
-		}
-		if (height != mInventoryContainer.getHeight())
-		{
-			mInventoryContainer.startAnimation(new ResizeHeightAnimation(mInventoryContainer, height));
-		}
+		ViewUtil.resize(mResizeListener, mOpen, mInventoryContainer);
 	}
 	
 	/**
@@ -331,6 +429,19 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	public void valueChanged()
 	{
 		updateMaxWeight();
+		setWeight();
+	}
+	
+	/**
+	 * Recalculates the current weight of all items.
+	 */
+	public void updateWeight()
+	{
+		mWeight = 0;
+		for (final InventoryItem item : mItemsList)
+		{
+			mWeight += item.getWeight() * item.getQuantity();
+		}
 		setWeight();
 	}
 	

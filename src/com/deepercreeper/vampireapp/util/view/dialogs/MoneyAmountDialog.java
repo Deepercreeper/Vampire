@@ -84,7 +84,7 @@ public class MoneyAmountDialog extends DialogFragment
 	public Dialog onCreateDialog(final Bundle aSavedInstanceState)
 	{
 		final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-		final LinearLayout container = (LinearLayout) View.inflate(mContext, R.layout.money_choose_view, null);
+		final LinearLayout container = (LinearLayout) View.inflate(mContext, R.layout.money_choose_dialog, null);
 		for (final String currency : mCurrency.getCurrencies())
 		{
 			final LinearLayout currencyView = (LinearLayout) View.inflate(mContext, R.layout.currency_chooser_view, null);
@@ -94,18 +94,18 @@ public class MoneyAmountDialog extends DialogFragment
 			amount.addTextChangedListener(new TextWatcher()
 			{
 				@Override
-				public void onTextChanged(final CharSequence aS, final int aStart, final int aBefore, final int aCount)
-				{}
+				public void afterTextChanged(final Editable aS)
+				{
+					updateOkButton();
+				}
 				
 				@Override
 				public void beforeTextChanged(final CharSequence aS, final int aStart, final int aCount, final int aAfter)
 				{}
 				
 				@Override
-				public void afterTextChanged(final Editable aS)
-				{
-					updateOkButton();
-				}
+				public void onTextChanged(final CharSequence aS, final int aStart, final int aBefore, final int aCount)
+				{}
 			});
 			amount.setOnFocusChangeListener(new OnFocusChangeListener()
 			{
@@ -134,7 +134,7 @@ public class MoneyAmountDialog extends DialogFragment
 			((TextView) currencyView.findViewById(R.id.view_currency_label)).setText(currency + " (0 - " + mMaxValues.get(currency) + "):");
 			container.addView(currencyView, container.getChildCount() - 1);
 		}
-		mOK = (Button) container.findViewById(R.id.view_ok_button);
+		mOK = (Button) container.findViewById(R.id.dialog_ok_button);
 		mOK.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -147,29 +147,6 @@ public class MoneyAmountDialog extends DialogFragment
 		builder.setTitle(mTitle).setView(container);
 		final AlertDialog dialog = builder.create();
 		return dialog;
-	}
-	
-	private void updateOkButton()
-	{
-		boolean enabled = true;
-		for (final String currency : mAmounts.keySet())
-		{
-			int value = -1;
-			try
-			{
-				value = Integer.parseInt(mAmounts.get(currency).getText().toString());
-			}
-			catch (final NumberFormatException e)
-			{}
-			
-			if (value < 0 || value > mMaxValues.get(currency))
-			{
-				enabled = false;
-				break;
-			}
-			mValues.put(currency, value);
-		}
-		ViewUtil.setEnabled(mOK, enabled);
 	}
 	
 	@Override
@@ -198,6 +175,29 @@ public class MoneyAmountDialog extends DialogFragment
 		{
 			throw new RuntimeException(e);
 		}
+	}
+	
+	private void updateOkButton()
+	{
+		boolean enabled = true;
+		for (final String currency : mAmounts.keySet())
+		{
+			int value = -1;
+			try
+			{
+				value = Integer.parseInt(mAmounts.get(currency).getText().toString());
+			}
+			catch (final NumberFormatException e)
+			{}
+			
+			if (value < 0 || value > mMaxValues.get(currency))
+			{
+				enabled = false;
+				break;
+			}
+			mValues.put(currency, value);
+		}
+		ViewUtil.setEnabled(mOK, enabled);
 	}
 	
 	/**

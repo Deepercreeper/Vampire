@@ -64,7 +64,17 @@ public class Message implements Saveable, Viewable
 		/**
 		 * Deletion of depot was denied
 		 */
-		DENY_DELETE
+		DENY_DELETE,
+		
+		/**
+		 * A host given item was taken
+		 */
+		TAKE_ITEM,
+		
+		/**
+		 * A host given item was ignored
+		 */
+		IGNORE_ITEM
 	}
 	
 	/**
@@ -282,8 +292,10 @@ public class Message implements Saveable, Viewable
 			@Override
 			public void onClick(final View aV)
 			{
-				release();
-				mListener.applyMessage(Message.this, aAction);
+				if (mListener.applyMessage(Message.this, aAction))
+				{
+					release();
+				}
 			}
 		});
 	}

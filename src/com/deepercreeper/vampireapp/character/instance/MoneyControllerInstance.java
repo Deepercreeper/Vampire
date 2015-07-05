@@ -22,7 +22,6 @@ import com.deepercreeper.vampireapp.host.change.MoneyChange;
 import com.deepercreeper.vampireapp.util.CodingUtil;
 import com.deepercreeper.vampireapp.util.Saveable;
 import com.deepercreeper.vampireapp.util.ViewUtil;
-import com.deepercreeper.vampireapp.util.view.ResizeHeightAnimation;
 import com.deepercreeper.vampireapp.util.view.ResizeListener;
 import com.deepercreeper.vampireapp.util.view.Viewable;
 import com.deepercreeper.vampireapp.util.view.dialogs.CreateStringDialog;
@@ -283,33 +282,7 @@ public class MoneyControllerInstance implements Saveable, Viewable
 	 */
 	public void resize()
 	{
-		// TODO Find a way to make this operation more smooth
-		if (mResizeListener != null)
-		{
-			int height = 0;
-			if (mOpen)
-			{
-				height = ViewUtil.calcHeight(mMoneyContainer);
-			}
-			mMoneyContainer.getLayoutParams().height = height;
-			mResizeListener.resize();
-		}
-		else
-		{
-			if (mMoneyContainer.getAnimation() != null && !mMoneyContainer.getAnimation().hasEnded())
-			{
-				mMoneyContainer.getAnimation().cancel();
-			}
-			int height = 0;
-			if (mOpen)
-			{
-				height = ViewUtil.calcHeight(mMoneyContainer);
-			}
-			if (height != mMoneyContainer.getHeight())
-			{
-				mMoneyContainer.startAnimation(new ResizeHeightAnimation(mMoneyContainer, height));
-			}
-		}
+		ViewUtil.resize(mResizeListener, mOpen, mMoneyContainer);
 	}
 	
 	@Override

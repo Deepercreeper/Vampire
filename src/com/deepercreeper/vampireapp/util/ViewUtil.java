@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewParent;
 import android.widget.LinearLayout;
+import com.deepercreeper.vampireapp.util.view.ResizeHeightAnimation;
+import com.deepercreeper.vampireapp.util.view.ResizeListener;
 
 /**
  * A helper class for view operations. It also contains all layout parameters.
@@ -46,6 +48,47 @@ public class ViewUtil
 	public static int calcPx(final int aDp, final Context aContext)
 	{
 		return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, aDp, aContext.getResources().getDisplayMetrics()));
+	}
+	
+	/**
+	 * Resizes the given container depending on its resize parent.
+	 * 
+	 * @param aParent
+	 *            The resize parent.
+	 * @param aOpen
+	 *            Whether the container should be open.
+	 * @param aContainer
+	 *            The container.
+	 */
+	public static void resize(final ResizeListener aParent, final boolean aOpen, final LinearLayout aContainer)
+	{
+		// TODO Find a way to make this operation more smooth
+		if (aParent != null)
+		{
+			int height = 0;
+			if (aOpen)
+			{
+				height = ViewUtil.calcHeight(aContainer);
+			}
+			aContainer.getLayoutParams().height = height;
+			aParent.resize();
+		}
+		else
+		{
+			if (aContainer.getAnimation() != null && !aContainer.getAnimation().hasEnded())
+			{
+				aContainer.getAnimation().cancel();
+			}
+			int height = 0;
+			if (aOpen)
+			{
+				height = ViewUtil.calcHeight(aContainer);
+			}
+			if (height != aContainer.getHeight())
+			{
+				aContainer.startAnimation(new ResizeHeightAnimation(aContainer, height));
+			}
+		}
 	}
 	
 	/**

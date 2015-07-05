@@ -43,6 +43,7 @@
     <string name="create_depot_title">Create depot</string>
     <string name="create_host">Create host</string>
     <string name="create_host_button">Create new host</string>
+    <string name="create_item">Create new item</string>
     <string name="damage">Damage</string>
     <string name="day">Day</string>
     <string name="delete_char">Delete</string>
@@ -60,16 +61,20 @@
     <string name="free_points_info">Free bonus points</string>
     <string name="friends">Friends</string>
     <string name="generation_colon">Generation:</string>
+    <string name="got_item">You got the following item: {0}</string>
     <string name="health_colon">Health:</string>
     <string name="host_closed">The host has stopped his game.</string>
     <string name="host_name">Host name</string>
     <string name="hosts">Hosts</string>
     <string name="hour">Hour</string>
     <string name="inventory">Inventory</string>
+    <string name="item_name">Item name</string>
+    <string name="item_weight">Item weight</string>
     <string name="kick">Kick</string>
     <string name="kicked">You have been kicked.</string>
     <string name="ko">Knocked out</string>
     <string name="left_game">left the game.</string>
+    <string name="left_item">Left the following item: {0}</string>
     <string name="magazine">Magazine</string>
     <string name="max">Max</string>
     <string name="max_weight">Maximum weight</string>
@@ -92,8 +97,10 @@
     <string name="round">Round</string>
     <string name="service_name">Item provider</string>
     <string name="stash">Stash</string>
+    <string name="to_much_weight">The item is too heavy.</string>
     <string name="unban">Unban</string>
     <string name="weight">Weight</string>
+    <string name="weight_unit">kg</string>
     <string name="yes">Yes</string>
 
 </resources>

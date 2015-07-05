@@ -2,8 +2,7 @@
 <EditText xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-	android:hint=""
+    android:hint=""
+    android:inputType="text"
     android:singleLine="true"
-    android:textSize="@dimen/normal_text_size" >
-
-</EditText>
+    android:textSize="@dimen/normal_text_size" />

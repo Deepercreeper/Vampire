@@ -31,6 +31,10 @@ public class InventoryItem implements Saveable, Viewable
 	
 	private final LinearLayout			mContainer;
 	
+	private TextView					mItemName;
+	
+	private int							mQuantity		= 1;
+	
 	private InventoryControllerInstance	mController;
 	
 	private boolean						mInitialized	= false;
@@ -51,6 +55,7 @@ public class InventoryItem implements Saveable, Viewable
 		mController = aController;
 		mName = aElement.getAttribute("name");
 		mWeight = Integer.parseInt(aElement.getAttribute("weight"));
+		mQuantity = Integer.parseInt(aElement.getAttribute("quantity"));
 		
 		mContainer = (LinearLayout) View.inflate(mContext, R.layout.inventory_item_view, null);
 		
@@ -81,6 +86,41 @@ public class InventoryItem implements Saveable, Viewable
 		init();
 	}
 	
+	/**
+	 * Increases the amount of this items by the given amount.
+	 * 
+	 * @param aAmount
+	 *            The amount.
+	 */
+	public void increase(final int aAmount)
+	{
+		mQuantity += aAmount;
+		updateValue();
+		getController().updateWeight();
+	}
+	
+	/**
+	 * @return how many items this stack contains.
+	 */
+	public int getQuantity()
+	{
+		return mQuantity;
+	}
+	
+	/**
+	 * Removes one of this item stack.<br>
+	 * If there is no one left, this item is removed from the controller.
+	 */
+	public void decrease()
+	{
+		mQuantity-- ;
+		updateValue();
+		if (mQuantity > 0)
+		{
+			getController().updateWeight();
+		}
+	}
+	
 	@Override
 	public LinearLayout getContainer()
 	{
@@ -98,11 +138,9 @@ public class InventoryItem implements Saveable, Viewable
 	{
 		if ( !mInitialized)
 		{
-			final TextView itemName = (TextView) getContainer().findViewById(R.id.view_inv_item_name_label);
+			mItemName = (TextView) getContainer().findViewById(R.id.view_inv_item_name_label);
 			final ImageButton infoButton = (ImageButton) getContainer().findViewById(R.id.view_inv_item_info_button);
 			final ImageButton removeButton = (ImageButton) getContainer().findViewById(R.id.view_remove_inv_item_button);
-			
-			itemName.setText(getName());
 			
 			infoButton.setOnClickListener(new OnClickListener()
 			{
@@ -118,12 +156,14 @@ public class InventoryItem implements Saveable, Viewable
 				@Override
 				public void onClick(final View aV)
 				{
-					getController().removeItem(InventoryItem.this);
+					getController().removeItem(InventoryItem.this, false);
 				}
 			});
 			
 			mInitialized = true;
 		}
+		
+		updateValue();
 	}
 	
 	/**
@@ -155,7 +195,7 @@ public class InventoryItem implements Saveable, Viewable
 	 */
 	public String getInfo()
 	{
-		return getName() + ": " + getWeight() + " " + getContext().getString(R.string.weight_unit);
+		return getName() + getQuantitySuffix() + ": " + getWeight() + " " + getContext().getString(R.string.weight_unit);
 	}
 	
 	/**
@@ -164,6 +204,67 @@ public class InventoryItem implements Saveable, Viewable
 	public Context getContext()
 	{
 		return mContext;
+	}
+	
+	private String getQuantitySuffix()
+	{
+		if (getQuantity() > 1)
+		{
+			return " (" + getQuantity() + ")";
+		}
+		return "";
+	}
+	
+	/**
+	 * Updates the name value.
+	 */
+	public void updateValue()
+	{
+		mItemName.setText(getName() + getQuantitySuffix());
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((mName == null) ? 0 : mName.hashCode());
+		result = prime * result + mWeight;
+		return result;
+	}
+	
+	@Override
+	public boolean equals(final Object obj)
+	{
+		if (this == obj)
+		{
+			return true;
+		}
+		if (obj == null)
+		{
+			return false;
+		}
+		if ( !(obj instanceof InventoryItem))
+		{
+			return false;
+		}
+		final InventoryItem other = (InventoryItem) obj;
+		if (mName == null)
+		{
+			if (other.mName != null)
+			{
+				return false;
+			}
+		}
+		else if ( !mName.equals(other.mName))
+		{
+			return false;
+		}
+		if (mWeight != other.mWeight)
+		{
+			return false;
+		}
+		return true;
 	}
 	
 	/**
@@ -183,6 +284,7 @@ public class InventoryItem implements Saveable, Viewable
 		final Element element = aDoc.createElement("item");
 		element.setAttribute("name", mName);
 		element.setAttribute("weight", "" + mWeight);
+		element.setAttribute("quantity", "" + mQuantity);
 		return element;
 	}
 }

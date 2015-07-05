@@ -20,6 +20,7 @@ import com.deepercreeper.vampireapp.host.change.CharacterChange;
 import com.deepercreeper.vampireapp.host.change.EPChange;
 import com.deepercreeper.vampireapp.host.change.GenerationChange;
 import com.deepercreeper.vampireapp.host.change.HealthChange;
+import com.deepercreeper.vampireapp.host.change.InventoryChange;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.host.change.MoneyChange;
 import com.deepercreeper.vampireapp.items.ItemProvider;
@@ -112,8 +113,9 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 	}
 	
 	@Override
-	public void applyMessage(final Message aMessage, final ButtonAction aAction)
+	public boolean applyMessage(final Message aMessage, final ButtonAction aAction)
 	{
+		final boolean release = true;
 		switch (aAction)
 		{
 			case NOTHING :
@@ -146,6 +148,7 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 				break;
 		}
 		// TODO Implement other button actions
+		return release;
 	}
 	
 	@Override
@@ -265,6 +268,10 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 		{
 			change = new MoneyChange(element);
 		}
+		else if (aType.equals(InventoryChange.TAG_NAME))
+		{
+			change = new InventoryChange(element, mContext);
+		}
 		
 		// TODO Add other changes
 		
@@ -305,6 +312,7 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 		mPlayerContainer.addView(mChar.getEPController().getContainer(), 1);
 		mPlayerContainer.addView(mChar.getGenerationController().getContainer(), 2);
 		mPlayerContainer.addView(mChar.getMoney().getContainer(), 3);
+		mPlayerContainer.addView(mChar.getInventory().getContainer(), 4);
 		
 		mTimeCheckBox = new CheckBox(mContext);
 		mTimeCheckBox.setLayoutParams(ViewUtil.getWrapHeight());
