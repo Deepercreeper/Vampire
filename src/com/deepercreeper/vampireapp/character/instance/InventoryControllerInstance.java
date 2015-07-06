@@ -189,7 +189,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 			@Override
 			public void itemCreated(final InventoryItem aItem)
 			{
-				mMessageListener.sendMessage(new Message(mChar.getName(), R.string.got_item, new String[] { aItem.getInfo() }, mContext, null,
+				mMessageListener.sendMessage(new Message(mChar.getName(), R.string.got_item, new String[] { aItem.getInfo(true) }, mContext, null,
 						ButtonAction.TAKE_ITEM, ButtonAction.IGNORE_ITEM, FilesUtil.serialize(aItem)));
 			}
 		};
@@ -374,7 +374,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 		}
 		if ( !mHost)
 		{
-			mMessageListener.sendMessage(new Message(mChar.getName(), R.string.left_item, new String[] { aItem.getInfo() }, mContext, null,
+			mMessageListener.sendMessage(new Message(mChar.getName(), R.string.left_item, new String[] { aItem.getInfo(false) }, mContext, null,
 					ButtonAction.NOTHING));
 		}
 	}

@@ -53,6 +53,8 @@ public class CreateInventoryItemDialog extends DialogFragment
 	
 	private EditText					mWeight;
 	
+	private EditText					mQuantity;
+	
 	private Button						mOK;
 	
 	private CreateInventoryItemDialog(final String aTitle, final Context aContext, final ItemCreationListener aListener)
@@ -68,10 +70,13 @@ public class CreateInventoryItemDialog extends DialogFragment
 	{
 		final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 		
-		final LinearLayout container = (LinearLayout) View.inflate(mContext, R.layout.create_inventory_item_dialog, null);
+		final LinearLayout container = (LinearLayout) View.inflate(mContext, R.layout.dialog_create_inventory_item, null);
 		mOK = (Button) container.findViewById(R.id.dialog_ok_button);
 		mName = (EditText) container.findViewById(R.id.dialog_item_name_text);
 		mWeight = (EditText) container.findViewById(R.id.dialog_item_weight_text);
+		mQuantity = (EditText) container.findViewById(R.id.dialog_item_quantity_text);
+		
+		mQuantity.setText("" + 1);
 		final TextWatcher listener = new TextWatcher()
 		{
 			@Override
@@ -90,12 +95,14 @@ public class CreateInventoryItemDialog extends DialogFragment
 		};
 		mName.addTextChangedListener(listener);
 		mWeight.addTextChangedListener(listener);
+		mQuantity.addTextChangedListener(listener);
 		mOK.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(final View aV)
 			{
-				mListener.itemCreated(new InventoryItem(mName.getText().toString(), Integer.parseInt(mWeight.getText().toString()), mContext, null));
+				mListener.itemCreated(new InventoryItem(mName.getText().toString(), Integer.parseInt(mWeight.getText().toString()), Integer
+						.parseInt(mQuantity.getText().toString()), mContext, null));
 				dismiss();
 			}
 		});
@@ -144,13 +151,21 @@ public class CreateInventoryItemDialog extends DialogFragment
 		try
 		{
 			weight = Integer.parseInt(mWeight.getText().toString());
+			if (weight < 0)
+			{
+				enabled = false;
+			}
+			else
+			{
+				weight = Integer.parseInt(mQuantity.getText().toString());
+				if (weight < 0)
+				{
+					enabled = false;
+				}
+			}
 		}
 		catch (final NumberFormatException e)
 		{}
-		if (weight < 0)
-		{
-			enabled = false;
-		}
 		mOK.setEnabled(enabled);
 	}
 	

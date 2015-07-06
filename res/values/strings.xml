@@ -92,6 +92,7 @@
     <string name="play_host">Starten</string>
     <string name="play_host_button">Host starten</string>
     <string name="play_lobby">Lobby</string>
+    <string name="quantity">Anzahl</string>
     <string name="reload_time">Nachladezeit</string>
     <string name="reset">Zurücksetzen</string>
     <string name="round">Runde</string>

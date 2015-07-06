@@ -34,6 +34,126 @@ public class Weapon extends InventoryItem
 	private String				mAmmo;
 	
 	/**
+	 * Creates a weapon out of the given XML data.
+	 * 
+	 * @param aElement
+	 *            The XML data.
+	 * @param aItems
+	 *            The item finder.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aController
+	 *            The parent inventory controller.
+	 */
+	public Weapon(final Element aElement, final ItemFinder aItems, final Context aContext, final InventoryControllerInstance aController)
+	{
+		super(aElement.getAttribute("name"), Integer.parseInt(aElement.getAttribute("weight")), Integer.parseInt(aElement.getAttribute("quantity")),
+				aContext, aController);
+		mItems = aItems;
+		mDifficulty = Integer.parseInt(aElement.getAttribute("difficulty"));
+		mDamage = Integer.parseInt(aElement.getAttribute("damage"));
+		mStash = aElement.getAttribute("stash");
+		mDistance = Integer.parseInt(aElement.getAttribute("distance"));
+		mReloadTime = Integer.parseInt(aElement.getAttribute("reloadTime"));
+		mMagazine = Integer.parseInt(aElement.getAttribute("magazine"));
+		mAmmo = aElement.getAttribute("ammo");
+		if (aElement.hasAttribute("additionalDamage"))
+		{
+			mAdditionalDamage = mItems.findItem(aElement.getAttribute("additionalDamage"));
+		}
+		else
+		{
+			mAdditionalDamage = null;
+		}
+	}
+	
+	/**
+	 * Creates a new weapon.
+	 * 
+	 * @param aName
+	 *            The weapon name.
+	 * @param aWeight
+	 *            The weapon weight.
+	 * @param aQuantity
+	 *            The quantity of this weapon.
+	 * @param aDifficulty
+	 *            the difficulty of this weapon.
+	 * @param aDamage
+	 *            The damage this weapon takes.
+	 * @param aAdditionalDamage
+	 *            Additional damage, that is dependent on an item..
+	 * @param aStash
+	 *            The place, this weapon can be stored.
+	 * @param aDistance
+	 *            The maximum distance. {@code -1} for melee weapons.
+	 * @param aReloadTime
+	 *            The number of rounds it takes to reload this weapon. {@code -1} for melee weapons.
+	 * @param aMagazine
+	 *            The number of bullets or arrows etc. that can be fired before reload is necessary. {@code -1} for melee weapons.
+	 * @param aAmmo
+	 *            The ammo type of this weapon. {@code null} for melee weapons.
+	 * @param aItems
+	 *            The item finder.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aController
+	 *            The parent inventory controller.
+	 */
+	public Weapon(final String aName, final int aWeight, final int aQuantity, final int aDifficulty, final int aDamage,
+			final String aAdditionalDamage, final String aStash, final int aDistance, final int aReloadTime, final int aMagazine, final String aAmmo,
+			final ItemFinder aItems, final Context aContext, final InventoryControllerInstance aController)
+	{
+		super(aName, aWeight, aQuantity, aContext, aController);
+		mDifficulty = aDifficulty;
+		mDamage = aDamage;
+		mStash = aStash;
+		mDistance = aDistance;
+		mReloadTime = aReloadTime;
+		mMagazine = aMagazine;
+		mAmmo = aAmmo;
+		mItems = aItems;
+		if (aAdditionalDamage != null)
+		{
+			mAdditionalDamage = mItems.findItem(aAdditionalDamage);
+		}
+		else
+		{
+			mAdditionalDamage = null;
+		}
+	}
+	
+	/**
+	 * Creates a new melee weapon.
+	 * 
+	 * @param aName
+	 *            The weapon name.
+	 * @param aWeight
+	 *            The weapon weight.
+	 * @param aQuantity
+	 *            The quantity of this weapon.
+	 * @param aDifficulty
+	 *            the difficulty of this weapon.
+	 * @param aDamage
+	 *            The damage this weapon takes.
+	 * @param aAdditionalDamage
+	 *            Additional damage that is dependent on an item.
+	 * @param aStash
+	 *            The place, this weapon can be stored.
+	 * @param aItems
+	 *            The item finder.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aController
+	 *            The parent inventory controller.
+	 */
+	public Weapon(final String aName, final int aWeight, final int aQuantity, final int aDifficulty, final int aDamage,
+			final String aAdditionalDamage, final String aStash, final ItemFinder aItems, final Context aContext,
+			final InventoryControllerInstance aController)
+	{
+		this(aName, aWeight, aQuantity, aDifficulty, aDamage, aAdditionalDamage, aStash, -1, -1, -1, null, aItems, aContext, aController);
+	}
+	
+	/**
 	 * Creates a new weapon.
 	 * 
 	 * @param aName
@@ -67,23 +187,8 @@ public class Weapon extends InventoryItem
 			final String aStash, final int aDistance, final int aReloadTime, final int aMagazine, final String aAmmo, final ItemFinder aItems,
 			final Context aContext, final InventoryControllerInstance aController)
 	{
-		super(aName, aWeight, aContext, aController);
-		mDifficulty = aDifficulty;
-		mDamage = aDamage;
-		mStash = aStash;
-		mDistance = aDistance;
-		mReloadTime = aReloadTime;
-		mMagazine = aMagazine;
-		mAmmo = aAmmo;
-		mItems = aItems;
-		if (aAdditionalDamage != null)
-		{
-			mAdditionalDamage = mItems.findItem(aAdditionalDamage);
-		}
-		else
-		{
-			mAdditionalDamage = null;
-		}
+		this(aName, aWeight, 1, aDifficulty, aDamage, aAdditionalDamage, aStash, aDistance, aReloadTime, aMagazine, aAmmo, aItems, aContext,
+				aController);
 	}
 	
 	/**
@@ -111,48 +216,27 @@ public class Weapon extends InventoryItem
 	public Weapon(final String aName, final int aWeight, final int aDifficulty, final int aDamage, final String aAdditionalDamage,
 			final String aStash, final ItemFinder aItems, final Context aContext, final InventoryControllerInstance aController)
 	{
-		this(aName, aWeight, aDifficulty, aDamage, aAdditionalDamage, aStash, -1, -1, -1, null, aItems, aContext, aController);
+		this(aName, aWeight, 1, aDifficulty, aDamage, aAdditionalDamage, aStash, aItems, aContext, aController);
 	}
 	
-	/**
-	 * Creates a weapon out of the given XML data.
-	 * 
-	 * @param aElement
-	 *            The XML data.
-	 * @param aItems
-	 *            The item finder.
-	 * @param aContext
-	 *            The underlying context.
-	 * @param aController
-	 *            The parent inventory controller.
-	 */
-	public Weapon(final Element aElement, final ItemFinder aItems, final Context aContext, final InventoryControllerInstance aController)
+	@Override
+	public Element asElement(final Document aDoc)
 	{
-		super(aElement.getAttribute("name"), Integer.parseInt(aElement.getAttribute("weight")), aContext, aController);
-		mItems = aItems;
-		mDifficulty = Integer.parseInt(aElement.getAttribute("difficulty"));
-		mDamage = Integer.parseInt(aElement.getAttribute("damage"));
-		mStash = aElement.getAttribute("stash");
-		mDistance = Integer.parseInt(aElement.getAttribute("distance"));
-		mReloadTime = Integer.parseInt(aElement.getAttribute("reloadTime"));
-		mMagazine = Integer.parseInt(aElement.getAttribute("magazine"));
-		mAmmo = aElement.getAttribute("ammo");
-		if (aElement.hasAttribute("additionalDamage"))
+		final Element element = aDoc.createElement("weapon");
+		element.setAttribute("name", getName());
+		element.setAttribute("weight", "" + getWeight());
+		element.setAttribute("difficulty", "" + getDifficulty());
+		element.setAttribute("damage", "" + getDamage());
+		if (mAdditionalDamage != null)
 		{
-			mAdditionalDamage = mItems.findItem(aElement.getAttribute("additionalDamage"));
+			element.setAttribute("additionalDamage", mAdditionalDamage.getName());
 		}
-		else
-		{
-			mAdditionalDamage = null;
-		}
-	}
-	
-	/**
-	 * @return The difficulty of using this weapon.
-	 */
-	public int getDifficulty()
-	{
-		return mDifficulty;
+		element.setAttribute("stash", getStash());
+		element.setAttribute("distance", "" + getDistance());
+		element.setAttribute("reloadTime", "" + getReloadTime());
+		element.setAttribute("magazine", "" + getMagazine());
+		element.setAttribute("ammo", getAmmo());
+		return element;
 	}
 	
 	/**
@@ -168,22 +252,6 @@ public class Weapon extends InventoryItem
 	}
 	
 	/**
-	 * @return the default damage, the weapon takes.
-	 */
-	public int getDamage()
-	{
-		return mDamage;
-	}
-	
-	/**
-	 * @return the place, this weapon can be stored.
-	 */
-	public String getStash()
-	{
-		return mStash;
-	}
-	
-	/**
 	 * @return The type of ammo this weapon needs or {@code null} if this is a melee weapon.
 	 */
 	public String getAmmo()
@@ -192,11 +260,61 @@ public class Weapon extends InventoryItem
 	}
 	
 	/**
+	 * @return the default damage, the weapon takes.
+	 */
+	public int getDamage()
+	{
+		return mDamage;
+	}
+	
+	/**
+	 * @return The difficulty of using this weapon.
+	 */
+	public int getDifficulty()
+	{
+		return mDifficulty;
+	}
+	
+	/**
 	 * @return the maximum distance of this weapon or {@code -1} if this i a melee weapon.
 	 */
 	public int getDistance()
 	{
 		return mDistance;
+	}
+	
+	@Override
+	public String getInfo(final boolean aQuantity)
+	{
+		final StringBuilder info = new StringBuilder();
+		info.append(getName() + (aQuantity ? getQuantity() : "") + ": ");
+		info.append(getContext().getString(R.string.weight) + ": " + getWeight() + " " + getContext().getString(R.string.weight_unit) + ", ");
+		info.append(getContext().getString(R.string.difficulty) + ": " + getDifficulty() + ", ");
+		info.append(getContext().getString(R.string.damage) + ": " + getDamage() + ", ");
+		if (mAdditionalDamage != null)
+		{
+			info.append(getContext().getString(R.string.additional_damage) + ": " + mAdditionalDamage.getName() + ", ");
+		}
+		info.append(getContext().getString(R.string.stash) + ": " + getStash() + ", ");
+		
+		if (getDistance() != -1)
+		{
+			info.append(getContext().getString(R.string.distance) + ": " + getDistance() + ", ");
+		}
+		if (getReloadTime() != -1)
+		{
+			info.append(getContext().getString(R.string.reload_time) + ": " + getReloadTime() + ", ");
+		}
+		if (getMagazine() != -1)
+		{
+			info.append(getContext().getString(R.string.magazine) + ": " + getMagazine() + ", ");
+		}
+		if (getDistance() != -1)
+		{
+			info.append(getContext().getString(R.string.ammo) + ": " + getAmmo() + ", ");
+		}
+		info.delete(info.length() - 2, info.length());
+		return info.toString();
 	}
 	
 	/**
@@ -213,6 +331,14 @@ public class Weapon extends InventoryItem
 	public int getReloadTime()
 	{
 		return mReloadTime;
+	}
+	
+	/**
+	 * @return the place, this weapon can be stored.
+	 */
+	public String getStash()
+	{
+		return mStash;
 	}
 	
 	/**
@@ -291,59 +417,5 @@ public class Weapon extends InventoryItem
 	public void setStash(final String aStash)
 	{
 		mStash = aStash;
-	}
-	
-	@Override
-	public String getInfo()
-	{
-		final StringBuilder info = new StringBuilder();
-		info.append(getName() + ": ");
-		info.append(getContext().getString(R.string.weight) + ": " + getWeight() + " " + getContext().getString(R.string.weight_unit) + ", ");
-		info.append(getContext().getString(R.string.difficulty) + ": " + getDifficulty() + ", ");
-		info.append(getContext().getString(R.string.damage) + ": " + getDamage() + ", ");
-		if (mAdditionalDamage != null)
-		{
-			info.append(getContext().getString(R.string.additional_damage) + ": " + mAdditionalDamage.getName() + ", ");
-		}
-		info.append(getContext().getString(R.string.stash) + ": " + getStash() + ", ");
-		
-		if (getDistance() != -1)
-		{
-			info.append(getContext().getString(R.string.distance) + ": " + getDistance() + ", ");
-		}
-		if (getReloadTime() != -1)
-		{
-			info.append(getContext().getString(R.string.reload_time) + ": " + getReloadTime() + ", ");
-		}
-		if (getMagazine() != -1)
-		{
-			info.append(getContext().getString(R.string.magazine) + ": " + getMagazine() + ", ");
-		}
-		if (getDistance() != -1)
-		{
-			info.append(getContext().getString(R.string.ammo) + ": " + getAmmo() + ", ");
-		}
-		info.delete(info.length() - 2, info.length());
-		return info.toString();
-	}
-	
-	@Override
-	public Element asElement(final Document aDoc)
-	{
-		final Element element = aDoc.createElement("weapon");
-		element.setAttribute("name", getName());
-		element.setAttribute("weight", "" + getWeight());
-		element.setAttribute("difficulty", "" + getDifficulty());
-		element.setAttribute("damage", "" + getDamage());
-		if (mAdditionalDamage != null)
-		{
-			element.setAttribute("additionalDamage", mAdditionalDamage.getName());
-		}
-		element.setAttribute("stash", getStash());
-		element.setAttribute("distance", "" + getDistance());
-		element.setAttribute("reloadTime", "" + getReloadTime());
-		element.setAttribute("magazine", "" + getMagazine());
-		element.setAttribute("ammo", getAmmo());
-		return element;
 	}
 }

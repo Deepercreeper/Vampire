@@ -69,6 +69,34 @@ public class InventoryItem implements Saveable, Viewable
 	 *            The item name.
 	 * @param aWeight
 	 *            The item weight.
+	 * @param aQuantity
+	 *            The quantity of this item.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aController
+	 *            the parent inventory controller.
+	 */
+	public InventoryItem(final String aName, final int aWeight, final int aQuantity, final Context aContext,
+			final InventoryControllerInstance aController)
+	{
+		mContext = aContext;
+		mController = aController;
+		mName = aName;
+		mWeight = aWeight;
+		mQuantity = aQuantity;
+		
+		mContainer = (LinearLayout) View.inflate(mContext, R.layout.inventory_item_view, null);
+		
+		init();
+	}
+	
+	/**
+	 * Creates a new inventory item.
+	 * 
+	 * @param aName
+	 *            The item name.
+	 * @param aWeight
+	 *            The item weight.
 	 * @param aContext
 	 *            The underlying context.
 	 * @param aController
@@ -76,14 +104,7 @@ public class InventoryItem implements Saveable, Viewable
 	 */
 	public InventoryItem(final String aName, final int aWeight, final Context aContext, final InventoryControllerInstance aController)
 	{
-		mContext = aContext;
-		mController = aController;
-		mName = aName;
-		mWeight = aWeight;
-		
-		mContainer = (LinearLayout) View.inflate(mContext, R.layout.inventory_item_view, null);
-		
-		init();
+		this(aName, aWeight, 1, aContext, aController);
 	}
 	
 	/**
@@ -147,7 +168,7 @@ public class InventoryItem implements Saveable, Viewable
 				@Override
 				public void onClick(final View aV)
 				{
-					Toast.makeText(mContext, getInfo(), Toast.LENGTH_LONG).show();
+					Toast.makeText(mContext, getInfo(true), Toast.LENGTH_LONG).show();
 				}
 			});
 			
@@ -191,11 +212,13 @@ public class InventoryItem implements Saveable, Viewable
 	}
 	
 	/**
+	 * @param aQuantity
+	 *            Whether the item quantity should be added.
 	 * @return a summary of this item.
 	 */
-	public String getInfo()
+	public String getInfo(final boolean aQuantity)
 	{
-		return getName() + getQuantitySuffix() + ": " + getWeight() + " " + getContext().getString(R.string.weight_unit);
+		return getName() + (aQuantity ? getQuantitySuffix() : "") + ": " + getWeight() + " " + getContext().getString(R.string.weight_unit);
 	}
 	
 	/**

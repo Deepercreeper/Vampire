@@ -92,6 +92,7 @@
     <string name="play_host">Play</string>
     <string name="play_host_button">Start host</string>
     <string name="play_lobby">Lobby</string>
+    <string name="quantity">Quantity</string>
     <string name="reload_time">Reload time</string>
     <string name="reset">Reset</string>
     <string name="round">Round</string>
