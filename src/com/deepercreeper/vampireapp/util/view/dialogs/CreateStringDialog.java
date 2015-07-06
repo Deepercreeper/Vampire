@@ -1,24 +1,21 @@
 package com.deepercreeper.vampireapp.util.view.dialogs;
 
-import java.lang.reflect.Field;
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.os.Bundle;
 import android.widget.EditText;
-import com.deepercreeper.vampireapp.util.ViewUtil;
+import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.util.view.dialogs.CreateStringDialog.CreationListener;
 
 /**
  * Used for creating a string and returning it to the given listener.
  * 
  * @author vrl
  */
-public class CreateStringDialog extends DialogFragment
+public class CreateStringDialog extends DefaultDialog<CreationListener, EditText>
 {
 	/**
 	 * A listener that is invoked when a string was created.
@@ -37,14 +34,6 @@ public class CreateStringDialog extends DialogFragment
 	}
 	
 	/**
-	 * @return whether any dialog is open at this time.
-	 */
-	public static boolean isDialogOpen()
-	{
-		return sDialogOpen;
-	}
-	
-	/**
 	 * Shows a create string dialog that returns the new created string to the listener.<br>
 	 * Only one dialog can be shown at one time.
 	 * 
@@ -59,77 +48,31 @@ public class CreateStringDialog extends DialogFragment
 	 */
 	public static void showCreateStringDialog(final String aTitle, final String aMessage, final Context aContext, final CreationListener aListener)
 	{
-		if (sDialogOpen)
+		if (isDialogOpen())
 		{
 			return;
 		}
 		new CreateStringDialog(aTitle, aMessage, aContext, aListener).show(((Activity) aContext).getFragmentManager(), aTitle);
 	}
 	
-	private static boolean			sDialogOpen	= false;
-	
-	private final String			mTitle;
-	
-	private final String			mMessage;
-	
-	private final EditText			mValue;
-	
-	private final Context			mContext;
-	
-	private final CreationListener	mListener;
+	private final String	mMessage;
 	
 	private CreateStringDialog(final String aTitle, final String aMessage, final Context aContext, final CreationListener aListener)
 	{
-		sDialogOpen = true;
-		mTitle = aTitle;
+		super(aTitle, aContext, aListener, R.layout.dialog_create_string, EditText.class);
 		mMessage = aMessage;
-		mContext = aContext;
-		mValue = new EditText(mContext);
-		mValue.setLayoutParams(ViewUtil.getWrapHeight());
-		mValue.setSingleLine();
-		mListener = aListener;
 	}
 	
 	@Override
-	public Dialog onCreateDialog(final Bundle aSavedInstanceState)
+	public Dialog createDialog(final Builder aBuilder)
 	{
-		final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-		builder.setTitle(mTitle).setMessage(mMessage).setView(mValue).setPositiveButton("OK", new OnClickListener()
+		return aBuilder.setMessage(mMessage).setPositiveButton("OK", new OnClickListener()
 		{
 			@Override
 			public void onClick(final DialogInterface aDialog, final int aWhich)
 			{
-				mListener.create(mValue.getText().toString());
+				getListener().create(getContainer().getText().toString());
 			}
-		});
-		
-		return builder.create();
-	}
-	
-	@Override
-	public void onDestroy()
-	{
-		super.onDestroy();
-		sDialogOpen = false;
-	}
-	
-	@Override
-	public void onDetach()
-	{
-		super.onDetach();
-		try
-		{
-			final Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
-			childFragmentManager.setAccessible(true);
-			childFragmentManager.set(this, null);
-		}
-		catch (final NoSuchFieldException e)
-		{
-			throw new RuntimeException(e);
-		}
-		catch (final IllegalAccessException e)
-		{
-			throw new RuntimeException(e);
-		}
+		}).create();
 	}
 }

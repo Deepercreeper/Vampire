@@ -1,13 +1,9 @@
 package com.deepercreeper.vampireapp.util.view.dialogs;
 
-import java.lang.reflect.Field;
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.Fragment;
 import android.content.Context;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -17,13 +13,14 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.InventoryItem;
+import com.deepercreeper.vampireapp.util.view.dialogs.CreateInventoryItemDialog.ItemCreationListener;
 
 /**
  * A dialog used for creating inventory items.
  * 
  * @author Vincent
  */
-public class CreateInventoryItemDialog extends DialogFragment
+public class CreateInventoryItemDialog extends DefaultDialog<ItemCreationListener, LinearLayout>
 {
 	/**
 	 * The inventory item created listener.
@@ -41,42 +38,27 @@ public class CreateInventoryItemDialog extends DialogFragment
 		public void itemCreated(InventoryItem aItem);
 	}
 	
-	private static boolean				sDialogOpen	= false;
+	private EditText	mName;
 	
-	private final String				mTitle;
+	private EditText	mWeight;
 	
-	private final Context				mContext;
+	private EditText	mQuantity;
 	
-	private final ItemCreationListener	mListener;
-	
-	private EditText					mName;
-	
-	private EditText					mWeight;
-	
-	private EditText					mQuantity;
-	
-	private Button						mOK;
+	private Button		mOK;
 	
 	private CreateInventoryItemDialog(final String aTitle, final Context aContext, final ItemCreationListener aListener)
 	{
-		sDialogOpen = true;
-		mTitle = aTitle;
-		mContext = aContext;
-		mListener = aListener;
+		super(aTitle, aContext, aListener, R.layout.dialog_create_inventory_item, LinearLayout.class);
 	}
 	
 	@Override
-	public Dialog onCreateDialog(final Bundle aSavedInstanceState)
+	public Dialog createDialog(final Builder aBuilder)
 	{
-		final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+		mOK = (Button) getContainer().findViewById(R.id.dialog_ok_button);
+		mName = (EditText) getContainer().findViewById(R.id.dialog_item_name_text);
+		mWeight = (EditText) getContainer().findViewById(R.id.dialog_item_weight_text);
+		mQuantity = (EditText) getContainer().findViewById(R.id.dialog_item_quantity_text);
 		
-		final LinearLayout container = (LinearLayout) View.inflate(mContext, R.layout.dialog_create_inventory_item, null);
-		mOK = (Button) container.findViewById(R.id.dialog_ok_button);
-		mName = (EditText) container.findViewById(R.id.dialog_item_name_text);
-		mWeight = (EditText) container.findViewById(R.id.dialog_item_weight_text);
-		mQuantity = (EditText) container.findViewById(R.id.dialog_item_quantity_text);
-		
-		mQuantity.setText("" + 1);
 		final TextWatcher listener = new TextWatcher()
 		{
 			@Override
@@ -93,6 +75,7 @@ public class CreateInventoryItemDialog extends DialogFragment
 			public void onTextChanged(final CharSequence aS, final int aStart, final int aBefore, final int aCount)
 			{}
 		};
+		mQuantity.setText("" + 1);
 		mName.addTextChangedListener(listener);
 		mWeight.addTextChangedListener(listener);
 		mQuantity.addTextChangedListener(listener);
@@ -101,43 +84,14 @@ public class CreateInventoryItemDialog extends DialogFragment
 			@Override
 			public void onClick(final View aV)
 			{
-				mListener.itemCreated(new InventoryItem(mName.getText().toString(), Integer.parseInt(mWeight.getText().toString()), Integer
-						.parseInt(mQuantity.getText().toString()), mContext, null));
+				getListener().itemCreated(
+						new InventoryItem(mName.getText().toString(), Integer.parseInt(mWeight.getText().toString()), Integer.parseInt(mQuantity
+								.getText().toString()), getContext(), null));
 				dismiss();
 			}
 		});
 		
-		builder.setTitle(mTitle).setView(container);
-		
-		return builder.create();
-	}
-	
-	@Override
-	public void onDestroy()
-	{
-		super.onDestroy();
-		sDialogOpen = false;
-	}
-	
-	@Override
-	public void onDetach()
-	{
-		super.onDetach();
-		// TODO Remove when not necessary anymore
-		try
-		{
-			final Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
-			childFragmentManager.setAccessible(true);
-			childFragmentManager.set(this, null);
-		}
-		catch (final NoSuchFieldException e)
-		{
-			throw new RuntimeException(e);
-		}
-		catch (final IllegalAccessException e)
-		{
-			throw new RuntimeException(e);
-		}
+		return aBuilder.create();
 	}
 	
 	private void updateOKButton()
@@ -170,14 +124,6 @@ public class CreateInventoryItemDialog extends DialogFragment
 	}
 	
 	/**
-	 * @return whether any dialog is currently open.
-	 */
-	public static boolean isDialogOpen()
-	{
-		return sDialogOpen;
-	}
-	
-	/**
 	 * Shows a create inventory item dialog.
 	 * 
 	 * @param aTitle
@@ -189,7 +135,7 @@ public class CreateInventoryItemDialog extends DialogFragment
 	 */
 	public static void showCreateInventoryItemDialog(final String aTitle, final Context aContext, final ItemCreationListener aListener)
 	{
-		if (sDialogOpen)
+		if (isDialogOpen())
 		{
 			return;
 		}

@@ -1,22 +1,19 @@
 package com.deepercreeper.vampireapp.util.view.dialogs;
 
-import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.List;
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.Fragment;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.items.interfaces.Nameable;
+import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog.SelectionListener;
 
 /**
  * Used for selecting items from a list and then invoking the given action.
@@ -25,7 +22,7 @@ import com.deepercreeper.vampireapp.items.interfaces.Nameable;
  * @param <T>
  *            The type of all items that can be selected.
  */
-public class SelectItemDialog <T extends Nameable> extends DialogFragment
+public class SelectItemDialog <T extends Nameable> extends DefaultDialog<SelectionListener<T>, ListView>
 {
 	/**
 	 * A listener that is invoked when a selection was made.
@@ -50,41 +47,27 @@ public class SelectItemDialog <T extends Nameable> extends DialogFragment
 		public void select(S aItem);
 	}
 	
-	private static boolean				sDialogOpen	= false;
+	private final List<T>			mItems;
 	
-	private final List<T>				mItems;
-	
-	private final ArrayAdapter<T>		mAdapter;
-	
-	private final ListView				mView;
-	
-	private final String				mTitle;
-	
-	private final Context				mContext;
-	
-	private final SelectionListener<T>	mAction;
+	private final ArrayAdapter<T>	mAdapter;
 	
 	private SelectItemDialog(final List<T> aItems, final String aTitle, final Context aContext, final SelectionListener<T> aAction)
 	{
-		sDialogOpen = true;
+		super(aTitle, aContext, aAction, R.layout.dialog_select_item, ListView.class);
 		mItems = aItems;
 		Collections.sort(mItems);
-		mTitle = aTitle;
-		mContext = aContext;
-		mAction = aAction;
 		
-		mView = new ListView(aContext);
-		mAdapter = new ArrayAdapter<T>(mContext, android.R.layout.simple_list_item_1, mItems);
-		mView.setOnItemClickListener(new OnItemClickListener()
+		mAdapter = new ArrayAdapter<T>(getContext(), android.R.layout.simple_list_item_1, mItems);
+		getContainer().setOnItemClickListener(new OnItemClickListener()
 		{
 			@Override
 			public void onItemClick(final AdapterView<?> aParent, final View aView, final int aPosition, final long aId)
 			{
-				mAction.select(mItems.get(aPosition));
+				getListener().select(mItems.get(aPosition));
 				dismiss();
 			}
 		});
-		mView.setAdapter(mAdapter);
+		getContainer().setAdapter(mAdapter);
 	}
 	
 	/**
@@ -102,46 +85,9 @@ public class SelectItemDialog <T extends Nameable> extends DialogFragment
 	}
 	
 	@Override
-	public void onCancel(final DialogInterface aDialog)
+	public Dialog createDialog(final Builder aBuilder)
 	{
-		mAction.cancel();
-		super.onCancel(aDialog);
-	}
-	
-	@Override
-	public Dialog onCreateDialog(final Bundle aSavedInstanceState)
-	{
-		final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-		builder.setTitle(mTitle).setView(mView);
-		return builder.create();
-	}
-	
-	@Override
-	public void onDestroy()
-	{
-		super.onDestroy();
-		sDialogOpen = false;
-	}
-	
-	@Override
-	public void onDetach()
-	{
-		super.onDetach();
-		// TODO Remove when not necessary anymore
-		try
-		{
-			final Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
-			childFragmentManager.setAccessible(true);
-			childFragmentManager.set(this, null);
-		}
-		catch (final NoSuchFieldException e)
-		{
-			throw new RuntimeException(e);
-		}
-		catch (final IllegalAccessException e)
-		{
-			throw new RuntimeException(e);
-		}
+		return aBuilder.create();
 	}
 	
 	/**
@@ -153,6 +99,12 @@ public class SelectItemDialog <T extends Nameable> extends DialogFragment
 	public void removeOption(final T aOption)
 	{
 		mAdapter.remove(aOption);
+	}
+	
+	@Override
+	protected void cancel()
+	{
+		getListener().cancel();
 	}
 	
 	/**
@@ -169,23 +121,14 @@ public class SelectItemDialog <T extends Nameable> extends DialogFragment
 	 *            The selection action.
 	 * @return the created dialog.
 	 */
-	public static <R extends Nameable> SelectItemDialog<R> createSelectionDialog(final List<R> aItems, final String aTitle, final Context aContext,
-			final SelectionListener<R> aAction)
+	public static <I extends Nameable> SelectItemDialog<I> createSelectionDialog(final List<I> aItems, final String aTitle, final Context aContext,
+			final SelectionListener<I> aAction)
 	{
-		if (sDialogOpen)
+		if (isDialogOpen())
 		{
 			return null;
 		}
-		return new SelectItemDialog<R>(aItems, aTitle, aContext, aAction);
-	}
-	
-	/**
-	 * @return whether any dialog is open at this time.
-	 */
-	public static boolean isDialogOpen()
-	{
-		// TODO Check occurrences of showDialog
-		return sDialogOpen;
+		return new SelectItemDialog<I>(aItems, aTitle, aContext, aAction);
 	}
 	
 	/**
@@ -202,14 +145,14 @@ public class SelectItemDialog <T extends Nameable> extends DialogFragment
 	 *            The selection action.
 	 * @return the created dialog.
 	 */
-	public static <R extends Nameable> SelectItemDialog<R> showSelectionDialog(final List<R> aItems, final String aTitle, final Context aContext,
-			final SelectionListener<R> aAction)
+	public static <I extends Nameable> SelectItemDialog<I> showSelectionDialog(final List<I> aItems, final String aTitle, final Context aContext,
+			final SelectionListener<I> aAction)
 	{
-		if (sDialogOpen)
+		if (isDialogOpen())
 		{
 			return null;
 		}
-		final SelectItemDialog<R> dialog = new SelectItemDialog<R>(aItems, aTitle, aContext, aAction);
+		final SelectItemDialog<I> dialog = new SelectItemDialog<I>(aItems, aTitle, aContext, aAction);
 		dialog.show(((Activity) aContext).getFragmentManager(), aTitle);
 		return dialog;
 	}

@@ -1,15 +1,11 @@
 package com.deepercreeper.vampireapp.util.view.dialogs;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.Fragment;
 import android.content.Context;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -22,13 +18,14 @@ import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.Currency;
 import com.deepercreeper.vampireapp.util.ViewUtil;
+import com.deepercreeper.vampireapp.util.view.dialogs.MoneyAmountDialog.MoneyAmountListener;
 
 /**
  * A dialog, that is used to choose, how much money to handle with.
  * 
  * @author Vincent
  */
-public class MoneyAmountDialog extends DialogFragment
+public class MoneyAmountDialog extends DefaultDialog<MoneyAmountListener, LinearLayout>
 {
 	/**
 	 * A listener for money amount choose.
@@ -51,17 +48,9 @@ public class MoneyAmountDialog extends DialogFragment
 	 */
 	public static final int				MAX_VALUE	= 10000;
 	
-	private static boolean				sDialogOpen	= false;
-	
 	private final Map<String, Integer>	mValues		= new HashMap<String, Integer>();
 	
 	private final Map<String, Integer>	mMaxValues;
-	
-	private final String				mTitle;
-	
-	private final Context				mContext;
-	
-	private final MoneyAmountListener	mAction;
 	
 	private final Currency				mCurrency;
 	
@@ -72,22 +61,17 @@ public class MoneyAmountDialog extends DialogFragment
 	private MoneyAmountDialog(final Currency aCurrency, final Map<String, Integer> aMaxValues, final String aTitle, final Context aContext,
 			final MoneyAmountListener aAction)
 	{
-		sDialogOpen = true;
-		mTitle = aTitle;
-		mContext = aContext;
-		mAction = aAction;
+		super(aTitle, aContext, aAction, R.layout.dialog_money_choose, LinearLayout.class);
 		mCurrency = aCurrency;
 		mMaxValues = aMaxValues;
 	}
 	
 	@Override
-	public Dialog onCreateDialog(final Bundle aSavedInstanceState)
+	public Dialog createDialog(final Builder aBuilder)
 	{
-		final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-		final LinearLayout container = (LinearLayout) View.inflate(mContext, R.layout.dialog_money_choose, null);
 		for (final String currency : mCurrency.getCurrencies())
 		{
-			final LinearLayout currencyView = (LinearLayout) View.inflate(mContext, R.layout.currency_chooser_view, null);
+			final LinearLayout currencyView = (LinearLayout) View.inflate(getContext(), R.layout.currency_chooser_view, null);
 			final EditText amount = (EditText) currencyView.findViewById(R.id.view_currency_value_text);
 			final Button max = (Button) currencyView.findViewById(R.id.view_max_currency_value_button);
 			
@@ -132,49 +116,19 @@ public class MoneyAmountDialog extends DialogFragment
 				}
 			});
 			((TextView) currencyView.findViewById(R.id.view_currency_label)).setText(currency + " (0 - " + mMaxValues.get(currency) + "):");
-			container.addView(currencyView, container.getChildCount() - 1);
+			getContainer().addView(currencyView, getContainer().getChildCount() - 1);
 		}
-		mOK = (Button) container.findViewById(R.id.dialog_ok_button);
+		mOK = (Button) getContainer().findViewById(R.id.dialog_ok_button);
 		mOK.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(final View aV)
 			{
-				mAction.amountSelected(mValues);
+				getListener().amountSelected(mValues);
 				dismiss();
 			}
 		});
-		builder.setTitle(mTitle).setView(container);
-		final AlertDialog dialog = builder.create();
-		return dialog;
-	}
-	
-	@Override
-	public void onDestroy()
-	{
-		super.onDestroy();
-		sDialogOpen = false;
-	}
-	
-	@Override
-	public void onDetach()
-	{
-		super.onDetach();
-		// TODO Remove when not necessary anymore
-		try
-		{
-			final Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
-			childFragmentManager.setAccessible(true);
-			childFragmentManager.set(this, null);
-		}
-		catch (final NoSuchFieldException e)
-		{
-			throw new RuntimeException(e);
-		}
-		catch (final IllegalAccessException e)
-		{
-			throw new RuntimeException(e);
-		}
+		return aBuilder.create();
 	}
 	
 	private void updateOkButton()
@@ -217,7 +171,7 @@ public class MoneyAmountDialog extends DialogFragment
 	public static void showMoneyAmountDialog(final Currency aCurrency, final Map<String, Integer> aMaxValues, final String aTitle,
 			final Context aContext, final MoneyAmountListener aAction)
 	{
-		if (sDialogOpen)
+		if (isDialogOpen())
 		{
 			return;
 		}
