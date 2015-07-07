@@ -49,13 +49,15 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	
 	private final Map<String, ItemInstance>						mItems				= new HashMap<String, ItemInstance>();
 	
-	private boolean												mInitialized		= false;
+	private final boolean										mHost;
 	
 	private final CharacterInstance								mCharacter;
 	
-	private Mode												mMode;
+	private final EPControllerInstance							mEP;
 	
-	private final EPControllerInstance									mEP;
+	private boolean												mInitialized		= false;
+	
+	private Mode												mMode;
 	
 	/**
 	 * Creates a new item controller out of the given XML data.
@@ -72,13 +74,16 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	 *            the experience controller.
 	 * @param aCharacter
 	 *            The character
+	 * @param aHost
+	 *            Whether this is a host sided controller.
 	 */
 	public ItemControllerInstanceImpl(final Element aElement, final ItemProvider aItems, final Context aContext, final Mode aMode,
-			final EPControllerInstance aEP, final CharacterInstance aCharacter)
+			final EPControllerInstance aEP, final CharacterInstance aCharacter, final boolean aHost)
 	{
 		mItemController = aItems.getController(aElement.getAttribute("name"));
 		mContext = aContext;
 		mMode = aMode;
+		mHost = aHost;
 		mEP = aEP;
 		mCharacter = aCharacter;
 		mContainer = new LinearLayout(getContext());
@@ -95,7 +100,7 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 				{
 					continue;
 				}
-				addGroupSilent(new ItemGroupInstanceImpl(group, this, getContext(), getMode(), getEP(), getCharacter()));
+				addGroupSilent(new ItemGroupInstanceImpl(group, this, getContext(), getMode(), getEP(), getCharacter(), mHost));
 			}
 		}
 		for (int i = 0; i < children.getLength(); i++ )
@@ -125,13 +130,16 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	 *            The experience controller.
 	 * @param aCharacter
 	 *            The character.
+	 * @param aHost
+	 *            Whether this is a host sided controller.
 	 */
-	public ItemControllerInstanceImpl(final ItemControllerCreation aItemController, final Context aContext, final Mode aMode, final EPControllerInstance aEP,
-			final CharacterInstance aCharacter)
+	public ItemControllerInstanceImpl(final ItemControllerCreation aItemController, final Context aContext, final Mode aMode,
+			final EPControllerInstance aEP, final CharacterInstance aCharacter, final boolean aHost)
 	{
 		mItemController = aItemController.getItemController();
 		mContext = aContext;
 		mMode = aMode;
+		mHost = aHost;
 		mEP = aEP;
 		mCharacter = aCharacter;
 		mContainer = new LinearLayout(getContext());
@@ -140,7 +148,7 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 		
 		for (final ItemGroupCreation group : aItemController.getGroupsList())
 		{
-			addGroupSilent(new ItemGroupInstanceImpl(group, this, getContext(), getMode(), getEP(), getCharacter()));
+			addGroupSilent(new ItemGroupInstanceImpl(group, this, getContext(), getMode(), getEP(), getCharacter(), mHost));
 		}
 		for (final GroupOptionCreation groupOption : aItemController.getGroupOptionsList())
 		{

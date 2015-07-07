@@ -24,10 +24,11 @@ import com.deepercreeper.vampireapp.host.change.InventoryChange;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.host.change.MoneyChange;
 import com.deepercreeper.vampireapp.items.ItemProvider;
+import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.FilesUtil;
 import com.deepercreeper.vampireapp.util.ViewUtil;
-import com.deepercreeper.vampireapp.util.view.ResizeHeightAnimation;
+import com.deepercreeper.vampireapp.util.view.Expander;
 import com.deepercreeper.vampireapp.util.view.ResizeListener;
 import com.deepercreeper.vampireapp.util.view.Viewable;
 
@@ -48,19 +49,17 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 	
 	private final ConnectionListener	mListener;
 	
-	private boolean						mTimeEnabled;
+	private Button						mButton;
 	
-	private boolean						mOpen	= false;
+	private Expander					mExpander;
+	
+	private boolean						mTimeEnabled;
 	
 	private int							mTime	= TimeListener.EVENING;
 	
 	private LinearLayout				mContainer;
 	
-	private LinearLayout				mPlayerContainer;
-	
 	private CheckBox					mTimeCheckBox;
-	
-	private Button						mButton;
 	
 	/**
 	 * Creates a new player that caches all needed data of the remote character.
@@ -86,6 +85,15 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 		mContext = aContext;
 		mListener = aListener;
 		init();
+	}
+	
+	@Override
+	public void resize()
+	{
+		if (mExpander != null)
+		{
+			mExpander.resize();
+		}
 	}
 	
 	@Override
@@ -191,16 +199,6 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 		mTimeCheckBox.setText(getName() + " - " + mTime + ":00");
 	}
 	
-	/**
-	 * Closes this player.
-	 */
-	public void close()
-	{
-		mOpen = false;
-		mButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
-		resize();
-	}
-	
 	@Override
 	public boolean equals(final Object obj)
 	{
@@ -302,17 +300,34 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 	public void init()
 	{
 		mContainer = (LinearLayout) View.inflate(mContext, R.layout.player_view, null);
-		mPlayerContainer = (LinearLayout) mContainer.findViewById(R.id.view_player_panel);
+		
+		final LinearLayout playerContainer = (LinearLayout) mContainer.findViewById(R.id.view_player_panel);
 		mButton = (Button) mContainer.findViewById(R.id.view_player_button);
+		mExpander = Expander.handle(playerContainer, mButton);
 		
 		final Button kick = (Button) mContainer.findViewById(R.id.view_kick_button);
 		final Button ban = (Button) mContainer.findViewById(R.id.view_ban_button);
 		
-		mPlayerContainer.addView(mChar.getHealth().getContainer(), 0);
-		mPlayerContainer.addView(mChar.getEPController().getContainer(), 1);
-		mPlayerContainer.addView(mChar.getGenerationController().getContainer(), 2);
-		mPlayerContainer.addView(mChar.getMoney().getContainer(), 3);
-		mPlayerContainer.addView(mChar.getInventory().getContainer(), 4);
+		mChar.update();
+		
+		playerContainer.addView(mChar.getHealth().getContainer(), 0);
+		playerContainer.addView(mChar.getEPController().getContainer(), 1);
+		playerContainer.addView(mChar.getGenerationController().getContainer(), 2);
+		playerContainer.addView(mChar.getMoney().getContainer(), 3);
+		playerContainer.addView(mChar.getInventory().getContainer(), 4);
+		
+		final LinearLayout controllerPanel = (LinearLayout) mContainer.findViewById(R.id.view_player_controller_panel);
+		Expander.handle(controllerPanel, (Button) mContainer.findViewById(R.id.view_player_controller_button), mExpander);
+		for (final ItemControllerInstance controller : mChar.getControllers())
+		{
+			if (controller.hasAnyItem())
+			{
+				controller.release();
+				controller.init();
+				controllerPanel.addView(controller.getContainer());
+				controller.close();
+			}
+		}
 		
 		mTimeCheckBox = new CheckBox(mContext);
 		mTimeCheckBox.setLayoutParams(ViewUtil.getWrapHeight());
@@ -327,23 +342,7 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 		updateTime();
 		mTimeCheckBox.setChecked(true);
 		
-		if (mOpen)
-		{
-			mButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
-		}
-		else
-		{
-			mButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
-		}
 		mButton.setText(getName());
-		mButton.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(final View aV)
-			{
-				toggle();
-			}
-		});
 		kick.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -363,41 +362,11 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 		});
 	}
 	
-	/**
-	 * @return whether this player is open.
-	 */
-	public boolean isOpen()
-	{
-		return mOpen;
-	}
-	
 	@Override
 	public void release()
 	{
 		ViewUtil.release(mContainer);
 		ViewUtil.release(mTimeCheckBox);
-	}
-	
-	@Override
-	public void resize()
-	{
-		if (mPlayerContainer == null)
-		{
-			return;
-		}
-		if (mPlayerContainer.getAnimation() != null && !mPlayerContainer.getAnimation().hasEnded())
-		{
-			mPlayerContainer.getAnimation().cancel();
-		}
-		int height = 0;
-		if (isOpen())
-		{
-			height = ViewUtil.calcHeight(mPlayerContainer);
-		}
-		if (height != mPlayerContainer.getHeight())
-		{
-			mPlayerContainer.startAnimation(new ResizeHeightAnimation(mPlayerContainer, height));
-		}
 	}
 	
 	/**
@@ -409,25 +378,10 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 	public void setAFK(final boolean aAFK)
 	{
 		mButton.setText(getName() + (aAFK ? " " + mContext.getString(R.string.afk) : ""));
-		if (aAFK) close();
+		if (aAFK)
+		{
+			mExpander.close();
+		}
 		ViewUtil.setEnabled(mButton, !aAFK);
 	}
-	
-	/**
-	 * Toggles whether this player is open.
-	 */
-	public void toggle()
-	{
-		mOpen = !mOpen;
-		if (mOpen)
-		{
-			mButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
-		}
-		else
-		{
-			mButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
-		}
-		resize();
-	}
-	
 }

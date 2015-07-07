@@ -47,6 +47,11 @@ public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemIn
 	public int calcEPCost();
 	
 	/**
+	 * @return whether this item can be decreased at all.
+	 */
+	public boolean canDecrease();
+	
+	/**
 	 * @return whether the character has enough experience to increase this item.
 	 */
 	public boolean canEPIncrease();
@@ -55,6 +60,11 @@ public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemIn
 	 * @return whether this item can be increased at all.
 	 */
 	public boolean canIncrease();
+	
+	/**
+	 * Decreases this item if possible.
+	 */
+	public void decrease();
 	
 	/**
 	 * @return the absolute value of this item.
@@ -218,26 +228,6 @@ public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemIn
 	public boolean isValueItem();
 	
 	/**
-	 * @return whether the host can decrease this item.
-	 */
-	public boolean masterCanDecrease();
-	
-	/**
-	 * @return whether the host can increase this item.
-	 */
-	public boolean masterCanIncrease();
-	
-	/**
-	 * Decreases this item if possible for the host.
-	 */
-	public void masterDecrease();
-	
-	/**
-	 * Increases this item if possible for the host.
-	 */
-	public void masterIncrease();
-	
-	/**
 	 * Updates the view shown value and information about this item.
 	 */
 	public void refreshValue();
@@ -249,11 +239,6 @@ public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemIn
 	 *            The listener to remove.
 	 */
 	public void removeValueListener(ItemValueListener aListener);
-	
-	/**
-	 * Calculates whether this item is increasable for the user.
-	 */
-	public void setIncreasable();
 	
 	/**
 	 * Sets the character mode for this item and all of its child items.

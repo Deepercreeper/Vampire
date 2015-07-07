@@ -396,8 +396,6 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 			exit(false);
 		}
 		
-		mChar.release();
-		
 		setContentView(R.layout.play_activity);
 		
 		setTitle(mChar.getName());
@@ -406,7 +404,6 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		final Button exit = (Button) findViewById(R.id.pa_exit_button);
 		
 		mChar.update();
-		mChar.init();
 		
 		controllersPanel.addView(mChar.getEPController().getContainer());
 		controllersPanel.addView(mChar.getHealth().getContainer());
@@ -418,6 +415,8 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		{
 			if (controller.hasAnyItem())
 			{
+				controller.release();
+				controller.init();
 				controllersPanel.addView(controller.getContainer());
 				controller.close();
 			}

@@ -71,9 +71,13 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	
 	private final ValueAnimator				mAnimator;
 	
+	private final boolean					mHost;
+	
 	private LinearLayout					mChildrenContainer;
 	
 	private ImageButton						mIncreaseButton;
+	
+	private ImageButton						mDecreaseButton;
 	
 	private ProgressBar						mValueBar;
 	
@@ -104,9 +108,11 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	 *            The parent item.
 	 * @param aCharacter
 	 *            The character.
+	 * @param aHost
+	 *            Whether this is a host sided item.
 	 */
 	public ItemInstanceImpl(final Element aElement, final ItemGroupInstance aItemGroup, final Context aContext, final Mode aMode,
-			final EPControllerInstance aEP, final ItemInstance aParentItem, final CharacterInstance aCharacter)
+			final EPControllerInstance aEP, final ItemInstance aParentItem, final CharacterInstance aCharacter, final boolean aHost)
 	{
 		super(aCharacter, aItemGroup.getItemController());
 		if (aParentItem == null)
@@ -120,6 +126,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		mItemGroup = aItemGroup;
 		mContext = aContext;
 		mEP = aEP;
+		mHost = aHost;
 		if (getItem().needsDescription())
 		{
 			mDescription = CodingUtil.decode(aElement.getAttribute("description"));
@@ -129,7 +136,8 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			mDescription = null;
 		}
 		mMode = aMode;
-		mContainer = (LinearLayout) View.inflate(mContext, R.layout.item_instance_view, null);
+		final int id = mHost ? R.layout.host_item_instance : R.layout.client_item_instance;
+		mContainer = (LinearLayout) View.inflate(mContext, id, null);
 		
 		if (isValueItem())
 		{
@@ -175,7 +183,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 				{
 					pos = Integer.parseInt(item.getAttribute("order"));
 				}
-				addChildSilent(new ItemInstanceImpl(item, getItemGroup(), getContext(), getMode(), getEP(), this, getCharacter()), pos);
+				addChildSilent(new ItemInstanceImpl(item, getItemGroup(), getContext(), getMode(), getEP(), this, getCharacter(), mHost), pos);
 			}
 		}
 		if (hasChildren() && !hasOrder())
@@ -199,18 +207,22 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	 *            The parent item.
 	 * @param aCharacter
 	 *            The character.
+	 * @param aHost
+	 *            Whether this is a host sided item.
 	 */
 	public ItemInstanceImpl(final ItemCreation aItem, final ItemGroupInstance aItemGroup, final Mode aMode, final EPControllerInstance aEP,
-			final ItemInstance aParentItem, final CharacterInstance aCharacter)
+			final ItemInstance aParentItem, final CharacterInstance aCharacter, final boolean aHost)
 	{
 		super(aCharacter, aItemGroup.getItemController());
 		mItem = aItem.getItem();
 		mItemGroup = aItemGroup;
 		mContext = aItem.getContext();
+		mHost = aHost;
 		mDescription = aItem.getDescription();
 		mEP = aEP;
 		mMode = aMode;
-		mContainer = (LinearLayout) View.inflate(mContext, R.layout.item_instance_view, null);
+		final int id = mHost ? R.layout.host_item_instance : R.layout.client_item_instance;
+		mContainer = (LinearLayout) View.inflate(mContext, id, null);
 		mNameText = new TextView(getContext());
 		
 		if (isParent())
@@ -249,7 +261,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			{
 				if ( !aItem.isMutableParent() || item.isImportant())
 				{
-					addChildSilent(new ItemInstanceImpl(item, getItemGroup(), getMode(), aEP, this, getCharacter()), -1);
+					addChildSilent(new ItemInstanceImpl(item, getItemGroup(), getMode(), aEP, this, getCharacter(), mHost), -1);
 				}
 			}
 			if ( !hasOrder())
@@ -337,17 +349,19 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			Log.w(TAG, "Tried to ask whether a non value item can be increased.");
 			return false;
 		}
-		final boolean canIncreaseItem;
+		if (mHost)
+		{
+			return mValueId < Math.min(getItem().getValues().length - 1, getMaxValue(InstanceRestrictionType.ITEM_VALUE));
+		}
+		if ( !hasEnoughEP())
+		{
+			return false;
+		}
 		if (getCharacter().isLowLevel())
 		{
-			canIncreaseItem = mValueId < Math.min(getItem().getMaxLowLevelValue(), getMaxValue(InstanceRestrictionType.ITEM_VALUE));
+			return mValueId < Math.min(getItem().getMaxLowLevelValue(), getMaxValue(InstanceRestrictionType.ITEM_VALUE));
 		}
-		else
-		{
-			canIncreaseItem = mValueId < getMaxValue(InstanceRestrictionType.ITEM_VALUE);
-		}
-		
-		return canIncreaseItem && hasEnoughEP();
+		return mValueId < getMaxValue(InstanceRestrictionType.ITEM_VALUE);
 	}
 	
 	@Override
@@ -526,6 +540,23 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	}
 	
 	@Override
+	public void decrease()
+	{
+		if ( !isValueItem())
+		{
+			Log.w(TAG, "Tried to decrease a non value item.");
+			return;
+		}
+		if (mValueId > 0)
+		{
+			mValueId-- ;
+		}
+		refreshValue();
+		updateCharacter();
+		updateValueListeners();
+	}
+	
+	@Override
 	public void increase()
 	{
 		if ( !isValueItem())
@@ -533,7 +564,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			Log.w(TAG, "Tried to increase a non value item.");
 			return;
 		}
-		if ( !hasEnoughEP())
+		if ( !mHost && !hasEnoughEP())
 		{
 			return;
 		}
@@ -541,7 +572,10 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		{
 			mValueId++ ;
 		}
-		getEP().decreaseBy(calcEPCost());
+		if ( !mHost)
+		{
+			getEP().decreaseBy(calcEPCost());
+		}
 		refreshValue();
 		updateCharacter();
 		updateValueListeners();
@@ -612,11 +646,14 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	{
 		if ( !mInitialized)
 		{
-			mChildrenContainer = (LinearLayout) getContainer().findViewById(R.id.view_item_instance_children_list);
-			mValueText = (TextView) getContainer().findViewById(R.id.view_item_instance_value_text);
-			mValueBar = (ProgressBar) getContainer().findViewById(R.id.view_item_instance_value_bar);
-			mIncreaseButton = (ImageButton) getContainer().findViewById(R.id.view_increase_item_instance_button);
-			mNameText = (TextView) getContainer().findViewById(R.id.view_item_instance_name_label);
+			mChildrenContainer = (LinearLayout) getContainer().findViewById(
+					mHost ? R.id.h_item_instance_children_list : R.id.c_item_instance_children_list);
+			mValueText = (TextView) getContainer().findViewById(mHost ? R.id.h_item_instance_value_text : R.id.c_item_instance_value_text);
+			mValueBar = (ProgressBar) getContainer().findViewById(mHost ? R.id.h_item_instance_value_bar : R.id.c_item_instance_value_bar);
+			mIncreaseButton = (ImageButton) getContainer().findViewById(
+					mHost ? R.id.h_increase_item_instance_button : R.id.c_increase_item_instance_button);
+			mDecreaseButton = mHost ? (ImageButton) getContainer().findViewById(R.id.h_decrease_item_instance_button) : null;
+			mNameText = (TextView) getContainer().findViewById(mHost ? R.id.h_item_instance_name_label : R.id.c_item_instance_name_label);
 			
 			mNameText.setText(getItem().getDisplayName());
 			mNameText.setOnClickListener(new OnClickListener()
@@ -709,57 +746,14 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	}
 	
 	@Override
-	public boolean masterCanDecrease()
+	public boolean canDecrease()
 	{
 		if ( !isValueItem())
 		{
 			Log.w(TAG, "Tried to ask whether a non value item can be decreased.");
 			return false;
 		}
-		final boolean canDecreaseItem = mValueId > Math.max(0, getMinValue(InstanceRestrictionType.ITEM_VALUE));
-		// TODO Implement
-		return canDecreaseItem;
-	}
-	
-	@Override
-	public boolean masterCanIncrease()
-	{
-		if ( !isValueItem())
-		{
-			Log.w(TAG, "Tried to ask whether a non value item can be increased.");
-			return false;
-		}
-		// TODO Implement
-		return false;
-	}
-	
-	@Override
-	public void masterDecrease()
-	{
-		if ( !isValueItem())
-		{
-			Log.w(TAG, "Tried to decrease a non value item.");
-			return;
-		}
-		if (mValueId > 0)
-		{
-			mValueId-- ;
-		}
-		refreshValue();
-		updateCharacter();
-		updateValueListeners();
-	}
-	
-	@Override
-	public void masterIncrease()
-	{
-		if ( !isValueItem())
-		{
-			Log.w(TAG, "Tried to increase a non value item.");
-			return;
-		}
-		// TODO Implement
-		return;
+		return mHost && mValueId > Math.max(0, getMinValue(InstanceRestrictionType.ITEM_VALUE));
 	}
 	
 	@Override
@@ -804,17 +798,6 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	}
 	
 	@Override
-	public void setIncreasable()
-	{
-		if ( !isValueItem())
-		{
-			Log.w(TAG, "Tried to change whether a non value item can be increased.");
-			return;
-		}
-		ViewUtil.setEnabled(mIncreaseButton, canIncrease());
-	}
-	
-	@Override
 	public void setMode(final Mode aMode)
 	{
 		mMode = aMode;
@@ -832,7 +815,11 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	{
 		if (isValueItem())
 		{
-			setIncreasable();
+			ViewUtil.setEnabled(mIncreaseButton, canIncrease());
+			if (mHost)
+			{
+				ViewUtil.setEnabled(mDecreaseButton, canDecrease());
+			}
 		}
 		if (isParent())
 		{
@@ -861,11 +848,11 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 				{
 					while (mValueId < getMinValue(InstanceRestrictionType.ITEM_VALUE))
 					{
-						masterIncrease();
+						increase();
 					}
 					while (mValueId > getMaxValue(InstanceRestrictionType.ITEM_VALUE))
 					{
-						masterDecrease();
+						decrease();
 					}
 				}
 			}

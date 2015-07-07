@@ -26,6 +26,7 @@ import com.deepercreeper.vampireapp.util.ItemFinder;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.Saveable;
 import com.deepercreeper.vampireapp.util.ViewUtil;
+import com.deepercreeper.vampireapp.util.view.Expander;
 import com.deepercreeper.vampireapp.util.view.ResizeListener;
 import com.deepercreeper.vampireapp.util.view.Viewable;
 import com.deepercreeper.vampireapp.util.view.dialogs.CreateInventoryItemDialog;
@@ -37,7 +38,7 @@ import com.deepercreeper.vampireapp.util.view.dialogs.CreateInventoryItemDialog.
  * 
  * @author vrl
  */
-public class InventoryControllerInstance implements Saveable, ItemValueListener, Viewable, ResizeListener
+public class InventoryControllerInstance implements Saveable, ItemValueListener, Viewable
 {
 	private static final String			TAG				= "InventoryController";
 	
@@ -61,23 +62,19 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	
 	private final CharacterInstance		mChar;
 	
+	private Expander					mExpander;
+	
 	private LinearLayout				mInventoryList;
 	
 	private TextView					mWeightLabel;
 	
 	private TextView					mMaxWeightLabel;
 	
-	private Button						mInventoryButton;
-	
 	private ImageButton					mAddItemButton;
-	
-	private LinearLayout				mInventoryContainer;
 	
 	private int							mWeight			= 0;
 	
 	private int							mMaxWeight;
-	
-	private boolean						mOpen			= false;
 	
 	private boolean						mInitialized	= false;
 	
@@ -223,7 +220,10 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 			aItem.init();
 			mInventoryList.addView(aItem.getContainer());
 			aItem.addTo(this);
-			resize();
+			if (mExpander != null)
+			{
+				mExpander.resize();
+			}
 		}
 		if ( !aSilent)
 		{
@@ -253,16 +253,6 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 		return getWeight() + aItem.getWeight() * aItem.getQuantity() <= getMaxWeight();
 	}
 	
-	/**
-	 * Closes the inventory view.
-	 */
-	public void close()
-	{
-		mOpen = false;
-		mInventoryButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
-		resize();
-	}
-	
 	@Override
 	public LinearLayout getContainer()
 	{
@@ -290,21 +280,13 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	{
 		if ( !mInitialized)
 		{
+			mExpander = Expander.handle((LinearLayout) getContainer().findViewById(mHost ? R.id.h_inventory_panel : R.id.c_inventory_panel),
+					(Button) getContainer().findViewById(mHost ? R.id.h_inventory_button : R.id.c_inventory_button), mResizeListener);
 			mInventoryList = (LinearLayout) getContainer().findViewById(mHost ? R.id.h_inventory_list : R.id.c_inventory_list);
-			mInventoryButton = (Button) getContainer().findViewById(mHost ? R.id.h_inventory_button : R.id.c_inventory_button);
 			mWeightLabel = (TextView) getContainer().findViewById(mHost ? R.id.h_weight_label : R.id.c_weight_label);
 			mMaxWeightLabel = (TextView) getContainer().findViewById(mHost ? R.id.h_max_weight_label : R.id.c_max_weight_label);
-			mInventoryContainer = (LinearLayout) getContainer().findViewById(mHost ? R.id.h_inventory_panel : R.id.c_inventory_panel);
 			mAddItemButton = mHost ? (ImageButton) getContainer().findViewById(R.id.h_add_item_button) : null;
 			
-			mInventoryButton.setOnClickListener(new OnClickListener()
-			{
-				@Override
-				public void onClick(final View aV)
-				{
-					toggleOpen();
-				}
-			});
 			if (mHost)
 			{
 				mAddItemButton.setOnClickListener(new OnClickListener()
@@ -332,7 +314,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 			mInventoryList.addView(item.getContainer());
 		}
 		
-		close();
+		mExpander.close();
 	}
 	
 	@Override
@@ -366,7 +348,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 			mWeight -= existingItem.getWeight();
 			setWeight();
 			existingItem.release();
-			resize();
+			mExpander.resize();
 		}
 		if ( !aSilent)
 		{
@@ -380,15 +362,6 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	}
 	
 	/**
-	 * Resizes the inventory display if necessary.
-	 */
-	@Override
-	public void resize()
-	{
-		ViewUtil.resize(mResizeListener, mOpen, mInventoryContainer);
-	}
-	
-	/**
 	 * Sets the new maximum weight that can be ported.
 	 * 
 	 * @param aMaxWeight
@@ -398,23 +371,6 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	{
 		mMaxWeight = aMaxWeight;
 		setWeight();
-	}
-	
-	/**
-	 * Opens or closes the inventory display.
-	 */
-	public void toggleOpen()
-	{
-		mOpen = !mOpen;
-		if (mOpen)
-		{
-			mInventoryButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
-		}
-		else
-		{
-			mInventoryButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
-		}
-		resize();
 	}
 	
 	/**

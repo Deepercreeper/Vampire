@@ -114,7 +114,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		
 		for (final ItemControllerCreation controller : aCreator.getControllers())
 		{
-			mControllers.add(new ItemControllerInstanceImpl(controller, getContext(), mMode, mEP, this));
+			mControllers.add(new ItemControllerInstanceImpl(controller, getContext(), mMode, mEP, this, mHost));
 		}
 		
 		mInventory = new InventoryControllerInstance(mItems.getInventory(), this, mContext, mResizeListener, aMessageListener, this, mHost);
@@ -196,7 +196,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 				final Element controller = (Element) controllers.getChildNodes().item(i);
 				if (controller.getTagName().equals("controller"))
 				{
-					mControllers.add(new ItemControllerInstanceImpl(controller, mItems, mContext, mMode, mEP, this));
+					mControllers.add(new ItemControllerInstanceImpl(controller, mItems, mContext, mMode, mEP, this, mHost));
 				}
 			}
 		}
@@ -430,41 +430,11 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	}
 	
 	/**
-	 * Initializes all subcomponents of this character.
-	 */
-	public void init()
-	{
-		mEP.init();
-		mHealth.init();
-		mMoney.init();
-		mInventory.init();
-		for (final ItemControllerInstance controller : getControllers())
-		{
-			controller.init();
-		}
-	}
-	
-	/**
 	 * @return whether this character is a low level character.
 	 */
 	public boolean isLowLevel()
 	{
 		return mGeneration.isLowLevel();
-	}
-	
-	/**
-	 * Releases all subcomponents of this character.
-	 */
-	public void release()
-	{
-		mEP.release();
-		mHealth.release();
-		mMoney.release();
-		mInventory.release();
-		for (final ItemControllerInstance controller : getControllers())
-		{
-			controller.release();
-		}
 	}
 	
 	/**

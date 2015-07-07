@@ -51,11 +51,13 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 	
 	private final CharacterInstance			mCharacter;
 	
+	private final boolean					mHost;
+	
 	private boolean							mInitialized	= false;
 	
 	private Mode							mMode;
 	
-	private final EPControllerInstance				mEP;
+	private final EPControllerInstance		mEP;
 	
 	/**
 	 * Creates a new group out of the given XML data.
@@ -72,14 +74,17 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 	 *            The experience controller.
 	 * @param aCharacter
 	 *            The character.
+	 * @param aHost
+	 *            Whether this is a host sided group.
 	 */
 	public ItemGroupInstanceImpl(final Element aElement, final ItemControllerInstance aItemController, final Context aContext, final Mode aMode,
-			final EPControllerInstance aEP, final CharacterInstance aCharacter)
+			final EPControllerInstance aEP, final CharacterInstance aCharacter, final boolean aHost)
 	{
 		mItemGroup = aItemController.getItemController().getGroup(aElement.getAttribute("name"));
 		mItemController = aItemController;
 		mContext = aContext;
 		mMode = aMode;
+		mHost = aHost;
 		mEP = aEP;
 		mCharacter = aCharacter;
 		mContainer = new LinearLayout(getContext());
@@ -102,7 +107,7 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 				{
 					pos = Integer.parseInt(item.getAttribute("order"));
 				}
-				addItemSilent(new ItemInstanceImpl(item, this, getContext(), getMode(), getEP(), null, getCharacter()), pos);
+				addItemSilent(new ItemInstanceImpl(item, this, getContext(), getMode(), getEP(), null, getCharacter(), mHost), pos);
 			}
 		}
 		if ( !hasOrder())
@@ -126,14 +131,17 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 	 *            The experience controller.
 	 * @param aCharacter
 	 *            The character.
+	 * @param aHost
+	 *            whether this is a host sided group.
 	 */
 	public ItemGroupInstanceImpl(final ItemGroupCreation aItemGroup, final ItemControllerInstance aItemController, final Context aContext,
-			final Mode aMode, final EPControllerInstance aEP, final CharacterInstance aCharacter)
+			final Mode aMode, final EPControllerInstance aEP, final CharacterInstance aCharacter, final boolean aHost)
 	{
 		mItemGroup = aItemGroup.getItemGroup();
 		mContext = aContext;
 		mItemController = aItemController;
 		mMode = aMode;
+		mHost = aHost;
 		mEP = aEP;
 		mCharacter = aCharacter;
 		mContainer = new LinearLayout(getContext());
@@ -145,7 +153,7 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 		{
 			if ( !getItemGroup().isMutable() || item.isImportant())
 			{
-				addItemSilent(new ItemInstanceImpl(item, this, getMode(), getEP(), null, getCharacter()), -1);
+				addItemSilent(new ItemInstanceImpl(item, this, getMode(), getEP(), null, getCharacter(), mHost), -1);
 			}
 		}
 		if ( !hasOrder())

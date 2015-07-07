@@ -13,8 +13,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.creation.HealthControllerCreation;
-import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.host.change.HealthChange;
+import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.DataUtil;
@@ -251,7 +251,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 					heavyWoundsChanged = true;
 				}
 				mValue-- ;
-				mCost.masterDecrease();
+				mCost.decrease();
 			}
 		}
 		mChangeListener.sendChange(new HealthChange(false, mValue));

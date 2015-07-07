@@ -70,6 +70,7 @@
     <string name="item_name">Item Name</string>
     <string name="item_weight">Item Gewicht</string>
     <string name="inventory">Inventar</string>
+    <string name="items">Items</string>
     <string name="kick">Rauswerfen</string>
     <string name="kicked">Der Host hat dich rausgeworfen.</string>
     <string name="ko">Außer Gefecht</string>

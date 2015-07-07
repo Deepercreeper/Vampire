@@ -22,6 +22,7 @@ import com.deepercreeper.vampireapp.host.change.MoneyChange;
 import com.deepercreeper.vampireapp.util.CodingUtil;
 import com.deepercreeper.vampireapp.util.Saveable;
 import com.deepercreeper.vampireapp.util.ViewUtil;
+import com.deepercreeper.vampireapp.util.view.Expander;
 import com.deepercreeper.vampireapp.util.view.ResizeListener;
 import com.deepercreeper.vampireapp.util.view.Viewable;
 import com.deepercreeper.vampireapp.util.view.dialogs.CreateStringDialog;
@@ -53,11 +54,7 @@ public class MoneyControllerInstance implements Saveable, Viewable
 	
 	private final CharacterInstance	mChar;
 	
-	private boolean					mOpen			= false;
-	
-	private Button					mMoneyButton;
-	
-	private LinearLayout			mMoneyContainer;
+	private Expander				mExpander;
 	
 	private LinearLayout			mDepotsList;
 	
@@ -245,7 +242,10 @@ public class MoneyControllerInstance implements Saveable, Viewable
 		{
 			mDepotsList.addView(depot.getContainer());
 		}
-		resize();
+		if (mExpander != null)
+		{
+			mExpander.resize();
+		}
 		if ( !aSilent)
 		{
 			mMessageListener.sendChange(new MoneyChange(aDepot.getName(), true));
@@ -277,32 +277,16 @@ public class MoneyControllerInstance implements Saveable, Viewable
 		return mDefaultDepot;
 	}
 	
-	/**
-	 * Resizes the inventory display if necessary.
-	 */
-	public void resize()
-	{
-		ViewUtil.resize(mResizeListener, mOpen, mMoneyContainer);
-	}
-	
 	@Override
 	public void init()
 	{
 		if ( !mInitialized)
 		{
 			mDepotsList = (LinearLayout) getContainer().findViewById(mHost ? R.id.h_depot_list : R.id.c_depot_list);
-			mMoneyButton = (Button) getContainer().findViewById(mHost ? R.id.h_money_button : R.id.c_money_button);
-			mMoneyContainer = (LinearLayout) getContainer().findViewById(mHost ? R.id.h_money_list : R.id.c_money_list);
+			mExpander = Expander.handle((LinearLayout) getContainer().findViewById(mHost ? R.id.h_money_list : R.id.c_money_list),
+					(Button) getContainer().findViewById(mHost ? R.id.h_money_button : R.id.c_money_button), mResizeListener);
 			final ImageButton addDepot = (ImageButton) getContainer().findViewById(mHost ? R.id.h_add_depot_button : R.id.c_add_depot_button);
 			
-			mMoneyButton.setOnClickListener(new OnClickListener()
-			{
-				@Override
-				public void onClick(final View aV)
-				{
-					toggleOpen();
-				}
-			});
 			addDepot.setOnClickListener(new OnClickListener()
 			{
 				@Override
@@ -362,39 +346,12 @@ public class MoneyControllerInstance implements Saveable, Viewable
 		{
 			mDepots.remove(depot);
 			depot.release();
-			resize();
+			mExpander.resize();
 			if ( !aSilent)
 			{
 				// TODO Replace the field by its getter
 				mMessageListener.sendChange(new MoneyChange(aName, false));
 			}
 		}
-	}
-	
-	/**
-	 * Closes the inventory view.
-	 */
-	public void close()
-	{
-		mOpen = false;
-		mMoneyButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
-		resize();
-	}
-	
-	/**
-	 * Opens or closes the inventory display.
-	 */
-	public void toggleOpen()
-	{
-		mOpen = !mOpen;
-		if (mOpen)
-		{
-			mMoneyButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
-		}
-		else
-		{
-			mMoneyButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
-		}
-		resize();
 	}
 }
