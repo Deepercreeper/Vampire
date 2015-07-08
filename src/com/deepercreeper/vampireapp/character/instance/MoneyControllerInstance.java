@@ -10,7 +10,6 @@ import org.w3c.dom.NodeList;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.R;
@@ -54,7 +53,7 @@ public class MoneyControllerInstance implements Saveable, Viewable
 	
 	private final CharacterInstance	mChar;
 	
-	private Expander				mExpander;
+	private final Expander			mExpander;
 	
 	private LinearLayout			mDepotsList;
 	
@@ -87,6 +86,9 @@ public class MoneyControllerInstance implements Saveable, Viewable
 		mChar = aChar;
 		final int id = mHost ? R.layout.host_money : R.layout.client_money;
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
+		mExpander = Expander.handle(mHost ? R.id.h_money_button : R.id.c_money_button, mHost ? R.id.h_money_list : R.id.c_money_list, aContext,
+				mResizeListener);
+		
 		init();
 		
 		mDefaultDepot = new MoneyDepot(mContext.getString(R.string.bag), mContext, mHost, true, this);
@@ -122,6 +124,9 @@ public class MoneyControllerInstance implements Saveable, Viewable
 		mChar = aChar;
 		final int id = mHost ? R.layout.host_money : R.layout.client_money;
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
+		mExpander = Expander.handle(mHost ? R.id.h_money_button : R.id.c_money_button, mHost ? R.id.h_money_list : R.id.c_money_list, aContext,
+				mResizeListener);
+		
 		init();
 		
 		MoneyDepot defaultDepot = null;
@@ -282,9 +287,9 @@ public class MoneyControllerInstance implements Saveable, Viewable
 	{
 		if ( !mInitialized)
 		{
+			mExpander.init();
+			
 			mDepotsList = (LinearLayout) getContainer().findViewById(mHost ? R.id.h_depot_list : R.id.c_depot_list);
-			mExpander = Expander.handle((LinearLayout) getContainer().findViewById(mHost ? R.id.h_money_list : R.id.c_money_list),
-					(Button) getContainer().findViewById(mHost ? R.id.h_money_button : R.id.c_money_button), mResizeListener);
 			final ImageButton addDepot = (ImageButton) getContainer().findViewById(mHost ? R.id.h_add_depot_button : R.id.c_add_depot_button);
 			
 			addDepot.setOnClickListener(new OnClickListener()

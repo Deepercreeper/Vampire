@@ -49,9 +49,7 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 	
 	private final ConnectionListener	mListener;
 	
-	private Button						mButton;
-	
-	private Expander					mExpander;
+	private final Expander				mExpander;
 	
 	private boolean						mTimeEnabled;
 	
@@ -84,6 +82,9 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 		mDevice = aDevice;
 		mContext = aContext;
 		mListener = aListener;
+		mContainer = (LinearLayout) View.inflate(mContext, R.layout.player_view, null);
+		mExpander = Expander.handle(R.id.view_player_button, R.id.view_player_panel, mContext);
+		
 		init();
 	}
 	
@@ -299,16 +300,13 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 	@Override
 	public void init()
 	{
-		mContainer = (LinearLayout) View.inflate(mContext, R.layout.player_view, null);
-		
-		final LinearLayout playerContainer = (LinearLayout) mContainer.findViewById(R.id.view_player_panel);
-		mButton = (Button) mContainer.findViewById(R.id.view_player_button);
-		mExpander = Expander.handle(playerContainer, mButton);
-		
-		final Button kick = (Button) mContainer.findViewById(R.id.view_kick_button);
-		final Button ban = (Button) mContainer.findViewById(R.id.view_ban_button);
+		mExpander.init();
 		
 		mChar.update();
+		
+		final LinearLayout playerContainer = mExpander.getContainer();
+		final Button kick = (Button) mContainer.findViewById(R.id.view_kick_button);
+		final Button ban = (Button) mContainer.findViewById(R.id.view_ban_button);
 		
 		playerContainer.addView(mChar.getHealth().getContainer(), 0);
 		playerContainer.addView(mChar.getEPController().getContainer(), 1);
@@ -316,16 +314,18 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 		playerContainer.addView(mChar.getMoney().getContainer(), 3);
 		playerContainer.addView(mChar.getInventory().getContainer(), 4);
 		
-		final LinearLayout controllerPanel = (LinearLayout) mContainer.findViewById(R.id.view_player_controller_panel);
-		Expander.handle(controllerPanel, (Button) mContainer.findViewById(R.id.view_player_controller_button), mExpander);
+		Expander expander = Expander.handle(R.id.view_player_controller_button, R.id.view_player_controller_panel, mContext, mExpander);
+		expander.init();
+		
+		final LinearLayout controllerPanel = expander.getContainer();
 		for (final ItemControllerInstance controller : mChar.getControllers())
 		{
 			if (controller.hasAnyItem())
 			{
 				controller.release();
 				controller.init();
-				controllerPanel.addView(controller.getContainer());
 				controller.close();
+				controllerPanel.addView(controller.getContainer());
 			}
 		}
 		
@@ -342,7 +342,7 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 		updateTime();
 		mTimeCheckBox.setChecked(true);
 		
-		mButton.setText(getName());
+		mExpander.getButton().setText(getName());
 		kick.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -377,11 +377,11 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 	 */
 	public void setAFK(final boolean aAFK)
 	{
-		mButton.setText(getName() + (aAFK ? " " + mContext.getString(R.string.afk) : ""));
+		mExpander.getButton().setText(getName() + (aAFK ? " " + mContext.getString(R.string.afk) : ""));
 		if (aAFK)
 		{
 			mExpander.close();
 		}
-		ViewUtil.setEnabled(mButton, !aAFK);
+		ViewUtil.setEnabled(mExpander.getButton(), !aAFK);
 	}
 }

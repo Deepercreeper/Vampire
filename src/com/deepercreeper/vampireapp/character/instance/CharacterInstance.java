@@ -114,7 +114,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		
 		for (final ItemControllerCreation controller : aCreator.getControllers())
 		{
-			mControllers.add(new ItemControllerInstanceImpl(controller, getContext(), mMode, mEP, this, mHost));
+			mControllers.add(new ItemControllerInstanceImpl(controller, getContext(), mMode, mEP, this, mResizeListener, mHost));
 		}
 		
 		mInventory = new InventoryControllerInstance(mItems.getInventory(), this, mContext, mResizeListener, aMessageListener, this, mHost);
@@ -196,7 +196,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 				final Element controller = (Element) controllers.getChildNodes().item(i);
 				if (controller.getTagName().equals("controller"))
 				{
-					mControllers.add(new ItemControllerInstanceImpl(controller, mItems, mContext, mMode, mEP, this, mHost));
+					mControllers.add(new ItemControllerInstanceImpl(controller, mItems, mContext, mMode, mEP, this, mResizeListener, mHost));
 				}
 			}
 		}

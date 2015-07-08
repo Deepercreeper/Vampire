@@ -10,9 +10,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import android.content.Context;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.LinearLayout;
+import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.items.interfaces.GroupOption;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
@@ -23,7 +22,8 @@ import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerIns
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemGroupInstance;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
-import com.deepercreeper.vampireapp.util.view.ResizeHeightAnimation;
+import com.deepercreeper.vampireapp.util.view.Expander;
+import com.deepercreeper.vampireapp.util.view.ResizeListener;
 
 /**
  * A group option instance implementation.
@@ -44,15 +44,13 @@ public class GroupOptionInstanceImpl implements GroupOptionInstance
 	
 	private final LinearLayout						mContainer;
 	
-	private final LinearLayout						mGroupContainer;
-	
-	private final Button							mGroupButton;
-	
 	private final CharacterInstance					mCharacter;
 	
-	private boolean									mInitialized	= false;
+	private final ResizeListener					mResizeListener;
 	
-	private boolean									mOpen			= false;
+	private final Expander							mExpander;
+	
+	private boolean									mInitialized	= false;
 	
 	/**
 	 * Creates a new group option out of the given XML data.
@@ -65,16 +63,18 @@ public class GroupOptionInstanceImpl implements GroupOptionInstance
 	 *            The underlying context.
 	 * @param aCharacter
 	 *            The character.
+	 * @param aResizeListener
+	 *            The parent resize listener.
 	 */
 	public GroupOptionInstanceImpl(final Element aElement, final ItemControllerInstance aItemController, final Context aContext,
-			final CharacterInstance aCharacter)
+			final CharacterInstance aCharacter, ResizeListener aResizeListener)
 	{
 		mGroupOption = aItemController.getItemController().getGroupOption(aElement.getAttribute("name"));
 		mContext = aContext;
-		mContainer = new LinearLayout(getContext());
-		mGroupContainer = new LinearLayout(getContext());
-		mGroupButton = new Button(getContext());
 		mCharacter = aCharacter;
+		mResizeListener = aResizeListener;
+		mContainer = (LinearLayout) View.inflate(getContext(), R.layout.group_option_view, null);
+		mExpander = Expander.handle(R.id.view_group_option_button, R.id.view_group_option_panel, mContext, mResizeListener);
 		
 		init();
 		
@@ -105,16 +105,18 @@ public class GroupOptionInstanceImpl implements GroupOptionInstance
 	 *            The underlying context.
 	 * @param aCharacter
 	 *            The character.
+	 * @param aResizeListener
+	 *            The parent resize listener.
 	 */
 	public GroupOptionInstanceImpl(final GroupOptionCreation aGroupOption, final ItemControllerInstance aItemController, final Context aContext,
-			final CharacterInstance aCharacter)
+			final CharacterInstance aCharacter, ResizeListener aResizeListener)
 	{
 		mGroupOption = aGroupOption.getGroupOption();
 		mContext = aContext;
-		mContainer = new LinearLayout(getContext());
-		mGroupContainer = new LinearLayout(getContext());
-		mGroupButton = new Button(getContext());
 		mCharacter = aCharacter;
+		mResizeListener = aResizeListener;
+		mContainer = (LinearLayout) View.inflate(getContext(), R.layout.group_option_view, null);
+		mExpander = Expander.handle(R.id.view_group_option_button, R.id.view_group_option_panel, mContext, mResizeListener);
 		
 		init();
 		
@@ -140,14 +142,6 @@ public class GroupOptionInstanceImpl implements GroupOptionInstance
 	}
 	
 	@Override
-	public void close()
-	{
-		mOpen = false;
-		mGroupButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
-		resize();
-	}
-	
-	@Override
 	public int compareTo(final GroupOptionInstance aAnother)
 	{
 		if (aAnother == null)
@@ -155,6 +149,18 @@ public class GroupOptionInstanceImpl implements GroupOptionInstance
 			return getGroupOption().compareTo(null);
 		}
 		return getGroupOption().compareTo(aAnother.getGroupOption());
+	}
+	
+	@Override
+	public void close()
+	{
+		mExpander.close();
+	}
+	
+	@Override
+	public void resize()
+	{
+		mExpander.resize();
 	}
 	
 	@Override
@@ -239,52 +245,13 @@ public class GroupOptionInstanceImpl implements GroupOptionInstance
 	{
 		if ( !mInitialized)
 		{
-			getContainer().setLayoutParams(ViewUtil.getWrapHeight());
-			getContainer().setOrientation(LinearLayout.VERTICAL);
-			
-			mGroupButton.setLayoutParams(ViewUtil.getWrapHeight());
-			mGroupButton.setText(getGroupOption().getDisplayName());
-		}
-		
-		if (mOpen)
-		{
-			mGroupButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
-		}
-		else
-		{
-			mGroupButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
-		}
-		
-		if ( !mInitialized)
-		{
-			mGroupButton.setOnClickListener(new OnClickListener()
-			{
-				@Override
-				public void onClick(final View aV)
-				{
-					toggleGroup();
-				}
-			});
-		}
-		getContainer().addView(mGroupButton);
-		
-		mGroupContainer.setLayoutParams(ViewUtil.getZeroHeight());
-		
-		if ( !mInitialized)
-		{
-			mGroupContainer.setOrientation(LinearLayout.VERTICAL);
+			mExpander.init();
+			mExpander.getButton().setText(getGroupOption().getDisplayName());
 			
 			mInitialized = true;
 		}
-		getContainer().addView(mGroupContainer);
 		
 		sortGroups();
-	}
-	
-	@Override
-	public boolean isOpen()
-	{
-		return mOpen;
 	}
 	
 	@Override
@@ -301,51 +268,16 @@ public class GroupOptionInstanceImpl implements GroupOptionInstance
 			group.release();
 		}
 		ViewUtil.release(getContainer());
-		ViewUtil.release(mGroupButton);
-		ViewUtil.release(mGroupContainer);
-	}
-	
-	@Override
-	public void resize()
-	{
-		if (mGroupContainer.getAnimation() != null && !mGroupContainer.getAnimation().hasEnded())
-		{
-			mGroupContainer.getAnimation().cancel();
-		}
-		int height = 0;
-		if (isOpen())
-		{
-			height = ViewUtil.calcHeight(mGroupContainer);
-		}
-		if (height != mGroupContainer.getHeight())
-		{
-			mGroupContainer.startAnimation(new ResizeHeightAnimation(mGroupContainer, height));
-		}
 	}
 	
 	@Override
 	public void setEnabled(final boolean aEnabled)
 	{
-		ViewUtil.setEnabled(mGroupButton, aEnabled);
-		if ( !aEnabled && isOpen())
+		ViewUtil.setEnabled(mExpander.getButton(), aEnabled);
+		if ( !aEnabled && mExpander.isOpen())
 		{
-			close();
+			mExpander.close();
 		}
-	}
-	
-	@Override
-	public void toggleGroup()
-	{
-		mOpen = !mOpen;
-		if (mOpen)
-		{
-			mGroupButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
-		}
-		else
-		{
-			mGroupButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
-		}
-		resize();
 	}
 	
 	@Override
@@ -374,7 +306,7 @@ public class GroupOptionInstanceImpl implements GroupOptionInstance
 		mGroups.put(aGroup.getItemGroup(), aGroup);
 		mGroupsList.add(aGroup);
 		Collections.sort(mGroupsList);
-		mGroupContainer.addView(aGroup.getContainer());
+		mExpander.getContainer().addView(aGroup.getContainer());
 	}
 	
 	private void sortGroups()
@@ -387,7 +319,7 @@ public class GroupOptionInstanceImpl implements GroupOptionInstance
 		for (final ItemGroupInstance group : getGroupsList())
 		{
 			group.init();
-			mGroupContainer.addView(group.getContainer());
+			mExpander.getContainer().addView(group.getContainer());
 		}
 	}
 }

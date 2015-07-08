@@ -25,6 +25,7 @@ import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerIns
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemGroupInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.util.ViewUtil;
+import com.deepercreeper.vampireapp.util.view.ResizeListener;
 
 /**
  * An item controller implementation.
@@ -55,6 +56,8 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	
 	private final EPControllerInstance							mEP;
 	
+	private final ResizeListener								mResizeListener;
+	
 	private boolean												mInitialized		= false;
 	
 	private Mode												mMode;
@@ -74,15 +77,18 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	 *            the experience controller.
 	 * @param aCharacter
 	 *            The character
+	 * @param aResizeListener
+	 *            The parent resize listener.
 	 * @param aHost
 	 *            Whether this is a host sided controller.
 	 */
 	public ItemControllerInstanceImpl(final Element aElement, final ItemProvider aItems, final Context aContext, final Mode aMode,
-			final EPControllerInstance aEP, final CharacterInstance aCharacter, final boolean aHost)
+			final EPControllerInstance aEP, final CharacterInstance aCharacter, ResizeListener aResizeListener, final boolean aHost)
 	{
 		mItemController = aItems.getController(aElement.getAttribute("name"));
 		mContext = aContext;
 		mMode = aMode;
+		mResizeListener = aResizeListener;
 		mHost = aHost;
 		mEP = aEP;
 		mCharacter = aCharacter;
@@ -112,7 +118,7 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 				{
 					continue;
 				}
-				addGroupOptionSilent(new GroupOptionInstanceImpl(groupOption, this, getContext(), getCharacter()));
+				addGroupOptionSilent(new GroupOptionInstanceImpl(groupOption, this, getContext(), getCharacter(), mResizeListener));
 			}
 		}
 	}
@@ -130,15 +136,18 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	 *            The experience controller.
 	 * @param aCharacter
 	 *            The character.
+	 * @param aResizeListener
+	 *            The parent resize listener.
 	 * @param aHost
 	 *            Whether this is a host sided controller.
 	 */
 	public ItemControllerInstanceImpl(final ItemControllerCreation aItemController, final Context aContext, final Mode aMode,
-			final EPControllerInstance aEP, final CharacterInstance aCharacter, final boolean aHost)
+			final EPControllerInstance aEP, final CharacterInstance aCharacter, ResizeListener aResizeListener, final boolean aHost)
 	{
 		mItemController = aItemController.getItemController();
 		mContext = aContext;
 		mMode = aMode;
+		mResizeListener = aResizeListener;
 		mHost = aHost;
 		mEP = aEP;
 		mCharacter = aCharacter;
@@ -152,7 +161,7 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 		}
 		for (final GroupOptionCreation groupOption : aItemController.getGroupOptionsList())
 		{
-			addGroupOptionSilent(new GroupOptionInstanceImpl(groupOption, this, getContext(), getCharacter()));
+			addGroupOptionSilent(new GroupOptionInstanceImpl(groupOption, this, getContext(), getCharacter(), mResizeListener));
 		}
 	}
 	

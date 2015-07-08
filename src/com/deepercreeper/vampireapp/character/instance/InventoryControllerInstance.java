@@ -7,7 +7,6 @@ import org.w3c.dom.Element;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -62,7 +61,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	
 	private final CharacterInstance		mChar;
 	
-	private Expander					mExpander;
+	private final Expander				mExpander;
 	
 	private LinearLayout				mInventoryList;
 	
@@ -116,6 +115,9 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 		
 		final int id = mHost ? R.layout.host_inventory : R.layout.client_inventory;
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
+		
+		mExpander = Expander.handle(mHost ? R.id.h_inventory_button : R.id.c_inventory_button, mHost ? R.id.h_inventory_panel
+				: R.id.c_inventory_panel, mContext, mResizeListener);
 		
 		init();
 		
@@ -172,6 +174,9 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 		
 		final int id = mHost ? R.layout.host_inventory : R.layout.client_inventory;
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
+		
+		mExpander = Expander.handle(mHost ? R.id.h_inventory_button : R.id.c_inventory_button, mHost ? R.id.h_inventory_panel
+				: R.id.c_inventory_panel, mContext, mResizeListener);
 		
 		init();
 	}
@@ -280,8 +285,8 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	{
 		if ( !mInitialized)
 		{
-			mExpander = Expander.handle((LinearLayout) getContainer().findViewById(mHost ? R.id.h_inventory_panel : R.id.c_inventory_panel),
-					(Button) getContainer().findViewById(mHost ? R.id.h_inventory_button : R.id.c_inventory_button), mResizeListener);
+			mExpander.init();
+			
 			mInventoryList = (LinearLayout) getContainer().findViewById(mHost ? R.id.h_inventory_list : R.id.c_inventory_list);
 			mWeightLabel = (TextView) getContainer().findViewById(mHost ? R.id.h_weight_label : R.id.c_weight_label);
 			mMaxWeightLabel = (TextView) getContainer().findViewById(mHost ? R.id.h_max_weight_label : R.id.c_max_weight_label);

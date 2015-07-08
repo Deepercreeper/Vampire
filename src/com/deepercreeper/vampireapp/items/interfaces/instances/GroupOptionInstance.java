@@ -6,6 +6,7 @@ import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.items.interfaces.GroupOption;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.util.Saveable;
+import com.deepercreeper.vampireapp.util.view.ResizeListener;
 import com.deepercreeper.vampireapp.util.view.Viewable;
 
 /**
@@ -13,13 +14,8 @@ import com.deepercreeper.vampireapp.util.view.Viewable;
  * 
  * @author vrl
  */
-public interface GroupOptionInstance extends Comparable<GroupOptionInstance>, Saveable, Viewable
+public interface GroupOptionInstance extends Comparable<GroupOptionInstance>, Saveable, Viewable, ResizeListener
 {
-	/**
-	 * Closes the group option.
-	 */
-	public void close();
-	
 	/**
 	 * @return the character.
 	 */
@@ -65,6 +61,11 @@ public interface GroupOptionInstance extends Comparable<GroupOptionInstance>, Sa
 	public boolean hasGroup(ItemGroup aGroup);
 	
 	/**
+	 * Closes the group option.
+	 */
+	public void close();
+	
+	/**
 	 * @param aGroup
 	 *            The group.
 	 * @return whether this group option contains the given group.
@@ -79,19 +80,9 @@ public interface GroupOptionInstance extends Comparable<GroupOptionInstance>, Sa
 	public boolean hasGroup(String aName);
 	
 	/**
-	 * @return whether this group option is expanded.
-	 */
-	public boolean isOpen();
-	
-	/**
 	 * @return whether this is a value group option.
 	 */
 	public boolean isValueGroupOption();
-	
-	/**
-	 * Updates the size of this group options view.
-	 */
-	public void resize();
 	
 	/**
 	 * Sets whether this group option should be enabled.
@@ -100,11 +91,6 @@ public interface GroupOptionInstance extends Comparable<GroupOptionInstance>, Sa
 	 *            whether this group option is enabled.
 	 */
 	public void setEnabled(boolean aEnabled);
-	
-	/**
-	 * Opens or closes this group option.
-	 */
-	public void toggleGroup();
 	
 	/**
 	 * Updates all groups inside this group option.
