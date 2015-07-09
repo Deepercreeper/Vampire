@@ -117,7 +117,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
 		
 		mExpander = Expander.handle(mHost ? R.id.h_inventory_button : R.id.c_inventory_button, mHost ? R.id.h_inventory_panel
-				: R.id.c_inventory_panel, mContext, mResizeListener);
+				: R.id.c_inventory_panel, mContainer, mResizeListener);
 		
 		init();
 		
@@ -176,7 +176,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
 		
 		mExpander = Expander.handle(mHost ? R.id.h_inventory_button : R.id.c_inventory_button, mHost ? R.id.h_inventory_panel
-				: R.id.c_inventory_panel, mContext, mResizeListener);
+				: R.id.c_inventory_panel, mContainer, mResizeListener);
 		
 		init();
 	}

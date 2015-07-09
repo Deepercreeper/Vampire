@@ -1,10 +1,10 @@
 package com.deepercreeper.vampireapp.util.view;
 
-import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 
 /**
@@ -14,31 +14,35 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class Expander implements ResizeListener
 {
-	private Button					mButton;
+	private static final String		TAG				= "Expander";
 	
-	private LinearLayout			mContainer;
+	private final ResizeListener	mResizeParent;
 	
-	private final ResizeListener	mParent;
-	
-	private final Context			mContext;
+	private final View				mParent;
 	
 	private final int				mButtonId;
 	
 	private final int				mContainerId;
 	
+	private Button					mButton;
+	
+	private LinearLayout			mContainer;
+	
+	private boolean					mInitialized	= false;
+	
 	private boolean					mOpen;
 	
-	private Expander(int aButtonId, int aContainerId, Context aContext, ResizeListener aParent)
+	private Expander(int aButtonId, int aContainerId, View aParent, ResizeListener aResizeParent)
 	{
 		mButtonId = aButtonId;
 		mContainerId = aContainerId;
+		mResizeParent = aResizeParent;
 		mParent = aParent;
-		mContext = aContext;
 	}
 	
-	private Expander(int aButtonId, int aContainerId, Context aContext)
+	private Expander(int aButtonId, int aContainerId, View aContainer)
 	{
-		this(aButtonId, aContainerId, aContext, null);
+		this(aButtonId, aContainerId, aContainer, null);
 	}
 	
 	/**
@@ -46,8 +50,8 @@ public class Expander implements ResizeListener
 	 */
 	public void init()
 	{
-		mButton = (Button) View.inflate(mContext, mButtonId, null);
-		mContainer = (LinearLayout) View.inflate(mContext, mContainerId, null);
+		mButton = (Button) mParent.findViewById(mButtonId);
+		mContainer = (LinearLayout) mParent.findViewById(mContainerId);
 		
 		mButton.setOnClickListener(new OnClickListener()
 		{
@@ -58,6 +62,8 @@ public class Expander implements ResizeListener
 			}
 		});
 		
+		mInitialized = true;
+		
 		close();
 	}
 	
@@ -66,6 +72,11 @@ public class Expander implements ResizeListener
 	 */
 	public void close()
 	{
+		if ( !mInitialized)
+		{
+			Log.w(TAG, "Expander not initialized!");
+			return;
+		}
 		mOpen = false;
 		mButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
 		resize();
@@ -74,7 +85,12 @@ public class Expander implements ResizeListener
 	@Override
 	public void resize()
 	{
-		ViewUtil.resize(mParent, mOpen, mContainer);
+		if ( !mInitialized)
+		{
+			Log.w(TAG, "Expander not initialized!");
+			return;
+		}
+		ViewUtil.resize(mResizeParent, mOpen, mContainer);
 	}
 	
 	/**
@@ -82,6 +98,11 @@ public class Expander implements ResizeListener
 	 */
 	public Button getButton()
 	{
+		if ( !mInitialized)
+		{
+			Log.w(TAG, "Expander not initialized!");
+			return null;
+		}
 		return mButton;
 	}
 	
@@ -90,6 +111,11 @@ public class Expander implements ResizeListener
 	 */
 	public LinearLayout getContainer()
 	{
+		if ( !mInitialized)
+		{
+			Log.w(TAG, "Expander not initialized!");
+			return null;
+		}
 		return mContainer;
 	}
 	
@@ -98,6 +124,11 @@ public class Expander implements ResizeListener
 	 */
 	public void toggleOpen()
 	{
+		if ( !mInitialized)
+		{
+			Log.w(TAG, "Expander not initialized!");
+			return;
+		}
 		mOpen = !mOpen;
 		if (mOpen)
 		{
@@ -125,15 +156,15 @@ public class Expander implements ResizeListener
 	 *            The expand button id.
 	 * @param aContainerId
 	 *            The expandable container id.
-	 * @param aContext
-	 *            The underlying context.
 	 * @param aParent
+	 *            The parent container.
+	 * @param aResizeParent
 	 *            The resize parent.
 	 * @return the created expander.
 	 */
-	public static Expander handle(int aButtonId, int aContainerId, Context aContext, ResizeListener aParent)
+	public static Expander handle(int aButtonId, int aContainerId, View aParent, ResizeListener aResizeParent)
 	{
-		return new Expander(aButtonId, aContainerId, aContext, aParent);
+		return new Expander(aButtonId, aContainerId, aParent, aResizeParent);
 	}
 	
 	/**
@@ -143,12 +174,12 @@ public class Expander implements ResizeListener
 	 *            The expand button id.
 	 * @param aContainerId
 	 *            The expandable container id.
-	 * @param aContext
-	 *            The underlying context.
+	 * @param aParent
+	 *            The parent container.
 	 * @return the created expander.
 	 */
-	public static Expander handle(int aButtonId, int aContainerId, Context aContext)
+	public static Expander handle(int aButtonId, int aContainerId, View aParent)
 	{
-		return new Expander(aButtonId, aContainerId, aContext);
+		return new Expander(aButtonId, aContainerId, aParent);
 	}
 }

@@ -381,7 +381,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		CharacterInstance character = null;
 		try
 		{
-			character = new CharacterInstance(xml, mItems, this, this, null, false);
+			character = new CharacterInstance(xml, mItems, this, this, null, null, false);
 		}
 		catch (final IllegalArgumentException e)
 		{

@@ -86,7 +86,7 @@ public class MoneyControllerInstance implements Saveable, Viewable
 		mChar = aChar;
 		final int id = mHost ? R.layout.host_money : R.layout.client_money;
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
-		mExpander = Expander.handle(mHost ? R.id.h_money_button : R.id.c_money_button, mHost ? R.id.h_money_list : R.id.c_money_list, aContext,
+		mExpander = Expander.handle(mHost ? R.id.h_money_button : R.id.c_money_button, mHost ? R.id.h_money_list : R.id.c_money_list, mContainer,
 				mResizeListener);
 		
 		init();
@@ -124,7 +124,7 @@ public class MoneyControllerInstance implements Saveable, Viewable
 		mChar = aChar;
 		final int id = mHost ? R.layout.host_money : R.layout.client_money;
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
-		mExpander = Expander.handle(mHost ? R.id.h_money_button : R.id.c_money_button, mHost ? R.id.h_money_list : R.id.c_money_list, aContext,
+		mExpander = Expander.handle(mHost ? R.id.h_money_button : R.id.c_money_button, mHost ? R.id.h_money_list : R.id.c_money_list, mContainer,
 				mResizeListener);
 		
 		init();

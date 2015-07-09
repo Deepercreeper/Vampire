@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewParent;
 import android.widget.LinearLayout;
+import com.deepercreeper.vampireapp.util.view.Expander;
 import com.deepercreeper.vampireapp.util.view.ResizeHeightAnimation;
 import com.deepercreeper.vampireapp.util.view.ResizeListener;
 
@@ -51,6 +52,17 @@ public class ViewUtil
 	}
 	
 	/**
+	 * Resizes the given expander by resizing all expander parents at once.
+	 * 
+	 * @param aExpander
+	 *            The resized expander.
+	 */
+	public static void resizeRecursive(Expander aExpander)
+	{
+		// TODO Implement recursive layout resize
+	}
+	
+	/**
 	 * Resizes the given container depending on its resize parent.
 	 * 
 	 * @param aParent
@@ -70,6 +82,7 @@ public class ViewUtil
 			{
 				height = ViewUtil.calcHeight(aContainer);
 			}
+			aContainer.invalidate();
 			aContainer.getLayoutParams().height = height;
 			aParent.resize();
 		}

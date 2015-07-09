@@ -51,6 +51,8 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 	
 	private final Expander				mExpander;
 	
+	private final Expander				mControllerExpander;
+	
 	private boolean						mTimeEnabled;
 	
 	private int							mTime	= TimeListener.EVENING;
@@ -77,13 +79,14 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 	public Player(final String aCharacter, final String aNumber, final ConnectedDevice aDevice, final ConnectionListener aListener,
 			final Context aContext, final ItemProvider aItems)
 	{
-		mChar = new CharacterInstance(aCharacter, aItems, aContext, this, this, true);
 		mNumber = aNumber;
 		mDevice = aDevice;
 		mContext = aContext;
 		mListener = aListener;
 		mContainer = (LinearLayout) View.inflate(mContext, R.layout.player_view, null);
-		mExpander = Expander.handle(R.id.view_player_button, R.id.view_player_panel, mContext);
+		mExpander = Expander.handle(R.id.view_player_button, R.id.view_player_panel, mContainer);
+		mControllerExpander = Expander.handle(R.id.view_player_controller_button, R.id.view_player_controller_panel, mContainer, mExpander);
+		mChar = new CharacterInstance(aCharacter, aItems, aContext, this, mExpander, mControllerExpander, true);
 		
 		init();
 	}
@@ -314,10 +317,9 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 		playerContainer.addView(mChar.getMoney().getContainer(), 3);
 		playerContainer.addView(mChar.getInventory().getContainer(), 4);
 		
-		Expander expander = Expander.handle(R.id.view_player_controller_button, R.id.view_player_controller_panel, mContext, mExpander);
-		expander.init();
+		mControllerExpander.init();
 		
-		final LinearLayout controllerPanel = expander.getContainer();
+		final LinearLayout controllerPanel = mControllerExpander.getContainer();
 		for (final ItemControllerInstance controller : mChar.getControllers())
 		{
 			if (controller.hasAnyItem())

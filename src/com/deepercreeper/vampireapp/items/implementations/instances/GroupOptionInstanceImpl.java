@@ -74,7 +74,7 @@ public class GroupOptionInstanceImpl implements GroupOptionInstance
 		mCharacter = aCharacter;
 		mResizeListener = aResizeListener;
 		mContainer = (LinearLayout) View.inflate(getContext(), R.layout.group_option_view, null);
-		mExpander = Expander.handle(R.id.view_group_option_button, R.id.view_group_option_panel, mContext, mResizeListener);
+		mExpander = Expander.handle(R.id.view_group_option_button, R.id.view_group_option_panel, mContainer, mResizeListener);
 		
 		init();
 		
@@ -116,7 +116,7 @@ public class GroupOptionInstanceImpl implements GroupOptionInstance
 		mCharacter = aCharacter;
 		mResizeListener = aResizeListener;
 		mContainer = (LinearLayout) View.inflate(getContext(), R.layout.group_option_view, null);
-		mExpander = Expander.handle(R.id.view_group_option_button, R.id.view_group_option_panel, mContext, mResizeListener);
+		mExpander = Expander.handle(R.id.view_group_option_button, R.id.view_group_option_panel, mContainer, mResizeListener);
 		
 		init();
 		
