@@ -9,7 +9,6 @@ import android.view.ViewParent;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.util.view.Expander;
 import com.deepercreeper.vampireapp.util.view.ResizeHeightAnimation;
-import com.deepercreeper.vampireapp.util.view.ResizeListener;
 
 /**
  * A helper class for view operations. It also contains all layout parameters.
@@ -18,21 +17,24 @@ import com.deepercreeper.vampireapp.util.view.ResizeListener;
  */
 public class ViewUtil
 {
+	private ViewUtil()
+	{}
+	
 	/**
 	 * Calculates the fetched height of the given layout in pixels.
 	 * 
-	 * @param aLayout
+	 * @param aView
 	 *            The layout to measure.
 	 * @return the height of the given layout.
 	 */
-	public static int calcHeight(final ViewGroup aLayout)
+	public static int calcHeight(final View aView)
 	{
 		// TODO Remove all unnecessary gravity attributes
-		final LayoutParams params = aLayout.getLayoutParams();
+		final LayoutParams params = aView.getLayoutParams();
 		final int height = params.height;
 		params.height = LayoutParams.WRAP_CONTENT;
-		aLayout.measure(0, 0);
-		final int measuredHeight = aLayout.getMeasuredHeight();
+		aView.measure(0, 0);
+		final int measuredHeight = aView.getMeasuredHeight();
 		params.height = height;
 		return measuredHeight;
 	}
@@ -49,59 +51,6 @@ public class ViewUtil
 	public static int calcPx(final int aDp, final Context aContext)
 	{
 		return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, aDp, aContext.getResources().getDisplayMetrics()));
-	}
-	
-	/**
-	 * Resizes the given expander by resizing all expander parents at once.
-	 * 
-	 * @param aExpander
-	 *            The resized expander.
-	 */
-	public static void resizeRecursive(Expander aExpander)
-	{
-		// TODO Implement recursive layout resize
-	}
-	
-	/**
-	 * Resizes the given container depending on its resize parent.
-	 * 
-	 * @param aParent
-	 *            The resize parent.
-	 * @param aOpen
-	 *            Whether the container should be open.
-	 * @param aContainer
-	 *            The container.
-	 */
-	public static void resize(final ResizeListener aParent, final boolean aOpen, final LinearLayout aContainer)
-	{
-		// TODO Find a way to make this operation more smooth
-		if (aParent != null)
-		{
-			int height = 0;
-			if (aOpen)
-			{
-				height = ViewUtil.calcHeight(aContainer);
-			}
-			aContainer.invalidate();
-			aContainer.getLayoutParams().height = height;
-			aParent.resize();
-		}
-		else
-		{
-			if (aContainer.getAnimation() != null && !aContainer.getAnimation().hasEnded())
-			{
-				aContainer.getAnimation().cancel();
-			}
-			int height = 0;
-			if (aOpen)
-			{
-				height = ViewUtil.calcHeight(aContainer);
-			}
-			if (height != aContainer.getHeight())
-			{
-				aContainer.startAnimation(new ResizeHeightAnimation(aContainer, height));
-			}
-		}
 	}
 	
 	/**
@@ -132,14 +81,6 @@ public class ViewUtil
 	}
 	
 	/**
-	 * @return layout parameters for zero height views.
-	 */
-	public static LinearLayout.LayoutParams getZeroHeight()
-	{
-		return new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 0);
-	}
-	
-	/**
 	 * Hides the given view by setting the width to {@code 0}.
 	 * 
 	 * @param aView
@@ -166,6 +107,35 @@ public class ViewUtil
 		if (parent instanceof ViewGroup)
 		{
 			((ViewGroup) parent).removeView(aView);
+		}
+	}
+	
+	/**
+	 * Resizes the given expander by resizing all expander parents at once.
+	 * 
+	 * @param aExpander
+	 *            The resized expander.
+	 */
+	public static void resizeRecursive(final Expander aExpander)
+	{
+		int height = 0;
+		if (aExpander.isOpen())
+		{
+			height = calcHeight(aExpander.getContainer());
+		}
+		aExpander.getContainer().startAnimation(new ResizeHeightAnimation(aExpander.getContainer(), height));
+		Expander expander = aExpander.getParent();
+		while (expander != null)
+		{
+			if ( !expander.isInitialized())
+			{
+				return;
+			}
+			if (expander.isOpen())
+			{
+				expander.getContainer().getLayoutParams().height = LayoutParams.WRAP_CONTENT;
+			}
+			expander = expander.getParent();
 		}
 	}
 	
@@ -200,7 +170,4 @@ public class ViewUtil
 		final LayoutParams params = aView.getLayoutParams();
 		params.width = calcPx(aWidth, aView.getContext());
 	}
-	
-	private ViewUtil()
-	{}
 }

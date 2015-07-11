@@ -7,9 +7,8 @@ import java.util.List;
 import java.util.Map;
 import android.content.Context;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.LinearLayout;
+import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.items.interfaces.GroupOption;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.items.interfaces.creations.GroupOptionCreation;
@@ -18,7 +17,7 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.ItemGroupCreation
 import com.deepercreeper.vampireapp.util.ComparatorUtil;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
-import com.deepercreeper.vampireapp.util.view.ResizeHeightAnimation;
+import com.deepercreeper.vampireapp.util.view.Expander;
 
 /**
  * A group option creation implementation.
@@ -39,13 +38,9 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 	
 	private final LinearLayout						mContainer;
 	
-	private final LinearLayout						mGroupContainer;
-	
-	private final Button							mGroupButton;
+	private final Expander							mExpander;
 	
 	private boolean									mInitialized	= false;
-	
-	private boolean									mOpen			= false;
 	
 	/**
 	 * Creates a new group option creation.
@@ -61,9 +56,8 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 	{
 		mGroupOption = aGroupOption;
 		mContext = aContext;
-		mContainer = new LinearLayout(getContext());
-		mGroupContainer = new LinearLayout(getContext());
-		mGroupButton = new Button(getContext());
+		mContainer = (LinearLayout) View.inflate(mContext, R.layout.group_option_creation_view, null);
+		mExpander = Expander.handle(R.id.view_group_option_creation_button, R.id.view_group_option_creation_panel, mContainer);
 		
 		init();
 		
@@ -179,9 +173,7 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 	@Override
 	public void close()
 	{
-		mOpen = false;
-		mGroupButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
-		resize();
+		mExpander.close();
 	}
 	
 	@Override
@@ -264,51 +256,13 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 	{
 		if ( !mInitialized)
 		{
-			getContainer().setLayoutParams(ViewUtil.getWrapHeight());
-			getContainer().setOrientation(LinearLayout.VERTICAL);
+			mExpander.init();
 			
-			mGroupButton.setLayoutParams(ViewUtil.getWrapHeight());
-			mGroupButton.setText(getGroupOption().getDisplayName());
-		}
-		
-		if (mOpen)
-		{
-			mGroupButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
-		}
-		else
-		{
-			mGroupButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
-		}
-		
-		if ( !mInitialized)
-		{
-			mGroupButton.setOnClickListener(new OnClickListener()
-			{
-				@Override
-				public void onClick(final View aV)
-				{
-					toggleGroup();
-				}
-			});
-		}
-		getContainer().addView(mGroupButton);
-		
-		mGroupContainer.setLayoutParams(ViewUtil.getZeroHeight());
-		
-		if ( !mInitialized)
-		{
-			mGroupContainer.setOrientation(LinearLayout.VERTICAL);
+			mExpander.getButton().setText(getGroupOption().getDisplayName());
+			
 			mInitialized = true;
 		}
-		getContainer().addView(mGroupContainer);
-		
 		sortGroups();
-	}
-	
-	@Override
-	public boolean isOpen()
-	{
-		return mOpen;
 	}
 	
 	@Override
@@ -325,51 +279,22 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 			group.release();
 		}
 		ViewUtil.release(getContainer());
-		ViewUtil.release(mGroupButton);
-		ViewUtil.release(mGroupContainer);
 	}
 	
 	@Override
 	public void resize()
 	{
-		if (mGroupContainer.getAnimation() != null && !mGroupContainer.getAnimation().hasEnded())
-		{
-			mGroupContainer.getAnimation().cancel();
-		}
-		int height = 0;
-		if (isOpen())
-		{
-			height = ViewUtil.calcHeight(mGroupContainer);
-		}
-		if (height != mGroupContainer.getHeight())
-		{
-			mGroupContainer.startAnimation(new ResizeHeightAnimation(mGroupContainer, height));
-		}
+		mExpander.resize();
 	}
 	
 	@Override
 	public void setEnabled(final boolean aEnabled)
 	{
-		ViewUtil.setEnabled(mGroupButton, aEnabled);
-		if ( !aEnabled && isOpen())
+		ViewUtil.setEnabled(mExpander.getButton(), aEnabled);
+		if ( !aEnabled && mExpander.isOpen())
 		{
 			close();
 		}
-	}
-	
-	@Override
-	public void toggleGroup()
-	{
-		mOpen = !mOpen;
-		if (mOpen)
-		{
-			mGroupButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
-		}
-		else
-		{
-			mGroupButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
-		}
-		resize();
 	}
 	
 	@Override
@@ -415,7 +340,7 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 		mGroups.put(aGroup.getItemGroup(), aGroup);
 		mGroupsList.add(aGroup);
 		Collections.sort(mGroupsList);
-		mGroupContainer.addView(aGroup.getContainer());
+		mExpander.getContainer().addView(aGroup.getContainer());
 	}
 	
 	private void sortGroups()
@@ -428,7 +353,7 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 		for (final ItemGroupCreation group : getGroupsList())
 		{
 			group.init();
-			mGroupContainer.addView(group.getContainer());
+			mExpander.getContainer().addView(group.getContainer());
 		}
 	}
 }

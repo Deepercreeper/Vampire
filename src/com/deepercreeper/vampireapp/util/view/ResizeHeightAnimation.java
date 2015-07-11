@@ -2,6 +2,7 @@ package com.deepercreeper.vampireapp.util.view;
 
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 
@@ -33,6 +34,8 @@ public class ResizeHeightAnimation extends Animation
 		mDestinationHeight = aDestinationHeight;
 		mStartHeight = aView.getHeight();
 		mView = aView;
+		
+		setInterpolator(new AccelerateInterpolator());
 		setDuration(DURATION);
 	}
 	
@@ -49,4 +52,5 @@ public class ResizeHeightAnimation extends Animation
 		p.height = (int) (mStartHeight + (mDestinationHeight - mStartHeight) * aInterpolatedTime);
 		mView.requestLayout();
 	}
+	
 }

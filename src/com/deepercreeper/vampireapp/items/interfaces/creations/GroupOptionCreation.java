@@ -104,11 +104,6 @@ public interface GroupOptionCreation extends Comparable<GroupOptionCreation>, Vi
 	public boolean hasGroup(String aName);
 	
 	/**
-	 * @return whether the view of this group option is open.
-	 */
-	public boolean isOpen();
-	
-	/**
 	 * @return whether this is a value group option.
 	 */
 	public boolean isValueGroupOption();
@@ -125,11 +120,6 @@ public interface GroupOptionCreation extends Comparable<GroupOptionCreation>, Vi
 	 *            Whether this group option is enabled.
 	 */
 	public void setEnabled(boolean aEnabled);
-	
-	/**
-	 * Opens or closes this group option.
-	 */
-	public void toggleGroup();
 	
 	/**
 	 * Updates all groups inside this group option.

@@ -32,7 +32,7 @@ public class Expander implements ResizeListener
 	
 	private boolean					mOpen;
 	
-	private Expander(int aButtonId, int aContainerId, View aParent, ResizeListener aResizeParent)
+	private Expander(final int aButtonId, final int aContainerId, final View aParent, final ResizeListener aResizeParent)
 	{
 		mButtonId = aButtonId;
 		mContainerId = aContainerId;
@@ -40,9 +40,21 @@ public class Expander implements ResizeListener
 		mParent = aParent;
 	}
 	
-	private Expander(int aButtonId, int aContainerId, View aContainer)
+	private Expander(final int aButtonId, final int aContainerId, final View aContainer)
 	{
 		this(aButtonId, aContainerId, aContainer, null);
+	}
+	
+	/**
+	 * @return the parent expander if existing. <code>null</code> otherwise.
+	 */
+	public Expander getParent()
+	{
+		if (mResizeParent instanceof Expander)
+		{
+			return (Expander) mResizeParent;
+		}
+		return null;
 	}
 	
 	/**
@@ -90,7 +102,7 @@ public class Expander implements ResizeListener
 			Log.w(TAG, "Expander not initialized!");
 			return;
 		}
-		ViewUtil.resize(mResizeParent, mOpen, mContainer);
+		ViewUtil.resizeRecursive(this);
 	}
 	
 	/**
@@ -142,6 +154,14 @@ public class Expander implements ResizeListener
 	}
 	
 	/**
+	 * @return whether this expander has been initialized yet.
+	 */
+	public boolean isInitialized()
+	{
+		return mInitialized;
+	}
+	
+	/**
 	 * @return whether this expander is open.
 	 */
 	public boolean isOpen()
@@ -162,7 +182,7 @@ public class Expander implements ResizeListener
 	 *            The resize parent.
 	 * @return the created expander.
 	 */
-	public static Expander handle(int aButtonId, int aContainerId, View aParent, ResizeListener aResizeParent)
+	public static Expander handle(final int aButtonId, final int aContainerId, final View aParent, final ResizeListener aResizeParent)
 	{
 		return new Expander(aButtonId, aContainerId, aParent, aResizeParent);
 	}
@@ -178,7 +198,7 @@ public class Expander implements ResizeListener
 	 *            The parent container.
 	 * @return the created expander.
 	 */
-	public static Expander handle(int aButtonId, int aContainerId, View aParent)
+	public static Expander handle(final int aButtonId, final int aContainerId, final View aParent)
 	{
 		return new Expander(aButtonId, aContainerId, aParent);
 	}
