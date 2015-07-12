@@ -93,7 +93,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	 *            Whether this character is a host side character.
 	 */
 	public CharacterInstance(final CharacterCreation aCreator, final MessageListener aMessageListener, final ResizeListener aResizeListener,
-			ResizeListener aControllerResizeListener, final boolean aHost)
+			final ResizeListener aControllerResizeListener, final boolean aHost)
 	{
 		mHost = aHost;
 		mResizeListener = aResizeListener;
@@ -116,7 +116,8 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		
 		for (final ItemControllerCreation controller : aCreator.getControllers())
 		{
-			mControllers.add(new ItemControllerInstanceImpl(controller, getContext(), mMode, mEP, this, aControllerResizeListener, mHost));
+			mControllers.add(new ItemControllerInstanceImpl(controller, getContext(), mMode, mEP, this, aControllerResizeListener, aMessageListener,
+					mHost));
 		}
 		
 		mInventory = new InventoryControllerInstance(mItems.getInventory(), this, mContext, mResizeListener, aMessageListener, this, mHost);
@@ -152,7 +153,8 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	 *             if the XML document can't be parsed.
 	 */
 	public CharacterInstance(final String aXML, final ItemProvider aItems, final Context aContext, final MessageListener aMessageListener,
-			final ResizeListener aResizeListener, ResizeListener aControllerResizeListener, final boolean aHost) throws IllegalArgumentException
+			final ResizeListener aResizeListener, final ResizeListener aControllerResizeListener, final boolean aHost)
+			throws IllegalArgumentException
 	{
 		Log.i(TAG, "Starting to load character xml.");
 		mItems = aItems;
@@ -200,8 +202,8 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 				final Element controller = (Element) controllers.getChildNodes().item(i);
 				if (controller.getTagName().equals("controller"))
 				{
-					mControllers
-							.add(new ItemControllerInstanceImpl(controller, mItems, mContext, mMode, mEP, this, aControllerResizeListener, mHost));
+					mControllers.add(new ItemControllerInstanceImpl(controller, mItems, mContext, mMode, mEP, this, aControllerResizeListener,
+							aMessageListener, mHost));
 				}
 			}
 		}

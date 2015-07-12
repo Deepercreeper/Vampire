@@ -202,6 +202,36 @@ public class DataUtil
 	}
 	
 	/**
+	 * @param aFlags
+	 *            a string of <code>0</code> and <code>1</code>.
+	 * @return the boolean array represented by the given string.
+	 */
+	public static boolean[] parseFlags(final String aFlags)
+	{
+		final boolean[] result = new boolean[aFlags.length()];
+		for (int i = 0; i < aFlags.length(); i++ )
+		{
+			result[i] = aFlags.charAt(i) == '1';
+		}
+		return result;
+	}
+	
+	/**
+	 * @param aFlags
+	 *            The boolean array.
+	 * @return a string of <code>0</code> and <code>1</code> representing the array.
+	 */
+	public static String parseFlags(final boolean[] aFlags)
+	{
+		final StringBuilder result = new StringBuilder();
+		for (final boolean flag : aFlags)
+		{
+			result.append(flag ? '1' : '0');
+		}
+		return result.toString();
+	}
+	
+	/**
 	 * Writes all string inside the given array into one string.
 	 * 
 	 * @param aList

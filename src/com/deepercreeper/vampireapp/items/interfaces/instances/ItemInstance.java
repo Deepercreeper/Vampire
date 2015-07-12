@@ -34,6 +34,14 @@ public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemIn
 	}
 	
 	/**
+	 * Sets the new value for this item.
+	 * 
+	 * @param aValue
+	 *            The new value.
+	 */
+	public void updateValue(int aValue);
+	
+	/**
 	 * Adds the given value listener to this item.
 	 * 
 	 * @param aListener
@@ -199,8 +207,13 @@ public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemIn
 	
 	/**
 	 * Increases this item if possible.
+	 * 
+	 * @param aAsk
+	 *            Whether the host needs to be asked.
+	 * @param aCostEP
+	 *            Whether the increase costs experience.
 	 */
-	public void increase();
+	public void increase(boolean aAsk, boolean aCostEP);
 	
 	/**
 	 * @param aItem

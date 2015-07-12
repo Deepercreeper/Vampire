@@ -23,6 +23,11 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.character.instance.EPControllerInstance;
 import com.deepercreeper.vampireapp.character.instance.Mode;
+import com.deepercreeper.vampireapp.host.Message;
+import com.deepercreeper.vampireapp.host.Message.ButtonAction;
+import com.deepercreeper.vampireapp.host.Message.MessageGroup;
+import com.deepercreeper.vampireapp.host.change.ItemChange;
+import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.items.implementations.instances.restrictions.InstanceRestrictionableImpl;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
@@ -71,6 +76,8 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	
 	private final ValueAnimator				mAnimator;
 	
+	private final MessageListener			mMessageListener;
+	
 	private final boolean					mHost;
 	
 	private LinearLayout					mChildrenContainer;
@@ -108,11 +115,14 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	 *            The parent item.
 	 * @param aCharacter
 	 *            The character.
+	 * @param aMessageListener
+	 *            The message listener.
 	 * @param aHost
 	 *            Whether this is a host sided item.
 	 */
 	public ItemInstanceImpl(final Element aElement, final ItemGroupInstance aItemGroup, final Context aContext, final Mode aMode,
-			final EPControllerInstance aEP, final ItemInstance aParentItem, final CharacterInstance aCharacter, final boolean aHost)
+			final EPControllerInstance aEP, final ItemInstance aParentItem, final CharacterInstance aCharacter,
+			final MessageListener aMessageListener, final boolean aHost)
 	{
 		super(aCharacter, aItemGroup.getItemController());
 		if (aParentItem == null)
@@ -138,6 +148,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		mMode = aMode;
 		final int id = mHost ? R.layout.host_item_instance : R.layout.client_item_instance;
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
+		mMessageListener = aMessageListener;
 		
 		if (isValueItem())
 		{
@@ -183,7 +194,8 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 				{
 					pos = Integer.parseInt(item.getAttribute("order"));
 				}
-				addChildSilent(new ItemInstanceImpl(item, getItemGroup(), getContext(), getMode(), getEP(), this, getCharacter(), mHost), pos);
+				addChildSilent(new ItemInstanceImpl(item, getItemGroup(), getContext(), getMode(), getEP(), this, getCharacter(), mMessageListener,
+						mHost), pos);
 			}
 		}
 		if (hasChildren() && !hasOrder())
@@ -207,11 +219,13 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	 *            The parent item.
 	 * @param aCharacter
 	 *            The character.
+	 * @param aMessageListener
+	 *            The message listener.
 	 * @param aHost
 	 *            Whether this is a host sided item.
 	 */
 	public ItemInstanceImpl(final ItemCreation aItem, final ItemGroupInstance aItemGroup, final Mode aMode, final EPControllerInstance aEP,
-			final ItemInstance aParentItem, final CharacterInstance aCharacter, final boolean aHost)
+			final ItemInstance aParentItem, final CharacterInstance aCharacter, final MessageListener aMessageListener, final boolean aHost)
 	{
 		super(aCharacter, aItemGroup.getItemController());
 		mItem = aItem.getItem();
@@ -224,6 +238,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		final int id = mHost ? R.layout.host_item_instance : R.layout.client_item_instance;
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
 		mNameText = new TextView(getContext());
+		mMessageListener = aMessageListener;
 		
 		if (isParent())
 		{
@@ -261,7 +276,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			{
 				if ( !aItem.isMutableParent() || item.isImportant())
 				{
-					addChildSilent(new ItemInstanceImpl(item, getItemGroup(), getMode(), aEP, this, getCharacter(), mHost), -1);
+					addChildSilent(new ItemInstanceImpl(item, getItemGroup(), getMode(), aEP, this, getCharacter(), aMessageListener, mHost), -1);
 				}
 			}
 			if ( !hasOrder())
@@ -547,6 +562,10 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			Log.w(TAG, "Tried to decrease a non value item.");
 			return;
 		}
+		if ( !mHost)
+		{
+			return;
+		}
 		if (mValueId > 0)
 		{
 			mValueId-- ;
@@ -554,31 +573,64 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		refreshValue();
 		updateCharacter();
 		updateValueListeners();
+		mMessageListener.sendChange(new ItemChange(getName(), mValueId));
+		mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, "", R.string.host_decreased, new String[] { getName(), "" + getValue() },
+				new boolean[] { true, false }, mContext, null, ButtonAction.NOTHING));
 	}
 	
 	@Override
-	public void increase()
+	public void updateValue(final int aValue)
+	{
+		if ( !isValueItem())
+		{
+			Log.w(TAG, "Tried to update a non value item.");
+			return;
+		}
+		mValueId = aValue;
+		refreshValue();
+		updateCharacter();
+		updateValueListeners();
+	}
+	
+	@Override
+	public void increase(final boolean aAsk, final boolean aCostEP)
 	{
 		if ( !isValueItem())
 		{
 			Log.w(TAG, "Tried to increase a non value item.");
 			return;
 		}
-		if ( !mHost && !hasEnoughEP())
+		if ( !mHost && aCostEP && !hasEnoughEP())
 		{
 			return;
 		}
-		if (mValueId < getItem().getValues().length - 1)
+		if ((mHost || !aAsk) && mValueId < getItem().getValues().length - 1)
 		{
 			mValueId++ ;
+			refreshValue();
+			updateCharacter();
+			updateValueListeners();
+			mMessageListener.sendChange(new ItemChange(getName(), mValueId));
 		}
-		if ( !mHost)
+		if ( !aAsk && aCostEP)
 		{
 			getEP().decreaseBy(calcEPCost());
 		}
-		refreshValue();
-		updateCharacter();
-		updateValueListeners();
+		if ( !aAsk)
+		{
+			return;
+		}
+		if (mHost)
+		{
+			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, "", R.string.host_increased, new String[] { getName(), "" + getValue() },
+					new boolean[] { true, false }, mContext, null, ButtonAction.NOTHING));
+		}
+		else
+		{
+			mMessageListener.sendMessage(new Message(MessageGroup.ITEM, getCharacter().getName(), R.string.ask_increase, new String[] { getName(),
+					"" + getItem().getValues()[mValueId + 1] }, new boolean[] { true, false }, mContext, null, ButtonAction.ACCEPT_INCREASE,
+					ButtonAction.DENY_INCREASE, getName()));
+		}
 	}
 	
 	private void updateValueListeners()
@@ -672,14 +724,29 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 					@Override
 					public void onClick(final View aV)
 					{
-						increase();
+						increase(true, true);
 					}
 				});
+				if (mHost)
+				{
+					mDecreaseButton.setOnClickListener(new OnClickListener()
+					{
+						@Override
+						public void onClick(final View aV)
+						{
+							decrease();
+						}
+					});
+				}
 			}
 			else
 			{
 				ViewUtil.hideWidth(mValueBar);
 				ViewUtil.hideWidth(mIncreaseButton);
+				if (mHost)
+				{
+					ViewUtil.hideWidth(mDecreaseButton);
+				}
 			}
 			
 			mInitialized = true;
@@ -687,7 +754,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		
 		if (isValueItem())
 		{
-			if (canEPIncrease())
+			if (mHost || canEPIncrease())
 			{
 				ViewUtil.setWidth(mIncreaseButton, 30);
 			}
@@ -848,7 +915,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 				{
 					while (mValueId < getMinValue(InstanceRestrictionType.ITEM_VALUE))
 					{
-						increase();
+						increase(false, false);
 					}
 					while (mValueId > getMaxValue(InstanceRestrictionType.ITEM_VALUE))
 					{

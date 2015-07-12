@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.character.instance.EPControllerInstance;
 import com.deepercreeper.vampireapp.character.instance.Mode;
+import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
@@ -74,11 +75,13 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 	 *            The experience controller.
 	 * @param aCharacter
 	 *            The character.
+	 * @param aMessageListener
+	 *            The message listener.
 	 * @param aHost
 	 *            Whether this is a host sided group.
 	 */
 	public ItemGroupInstanceImpl(final Element aElement, final ItemControllerInstance aItemController, final Context aContext, final Mode aMode,
-			final EPControllerInstance aEP, final CharacterInstance aCharacter, final boolean aHost)
+			final EPControllerInstance aEP, final CharacterInstance aCharacter, final MessageListener aMessageListener, final boolean aHost)
 	{
 		mItemGroup = aItemController.getItemController().getGroup(aElement.getAttribute("name"));
 		mItemController = aItemController;
@@ -107,7 +110,7 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 				{
 					pos = Integer.parseInt(item.getAttribute("order"));
 				}
-				addItemSilent(new ItemInstanceImpl(item, this, getContext(), getMode(), getEP(), null, getCharacter(), mHost), pos);
+				addItemSilent(new ItemInstanceImpl(item, this, getContext(), getMode(), getEP(), null, getCharacter(), aMessageListener, mHost), pos);
 			}
 		}
 		if ( !hasOrder())
@@ -131,11 +134,14 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 	 *            The experience controller.
 	 * @param aCharacter
 	 *            The character.
+	 * @param aMessageListener
+	 *            The message listener.
 	 * @param aHost
 	 *            whether this is a host sided group.
 	 */
 	public ItemGroupInstanceImpl(final ItemGroupCreation aItemGroup, final ItemControllerInstance aItemController, final Context aContext,
-			final Mode aMode, final EPControllerInstance aEP, final CharacterInstance aCharacter, final boolean aHost)
+			final Mode aMode, final EPControllerInstance aEP, final CharacterInstance aCharacter, final MessageListener aMessageListener,
+			final boolean aHost)
 	{
 		mItemGroup = aItemGroup.getItemGroup();
 		mContext = aContext;
@@ -153,7 +159,7 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 		{
 			if ( !getItemGroup().isMutable() || item.isImportant())
 			{
-				addItemSilent(new ItemInstanceImpl(item, this, getMode(), getEP(), null, getCharacter(), mHost), -1);
+				addItemSilent(new ItemInstanceImpl(item, this, getMode(), getEP(), null, getCharacter(), aMessageListener, mHost), -1);
 			}
 		}
 		if ( !hasOrder())

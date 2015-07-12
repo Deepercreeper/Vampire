@@ -1,6 +1,7 @@
 package com.deepercreeper.vampireapp.activities;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import android.app.Activity;
@@ -20,20 +21,20 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.InventoryItem;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.character.instance.InventoryControllerInstance;
-import com.deepercreeper.vampireapp.character.instance.MoneyControllerInstance;
-import com.deepercreeper.vampireapp.character.instance.MoneyDepot;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
 import com.deepercreeper.vampireapp.connection.ConnectionController;
 import com.deepercreeper.vampireapp.connection.ConnectionListener;
 import com.deepercreeper.vampireapp.host.Message;
 import com.deepercreeper.vampireapp.host.Message.ButtonAction;
+import com.deepercreeper.vampireapp.host.Message.MessageGroup;
 import com.deepercreeper.vampireapp.host.Player;
 import com.deepercreeper.vampireapp.host.change.CharacterChange;
 import com.deepercreeper.vampireapp.host.change.EPChange;
 import com.deepercreeper.vampireapp.host.change.GenerationChange;
 import com.deepercreeper.vampireapp.host.change.HealthChange;
 import com.deepercreeper.vampireapp.host.change.InventoryChange;
+import com.deepercreeper.vampireapp.host.change.ItemChange;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.host.change.MoneyChange;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
@@ -43,6 +44,7 @@ import com.deepercreeper.vampireapp.mechanics.TimeListener.Type;
 import com.deepercreeper.vampireapp.util.ConnectionUtil;
 import com.deepercreeper.vampireapp.util.ContactsUtil;
 import com.deepercreeper.vampireapp.util.FilesUtil;
+import com.deepercreeper.vampireapp.util.LanguageUtil;
 import com.deepercreeper.vampireapp.util.view.ResizeListener;
 
 /**
@@ -64,6 +66,8 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	 * The request code for playing a character.
 	 */
 	public static final int			PLAY_CHAR_REQUEST	= 2;
+	
+	private final List<Message>		mMessages			= new ArrayList<Message>();
 	
 	private Handler					mHandler;
 	
@@ -121,27 +125,9 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	public boolean applyMessage(final Message aMessage, final ButtonAction aAction)
 	{
 		boolean release = true;
-		final MoneyControllerInstance money = mChar.getMoney();
 		final InventoryControllerInstance inventory = mChar.getInventory();
 		switch (aAction)
 		{
-			case ACCEPT_TAKE :
-				final Map<String, Integer> takeValues = MoneyDepot.deserializeValues(",", " ", aMessage.getSaveable(0), money.getCurrency());
-				final String takeDepotName = aMessage.getSaveable(1);
-				money.getDepot(takeDepotName).remove(takeValues);
-				money.getDefaultDepot().add(takeValues);
-				break;
-			case ACCEPT_DEPOT :
-				final Map<String, Integer> depotValues = MoneyDepot.deserializeValues(",", " ", aMessage.getSaveable(0), money.getCurrency());
-				final String depotDepotName = aMessage.getSaveable(1);
-				money.getDefaultDepot().remove(depotValues);
-				money.getDepot(depotDepotName).add(depotValues);
-				break;
-			case ACCEPT_DELETE :
-				final String deletedDepot = aMessage.getSaveable(0);
-				money.getDepot(deletedDepot).takeAll();
-				money.removeDepot(deletedDepot, false);
-				break;
 			case TAKE_ITEM :
 				final Element itemElement = (Element) FilesUtil.loadDocument(aMessage.getSaveables()[0]).getElementsByTagName("item").item(0);
 				final InventoryItem item = new InventoryItem(itemElement, this, null);
@@ -156,12 +142,17 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 				}
 				break;
 			case IGNORE_ITEM :
-				sendMessage(new Message(mChar.getName(), R.string.left_item, aMessage.getArguments(), this, null, ButtonAction.NOTHING));
+				sendMessage(new Message(MessageGroup.SINGLE, mChar.getName(), R.string.left_item, aMessage.getArguments(), this, null,
+						ButtonAction.NOTHING));
 				break;
 			default :
 				break;
 		}
 		// TODO Implement other button actions
+		if (release)
+		{
+			mMessages.remove(aMessage);
+		}
 		return release;
 	}
 	
@@ -254,7 +245,11 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 				break;
 			case MESSAGE :
 				final Message message = Message.deserialize(aArgs[0], this, this);
-				mMessageList.addView(message.getContainer());
+				if ( !mMessages.contains(message))
+				{
+					mMessages.add(message);
+					mMessageList.addView(message.getContainer());
+				}
 			default :
 				break;
 		}
@@ -286,6 +281,10 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		else if (aType.equals(InventoryChange.TAG_NAME))
 		{
 			change = new InventoryChange(element, this);
+		}
+		else if (aType.equals(ItemChange.TAG_NAME))
+		{
+			change = new ItemChange(element);
 		}
 		
 		// TODO Add other changes
@@ -374,6 +373,8 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	
 	private void init()
 	{
+		LanguageUtil.init(this);
+		
 		mConnection = new ConnectionController(this, this, mHandler);
 		mConnection.connect(this);
 		

@@ -13,6 +13,7 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.FilesUtil;
+import com.deepercreeper.vampireapp.util.LanguageUtil;
 import com.deepercreeper.vampireapp.util.Saveable;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.Viewable;
@@ -52,6 +53,11 @@ public class Message implements Saveable, Viewable
 		ACCEPT_DELETE,
 		
 		/**
+		 * Increase of item was accepted
+		 */
+		ACCEPT_INCREASE,
+		
+		/**
 		 * Taking money from a depot was denied
 		 */
 		DENY_TAKE,
@@ -65,6 +71,11 @@ public class Message implements Saveable, Viewable
 		 * Deletion of depot was denied
 		 */
 		DENY_DELETE,
+		
+		/**
+		 * Increase of item was denied
+		 */
+		DENY_INCREASE,
 		
 		/**
 		 * A host given item was taken
@@ -95,15 +106,47 @@ public class Message implements Saveable, Viewable
 		YES_NO
 	}
 	
+	/**
+	 * Used for checking, whether multiple messages of one type can be displayed at once.
+	 * 
+	 * @author Vincent
+	 */
+	public static enum MessageGroup
+	{
+		/**
+		 * These messages are not equal
+		 */
+		SINGLE,
+		
+		/**
+		 * All money messages
+		 */
+		MONEY,
+		
+		/**
+		 * All inventory messages
+		 */
+		INVENTORY,
+		
+		/**
+		 * All item messages
+		 */
+		ITEM
+	}
+	
 	private static final String		TAG_NAME	= "message";
 	
 	private final MessageType		mType;
+	
+	private final MessageGroup		mGroup;
 	
 	private final int				mMessageId;
 	
 	private final String			mSender;
 	
 	private final String[]			mArguments;
+	
+	private final boolean[]			mTranslated;
 	
 	private final String[]			mSaveables;
 	
@@ -120,6 +163,8 @@ public class Message implements Saveable, Viewable
 	/**
 	 * Creates a yes/no message.
 	 * 
+	 * @param aGroup
+	 *            The message group.
 	 * @param aSender
 	 *            The message sender.
 	 * @param aMessageId
@@ -137,16 +182,52 @@ public class Message implements Saveable, Viewable
 	 * @param aSaveables
 	 *            Saveable objects.
 	 */
-	public Message(final String aSender, final int aMessageId, final String[] aArguments, final Context aContext, final MessageListener aListener,
-			final ButtonAction aYesAction, final ButtonAction aNoAction, final String... aSaveables)
+	public Message(final MessageGroup aGroup, final String aSender, final int aMessageId, final String[] aArguments, final Context aContext,
+			final MessageListener aListener, final ButtonAction aYesAction, final ButtonAction aNoAction, final String... aSaveables)
 	{
-		this(MessageType.YES_NO, aSender, aMessageId, aArguments, aContext, aListener, R.layout.message_yes_no, aYesAction, aNoAction, aSaveables);
+		this(MessageType.YES_NO, aGroup, aSender, aMessageId, aArguments, new boolean[aArguments.length], aContext, aListener,
+				R.layout.message_yes_no, aYesAction, aNoAction, aSaveables);
+		init();
+	}
+	
+	/**
+	 * Creates a yes/no message.
+	 * 
+	 * @param aGroup
+	 *            The message group.
+	 * @param aSender
+	 *            The message sender.
+	 * @param aMessageId
+	 *            The message text.
+	 * @param aArguments
+	 *            The message arguments.
+	 * @param aTranslated
+	 *            The arguments, that should be translated.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aListener
+	 *            The message listener.
+	 * @param aYesAction
+	 *            The yes action.
+	 * @param aNoAction
+	 *            The no action.
+	 * @param aSaveables
+	 *            Saveable objects.
+	 */
+	public Message(final MessageGroup aGroup, final String aSender, final int aMessageId, final String[] aArguments, final boolean[] aTranslated,
+			final Context aContext, final MessageListener aListener, final ButtonAction aYesAction, final ButtonAction aNoAction,
+			final String... aSaveables)
+	{
+		this(MessageType.YES_NO, aGroup, aSender, aMessageId, aArguments, aTranslated, aContext, aListener, R.layout.message_yes_no, aYesAction,
+				aNoAction, aSaveables);
 		init();
 	}
 	
 	/**
 	 * Creates a info message.
 	 * 
+	 * @param aGroup
+	 *            The message group.
 	 * @param aSender
 	 *            The message sender.
 	 * @param aMessageId
@@ -162,22 +243,54 @@ public class Message implements Saveable, Viewable
 	 * @param aSaveables
 	 *            Saveable objects.
 	 */
-	public Message(final String aSender, final int aMessageId, final String[] aArguments, final Context aContext, final MessageListener aListener,
-			final ButtonAction aOkAction, final String... aSaveables)
+	public Message(final MessageGroup aGroup, final String aSender, final int aMessageId, final String[] aArguments, final Context aContext,
+			final MessageListener aListener, final ButtonAction aOkAction, final String... aSaveables)
 	{
-		this(MessageType.INFO, aSender, aMessageId, aArguments, aContext, aListener, R.layout.message_info, aOkAction, ButtonAction.NOTHING,
-				aSaveables);
+		this(MessageType.INFO, aGroup, aSender, aMessageId, aArguments, new boolean[aArguments.length], aContext, aListener, R.layout.message_info,
+				aOkAction, ButtonAction.NOTHING, aSaveables);
 		init();
 	}
 	
-	private Message(final MessageType aType, final String aSender, final int aMessageId, final String[] aArguments, final Context aContext,
-			final MessageListener aListener, final int aViewId, final ButtonAction aYesAction, final ButtonAction aNoAction,
-			final String... aSaveables)
+	/**
+	 * Creates a info message.
+	 * 
+	 * @param aGroup
+	 *            The message group.
+	 * @param aSender
+	 *            The message sender.
+	 * @param aMessageId
+	 *            The message text.
+	 * @param aArguments
+	 *            The message arguments.
+	 * @param aTranslated
+	 *            The arguments, that should be translated.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aListener
+	 *            The message listener.
+	 * @param aOkAction
+	 *            When the message is approved, this action happens.
+	 * @param aSaveables
+	 *            Saveable objects.
+	 */
+	public Message(final MessageGroup aGroup, final String aSender, final int aMessageId, final String[] aArguments, final boolean[] aTranslated,
+			final Context aContext, final MessageListener aListener, final ButtonAction aOkAction, final String... aSaveables)
+	{
+		this(MessageType.INFO, aGroup, aSender, aMessageId, aArguments, aTranslated, aContext, aListener, R.layout.message_info, aOkAction,
+				ButtonAction.NOTHING, aSaveables);
+		init();
+	}
+	
+	private Message(final MessageType aType, final MessageGroup aGroup, final String aSender, final int aMessageId, final String[] aArguments,
+			final boolean[] aTranslated, final Context aContext, final MessageListener aListener, final int aViewId, final ButtonAction aYesAction,
+			final ButtonAction aNoAction, final String... aSaveables)
 	{
 		mType = aType;
+		mGroup = aGroup;
 		mSender = aSender;
 		mMessageId = aMessageId;
 		mArguments = aArguments;
+		mTranslated = aTranslated;
 		mListener = aListener;
 		mContext = aContext;
 		mYesAction = aYesAction;
@@ -191,12 +304,14 @@ public class Message implements Saveable, Viewable
 	{
 		final Element element = aDoc.createElement(TAG_NAME);
 		element.setAttribute("type", mType.name());
+		element.setAttribute("group", mGroup.name());
 		element.setAttribute("message", "" + mMessageId);
 		element.setAttribute("arguments", DataUtil.parseArray(mArguments));
 		element.setAttribute("sender", mSender);
 		element.setAttribute("yes-action", mYesAction.name());
 		element.setAttribute("no-action", mNoAction.name());
 		element.setAttribute("saveables", DataUtil.parseArray(mSaveables));
+		element.setAttribute("translated", DataUtil.parseFlags(mTranslated));
 		return element;
 	}
 	
@@ -279,9 +394,26 @@ public class Message implements Saveable, Viewable
 	{
 		if (mSender.isEmpty())
 		{
-			return FilesUtil.buildMessage(mMessageId, mArguments, mContext);
+			return FilesUtil.buildMessage(mMessageId, translateArguments(), mContext);
 		}
-		return mSender + ": " + FilesUtil.buildMessage(mMessageId, mArguments, mContext);
+		return mSender + ": " + FilesUtil.buildMessage(mMessageId, translateArguments(), mContext);
+	}
+	
+	private String[] translateArguments()
+	{
+		final String[] arguments = new String[mArguments.length];
+		for (int i = 0; i < arguments.length; i++ )
+		{
+			if (mTranslated[i])
+			{
+				arguments[i] = LanguageUtil.instance().getValue(mArguments[i]);
+			}
+			else
+			{
+				arguments[i] = mArguments[i];
+			}
+		}
+		return arguments;
 	}
 	
 	private void initButton(final int aButtonId, final ButtonAction aAction)
@@ -298,6 +430,31 @@ public class Message implements Saveable, Viewable
 				}
 			}
 		});
+	}
+	
+	@Override
+	public boolean equals(final Object aO)
+	{
+		if (mGroup.equals(MessageGroup.SINGLE))
+		{
+			return false;
+		}
+		if (aO instanceof Message)
+		{
+			final Message message = (Message) aO;
+			return mGroup.equals(message.mGroup);
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		if (mGroup.equals(MessageGroup.SINGLE))
+		{
+			return super.hashCode();
+		}
+		return mGroup.name().hashCode();
 	}
 	
 	private void initMessageText(final int aTextId)
@@ -327,18 +484,20 @@ public class Message implements Saveable, Viewable
 	{
 		final Element messageElement = (Element) FilesUtil.loadDocument(aXML).getElementsByTagName(TAG_NAME).item(0);
 		final MessageType type = MessageType.valueOf(messageElement.getAttribute("type"));
+		final MessageGroup group = MessageGroup.valueOf(messageElement.getAttribute("group"));
 		final int messageId = Integer.parseInt(messageElement.getAttribute("message"));
 		final String[] arguments = DataUtil.parseArray(messageElement.getAttribute("arguments"));
 		final String sender = messageElement.getAttribute("sender");
 		final ButtonAction yesAction = ButtonAction.valueOf(messageElement.getAttribute("yes-action"));
 		final ButtonAction noAction = ButtonAction.valueOf(messageElement.getAttribute("no-action"));
 		final String[] saveables = DataUtil.parseArray(messageElement.getAttribute("saveables"));
+		final boolean[] translated = DataUtil.parseFlags(messageElement.getAttribute("translated"));
 		switch (type)
 		{
 			case INFO :
-				return new Message(sender, messageId, arguments, aContext, aListener, yesAction, saveables);
+				return new Message(group, sender, messageId, arguments, translated, aContext, aListener, yesAction, saveables);
 			case YES_NO :
-				return new Message(sender, messageId, arguments, aContext, aListener, yesAction, noAction, saveables);
+				return new Message(group, sender, messageId, arguments, translated, aContext, aListener, yesAction, noAction, saveables);
 			default :
 				return null;
 		}

@@ -8,6 +8,7 @@
             <group
                 name="Physical"
                 epCostMulti="4"
+                epCostNew="4"
                 freePointsCost="5"
                 maxLowLevelValue="5"
                 maxValue="6"
@@ -25,6 +26,7 @@
             <group
                 name="Social"
                 epCostMulti="4"
+                epCostNew="4"
                 freePointsCost="5"
                 maxLowLevelValue="5"
                 maxValue="6"
@@ -42,6 +44,7 @@
             <group
                 name="Mental"
                 epCostMulti="4"
+                epCostNew="4"
                 freePointsCost="5"
                 maxLowLevelValue="5"
                 maxValue="6"

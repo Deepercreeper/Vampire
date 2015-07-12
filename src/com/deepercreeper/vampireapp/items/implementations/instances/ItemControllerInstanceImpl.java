@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.character.instance.EPControllerInstance;
 import com.deepercreeper.vampireapp.character.instance.Mode;
+import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.interfaces.GroupOption;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
@@ -79,11 +80,14 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	 *            The character
 	 * @param aResizeListener
 	 *            The parent resize listener.
+	 * @param aMessageListener
+	 *            The message listener.
 	 * @param aHost
 	 *            Whether this is a host sided controller.
 	 */
 	public ItemControllerInstanceImpl(final Element aElement, final ItemProvider aItems, final Context aContext, final Mode aMode,
-			final EPControllerInstance aEP, final CharacterInstance aCharacter, ResizeListener aResizeListener, final boolean aHost)
+			final EPControllerInstance aEP, final CharacterInstance aCharacter, final ResizeListener aResizeListener,
+			final MessageListener aMessageListener, final boolean aHost)
 	{
 		mItemController = aItems.getController(aElement.getAttribute("name"));
 		mContext = aContext;
@@ -106,7 +110,7 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 				{
 					continue;
 				}
-				addGroupSilent(new ItemGroupInstanceImpl(group, this, getContext(), getMode(), getEP(), getCharacter(), mHost));
+				addGroupSilent(new ItemGroupInstanceImpl(group, this, getContext(), getMode(), getEP(), getCharacter(), aMessageListener, mHost));
 			}
 		}
 		for (int i = 0; i < children.getLength(); i++ )
@@ -138,11 +142,14 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	 *            The character.
 	 * @param aResizeListener
 	 *            The parent resize listener.
+	 * @param aMessageListener
+	 *            The message listener.
 	 * @param aHost
 	 *            Whether this is a host sided controller.
 	 */
 	public ItemControllerInstanceImpl(final ItemControllerCreation aItemController, final Context aContext, final Mode aMode,
-			final EPControllerInstance aEP, final CharacterInstance aCharacter, ResizeListener aResizeListener, final boolean aHost)
+			final EPControllerInstance aEP, final CharacterInstance aCharacter, final ResizeListener aResizeListener,
+			final MessageListener aMessageListener, final boolean aHost)
 	{
 		mItemController = aItemController.getItemController();
 		mContext = aContext;
@@ -157,7 +164,7 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 		
 		for (final ItemGroupCreation group : aItemController.getGroupsList())
 		{
-			addGroupSilent(new ItemGroupInstanceImpl(group, this, getContext(), getMode(), getEP(), getCharacter(), mHost));
+			addGroupSilent(new ItemGroupInstanceImpl(group, this, getContext(), getMode(), getEP(), getCharacter(), aMessageListener, mHost));
 		}
 		for (final GroupOptionCreation groupOption : aItemController.getGroupOptionsList())
 		{

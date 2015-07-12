@@ -2,8 +2,9 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <string name="accept_delete">Ihr habt {0} aufgelöst.</string>
-    <string name="accept_take">Ihr habt {0} von {1} genommen.</string>
     <string name="accept_depot">Ihr habt {0} in {1} gelagert.</string>
+    <string name="accept_increase">{0} wurde auf {1} erhöht.</string>
+    <string name="accept_take">Ihr habt {0} von {1} genommen.</string>
     <string name="add">Hinzufügen</string>
     <string name="add_health">Lebensstufe hinzufügen</string>
     <string name="add_insanity">Geistesstörung hinzufügen</string>
@@ -18,7 +19,8 @@
     <string name="apply">Annehmen</string>
     <string name="ask_delete_depot">Will {0} auflösen.</string>
 	<string name="ask_depot_money">Will {0} in {1} lagern.</string>
-    <string name="ask_take_money">Will {0} von {1} nehmen.</string>
+	<string name="ask_increase">Will {0} auf {1} erhöhen.</string>
+	<string name="ask_take_money">Will {0} von {1} nehmen.</string>
     <string name="back">Zurück</string>
     <string name="bag">Tasche</string>
     <string name="ban">Bannen</string>
@@ -49,6 +51,7 @@
     <string name="delete_char">Löschen</string>
     <string name="delete_chars">Alle löschen</string>
     <string name="delete_host">Löschen</string>
+    <string name="deny_increase">Ihr dürft {0} nicht erhöhen.</string>
     <string name="deny_take_depot">Ihr habt keinen Zugriff auf {0}.</string>
     <string name="description">Beschreibung</string>
     <string name="difficulty">Schwierigkeit</string>
@@ -64,6 +67,8 @@
     <string name="got_item">Sie haben folgenden Gegenstand erhalten: {0}</string>
     <string name="health_colon">Leben:</string>
     <string name="host_closed">Der Host hat sein Spiel beendet.</string>
+    <string name="host_decreased">{0} wurde auf {1} verringert.</string>
+    <string name="host_increased">{0} wurde auf {1} erhöht.</string>
     <string name="host_name">Host Name</string>
     <string name="hosts">Hosts</string>
     <string name="hour">Stunde</string>

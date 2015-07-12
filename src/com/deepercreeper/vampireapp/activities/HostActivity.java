@@ -27,6 +27,7 @@ import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.mechanics.TimeListener.Type;
 import com.deepercreeper.vampireapp.util.ConnectionUtil;
 import com.deepercreeper.vampireapp.util.FilesUtil;
+import com.deepercreeper.vampireapp.util.LanguageUtil;
 import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog;
 import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog.SelectionListener;
 
@@ -228,6 +229,8 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 		mConnection = new ConnectionController(this, this, mHandler);
 		mConnection.startServer();
 		
+		LanguageUtil.init(this);
+		
 		setContentView(R.layout.host_activity);
 		
 		setTitle(mHost.getName());
@@ -299,7 +302,7 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 	
 	private void login(final ConnectedDevice aDevice, final String aNumber, final String aCharacter)
 	{
-		final Player player = new Player(aCharacter, aNumber, aDevice, this, this, mItems);
+		final Player player = new Player(aCharacter, aNumber, aDevice, this, this, mItems, mHost);
 		if ( !mHost.addPlayer(player))
 		{
 			if (mHost.isBanned(player))

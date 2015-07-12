@@ -15,6 +15,7 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.Currency;
 import com.deepercreeper.vampireapp.host.Message;
 import com.deepercreeper.vampireapp.host.Message.ButtonAction;
+import com.deepercreeper.vampireapp.host.Message.MessageGroup;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.host.change.MoneyChange;
 import com.deepercreeper.vampireapp.items.implementations.Named;
@@ -190,7 +191,8 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 				if (mDefault)
 				{
 					args = new String[] { serializeValues(", ", " ", aMap, true, mCurrency) };
-					getMessageListener().sendMessage(new Message("", R.string.money_sent, args, mContext, null, ButtonAction.NOTHING));
+					getMessageListener().sendMessage(
+							new Message(MessageGroup.SINGLE, "", R.string.money_sent, args, mContext, null, ButtonAction.NOTHING));
 					add(aMap);
 				}
 				else
@@ -204,7 +206,7 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 					{
 						args = new String[] { serializeValues(", ", " ", aMap, true, mCurrency), getName() };
 						getMessageListener().sendMessage(
-								new Message(mController.getChar().getName(), R.string.ask_depot_money, args, mContext, null,
+								new Message(MessageGroup.MONEY, mController.getChar().getName(), R.string.ask_depot_money, args, mContext, null,
 										ButtonAction.ACCEPT_DEPOT, ButtonAction.DENY_DEPOT, serializeValues(",", " ", aMap, false, mCurrency),
 										getName()));
 					}
@@ -385,7 +387,8 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 					args = new String[] { serializeValues(", ", " ", aMap, true, mCurrency) };
 					remove(aMap);
 					getMessageListener().sendMessage(
-							new Message(mController.getChar().getName(), R.string.money_sent, args, mContext, null, ButtonAction.NOTHING));
+							new Message(MessageGroup.SINGLE, mController.getChar().getName(), R.string.money_sent, args, mContext, null,
+									ButtonAction.NOTHING));
 				}
 				else
 				{
@@ -398,8 +401,9 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 					{
 						args = new String[] { serializeValues(", ", " ", aMap, true, mCurrency), getName() };
 						getMessageListener().sendMessage(
-								new Message(mController.getChar().getName(), R.string.ask_take_money, args, mContext, null, ButtonAction.ACCEPT_TAKE,
-										ButtonAction.DENY_TAKE, serializeValues(",", " ", aMap, false, mCurrency), getName()));
+								new Message(MessageGroup.MONEY, mController.getChar().getName(), R.string.ask_take_money, args, mContext, null,
+										ButtonAction.ACCEPT_TAKE, ButtonAction.DENY_TAKE, serializeValues(",", " ", aMap, false, mCurrency),
+										getName()));
 					}
 				}
 			}

@@ -2,8 +2,9 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <string name="accept_delete">You deleted {0}.</string>
-    <string name="accept_take">You took {0} of {1}.</string>
     <string name="accept_depot">You did depot {0} at {1}.</string>
+    <string name="accept_increase">{0} was increased to {1}.</string>
+    <string name="accept_take">You took {0} of {1}.</string>
     <string name="add">Add</string>
     <string name="add_health">Add health step</string>
     <string name="add_insanity">Add insanity</string>
@@ -18,6 +19,7 @@
     <string name="apply">Apply</string>
     <string name="ask_delete_depot">Wants to delete {0}.</string>
     <string name="ask_depot_money">Wants to depot {0} at {1}.</string>
+    <string name="ask_increase">Wants to increase {0} to {1}.</string>
     <string name="ask_take_money">Wants to take {0} from {1}.</string>
     <string name="back">Back</string>
     <string name="bag">Bag</string>
@@ -49,6 +51,7 @@
     <string name="delete_char">Delete</string>
     <string name="delete_chars">Delete all</string>
     <string name="delete_host">Delete</string>
+    <string name="deny_increase">You must not increase {0}.</string>
     <string name="deny_take_depot">You have no access to {0}.</string>
     <string name="description">Description</string>
     <string name="difficulty">Difficulty</string>
@@ -64,6 +67,8 @@
     <string name="got_item">You got the following item: {0}</string>
     <string name="health_colon">Health:</string>
     <string name="host_closed">The host has stopped his game.</string>
+    <string name="host_decreased">{0} has been decreased to {1}.</string>
+    <string name="host_increased">{0} has been increased to {1}.</string>
     <string name="host_name">Host name</string>
     <string name="hosts">Hosts</string>
     <string name="hour">Hour</string>

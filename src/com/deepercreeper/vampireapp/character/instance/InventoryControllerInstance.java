@@ -16,6 +16,7 @@ import com.deepercreeper.vampireapp.character.InventoryItem;
 import com.deepercreeper.vampireapp.character.Weapon;
 import com.deepercreeper.vampireapp.host.Message;
 import com.deepercreeper.vampireapp.host.Message.ButtonAction;
+import com.deepercreeper.vampireapp.host.Message.MessageGroup;
 import com.deepercreeper.vampireapp.host.change.InventoryChange;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
@@ -191,8 +192,9 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 			@Override
 			public void itemCreated(final InventoryItem aItem)
 			{
-				mMessageListener.sendMessage(new Message(mChar.getName(), R.string.got_item, new String[] { aItem.getInfo(true) }, mContext, null,
-						ButtonAction.TAKE_ITEM, ButtonAction.IGNORE_ITEM, FilesUtil.serialize(aItem)));
+				mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, mChar.getName(), R.string.got_item,
+						new String[] { aItem.getInfo(true) }, mContext, null, ButtonAction.TAKE_ITEM, ButtonAction.IGNORE_ITEM, FilesUtil
+								.serialize(aItem)));
 			}
 		};
 		CreateInventoryItemDialog.showCreateInventoryItemDialog(mContext.getString(R.string.create_item), mContext, listener);
@@ -361,8 +363,8 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 		}
 		if ( !mHost)
 		{
-			mMessageListener.sendMessage(new Message(mChar.getName(), R.string.left_item, new String[] { aItem.getInfo(false) }, mContext, null,
-					ButtonAction.NOTHING));
+			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, mChar.getName(), R.string.left_item, new String[] { aItem.getInfo(false) },
+					mContext, null, ButtonAction.NOTHING));
 		}
 	}
 	

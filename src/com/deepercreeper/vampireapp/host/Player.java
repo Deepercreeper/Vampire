@@ -1,5 +1,6 @@
 package com.deepercreeper.vampireapp.host;
 
+import java.util.Map;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import android.content.Context;
@@ -12,15 +13,19 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
+import com.deepercreeper.vampireapp.character.instance.MoneyControllerInstance;
+import com.deepercreeper.vampireapp.character.instance.MoneyDepot;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
 import com.deepercreeper.vampireapp.connection.ConnectionListener;
 import com.deepercreeper.vampireapp.host.Message.ButtonAction;
+import com.deepercreeper.vampireapp.host.Message.MessageGroup;
 import com.deepercreeper.vampireapp.host.change.CharacterChange;
 import com.deepercreeper.vampireapp.host.change.EPChange;
 import com.deepercreeper.vampireapp.host.change.GenerationChange;
 import com.deepercreeper.vampireapp.host.change.HealthChange;
 import com.deepercreeper.vampireapp.host.change.InventoryChange;
+import com.deepercreeper.vampireapp.host.change.ItemChange;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.host.change.MoneyChange;
 import com.deepercreeper.vampireapp.items.ItemProvider;
@@ -39,6 +44,8 @@ import com.deepercreeper.vampireapp.util.view.Viewable;
  */
 public class Player implements Viewable, TimeListener, MessageListener, ResizeListener
 {
+	private final Host					mHost;
+	
 	private final ConnectedDevice		mDevice;
 	
 	private final CharacterInstance		mChar;
@@ -53,11 +60,11 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 	
 	private final Expander				mControllerExpander;
 	
+	private final LinearLayout			mContainer;
+	
 	private boolean						mTimeEnabled;
 	
 	private int							mTime	= TimeListener.EVENING;
-	
-	private LinearLayout				mContainer;
 	
 	private CheckBox					mTimeCheckBox;
 	
@@ -75,10 +82,14 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 	 * @param aContext
 	 *            The underlying context.
 	 * @param aItems
+	 *            the item provider.
+	 * @param aHost
+	 *            The parent host.
 	 */
 	public Player(final String aCharacter, final String aNumber, final ConnectedDevice aDevice, final ConnectionListener aListener,
-			final Context aContext, final ItemProvider aItems)
+			final Context aContext, final ItemProvider aItems, final Host aHost)
 	{
+		mHost = aHost;
 		mNumber = aNumber;
 		mDevice = aDevice;
 		mContext = aContext;
@@ -128,38 +139,62 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 	public boolean applyMessage(final Message aMessage, final ButtonAction aAction)
 	{
 		final boolean release = true;
+		final MoneyControllerInstance money = mChar.getMoney();
 		switch (aAction)
 		{
 			case NOTHING :
 				break;
 			case ACCEPT_DELETE :
-				sendMessage(new Message("", R.string.accept_delete, aMessage.getArguments(), mContext, null, ButtonAction.ACCEPT_DELETE,
-						aMessage.getSaveables()));
+				final String deletedDepot = aMessage.getSaveable(0);
+				money.getDepot(deletedDepot).takeAll();
+				money.removeDepot(deletedDepot, false);
+				sendMessage(new Message(MessageGroup.SINGLE, "", R.string.accept_delete, aMessage.getArguments(), mContext, null,
+						ButtonAction.NOTHING));
 				break;
 			case DENY_DELETE :
-				sendMessage(new Message("", R.string.deny_take_depot, new String[] { aMessage.getArgument(0) }, mContext, null, ButtonAction.NOTHING,
-						aMessage.getSaveables()));
+				sendMessage(new Message(MessageGroup.SINGLE, "", R.string.deny_take_depot, new String[] { aMessage.getArgument(0) }, mContext, null,
+						ButtonAction.NOTHING, aMessage.getSaveables()));
 				break;
 			case ACCEPT_TAKE :
-				sendMessage(new Message("", R.string.accept_take, aMessage.getArguments(), mContext, null, ButtonAction.ACCEPT_TAKE,
-						aMessage.getSaveables()));
+				final Map<String, Integer> takeValues = MoneyDepot.deserializeValues(",", " ", aMessage.getSaveable(0), money.getCurrency());
+				final String takeDepotName = aMessage.getSaveable(1);
+				money.getDepot(takeDepotName).remove(takeValues);
+				money.getDefaultDepot().add(takeValues);
+				sendMessage(new Message(MessageGroup.SINGLE, "", R.string.accept_take, aMessage.getArguments(), mContext, null, ButtonAction.NOTHING));
 				break;
 			case DENY_TAKE :
-				sendMessage(new Message("", R.string.deny_take_depot, new String[] { aMessage.getArgument(1) }, mContext, null, ButtonAction.NOTHING,
-						aMessage.getSaveables()));
+				sendMessage(new Message(MessageGroup.SINGLE, "", R.string.deny_take_depot, new String[] { aMessage.getArgument(1) }, mContext, null,
+						ButtonAction.NOTHING, aMessage.getSaveables()));
 				break;
 			case ACCEPT_DEPOT :
-				sendMessage(new Message("", R.string.accept_depot, aMessage.getArguments(), mContext, null, ButtonAction.ACCEPT_DEPOT,
-						aMessage.getSaveables()));
+				final Map<String, Integer> depotValues = MoneyDepot.deserializeValues(",", " ", aMessage.getSaveable(0), money.getCurrency());
+				final String depotDepotName = aMessage.getSaveable(1);
+				money.getDefaultDepot().remove(depotValues);
+				money.getDepot(depotDepotName).add(depotValues);
+				sendMessage(new Message(MessageGroup.SINGLE, "", R.string.accept_depot, aMessage.getArguments(), mContext, null, ButtonAction.NOTHING));
 				break;
 			case DENY_DEPOT :
-				sendMessage(new Message("", R.string.deny_take_depot, new String[] { aMessage.getArgument(1) }, mContext, null, ButtonAction.NOTHING,
-						aMessage.getSaveables()));
+				sendMessage(new Message(MessageGroup.SINGLE, "", R.string.deny_take_depot, new String[] { aMessage.getArgument(1) }, mContext, null,
+						ButtonAction.NOTHING, aMessage.getSaveables()));
+				break;
+			case ACCEPT_INCREASE :
+				mChar.findItem(aMessage.getSaveable(0)).increase(false, true);
+				sendMessage(new Message(MessageGroup.SINGLE, "", R.string.accept_increase, aMessage.getArguments(), new boolean[] { true, false },
+						mContext, null, ButtonAction.NOTHING));
+				break;
+			case DENY_INCREASE :
+				sendMessage(new Message(MessageGroup.SINGLE, "", R.string.deny_increase, new String[] { aMessage.getArgument(0) },
+						new boolean[] { true }, mContext, null, ButtonAction.NOTHING));
 				break;
 			default :
 				break;
 		}
 		// TODO Implement other button actions
+		
+		if (release)
+		{
+			mHost.releaseMessage(aMessage);
+		}
 		return release;
 	}
 	
@@ -273,6 +308,10 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 		else if (aType.equals(InventoryChange.TAG_NAME))
 		{
 			change = new InventoryChange(element, mContext);
+		}
+		else if (aType.equals(ItemChange.TAG_NAME))
+		{
+			change = new ItemChange(element);
 		}
 		
 		// TODO Add other changes

@@ -33,6 +33,8 @@ public class Host implements TimeListener, Saveable
 	
 	private final List<BannedPlayer>	mBanned		= new ArrayList<BannedPlayer>();
 	
+	private final List<Message>			mMessages	= new ArrayList<Message>();
+	
 	private final String				mLocation;
 	
 	private final Context				mContext;
@@ -227,6 +229,17 @@ public class Host implements TimeListener, Saveable
 	}
 	
 	/**
+	 * Removes the given message from the messages list.
+	 * 
+	 * @param aMessage
+	 *            The message.
+	 */
+	public void releaseMessage(final Message aMessage)
+	{
+		mMessages.remove(aMessage);
+	}
+	
+	/**
 	 * Sets the list, all players are displayed inside.
 	 * 
 	 * @param aPlayersList
@@ -256,7 +269,11 @@ public class Host implements TimeListener, Saveable
 	 */
 	public void addMessage(final Message aMessage)
 	{
-		mMessageList.addView(aMessage.getContainer());
+		if ( !mMessages.contains(aMessage))
+		{
+			mMessages.add(aMessage);
+			mMessageList.addView(aMessage.getContainer());
+		}
 	}
 	
 	@Override
