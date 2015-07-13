@@ -1,5 +1,6 @@
 package com.deepercreeper.vampireapp.util.view.dialogs;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import android.app.Activity;
@@ -108,6 +109,14 @@ public class SelectItemDialog <T extends Nameable> extends DefaultDialog<Selecti
 	}
 	
 	/**
+	 * @return whether any of this classes dialogs is open.
+	 */
+	public static boolean isDialogOpen()
+	{
+		return isDialogOpen(SelectItemDialog.class);
+	}
+	
+	/**
 	 * Creates an item selection dialog that invokes the selection listener when any item was selected.<br>
 	 * Only one dialog can be shown at one time.
 	 * 
@@ -153,6 +162,32 @@ public class SelectItemDialog <T extends Nameable> extends DefaultDialog<Selecti
 			return null;
 		}
 		final SelectItemDialog<I> dialog = new SelectItemDialog<I>(aItems, aTitle, aContext, aAction);
+		dialog.show(((Activity) aContext).getFragmentManager(), aTitle);
+		return dialog;
+	}
+	
+	/**
+	 * Shows an item selection dialog that invokes the selection listener when any item was selected.<br>
+	 * Only one dialog can be shown at one time.
+	 * 
+	 * @param aItems
+	 *            A list of items that are able to be selected inside the dialog.
+	 * @param aTitle
+	 *            The dialog title.
+	 * @param aContext
+	 *            The context.
+	 * @param aAction
+	 *            The selection action.
+	 * @return the created dialog.
+	 */
+	public static <I extends Nameable> SelectItemDialog<I> showSelectionDialog(final I[] aItems, final String aTitle, final Context aContext,
+			final SelectionListener<I> aAction)
+	{
+		if (isDialogOpen())
+		{
+			return null;
+		}
+		final SelectItemDialog<I> dialog = new SelectItemDialog<I>(Arrays.asList(aItems), aTitle, aContext, aAction);
 		dialog.show(((Activity) aContext).getFragmentManager(), aTitle);
 		return dialog;
 	}

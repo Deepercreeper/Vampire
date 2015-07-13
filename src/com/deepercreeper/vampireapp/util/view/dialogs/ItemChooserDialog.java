@@ -81,6 +81,14 @@ public class ItemChooserDialog extends DefaultDialog<ItemChooseListener, LinearL
 	}
 	
 	/**
+	 * @return whether any of this classes dialogs is open.
+	 */
+	public static boolean isDialogOpen()
+	{
+		return isDialogOpen(ItemChooserDialog.class);
+	}
+	
+	/**
 	 * Shows a item chooser dialog.
 	 * 
 	 * @param aItems

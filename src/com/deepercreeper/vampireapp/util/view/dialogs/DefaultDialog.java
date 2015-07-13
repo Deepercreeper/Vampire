@@ -1,6 +1,8 @@
 package com.deepercreeper.vampireapp.util.view.dialogs;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -21,19 +23,19 @@ import android.view.View;
  */
 public abstract class DefaultDialog <L, C extends View> extends DialogFragment
 {
-	private static boolean	sDialogOpen	= false;
+	private static final Map<String, Boolean>	sDialogsOpen	= new HashMap<String, Boolean>();
 	
-	private final String	mTitle;
+	private final String						mTitle;
 	
-	private final Context	mContext;
+	private final Context						mContext;
 	
-	private final L			mListener;
+	private final L								mListener;
 	
-	private final C			mContainer;
+	private final C								mContainer;
 	
 	protected DefaultDialog(final String aTitle, final Context aContext, final L aListener, final int aViewId, final Class<C> aContainerClass)
 	{
-		sDialogOpen = true;
+		sDialogsOpen.put(getClass().getName(), true);
 		mTitle = aTitle;
 		mContext = aContext;
 		mListener = aListener;
@@ -51,7 +53,7 @@ public abstract class DefaultDialog <L, C extends View> extends DialogFragment
 	public final void onDestroy()
 	{
 		super.onDestroy();
-		sDialogOpen = false;
+		sDialogsOpen.put(getClass().getName(), false);
 	}
 	
 	@Override
@@ -106,8 +108,12 @@ public abstract class DefaultDialog <L, C extends View> extends DialogFragment
 	/**
 	 * @return whether any dialog fragment is active and open.
 	 */
-	public static boolean isDialogOpen()
+	protected static boolean isDialogOpen(final Class<?> aClass)
 	{
-		return sDialogOpen;
+		if ( !sDialogsOpen.containsKey(aClass.getName()))
+		{
+			return false;
+		}
+		return sDialogsOpen.get(aClass.getName());
 	}
 }

@@ -57,6 +57,14 @@ public class CreateStringDialog extends DefaultDialog<CreationListener, EditText
 	
 	private final String	mMessage;
 	
+	/**
+	 * @return whether any of this classes dialogs is open.
+	 */
+	public static boolean isDialogOpen()
+	{
+		return isDialogOpen(CreateStringDialog.class);
+	}
+	
 	private CreateStringDialog(final String aTitle, final String aMessage, final Context aContext, final CreationListener aListener)
 	{
 		super(aTitle, aContext, aListener, R.layout.dialog_create_string, EditText.class);

@@ -19,6 +19,7 @@ import com.deepercreeper.vampireapp.host.Message.ButtonAction;
 import com.deepercreeper.vampireapp.host.Message.MessageGroup;
 import com.deepercreeper.vampireapp.host.change.InventoryChange;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
+import com.deepercreeper.vampireapp.items.implementations.Named;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance.ItemValueListener;
 import com.deepercreeper.vampireapp.util.FilesUtil;
@@ -31,6 +32,8 @@ import com.deepercreeper.vampireapp.util.view.ResizeListener;
 import com.deepercreeper.vampireapp.util.view.Viewable;
 import com.deepercreeper.vampireapp.util.view.dialogs.CreateInventoryItemDialog;
 import com.deepercreeper.vampireapp.util.view.dialogs.CreateInventoryItemDialog.ItemCreationListener;
+import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog;
+import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog.SelectionListener;
 
 /**
  * This controller is used to control the whole character inventory.<br>
@@ -40,7 +43,31 @@ import com.deepercreeper.vampireapp.util.view.dialogs.CreateInventoryItemDialog.
  */
 public class InventoryControllerInstance implements Saveable, ItemValueListener, Viewable
 {
-	private static final String			TAG				= "InventoryController";
+	private static final String			TAG			= "InventoryController";
+	
+	private static final List<ItemType>	ITEM_TYPES	= new ArrayList<ItemType>();
+	
+	private static final ItemType		ITEM		= new ItemType("Item");
+	
+	private static final ItemType		WEAPON		= new ItemType("Weapon");
+	
+	private static final ItemType		ARMOR		= new ItemType("Armor");
+	
+	private static class ItemType extends Named
+	{
+		
+		private ItemType(final String aName)
+		{
+			super(aName);
+			ITEM_TYPES.add(this);
+		}
+		
+		@Override
+		public String toString()
+		{
+			return getDisplayName();
+		}
+	}
 	
 	private final Inventory				mInventory;
 	
@@ -182,22 +209,49 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 		init();
 	}
 	
+	private void addItem(final Named aItemType)
+	{
+		if (aItemType.equals(ITEM))
+		{
+			final ItemCreationListener listener = new ItemCreationListener()
+			{
+				@Override
+				public void itemCreated(final InventoryItem aItem)
+				{
+					mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, mChar.getName(), R.string.got_item, new String[] { aItem
+							.getInfo(true) }, mContext, null, ButtonAction.TAKE_ITEM, ButtonAction.IGNORE_ITEM, FilesUtil.serialize(aItem)));
+				}
+			};
+			CreateInventoryItemDialog.showCreateInventoryItemDialog(mContext.getString(R.string.create_item), mContext, listener);
+		}
+		else if (aItemType.equals(WEAPON))
+		{
+			// TODO Implement weapon creation
+		}
+		else if (aItemType.equals(ARMOR))
+		{
+			// TODO Implement armor creation
+		}
+	}
+	
 	/**
 	 * Asks the user to create a new inventory item.
 	 */
 	public void addItem()
 	{
-		final ItemCreationListener listener = new ItemCreationListener()
+		final SelectionListener<ItemType> listener = new SelectionListener<ItemType>()
 		{
 			@Override
-			public void itemCreated(final InventoryItem aItem)
+			public void select(final ItemType aItem)
 			{
-				mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, mChar.getName(), R.string.got_item,
-						new String[] { aItem.getInfo(true) }, mContext, null, ButtonAction.TAKE_ITEM, ButtonAction.IGNORE_ITEM, FilesUtil
-								.serialize(aItem)));
+				addItem(aItem);
 			}
+			
+			@Override
+			public void cancel()
+			{}
 		};
-		CreateInventoryItemDialog.showCreateInventoryItemDialog(mContext.getString(R.string.create_item), mContext, listener);
+		SelectItemDialog.showSelectionDialog(ITEM_TYPES, mContext.getString(R.string.choose_item_type), mContext, listener);
 	}
 	
 	/**

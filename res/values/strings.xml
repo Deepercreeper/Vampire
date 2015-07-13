@@ -34,6 +34,7 @@
     <string name="char_name">Charakter Name</string>
     <string name="characters">Charaktere</string>
     <string name="choose_host">Host auswählen</string>
+	<string name="choose_item_type">Item Typ auswählen</string>
     <string name="choose_money_amount">Geldmenge wählen</string>
     <string name="clan_colon">Clan:</string>
     <string name="concept">Konzept</string>

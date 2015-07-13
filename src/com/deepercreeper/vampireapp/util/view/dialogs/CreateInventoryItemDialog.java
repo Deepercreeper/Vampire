@@ -124,6 +124,14 @@ public class CreateInventoryItemDialog extends DefaultDialog<ItemCreationListene
 	}
 	
 	/**
+	 * @return whether any of this classes dialogs is open.
+	 */
+	public static boolean isDialogOpen()
+	{
+		return isDialogOpen(CreateInventoryItemDialog.class);
+	}
+	
+	/**
 	 * Shows a create inventory item dialog.
 	 * 
 	 * @param aTitle

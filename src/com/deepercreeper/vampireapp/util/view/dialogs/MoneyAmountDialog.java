@@ -155,6 +155,14 @@ public class MoneyAmountDialog extends DefaultDialog<MoneyAmountListener, Linear
 	}
 	
 	/**
+	 * @return whether any of this classes dialogs is open.
+	 */
+	public static boolean isDialogOpen()
+	{
+		return isDialogOpen(MoneyAmountDialog.class);
+	}
+	
+	/**
 	 * Shows a money amount dialog with the given specifications.
 	 * 
 	 * @param aCurrency
