@@ -7,11 +7,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import android.content.Context;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.Currency;
 import com.deepercreeper.vampireapp.host.Message;
@@ -27,6 +22,11 @@ import com.deepercreeper.vampireapp.util.view.ResizeListener;
 import com.deepercreeper.vampireapp.util.view.Viewable;
 import com.deepercreeper.vampireapp.util.view.dialogs.CreateStringDialog;
 import com.deepercreeper.vampireapp.util.view.dialogs.CreateStringDialog.CreationListener;
+import android.content.Context;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 /**
  * This controller is used to control the money and warranty of the character.<br>
@@ -36,29 +36,29 @@ import com.deepercreeper.vampireapp.util.view.dialogs.CreateStringDialog.Creatio
  */
 public class MoneyControllerInstance implements Saveable, Viewable
 {
-	private final List<MoneyDepot>	mDepots			= new ArrayList<MoneyDepot>();
+	private final List<MoneyDepot> mDepots = new ArrayList<MoneyDepot>();
 	
-	private final Currency			mCurrency;
+	private final Currency mCurrency;
 	
-	private final LinearLayout		mContainer;
+	private final LinearLayout mContainer;
 	
-	private final Context			mContext;
+	private final Context mContext;
 	
-	private final boolean			mHost;
+	private final boolean mHost;
 	
-	private final MoneyDepot		mDefaultDepot;
+	private final MoneyDepot mDefaultDepot;
 	
-	private final MessageListener	mMessageListener;
+	private final MessageListener mMessageListener;
 	
-	private final ResizeListener	mResizeListener;
+	private final ResizeListener mResizeListener;
 	
-	private final CharacterInstance	mChar;
+	private final CharacterInstance mChar;
 	
-	private final Expander			mExpander;
+	private final Expander mExpander;
 	
-	private LinearLayout			mDepotsList;
+	private LinearLayout mDepotsList;
 	
-	private boolean					mInitialized	= false;
+	private boolean mInitialized = false;
 	
 	/**
 	 * Creates a new money controller.
@@ -89,7 +89,7 @@ public class MoneyControllerInstance implements Saveable, Viewable
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
 		mExpander = Expander.handle(mHost ? R.id.h_money_button : R.id.c_money_button, mHost ? R.id.h_money_list : R.id.c_money_list, mContainer,
 				mResizeListener);
-		
+				
 		init();
 		
 		mDefaultDepot = new MoneyDepot(mContext.getString(R.string.bag), mContext, mHost, true, this);
@@ -127,7 +127,7 @@ public class MoneyControllerInstance implements Saveable, Viewable
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
 		mExpander = Expander.handle(mHost ? R.id.h_money_button : R.id.c_money_button, mHost ? R.id.h_money_list : R.id.c_money_list, mContainer,
 				mResizeListener);
-		
+				
 		init();
 		
 		MoneyDepot defaultDepot = null;
@@ -254,7 +254,7 @@ public class MoneyControllerInstance implements Saveable, Viewable
 		}
 		if ( !aSilent)
 		{
-			mMessageListener.sendChange(new MoneyChange(aDepot.getName(), true));
+			getMessageListener().sendChange(new MoneyChange(aDepot.getName(), true));
 		}
 	}
 	
@@ -344,9 +344,8 @@ public class MoneyControllerInstance implements Saveable, Viewable
 		final MoneyDepot depot = getDepot(aName);
 		if ( !depot.isEmpty())
 		{
-			getMessageListener().sendMessage(
-					new Message(MessageGroup.MONEY, getChar().getName(), R.string.ask_delete_depot, new String[] { depot.getName() }, mContext, null,
-							ButtonAction.ACCEPT_DELETE, ButtonAction.DENY_DELETE, depot.getName()));
+			getMessageListener().sendMessage(new Message(MessageGroup.MONEY, getChar().getName(), R.string.ask_delete_depot,
+					new String[] { depot.getName() }, mContext, null, ButtonAction.ACCEPT_DELETE, ButtonAction.DENY_DELETE, depot.getName()));
 		}
 		else
 		{
@@ -355,8 +354,7 @@ public class MoneyControllerInstance implements Saveable, Viewable
 			mExpander.resize();
 			if ( !aSilent)
 			{
-				// TODO Replace the field by its getter
-				mMessageListener.sendChange(new MoneyChange(aName, false));
+				getMessageListener().sendChange(new MoneyChange(aName, false));
 			}
 		}
 	}

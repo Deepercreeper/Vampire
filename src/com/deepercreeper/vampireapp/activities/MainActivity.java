@@ -1,6 +1,20 @@
 package com.deepercreeper.vampireapp.activities;
 
 import java.util.Locale;
+import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.character.CharController;
+import com.deepercreeper.vampireapp.character.instance.CharacterCompound;
+import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
+import com.deepercreeper.vampireapp.connection.ConnectedDevice;
+import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
+import com.deepercreeper.vampireapp.connection.ConnectionController;
+import com.deepercreeper.vampireapp.connection.ConnectionListener;
+import com.deepercreeper.vampireapp.host.Host;
+import com.deepercreeper.vampireapp.host.HostController;
+import com.deepercreeper.vampireapp.host.Player;
+import com.deepercreeper.vampireapp.items.ItemConsumer;
+import com.deepercreeper.vampireapp.items.ItemProvider;
+import com.deepercreeper.vampireapp.util.ConnectionUtil;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -19,20 +33,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.character.CharController;
-import com.deepercreeper.vampireapp.character.instance.CharacterCompound;
-import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
-import com.deepercreeper.vampireapp.connection.ConnectedDevice;
-import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
-import com.deepercreeper.vampireapp.connection.ConnectionController;
-import com.deepercreeper.vampireapp.connection.ConnectionListener;
-import com.deepercreeper.vampireapp.host.Host;
-import com.deepercreeper.vampireapp.host.HostController;
-import com.deepercreeper.vampireapp.host.Player;
-import com.deepercreeper.vampireapp.items.ItemConsumer;
-import com.deepercreeper.vampireapp.items.ItemProvider;
-import com.deepercreeper.vampireapp.util.ConnectionUtil;
 
 /**
  * The main activity is the start class for the vampire application.<br>
@@ -105,25 +105,25 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 		}
 	}
 	
-	private static final String		TAG					= "VampireActivity";
+	private static final String TAG = "VampireActivity";
 	
-	private static final String		ARG_SECTION_NUMBER	= "section_number";
+	private static final String ARG_SECTION_NUMBER = "section_number";
 	
-	private Handler					mHandler;
+	private Handler mHandler;
 	
-	private ConnectionController	mConnection;
+	private ConnectionController mConnection;
 	
-	private Menu					mOptionsMenu;
+	private Menu mOptionsMenu;
 	
-	private CharController			mChars;
+	private CharController mChars;
 	
-	private HostController			mHosts;
+	private HostController mHosts;
 	
-	private ItemProvider			mItems;
+	private ItemProvider mItems;
 	
-	private SectionsPagerAdapter	mSectionsPagerAdapter;
+	private SectionsPagerAdapter mSectionsPagerAdapter;
 	
-	private ViewPager				mViewPager;
+	private ViewPager mViewPager;
 	
 	@Override
 	public void banned(final Player aPlayer)
@@ -273,13 +273,13 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 		else if (aRequestCode == HostActivity.PLAY_HOST_REQUEST && aResultCode == RESULT_OK)
 		{
 			final String xml = aData.getStringExtra(HostActivity.HOST);
-			final Host host = new Host(xml, mItems, this);
+			final Host host = new Host(xml, this, true);
 			mHosts.updateHost(host);
 		}
 		else if (aRequestCode == CreateHostActivity.CREATE_HOST_REQUEST && aResultCode == RESULT_OK)
 		{
 			final String name = aData.getStringExtra(CreateHostActivity.HOST_NAME);
-			mHosts.saveHost(new Host(name, mItems, HostController.DEFAULT_LOCATION, this));
+			mHosts.saveHost(new Host(name, this, false));
 		}
 	}
 	
@@ -324,7 +324,7 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
 		
 		mChars = new CharController(this, mItems, mConnection);
-		mHosts = new HostController(this, mItems, mConnection);
+		mHosts = new HostController(this, mConnection);
 		
 		setContentView(R.layout.main_activity);
 		

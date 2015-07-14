@@ -5,14 +5,13 @@ import java.util.Collections;
 import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import android.content.Context;
-import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
-import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.CodingUtil;
 import com.deepercreeper.vampireapp.util.FilesUtil;
 import com.deepercreeper.vampireapp.util.Saveable;
+import android.content.Context;
+import android.widget.LinearLayout;
 
 /**
  * This host represents a whole vampire game, that accepts users and handles the game flow.
@@ -21,46 +20,42 @@ import com.deepercreeper.vampireapp.util.Saveable;
  */
 public class Host implements TimeListener, Saveable
 {
-	private final String				mName;
+	private final String mName;
 	
-	/**
-	 * TODO Is this really used?
-	 */
-	@SuppressWarnings("unused")
-	private final ItemProvider			mItems;
+	private final List<Player> mPlayers = new ArrayList<Player>();
 	
-	private final List<Player>			mPlayers	= new ArrayList<Player>();
+	private final List<BannedPlayer> mBanned = new ArrayList<BannedPlayer>();
 	
-	private final List<BannedPlayer>	mBanned		= new ArrayList<BannedPlayer>();
+	private final List<Message> mMessages = new ArrayList<Message>();
 	
-	private final List<Message>			mMessages	= new ArrayList<Message>();
+	private final Context mContext;
 	
-	private final String				mLocation;
+	private LinearLayout mMessageList;
 	
-	private final Context				mContext;
+	private LinearLayout mPlayersList;
 	
-	private LinearLayout				mMessageList;
-	
-	private LinearLayout				mPlayersList;
-	
-	private LinearLayout				mPlayersTimeList;
+	private LinearLayout mPlayersTimeList;
 	
 	/**
 	 * Creates a host out of the given XML data.
 	 * 
-	 * @param aXML
-	 *            The XML data.
-	 * @param aItems
-	 *            The item provider.
+	 * @param aData
+	 *            The XML data or host name.
 	 * @param aContext
 	 *            The underlying context.
+	 * @param aFromXML
+	 *            whether this document should be created out of XML data or the first argument is the host name.
 	 */
-	public Host(final String aXML, final ItemProvider aItems, final Context aContext)
+	public Host(final String aData, final Context aContext, boolean aFromXML)
 	{
-		mItems = aItems;
 		mContext = aContext;
+		if ( !aFromXML)
+		{
+			mName = aData;
+			return;
+		}
 		
-		final Document doc = FilesUtil.loadDocument(aXML);
+		final Document doc = FilesUtil.loadDocument(aData);
 		if (doc == null)
 		{
 			throw new IllegalArgumentException();
@@ -72,7 +67,6 @@ public class Host implements TimeListener, Saveable
 		// Meta data
 		final Element meta = (Element) root.getElementsByTagName("meta").item(0);
 		mName = CodingUtil.decode(meta.getAttribute("name"));
-		mLocation = meta.getAttribute("location");
 		
 		// Banned players
 		final Element bans = (Element) root.getElementsByTagName("bans").item(0);
@@ -87,26 +81,6 @@ public class Host implements TimeListener, Saveable
 				}
 			}
 		}
-	}
-	
-	/**
-	 * Creates a new host with the given name and location.
-	 * 
-	 * @param aName
-	 *            The host name.
-	 * @param aItems
-	 *            The item provider.
-	 * @param aContext
-	 *            The underlying context.
-	 * @param aLocation
-	 *            The host location.
-	 */
-	public Host(final String aName, final ItemProvider aItems, final String aLocation, final Context aContext)
-	{
-		mName = aName;
-		mContext = aContext;
-		mItems = aItems;
-		mLocation = aLocation;
 	}
 	
 	/**
@@ -215,7 +189,6 @@ public class Host implements TimeListener, Saveable
 		// Meta data
 		final Element meta = aDoc.createElement("meta");
 		meta.setAttribute("name", CodingUtil.encode(getName()));
-		meta.setAttribute("location", mLocation);
 		root.appendChild(meta);
 		
 		// Banned players

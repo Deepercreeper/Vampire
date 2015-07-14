@@ -4,19 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
-import android.view.Menu;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.InventoryItem;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
@@ -46,6 +33,19 @@ import com.deepercreeper.vampireapp.util.ContactsUtil;
 import com.deepercreeper.vampireapp.util.FilesUtil;
 import com.deepercreeper.vampireapp.util.LanguageUtil;
 import com.deepercreeper.vampireapp.util.view.ResizeListener;
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 /**
  * This activity is used to play a character, that was created before and connect to a host.<br>
@@ -55,29 +55,29 @@ import com.deepercreeper.vampireapp.util.view.ResizeListener;
  */
 public class PlayActivity extends Activity implements ItemConsumer, ConnectionListener, MessageListener, ResizeListener
 {
-	private static final String		TAG					= "PlayActivity";
+	private static final String TAG = "PlayActivity";
 	
 	/**
 	 * The extra key for the character that is going to be played.
 	 */
-	public static final String		CHARACTER			= "CHARACTER";
+	public static final String CHARACTER = "CHARACTER";
 	
 	/**
 	 * The request code for playing a character.
 	 */
-	public static final int			PLAY_CHAR_REQUEST	= 2;
+	public static final int PLAY_CHAR_REQUEST = 2;
 	
-	private final List<Message>		mMessages			= new ArrayList<Message>();
+	private final List<Message> mMessages = new ArrayList<Message>();
 	
-	private Handler					mHandler;
+	private Handler mHandler;
 	
-	private ConnectionController	mConnection;
+	private ConnectionController mConnection;
 	
-	private ItemProvider			mItems;
+	private ItemProvider mItems;
 	
-	private LinearLayout			mMessageList;
+	private LinearLayout mMessageList;
 	
-	private CharacterInstance		mChar;
+	private CharacterInstance mChar;
 	
 	@Override
 	public void banned(final Player aPlayer)
@@ -176,7 +176,6 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	 */
 	public void exit(final boolean aSaveCharacter)
 	{
-		// TODO Maybe add a negative exit
 		mConnection.exit();
 		final Intent intent = new Intent();
 		intent.putExtra(CHARACTER, FilesUtil.serialize(mChar));
@@ -253,7 +252,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 			default :
 				break;
 		}
-		// TODO Implement
+		// TODO Implement other Message types
 	}
 	
 	@Override
@@ -287,7 +286,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 			change = new ItemChange(element);
 		}
 		
-		// TODO Add other changes
+		// TODO Implement other changes
 		
 		if (change != null)
 		{

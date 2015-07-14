@@ -6,6 +6,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.activities.CreateHostActivity;
+import com.deepercreeper.vampireapp.activities.HostActivity;
+import com.deepercreeper.vampireapp.connection.ConnectionController;
+import com.deepercreeper.vampireapp.util.FilesUtil;
+import com.deepercreeper.vampireapp.util.Log;
+import com.deepercreeper.vampireapp.util.ViewUtil;
+import com.deepercreeper.vampireapp.util.view.HostContextMenu;
+import com.deepercreeper.vampireapp.util.view.HostContextMenu.HostListener;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
@@ -14,16 +23,6 @@ import android.view.View.OnLongClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.activities.CreateHostActivity;
-import com.deepercreeper.vampireapp.activities.HostActivity;
-import com.deepercreeper.vampireapp.connection.ConnectionController;
-import com.deepercreeper.vampireapp.items.ItemProvider;
-import com.deepercreeper.vampireapp.util.FilesUtil;
-import com.deepercreeper.vampireapp.util.Log;
-import com.deepercreeper.vampireapp.util.ViewUtil;
-import com.deepercreeper.vampireapp.util.view.HostContextMenu;
-import com.deepercreeper.vampireapp.util.view.HostContextMenu.HostListener;
 
 /**
  * This controller handles all existing hosts. They can be saved, loaded and played.
@@ -32,40 +31,30 @@ import com.deepercreeper.vampireapp.util.view.HostContextMenu.HostListener;
  */
 public class HostController implements HostListener
 {
-	/**
-	 * The default host location. TODO Maybe remove this field since it won't be used.
-	 */
-	public static final String			DEFAULT_LOCATION	= "Germany";
+	private static final String TAG = "HostController";
 	
-	private static final String			TAG					= "HostController";
+	private static final String HOSTS_LIST = "Hosts.lst";
 	
-	private static final String			HOSTS_LIST			= "Hosts.lst";
+	private final ConnectionController mConnection;
 	
-	private final ConnectionController	mConnection;
+	private final Map<String, Host> mHostsCache = new HashMap<String, Host>();
 	
-	private final Map<String, Host>		mHostsCache			= new HashMap<String, Host>();
+	private final List<String> mHostNames = new ArrayList<String>();
 	
-	private final List<String>			mHostNames			= new ArrayList<String>();
+	private final Activity mContext;
 	
-	private final ItemProvider			mItems;
-	
-	private final Activity				mContext;
-	
-	private LinearLayout				mHostsList;
+	private LinearLayout mHostsList;
 	
 	/**
 	 * Creates a new host controller.
 	 * 
 	 * @param aContext
 	 *            The underlying context.
-	 * @param aItems
-	 *            The item provider.
 	 * @param aConnection
 	 *            The connection controller.
 	 */
-	public HostController(final Activity aContext, final ItemProvider aItems, final ConnectionController aConnection)
+	public HostController(final Activity aContext, final ConnectionController aConnection)
 	{
-		mItems = aItems;
 		mContext = aContext;
 		mConnection = aConnection;
 	}
@@ -116,7 +105,7 @@ public class HostController implements HostListener
 			final String data = FilesUtil.loadFile(aName + ".hst", mContext);
 			if (data != null)
 			{
-				host = new Host(data, mItems, mContext);
+				host = new Host(data, mContext, true);
 			}
 		}
 		if (host == null)

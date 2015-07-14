@@ -1,18 +1,6 @@
 package com.deepercreeper.vampireapp.activities;
 
 import java.util.List;
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
@@ -30,6 +18,18 @@ import com.deepercreeper.vampireapp.util.FilesUtil;
 import com.deepercreeper.vampireapp.util.LanguageUtil;
 import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog;
 import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog.SelectionListener;
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 /**
  * This activity represents the running host game. It is able to accept new players<br>
@@ -42,20 +42,20 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 	/**
 	 * The request code for starting a host game.
 	 */
-	public static final int			PLAY_HOST_REQUEST	= 3;
+	public static final int PLAY_HOST_REQUEST = 3;
 	
 	/**
 	 * The extra key for the hosts name.
 	 */
-	public static final String		HOST				= "HOST";
+	public static final String HOST = "HOST";
 	
-	private Handler					mHandler;
+	private Handler mHandler;
 	
-	private ConnectionController	mConnection;
+	private ConnectionController mConnection;
 	
-	private Host					mHost;
+	private Host mHost;
 	
-	private ItemProvider			mItems;
+	private ItemProvider mItems;
 	
 	@Override
 	public void banned(final Player aPlayer)
@@ -87,7 +87,7 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 	public void consumeItems(final ItemProvider aItems)
 	{
 		mItems = aItems;
-		mHost = new Host(getIntent().getStringExtra(HOST), mItems, this);
+		mHost = new Host(getIntent().getStringExtra(HOST), this, true);
 		
 		init();
 	}
