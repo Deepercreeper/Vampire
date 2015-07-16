@@ -1,7 +1,7 @@
 package com.deepercreeper.vampireapp.host.change;
 
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
-import com.deepercreeper.vampireapp.util.Saveable;
+import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 
 /**
  * Each action, that is done and has an effect to the other side of the connection is serialized as a change.

@@ -33,9 +33,9 @@ import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerIns
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.FilesUtil;
 import com.deepercreeper.vampireapp.util.ViewUtil;
+import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
+import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 import com.deepercreeper.vampireapp.util.view.Expander;
-import com.deepercreeper.vampireapp.util.view.ResizeListener;
-import com.deepercreeper.vampireapp.util.view.Viewable;
 
 /**
  * A host side represented character player.

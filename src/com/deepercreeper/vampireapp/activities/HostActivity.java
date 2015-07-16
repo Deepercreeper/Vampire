@@ -17,7 +17,7 @@ import com.deepercreeper.vampireapp.util.ConnectionUtil;
 import com.deepercreeper.vampireapp.util.FilesUtil;
 import com.deepercreeper.vampireapp.util.LanguageUtil;
 import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog;
-import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog.SelectionListener;
+import com.deepercreeper.vampireapp.util.view.listeners.ItemSelectionListener;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -158,7 +158,7 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 			makeText(R.string.no_banned_players, Toast.LENGTH_SHORT);
 			return;
 		}
-		final SelectionListener<BannedPlayer> action = new SelectionListener<BannedPlayer>()
+		final ItemSelectionListener<BannedPlayer> action = new ItemSelectionListener<BannedPlayer>()
 		{
 			@Override
 			public void select(final BannedPlayer aPlayer)

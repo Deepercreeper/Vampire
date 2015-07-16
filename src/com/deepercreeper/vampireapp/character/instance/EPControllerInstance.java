@@ -13,7 +13,7 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.host.change.EPChange;
 import com.deepercreeper.vampireapp.util.ViewUtil;
-import com.deepercreeper.vampireapp.util.view.Viewable;
+import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 
 /**
  * This controller is used to control the experience a character collects.<br>

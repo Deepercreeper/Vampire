@@ -37,9 +37,9 @@ import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.Inst
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction.InstanceRestrictionType;
 import com.deepercreeper.vampireapp.mechanics.Action;
 import com.deepercreeper.vampireapp.util.CodingUtil;
-import com.deepercreeper.vampireapp.util.ItemFinder;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
+import com.deepercreeper.vampireapp.util.interfaces.ItemFinder;
 
 /**
  * An item instance implementation.

@@ -6,7 +6,7 @@ import android.content.Context;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.InventoryControllerInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
-import com.deepercreeper.vampireapp.util.ItemFinder;
+import com.deepercreeper.vampireapp.util.interfaces.ItemFinder;
 
 /**
  * This is a sub type of an inventory item and represents a weapon.

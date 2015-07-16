@@ -7,8 +7,8 @@ import java.util.Set;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
 import com.deepercreeper.vampireapp.mechanics.Duration;
 import com.deepercreeper.vampireapp.mechanics.Duration.DurationListener;
+import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
-import com.deepercreeper.vampireapp.util.Saveable;
 
 /**
  * A character can have several restrictions. They can restrict items, groups or something else.

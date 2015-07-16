@@ -20,7 +20,7 @@ import android.widget.LinearLayout;
  * 
  * @author Vincent
  */
-public class CreateInventoryItemDialog extends DefaultDialog<ItemCreationListener, LinearLayout>
+public class CreateWeaponItemDialog extends DefaultDialog<ItemCreationListener, LinearLayout>
 {
 	private EditText mName;
 	
@@ -30,7 +30,7 @@ public class CreateInventoryItemDialog extends DefaultDialog<ItemCreationListene
 	
 	private Button mOK;
 	
-	private CreateInventoryItemDialog(final String aTitle, final Context aContext, final ItemCreationListener aListener)
+	private CreateWeaponItemDialog(final String aTitle, final Context aContext, final ItemCreationListener aListener)
 	{
 		super(aTitle, aContext, aListener, R.layout.dialog_create_inventory_item, LinearLayout.class);
 	}
@@ -111,7 +111,7 @@ public class CreateInventoryItemDialog extends DefaultDialog<ItemCreationListene
 	 */
 	public static boolean isDialogOpen()
 	{
-		return isDialogOpen(CreateInventoryItemDialog.class);
+		return isDialogOpen(CreateWeaponItemDialog.class);
 	}
 	
 	/**
@@ -130,6 +130,6 @@ public class CreateInventoryItemDialog extends DefaultDialog<ItemCreationListene
 		{
 			return;
 		}
-		new CreateInventoryItemDialog(aTitle, aContext, aListener).show(((Activity) aContext).getFragmentManager(), aTitle);
+		new CreateWeaponItemDialog(aTitle, aContext, aListener).show(((Activity) aContext).getFragmentManager(), aTitle);
 	}
 }

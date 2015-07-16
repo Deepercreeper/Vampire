@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import com.deepercreeper.vampireapp.util.Saveable;
+import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 
 /**
  * This class represents a duration of time, that counts down to zero.

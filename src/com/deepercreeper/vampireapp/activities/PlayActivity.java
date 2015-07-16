@@ -32,7 +32,7 @@ import com.deepercreeper.vampireapp.util.ConnectionUtil;
 import com.deepercreeper.vampireapp.util.ContactsUtil;
 import com.deepercreeper.vampireapp.util.FilesUtil;
 import com.deepercreeper.vampireapp.util.LanguageUtil;
-import com.deepercreeper.vampireapp.util.view.ResizeListener;
+import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;

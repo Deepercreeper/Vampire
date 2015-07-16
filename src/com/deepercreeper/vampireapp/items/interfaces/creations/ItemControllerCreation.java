@@ -7,7 +7,7 @@ import com.deepercreeper.vampireapp.items.interfaces.GroupOption;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestrictionable;
-import com.deepercreeper.vampireapp.util.view.Viewable;
+import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 
 /**
  * This controller controls several groups and a few group options.

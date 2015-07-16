@@ -1,5 +1,20 @@
 package com.deepercreeper.vampireapp.activities;
 
+import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
+import com.deepercreeper.vampireapp.character.creation.CharacterCreation.CharCreationListener;
+import com.deepercreeper.vampireapp.character.creation.CreationMode;
+import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
+import com.deepercreeper.vampireapp.items.ItemConsumer;
+import com.deepercreeper.vampireapp.items.ItemProvider;
+import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
+import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
+import com.deepercreeper.vampireapp.lists.items.DescriptionCreation;
+import com.deepercreeper.vampireapp.util.ConnectionUtil;
+import com.deepercreeper.vampireapp.util.FilesUtil;
+import com.deepercreeper.vampireapp.util.ViewUtil;
+import com.deepercreeper.vampireapp.util.view.dialogs.CreateStringDialog;
+import com.deepercreeper.vampireapp.util.view.listeners.StringCreationListener;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,21 +33,6 @@ import android.widget.NumberPicker;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
-import com.deepercreeper.vampireapp.character.creation.CharacterCreation.CharCreationListener;
-import com.deepercreeper.vampireapp.character.creation.CreationMode;
-import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
-import com.deepercreeper.vampireapp.items.ItemConsumer;
-import com.deepercreeper.vampireapp.items.ItemProvider;
-import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
-import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
-import com.deepercreeper.vampireapp.lists.items.DescriptionCreation;
-import com.deepercreeper.vampireapp.util.ConnectionUtil;
-import com.deepercreeper.vampireapp.util.FilesUtil;
-import com.deepercreeper.vampireapp.util.ViewUtil;
-import com.deepercreeper.vampireapp.util.view.dialogs.CreateStringDialog;
-import com.deepercreeper.vampireapp.util.view.dialogs.CreateStringDialog.CreationListener;
 
 /**
  * This activity is used to create a character. Either a free character,<br>
@@ -51,32 +51,32 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 	/**
 	 * The extra key for a list of already used character names, so the new name is not already in use.
 	 */
-	public static final String	CHAR_NAMES			= "CHAR_NAMES";
+	public static final String CHAR_NAMES = "CHAR_NAMES";
 	
 	/**
 	 * The extra key for the serialized character data. Used for sending the created character back to the main activity.
 	 */
-	public static final String	CHARACTER			= "CHARACTER";
+	public static final String CHARACTER = "CHARACTER";
 	
 	/**
 	 * The extra key for whether creating a free or a system restricted character.
 	 */
-	public static final String	FREE_CREATION		= "FREE_CREATION";
+	public static final String FREE_CREATION = "FREE_CREATION";
 	
 	/**
 	 * The request code for creating a new character.
 	 */
-	public static final int		CREATE_CHAR_REQUEST	= 1;
+	public static final int CREATE_CHAR_REQUEST = 1;
 	
-	private String[]			mCharNames;
+	private String[] mCharNames;
 	
-	private boolean				mFreeCreation;
+	private boolean mFreeCreation;
 	
-	private State				mState;
+	private State mState;
 	
-	private ItemProvider		mItems;
+	private ItemProvider mItems;
 	
-	private CharacterCreation	mChar;
+	private CharacterCreation mChar;
 	
 	@Override
 	public void consumeItems(final ItemProvider aItems)
@@ -238,7 +238,7 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 			@Override
 			public void onClick(final View aV)
 			{
-				final CreationListener listener = new CreationListener()
+				final StringCreationListener listener = new StringCreationListener()
 				{
 					@Override
 					public void create(final String aString)
@@ -429,8 +429,8 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 		});
 		natureSpinner.setSelection(mItems.getNatures().displayIndexOf(mChar.getNature()));
 		
-		behaviorSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, mItems.getNatures()
-				.getDisplayNames()));
+		behaviorSpinner
+				.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, mItems.getNatures().getDisplayNames()));
 		behaviorSpinner.setOnItemSelectedListener(new OnItemSelectedListener()
 		{
 			@Override

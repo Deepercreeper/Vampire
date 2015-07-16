@@ -2,7 +2,7 @@ package com.deepercreeper.vampireapp.host.change;
 
 import com.deepercreeper.vampireapp.host.Message;
 import com.deepercreeper.vampireapp.host.Message.ButtonAction;
-import com.deepercreeper.vampireapp.util.view.Toaster;
+import com.deepercreeper.vampireapp.util.interfaces.Toaster;
 
 /**
  * A listener for changes that are created by the character and changes that have to be applied to the character.

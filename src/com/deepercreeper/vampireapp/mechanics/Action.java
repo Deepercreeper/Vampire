@@ -2,7 +2,7 @@ package com.deepercreeper.vampireapp.mechanics;
 
 import java.util.HashMap;
 import java.util.Map;
-import com.deepercreeper.vampireapp.util.ItemFinder;
+import com.deepercreeper.vampireapp.util.interfaces.ItemFinder;
 
 /**
  * Everything that is possible to be executed by a character, like abilities, healing or something<br>

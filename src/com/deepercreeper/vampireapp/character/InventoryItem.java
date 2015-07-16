@@ -11,9 +11,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.InventoryControllerInstance;
-import com.deepercreeper.vampireapp.util.Saveable;
 import com.deepercreeper.vampireapp.util.ViewUtil;
-import com.deepercreeper.vampireapp.util.view.Viewable;
+import com.deepercreeper.vampireapp.util.interfaces.Saveable;
+import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 
 /**
  * An inventory item has several properties and can be stored inside the inventory.<br>

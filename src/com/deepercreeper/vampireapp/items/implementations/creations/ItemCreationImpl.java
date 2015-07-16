@@ -5,15 +5,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import android.animation.ValueAnimator;
-import android.content.Context;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.creation.CreationMode;
 import com.deepercreeper.vampireapp.items.implementations.creations.restrictions.CreationRestrictionableImpl;
@@ -26,7 +17,16 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.Crea
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog;
-import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog.SelectionListener;
+import com.deepercreeper.vampireapp.util.view.listeners.ItemSelectionListener;
+import android.animation.ValueAnimator;
+import android.content.Context;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * An item creation implementation.
@@ -53,85 +53,85 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		void increase();
 	}
 	
-	private static final String				TAG					= "ItemCreation";
+	private static final String TAG = "ItemCreation";
 	
-	private static final int				VALUE_MULTIPLICATOR	= 20;
+	private static final int VALUE_MULTIPLICATOR = 20;
 	
-	private final ChangeAction				mChangeValue		= new ChangeAction()
-																{
-																	@Override
-																	public void decrease()
-																	{
-																		mValueId-- ;
-																	}
-																	
-																	@Override
-																	public void increase()
-																	{
-																		mValueId++ ;
-																	}
-																};
+	private final ChangeAction mChangeValue = new ChangeAction()
+	{
+		@Override
+		public void decrease()
+		{
+			mValueId-- ;
+		}
+		
+		@Override
+		public void increase()
+		{
+			mValueId++ ;
+		}
+	};
 	
-	private final ChangeAction				mChangeTempPoints	= new ChangeAction()
-																{
-																	@Override
-																	public void decrease()
-																	{
-																		mTempPoints-- ;
-																	}
-																	
-																	@Override
-																	public void increase()
-																	{
-																		mTempPoints++ ;
-																	}
-																};
+	private final ChangeAction mChangeTempPoints = new ChangeAction()
+	{
+		@Override
+		public void decrease()
+		{
+			mTempPoints-- ;
+		}
+		
+		@Override
+		public void increase()
+		{
+			mTempPoints++ ;
+		}
+	};
 	
-	private final Item						mItem;
+	private final Item mItem;
 	
-	private final Context					mContext;
+	private final Context mContext;
 	
-	private final ItemGroupCreation			mItemGroup;
+	private final ItemGroupCreation mItemGroup;
 	
-	private final ValueAnimator				mAnimator;
+	private final ValueAnimator mAnimator;
 	
-	private ImageButton						mIncreaseButton;
+	private ImageButton mIncreaseButton;
 	
-	private ImageButton						mDecreaseButton;
+	private ImageButton mDecreaseButton;
 	
-	private ProgressBar						mValueBar;
+	private ProgressBar mValueBar;
 	
-	private TextView						mValueText;
+	private TextView mValueText;
 	
-	private final LinearLayout				mContainer;
+	private final LinearLayout mContainer;
 	
-	private final List<ItemCreation>		mChildrenList;
+	private final List<ItemCreation> mChildrenList;
 	
-	private final Map<String, ItemCreation>	mChildren;
+	private final Map<String, ItemCreation> mChildren;
 	
-	private final ItemCreation				mParentItem;
+	private final ItemCreation mParentItem;
 	
-	private LinearLayout					mChildrenContainer;
+	private LinearLayout mChildrenContainer;
 	
-	private ImageButton						mAddButton;
+	private ImageButton mAddButton;
 	
-	private ImageButton						mEditButton;
+	private ImageButton mEditButton;
 	
-	private ImageButton						mRemoveButton;
+	private ImageButton mRemoveButton;
 	
-	private TextView						mNameText;
+	private TextView mNameText;
 	
-	private boolean							mInitialized		= false;
+	private boolean mInitialized = false;
 	
-	private CreationMode					mMode;
+	private CreationMode mMode;
 	
-	private PointHandler					mPoints;
+	private PointHandler mPoints;
 	
-	private String							mDescription;
+	private String mDescription;
 	
-	private int								mValueId;
+	private int mValueId;
 	
-	private int								mTempPoints;
+	private int mTempPoints;
 	
 	/**
 	 * Creates a new item creation.
@@ -218,7 +218,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		{
 			return;
 		}
-		final SelectionListener<Item> action = new SelectionListener<Item>()
+		final ItemSelectionListener<Item> action = new ItemSelectionListener<Item>()
 		{
 			@Override
 			public void cancel()
@@ -418,7 +418,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		{
 			return;
 		}
-		final SelectionListener<Item> action = new SelectionListener<Item>()
+		final ItemSelectionListener<Item> action = new ItemSelectionListener<Item>()
 		{
 			@Override
 			public void cancel()

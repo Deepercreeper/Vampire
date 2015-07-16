@@ -7,7 +7,7 @@ import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation.PointHandler;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestrictionable;
-import com.deepercreeper.vampireapp.util.view.Viewable;
+import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 
 /**
  * Used to create item groups.

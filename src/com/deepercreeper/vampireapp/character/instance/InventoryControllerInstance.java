@@ -4,12 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import android.content.Context;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.Inventory;
 import com.deepercreeper.vampireapp.character.InventoryItem;
@@ -23,17 +17,23 @@ import com.deepercreeper.vampireapp.items.implementations.Named;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance.ItemValueListener;
 import com.deepercreeper.vampireapp.util.FilesUtil;
-import com.deepercreeper.vampireapp.util.ItemFinder;
 import com.deepercreeper.vampireapp.util.Log;
-import com.deepercreeper.vampireapp.util.Saveable;
 import com.deepercreeper.vampireapp.util.ViewUtil;
+import com.deepercreeper.vampireapp.util.interfaces.ItemFinder;
+import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
+import com.deepercreeper.vampireapp.util.interfaces.Saveable;
+import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 import com.deepercreeper.vampireapp.util.view.Expander;
-import com.deepercreeper.vampireapp.util.view.ResizeListener;
-import com.deepercreeper.vampireapp.util.view.Viewable;
 import com.deepercreeper.vampireapp.util.view.dialogs.CreateInventoryItemDialog;
-import com.deepercreeper.vampireapp.util.view.dialogs.CreateInventoryItemDialog.ItemCreationListener;
 import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog;
-import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog.SelectionListener;
+import com.deepercreeper.vampireapp.util.view.listeners.ItemCreationListener;
+import com.deepercreeper.vampireapp.util.view.listeners.ItemSelectionListener;
+import android.content.Context;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 /**
  * This controller is used to control the whole character inventory.<br>
@@ -43,15 +43,15 @@ import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog.Selection
  */
 public class InventoryControllerInstance implements Saveable, ItemValueListener, Viewable
 {
-	private static final String			TAG			= "InventoryController";
+	private static final String TAG = "InventoryController";
 	
-	private static final List<ItemType>	ITEM_TYPES	= new ArrayList<ItemType>();
+	private static final List<ItemType> ITEM_TYPES = new ArrayList<ItemType>();
 	
-	private static final ItemType		ITEM		= new ItemType("Item");
+	private static final ItemType ITEM = new ItemType("Item");
 	
-	private static final ItemType		WEAPON		= new ItemType("Weapon");
+	private static final ItemType WEAPON = new ItemType("Weapon");
 	
-	private static final ItemType		ARMOR		= new ItemType("Armor");
+	private static final ItemType ARMOR = new ItemType("Armor");
 	
 	private static class ItemType extends Named
 	{
@@ -69,41 +69,41 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 		}
 	}
 	
-	private final Inventory				mInventory;
+	private final Inventory mInventory;
 	
-	private final List<InventoryItem>	mItemsList		= new ArrayList<InventoryItem>();
+	private final List<InventoryItem> mItemsList = new ArrayList<InventoryItem>();
 	
-	private final ItemFinder			mItems;
+	private final ItemFinder mItems;
 	
-	private final Context				mContext;
+	private final Context mContext;
 	
-	private final LinearLayout			mContainer;
+	private final LinearLayout mContainer;
 	
-	private final ItemInstance			mMaxWeightItem;
+	private final ItemInstance mMaxWeightItem;
 	
-	private final boolean				mHost;
+	private final boolean mHost;
 	
-	private final ResizeListener		mResizeListener;
+	private final ResizeListener mResizeListener;
 	
-	private final MessageListener		mMessageListener;
+	private final MessageListener mMessageListener;
 	
-	private final CharacterInstance		mChar;
+	private final CharacterInstance mChar;
 	
-	private final Expander				mExpander;
+	private final Expander mExpander;
 	
-	private LinearLayout				mInventoryList;
+	private LinearLayout mInventoryList;
 	
-	private TextView					mWeightLabel;
+	private TextView mWeightLabel;
 	
-	private TextView					mMaxWeightLabel;
+	private TextView mMaxWeightLabel;
 	
-	private ImageButton					mAddItemButton;
+	private ImageButton mAddItemButton;
 	
-	private int							mWeight			= 0;
+	private int mWeight = 0;
 	
-	private int							mMaxWeight;
+	private int mMaxWeight;
 	
-	private boolean						mInitialized	= false;
+	private boolean mInitialized = false;
 	
 	/**
 	 * Creates a new inventory controller from the given XML document.
@@ -144,9 +144,9 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 		final int id = mHost ? R.layout.host_inventory : R.layout.client_inventory;
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
 		
-		mExpander = Expander.handle(mHost ? R.id.h_inventory_button : R.id.c_inventory_button, mHost ? R.id.h_inventory_panel
-				: R.id.c_inventory_panel, mContainer, mResizeListener);
-		
+		mExpander = Expander.handle(mHost ? R.id.h_inventory_button : R.id.c_inventory_button,
+				mHost ? R.id.h_inventory_panel : R.id.c_inventory_panel, mContainer, mResizeListener);
+				
 		init();
 		
 		for (int i = 0; i < aElement.getChildNodes().getLength(); i++ )
@@ -203,9 +203,9 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 		final int id = mHost ? R.layout.host_inventory : R.layout.client_inventory;
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
 		
-		mExpander = Expander.handle(mHost ? R.id.h_inventory_button : R.id.c_inventory_button, mHost ? R.id.h_inventory_panel
-				: R.id.c_inventory_panel, mContainer, mResizeListener);
-		
+		mExpander = Expander.handle(mHost ? R.id.h_inventory_button : R.id.c_inventory_button,
+				mHost ? R.id.h_inventory_panel : R.id.c_inventory_panel, mContainer, mResizeListener);
+				
 		init();
 	}
 	
@@ -218,8 +218,9 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 				@Override
 				public void itemCreated(final InventoryItem aItem)
 				{
-					mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, mChar.getName(), R.string.got_item, new String[] { aItem
-							.getInfo(true) }, mContext, null, ButtonAction.TAKE_ITEM, ButtonAction.IGNORE_ITEM, FilesUtil.serialize(aItem)));
+					mMessageListener
+							.sendMessage(new Message(MessageGroup.SINGLE, mChar.getName(), R.string.got_item, new String[] { aItem.getInfo(true) },
+									mContext, null, ButtonAction.TAKE_ITEM, ButtonAction.IGNORE_ITEM, FilesUtil.serialize(aItem)));
 				}
 			};
 			CreateInventoryItemDialog.showCreateInventoryItemDialog(mContext.getString(R.string.create_item), mContext, listener);
@@ -239,7 +240,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	 */
 	public void addItem()
 	{
-		final SelectionListener<ItemType> listener = new SelectionListener<ItemType>()
+		final ItemSelectionListener<ItemType> listener = new ItemSelectionListener<ItemType>()
 		{
 			@Override
 			public void select(final ItemType aItem)

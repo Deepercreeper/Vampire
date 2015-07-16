@@ -8,8 +8,8 @@ import com.deepercreeper.vampireapp.character.instance.Mode;
 import com.deepercreeper.vampireapp.items.interfaces.GroupOption;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
-import com.deepercreeper.vampireapp.util.Saveable;
-import com.deepercreeper.vampireapp.util.view.Viewable;
+import com.deepercreeper.vampireapp.util.interfaces.Saveable;
+import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 
 /**
  * A controller handles a bunch of groups and a their group options.

@@ -5,7 +5,7 @@ import org.w3c.dom.Element;
 import android.content.Context;
 import com.deepercreeper.vampireapp.items.implementations.Named;
 import com.deepercreeper.vampireapp.util.ContactsUtil;
-import com.deepercreeper.vampireapp.util.Saveable;
+import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 
 /**
  * Represents a host banned player.

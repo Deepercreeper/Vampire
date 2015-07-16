@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.util.view;
+package com.deepercreeper.vampireapp.util.interfaces;
 
 /**
  * Some controllers need to update the size of their parents.

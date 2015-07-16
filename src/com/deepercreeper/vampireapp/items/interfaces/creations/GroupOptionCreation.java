@@ -4,7 +4,7 @@ import java.util.List;
 import android.content.Context;
 import com.deepercreeper.vampireapp.items.interfaces.GroupOption;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
-import com.deepercreeper.vampireapp.util.view.Viewable;
+import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 
 /**
  * Contains item group creations and handles between group restrictions.

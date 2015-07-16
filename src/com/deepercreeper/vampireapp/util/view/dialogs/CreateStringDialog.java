@@ -1,5 +1,7 @@
 package com.deepercreeper.vampireapp.util.view.dialogs;
 
+import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.util.view.listeners.StringCreationListener;
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
@@ -7,32 +9,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.widget.EditText;
-import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.util.view.dialogs.CreateStringDialog.CreationListener;
 
 /**
  * Used for creating a string and returning it to the given listener.
  * 
  * @author vrl
  */
-public class CreateStringDialog extends DefaultDialog<CreationListener, EditText>
+public class CreateStringDialog extends DefaultDialog<StringCreationListener, EditText>
 {
-	/**
-	 * A listener that is invoked when a string was created.
-	 * 
-	 * @author vrl
-	 */
-	public interface CreationListener
-	{
-		/**
-		 * Invoked when the given string was created.
-		 * 
-		 * @param aString
-		 *            The new created string.
-		 */
-		public void create(String aString);
-	}
-	
 	/**
 	 * Shows a create string dialog that returns the new created string to the listener.<br>
 	 * Only one dialog can be shown at one time.
@@ -46,7 +30,7 @@ public class CreateStringDialog extends DefaultDialog<CreationListener, EditText
 	 * @param aListener
 	 *            The string creation listener.
 	 */
-	public static void showCreateStringDialog(final String aTitle, final String aMessage, final Context aContext, final CreationListener aListener)
+	public static void showCreateStringDialog(final String aTitle, final String aMessage, final Context aContext, final StringCreationListener aListener)
 	{
 		if (isDialogOpen())
 		{
@@ -55,7 +39,7 @@ public class CreateStringDialog extends DefaultDialog<CreationListener, EditText
 		new CreateStringDialog(aTitle, aMessage, aContext, aListener).show(((Activity) aContext).getFragmentManager(), aTitle);
 	}
 	
-	private final String	mMessage;
+	private final String mMessage;
 	
 	/**
 	 * @return whether any of this classes dialogs is open.
@@ -65,7 +49,7 @@ public class CreateStringDialog extends DefaultDialog<CreationListener, EditText
 		return isDialogOpen(CreateStringDialog.class);
 	}
 	
-	private CreateStringDialog(final String aTitle, final String aMessage, final Context aContext, final CreationListener aListener)
+	private CreateStringDialog(final String aTitle, final String aMessage, final Context aContext, final StringCreationListener aListener)
 	{
 		super(aTitle, aContext, aListener, R.layout.dialog_create_string, EditText.class);
 		mMessage = aMessage;

@@ -6,6 +6,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
+import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
 
 /**
  * An expander handles the expandable container view.

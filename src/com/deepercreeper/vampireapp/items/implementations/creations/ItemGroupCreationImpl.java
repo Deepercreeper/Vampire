@@ -7,14 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import android.content.Context;
-import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.creation.CreationMode;
 import com.deepercreeper.vampireapp.items.implementations.creations.restrictions.CreationRestrictionableImpl;
@@ -29,7 +21,15 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.Crea
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog;
-import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog.SelectionListener;
+import com.deepercreeper.vampireapp.util.view.listeners.ItemSelectionListener;
+import android.content.Context;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 /**
  * A group creation implementation.
@@ -38,29 +38,29 @@ import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog.Selection
  */
 public class ItemGroupCreationImpl extends CreationRestrictionableImpl implements ItemGroupCreation
 {
-	private static final String				TAG				= "ItemGroupCreation";
+	private static final String TAG = "ItemGroupCreation";
 	
-	private final ItemGroup					mItemGroup;
+	private final ItemGroup mItemGroup;
 	
-	private final LinearLayout				mContainer;
+	private final LinearLayout mContainer;
 	
-	private final Context					mContext;
+	private final Context mContext;
 	
-	private final ItemControllerCreation	mItemController;
+	private final ItemControllerCreation mItemController;
 	
-	private final List<ItemCreation>		mItemsList		= new ArrayList<ItemCreation>();
+	private final List<ItemCreation> mItemsList = new ArrayList<ItemCreation>();
 	
-	private final Map<Item, ItemCreation>	mItems			= new HashMap<Item, ItemCreation>();
+	private final Map<Item, ItemCreation> mItems = new HashMap<Item, ItemCreation>();
 	
-	private final TextView					mTitleText;
+	private final TextView mTitleText;
 	
-	private final Button					mAddButton;
+	private final Button mAddButton;
 	
-	private boolean							mInitialized	= false;
+	private boolean mInitialized = false;
 	
-	private CreationMode					mMode;
+	private CreationMode mMode;
 	
-	private PointHandler					mPoints;
+	private PointHandler mPoints;
 	
 	/**
 	 * Creates a new group creation.
@@ -122,7 +122,7 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		{
 			return;
 		}
-		final SelectionListener<Item> action = new SelectionListener<Item>()
+		final ItemSelectionListener<Item> action = new ItemSelectionListener<Item>()
 		{
 			@Override
 			public void cancel()
@@ -215,7 +215,7 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		{
 			return;
 		}
-		final SelectionListener<Item> action = new SelectionListener<Item>()
+		final ItemSelectionListener<Item> action = new ItemSelectionListener<Item>()
 		{
 			@Override
 			public void cancel()
@@ -582,9 +582,9 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 	{
 		if (isMutable())
 		{
-			ViewUtil.setEnabled(mAddButton, !getAddableItems().isEmpty()
-					&& getItemsList().size() < getMaxValue(CreationRestrictionType.GROUP_CHILDREN_COUNT)
-					&& getItemsList().size() < getItemGroup().getMaxItems());
+			ViewUtil.setEnabled(mAddButton,
+					!getAddableItems().isEmpty() && getItemsList().size() < getMaxValue(CreationRestrictionType.GROUP_CHILDREN_COUNT)
+							&& getItemsList().size() < getItemGroup().getMaxItems());
 		}
 	}
 	

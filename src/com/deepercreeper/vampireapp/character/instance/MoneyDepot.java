@@ -5,12 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import android.content.Context;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.Currency;
 import com.deepercreeper.vampireapp.host.Message;
@@ -21,11 +15,17 @@ import com.deepercreeper.vampireapp.host.change.MoneyChange;
 import com.deepercreeper.vampireapp.items.implementations.Named;
 import com.deepercreeper.vampireapp.util.CodingUtil;
 import com.deepercreeper.vampireapp.util.DataUtil;
-import com.deepercreeper.vampireapp.util.Saveable;
 import com.deepercreeper.vampireapp.util.ViewUtil;
-import com.deepercreeper.vampireapp.util.view.Viewable;
+import com.deepercreeper.vampireapp.util.interfaces.Saveable;
+import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 import com.deepercreeper.vampireapp.util.view.dialogs.MoneyAmountDialog;
-import com.deepercreeper.vampireapp.util.view.dialogs.MoneyAmountDialog.MoneyAmountListener;
+import com.deepercreeper.vampireapp.util.view.listeners.MoneyAmountListener;
+import android.content.Context;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 /**
  * A money depot contains a number of coins for each currency and can be deleted.<br>
@@ -38,48 +38,48 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 	/**
 	 * The default comparator, that takes the default depot to the top.
 	 */
-	public static final Comparator<MoneyDepot>	COMPARATOR		= new Comparator<MoneyDepot>()
-																{
-																	@Override
-																	public int compare(final MoneyDepot aLhs, final MoneyDepot aRhs)
-																	{
-																		if (aLhs.isDefault())
-																		{
-																			return -1;
-																		}
-																		if (aRhs.isDefault())
-																		{
-																			return 1;
-																		}
-																		return aLhs.getName().compareTo(aRhs.getName());
-																	}
-																};
+	public static final Comparator<MoneyDepot> COMPARATOR = new Comparator<MoneyDepot>()
+	{
+		@Override
+		public int compare(final MoneyDepot aLhs, final MoneyDepot aRhs)
+		{
+			if (aLhs.isDefault())
+			{
+				return -1;
+			}
+			if (aRhs.isDefault())
+			{
+				return 1;
+			}
+			return aLhs.getName().compareTo(aRhs.getName());
+		}
+	};
 	
-	private final Map<String, Integer>			mValues;
+	private final Map<String, Integer> mValues;
 	
-	private final LinearLayout					mContainer;
+	private final LinearLayout mContainer;
 	
-	private final boolean						mHost;
+	private final boolean mHost;
 	
-	private final Context						mContext;
+	private final Context mContext;
 	
-	private final Currency						mCurrency;
+	private final Currency mCurrency;
 	
-	private final boolean						mDefault;
+	private final boolean mDefault;
 	
-	private final MoneyControllerInstance		mController;
+	private final MoneyControllerInstance mController;
 	
-	private boolean								mInitialized	= false;
+	private boolean mInitialized = false;
 	
-	private TextView							mNameText;
+	private TextView mNameText;
 	
-	private TextView							mValueText;
+	private TextView mValueText;
 	
-	private ImageButton							mTakeButton;
+	private ImageButton mTakeButton;
 	
-	private ImageButton							mDepotButton;
+	private ImageButton mDepotButton;
 	
-	private ImageButton							mDeleteButton;
+	private ImageButton mDeleteButton;
 	
 	/**
 	 * Creates a new money depot.
@@ -191,8 +191,8 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 				if (mDefault)
 				{
 					args = new String[] { serializeValues(", ", " ", aMap, true, mCurrency) };
-					getMessageListener().sendMessage(
-							new Message(MessageGroup.SINGLE, "", R.string.money_sent, args, mContext, null, ButtonAction.NOTHING));
+					getMessageListener()
+							.sendMessage(new Message(MessageGroup.SINGLE, "", R.string.money_sent, args, mContext, null, ButtonAction.NOTHING));
 					add(aMap);
 				}
 				else
@@ -205,10 +205,9 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 					else
 					{
 						args = new String[] { serializeValues(", ", " ", aMap, true, mCurrency), getName() };
-						getMessageListener().sendMessage(
-								new Message(MessageGroup.MONEY, mController.getChar().getName(), R.string.ask_depot_money, args, mContext, null,
-										ButtonAction.ACCEPT_DEPOT, ButtonAction.DENY_DEPOT, serializeValues(",", " ", aMap, false, mCurrency),
-										getName()));
+						getMessageListener().sendMessage(new Message(MessageGroup.MONEY, mController.getChar().getName(), R.string.ask_depot_money,
+								args, mContext, null, ButtonAction.ACCEPT_DEPOT, ButtonAction.DENY_DEPOT,
+								serializeValues(",", " ", aMap, false, mCurrency), getName()));
 					}
 				}
 			}
@@ -386,9 +385,8 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 				{
 					args = new String[] { serializeValues(", ", " ", aMap, true, mCurrency) };
 					remove(aMap);
-					getMessageListener().sendMessage(
-							new Message(MessageGroup.SINGLE, mController.getChar().getName(), R.string.money_sent, args, mContext, null,
-									ButtonAction.NOTHING));
+					getMessageListener().sendMessage(new Message(MessageGroup.SINGLE, mController.getChar().getName(), R.string.money_sent, args,
+							mContext, null, ButtonAction.NOTHING));
 				}
 				else
 				{
@@ -400,10 +398,9 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 					else
 					{
 						args = new String[] { serializeValues(", ", " ", aMap, true, mCurrency), getName() };
-						getMessageListener().sendMessage(
-								new Message(MessageGroup.MONEY, mController.getChar().getName(), R.string.ask_take_money, args, mContext, null,
-										ButtonAction.ACCEPT_TAKE, ButtonAction.DENY_TAKE, serializeValues(",", " ", aMap, false, mCurrency),
-										getName()));
+						getMessageListener().sendMessage(new Message(MessageGroup.MONEY, mController.getChar().getName(), R.string.ask_take_money,
+								args, mContext, null, ButtonAction.ACCEPT_TAKE, ButtonAction.DENY_TAKE,
+								serializeValues(",", " ", aMap, false, mCurrency), getName()));
 					}
 				}
 			}

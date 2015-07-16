@@ -11,7 +11,7 @@ import com.deepercreeper.vampireapp.lists.items.Description;
 import com.deepercreeper.vampireapp.lists.items.DescriptionCreation;
 import com.deepercreeper.vampireapp.lists.items.DescriptionInstance;
 import com.deepercreeper.vampireapp.util.CodingUtil;
-import com.deepercreeper.vampireapp.util.Saveable;
+import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 
 /**
  * A controller for all character descriptions.

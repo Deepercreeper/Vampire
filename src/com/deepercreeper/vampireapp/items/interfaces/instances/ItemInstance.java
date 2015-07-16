@@ -9,9 +9,9 @@ import com.deepercreeper.vampireapp.character.instance.Mode;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestrictionable;
 import com.deepercreeper.vampireapp.mechanics.Action;
-import com.deepercreeper.vampireapp.util.ItemFinder;
-import com.deepercreeper.vampireapp.util.Saveable;
-import com.deepercreeper.vampireapp.util.view.Viewable;
+import com.deepercreeper.vampireapp.util.interfaces.ItemFinder;
+import com.deepercreeper.vampireapp.util.interfaces.Saveable;
+import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 
 /**
  * This represents a final item that a character can have.

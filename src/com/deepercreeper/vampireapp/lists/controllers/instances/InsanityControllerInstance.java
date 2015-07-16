@@ -11,7 +11,7 @@ import com.deepercreeper.vampireapp.mechanics.Duration;
 import com.deepercreeper.vampireapp.mechanics.Duration.DurationListener;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.CodingUtil;
-import com.deepercreeper.vampireapp.util.Saveable;
+import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 
 /**
  * A controller for all insanity instances.

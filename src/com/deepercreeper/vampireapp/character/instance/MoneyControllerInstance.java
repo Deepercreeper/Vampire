@@ -15,13 +15,13 @@ import com.deepercreeper.vampireapp.host.Message.MessageGroup;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.host.change.MoneyChange;
 import com.deepercreeper.vampireapp.util.CodingUtil;
-import com.deepercreeper.vampireapp.util.Saveable;
 import com.deepercreeper.vampireapp.util.ViewUtil;
+import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
+import com.deepercreeper.vampireapp.util.interfaces.Saveable;
+import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 import com.deepercreeper.vampireapp.util.view.Expander;
-import com.deepercreeper.vampireapp.util.view.ResizeListener;
-import com.deepercreeper.vampireapp.util.view.Viewable;
 import com.deepercreeper.vampireapp.util.view.dialogs.CreateStringDialog;
-import com.deepercreeper.vampireapp.util.view.dialogs.CreateStringDialog.CreationListener;
+import com.deepercreeper.vampireapp.util.view.listeners.StringCreationListener;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -191,7 +191,7 @@ public class MoneyControllerInstance implements Saveable, Viewable
 		{
 			return;
 		}
-		final CreationListener listener = new CreationListener()
+		final StringCreationListener listener = new StringCreationListener()
 		{
 			@Override
 			public void create(final String aString)

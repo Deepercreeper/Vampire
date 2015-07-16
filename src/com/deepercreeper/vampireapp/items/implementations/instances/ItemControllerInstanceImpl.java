@@ -26,7 +26,7 @@ import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerIns
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemGroupInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.util.ViewUtil;
-import com.deepercreeper.vampireapp.util.view.ResizeListener;
+import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
 
 /**
  * An item controller implementation.

@@ -1,5 +1,11 @@
 package com.deepercreeper.vampireapp.util.view.dialogs;
 
+import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.items.ItemProvider;
+import com.deepercreeper.vampireapp.items.interfaces.Item;
+import com.deepercreeper.vampireapp.items.interfaces.ItemController;
+import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
+import com.deepercreeper.vampireapp.util.view.listeners.ItemChooseListener;
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
@@ -9,12 +15,6 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.items.ItemProvider;
-import com.deepercreeper.vampireapp.items.interfaces.Item;
-import com.deepercreeper.vampireapp.items.interfaces.ItemController;
-import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
-import com.deepercreeper.vampireapp.util.view.dialogs.ItemChooserDialog.ItemChooseListener;
 
 /**
  * A dialog used to choose one item out of all given.
@@ -23,23 +23,7 @@ import com.deepercreeper.vampireapp.util.view.dialogs.ItemChooserDialog.ItemChoo
  */
 public class ItemChooserDialog extends DefaultDialog<ItemChooseListener, LinearLayout>
 {
-	/**
-	 * A listener for item choosing actions.
-	 * 
-	 * @author Vincent
-	 */
-	public static interface ItemChooseListener
-	{
-		/**
-		 * The given item was chosen.
-		 * 
-		 * @param aItem
-		 *            The item.
-		 */
-		public void chose(Item aItem);
-	}
-	
-	private final ItemProvider	mItems;
+	private final ItemProvider mItems;
 	
 	private ItemChooserDialog(final ItemProvider aItems, final String aTitle, final Context aContext, final ItemChooseListener aListener)
 	{

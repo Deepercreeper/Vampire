@@ -24,10 +24,10 @@ import com.deepercreeper.vampireapp.lists.items.Nature;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.CodingUtil;
 import com.deepercreeper.vampireapp.util.FilesUtil;
-import com.deepercreeper.vampireapp.util.ItemFinder;
 import com.deepercreeper.vampireapp.util.Log;
-import com.deepercreeper.vampireapp.util.Saveable;
-import com.deepercreeper.vampireapp.util.view.ResizeListener;
+import com.deepercreeper.vampireapp.util.interfaces.ItemFinder;
+import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
+import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 
 /**
  * This represents an existing character that can be played, saved and loaded.

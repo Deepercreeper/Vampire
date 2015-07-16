@@ -6,6 +6,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
+import com.deepercreeper.vampireapp.host.Player;
+import com.deepercreeper.vampireapp.util.BluetoothReceiver;
+import com.deepercreeper.vampireapp.util.BluetoothReceiver.BluetoothListener;
+import com.deepercreeper.vampireapp.util.Log;
+import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog;
+import com.deepercreeper.vampireapp.util.view.listeners.ItemSelectionListener;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -14,14 +22,6 @@ import android.bluetooth.BluetoothSocket;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.widget.Toast;
-import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
-import com.deepercreeper.vampireapp.host.Player;
-import com.deepercreeper.vampireapp.util.BluetoothReceiver;
-import com.deepercreeper.vampireapp.util.BluetoothReceiver.BluetoothListener;
-import com.deepercreeper.vampireapp.util.Log;
-import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog;
-import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog.SelectionListener;
 
 /**
  * This controller handles all connection actions like creating an open Bluetooth port<br>
@@ -31,29 +31,29 @@ import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog.Selection
  */
 public class ConnectionController implements ConnectionListener
 {
-	private static final String			TAG					= "ConnectionController";
+	private static final String TAG = "ConnectionController";
 	
-	private static final UUID			DEFAULT_UUID		= UUID.fromString("c155da2d-302d-4f10-bc3b-fa277af3599d");
+	private static final UUID DEFAULT_UUID = UUID.fromString("c155da2d-302d-4f10-bc3b-fa277af3599d");
 	
-	private final BluetoothReceiver		mReceiver			= new BluetoothReceiver();
+	private final BluetoothReceiver mReceiver = new BluetoothReceiver();
 	
-	private final Activity				mContext;
+	private final Activity mContext;
 	
-	private final List<ConnectedDevice>	mDevices			= new ArrayList<ConnectedDevice>();
+	private final List<ConnectedDevice> mDevices = new ArrayList<ConnectedDevice>();
 	
-	private final ConnectionListener	mConnectionListener;
+	private final ConnectionListener mConnectionListener;
 	
-	private final Handler				mHandler;
+	private final Handler mHandler;
 	
-	private BluetoothAdapter			mBluetoothAdapter;
+	private BluetoothAdapter mBluetoothAdapter;
 	
-	private BluetoothServerSocket		mInsecureSocket		= null;
+	private BluetoothServerSocket mInsecureSocket = null;
 	
-	private BluetoothServerSocket		mSecureSocket		= null;
+	private BluetoothServerSocket mSecureSocket = null;
 	
-	private boolean						mBluetooth			= true;
+	private boolean mBluetooth = true;
 	
-	private boolean						mCheckingForDevies	= false;
+	private boolean mCheckingForDevies = false;
 	
 	/**
 	 * Creates a new connection controller for the given activity.
@@ -118,7 +118,7 @@ public class ConnectionController implements ConnectionListener
 		{
 			devices.add(new Device(device));
 		}
-		final SelectionListener<Device> listener = new SelectionListener<Device>()
+		final ItemSelectionListener<Device> listener = new ItemSelectionListener<Device>()
 		{
 			@Override
 			public void cancel()

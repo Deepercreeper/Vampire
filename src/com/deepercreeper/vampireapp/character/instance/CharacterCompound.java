@@ -9,9 +9,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.util.ViewUtil;
+import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 import com.deepercreeper.vampireapp.util.view.CharacterContextMenu;
 import com.deepercreeper.vampireapp.util.view.CharacterContextMenu.CharacterListener;
-import com.deepercreeper.vampireapp.util.view.Viewable;
 
 /**
  * A container for characters, that displays main information about it and prevents the system from<br>

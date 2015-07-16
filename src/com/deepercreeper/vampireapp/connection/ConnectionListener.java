@@ -2,7 +2,7 @@ package com.deepercreeper.vampireapp.connection;
 
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
 import com.deepercreeper.vampireapp.host.Player;
-import com.deepercreeper.vampireapp.util.view.Toaster;
+import com.deepercreeper.vampireapp.util.interfaces.Toaster;
 
 /**
  * This listener is used to react to Bluetooth events.

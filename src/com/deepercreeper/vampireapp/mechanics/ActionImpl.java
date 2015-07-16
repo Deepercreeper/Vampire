@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
-import com.deepercreeper.vampireapp.util.ItemFinder;
 import com.deepercreeper.vampireapp.util.LanguageUtil;
+import com.deepercreeper.vampireapp.util.interfaces.ItemFinder;
 
 /**
  * The default implementation of an action.

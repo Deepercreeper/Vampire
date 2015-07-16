@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.util.view;
+package com.deepercreeper.vampireapp.util.interfaces;
 
 /**
  * Everything that is able to make toast messages should implement this interface.

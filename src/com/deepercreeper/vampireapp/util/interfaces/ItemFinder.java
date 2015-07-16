@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.util;
+package com.deepercreeper.vampireapp.util.interfaces;
 
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 

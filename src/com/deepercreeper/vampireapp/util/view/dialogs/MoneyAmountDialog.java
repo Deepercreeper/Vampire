@@ -2,6 +2,10 @@ package com.deepercreeper.vampireapp.util.view.dialogs;
 
 import java.util.HashMap;
 import java.util.Map;
+import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.character.Currency;
+import com.deepercreeper.vampireapp.util.ViewUtil;
+import com.deepercreeper.vampireapp.util.view.listeners.MoneyAmountListener;
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
@@ -15,10 +19,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.character.Currency;
-import com.deepercreeper.vampireapp.util.ViewUtil;
-import com.deepercreeper.vampireapp.util.view.dialogs.MoneyAmountDialog.MoneyAmountListener;
 
 /**
  * A dialog, that is used to choose, how much money to handle with.
@@ -28,35 +28,19 @@ import com.deepercreeper.vampireapp.util.view.dialogs.MoneyAmountDialog.MoneyAmo
 public class MoneyAmountDialog extends DefaultDialog<MoneyAmountListener, LinearLayout>
 {
 	/**
-	 * A listener for money amount choose.
-	 * 
-	 * @author Vincent
-	 */
-	public static interface MoneyAmountListener
-	{
-		/**
-		 * Invoked, when the money amount was chosen.
-		 * 
-		 * @param aMap
-		 *            A map that puts an amount to each currency.
-		 */
-		public void amountSelected(Map<String, Integer> aMap);
-	}
-	
-	/**
 	 * The default maximum money amount.
 	 */
-	public static final int				MAX_VALUE	= 10000;
+	public static final int MAX_VALUE = 10000;
 	
-	private final Map<String, Integer>	mValues		= new HashMap<String, Integer>();
+	private final Map<String, Integer> mValues = new HashMap<String, Integer>();
 	
-	private final Map<String, Integer>	mMaxValues;
+	private final Map<String, Integer> mMaxValues;
 	
-	private final Currency				mCurrency;
+	private final Currency mCurrency;
 	
-	private final Map<String, EditText>	mAmounts	= new HashMap<String, EditText>();
+	private final Map<String, EditText> mAmounts = new HashMap<String, EditText>();
 	
-	private Button						mOK;
+	private Button mOK;
 	
 	private MoneyAmountDialog(final Currency aCurrency, final Map<String, Integer> aMaxValues, final String aTitle, final Context aContext,
 			final MoneyAmountListener aAction)
