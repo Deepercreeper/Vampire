@@ -14,6 +14,7 @@
  - Fragment XML file: f_*
  - TextView: *_label
  - EditText: *_text
+ - CheckBox: *_box
  - ProgressBar: *_bar
  - Button: *_button
  - Spinner: *_spinner

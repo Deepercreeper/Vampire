@@ -5,12 +5,13 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import android.content.Context;
 import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.implementations.instances.ItemControllerInstanceImpl;
 import com.deepercreeper.vampireapp.items.implementations.instances.restrictions.InstanceRestrictionImpl;
+import com.deepercreeper.vampireapp.items.interfaces.Item;
+import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
@@ -28,6 +29,7 @@ import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.interfaces.ItemFinder;
 import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
+import android.content.Context;
 
 /**
  * This represents an existing character that can be played, saved and loaded.
@@ -36,47 +38,47 @@ import com.deepercreeper.vampireapp.util.interfaces.Saveable;
  */
 public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 {
-	private static final String					TAG				= "CharacterInstance";
+	private static final String TAG = "CharacterInstance";
 	
-	private final ItemProvider					mItems;
+	private final ItemProvider mItems;
 	
-	private final Context						mContext;
+	private final Context mContext;
 	
-	private final List<ItemControllerInstance>	mControllers	= new ArrayList<ItemControllerInstance>();
+	private final List<ItemControllerInstance> mControllers = new ArrayList<ItemControllerInstance>();
 	
-	private final List<TimeListener>			mTimeListeners	= new ArrayList<TimeListener>();
+	private final List<TimeListener> mTimeListeners = new ArrayList<TimeListener>();
 	
-	private final List<InstanceRestriction>		mRestrictions	= new ArrayList<InstanceRestriction>();
+	private final List<InstanceRestriction> mRestrictions = new ArrayList<InstanceRestriction>();
 	
-	private final GenerationControllerInstance	mGeneration;
+	private final GenerationControllerInstance mGeneration;
 	
-	private final DescriptionControllerInstance	mDescriptions;
+	private final DescriptionControllerInstance mDescriptions;
 	
-	private final InsanityControllerInstance	mInsanities;
+	private final InsanityControllerInstance mInsanities;
 	
-	private final EPControllerInstance			mEP;
+	private final EPControllerInstance mEP;
 	
-	private final String						mName;
+	private final String mName;
 	
-	private final String						mConcept;
+	private final String mConcept;
 	
-	private final Nature						mNature;
+	private final Nature mNature;
 	
-	private final Nature						mBehavior;
+	private final Nature mBehavior;
 	
-	private final Clan							mClan;
+	private final Clan mClan;
 	
-	private final HealthControllerInstance		mHealth;
+	private final HealthControllerInstance mHealth;
 	
-	private final MoneyControllerInstance		mMoney;
+	private final MoneyControllerInstance mMoney;
 	
-	private final InventoryControllerInstance	mInventory;
+	private final InventoryControllerInstance mInventory;
 	
-	private final boolean						mHost;
+	private final boolean mHost;
 	
-	private final ResizeListener				mResizeListener;
+	private final ResizeListener mResizeListener;
 	
-	private Mode								mMode;
+	private Mode mMode;
 	
 	/**
 	 * Creates a new character out of the given character creation.
@@ -116,8 +118,8 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		
 		for (final ItemControllerCreation controller : aCreator.getControllers())
 		{
-			mControllers.add(new ItemControllerInstanceImpl(controller, getContext(), mMode, mEP, this, aControllerResizeListener, aMessageListener,
-					mHost));
+			mControllers.add(
+					new ItemControllerInstanceImpl(controller, getContext(), mMode, mEP, this, aControllerResizeListener, aMessageListener, mHost));
 		}
 		
 		mInventory = new InventoryControllerInstance(mItems.getInventory(), this, mContext, mResizeListener, aMessageListener, this, mHost);
@@ -153,8 +155,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	 *             if the XML document can't be parsed.
 	 */
 	public CharacterInstance(final String aXML, final ItemProvider aItems, final Context aContext, final MessageListener aMessageListener,
-			final ResizeListener aResizeListener, final ResizeListener aControllerResizeListener, final boolean aHost)
-			throws IllegalArgumentException
+			final ResizeListener aResizeListener, final ResizeListener aControllerResizeListener, final boolean aHost) throws IllegalArgumentException
 	{
 		Log.i(TAG, "Starting to load character xml.");
 		mItems = aItems;
@@ -215,11 +216,11 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		// Money
 		mMoney = new MoneyControllerInstance(mItems.getCurrency(), (Element) root.getElementsByTagName("money").item(0), getContext(), mHost,
 				aMessageListener, mResizeListener, this);
-		
+				
 		// Inventory
 		mInventory = new InventoryControllerInstance((Element) root.getElementsByTagName("inventory").item(0), mItems.getInventory(), this,
 				getContext(), mResizeListener, aMessageListener, this, mHost);
-		
+				
 		// Restrictions
 		final Element restrictions = (Element) root.getElementsByTagName("restrictions").item(0);
 		final NodeList restrictionsList = restrictions.getChildNodes();
@@ -301,6 +302,17 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		{
 			listener.time(aType, aAmount);
 		}
+	}
+	
+	@Override
+	public List<Item> getItemsList()
+	{
+		List<Item> items = new ArrayList<Item>();
+		for (ItemController controller : mItems.getControllers())
+		{
+			items.addAll(controller.getItemsList());
+		}
+		return items;
 	}
 	
 	@Override

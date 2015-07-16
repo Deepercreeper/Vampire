@@ -7,7 +7,6 @@ import org.w3c.dom.Element;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.Inventory;
 import com.deepercreeper.vampireapp.character.InventoryItem;
-import com.deepercreeper.vampireapp.character.Weapon;
 import com.deepercreeper.vampireapp.host.Message;
 import com.deepercreeper.vampireapp.host.Message.ButtonAction;
 import com.deepercreeper.vampireapp.host.Message.MessageGroup;
@@ -25,8 +24,9 @@ import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 import com.deepercreeper.vampireapp.util.view.Expander;
 import com.deepercreeper.vampireapp.util.view.dialogs.CreateInventoryItemDialog;
+import com.deepercreeper.vampireapp.util.view.dialogs.CreateWeaponItemDialog;
 import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog;
-import com.deepercreeper.vampireapp.util.view.listeners.ItemCreationListener;
+import com.deepercreeper.vampireapp.util.view.listeners.InventoryItemCreationListener;
 import com.deepercreeper.vampireapp.util.view.listeners.ItemSelectionListener;
 import android.content.Context;
 import android.view.View;
@@ -156,11 +156,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 				final Element child = (Element) aElement.getChildNodes().item(i);
 				if (child.getTagName().equals("item"))
 				{
-					addItem(new InventoryItem(child, mContext, this), true);
-				}
-				else if (child.getTagName().equals("weapon"))
-				{
-					addItem(new Weapon(child, mItems, mContext, this), true);
+					addItem(InventoryItem.deserialize(child, mContext, this, mChar), true);
 				}
 			}
 		}
@@ -211,23 +207,23 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	
 	private void addItem(final Named aItemType)
 	{
+		final InventoryItemCreationListener listener = new InventoryItemCreationListener()
+		{
+			@Override
+			public void itemCreated(final InventoryItem aItem)
+			{
+				mMessageListener
+						.sendMessage(new Message(MessageGroup.SINGLE, "", R.string.got_item, aItem.getInfoArray(), aItem.getInfoTranslatedArray(),
+								mContext, null, ButtonAction.TAKE_ITEM, ButtonAction.IGNORE_ITEM, FilesUtil.serialize(aItem)));
+			}
+		};
 		if (aItemType.equals(ITEM))
 		{
-			final ItemCreationListener listener = new ItemCreationListener()
-			{
-				@Override
-				public void itemCreated(final InventoryItem aItem)
-				{
-					mMessageListener
-							.sendMessage(new Message(MessageGroup.SINGLE, mChar.getName(), R.string.got_item, new String[] { aItem.getInfo(true) },
-									mContext, null, ButtonAction.TAKE_ITEM, ButtonAction.IGNORE_ITEM, FilesUtil.serialize(aItem)));
-				}
-			};
 			CreateInventoryItemDialog.showCreateInventoryItemDialog(mContext.getString(R.string.create_item), mContext, listener);
 		}
 		else if (aItemType.equals(WEAPON))
 		{
-			// TODO Implement weapon creation
+			CreateWeaponItemDialog.showCreateWeaponItemDialog(mContext.getString(R.string.create_weapon), mContext, listener, mChar);
 		}
 		else if (aItemType.equals(ARMOR))
 		{
@@ -418,8 +414,8 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 		}
 		if ( !mHost)
 		{
-			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, mChar.getName(), R.string.left_item, new String[] { aItem.getInfo(false) },
-					mContext, null, ButtonAction.NOTHING));
+			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, mChar.getName(), R.string.left_item, aItem.getInfoArray(),
+					aItem.getInfoTranslatedArray(), mContext, null, ButtonAction.NOTHING));
 		}
 	}
 	

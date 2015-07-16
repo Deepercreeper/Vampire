@@ -17,13 +17,13 @@ import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
  */
 public class ItemControllerImpl extends Named implements ItemController
 {
-	private final Map<String, ItemGroup>	mGroups				= new HashMap<String, ItemGroup>();
+	private final Map<String, ItemGroup> mGroups = new HashMap<String, ItemGroup>();
 	
-	private final List<ItemGroup>			mGroupList			= new ArrayList<ItemGroup>();
+	private final List<ItemGroup> mGroupList = new ArrayList<ItemGroup>();
 	
-	private final Map<String, GroupOption>	mGroupOptions		= new HashMap<String, GroupOption>();
+	private final Map<String, GroupOption> mGroupOptions = new HashMap<String, GroupOption>();
 	
-	private final List<GroupOption>			mGroupOptionList	= new ArrayList<GroupOption>();
+	private final List<GroupOption> mGroupOptionList = new ArrayList<GroupOption>();
 	
 	/**
 	 * Creates a new item controller.
@@ -87,6 +87,17 @@ public class ItemControllerImpl extends Named implements ItemController
 			}
 		}
 		return null;
+	}
+	
+	@Override
+	public List<Item> getItemsList()
+	{
+		List<Item> items = new ArrayList<Item>();
+		for (ItemGroup group : getGroupsList())
+		{
+			items.addAll(group.getItemsList());
+		}
+		return items;
 	}
 	
 	@Override

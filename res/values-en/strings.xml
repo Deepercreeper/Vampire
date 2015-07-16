@@ -47,6 +47,7 @@
     <string name="create_host">Create host</string>
     <string name="create_host_button">Create new host</string>
     <string name="create_item">Create new item</string>
+    <string name="create_weapon">Create new weapon</string>
     <string name="damage">Damage</string>
     <string name="day">Day</string>
     <string name="delete_char">Delete</string>
@@ -57,6 +58,8 @@
     <string name="description">Description</string>
     <string name="difficulty">Difficulty</string>
     <string name="distance">Distance</string>
+    <string name="distance_weapon">Distanceweapon</string>
+    <string name="distance_unit">m</string>
     <string name="edit_item">Edit </string>
     <string name="ep_colon">Experience:</string>
     <string name="ep_amount">EP amount</string>
@@ -65,7 +68,7 @@
     <string name="free_points_info">Free bonus points</string>
     <string name="friends">Friends</string>
     <string name="generation_colon">Generation:</string>
-    <string name="got_item">You got the following item: {0}</string>
+    <string name="got_item">You got the following item: {x}</string>
     <string name="health_colon">Health:</string>
     <string name="host_closed">The host has stopped his game.</string>
     <string name="host_decreased">{0} has been decreased to {1}.</string>
@@ -81,7 +84,7 @@
     <string name="kicked">You have been kicked.</string>
     <string name="ko">Knocked out</string>
     <string name="left_game">left the game.</string>
-    <string name="left_item">Left the following item: {0}</string>
+    <string name="left_item">Left the following item: {x}</string>
     <string name="magazine">Magazine</string>
     <string name="max">Max</string>
     <string name="max_weight">Maximum weight</string>

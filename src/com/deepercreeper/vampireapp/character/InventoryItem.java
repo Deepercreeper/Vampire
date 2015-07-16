@@ -2,6 +2,13 @@ package com.deepercreeper.vampireapp.character;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.character.instance.InventoryControllerInstance;
+import com.deepercreeper.vampireapp.util.CodingUtil;
+import com.deepercreeper.vampireapp.util.ViewUtil;
+import com.deepercreeper.vampireapp.util.interfaces.ItemFinder;
+import com.deepercreeper.vampireapp.util.interfaces.Saveable;
+import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -9,11 +16,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.character.instance.InventoryControllerInstance;
-import com.deepercreeper.vampireapp.util.ViewUtil;
-import com.deepercreeper.vampireapp.util.interfaces.Saveable;
-import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 
 /**
  * An inventory item has several properties and can be stored inside the inventory.<br>
@@ -23,37 +25,29 @@ import com.deepercreeper.vampireapp.util.interfaces.Viewable;
  */
 public class InventoryItem implements Saveable, Viewable
 {
-	private final int					mWeight;
+	private static final String ITEM_TYPE = "item";
 	
-	private final String				mName;
+	private final int mWeight;
 	
-	private final Context				mContext;
+	private final String mName;
 	
-	private final LinearLayout			mContainer;
+	private final Context mContext;
 	
-	private TextView					mItemName;
+	private final LinearLayout mContainer;
 	
-	private int							mQuantity		= 1;
+	private TextView mItemName;
 	
-	private InventoryControllerInstance	mController;
+	private int mQuantity = 1;
 	
-	private boolean						mInitialized	= false;
+	private InventoryControllerInstance mController;
 	
-	/**
-	 * Creates a new inventory item out of the given XML data.
-	 * 
-	 * @param aElement
-	 *            The XML data.
-	 * @param aContext
-	 *            The underlying context.
-	 * @param aController
-	 *            The parent inventory controller.
-	 */
-	public InventoryItem(final Element aElement, final Context aContext, final InventoryControllerInstance aController)
+	private boolean mInitialized = false;
+	
+	private InventoryItem(final Element aElement, final Context aContext, final InventoryControllerInstance aController)
 	{
 		mContext = aContext;
 		mController = aController;
-		mName = aElement.getAttribute("name");
+		mName = CodingUtil.decode(aElement.getAttribute("name"));
 		mWeight = Integer.parseInt(aElement.getAttribute("weight"));
 		mQuantity = Integer.parseInt(aElement.getAttribute("quantity"));
 		
@@ -229,7 +223,7 @@ public class InventoryItem implements Saveable, Viewable
 		return mContext;
 	}
 	
-	private String getQuantitySuffix()
+	protected String getQuantitySuffix()
 	{
 		if (getQuantity() > 1)
 		{
@@ -301,13 +295,62 @@ public class InventoryItem implements Saveable, Viewable
 		mController = aController;
 	}
 	
+	protected String getType()
+	{
+		return ITEM_TYPE;
+	}
+	
 	@Override
 	public Element asElement(final Document aDoc)
 	{
 		final Element element = aDoc.createElement("item");
-		element.setAttribute("name", mName);
-		element.setAttribute("weight", "" + mWeight);
-		element.setAttribute("quantity", "" + mQuantity);
+		element.setAttribute("type", getType());
+		element.setAttribute("name", CodingUtil.encode(getName()));
+		element.setAttribute("weight", "" + getWeight());
+		element.setAttribute("quantity", "" + getQuantity());
 		return element;
+	}
+	
+	/**
+	 * @return an array of strings, that are used to display this item inside a message.
+	 */
+	public String[] getInfoArray()
+	{
+		return new String[] { getName() + getQuantitySuffix() + ": " + getWeight() + " ", getContext().getString(R.string.weight_unit) };
+	}
+	
+	/**
+	 * @return a boolean array that determines which info array entries should be translated.
+	 */
+	public boolean[] getInfoTranslatedArray()
+	{
+		return new boolean[] { false, true };
+	}
+	
+	/**
+	 * Deserializes the given item depending on the type attribute.
+	 * 
+	 * @param aElement
+	 *            The element-
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aController
+	 *            The inventory controller.
+	 * @param aItems
+	 *            An item finder.
+	 * @return the new created item.
+	 */
+	public static InventoryItem deserialize(Element aElement, Context aContext, InventoryControllerInstance aController, ItemFinder aItems)
+	{
+		String type = aElement.getAttribute("type");
+		if (type.equals(ITEM_TYPE))
+		{
+			return new InventoryItem(aElement, aContext, aController);
+		}
+		if (type.equals(Weapon.ITEM_TYPE))
+		{
+			return new Weapon(aElement, aItems, aContext, aController);
+		}
+		return null;
 	}
 }

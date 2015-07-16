@@ -7,7 +7,7 @@ import com.deepercreeper.vampireapp.character.InventoryItem;
  * 
  * @author Vincent
  */
-public interface ItemCreationListener
+public interface InventoryItemCreationListener
 {
 	/**
 	 * Invoked, when an inventory item was created.

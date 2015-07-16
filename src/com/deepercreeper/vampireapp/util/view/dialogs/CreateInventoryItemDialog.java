@@ -2,7 +2,8 @@ package com.deepercreeper.vampireapp.util.view.dialogs;
 
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.InventoryItem;
-import com.deepercreeper.vampireapp.util.view.listeners.ItemCreationListener;
+import com.deepercreeper.vampireapp.util.ViewUtil;
+import com.deepercreeper.vampireapp.util.view.listeners.InventoryItemCreationListener;
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
@@ -20,7 +21,7 @@ import android.widget.LinearLayout;
  * 
  * @author Vincent
  */
-public class CreateInventoryItemDialog extends DefaultDialog<ItemCreationListener, LinearLayout>
+public class CreateInventoryItemDialog extends DefaultDialog<InventoryItemCreationListener, LinearLayout>
 {
 	private EditText mName;
 	
@@ -30,7 +31,7 @@ public class CreateInventoryItemDialog extends DefaultDialog<ItemCreationListene
 	
 	private Button mOK;
 	
-	private CreateInventoryItemDialog(final String aTitle, final Context aContext, final ItemCreationListener aListener)
+	private CreateInventoryItemDialog(final String aTitle, final Context aContext, final InventoryItemCreationListener aListener)
 	{
 		super(aTitle, aContext, aListener, R.layout.dialog_create_inventory_item, LinearLayout.class);
 	}
@@ -103,7 +104,7 @@ public class CreateInventoryItemDialog extends DefaultDialog<ItemCreationListene
 		}
 		catch (final NumberFormatException e)
 		{}
-		mOK.setEnabled(enabled);
+		ViewUtil.setEnabled(mOK, enabled);
 	}
 	
 	/**
@@ -124,7 +125,7 @@ public class CreateInventoryItemDialog extends DefaultDialog<ItemCreationListene
 	 * @param aListener
 	 *            The dialog listener.
 	 */
-	public static void showCreateInventoryItemDialog(final String aTitle, final Context aContext, final ItemCreationListener aListener)
+	public static void showCreateInventoryItemDialog(final String aTitle, final Context aContext, final InventoryItemCreationListener aListener)
 	{
 		if (isDialogOpen())
 		{

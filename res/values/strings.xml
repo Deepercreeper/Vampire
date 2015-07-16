@@ -47,6 +47,7 @@
     <string name="create_host">Host erstellen</string>
     <string name="create_host_button">Neuen Host erstellen</string>
     <string name="create_item">Neues Item erstellen</string>
+    <string name="create_weapon">Neue Waffe erstellen</string>
     <string name="damage">Schaden</string>
     <string name="day">Tag</string>
     <string name="delete_char">Löschen</string>
@@ -57,6 +58,8 @@
     <string name="description">Beschreibung</string>
     <string name="difficulty">Schwierigkeit</string>
     <string name="distance">Reichweite</string>
+    <string name="distance_weapon">Distanzwaffe</string>
+    <string name="distance_unit">m</string>
     <string name="edit_item">Bearbeiten von </string>
     <string name="ep_colon">Erfahrung:</string>
     <string name="ep_amount">EP Menge</string>
@@ -65,7 +68,7 @@
     <string name="free_points_info">Freie Zusatzpunkte</string>
     <string name="friends">Freunde</string>
     <string name="generation_colon">Generation:</string>
-    <string name="got_item">Sie haben folgenden Gegenstand erhalten: {0}</string>
+    <string name="got_item">Sie haben folgenden Gegenstand erhalten: {x}</string>
     <string name="health_colon">Leben:</string>
     <string name="host_closed">Der Host hat sein Spiel beendet.</string>
     <string name="host_decreased">{0} wurde auf {1} verringert.</string>
@@ -81,7 +84,7 @@
     <string name="kicked">Der Host hat dich rausgeworfen.</string>
     <string name="ko">Außer Gefecht</string>
     <string name="left_game">hat das Spiel verlassen.</string>
-    <string name="left_item">Hat folgenden Gegenstand liegen lassen: {0}</string>
+    <string name="left_item">Hat folgenden Gegenstand liegen lassen: {x}</string>
     <string name="magazine">Magazin</string>
     <string name="max">Max</string>
     <string name="max_weight">Maximales Gewicht</string>

@@ -55,4 +55,9 @@ public interface ItemController extends Nameable
 	 * @return the item with the given name.
 	 */
 	public Item getItem(String aName);
+	
+	/**
+	 * @return a list of all items inside this controller.
+	 */
+	public List<Item> getItemsList();
 }

@@ -2,10 +2,11 @@ package com.deepercreeper.vampireapp.host.change;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import android.content.Context;
 import com.deepercreeper.vampireapp.character.InventoryItem;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.util.FilesUtil;
+import com.deepercreeper.vampireapp.util.interfaces.ItemFinder;
+import android.content.Context;
 
 /**
  * A inventory change.
@@ -17,11 +18,11 @@ public class InventoryChange implements CharacterChange
 	/**
 	 * The XML tag for inventory changes.
 	 */
-	public static final String	TAG_NAME	= "inventory-change";
+	public static final String TAG_NAME = "inventory-change";
 	
-	private final InventoryItem	mItem;
+	private final InventoryItem mItem;
 	
-	private final boolean		mAdded;
+	private final boolean mAdded;
 	
 	/**
 	 * The inventory has added or removed an item.
@@ -44,12 +45,14 @@ public class InventoryChange implements CharacterChange
 	 *            The data.
 	 * @param aContext
 	 *            The underlying context.
+	 * @param aItems
+	 *            An item finder.
 	 */
-	public InventoryChange(final Element aElement, final Context aContext)
+	public InventoryChange(final Element aElement, final Context aContext, ItemFinder aItems)
 	{
 		mAdded = Boolean.valueOf(aElement.getAttribute("added"));
 		final Element itemElement = (Element) FilesUtil.loadDocument(aElement.getAttribute("item")).getElementsByTagName("item").item(0);
-		mItem = new InventoryItem(itemElement, aContext, null);
+		mItem = InventoryItem.deserialize(itemElement, aContext, null, aItems);
 	}
 	
 	@Override

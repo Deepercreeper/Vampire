@@ -130,7 +130,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		{
 			case TAKE_ITEM :
 				final Element itemElement = (Element) FilesUtil.loadDocument(aMessage.getSaveables()[0]).getElementsByTagName("item").item(0);
-				final InventoryItem item = new InventoryItem(itemElement, this, null);
+				final InventoryItem item = InventoryItem.deserialize(itemElement, this, null, mChar);
 				if (inventory.canAddItem(item))
 				{
 					inventory.addItem(item, false);
@@ -279,7 +279,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		}
 		else if (aType.equals(InventoryChange.TAG_NAME))
 		{
-			change = new InventoryChange(element, this);
+			change = new InventoryChange(element, this, mChar);
 		}
 		else if (aType.equals(ItemChange.TAG_NAME))
 		{

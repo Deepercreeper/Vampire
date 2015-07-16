@@ -3,14 +3,6 @@ package com.deepercreeper.vampireapp.host;
 import java.util.Map;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import android.content.Context;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.character.instance.MoneyControllerInstance;
@@ -36,6 +28,14 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 import com.deepercreeper.vampireapp.util.view.Expander;
+import android.content.Context;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.LinearLayout;
 
 /**
  * A host side represented character player.
@@ -44,29 +44,29 @@ import com.deepercreeper.vampireapp.util.view.Expander;
  */
 public class Player implements Viewable, TimeListener, MessageListener, ResizeListener
 {
-	private final Host					mHost;
+	private final Host mHost;
 	
-	private final ConnectedDevice		mDevice;
+	private final ConnectedDevice mDevice;
 	
-	private final CharacterInstance		mChar;
+	private final CharacterInstance mChar;
 	
-	private final String				mNumber;
+	private final String mNumber;
 	
-	private final Context				mContext;
+	private final Context mContext;
 	
-	private final ConnectionListener	mListener;
+	private final ConnectionListener mListener;
 	
-	private final Expander				mExpander;
+	private final Expander mExpander;
 	
-	private final Expander				mControllerExpander;
+	private final Expander mControllerExpander;
 	
-	private final LinearLayout			mContainer;
+	private final LinearLayout mContainer;
 	
-	private boolean						mTimeEnabled;
+	private boolean mTimeEnabled;
 	
-	private int							mTime	= TimeListener.EVENING;
+	private int mTime = TimeListener.EVENING;
 	
-	private CheckBox					mTimeCheckBox;
+	private CheckBox mTimeCheckBox;
 	
 	/**
 	 * Creates a new player that caches all needed data of the remote character.
@@ -148,8 +148,8 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 				final String deletedDepot = aMessage.getSaveable(0);
 				money.getDepot(deletedDepot).takeAll();
 				money.removeDepot(deletedDepot, false);
-				sendMessage(new Message(MessageGroup.SINGLE, "", R.string.accept_delete, aMessage.getArguments(), mContext, null,
-						ButtonAction.NOTHING));
+				sendMessage(
+						new Message(MessageGroup.SINGLE, "", R.string.accept_delete, aMessage.getArguments(), mContext, null, ButtonAction.NOTHING));
 				break;
 			case DENY_DELETE :
 				sendMessage(new Message(MessageGroup.SINGLE, "", R.string.deny_take_depot, new String[] { aMessage.getArgument(0) }, mContext, null,
@@ -160,7 +160,8 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 				final String takeDepotName = aMessage.getSaveable(1);
 				money.getDepot(takeDepotName).remove(takeValues);
 				money.getDefaultDepot().add(takeValues);
-				sendMessage(new Message(MessageGroup.SINGLE, "", R.string.accept_take, aMessage.getArguments(), mContext, null, ButtonAction.NOTHING));
+				sendMessage(
+						new Message(MessageGroup.SINGLE, "", R.string.accept_take, aMessage.getArguments(), mContext, null, ButtonAction.NOTHING));
 				break;
 			case DENY_TAKE :
 				sendMessage(new Message(MessageGroup.SINGLE, "", R.string.deny_take_depot, new String[] { aMessage.getArgument(1) }, mContext, null,
@@ -171,7 +172,8 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 				final String depotDepotName = aMessage.getSaveable(1);
 				money.getDefaultDepot().remove(depotValues);
 				money.getDepot(depotDepotName).add(depotValues);
-				sendMessage(new Message(MessageGroup.SINGLE, "", R.string.accept_depot, aMessage.getArguments(), mContext, null, ButtonAction.NOTHING));
+				sendMessage(
+						new Message(MessageGroup.SINGLE, "", R.string.accept_depot, aMessage.getArguments(), mContext, null, ButtonAction.NOTHING));
 				break;
 			case DENY_DEPOT :
 				sendMessage(new Message(MessageGroup.SINGLE, "", R.string.deny_take_depot, new String[] { aMessage.getArgument(1) }, mContext, null,
@@ -307,7 +309,7 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 		}
 		else if (aType.equals(InventoryChange.TAG_NAME))
 		{
-			change = new InventoryChange(element, mContext);
+			change = new InventoryChange(element, mContext, mChar);
 		}
 		else if (aType.equals(ItemChange.TAG_NAME))
 		{

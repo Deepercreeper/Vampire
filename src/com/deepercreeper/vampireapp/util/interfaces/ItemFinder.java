@@ -1,5 +1,7 @@
 package com.deepercreeper.vampireapp.util.interfaces;
 
+import java.util.List;
+import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 
 /**
@@ -15,4 +17,9 @@ public interface ItemFinder
 	 * @return the item instance with the given name.
 	 */
 	public ItemInstance findItem(String aName);
+	
+	/**
+	 * @return a list of all items.
+	 */
+	public List<Item> getItemsList();
 }

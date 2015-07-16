@@ -1,12 +1,16 @@
 package com.deepercreeper.vampireapp.character;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import android.content.Context;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.InventoryControllerInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
+import com.deepercreeper.vampireapp.util.CodingUtil;
+import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.interfaces.ItemFinder;
+import android.content.Context;
 
 /**
  * This is a sub type of an inventory item and represents a weapon.
@@ -15,51 +19,55 @@ import com.deepercreeper.vampireapp.util.interfaces.ItemFinder;
  */
 public class Weapon extends InventoryItem
 {
-	private final ItemFinder	mItems;
-	
-	private int					mDifficulty;
-	
-	private int					mDamage;
-	
-	private final ItemInstance	mAdditionalDamage;
-	
-	private String				mStash;
-	
-	private int					mDistance;
-	
-	private int					mReloadTime;
-	
-	private int					mMagazine;
-	
-	private String				mAmmo;
-	
 	/**
-	 * Creates a weapon out of the given XML data.
-	 * 
-	 * @param aElement
-	 *            The XML data.
-	 * @param aItems
-	 *            The item finder.
-	 * @param aContext
-	 *            The underlying context.
-	 * @param aController
-	 *            The parent inventory controller.
+	 * The type that defines items to be weapons.
 	 */
-	public Weapon(final Element aElement, final ItemFinder aItems, final Context aContext, final InventoryControllerInstance aController)
+	public static final String ITEM_TYPE = "weapon";
+	
+	private final ItemFinder mItems;
+	
+	private final ItemInstance mAdditionalDamage;
+	
+	private final boolean mDistanceWeapon;
+	
+	private int mDifficulty;
+	
+	private int mDamage;
+	
+	private String mStash;
+	
+	private int mDistance;
+	
+	private int mReloadTime;
+	
+	private int mMagazine;
+	
+	private String mAmmo;
+	
+	protected Weapon(final Element aElement, final ItemFinder aItems, final Context aContext, final InventoryControllerInstance aController)
 	{
-		super(aElement.getAttribute("name"), Integer.parseInt(aElement.getAttribute("weight")), Integer.parseInt(aElement.getAttribute("quantity")),
-				aContext, aController);
+		super(CodingUtil.decode(aElement.getAttribute("name")), Integer.parseInt(aElement.getAttribute("weight")),
+				Integer.parseInt(aElement.getAttribute("quantity")), aContext, aController);
 		mItems = aItems;
+		mDistanceWeapon = Boolean.valueOf(aElement.getAttribute("distance-weapon"));
 		mDifficulty = Integer.parseInt(aElement.getAttribute("difficulty"));
 		mDamage = Integer.parseInt(aElement.getAttribute("damage"));
-		mStash = aElement.getAttribute("stash");
-		mDistance = Integer.parseInt(aElement.getAttribute("distance"));
-		mReloadTime = Integer.parseInt(aElement.getAttribute("reloadTime"));
-		mMagazine = Integer.parseInt(aElement.getAttribute("magazine"));
-		mAmmo = aElement.getAttribute("ammo");
+		mStash = CodingUtil.decode(aElement.getAttribute("stash"));
+		if (mDistanceWeapon)
+		{
+			mDistance = Integer.parseInt(aElement.getAttribute("distance"));
+			mReloadTime = Integer.parseInt(aElement.getAttribute("reloadTime"));
+			mMagazine = Integer.parseInt(aElement.getAttribute("magazine"));
+			mAmmo = CodingUtil.decode(aElement.getAttribute("ammo"));
+		}
+		else
+		{
+			mDistance = mReloadTime = mMagazine = -1;
+			mAmmo = null;
+		}
 		if (aElement.hasAttribute("additionalDamage"))
 		{
-			mAdditionalDamage = mItems.findItem(aElement.getAttribute("additionalDamage"));
+			mAdditionalDamage = mItems.findItem(CodingUtil.decode(aElement.getAttribute("additionalDamage")));
 		}
 		else
 		{
@@ -111,6 +119,7 @@ public class Weapon extends InventoryItem
 		mReloadTime = aReloadTime;
 		mMagazine = aMagazine;
 		mAmmo = aAmmo;
+		mDistanceWeapon = mDistance != -1 && mReloadTime != -1 && mMagazine != -1 && mAmmo != null;
 		mItems = aItems;
 		if (aAdditionalDamage != null)
 		{
@@ -222,21 +231,83 @@ public class Weapon extends InventoryItem
 	@Override
 	public Element asElement(final Document aDoc)
 	{
-		final Element element = aDoc.createElement("weapon");
-		element.setAttribute("name", getName());
-		element.setAttribute("weight", "" + getWeight());
+		final Element element = super.asElement(aDoc);
 		element.setAttribute("difficulty", "" + getDifficulty());
 		element.setAttribute("damage", "" + getDamage());
 		if (mAdditionalDamage != null)
 		{
-			element.setAttribute("additionalDamage", mAdditionalDamage.getName());
+			element.setAttribute("additionalDamage", CodingUtil.encode(mAdditionalDamage.getName()));
 		}
-		element.setAttribute("stash", getStash());
-		element.setAttribute("distance", "" + getDistance());
-		element.setAttribute("reloadTime", "" + getReloadTime());
-		element.setAttribute("magazine", "" + getMagazine());
-		element.setAttribute("ammo", getAmmo());
+		element.setAttribute("stash", CodingUtil.encode(getStash()));
+		element.setAttribute("distance-weapon", "" + mDistanceWeapon);
+		if (mDistanceWeapon)
+		{
+			element.setAttribute("distance", "" + getDistance());
+			element.setAttribute("reloadTime", "" + getReloadTime());
+			element.setAttribute("magazine", "" + getMagazine());
+			element.setAttribute("ammo", CodingUtil.encode(getAmmo()));
+		}
 		return element;
+	}
+	
+	@Override
+	public String[] getInfoArray()
+	{
+		List<String> list = new ArrayList<String>();
+		list.add(getName() + getQuantitySuffix() + ": ");
+		list.add("" + R.string.weight);
+		list.add(": " + getWeight() + " ");
+		list.add("" + R.string.weight_unit);
+		list.add(", ");
+		list.add("" + R.string.difficulty);
+		list.add(": " + getDifficulty() + ", ");
+		list.add("" + R.string.damage);
+		list.add(": " + getDamage() + ", ");
+		if (mAdditionalDamage != null)
+		{
+			list.add("" + R.string.additional_damage);
+			list.add(": ");
+			list.add(mAdditionalDamage.getName());
+			list.add(", ");
+		}
+		list.add("" + R.string.stash);
+		list.add(": " + getStash());
+		if (mDistanceWeapon)
+		{
+			list.add(", ");
+			list.add("" + R.string.distance);
+			list.add(": " + getDistance() + ", ");
+			list.add("" + R.string.magazine);
+			list.add(": " + getMagazine() + ", ");
+			list.add("" + R.string.reload_time);
+			list.add(": " + getReloadTime() + ", ");
+			list.add("" + R.string.ammo);
+			list.add(": " + getAmmo());
+		}
+		return list.toArray(new String[list.size()]);
+	}
+	
+	@Override
+	public boolean[] getInfoTranslatedArray()
+	{
+		StringBuilder flags = new StringBuilder();
+		flags.append("010101010");
+		if (mAdditionalDamage != null)
+		{
+			flags.append("1010");
+		}
+		flags.append("10");
+		if (mDistanceWeapon)
+		{
+			flags.append("010101010");
+		}
+		return DataUtil.parseFlags(flags.toString());
+	}
+	
+	@Override
+	protected String getType()
+	{
+		return ITEM_TYPE;
 	}
 	
 	/**
@@ -287,7 +358,7 @@ public class Weapon extends InventoryItem
 	public String getInfo(final boolean aQuantity)
 	{
 		final StringBuilder info = new StringBuilder();
-		info.append(getName() + (aQuantity ? getQuantity() : "") + ": ");
+		info.append(getName() + (aQuantity ? getQuantitySuffix() : "") + ": ");
 		info.append(getContext().getString(R.string.weight) + ": " + getWeight() + " " + getContext().getString(R.string.weight_unit) + ", ");
 		info.append(getContext().getString(R.string.difficulty) + ": " + getDifficulty() + ", ");
 		info.append(getContext().getString(R.string.damage) + ": " + getDamage() + ", ");
@@ -295,25 +366,16 @@ public class Weapon extends InventoryItem
 		{
 			info.append(getContext().getString(R.string.additional_damage) + ": " + mAdditionalDamage.getName() + ", ");
 		}
-		info.append(getContext().getString(R.string.stash) + ": " + getStash() + ", ");
+		info.append(getContext().getString(R.string.stash) + ": " + getStash());
 		
-		if (getDistance() != -1)
+		if (mDistanceWeapon)
 		{
+			info.append(", ");
 			info.append(getContext().getString(R.string.distance) + ": " + getDistance() + ", ");
-		}
-		if (getReloadTime() != -1)
-		{
 			info.append(getContext().getString(R.string.reload_time) + ": " + getReloadTime() + ", ");
-		}
-		if (getMagazine() != -1)
-		{
 			info.append(getContext().getString(R.string.magazine) + ": " + getMagazine() + ", ");
+			info.append(getContext().getString(R.string.ammo) + ": " + getAmmo());
 		}
-		if (getDistance() != -1)
-		{
-			info.append(getContext().getString(R.string.ammo) + ": " + getAmmo() + ", ");
-		}
-		info.delete(info.length() - 2, info.length());
 		return info.toString();
 	}
 	

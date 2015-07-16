@@ -27,9 +27,9 @@ import android.content.Context;
  */
 public class FilesUtil
 {
-	private static final String	TAG			= "FilesUtil";
+	private static final String TAG = "FilesUtil";
 	
-	private static final String	FILE_ENDING	= ".xml";
+	private static final String FILE_ENDING = ".xml";
 	
 	private FilesUtil()
 	{}
@@ -132,6 +132,15 @@ public class FilesUtil
 		for (int i = 0; i < aArgs.length; i++ )
 		{
 			result = result.replace("{" + i + "}", aArgs[i]);
+		}
+		if (result.contains("{x}"))
+		{
+			StringBuilder args = new StringBuilder();
+			for (String arg : aArgs)
+			{
+				args.append(arg);
+			}
+			result = result.replace("{x}", args.toString());
 		}
 		return result;
 	}

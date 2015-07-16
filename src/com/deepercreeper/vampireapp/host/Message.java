@@ -2,13 +2,6 @@ package com.deepercreeper.vampireapp.host;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import android.content.Context;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.util.DataUtil;
@@ -17,6 +10,13 @@ import com.deepercreeper.vampireapp.util.LanguageUtil;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
+import android.content.Context;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * A message that can be sent between host and client and needs user appreciation.
@@ -134,31 +134,31 @@ public class Message implements Saveable, Viewable
 		ITEM
 	}
 	
-	private static final String		TAG_NAME	= "message";
+	private static final String TAG_NAME = "message";
 	
-	private final MessageType		mType;
+	private final MessageType mType;
 	
-	private final MessageGroup		mGroup;
+	private final MessageGroup mGroup;
 	
-	private final int				mMessageId;
+	private final int mMessageId;
 	
-	private final String			mSender;
+	private final String mSender;
 	
-	private final String[]			mArguments;
+	private final String[] mArguments;
 	
-	private final boolean[]			mTranslated;
+	private final boolean[] mTranslated;
 	
-	private final String[]			mSaveables;
+	private final String[] mSaveables;
 	
-	private final MessageListener	mListener;
+	private final MessageListener mListener;
 	
-	private final Context			mContext;
+	private final Context mContext;
 	
-	private final LinearLayout		mContainer;
+	private final LinearLayout mContainer;
 	
-	private final ButtonAction		mYesAction;
+	private final ButtonAction mYesAction;
 	
-	private final ButtonAction		mNoAction;
+	private final ButtonAction mNoAction;
 	
 	/**
 	 * Creates a yes/no message.
@@ -406,7 +406,15 @@ public class Message implements Saveable, Viewable
 		{
 			if (mTranslated[i])
 			{
-				arguments[i] = LanguageUtil.instance().getValue(mArguments[i]);
+				try
+				{
+					int id = Integer.parseInt(mArguments[i]);
+					arguments[i] = mContext.getString(id);
+				}
+				catch (NumberFormatException e)
+				{
+					arguments[i] = LanguageUtil.instance().getValue(mArguments[i]);
+				}
 			}
 			else
 			{
