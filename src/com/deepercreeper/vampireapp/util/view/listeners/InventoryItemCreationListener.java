@@ -1,6 +1,6 @@
 package com.deepercreeper.vampireapp.util.view.listeners;
 
-import com.deepercreeper.vampireapp.character.InventoryItem;
+import com.deepercreeper.vampireapp.character.inventory.Artifact;
 
 /**
  * The inventory item created listener.
@@ -15,5 +15,5 @@ public interface InventoryItemCreationListener
 	 * @param aItem
 	 *            The newly created item.
 	 */
-	public void itemCreated(InventoryItem aItem);
+	public void itemCreated(Artifact aItem);
 }

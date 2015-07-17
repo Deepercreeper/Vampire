@@ -128,7 +128,19 @@ public class FilesUtil
 	 */
 	public static String buildMessage(final int aMessageId, final String[] aArgs, final Context aContext)
 	{
-		String result = aContext.getString(aMessageId);
+		return buildMessage(aContext.getString(aMessageId), aArgs);
+	}
+	
+	/**
+	 * @param aMessage
+	 *            The message.
+	 * @param aArgs
+	 *            The arguments.
+	 * @return the given string with <code>{0}, {1}, ...</code> replaced with the given arguments.
+	 */
+	public static String buildMessage(final String aMessage, final String[] aArgs)
+	{
+		String result = aMessage;
 		for (int i = 0; i < aArgs.length; i++ )
 		{
 			result = result.replace("{" + i + "}", aArgs[i]);

@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import com.deepercreeper.vampireapp.character.Health;
-import com.deepercreeper.vampireapp.character.Inventory;
+import com.deepercreeper.vampireapp.character.inventory.Inventory;
 import com.deepercreeper.vampireapp.character.Currency;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;

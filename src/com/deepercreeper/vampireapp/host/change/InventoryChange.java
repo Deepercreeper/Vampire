@@ -2,8 +2,8 @@ package com.deepercreeper.vampireapp.host.change;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import com.deepercreeper.vampireapp.character.InventoryItem;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
+import com.deepercreeper.vampireapp.character.inventory.Artifact;
 import com.deepercreeper.vampireapp.util.FilesUtil;
 import com.deepercreeper.vampireapp.util.interfaces.ItemFinder;
 import android.content.Context;
@@ -20,7 +20,7 @@ public class InventoryChange implements CharacterChange
 	 */
 	public static final String TAG_NAME = "inventory-change";
 	
-	private final InventoryItem mItem;
+	private final Artifact mItem;
 	
 	private final boolean mAdded;
 	
@@ -32,7 +32,7 @@ public class InventoryChange implements CharacterChange
 	 * @param aAdded
 	 *            Whether the item was added or removed.
 	 */
-	public InventoryChange(final InventoryItem aItem, final boolean aAdded)
+	public InventoryChange(final Artifact aItem, final boolean aAdded)
 	{
 		mItem = aItem;
 		mAdded = aAdded;
@@ -52,7 +52,7 @@ public class InventoryChange implements CharacterChange
 	{
 		mAdded = Boolean.valueOf(aElement.getAttribute("added"));
 		final Element itemElement = (Element) FilesUtil.loadDocument(aElement.getAttribute("item")).getElementsByTagName("item").item(0);
-		mItem = InventoryItem.deserialize(itemElement, aContext, null, aItems);
+		mItem = Artifact.deserialize(itemElement, aContext, null, aItems);
 	}
 	
 	@Override

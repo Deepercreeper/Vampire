@@ -1,14 +1,17 @@
-package com.deepercreeper.vampireapp.character;
+package com.deepercreeper.vampireapp.character.inventory;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.InventoryControllerInstance;
 import com.deepercreeper.vampireapp.util.CodingUtil;
+import com.deepercreeper.vampireapp.util.DataUtil;
+import com.deepercreeper.vampireapp.util.FilesUtil;
+import com.deepercreeper.vampireapp.util.LanguageUtil;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.interfaces.ItemFinder;
-import com.deepercreeper.vampireapp.util.interfaces.Saveable;
-import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,9 +26,12 @@ import android.widget.Toast;
  * 
  * @author vrl
  */
-public class InventoryItem implements Saveable, Viewable
+public class Artifact implements InventoryItem
 {
-	private static final String ITEM_TYPE = "item";
+	/**
+	 * The type that defines items to be artifacts.
+	 */
+	public static final String ARTIFACT_ITEM_TYPE = "item";
 	
 	private final int mWeight;
 	
@@ -43,7 +49,7 @@ public class InventoryItem implements Saveable, Viewable
 	
 	private boolean mInitialized = false;
 	
-	private InventoryItem(final Element aElement, final Context aContext, final InventoryControllerInstance aController)
+	private Artifact(final Element aElement, final Context aContext, final InventoryControllerInstance aController)
 	{
 		mContext = aContext;
 		mController = aController;
@@ -70,8 +76,7 @@ public class InventoryItem implements Saveable, Viewable
 	 * @param aController
 	 *            the parent inventory controller.
 	 */
-	public InventoryItem(final String aName, final int aWeight, final int aQuantity, final Context aContext,
-			final InventoryControllerInstance aController)
+	public Artifact(final String aName, final int aWeight, final int aQuantity, final Context aContext, final InventoryControllerInstance aController)
 	{
 		mContext = aContext;
 		mController = aController;
@@ -96,37 +101,27 @@ public class InventoryItem implements Saveable, Viewable
 	 * @param aController
 	 *            the parent inventory controller.
 	 */
-	public InventoryItem(final String aName, final int aWeight, final Context aContext, final InventoryControllerInstance aController)
+	public Artifact(final String aName, final int aWeight, final Context aContext, final InventoryControllerInstance aController)
 	{
 		this(aName, aWeight, 1, aContext, aController);
 	}
 	
-	/**
-	 * Increases the amount of this items by the given amount.
-	 * 
-	 * @param aAmount
-	 *            The amount.
-	 */
-	public void increase(final int aAmount)
+	@Override
+	public final void increase(final int aAmount)
 	{
 		mQuantity += aAmount;
 		updateValue();
 		getController().updateWeight();
 	}
 	
-	/**
-	 * @return how many items this stack contains.
-	 */
-	public int getQuantity()
+	@Override
+	public final int getQuantity()
 	{
 		return mQuantity;
 	}
 	
-	/**
-	 * Removes one of this item stack.<br>
-	 * If there is no one left, this item is removed from the controller.
-	 */
-	public void decrease()
+	@Override
+	public final void decrease()
 	{
 		mQuantity-- ;
 		updateValue();
@@ -137,13 +132,13 @@ public class InventoryItem implements Saveable, Viewable
 	}
 	
 	@Override
-	public LinearLayout getContainer()
+	public final LinearLayout getContainer()
 	{
 		return mContainer;
 	}
 	
 	@Override
-	public void release()
+	public final void release()
 	{
 		ViewUtil.release(getContainer());
 	}
@@ -162,7 +157,7 @@ public class InventoryItem implements Saveable, Viewable
 				@Override
 				public void onClick(final View aV)
 				{
-					Toast.makeText(mContext, getInfo(true), Toast.LENGTH_LONG).show();
+					Toast.makeText(mContext, getInfo(), Toast.LENGTH_LONG).show();
 				}
 			});
 			
@@ -171,7 +166,7 @@ public class InventoryItem implements Saveable, Viewable
 				@Override
 				public void onClick(final View aV)
 				{
-					getController().removeItem(InventoryItem.this, false);
+					getController().removeItem(Artifact.this, false);
 				}
 			});
 			
@@ -181,49 +176,37 @@ public class InventoryItem implements Saveable, Viewable
 		updateValue();
 	}
 	
-	/**
-	 * @return The parent inventory controller.
-	 */
-	public InventoryControllerInstance getController()
+	@Override
+	public final InventoryControllerInstance getController()
 	{
 		return mController;
 	}
 	
-	/**
-	 * @return the item name.
-	 */
-	public String getName()
+	@Override
+	public final String getName()
 	{
 		return mName;
 	}
 	
-	/**
-	 * @return the item weight.
-	 */
-	public int getWeight()
+	@Override
+	public final int getWeight()
 	{
 		return mWeight;
 	}
 	
-	/**
-	 * @param aQuantity
-	 *            Whether the item quantity should be added.
-	 * @return a summary of this item.
-	 */
-	public String getInfo(final boolean aQuantity)
+	@Override
+	public final String getInfo()
 	{
-		return getName() + (aQuantity ? getQuantitySuffix() : "") + ": " + getWeight() + " " + getContext().getString(R.string.weight_unit);
+		return FilesUtil.buildMessage("{x}", LanguageUtil.instance().translateArray(getInfoArray(), getInfoTranslatedArray()));
 	}
 	
-	/**
-	 * @return the underlying context.
-	 */
-	public Context getContext()
+	@Override
+	public final Context getContext()
 	{
 		return mContext;
 	}
 	
-	protected String getQuantitySuffix()
+	protected final String getQuantitySuffix()
 	{
 		if (getQuantity() > 1)
 		{
@@ -232,9 +215,7 @@ public class InventoryItem implements Saveable, Viewable
 		return "";
 	}
 	
-	/**
-	 * Updates the name value.
-	 */
+	@Override
 	public void updateValue()
 	{
 		mItemName.setText(getName() + getQuantitySuffix());
@@ -261,11 +242,11 @@ public class InventoryItem implements Saveable, Viewable
 		{
 			return false;
 		}
-		if ( !(obj instanceof InventoryItem))
+		if ( !(obj instanceof Artifact))
 		{
 			return false;
 		}
-		final InventoryItem other = (InventoryItem) obj;
+		final Artifact other = (Artifact) obj;
 		if (mName == null)
 		{
 			if (other.mName != null)
@@ -284,20 +265,16 @@ public class InventoryItem implements Saveable, Viewable
 		return true;
 	}
 	
-	/**
-	 * Sets the parent inventory controller.
-	 * 
-	 * @param aController
-	 *            The new parent inventory controller.
-	 */
-	public void addTo(final InventoryControllerInstance aController)
+	@Override
+	public final void addTo(final InventoryControllerInstance aController)
 	{
 		mController = aController;
 	}
 	
-	protected String getType()
+	@Override
+	public String getType()
 	{
-		return ITEM_TYPE;
+		return ARTIFACT_ITEM_TYPE;
 	}
 	
 	@Override
@@ -311,20 +288,21 @@ public class InventoryItem implements Saveable, Viewable
 		return element;
 	}
 	
-	/**
-	 * @return an array of strings, that are used to display this item inside a message.
-	 */
+	@Override
 	public String[] getInfoArray()
 	{
-		return new String[] { getName() + getQuantitySuffix() + ": " + getWeight() + " ", getContext().getString(R.string.weight_unit) };
+		List<String> list = new ArrayList<String>();
+		list.add(getName() + getQuantitySuffix() + ": ");
+		list.add("" + R.string.weight);
+		list.add(": " + getWeight() + " ");
+		list.add("" + R.string.weight_unit);
+		return list.toArray(new String[list.size()]);
 	}
 	
-	/**
-	 * @return a boolean array that determines which info array entries should be translated.
-	 */
+	@Override
 	public boolean[] getInfoTranslatedArray()
 	{
-		return new boolean[] { false, true };
+		return DataUtil.parseFlags("0101");
 	}
 	
 	/**
@@ -340,14 +318,14 @@ public class InventoryItem implements Saveable, Viewable
 	 *            An item finder.
 	 * @return the new created item.
 	 */
-	public static InventoryItem deserialize(Element aElement, Context aContext, InventoryControllerInstance aController, ItemFinder aItems)
+	public static Artifact deserialize(Element aElement, Context aContext, InventoryControllerInstance aController, ItemFinder aItems)
 	{
 		String type = aElement.getAttribute("type");
-		if (type.equals(ITEM_TYPE))
+		if (type.equals(ARTIFACT_ITEM_TYPE))
 		{
-			return new InventoryItem(aElement, aContext, aController);
+			return new Artifact(aElement, aContext, aController);
 		}
-		if (type.equals(Weapon.ITEM_TYPE))
+		if (type.equals(Weapon.WEAPON_ITEM_TYPE))
 		{
 			return new Weapon(aElement, aItems, aContext, aController);
 		}

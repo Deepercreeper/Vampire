@@ -2,7 +2,7 @@ package com.deepercreeper.vampireapp.items;
 
 import java.util.List;
 import com.deepercreeper.vampireapp.character.Health;
-import com.deepercreeper.vampireapp.character.Inventory;
+import com.deepercreeper.vampireapp.character.inventory.Inventory;
 import com.deepercreeper.vampireapp.character.Currency;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.lists.controllers.ClanController;

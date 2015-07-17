@@ -17,6 +17,7 @@
     <string name="amount">Menge</string>
     <string name="app_name">VampireApp</string>
     <string name="apply">Annehmen</string>
+    <string name="armor">Rüstung</string>
     <string name="ask_delete_depot">Will {0} auflösen.</string>
 	<string name="ask_depot_money">Will {0} in {1} lagern.</string>
 	<string name="ask_increase">Will {0} auf {1} erhöhen.</string>

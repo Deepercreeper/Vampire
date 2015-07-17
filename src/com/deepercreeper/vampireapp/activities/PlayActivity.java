@@ -5,9 +5,9 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.character.InventoryItem;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.character.instance.InventoryControllerInstance;
+import com.deepercreeper.vampireapp.character.inventory.Artifact;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
 import com.deepercreeper.vampireapp.connection.ConnectionController;
@@ -130,7 +130,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		{
 			case TAKE_ITEM :
 				final Element itemElement = (Element) FilesUtil.loadDocument(aMessage.getSaveables()[0]).getElementsByTagName("item").item(0);
-				final InventoryItem item = InventoryItem.deserialize(itemElement, this, null, mChar);
+				final Artifact item = Artifact.deserialize(itemElement, this, null, mChar);
 				if (inventory.canAddItem(item))
 				{
 					inventory.addItem(item, false);
@@ -142,8 +142,8 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 				}
 				break;
 			case IGNORE_ITEM :
-				sendMessage(new Message(MessageGroup.SINGLE, mChar.getName(), R.string.left_item, aMessage.getArguments(), this, null,
-						ButtonAction.NOTHING));
+				sendMessage(new Message(MessageGroup.SINGLE, mChar.getName(), R.string.left_item, aMessage.getArguments(),
+						aMessage.getTranslatedArguments(), this, null, ButtonAction.NOTHING));
 				break;
 			default :
 				break;

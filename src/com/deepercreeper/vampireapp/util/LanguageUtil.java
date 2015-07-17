@@ -15,17 +15,17 @@ import android.content.Context;
  */
 public class LanguageUtil
 {
-	private static final String				TAG				= "LanguageUtil";
+	private static final String TAG = "LanguageUtil";
 	
-	private static final String				LANGUAGE		= "language";
+	private static final String LANGUAGE = "language";
 	
-	private static final LanguageUtil		INSTANCE		= new LanguageUtil();
+	private static final LanguageUtil INSTANCE = new LanguageUtil();
 	
-	private static boolean					mInitialized	= false;
+	private static boolean mInitialized = false;
 	
-	private Context							mContext;
+	private Context mContext;
 	
-	private final TreeMap<String, String>	mValues			= new TreeMap<String, String>();
+	private final TreeMap<String, String> mValues = new TreeMap<String, String>();
 	
 	private LanguageUtil()
 	{}
@@ -104,6 +104,50 @@ public class LanguageUtil
 			return aKey;
 		}
 		return value;
+	}
+	
+	/**
+	 * Translates all strings inside the given array if the corresponding boolean is true.
+	 * 
+	 * @param aArgs
+	 *            The string argument array.
+	 * @param aTranslatedArgs
+	 *            Whether the current argument should be translated.
+	 * @return an array of translated strings.
+	 */
+	public String[] translateArray(String[] aArgs, boolean[] aTranslatedArgs)
+	{
+		if ( !mInitialized)
+		{
+			Log.w(TAG, "LanguageUtil was not initialized yet.");
+			return null;
+		}
+		if (aArgs.length != aTranslatedArgs.length)
+		{
+			Log.w(TAG, "Tried to translate an array of length" + aArgs.length + " with a flag list of length " + aTranslatedArgs.length + ".");
+			return null;
+		}
+		final String[] arguments = new String[aArgs.length];
+		for (int i = 0; i < arguments.length; i++ )
+		{
+			if (aTranslatedArgs[i])
+			{
+				try
+				{
+					int id = Integer.parseInt(aArgs[i]);
+					arguments[i] = mContext.getString(id);
+				}
+				catch (NumberFormatException e)
+				{
+					arguments[i] = LanguageUtil.instance().getValue(aArgs[i]);
+				}
+			}
+			else
+			{
+				arguments[i] = aArgs[i];
+			}
+		}
+		return arguments;
 	}
 	
 	/**

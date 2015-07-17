@@ -1,7 +1,7 @@
 package com.deepercreeper.vampireapp.util.view.dialogs;
 
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.character.Weapon;
+import com.deepercreeper.vampireapp.character.inventory.Weapon;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.interfaces.ItemFinder;

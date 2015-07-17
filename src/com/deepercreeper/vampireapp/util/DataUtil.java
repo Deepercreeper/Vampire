@@ -14,7 +14,7 @@ import org.w3c.dom.NodeList;
 import android.content.Context;
 import com.deepercreeper.vampireapp.character.Currency;
 import com.deepercreeper.vampireapp.character.Health;
-import com.deepercreeper.vampireapp.character.Inventory;
+import com.deepercreeper.vampireapp.character.inventory.Inventory;
 import com.deepercreeper.vampireapp.items.implementations.GroupOptionImpl;
 import com.deepercreeper.vampireapp.items.implementations.ItemControllerImpl;
 import com.deepercreeper.vampireapp.items.implementations.ItemGroupImpl;

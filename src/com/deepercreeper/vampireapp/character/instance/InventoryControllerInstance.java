@@ -5,8 +5,8 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.character.Inventory;
-import com.deepercreeper.vampireapp.character.InventoryItem;
+import com.deepercreeper.vampireapp.character.inventory.Inventory;
+import com.deepercreeper.vampireapp.character.inventory.Artifact;
 import com.deepercreeper.vampireapp.host.Message;
 import com.deepercreeper.vampireapp.host.Message.ButtonAction;
 import com.deepercreeper.vampireapp.host.Message.MessageGroup;
@@ -71,7 +71,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	
 	private final Inventory mInventory;
 	
-	private final List<InventoryItem> mItemsList = new ArrayList<InventoryItem>();
+	private final List<Artifact> mItemsList = new ArrayList<Artifact>();
 	
 	private final ItemFinder mItems;
 	
@@ -156,7 +156,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 				final Element child = (Element) aElement.getChildNodes().item(i);
 				if (child.getTagName().equals("item"))
 				{
-					addItem(InventoryItem.deserialize(child, mContext, this, mChar), true);
+					addItem(Artifact.deserialize(child, mContext, this, mChar), true);
 				}
 			}
 		}
@@ -210,7 +210,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 		final InventoryItemCreationListener listener = new InventoryItemCreationListener()
 		{
 			@Override
-			public void itemCreated(final InventoryItem aItem)
+			public void itemCreated(final Artifact aItem)
 			{
 				mMessageListener
 						.sendMessage(new Message(MessageGroup.SINGLE, "", R.string.got_item, aItem.getInfoArray(), aItem.getInfoTranslatedArray(),
@@ -259,7 +259,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	 * @param aSilent
 	 *            Whether this is a silent addition.
 	 */
-	public void addItem(final InventoryItem aItem, final boolean aSilent)
+	public void addItem(final Artifact aItem, final boolean aSilent)
 	{
 		if ( !canAddItem(aItem))
 		{
@@ -267,7 +267,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 		}
 		if (mItemsList.contains(aItem))
 		{
-			final InventoryItem existingItem = mItemsList.get(mItemsList.indexOf(aItem));
+			final Artifact existingItem = mItemsList.get(mItemsList.indexOf(aItem));
 			existingItem.increase(aItem.getQuantity());
 		}
 		else
@@ -293,7 +293,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	public Element asElement(final Document aDoc)
 	{
 		final Element element = aDoc.createElement("inventory");
-		for (final InventoryItem item : mItemsList)
+		for (final Artifact item : mItemsList)
 		{
 			element.appendChild(item.asElement(aDoc));
 		}
@@ -306,7 +306,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	 * @return whether the given item can be added to this inventory.<br>
 	 *         Referring to the weight properties.
 	 */
-	public boolean canAddItem(final InventoryItem aItem)
+	public boolean canAddItem(final Artifact aItem)
 	{
 		return getWeight() + aItem.getWeight() * aItem.getQuantity() <= getMaxWeight();
 	}
@@ -362,11 +362,11 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 			mInitialized = true;
 		}
 		
-		for (final InventoryItem item : mItemsList)
+		for (final Artifact item : mItemsList)
 		{
 			item.release();
 		}
-		for (final InventoryItem item : mItemsList)
+		for (final Artifact item : mItemsList)
 		{
 			item.init();
 			mInventoryList.addView(item.getContainer());
@@ -379,7 +379,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	public void release()
 	{
 		ViewUtil.release(getContainer());
-		for (final InventoryItem item : mItemsList)
+		for (final Artifact item : mItemsList)
 		{
 			item.release();
 		}
@@ -393,9 +393,9 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	 * @param aSilent
 	 *            Whether this is a silent remove.
 	 */
-	public void removeItem(final InventoryItem aItem, final boolean aSilent)
+	public void removeItem(final Artifact aItem, final boolean aSilent)
 	{
-		final InventoryItem existingItem = mItemsList.get(mItemsList.indexOf(aItem));
+		final Artifact existingItem = mItemsList.get(mItemsList.indexOf(aItem));
 		if (existingItem.getQuantity() > 1)
 		{
 			existingItem.decrease();
@@ -452,7 +452,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	public void updateWeight()
 	{
 		mWeight = 0;
-		for (final InventoryItem item : mItemsList)
+		for (final Artifact item : mItemsList)
 		{
 			mWeight += item.getWeight() * item.getQuantity();
 		}

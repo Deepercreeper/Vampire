@@ -146,7 +146,7 @@ public class Message implements Saveable, Viewable
 	
 	private final String[] mArguments;
 	
-	private final boolean[] mTranslated;
+	private final boolean[] mTranslatedArguments;
 	
 	private final String[] mSaveables;
 	
@@ -290,7 +290,7 @@ public class Message implements Saveable, Viewable
 		mSender = aSender;
 		mMessageId = aMessageId;
 		mArguments = aArguments;
-		mTranslated = aTranslated;
+		mTranslatedArguments = aTranslated;
 		mListener = aListener;
 		mContext = aContext;
 		mYesAction = aYesAction;
@@ -311,7 +311,7 @@ public class Message implements Saveable, Viewable
 		element.setAttribute("yes-action", mYesAction.name());
 		element.setAttribute("no-action", mNoAction.name());
 		element.setAttribute("saveables", DataUtil.parseArray(mSaveables));
-		element.setAttribute("translated", DataUtil.parseFlags(mTranslated));
+		element.setAttribute("translated", DataUtil.parseFlags(mTranslatedArguments));
 		return element;
 	}
 	
@@ -321,6 +321,14 @@ public class Message implements Saveable, Viewable
 	public String[] getArguments()
 	{
 		return mArguments;
+	}
+	
+	/**
+	 * @return an array of booleans indicating, whether the argument at the position should be translated.
+	 */
+	public boolean[] getTranslatedArguments()
+	{
+		return mTranslatedArguments;
 	}
 	
 	@Override
@@ -394,34 +402,9 @@ public class Message implements Saveable, Viewable
 	{
 		if (mSender.isEmpty())
 		{
-			return FilesUtil.buildMessage(mMessageId, translateArguments(), mContext);
+			return FilesUtil.buildMessage(mMessageId, LanguageUtil.instance().translateArray(mArguments, mTranslatedArguments), mContext);
 		}
-		return mSender + ": " + FilesUtil.buildMessage(mMessageId, translateArguments(), mContext);
-	}
-	
-	private String[] translateArguments()
-	{
-		final String[] arguments = new String[mArguments.length];
-		for (int i = 0; i < arguments.length; i++ )
-		{
-			if (mTranslated[i])
-			{
-				try
-				{
-					int id = Integer.parseInt(mArguments[i]);
-					arguments[i] = mContext.getString(id);
-				}
-				catch (NumberFormatException e)
-				{
-					arguments[i] = LanguageUtil.instance().getValue(mArguments[i]);
-				}
-			}
-			else
-			{
-				arguments[i] = mArguments[i];
-			}
-		}
-		return arguments;
+		return mSender + ": " + FilesUtil.buildMessage(mMessageId, LanguageUtil.instance().translateArray(mArguments, mTranslatedArguments), mContext);
 	}
 	
 	private void initButton(final int aButtonId, final ButtonAction aAction)

@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.character;
+package com.deepercreeper.vampireapp.character.inventory;
 
 /**
  * Represents default inventory settings.

@@ -1,6 +1,7 @@
-package com.deepercreeper.vampireapp.character;
+package com.deepercreeper.vampireapp.character.inventory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -17,12 +18,12 @@ import android.content.Context;
  * 
  * @author vrl
  */
-public class Weapon extends InventoryItem
+public class Weapon extends Artifact
 {
 	/**
 	 * The type that defines items to be weapons.
 	 */
-	public static final String ITEM_TYPE = "weapon";
+	public static final String WEAPON_ITEM_TYPE = "weapon";
 	
 	private final ItemFinder mItems;
 	
@@ -30,19 +31,19 @@ public class Weapon extends InventoryItem
 	
 	private final boolean mDistanceWeapon;
 	
-	private int mDifficulty;
+	private final int mDifficulty;
 	
-	private int mDamage;
+	private final int mDamage;
 	
-	private String mStash;
+	private final String mStash;
 	
-	private int mDistance;
+	private final int mDistance;
 	
-	private int mReloadTime;
+	private final int mReloadTime;
 	
-	private int mMagazine;
+	private final int mMagazine;
 	
-	private String mAmmo;
+	private final String mAmmo;
 	
 	protected Weapon(final Element aElement, final ItemFinder aItems, final Context aContext, final InventoryControllerInstance aController)
 	{
@@ -254,10 +255,7 @@ public class Weapon extends InventoryItem
 	public String[] getInfoArray()
 	{
 		List<String> list = new ArrayList<String>();
-		list.add(getName() + getQuantitySuffix() + ": ");
-		list.add("" + R.string.weight);
-		list.add(": " + getWeight() + " ");
-		list.add("" + R.string.weight_unit);
+		list.addAll(Arrays.asList(super.getInfoArray()));
 		list.add(", ");
 		list.add("" + R.string.difficulty);
 		list.add(": " + getDifficulty() + ", ");
@@ -291,7 +289,8 @@ public class Weapon extends InventoryItem
 	public boolean[] getInfoTranslatedArray()
 	{
 		StringBuilder flags = new StringBuilder();
-		flags.append("010101010");
+		flags.append(DataUtil.parseFlags(super.getInfoTranslatedArray()));
+		flags.append("01010");
 		if (mAdditionalDamage != null)
 		{
 			flags.append("1010");
@@ -305,9 +304,9 @@ public class Weapon extends InventoryItem
 	}
 	
 	@Override
-	protected String getType()
+	public String getType()
 	{
-		return ITEM_TYPE;
+		return WEAPON_ITEM_TYPE;
 	}
 	
 	/**
@@ -354,31 +353,6 @@ public class Weapon extends InventoryItem
 		return mDistance;
 	}
 	
-	@Override
-	public String getInfo(final boolean aQuantity)
-	{
-		final StringBuilder info = new StringBuilder();
-		info.append(getName() + (aQuantity ? getQuantitySuffix() : "") + ": ");
-		info.append(getContext().getString(R.string.weight) + ": " + getWeight() + " " + getContext().getString(R.string.weight_unit) + ", ");
-		info.append(getContext().getString(R.string.difficulty) + ": " + getDifficulty() + ", ");
-		info.append(getContext().getString(R.string.damage) + ": " + getDamage() + ", ");
-		if (mAdditionalDamage != null)
-		{
-			info.append(getContext().getString(R.string.additional_damage) + ": " + mAdditionalDamage.getName() + ", ");
-		}
-		info.append(getContext().getString(R.string.stash) + ": " + getStash());
-		
-		if (mDistanceWeapon)
-		{
-			info.append(", ");
-			info.append(getContext().getString(R.string.distance) + ": " + getDistance() + ", ");
-			info.append(getContext().getString(R.string.reload_time) + ": " + getReloadTime() + ", ");
-			info.append(getContext().getString(R.string.magazine) + ": " + getMagazine() + ", ");
-			info.append(getContext().getString(R.string.ammo) + ": " + getAmmo());
-		}
-		return info.toString();
-	}
-	
 	/**
 	 * @return the maximum number of bullets that can be stored, before reload is necessary or {@code -1} if this is a melee weapon.
 	 */
@@ -401,83 +375,5 @@ public class Weapon extends InventoryItem
 	public String getStash()
 	{
 		return mStash;
-	}
-	
-	/**
-	 * Sets the ammo type for non melee weapons.
-	 * 
-	 * @param aAmmo
-	 *            The new ammo type or {@code null} if this is a melee weapon.
-	 */
-	public void setAmmo(final String aAmmo)
-	{
-		mAmmo = aAmmo;
-	}
-	
-	/**
-	 * Sets the damage this weapon takes.
-	 * 
-	 * @param aDamage
-	 *            The new number of instant damage points this weapon takes.
-	 */
-	public void setDamage(final int aDamage)
-	{
-		mDamage = aDamage;
-	}
-	
-	/**
-	 * Sets the weapons difficulty.
-	 * 
-	 * @param aDifficulty
-	 *            The new minimum value each dice has to count to add a hit.
-	 */
-	public void setDifficulty(final int aDifficulty)
-	{
-		mDifficulty = aDifficulty;
-	}
-	
-	/**
-	 * Sets the new maximum distance for non melee weapons.
-	 * 
-	 * @param aDistance
-	 *            The new distance in meters or {@code -1} if this is a melee weapon.
-	 */
-	public void setDistance(final int aDistance)
-	{
-		mDistance = aDistance;
-	}
-	
-	/**
-	 * Sets the magazine size for non melee weapons.
-	 * 
-	 * @param aMagazine
-	 *            The new number of bullets, arrows, etc. a character can shoot before reloading<br>
-	 *            or {@code -1} if this is a melee weapon.
-	 */
-	public void setMagazine(final int aMagazine)
-	{
-		mMagazine = aMagazine;
-	}
-	
-	/**
-	 * Sets the reload time for non melee weapons.
-	 * 
-	 * @param aReloadTime
-	 *            the new number of rounds used to reload or {@code -1} if this is a melee weapon.
-	 */
-	public void setReloadTime(final int aReloadTime)
-	{
-		mReloadTime = aReloadTime;
-	}
-	
-	/**
-	 * Sets the new weapon storing place.
-	 * 
-	 * @param aStash
-	 *            The place where to store this weapon.
-	 */
-	public void setStash(final String aStash)
-	{
-		mStash = aStash;
 	}
 }

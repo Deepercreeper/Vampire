@@ -1,7 +1,7 @@
 package com.deepercreeper.vampireapp.util.view.dialogs;
 
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.character.InventoryItem;
+import com.deepercreeper.vampireapp.character.inventory.Artifact;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.listeners.InventoryItemCreationListener;
 import android.app.Activity;
@@ -69,7 +69,7 @@ public class CreateInventoryItemDialog extends DefaultDialog<InventoryItemCreati
 			@Override
 			public void onClick(final View aV)
 			{
-				getListener().itemCreated(new InventoryItem(mName.getText().toString(), Integer.parseInt(mWeight.getText().toString()),
+				getListener().itemCreated(new Artifact(mName.getText().toString(), Integer.parseInt(mWeight.getText().toString()),
 						Integer.parseInt(mQuantity.getText().toString()), getContext(), null));
 				dismiss();
 			}
