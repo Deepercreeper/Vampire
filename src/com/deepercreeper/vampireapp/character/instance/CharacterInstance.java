@@ -103,7 +103,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		mContext = aCreator.getContext();
 		mGeneration = new GenerationControllerInstance(aCreator.getGenerationValue(), this, mHost, aMessageListener);
 		mDescriptions = new DescriptionControllerInstance(aCreator.getDescriptions());
-		mInsanities = new InsanityControllerInstance(aCreator.getInsanities());
+		mInsanities = new InsanityControllerInstance(aCreator.getInsanities(), getContext(), mHost, aMessageListener, mResizeListener);
 		mEP = new EPControllerInstance(getContext(), aMessageListener, mHost, this);
 		mMoney = new MoneyControllerInstance(mItems.getCurrency(), getContext(), mHost, aMessageListener, mResizeListener, this);
 		mTimeListeners.add(mInsanities);
@@ -188,7 +188,8 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		mGeneration = new GenerationControllerInstance((Element) root.getElementsByTagName("generation").item(0), this, mHost, aMessageListener);
 		
 		// Insanities
-		mInsanities = new InsanityControllerInstance((Element) root.getElementsByTagName("insanities").item(0));
+		mInsanities = new InsanityControllerInstance((Element) root.getElementsByTagName("insanities").item(0), getContext(), mHost, aMessageListener,
+				mResizeListener);
 		mTimeListeners.add(mInsanities);
 		
 		// Descriptions
@@ -237,6 +238,14 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		}
 		
 		Log.i(TAG, "Finished loading character.");
+	}
+	
+	/**
+	 * @return the insanities controller.
+	 */
+	public InsanityControllerInstance getInsanities()
+	{
+		return mInsanities;
 	}
 	
 	/**

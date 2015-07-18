@@ -50,8 +50,7 @@
         style="@style/BarButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/ok" 
         android:enabled="false"
-        />
+        android:text="@string/ok" />
     
 </LinearLayout>

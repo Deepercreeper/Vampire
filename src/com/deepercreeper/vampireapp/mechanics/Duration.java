@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
+import android.content.Context;
 
 /**
  * This class represents a duration of time, that counts down to zero.
@@ -24,18 +26,30 @@ public class Duration implements TimeListener, Saveable
 		 * Called when the given duration is due.
 		 */
 		public void onDue();
+		
+		/**
+		 * Invoked, when the time changed.
+		 */
+		public void timeUpdated();
 	}
 	
 	/**
 	 * This duration won't end.
 	 */
-	public static final Duration			FOREVER		= new Duration();
+	public static final Duration FOREVER = new Duration()
+	{
+		@Override
+		public void time(Type aType, int aAmount)
+		{}
+	};
 	
-	private final Type						mType;
+	private final Type mType;
 	
-	private final List<DurationListener>	mListeners	= new ArrayList<DurationListener>();
+	private final List<DurationListener> mListeners = new ArrayList<DurationListener>();
 	
-	private int								mValue;
+	private int mValue;
+	
+	private boolean mDue = false;
 	
 	/**
 	 * Creates a new duration.
@@ -72,6 +86,14 @@ public class Duration implements TimeListener, Saveable
 	}
 	
 	/**
+	 * @return whether this duration is over.
+	 */
+	public boolean isDue()
+	{
+		return mDue;
+	}
+	
+	/**
 	 * Adds a duration listener to this duration.
 	 * 
 	 * @param aListener
@@ -88,12 +110,12 @@ public class Duration implements TimeListener, Saveable
 		final Element element = aDoc.createElement("duration");
 		if (this == FOREVER)
 		{
-			element.setAttribute("type", "forever");
+			element.setAttribute("durationType", "forever");
 		}
 		else
 		{
-			element.setAttribute("type", getType().name());
-			element.setAttribute("value", "" + getValue());
+			element.setAttribute("durationType", getType().name());
+			element.setAttribute("durationValue", "" + getValue());
 		}
 		return element;
 	}
@@ -113,6 +135,13 @@ public class Duration implements TimeListener, Saveable
 				round(aAmount);
 			default :
 				break;
+		}
+		if ( !mDue)
+		{
+			for (DurationListener listener : mListeners)
+			{
+				listener.timeUpdated();
+			}
 		}
 	}
 	
@@ -160,6 +189,7 @@ public class Duration implements TimeListener, Saveable
 		if (mValue == 0)
 		{
 			onDue();
+			mDue = true;
 		}
 	}
 	
@@ -198,12 +228,14 @@ public class Duration implements TimeListener, Saveable
 				{
 					mValue = 0;
 				}
+				break;
 			default :
 				return;
 		}
 		if (mValue == 0)
 		{
 			onDue();
+			mDue = true;
 		}
 	}
 	
@@ -224,6 +256,7 @@ public class Duration implements TimeListener, Saveable
 		if (mValue == 0)
 		{
 			onDue();
+			mDue = true;
 		}
 	}
 	
@@ -235,6 +268,20 @@ public class Duration implements TimeListener, Saveable
 			return "Forever";
 		}
 		return getType().name() + ": " + getValue();
+	}
+	
+	/**
+	 * @param aContext
+	 *            The underlying context.
+	 * @return the display name of this duration.
+	 */
+	public String getName(Context aContext)
+	{
+		if (this == FOREVER)
+		{
+			return aContext.getString(R.string.forever);
+		}
+		return getType().getName(aContext) + ": " + getValue();
 	}
 	
 	private void onDue()
@@ -254,7 +301,7 @@ public class Duration implements TimeListener, Saveable
 	 */
 	public static Duration create(final Element aElement)
 	{
-		if (aElement.getAttribute("type").equals("forever"))
+		if (aElement.getAttribute("durationType").equals("forever"))
 		{
 			return FOREVER;
 		}

@@ -80,6 +80,8 @@ public class CreateArmorItemDialog extends DefaultDialog<InventoryItemCreationLi
 			}
 		});
 		
+		updateOKButton();
+		
 		return aBuilder.create();
 	}
 	

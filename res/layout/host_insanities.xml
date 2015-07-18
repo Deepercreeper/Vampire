@@ -1,37 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical" >
 
     <Button
-        android:id="@+id/c_money_button"
+        android:id="@+id/h_insanities_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawableEnd="@android:drawable/arrow_down_float"
         android:drawableRight="@android:drawable/arrow_down_float"
-        android:text="@string/money" />
+        android:text="@string/insanities" />
 
     <LinearLayout
-        android:id="@+id/c_money_list"
-        style="@style/List"
+        android:id="@+id/h_insanities_panel"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical" >
 
-        <LinearLayout
-            android:id="@+id/c_depot_list"
-            style="@style/List"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
-
         <Button
-            android:id="@+id/c_add_depot_button"
+            android:id="@+id/h_add_insanity_button"
             style="@style/BarButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/add_depot" />
+            android:text="@string/add_insanity" />
     </LinearLayout>
 
 </LinearLayout>

@@ -75,6 +75,8 @@ public class CreateInventoryItemDialog extends DefaultDialog<InventoryItemCreati
 			}
 		});
 		
+		updateOKButton();
+		
 		return aBuilder.create();
 	}
 	

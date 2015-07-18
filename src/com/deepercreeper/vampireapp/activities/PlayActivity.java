@@ -20,6 +20,7 @@ import com.deepercreeper.vampireapp.host.change.CharacterChange;
 import com.deepercreeper.vampireapp.host.change.EPChange;
 import com.deepercreeper.vampireapp.host.change.GenerationChange;
 import com.deepercreeper.vampireapp.host.change.HealthChange;
+import com.deepercreeper.vampireapp.host.change.InsanityChange;
 import com.deepercreeper.vampireapp.host.change.InventoryChange;
 import com.deepercreeper.vampireapp.host.change.ItemChange;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
@@ -80,45 +81,46 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	private CharacterInstance mChar;
 	
 	@Override
-	public void banned(final Player aPlayer)
+	public void applyChange(final String aChange, final String aType)
 	{
-		makeText(R.string.banned, Toast.LENGTH_SHORT);
-		exit(true);
-	}
-	
-	@Override
-	public void cancel()
-	{
-		if (mConnection.hasHost())
+		final Document doc = FilesUtil.loadDocument(aChange);
+		final Element element = (Element) doc.getElementsByTagName(aType).item(0);
+		CharacterChange change = null;
+		if (aType.equals(HealthChange.TAG_NAME))
 		{
-			mConnection.sendToAll(MessageType.LEFT_GAME);
+			change = new HealthChange(element);
 		}
-		exit(true);
-	}
-	
-	@Override
-	public void connectedTo(final ConnectedDevice aDevice)
-	{
-		aDevice.send(MessageType.LOGIN, ContactsUtil.getPhoneNumber(this), FilesUtil.serialize(mChar));
-	}
-	
-	@Override
-	public void connectionEnabled(final boolean aEnabled)
-	{
-		if ( !aEnabled)
+		else if (aType.equals(EPChange.TAG_NAME))
 		{
-			if (mConnection.hasHost())
-			{
-				mConnection.sendToAll(MessageType.LEFT_GAME);
-			}
-			exit(true);
+			change = new EPChange(element);
 		}
-	}
-	
-	@Override
-	public void sendMessage(final Message aMessage)
-	{
-		mConnection.getHost().send(MessageType.MESSAGE, FilesUtil.serialize(aMessage));
+		else if (aType.equals(GenerationChange.TAG_NAME))
+		{
+			change = new GenerationChange(element);
+		}
+		else if (aType.equals(MoneyChange.TAG_NAME))
+		{
+			change = new MoneyChange(element);
+		}
+		else if (aType.equals(InventoryChange.TAG_NAME))
+		{
+			change = new InventoryChange(element, this, mChar);
+		}
+		else if (aType.equals(ItemChange.TAG_NAME))
+		{
+			change = new ItemChange(element);
+		}
+		else if (aType.equals(InsanityChange.TAG_NAME))
+		{
+			change = new InsanityChange(element);
+		}
+		
+		// TODO Implement other changes
+		
+		if (change != null)
+		{
+			change.applyChange(mChar);
+		}
 	}
 	
 	@Override
@@ -154,6 +156,42 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 			mMessages.remove(aMessage);
 		}
 		return release;
+	}
+	
+	@Override
+	public void banned(final Player aPlayer)
+	{
+		makeText(R.string.banned, Toast.LENGTH_SHORT);
+		exit(true);
+	}
+	
+	@Override
+	public void cancel()
+	{
+		if (mConnection.hasHost())
+		{
+			mConnection.sendToAll(MessageType.LEFT_GAME);
+		}
+		exit(true);
+	}
+	
+	@Override
+	public void connectedTo(final ConnectedDevice aDevice)
+	{
+		aDevice.send(MessageType.LOGIN, ContactsUtil.getPhoneNumber(this), FilesUtil.serialize(mChar));
+	}
+	
+	@Override
+	public void connectionEnabled(final boolean aEnabled)
+	{
+		if ( !aEnabled)
+		{
+			if (mConnection.hasHost())
+			{
+				mConnection.sendToAll(MessageType.LEFT_GAME);
+			}
+			exit(true);
+		}
 	}
 	
 	@Override
@@ -256,42 +294,29 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	}
 	
 	@Override
-	public void applyChange(final String aChange, final String aType)
+	public void showMessage(Message aMessage)
 	{
-		final Document doc = FilesUtil.loadDocument(aChange);
-		final Element element = (Element) doc.getElementsByTagName(aType).item(0);
-		CharacterChange change = null;
-		if (aType.equals(HealthChange.TAG_NAME))
+		if ( !mMessages.contains(aMessage))
 		{
-			change = new HealthChange(element);
+			mMessages.add(aMessage);
+			mMessageList.addView(aMessage.getContainer());
 		}
-		else if (aType.equals(EPChange.TAG_NAME))
-		{
-			change = new EPChange(element);
-		}
-		else if (aType.equals(GenerationChange.TAG_NAME))
-		{
-			change = new GenerationChange(element);
-		}
-		else if (aType.equals(MoneyChange.TAG_NAME))
-		{
-			change = new MoneyChange(element);
-		}
-		else if (aType.equals(InventoryChange.TAG_NAME))
-		{
-			change = new InventoryChange(element, this, mChar);
-		}
-		else if (aType.equals(ItemChange.TAG_NAME))
-		{
-			change = new ItemChange(element);
-		}
-		
-		// TODO Implement other changes
-		
-		if (change != null)
-		{
-			change.applyChange(mChar);
-		}
+	}
+	
+	@Override
+	public void resize()
+	{}
+	
+	@Override
+	public void sendChange(final CharacterChange aChange)
+	{
+		mConnection.getHost().send(MessageType.UPDATE, FilesUtil.serialize(aChange), aChange.getType());
+	}
+	
+	@Override
+	public void sendMessage(final Message aMessage)
+	{
+		mConnection.getHost().send(MessageType.MESSAGE, FilesUtil.serialize(aMessage));
 	}
 	
 	/**
@@ -360,16 +385,6 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		super.onResume();
 	}
 	
-	@Override
-	public void sendChange(final CharacterChange aChange)
-	{
-		mConnection.getHost().send(MessageType.UPDATE, FilesUtil.serialize(aChange), aChange.getType());
-	}
-	
-	@Override
-	public void resize()
-	{}
-	
 	private void init()
 	{
 		LanguageUtil.init(this);
@@ -410,6 +425,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		controllersPanel.addView(mChar.getGenerationController().getContainer());
 		controllersPanel.addView(mChar.getMoney().getContainer());
 		controllersPanel.addView(mChar.getInventory().getContainer());
+		controllersPanel.addView(mChar.getInsanities().getContainer());
 		
 		for (final ItemControllerInstance controller : mChar.getControllers())
 		{

@@ -25,7 +25,7 @@ import com.deepercreeper.vampireapp.util.view.listeners.StringCreationListener;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 /**
@@ -291,7 +291,7 @@ public class MoneyControllerInstance implements Saveable, Viewable
 			mExpander.init();
 			
 			mDepotsList = (LinearLayout) getContainer().findViewById(mHost ? R.id.h_depot_list : R.id.c_depot_list);
-			final ImageButton addDepot = (ImageButton) getContainer().findViewById(mHost ? R.id.h_add_depot_button : R.id.c_add_depot_button);
+			final Button addDepot = (Button) getContainer().findViewById(mHost ? R.id.h_add_depot_button : R.id.c_add_depot_button);
 			
 			addDepot.setOnClickListener(new OnClickListener()
 			{

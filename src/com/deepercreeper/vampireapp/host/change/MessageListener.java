@@ -47,4 +47,12 @@ public interface MessageListener extends Toaster
 	 *            The message to send.
 	 */
 	public void sendMessage(Message aMessage);
+	
+	/**
+	 * Shows this message directly to the user.
+	 * 
+	 * @param aMessage
+	 *            The message to show.
+	 */
+	public void showMessage(Message aMessage);
 }

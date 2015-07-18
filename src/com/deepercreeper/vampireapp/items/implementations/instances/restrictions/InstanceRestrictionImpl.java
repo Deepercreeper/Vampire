@@ -20,25 +20,25 @@ import com.deepercreeper.vampireapp.util.DataUtil;
  */
 public class InstanceRestrictionImpl implements InstanceRestriction
 {
-	private final String					mItemName;
+	private final String mItemName;
 	
-	private final List<String>				mItems;
+	private final List<String> mItems;
 	
-	private final Set<InstanceCondition>	mConditions	= new HashSet<InstanceCondition>();
+	private final Set<InstanceCondition> mConditions = new HashSet<InstanceCondition>();
 	
-	private final InstanceRestrictionType	mType;
+	private final InstanceRestrictionType mType;
 	
-	private final Duration					mDuration;
+	private final Duration mDuration;
 	
-	private final int						mValue;
+	private final int mValue;
 	
-	private final int						mMinimum;
+	private final int mMinimum;
 	
-	private final int						mMaximum;
+	private final int mMaximum;
 	
-	private final int						mIndex;
+	private final int mIndex;
 	
-	private InstanceRestrictionable			mParent;
+	private InstanceRestrictionable mParent;
 	
 	/**
 	 * Creates a new restriction out of the given XML data.
@@ -117,6 +117,12 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 	public void time(final Type aType, final int aAmount)
 	{
 		mDuration.time(aType, aAmount);
+	}
+	
+	@Override
+	public void timeUpdated()
+	{
+		// TODO Implement when restrictions have views
 	}
 	
 	@Override

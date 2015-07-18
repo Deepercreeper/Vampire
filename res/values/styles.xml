@@ -6,6 +6,8 @@
 
     <style name="AppTheme" parent="@style/AppBaseTheme" />
 
+    <style name="List" parent="@android:style/Holo.Light.ButtonBar.AlertDialog"></style>
+    
     <style name="BarButton" parent="@android:style/Widget.Holo.Button.Borderless">
         <item name="android:textColor">@android:color/white</item>
     </style>

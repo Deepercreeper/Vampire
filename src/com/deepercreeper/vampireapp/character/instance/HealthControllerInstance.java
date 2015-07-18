@@ -2,15 +2,6 @@ package com.deepercreeper.vampireapp.character.instance;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import android.animation.ValueAnimator;
-import android.animation.ValueAnimator.AnimatorUpdateListener;
-import android.content.Context;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.creation.HealthControllerCreation;
 import com.deepercreeper.vampireapp.host.change.HealthChange;
@@ -22,6 +13,15 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.interfaces.ItemFinder;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
+import android.animation.ValueAnimator;
+import android.animation.ValueAnimator.AnimatorUpdateListener;
+import android.content.Context;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 /**
  * This controller is used to control the health of a character.<br>
@@ -31,37 +31,37 @@ import com.deepercreeper.vampireapp.util.interfaces.Viewable;
  */
 public class HealthControllerInstance implements TimeListener, Saveable, Viewable, AnimatorUpdateListener
 {
-	private static final int		VALUE_MULTIPLICATOR	= 20;
+	private static final int VALUE_MULTIPLICATOR = 20;
 	
-	private final LinearLayout		mContainer;
+	private final LinearLayout mContainer;
 	
-	private final ItemInstance		mCost;
+	private final ItemInstance mCost;
 	
-	private final ItemFinder		mItems;
+	private final ItemFinder mItems;
 	
-	private final MessageListener	mChangeListener;
+	private final MessageListener mChangeListener;
 	
-	private final boolean			mHost;
+	private final boolean mHost;
 	
-	private final ValueAnimator		mAnimator;
+	private final ValueAnimator mAnimator;
 	
-	private ImageButton				mHealButton;
+	private ImageButton mHealButton;
 	
-	private ImageButton				mHurtButton;
+	private ImageButton mHurtButton;
 	
-	private ImageButton				mHeavyHurt;
+	private ImageButton mHeavyHurt;
 	
-	private ProgressBar				mValueBar;
+	private ProgressBar mValueBar;
 	
-	private TextView				mStepLabel;
+	private TextView mStepLabel;
 	
-	private boolean					mInitialized		= false;
+	private boolean mInitialized = false;
 	
-	private int[]					mSteps;
+	private int[] mSteps;
 	
-	private int						mHeavyWounds		= 0;
+	private int mHeavyWounds = 0;
 	
-	private int						mValue				= 0;
+	private int mValue = 0;
 	
 	/**
 	 * Creates a new health controller out of the given XML data.
@@ -353,7 +353,6 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 				mHeavyWounds-- ;
 			}
 			updateButtons();
-			mChangeListener.sendChange(new HealthChange(true, mHeavyWounds));
 		}
 	}
 	

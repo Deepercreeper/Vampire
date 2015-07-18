@@ -37,7 +37,7 @@
             android:orientation="vertical" />
 
         <LinearLayout
-            style="?android:attr/buttonBarStyle"
+            style="@style/List"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 

@@ -16,6 +16,7 @@ import com.deepercreeper.vampireapp.host.change.CharacterChange;
 import com.deepercreeper.vampireapp.host.change.EPChange;
 import com.deepercreeper.vampireapp.host.change.GenerationChange;
 import com.deepercreeper.vampireapp.host.change.HealthChange;
+import com.deepercreeper.vampireapp.host.change.InsanityChange;
 import com.deepercreeper.vampireapp.host.change.InventoryChange;
 import com.deepercreeper.vampireapp.host.change.ItemChange;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
@@ -136,6 +137,12 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 	}
 	
 	@Override
+	public void showMessage(Message aMessage)
+	{
+		mHost.addMessage(aMessage);
+	}
+	
+	@Override
 	public boolean applyMessage(final Message aMessage, final ButtonAction aAction)
 	{
 		final boolean release = true;
@@ -207,11 +214,13 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 		{
 			if (aType != Type.SET)
 			{
+				mChar.time(aType, aAmount);
 				mDevice.send(MessageType.TIME, aType.name(), "" + aAmount);
 			}
 			else
 			{
 				final int difference = (aAmount + 24 - mTime) % 24;
+				mChar.time(Type.HOUR, difference);
 				mDevice.send(MessageType.TIME, Type.HOUR.name(), "" + difference);
 			}
 			switch (aType)
@@ -315,6 +324,10 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 		{
 			change = new ItemChange(element);
 		}
+		else if (aType.equals(InsanityChange.TAG_NAME))
+		{
+			change = new InsanityChange(element);
+		}
 		
 		// TODO Add other changes
 		
@@ -357,6 +370,7 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 		playerContainer.addView(mChar.getGenerationController().getContainer(), 2);
 		playerContainer.addView(mChar.getMoney().getContainer(), 3);
 		playerContainer.addView(mChar.getInventory().getContainer(), 4);
+		playerContainer.addView(mChar.getInsanities().getContainer(), 5);
 		
 		mControllerExpander.init();
 		

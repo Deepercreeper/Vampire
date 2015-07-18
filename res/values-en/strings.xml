@@ -6,6 +6,7 @@
     <string name="accept_increase">{0} was increased to {1}.</string>
     <string name="accept_take">You took {0} of {1}.</string>
     <string name="add">Add</string>
+    <string name="add_depot">Add depot</string>
     <string name="add_health">Add health step</string>
     <string name="add_insanity">Add insanity</string>
     <string name="add_insanity_message">Enter the name of a insanity:</string>
@@ -48,6 +49,7 @@
     <string name="create_depot_title">Create depot</string>
     <string name="create_host">Create host</string>
     <string name="create_host_button">Create new host</string>
+    <string name="create_insanity">Create new insanity</string>
     <string name="create_item">Create new item</string>
     <string name="create_weapon">Create new weapon</string>
     <string name="damage">Damage</string>
@@ -67,9 +69,11 @@
     <string name="ep_amount">EP amount</string>
     <string name="exit">Exit</string>
     <string name="finish">Finish</string>
+    <string name="forever">Forever</string>
     <string name="free_points_info">Free bonus points</string>
     <string name="friends">Friends</string>
     <string name="generation_colon">Generation:</string>
+	<string name="got_insanity">You got the following insanity: {0}</string>
     <string name="got_item">You got the following item: {x}</string>
     <string name="health_colon">Health:</string>
     <string name="host_closed">The host has stopped his game.</string>
@@ -78,6 +82,8 @@
     <string name="host_name">Host name</string>
     <string name="hosts">Hosts</string>
     <string name="hour">Hour</string>
+    <string name="insanities">Insanities</string>
+    <string name="insanity_name">Name of insanity</string>
     <string name="inventory">Inventory</string>
     <string name="item_name">Item name</string>
     <string name="item_weight">Item weight</string>
@@ -87,6 +93,7 @@
     <string name="ko">Knocked out</string>
     <string name="left_game">left the game.</string>
     <string name="left_item">Left the following item: {x}</string>
+    <string name="lost_insanity">You don\'t have the following insanity anymore: {0}</string>
     <string name="magazine">Magazine</string>
     <string name="max">Max</string>
     <string name="max_weight">Maximum weight</string>
@@ -98,7 +105,7 @@
     <string name="next">Next</string>
     <string name="no">No</string>
     <string name="no_banned_players">There are currently no banned players.</string>
-    <string name="no_paired_device">You have no paired devices!</string>
+    <string name="no_paired_device">You have no paired devices.</string>
     <string name="ok">OK</string>
     <string name="play">Play</string>
     <string name="play_host">Play</string>

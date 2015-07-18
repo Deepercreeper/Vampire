@@ -16,6 +16,7 @@
         android:id="@+id/h_inventory_panel"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        style="@style/List"
         android:orientation="vertical" >
 
         <LinearLayout
@@ -42,13 +43,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" />
 
-        <ImageButton
+        <Button
             android:id="@+id/h_add_item_button"
-            android:layout_width="@dimen/button_width"
-            android:layout_height="@dimen/button_height"
-            android:layout_gravity="center_horizontal"
-            android:contentDescription="@string/content_description"
-            android:src="@drawable/ic_increase" />
+            style="@style/BarButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/add_item"
+            />
     </LinearLayout>
 
 </LinearLayout>

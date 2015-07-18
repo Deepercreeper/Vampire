@@ -25,7 +25,7 @@
 
         <LinearLayout
             android:id="@+id/f_chars_list"
-            style="?android:attr/buttonBarStyle"
+            style="@style/List"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" />

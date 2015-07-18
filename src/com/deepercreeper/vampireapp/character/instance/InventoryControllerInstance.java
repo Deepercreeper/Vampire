@@ -32,7 +32,7 @@ import com.deepercreeper.vampireapp.util.view.listeners.ItemSelectionListener;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -98,7 +98,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	
 	private TextView mMaxWeightLabel;
 	
-	private ImageButton mAddItemButton;
+	private Button mAddItemButton;
 	
 	private int mWeight = 0;
 	
@@ -344,7 +344,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 			mInventoryList = (LinearLayout) getContainer().findViewById(mHost ? R.id.h_inventory_list : R.id.c_inventory_list);
 			mWeightLabel = (TextView) getContainer().findViewById(mHost ? R.id.h_weight_label : R.id.c_weight_label);
 			mMaxWeightLabel = (TextView) getContainer().findViewById(mHost ? R.id.h_max_weight_label : R.id.c_max_weight_label);
-			mAddItemButton = mHost ? (ImageButton) getContainer().findViewById(R.id.h_add_item_button) : null;
+			mAddItemButton = mHost ? (Button) getContainer().findViewById(R.id.h_add_item_button) : null;
 			
 			if (mHost)
 			{

@@ -167,6 +167,8 @@ public class CreateWeaponItemDialog extends DefaultDialog<InventoryItemCreationL
 			}
 		});
 		
+		updateOKButton();
+		
 		return aBuilder.create();
 	}
 	
