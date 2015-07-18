@@ -274,7 +274,6 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 				banned(null);
 				break;
 			case TIME :
-				makeText("Time changed: " + aArgs[0] + " " + aArgs[1], Toast.LENGTH_SHORT);
 				mChar.time(Type.valueOf(aArgs[0]), Integer.parseInt(aArgs[1]));
 				break;
 			case UPDATE :
