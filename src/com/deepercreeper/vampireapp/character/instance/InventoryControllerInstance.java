@@ -5,8 +5,8 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.character.inventory.Inventory;
 import com.deepercreeper.vampireapp.character.inventory.Artifact;
+import com.deepercreeper.vampireapp.character.inventory.Inventory;
 import com.deepercreeper.vampireapp.host.Message;
 import com.deepercreeper.vampireapp.host.Message.ButtonAction;
 import com.deepercreeper.vampireapp.host.Message.MessageGroup;
@@ -23,6 +23,7 @@ import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 import com.deepercreeper.vampireapp.util.view.Expander;
+import com.deepercreeper.vampireapp.util.view.dialogs.CreateArmorItemDialog;
 import com.deepercreeper.vampireapp.util.view.dialogs.CreateInventoryItemDialog;
 import com.deepercreeper.vampireapp.util.view.dialogs.CreateWeaponItemDialog;
 import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog;
@@ -227,7 +228,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 		}
 		else if (aItemType.equals(ARMOR))
 		{
-			// TODO Implement armor creation
+			CreateArmorItemDialog.showCreateArmorItemDialog(mContext.getString(R.string.create_armor), mContext, listener);
 		}
 	}
 	

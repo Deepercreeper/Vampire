@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 
 /**
  * An abstract dialog, that implements the default methods.
@@ -23,15 +24,15 @@ import android.view.View;
  */
 public abstract class DefaultDialog <L, C extends View> extends DialogFragment
 {
-	private static final Map<String, Boolean>	sDialogsOpen	= new HashMap<String, Boolean>();
+	private static final Map<String, Boolean> sDialogsOpen = new HashMap<String, Boolean>();
 	
-	private final String						mTitle;
+	private final String mTitle;
 	
-	private final Context						mContext;
+	private final Context mContext;
 	
-	private final L								mListener;
+	private final L mListener;
 	
-	private final C								mContainer;
+	private final C mContainer;
 	
 	protected DefaultDialog(final String aTitle, final Context aContext, final L aListener, final int aViewId, final Class<C> aContainerClass)
 	{
@@ -84,6 +85,23 @@ public abstract class DefaultDialog <L, C extends View> extends DialogFragment
 	}
 	
 	protected abstract Dialog createDialog(AlertDialog.Builder aBuilder);
+	
+	protected boolean isNameOk(EditText aText)
+	{
+		return !aText.getText().toString().trim().isEmpty();
+	}
+	
+	protected boolean isNumberOk(EditText aText, int aMin)
+	{
+		int value = -1;
+		try
+		{
+			value = Integer.parseInt(aText.getText().toString());
+		}
+		catch (NumberFormatException e)
+		{}
+		return value >= aMin;
+	}
 	
 	protected void cancel()
 	{

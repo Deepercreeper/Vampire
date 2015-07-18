@@ -42,6 +42,7 @@
     <string name="concept_colon">Konzept:</string>
     <string name="connection">Verbindung</string>
     <string name="content_description">Placeholder</string>
+	<string name="create_armor">Neue Rüstung erstellen</string>
     <string name="create_char">Charaktererstellung</string>
     <string name="create_depot">Bitte geben Sie den Namen des neuen Depots ein:</string>
     <string name="create_depot_title">Depot erstellen</string>

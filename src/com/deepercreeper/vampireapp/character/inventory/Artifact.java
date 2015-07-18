@@ -329,6 +329,10 @@ public class Artifact implements InventoryItem
 		{
 			return new Weapon(aElement, aItems, aContext, aController);
 		}
+		if (type.equals(Armor.ARMOR_ITEM_TYPE))
+		{
+			return new Armor(aElement, aContext, aController);
+		}
 		return null;
 	}
 }

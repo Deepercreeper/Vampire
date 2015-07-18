@@ -189,23 +189,6 @@ public class CreateWeaponItemDialog extends DefaultDialog<InventoryItemCreationL
 		ViewUtil.setEnabled(mOK, enabled);
 	}
 	
-	private boolean isNameOk(EditText aText)
-	{
-		return !aText.getText().toString().trim().isEmpty();
-	}
-	
-	private boolean isNumberOk(EditText aText, int aMin)
-	{
-		int value = -1;
-		try
-		{
-			value = Integer.parseInt(aText.getText().toString());
-		}
-		catch (NumberFormatException e)
-		{}
-		return value >= aMin;
-	}
-	
 	/**
 	 * @return whether any of this classes dialogs is open.
 	 */

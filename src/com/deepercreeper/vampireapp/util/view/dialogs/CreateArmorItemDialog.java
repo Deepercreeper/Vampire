@@ -1,7 +1,7 @@
 package com.deepercreeper.vampireapp.util.view.dialogs;
 
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.character.inventory.Artifact;
+import com.deepercreeper.vampireapp.character.inventory.Armor;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.listeners.InventoryItemCreationListener;
 import android.app.Activity;
@@ -17,11 +17,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 /**
- * A dialog used for creating inventory items.
+ * Dialog used to create armor items.
  * 
- * @author Vincent
+ * @author vrl
  */
-public class CreateInventoryItemDialog extends DefaultDialog<InventoryItemCreationListener, LinearLayout>
+public class CreateArmorItemDialog extends DefaultDialog<InventoryItemCreationListener, LinearLayout>
 {
 	private EditText mName;
 	
@@ -29,20 +29,23 @@ public class CreateInventoryItemDialog extends DefaultDialog<InventoryItemCreati
 	
 	private EditText mQuantity;
 	
+	private EditText mArmor;
+	
 	private Button mOK;
 	
-	private CreateInventoryItemDialog(final String aTitle, final Context aContext, final InventoryItemCreationListener aListener)
+	private CreateArmorItemDialog(String aTitle, Context aContext, InventoryItemCreationListener aListener)
 	{
-		super(aTitle, aContext, aListener, R.layout.dialog_create_inventory_item, LinearLayout.class);
+		super(aTitle, aContext, aListener, R.layout.dialog_create_armor_item, LinearLayout.class);
 	}
 	
 	@Override
-	public Dialog createDialog(final Builder aBuilder)
+	protected Dialog createDialog(Builder aBuilder)
 	{
-		mOK = (Button) getContainer().findViewById(R.id.dialog_ok_button);
-		mName = (EditText) getContainer().findViewById(R.id.dialog_item_name_text);
-		mWeight = (EditText) getContainer().findViewById(R.id.dialog_item_weight_text);
-		mQuantity = (EditText) getContainer().findViewById(R.id.dialog_item_quantity_text);
+		mOK = (Button) getContainer().findViewById(R.id.dialog_armor_ok_button);
+		mName = (EditText) getContainer().findViewById(R.id.dialog_armor_name_text);
+		mWeight = (EditText) getContainer().findViewById(R.id.dialog_armor_weight_text);
+		mQuantity = (EditText) getContainer().findViewById(R.id.dialog_armor_quantity_text);
+		mArmor = (EditText) getContainer().findViewById(R.id.dialog_armor_text);
 		
 		final TextWatcher listener = new TextWatcher()
 		{
@@ -64,13 +67,15 @@ public class CreateInventoryItemDialog extends DefaultDialog<InventoryItemCreati
 		mName.addTextChangedListener(listener);
 		mWeight.addTextChangedListener(listener);
 		mQuantity.addTextChangedListener(listener);
+		mArmor.addTextChangedListener(listener);
 		mOK.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(final View aV)
 			{
-				getListener().itemCreated(new Artifact(mName.getText().toString(), Integer.parseInt(mWeight.getText().toString()),
-						Integer.parseInt(mQuantity.getText().toString()), getContext(), null));
+				Armor armor = new Armor(mName.getText().toString().trim(), Integer.parseInt(mWeight.getText().toString()),
+						Integer.parseInt(mQuantity.getText().toString()), Integer.parseInt(mArmor.getText().toString()), getContext(), null);
+				getListener().itemCreated(armor);
 				dismiss();
 			}
 		});
@@ -84,6 +89,7 @@ public class CreateInventoryItemDialog extends DefaultDialog<InventoryItemCreati
 		enabled &= isNameOk(mName);
 		enabled &= isNumberOk(mWeight, 0);
 		enabled &= isNumberOk(mQuantity, 1);
+		enabled &= isNumberOk(mArmor, 0);
 		ViewUtil.setEnabled(mOK, enabled);
 	}
 	
@@ -92,11 +98,11 @@ public class CreateInventoryItemDialog extends DefaultDialog<InventoryItemCreati
 	 */
 	public static boolean isDialogOpen()
 	{
-		return isDialogOpen(CreateInventoryItemDialog.class);
+		return isDialogOpen(CreateArmorItemDialog.class);
 	}
 	
 	/**
-	 * Shows a create inventory item dialog.
+	 * Shows a create weapon item dialog.
 	 * 
 	 * @param aTitle
 	 *            The dialog title.
@@ -105,12 +111,12 @@ public class CreateInventoryItemDialog extends DefaultDialog<InventoryItemCreati
 	 * @param aListener
 	 *            The dialog listener.
 	 */
-	public static void showCreateInventoryItemDialog(final String aTitle, final Context aContext, final InventoryItemCreationListener aListener)
+	public static void showCreateArmorItemDialog(final String aTitle, final Context aContext, final InventoryItemCreationListener aListener)
 	{
 		if (isDialogOpen())
 		{
 			return;
 		}
-		new CreateInventoryItemDialog(aTitle, aContext, aListener).show(((Activity) aContext).getFragmentManager(), aTitle);
+		new CreateArmorItemDialog(aTitle, aContext, aListener).show(((Activity) aContext).getFragmentManager(), aTitle);
 	}
 }

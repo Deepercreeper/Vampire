@@ -42,6 +42,7 @@
     <string name="concept_colon">Concept:</string>
     <string name="connection">Connection</string>
     <string name="content_description">Placeholder</string>
+    <string name="create_armor">Create new armor</string>
     <string name="create_char">Charactercreation</string>
     <string name="create_depot">Please enter the name of the new depot:</string>
     <string name="create_depot_title">Create depot</string>
