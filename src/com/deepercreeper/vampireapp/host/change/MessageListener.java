@@ -1,5 +1,6 @@
 package com.deepercreeper.vampireapp.host.change;
 
+import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.host.Message;
 import com.deepercreeper.vampireapp.host.Message.ButtonAction;
 import com.deepercreeper.vampireapp.util.interfaces.Toaster;
@@ -55,4 +56,9 @@ public interface MessageListener extends Toaster
 	 *            The message to show.
 	 */
 	public void showMessage(Message aMessage);
+	
+	/**
+	 * @return the character.
+	 */
+	public CharacterInstance getCharacter();
 }

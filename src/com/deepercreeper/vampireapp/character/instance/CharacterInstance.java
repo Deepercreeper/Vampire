@@ -105,7 +105,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		mDescriptions = new DescriptionControllerInstance(aCreator.getDescriptions());
 		mInsanities = new InsanityControllerInstance(aCreator.getInsanities(), getContext(), mHost, aMessageListener, mResizeListener);
 		mEP = new EPControllerInstance(getContext(), aMessageListener, mHost, this);
-		mMoney = new MoneyControllerInstance(mItems.getCurrency(), getContext(), mHost, aMessageListener, mResizeListener, this);
+		mMoney = new MoneyControllerInstance(mItems.getCurrency(), getContext(), mHost, aMessageListener, mResizeListener);
 		mTimeListeners.add(mInsanities);
 		
 		mName = aCreator.getName();
@@ -122,7 +122,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 					new ItemControllerInstanceImpl(controller, getContext(), mMode, mEP, this, aControllerResizeListener, aMessageListener, mHost));
 		}
 		
-		mInventory = new InventoryControllerInstance(mItems.getInventory(), this, mContext, mResizeListener, aMessageListener, this, mHost);
+		mInventory = new InventoryControllerInstance(mItems.getInventory(), this, mContext, mResizeListener, aMessageListener, mHost);
 		mHealth = new HealthControllerInstance(aCreator.getHealth(), getContext(), this, aMessageListener, mHost);
 		mTimeListeners.add(mHealth);
 		
@@ -216,11 +216,11 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		
 		// Money
 		mMoney = new MoneyControllerInstance(mItems.getCurrency(), (Element) root.getElementsByTagName("money").item(0), getContext(), mHost,
-				aMessageListener, mResizeListener, this);
+				aMessageListener, mResizeListener);
 				
 		// Inventory
 		mInventory = new InventoryControllerInstance((Element) root.getElementsByTagName("inventory").item(0), mItems.getInventory(), this,
-				getContext(), mResizeListener, aMessageListener, this, mHost);
+				getContext(), mResizeListener, aMessageListener, mHost);
 				
 		// Restrictions
 		final Element restrictions = (Element) root.getElementsByTagName("restrictions").item(0);

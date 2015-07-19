@@ -56,17 +56,10 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	
 	private static class ItemType extends Named
 	{
-		
 		private ItemType(final String aName)
 		{
 			super(aName);
 			ITEM_TYPES.add(this);
-		}
-		
-		@Override
-		public String toString()
-		{
-			return getDisplayName();
 		}
 	}
 	
@@ -87,8 +80,6 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	private final ResizeListener mResizeListener;
 	
 	private final MessageListener mMessageListener;
-	
-	private final CharacterInstance mChar;
 	
 	private final Expander mExpander;
 	
@@ -121,20 +112,17 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	 *            The parent resize listener.
 	 * @param aMessageListener
 	 *            The message listener.
-	 * @param aChar
-	 *            The character.
 	 * @param aHost
 	 *            Whether this is a host sided controller.
 	 */
 	public InventoryControllerInstance(final Element aElement, final Inventory aInventory, final ItemFinder aItems, final Context aContext,
-			final ResizeListener aResizeListener, final MessageListener aMessageListener, final CharacterInstance aChar, final boolean aHost)
+			final ResizeListener aResizeListener, final MessageListener aMessageListener, final boolean aHost)
 	{
 		mInventory = aInventory;
 		mItems = aItems;
 		mContext = aContext;
 		mResizeListener = aResizeListener;
 		mMessageListener = aMessageListener;
-		mChar = aChar;
 		mHost = aHost;
 		
 		mMaxWeightItem = mItems.findItem(mInventory.getMaxWeightItem());
@@ -157,7 +145,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 				final Element child = (Element) aElement.getChildNodes().item(i);
 				if (child.getTagName().equals("item"))
 				{
-					addItem(Artifact.deserialize(child, mContext, this, mChar), true);
+					addItem(Artifact.deserialize(child, mContext, this, mMessageListener.getCharacter()), true);
 				}
 			}
 		}
@@ -176,20 +164,17 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	 *            The parent resize listener.
 	 * @param aMessageListener
 	 *            The message listener.
-	 * @param aChar
-	 *            The character.
 	 * @param aHost
 	 *            Whether this is a host sided controller.
 	 */
 	public InventoryControllerInstance(final Inventory aInventory, final ItemFinder aItems, final Context aContext,
-			final ResizeListener aResizeListener, final MessageListener aMessageListener, final CharacterInstance aChar, final boolean aHost)
+			final ResizeListener aResizeListener, final MessageListener aMessageListener, final boolean aHost)
 	{
 		mInventory = aInventory;
 		mItems = aItems;
 		mContext = aContext;
 		mResizeListener = aResizeListener;
 		mMessageListener = aMessageListener;
-		mChar = aChar;
 		mHost = aHost;
 		
 		mMaxWeightItem = mItems.findItem(mInventory.getMaxWeightItem());
@@ -224,7 +209,8 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 		}
 		else if (aItemType.equals(WEAPON))
 		{
-			CreateWeaponItemDialog.showCreateWeaponItemDialog(mContext.getString(R.string.create_weapon), mContext, listener, mChar);
+			CreateWeaponItemDialog.showCreateWeaponItemDialog(mContext.getString(R.string.create_weapon), mContext, listener,
+					mMessageListener.getCharacter());
 		}
 		else if (aItemType.equals(ARMOR))
 		{
@@ -415,8 +401,8 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 		}
 		if ( !mHost)
 		{
-			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, mChar.getName(), R.string.left_item, aItem.getInfoArray(),
-					aItem.getInfoTranslatedArray(), mContext, null, ButtonAction.NOTHING));
+			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, mMessageListener.getCharacter().getName(), R.string.left_item,
+					aItem.getInfoArray(), aItem.getInfoTranslatedArray(), mContext, null, ButtonAction.NOTHING));
 		}
 	}
 	

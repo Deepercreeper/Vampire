@@ -1,5 +1,7 @@
 package com.deepercreeper.vampireapp.util;
 
+import com.deepercreeper.vampireapp.util.view.Expander;
+import com.deepercreeper.vampireapp.util.view.ResizeHeightAnimation;
 import android.content.Context;
 import android.util.TypedValue;
 import android.view.View;
@@ -7,8 +9,6 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewParent;
 import android.widget.LinearLayout;
-import com.deepercreeper.vampireapp.util.view.Expander;
-import com.deepercreeper.vampireapp.util.view.ResizeHeightAnimation;
 
 /**
  * A helper class for view operations. It also contains all layout parameters.
@@ -92,6 +92,17 @@ public class ViewUtil
 	}
 	
 	/**
+	 * Hides the given view by setting the height to {@code 0}.
+	 * 
+	 * @param aView
+	 *            The view.
+	 */
+	public static void hideHeight(final View aView)
+	{
+		setHeight(aView, 0);
+	}
+	
+	/**
 	 * Removes a view from its parent view. Optionally removes all child views.
 	 * 
 	 * @param aView
@@ -158,7 +169,90 @@ public class ViewUtil
 	}
 	
 	/**
+	 * Sets the width of the given view to {@link LayoutParams#WRAP_CONTENT}.
+	 * 
+	 * @param aView
+	 *            The view to wrap in width.
+	 */
+	public static void wrapWidth(View aView)
+	{
+		aView.getLayoutParams().width = LayoutParams.WRAP_CONTENT;
+	}
+	
+	/**
+	 * Sets the height of the given view to {@link LayoutParams#WRAP_CONTENT}.
+	 * 
+	 * @param aView
+	 *            The view to wrap in height.
+	 */
+	public static void wrapHeight(View aView)
+	{
+		aView.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
+	}
+	
+	/**
+	 * Sets the width of the given view to {@link LayoutParams#MATCH_PARENT}.
+	 * 
+	 * @param aView
+	 *            The view to match in width.
+	 */
+	public static void matchWidth(View aView)
+	{
+		aView.getLayoutParams().width = LayoutParams.MATCH_PARENT;
+	}
+	
+	/**
+	 * Sets the height of the given view to {@link LayoutParams#MATCH_PARENT}.
+	 * 
+	 * @param aView
+	 *            The view to match in height.
+	 */
+	public static void matchHeight(View aView)
+	{
+		aView.getLayoutParams().height = LayoutParams.MATCH_PARENT;
+	}
+	
+	/**
+	 * Sets the width of the given view to the given value calculated into pixels.
+	 * 
+	 * @param aView
+	 *            The view.
+	 * @param aHeight
+	 *            The new width.
+	 */
+	public static void setHeight(final View aView, final int aHeight)
+	{
+		aView.getLayoutParams().height = calcPx(aHeight, aView.getContext());
+	}
+	
+	/**
 	 * Sets the width of the given view to the given value.
+	 * 
+	 * @param aView
+	 *            The view.
+	 * @param aHeight
+	 *            The new height.
+	 */
+	public static void setPxHeight(final View aView, final int aHeight)
+	{
+		aView.getLayoutParams().width = aHeight;
+	}
+	
+	/**
+	 * Sets the width of the given view to the given value.
+	 * 
+	 * @param aView
+	 *            The view.
+	 * @param aWidth
+	 *            The new width.
+	 */
+	public static void setPxWidth(final View aView, final int aWidth)
+	{
+		aView.getLayoutParams().width = aWidth;
+	}
+	
+	/**
+	 * Sets the width of the given view to the given value calculated into pixels.
 	 * 
 	 * @param aView
 	 *            The view.
@@ -167,7 +261,6 @@ public class ViewUtil
 	 */
 	public static void setWidth(final View aView, final int aWidth)
 	{
-		final LayoutParams params = aView.getLayoutParams();
-		params.width = calcPx(aWidth, aView.getContext());
+		aView.getLayoutParams().width = calcPx(aWidth, aView.getContext());
 	}
 }

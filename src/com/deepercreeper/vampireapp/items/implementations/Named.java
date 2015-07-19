@@ -11,7 +11,7 @@ import com.deepercreeper.vampireapp.util.Log;
  */
 public class Named implements Nameable
 {
-	private String	mName;
+	private String mName;
 	
 	/**
 	 * Creates a new named entity.
@@ -62,7 +62,7 @@ public class Named implements Nameable
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((mName == null) ? 0 : mName.hashCode());
+		result = prime * result + ((getName() == null) ? 0 : getName().hashCode());
 		return result;
 	}
 	
@@ -73,35 +73,35 @@ public class Named implements Nameable
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		final Named other = (Named) obj;
-		if (mName == null)
+		if (getName() == null)
 		{
-			if (other.mName != null) return false;
+			if (other.getName() != null) return false;
 		}
-		else if ( !mName.equals(other.mName)) return false;
+		else if ( !getName().equals(other.getName())) return false;
 		return true;
 	}
 	
 	@Override
 	public char charAt(final int aIndex)
 	{
-		return mName.charAt(aIndex);
+		return getName().charAt(aIndex);
 	}
 	
 	@Override
 	public int length()
 	{
-		return mName.length();
+		return getName().length();
 	}
 	
 	@Override
 	public CharSequence subSequence(final int aStart, final int aEnd)
 	{
-		return mName.subSequence(aStart, aEnd);
+		return getName().subSequence(aStart, aEnd);
 	}
 	
 	@Override
 	public String toString()
 	{
-		return mName;
+		return getDisplayName();
 	}
 }

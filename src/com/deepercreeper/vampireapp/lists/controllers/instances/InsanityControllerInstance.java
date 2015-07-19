@@ -52,8 +52,10 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 		public void onDue()
 		{
 			removeInsanity(mInsanity, true);
-			mMessageListener.showMessage(new Message(MessageGroup.SINGLE, "", R.string.lost_insanity, new String[] { mInsanity }, mContext,
-					mMessageListener, ButtonAction.NOTHING));
+			int id = mHost ? R.string.player_lost_insanity : R.string.lost_insanity;
+			String sender = mHost ? mMessageListener.getCharacter().getName() : "";
+			mMessageListener.showMessage(
+					new Message(MessageGroup.SINGLE, sender, id, new String[] { mInsanity }, mContext, mMessageListener, ButtonAction.NOTHING));
 		}
 		
 		@Override

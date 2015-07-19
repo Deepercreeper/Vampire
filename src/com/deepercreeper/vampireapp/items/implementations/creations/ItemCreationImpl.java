@@ -881,14 +881,16 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		
 		if (isValueItem())
 		{
-			// TODO Use cases needed?
-			ViewUtil.setWidth(mDecreaseButton, 30);
-			ViewUtil.setWidth(mIncreaseButton, 30);
-			ViewUtil.setWidth(mValueText, 30);
+			int buttonWidth = (int) getContext().getResources().getDimension(R.dimen.button_width);
+			ViewUtil.setPxWidth(mDecreaseButton, buttonWidth);
+			ViewUtil.setPxWidth(mIncreaseButton, buttonWidth);
+			ViewUtil.wrapWidth(mValueText);
+			ViewUtil.matchHeight(mValueBar);
 		}
 		else
 		{
 			// TODO Do this in another way
+			ViewUtil.hideHeight(mValueBar);
 			ViewUtil.hideWidth(mValueBar);
 			ViewUtil.hideWidth(mDecreaseButton);
 			ViewUtil.hideWidth(mIncreaseButton);

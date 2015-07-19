@@ -52,8 +52,6 @@ public class MoneyControllerInstance implements Saveable, Viewable
 	
 	private final ResizeListener mResizeListener;
 	
-	private final CharacterInstance mChar;
-	
 	private final Expander mExpander;
 	
 	private LinearLayout mDepotsList;
@@ -73,18 +71,15 @@ public class MoneyControllerInstance implements Saveable, Viewable
 	 *            The change listener.
 	 * @param aResizeListener
 	 *            The resize listener.
-	 * @param aChar
-	 *            The parent character.
 	 */
 	public MoneyControllerInstance(final Currency aCurrency, final Context aContext, final boolean aHost, final MessageListener aChangeListener,
-			final ResizeListener aResizeListener, final CharacterInstance aChar)
+			final ResizeListener aResizeListener)
 	{
 		mCurrency = aCurrency;
 		mHost = aHost;
 		mContext = aContext;
 		mMessageListener = aChangeListener;
 		mResizeListener = aResizeListener;
-		mChar = aChar;
 		final int id = mHost ? R.layout.host_money : R.layout.client_money;
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
 		mExpander = Expander.handle(mHost ? R.id.h_money_button : R.id.c_money_button, mHost ? R.id.h_money_list : R.id.c_money_list, mContainer,
@@ -111,18 +106,15 @@ public class MoneyControllerInstance implements Saveable, Viewable
 	 *            The change listener.
 	 * @param aResizeListener
 	 *            The resize listener.
-	 * @param aChar
-	 *            The parent character.
 	 */
 	public MoneyControllerInstance(final Currency aCurrency, final Element aElement, final Context aContext, final boolean aHost,
-			final MessageListener aChangeListener, final ResizeListener aResizeListener, final CharacterInstance aChar)
+			final MessageListener aChangeListener, final ResizeListener aResizeListener)
 	{
 		mCurrency = aCurrency;
 		mHost = aHost;
 		mContext = aContext;
 		mMessageListener = aChangeListener;
 		mResizeListener = aResizeListener;
-		mChar = aChar;
 		final int id = mHost ? R.layout.host_money : R.layout.client_money;
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
 		mExpander = Expander.handle(mHost ? R.id.h_money_button : R.id.c_money_button, mHost ? R.id.h_money_list : R.id.c_money_list, mContainer,
@@ -160,9 +152,9 @@ public class MoneyControllerInstance implements Saveable, Viewable
 	/**
 	 * @return the parent char.
 	 */
-	public CharacterInstance getChar()
+	public CharacterInstance getCharacter()
 	{
-		return mChar;
+		return mMessageListener.getCharacter();
 	}
 	
 	/**
@@ -344,7 +336,7 @@ public class MoneyControllerInstance implements Saveable, Viewable
 		final MoneyDepot depot = getDepot(aName);
 		if ( !depot.isEmpty())
 		{
-			getMessageListener().sendMessage(new Message(MessageGroup.MONEY, getChar().getName(), R.string.ask_delete_depot,
+			getMessageListener().sendMessage(new Message(MessageGroup.MONEY, getCharacter().getName(), R.string.ask_delete_depot,
 					new String[] { depot.getName() }, mContext, null, ButtonAction.ACCEPT_DELETE, ButtonAction.DENY_DELETE, depot.getName()));
 		}
 		else

@@ -50,7 +50,7 @@ public interface TimeListener
 		 */
 		public static Type getTypeOf(Nameable aType)
 		{
-			return valueOf(aType.getDisplayName());
+			return valueOf(aType.getName());
 		}
 		
 		/**
@@ -59,19 +59,19 @@ public interface TimeListener
 		 * @return a list of nameables that represent a type each.
 		 * @note the display name of each nameable is replaced by the types real name.
 		 */
-		public static List<Nameable> getTypesList(Context aContext)
+		public static List<Nameable> getTypesList(final Context aContext)
 		{
 			List<Nameable> list = new ArrayList<Nameable>();
 			for (final Type type : values())
 			{
 				if (type.isTypicalType())
 				{
-					list.add(new Named(type.getName(aContext))
+					list.add(new Named(type.name())
 					{
 						@Override
 						public String getDisplayName()
 						{
-							return type.name();
+							return type.getName(aContext);
 						}
 					});
 				}

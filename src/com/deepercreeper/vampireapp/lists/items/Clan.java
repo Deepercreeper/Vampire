@@ -13,13 +13,13 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.Crea
  */
 public class Clan extends Named
 {
-	private final HashSet<CreationRestriction>	mRestrictions	= new HashSet<CreationRestriction>();
+	private final HashSet<CreationRestriction> mRestrictions = new HashSet<CreationRestriction>();
 	
 	/**
 	 * Creates a new clan with the given name.
 	 * 
 	 * @param aName
-	 *            The caln name.
+	 *            The clan name.
 	 */
 	public Clan(final String aName)
 	{
@@ -62,11 +62,5 @@ public class Clan extends Named
 	public String getDescription()
 	{
 		return getName();
-	}
-	
-	@Override
-	public int hashCode()
-	{
-		return getName().hashCode();
 	}
 }

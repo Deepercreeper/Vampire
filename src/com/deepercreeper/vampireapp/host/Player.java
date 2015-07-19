@@ -143,6 +143,12 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 	}
 	
 	@Override
+	public CharacterInstance getCharacter()
+	{
+		return mChar;
+	}
+	
+	@Override
 	public boolean applyMessage(final Message aMessage, final ButtonAction aAction)
 	{
 		final boolean release = true;

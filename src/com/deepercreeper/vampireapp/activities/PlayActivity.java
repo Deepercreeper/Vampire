@@ -124,6 +124,12 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	}
 	
 	@Override
+	public CharacterInstance getCharacter()
+	{
+		return mChar;
+	}
+	
+	@Override
 	public boolean applyMessage(final Message aMessage, final ButtonAction aAction)
 	{
 		boolean release = true;

@@ -23,8 +23,6 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog;
 import com.deepercreeper.vampireapp.util.view.listeners.ItemSelectionListener;
 import android.content.Context;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -52,9 +50,9 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 	
 	private final Map<Item, ItemCreation> mItems = new HashMap<Item, ItemCreation>();
 	
-	private final TextView mTitleText;
+	private LinearLayout mItemsContainer;
 	
-	private final Button mAddButton;
+	private Button mAddButton;
 	
 	private boolean mInitialized = false;
 	
@@ -85,9 +83,7 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		mItemController = aController;
 		mMode = aMode;
 		mPoints = aPoints;
-		mContainer = new LinearLayout(getContext());
-		mTitleText = new TextView(getContext());
-		mAddButton = new Button(getContext());
+		mContainer = (LinearLayout) View.inflate(getContext(), R.layout.item_group_creation_view, null);
 		init();
 		if ( !isMutable())
 		{
@@ -157,7 +153,7 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		final ItemCreation item = new ItemCreationImpl(aItem, getContext(), this, getCreationMode(), getPoints(), null);
 		getItemsList().add(item);
 		mItems.put(aItem, item);
-		getContainer().addView(item.getContainer());
+		mItemsContainer.addView(item.getContainer());
 		getItemController().resize();
 		getItemController().addItemName(item);
 		updateController();
@@ -227,7 +223,7 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 				setItemAt(index, aChoosenItem);
 			}
 		};
-		SelectItemDialog.showSelectionDialog(items, getContext().getString(R.string.edit_item) + aItem.getName(), getContext(), action);
+		SelectItemDialog.showSelectionDialog(items, getContext().getString(R.string.edit_item) + " " + aItem.getName(), getContext(), action);
 	}
 	
 	@Override
@@ -407,35 +403,30 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 	{
 		if ( !mInitialized)
 		{
-			getContainer().setLayoutParams(ViewUtil.getWrapHeight());
-			getContainer().setOrientation(LinearLayout.VERTICAL);
+			mAddButton = (Button) getContainer().findViewById(R.id.view_item_group_add_button);
+			mItemsContainer = (LinearLayout) getContainer().findViewById(R.id.view_item_group_items_list);
 			
-			mTitleText.setLayoutParams(ViewUtil.getWrapHeight());
-			mTitleText.setText(getItemGroup().getDisplayName());
-			mTitleText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-			mTitleText.setGravity(Gravity.CENTER);
+			((TextView) getContainer().findViewById(R.id.view_item_group_name_label)).setText(getItemGroup().getDisplayName());
+			mAddButton.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					addItem();
+				}
+			});
+			mInitialized = true;
 		}
-		getContainer().addView(mTitleText);
 		
 		if (getCreationMode().canAddItem(this))
 		{
-			mAddButton.setLayoutParams(ViewUtil.getWrapHeight());
-			
-			if ( !mInitialized)
-			{
-				mAddButton.setText(mContext.getString(R.string.add) + "...");
-				mAddButton.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(final View aV)
-					{
-						addItem();
-					}
-				});
-			}
-			updateAddButton();
-			getContainer().addView(mAddButton);
+			ViewUtil.wrapHeight(mAddButton);
 		}
+		else
+		{
+			ViewUtil.hideHeight(mAddButton);
+		}
+		updateAddButton();
 		
 		if ( !hasOrder())
 		{
@@ -446,13 +437,8 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 			for (final ItemCreation item : getItemsList())
 			{
 				item.init();
-				getContainer().addView(item.getContainer());
+				mItemsContainer.addView(item.getContainer());
 			}
-		}
-		
-		if ( !mInitialized)
-		{
-			mInitialized = true;
 		}
 	}
 	
@@ -480,8 +466,6 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 			item.release();
 		}
 		ViewUtil.release(getContainer());
-		ViewUtil.release(mTitleText);
-		ViewUtil.release(mAddButton);
 	}
 	
 	@Override
@@ -556,7 +540,7 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		mItems.remove(oldItem.getItem());
 		getItemsList().set(aIndex, item);
 		mItems.put(aItem, item);
-		getContainer().addView(item.getContainer(), aIndex + 1 + (isMutable() ? 1 : 0));
+		mItemsContainer.addView(item.getContainer(), aIndex);
 		getItemController().addItemName(item);
 		updateController();
 	}
@@ -644,7 +628,7 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		}
 		getItemsList().add(aItem);
 		mItems.put(aItem.getItem(), aItem);
-		getContainer().addView(aItem.getContainer());
+		mItemsContainer.addView(aItem.getContainer());
 		getItemController().addItemName(aItem);
 		getItemController().resize();
 		updateController();
@@ -700,7 +684,7 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		for (final ItemCreation item : getItemsList())
 		{
 			item.init();
-			getContainer().addView(item.getContainer());
+			mItemsContainer.addView(item.getContainer());
 		}
 	}
 }

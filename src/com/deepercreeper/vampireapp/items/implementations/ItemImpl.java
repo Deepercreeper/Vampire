@@ -17,39 +17,39 @@ import com.deepercreeper.vampireapp.util.Log;
  */
 public class ItemImpl extends Named implements Item
 {
-	private static final String			TAG				= "Item";
+	private static final String TAG = "Item";
 	
-	private final Map<String, Action>	mActions		= new HashMap<String, Action>();
+	private final Map<String, Action> mActions = new HashMap<String, Action>();
 	
-	private final List<Action>			mActionsList	= new ArrayList<Action>();
+	private final List<Action> mActionsList = new ArrayList<Action>();
 	
-	private final ItemGroup				mItemGroup;
+	private final ItemGroup mItemGroup;
 	
-	private final Item					mParentItem;
+	private final Item mParentItem;
 	
-	private final boolean				mNeedsDescription;
+	private final boolean mNeedsDescription;
 	
-	private final boolean				mParent;
+	private final boolean mParent;
 	
-	private final boolean				mMutableParent;
+	private final boolean mMutableParent;
 	
-	private final boolean				mValueItem;
+	private final boolean mValueItem;
 	
-	private final boolean				mOrder;
+	private final boolean mOrder;
 	
-	private final int					mStartValue;
+	private final int mStartValue;
 	
-	private final int					mEPCost;
+	private final int mEPCost;
 	
-	private final int					mEPCostNew;
+	private final int mEPCostNew;
 	
-	private final int					mEPCostMultiplicator;
+	private final int mEPCostMultiplicator;
 	
-	private final int[]					mValues;
+	private final int[] mValues;
 	
-	private final List<Item>			mChildrenList;
+	private final List<Item> mChildrenList;
 	
-	private final Map<String, Item>		mChildren;
+	private final Map<String, Item> mChildren;
 	
 	/**
 	 * Creates a new item.
@@ -80,8 +80,8 @@ public class ItemImpl extends Named implements Item
 	 *            The parent item or {@code null} if this is no child item.
 	 */
 	public ItemImpl(final String aName, final ItemGroup aGroup, final boolean aNeedsDescription, final boolean aParent, final boolean aMutableParent,
-			final boolean aOrder, final int[] aValues, final int aStartValue, final int aEPCost, final int aEPCostNew,
-			final int aEPCostMultiplicator, final Item aParentItem)
+			final boolean aOrder, final int[] aValues, final int aStartValue, final int aEPCost, final int aEPCostNew, final int aEPCostMultiplicator,
+			final Item aParentItem)
 	{
 		super(aName);
 		mItemGroup = aGroup;
@@ -380,11 +380,5 @@ public class ItemImpl extends Named implements Item
 	public boolean needsDescription()
 	{
 		return mNeedsDescription;
-	}
-	
-	@Override
-	public String toString()
-	{
-		return getName();
 	}
 }

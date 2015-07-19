@@ -1,5 +1,11 @@
 package com.deepercreeper.vampireapp.character.instance;
 
+import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.util.LanguageUtil;
+import com.deepercreeper.vampireapp.util.ViewUtil;
+import com.deepercreeper.vampireapp.util.interfaces.Viewable;
+import com.deepercreeper.vampireapp.util.view.CharacterContextMenu;
+import com.deepercreeper.vampireapp.util.view.CharacterContextMenu.CharacterListener;
 import android.app.Activity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -7,11 +13,6 @@ import android.view.View.OnLongClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.util.ViewUtil;
-import com.deepercreeper.vampireapp.util.interfaces.Viewable;
-import com.deepercreeper.vampireapp.util.view.CharacterContextMenu;
-import com.deepercreeper.vampireapp.util.view.CharacterContextMenu.CharacterListener;
 
 /**
  * A container for characters, that displays main information about it and prevents the system from<br>
@@ -21,27 +22,27 @@ import com.deepercreeper.vampireapp.util.view.CharacterContextMenu.CharacterList
  */
 public class CharacterCompound implements Comparable<CharacterCompound>, Viewable
 {
-	private final Activity			mContext;
+	private final Activity mContext;
 	
-	private final String			mName;
+	private final String mName;
 	
-	private final String			mConcept;
+	private final String mConcept;
 	
-	private final int				mGeneration;
+	private final int mGeneration;
 	
-	private final String			mNature;
+	private final String mNature;
 	
-	private final String			mBehavior;
+	private final String mBehavior;
 	
-	private final int				mEP;
+	private final int mEP;
 	
-	private final CharacterListener	mListener;
+	private final CharacterListener mListener;
 	
-	private Button					mPlay;
+	private Button mPlay;
 	
-	private LinearLayout			mContainer;
+	private LinearLayout mContainer;
 	
-	private long					mLastUsed;
+	private long mLastUsed;
 	
 	/**
 	 * Creates a new character compound out of the existing character.
@@ -238,10 +239,10 @@ public class CharacterCompound implements Comparable<CharacterCompound>, Viewabl
 		ep.setText("EP: " + mEP);
 		
 		final TextView behavior = (TextView) mContainer.findViewById(R.id.compound_behavior_label);
-		behavior.setText(mContext.getString(R.string.behavior_colon) + " " + mBehavior);
+		behavior.setText(mContext.getString(R.string.behavior_colon) + " " + LanguageUtil.instance().getValue(mBehavior));
 		
 		final TextView nature = (TextView) mContainer.findViewById(R.id.compound_nature_label);
-		nature.setText(mContext.getString(R.string.nature_colon) + " " + mNature);
+		nature.setText(mContext.getString(R.string.nature_colon) + " " + LanguageUtil.instance().getValue(mNature));
 	}
 	
 	@Override

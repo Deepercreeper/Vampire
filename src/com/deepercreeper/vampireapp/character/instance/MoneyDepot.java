@@ -205,7 +205,7 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 					else
 					{
 						args = new String[] { serializeValues(", ", " ", aMap, true, mCurrency), getName() };
-						getMessageListener().sendMessage(new Message(MessageGroup.MONEY, mController.getChar().getName(), R.string.ask_depot_money,
+						getMessageListener().sendMessage(new Message(MessageGroup.MONEY, mController.getCharacter().getName(), R.string.ask_depot_money,
 								args, mContext, null, ButtonAction.ACCEPT_DEPOT, ButtonAction.DENY_DEPOT,
 								serializeValues(",", " ", aMap, false, mCurrency), getName()));
 					}
@@ -385,7 +385,7 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 				{
 					args = new String[] { serializeValues(", ", " ", aMap, true, mCurrency) };
 					remove(aMap);
-					getMessageListener().sendMessage(new Message(MessageGroup.SINGLE, mController.getChar().getName(), R.string.money_sent, args,
+					getMessageListener().sendMessage(new Message(MessageGroup.SINGLE, mController.getCharacter().getName(), R.string.money_sent, args,
 							mContext, null, ButtonAction.NOTHING));
 				}
 				else
@@ -398,7 +398,7 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 					else
 					{
 						args = new String[] { serializeValues(", ", " ", aMap, true, mCurrency), getName() };
-						getMessageListener().sendMessage(new Message(MessageGroup.MONEY, mController.getChar().getName(), R.string.ask_take_money,
+						getMessageListener().sendMessage(new Message(MessageGroup.MONEY, mController.getCharacter().getName(), R.string.ask_take_money,
 								args, mContext, null, ButtonAction.ACCEPT_TAKE, ButtonAction.DENY_TAKE,
 								serializeValues(",", " ", aMap, false, mCurrency), getName()));
 					}
