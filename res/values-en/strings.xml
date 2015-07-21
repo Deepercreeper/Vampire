@@ -7,7 +7,7 @@
     <string name="accept_take">You took {0} of {1}.</string>
     <string name="add">Add</string>
     <string name="add_depot">Add depot</string>
-    <string name="add_health">Add health step</string>
+    <string name="add_health_step">Add health step</string>
     <string name="add_insanity">Add insanity</string>
     <string name="add_insanity_message">Enter the name of a insanity:</string>
     <string name="add_item">Add Item</string>

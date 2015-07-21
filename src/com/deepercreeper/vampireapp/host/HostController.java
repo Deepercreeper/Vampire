@@ -10,7 +10,7 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.activities.CreateHostActivity;
 import com.deepercreeper.vampireapp.activities.HostActivity;
 import com.deepercreeper.vampireapp.connection.ConnectionController;
-import com.deepercreeper.vampireapp.util.FilesUtil;
+import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.HostContextMenu;
@@ -102,7 +102,7 @@ public class HostController implements HostListener
 		Host host = mHostsCache.get(aName);
 		if (host == null)
 		{
-			final String data = FilesUtil.loadFile(aName + ".hst", mContext);
+			final String data = DataUtil.loadFile(aName + ".hst", mContext);
 			if (data != null)
 			{
 				host = new Host(data, mContext, true);
@@ -121,7 +121,7 @@ public class HostController implements HostListener
 	 */
 	public void loadHosts()
 	{
-		final String data = FilesUtil.loadFile(HOSTS_LIST, mContext);
+		final String data = DataUtil.loadFile(HOSTS_LIST, mContext);
 		if (data != null && !data.trim().isEmpty())
 		{
 			mHostNames.clear();
@@ -139,7 +139,7 @@ public class HostController implements HostListener
 		final Host host = loadHost(aName);
 		
 		final Intent intent = new Intent(mContext, HostActivity.class);
-		intent.putExtra(HostActivity.HOST, FilesUtil.serialize(host));
+		intent.putExtra(HostActivity.HOST, DataUtil.serialize(host));
 		
 		mContext.startActivityForResult(intent, HostActivity.PLAY_HOST_REQUEST);
 	}
@@ -156,7 +156,7 @@ public class HostController implements HostListener
 		{
 			mHostNames.add(aHost.getName());
 		}
-		FilesUtil.saveFile(FilesUtil.serialize(aHost), aHost.getName() + ".hst", mContext);
+		DataUtil.saveFile(DataUtil.serialize(aHost), aHost.getName() + ".hst", mContext);
 		sortHosts();
 		saveHostsList();
 	}
@@ -176,7 +176,7 @@ public class HostController implements HostListener
 			hostNames.append(mHostNames.get(i));
 		}
 		
-		FilesUtil.saveFile(hostNames.toString(), HOSTS_LIST, mContext);
+		DataUtil.saveFile(hostNames.toString(), HOSTS_LIST, mContext);
 	}
 	
 	/**

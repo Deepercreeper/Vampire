@@ -4,7 +4,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.character.inventory.Artifact;
-import com.deepercreeper.vampireapp.util.FilesUtil;
+import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.interfaces.ItemFinder;
 import android.content.Context;
 
@@ -51,7 +51,7 @@ public class InventoryChange implements CharacterChange
 	public InventoryChange(final Element aElement, final Context aContext, ItemFinder aItems)
 	{
 		mAdded = Boolean.valueOf(aElement.getAttribute("added"));
-		final Element itemElement = (Element) FilesUtil.loadDocument(aElement.getAttribute("item")).getElementsByTagName("item").item(0);
+		final Element itemElement = (Element) DataUtil.loadDocument(aElement.getAttribute("item")).getElementsByTagName("item").item(0);
 		mItem = Artifact.deserialize(itemElement, aContext, null, aItems);
 	}
 	
@@ -60,7 +60,7 @@ public class InventoryChange implements CharacterChange
 	{
 		final Element element = aDoc.createElement(TAG_NAME);
 		element.setAttribute("added", "" + mAdded);
-		element.setAttribute("item", FilesUtil.serialize(mItem));
+		element.setAttribute("item", DataUtil.serialize(mItem));
 		return element;
 	}
 	

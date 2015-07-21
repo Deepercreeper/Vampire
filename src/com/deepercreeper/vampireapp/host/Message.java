@@ -5,7 +5,6 @@ import org.w3c.dom.Element;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.util.DataUtil;
-import com.deepercreeper.vampireapp.util.FilesUtil;
 import com.deepercreeper.vampireapp.util.LanguageUtil;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
@@ -402,9 +401,9 @@ public class Message implements Saveable, Viewable
 	{
 		if (mSender.isEmpty())
 		{
-			return FilesUtil.buildMessage(mMessageId, LanguageUtil.instance().translateArray(mArguments, mTranslatedArguments), mContext);
+			return DataUtil.buildMessage(mMessageId, LanguageUtil.instance().translateArray(mArguments, mTranslatedArguments), mContext);
 		}
-		return mSender + ": " + FilesUtil.buildMessage(mMessageId, LanguageUtil.instance().translateArray(mArguments, mTranslatedArguments), mContext);
+		return mSender + ": " + DataUtil.buildMessage(mMessageId, LanguageUtil.instance().translateArray(mArguments, mTranslatedArguments), mContext);
 	}
 	
 	private void initButton(final int aButtonId, final ButtonAction aAction)
@@ -473,7 +472,7 @@ public class Message implements Saveable, Viewable
 	 */
 	public static Message deserialize(final String aXML, final Context aContext, final MessageListener aListener)
 	{
-		final Element messageElement = (Element) FilesUtil.loadDocument(aXML).getElementsByTagName(TAG_NAME).item(0);
+		final Element messageElement = (Element) DataUtil.loadDocument(aXML).getElementsByTagName(TAG_NAME).item(0);
 		final MessageType type = MessageType.valueOf(messageElement.getAttribute("type"));
 		final MessageGroup group = MessageGroup.valueOf(messageElement.getAttribute("group"));
 		final int messageId = Integer.parseInt(messageElement.getAttribute("message"));

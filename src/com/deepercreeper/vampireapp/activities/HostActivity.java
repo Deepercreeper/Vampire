@@ -14,7 +14,7 @@ import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.mechanics.TimeListener.Type;
 import com.deepercreeper.vampireapp.util.ConnectionUtil;
-import com.deepercreeper.vampireapp.util.FilesUtil;
+import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.LanguageUtil;
 import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog;
 import com.deepercreeper.vampireapp.util.view.listeners.ItemSelectionListener;
@@ -106,7 +106,7 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 		mConnection.sendToAll(MessageType.CLOSED);
 		mConnection.exit();
 		final Intent intent = new Intent();
-		intent.putExtra(HOST, FilesUtil.serialize(mHost));
+		intent.putExtra(HOST, DataUtil.serialize(mHost));
 		setResult(RESULT_OK, intent);
 		finish();
 	}

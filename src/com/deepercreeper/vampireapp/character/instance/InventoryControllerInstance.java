@@ -15,7 +15,7 @@ import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.items.implementations.Named;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance.ItemValueListener;
-import com.deepercreeper.vampireapp.util.FilesUtil;
+import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.interfaces.ItemFinder;
@@ -200,7 +200,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 			{
 				mMessageListener
 						.sendMessage(new Message(MessageGroup.SINGLE, "", R.string.got_item, aItem.getInfoArray(), aItem.getInfoTranslatedArray(),
-								mContext, null, ButtonAction.TAKE_ITEM, ButtonAction.IGNORE_ITEM, FilesUtil.serialize(aItem)));
+								mContext, null, ButtonAction.TAKE_ITEM, ButtonAction.IGNORE_ITEM, DataUtil.serialize(aItem)));
 			}
 		};
 		if (aItemType.equals(ITEM))

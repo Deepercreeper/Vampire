@@ -8,7 +8,7 @@ import org.w3c.dom.Element;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.CodingUtil;
-import com.deepercreeper.vampireapp.util.FilesUtil;
+import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 import android.content.Context;
 import android.widget.LinearLayout;
@@ -55,7 +55,7 @@ public class Host implements TimeListener, Saveable
 			return;
 		}
 		
-		final Document doc = FilesUtil.loadDocument(aData);
+		final Document doc = DataUtil.loadDocument(aData);
 		if (doc == null)
 		{
 			throw new IllegalArgumentException();

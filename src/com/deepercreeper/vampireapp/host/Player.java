@@ -24,7 +24,7 @@ import com.deepercreeper.vampireapp.host.change.MoneyChange;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
-import com.deepercreeper.vampireapp.util.FilesUtil;
+import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
@@ -127,17 +127,17 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 	@Override
 	public void sendChange(final CharacterChange aChange)
 	{
-		mDevice.send(MessageType.UPDATE, FilesUtil.serialize(aChange), aChange.getType());
+		mDevice.send(MessageType.UPDATE, DataUtil.serialize(aChange), aChange.getType());
 	}
 	
 	@Override
 	public void sendMessage(final Message aMessage)
 	{
-		mDevice.send(MessageType.MESSAGE, FilesUtil.serialize(aMessage));
+		mDevice.send(MessageType.MESSAGE, DataUtil.serialize(aMessage));
 	}
 	
 	@Override
-	public void showMessage(Message aMessage)
+	public void showMessage(final Message aMessage)
 	{
 		mHost.addMessage(aMessage);
 	}
@@ -303,7 +303,7 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 	@Override
 	public void applyChange(final String aChange, final String aType)
 	{
-		final Document doc = FilesUtil.loadDocument(aChange);
+		final Document doc = DataUtil.loadDocument(aChange);
 		final Element element = (Element) doc.getElementsByTagName(aType).item(0);
 		CharacterChange change = null;
 		if (aType.equals(HealthChange.TAG_NAME))

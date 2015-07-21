@@ -1,17 +1,32 @@
 package com.deepercreeper.vampireapp.util;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import android.content.Context;
 import com.deepercreeper.vampireapp.character.Currency;
 import com.deepercreeper.vampireapp.character.Health;
 import com.deepercreeper.vampireapp.character.inventory.Inventory;
@@ -34,6 +49,8 @@ import com.deepercreeper.vampireapp.lists.items.Clan;
 import com.deepercreeper.vampireapp.mechanics.Action;
 import com.deepercreeper.vampireapp.mechanics.Action.ActionType;
 import com.deepercreeper.vampireapp.mechanics.ActionImpl;
+import com.deepercreeper.vampireapp.util.interfaces.Saveable;
+import android.content.Context;
 
 /**
  * Used to load all needed information for the item provider from the local data.
@@ -42,25 +59,27 @@ import com.deepercreeper.vampireapp.mechanics.ActionImpl;
  */
 public class DataUtil
 {
-	private static final String	TAG				= "DataUtil";
+	private static final String FILE_ENDING = ".xml";
 	
-	private static final String	CONTROLLER		= "controller";
+	private static final String TAG = "DataUtil";
 	
-	private static final String	ITEM			= "item";
+	private static final String CONTROLLER = "controller";
 	
-	private static final String	GROUP			= "group";
+	private static final String ITEM = "item";
 	
-	private static final String	GROUP_OPTION	= "group-option";
+	private static final String GROUP = "group";
 	
-	private static final String	CLAN			= "clan";
+	private static final String GROUP_OPTION = "group-option";
 	
-	private static final String	CONDITION		= "condition";
+	private static final String CLAN = "clan";
 	
-	private static final String	RESTRICTION		= "restriction";
+	private static final String CONDITION = "condition";
 	
-	private static final String	ACTION			= "action";
+	private static final String RESTRICTION = "restriction";
 	
-	private static Document		sData;
+	private static final String ACTION = "action";
+	
+	private static Document sData;
 	
 	/**
 	 * @param aContext
@@ -312,7 +331,7 @@ public class DataUtil
 	{
 		if (sData == null)
 		{
-			sData = FilesUtil.loadDocument(aContext, "data", false);
+			sData = loadDocument(aContext, "data", false);
 		}
 		return sData;
 	}
@@ -746,7 +765,7 @@ public class DataUtil
 				
 				final CreationRestriction restriction = new CreationRestrictionImpl(type, itemName, minimum, maximum, items, index, value,
 						creationRestriction);
-				
+						
 				if (child.hasChildNodes())
 				{
 					for (final CreationCondition condition : loadConditions(child))
@@ -758,5 +777,228 @@ public class DataUtil
 			}
 		}
 		return restrictions;
+	}
+	
+	/**
+	 * @return a new empty XML document.
+	 */
+	public static Document createDocument()
+	{
+		Document doc = null;
+		try
+		{
+			doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+		}
+		catch (final ParserConfigurationException e)
+		{
+			Log.e(TAG, "Could not create a XML document.");
+		}
+		return doc;
+	}
+	
+	/**
+	 * @param aSaveable
+	 *            The item to serialize.
+	 * @return a string containing the given saveable.
+	 */
+	public static String serialize(final Saveable aSaveable)
+	{
+		final Document doc = createDocument();
+		if (doc == null)
+		{
+			return null;
+		}
+		
+		doc.appendChild(aSaveable.asElement(doc));
+		
+		return readDocument(doc);
+	}
+	
+	/**
+	 * Loads the given document from the file system.
+	 * 
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aName
+	 *            The file name.
+	 * @param aLocale
+	 *            The language type of the file if existing.
+	 * @return the language depending document.
+	 */
+	public static Document loadDocument(final Context aContext, final String aName, final boolean aLocale)
+	{
+		Document doc = null;
+		try
+		{
+			final DocumentBuilderFactory DOMfactory = DocumentBuilderFactory.newInstance();
+			final DocumentBuilder DOMbuilder = DOMfactory.newDocumentBuilder();
+			final String postfix = aLocale ? "-" + Locale.getDefault().getLanguage() : "";
+			doc = DOMbuilder.parse(aContext.getAssets().open(aName + postfix + FILE_ENDING));
+		}
+		catch (final Exception e)
+		{
+			return null;
+		}
+		return doc;
+	}
+	
+	/**
+	 * @param aXML
+	 *            The XML data.
+	 * @return a document created out of the given XML data.
+	 */
+	public static Document loadDocument(final String aXML)
+	{
+		final InputStream stream = new ByteArrayInputStream(aXML.getBytes(Charset.defaultCharset()));
+		Document doc = null;
+		try
+		{
+			doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(stream);
+		}
+		catch (final Exception e)
+		{
+			Log.e(TAG, "Could not read input stream.");
+		}
+		return doc;
+	}
+	
+	/**
+	 * @param aMessageId
+	 *            The message id.
+	 * @param aArgs
+	 *            The arguments.
+	 * @param aContext
+	 *            The underlying context.
+	 * @return the given string with <code>{0}, {1}, ...</code> replaced with the given arguments.
+	 */
+	public static String buildMessage(final int aMessageId, final String[] aArgs, final Context aContext)
+	{
+		return buildMessage(aContext.getString(aMessageId), aArgs);
+	}
+	
+	/**
+	 * @param aMessage
+	 *            The message.
+	 * @param aArgs
+	 *            The arguments.
+	 * @return the given string with <code>{0}, {1}, ...</code> replaced with the given arguments.
+	 */
+	public static String buildMessage(final String aMessage, final String[] aArgs)
+	{
+		String result = aMessage;
+		for (int i = 0; i < aArgs.length; i++ )
+		{
+			result = result.replace("{" + i + "}", aArgs[i]);
+		}
+		if (result.contains("{x}"))
+		{
+			final StringBuilder args = new StringBuilder();
+			for (final String arg : aArgs)
+			{
+				args.append(arg);
+			}
+			result = result.replace("{x}", args.toString());
+		}
+		return result;
+	}
+	
+	/**
+	 * Loads the given file and returns it as a string.
+	 * 
+	 * @param aFile
+	 *            The file name.
+	 * @param aContext
+	 *            The underlying context.
+	 * @return a string containing all contents of the given file.
+	 */
+	public static String loadFile(final String aFile, final Context aContext)
+	{
+		String data = null;
+		InputStreamReader reader = null;
+		try
+		{
+			reader = new InputStreamReader(aContext.openFileInput(aFile));
+			final StringBuilder list = new StringBuilder();
+			int c;
+			while ((c = reader.read()) != -1)
+			{
+				list.append((char) c);
+			}
+			data = list.toString();
+		}
+		catch (final FileNotFoundException e)
+		{
+			Log.i(TAG, "No characters saved.");
+		}
+		catch (final IOException e)
+		{
+			Log.e(TAG, "Could not load characters list.");
+		}
+		try
+		{
+			if (reader != null)
+			{
+				reader.close();
+			}
+		}
+		catch (final IOException e)
+		{
+			Log.e(TAG, "Could not close reader.");
+		}
+		return data;
+	}
+	
+	/**
+	 * @param aDoc
+	 *            A XML document.
+	 * @return a string containing the whole document.
+	 */
+	public static String readDocument(final Document aDoc)
+	{
+		final ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		final StreamResult result = new StreamResult(stream);
+		try
+		{
+			TransformerFactory.newInstance().newTransformer().transform(new DOMSource(aDoc), result);
+		}
+		catch (final TransformerException e)
+		{
+			Log.e(TAG, "Could not write document into stream.");
+		}
+		try
+		{
+			stream.close();
+		}
+		catch (final IOException e)
+		{
+			Log.e(TAG, "Could not close stream.");
+		}
+		
+		return new String(stream.toByteArray(), Charset.defaultCharset());
+	}
+	
+	/**
+	 * Saves the given data to the given file.
+	 * 
+	 * @param aData
+	 *            The data that should be saved.
+	 * @param aFile
+	 *            The file where to store the data.
+	 * @param aContext
+	 *            The underlying context.
+	 */
+	public static void saveFile(final String aData, final String aFile, final Context aContext)
+	{
+		try
+		{
+			final PrintWriter writer = new PrintWriter(aContext.openFileOutput(aFile, Context.MODE_PRIVATE));
+			writer.append(aData);
+			writer.flush();
+			writer.close();
+		}
+		catch (final IOException e)
+		{
+			Log.e(TAG, "Could not open file stream.");
+		}
 	}
 }

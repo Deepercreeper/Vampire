@@ -2,6 +2,10 @@ package com.deepercreeper.vampireapp.character.creation;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.items.ItemProvider;
+import com.deepercreeper.vampireapp.util.ViewUtil;
+import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -9,10 +13,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.items.ItemProvider;
-import com.deepercreeper.vampireapp.util.ViewUtil;
-import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 
 /**
  * This controller controls the health system of a character in creation mode.<br>
@@ -24,9 +24,9 @@ public class HealthControllerCreation implements Viewable
 {
 	private class Step
 	{
-		private final LinearLayout	mStepContainer;
+		private final LinearLayout mStepContainer;
 		
-		private int					mValue;
+		private int mValue;
 		
 		public Step(final int aValue)
 		{
@@ -36,7 +36,7 @@ public class HealthControllerCreation implements Viewable
 			final ImageButton remove = ((ImageButton) mStepContainer.findViewById(R.id.view_remove_step_button));
 			final ImageButton increase = ((ImageButton) mStepContainer.findViewById(R.id.view_increase_step_button));
 			final ImageButton decrease = ((ImageButton) mStepContainer.findViewById(R.id.view_decrease_step_button));
-			if (aValue == -1)
+			if (mValue == -1)
 			{
 				value.setText(R.string.ko);
 				ViewUtil.setEnabled(remove, false);
@@ -82,12 +82,6 @@ public class HealthControllerCreation implements Viewable
 			ViewUtil.setEnabled(decrease, mValue > 0);
 		}
 		
-		@Override
-		public boolean equals(final Object aO)
-		{
-			return this == aO;
-		}
-		
 		public LinearLayout getContainer()
 		{
 			return mStepContainer;
@@ -98,29 +92,21 @@ public class HealthControllerCreation implements Viewable
 			return mValue;
 		}
 		
-		@Override
-		public int hashCode()
-		{
-			return super.hashCode();
-		}
-		
 		public void release()
 		{
 			ViewUtil.release(mStepContainer);
 		}
 	}
 	
-	private final List<Step>	mSteps			= new ArrayList<Step>();
+	private final List<Step> mSteps = new ArrayList<Step>();
 	
-	private final LinearLayout	mContainer;
+	private final LinearLayout mContainer;
 	
-	private final Context		mContext;
+	private final Context mContext;
 	
-	private final String		mCost;
+	private final String mCost;
 	
-	private final Button		mAddButton;
-	
-	private boolean				mInitialized	= false;
+	private boolean mInitialized = false;
 	
 	/**
 	 * Creates a new health controller creation.
@@ -135,8 +121,7 @@ public class HealthControllerCreation implements Viewable
 		mContext = aContext;
 		mCost = aItems.getHealth().getCost();
 		
-		mContainer = new LinearLayout(mContext);
-		mAddButton = new Button(mContext);
+		mContainer = (LinearLayout) View.inflate(mContext, R.layout.health_creation_view, null);
 		
 		for (final int health : aItems.getHealth().getSteps())
 		{
@@ -178,11 +163,8 @@ public class HealthControllerCreation implements Viewable
 	{
 		if ( !mInitialized)
 		{
-			getContainer().setLayoutParams(ViewUtil.getWrapHeight());
-			getContainer().setOrientation(LinearLayout.VERTICAL);
-			mAddButton.setLayoutParams(ViewUtil.getWrapHeight());
-			mAddButton.setText(mContext.getResources().getString(R.string.add_health));
-			mAddButton.setOnClickListener(new OnClickListener()
+			final Button addButton = (Button) getContainer().findViewById(R.id.view_add_health_step_button);
+			addButton.setOnClickListener(new OnClickListener()
 			{
 				@Override
 				public void onClick(final View aV)
@@ -194,8 +176,6 @@ public class HealthControllerCreation implements Viewable
 			mInitialized = true;
 		}
 		
-		getContainer().addView(mAddButton);
-		
 		for (final Step step : mSteps)
 		{
 			getContainer().addView(step.getContainer());
@@ -206,7 +186,10 @@ public class HealthControllerCreation implements Viewable
 	public void release()
 	{
 		ViewUtil.release(getContainer());
-		getContainer().removeAllViews();
+		for (final Step step : mSteps)
+		{
+			step.release();
+		}
 	}
 	
 	private void addStep()

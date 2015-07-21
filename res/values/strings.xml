@@ -7,7 +7,7 @@
     <string name="accept_take">Ihr habt {0} von {1} genommen.</string>
     <string name="add">Hinzufügen</string>
     <string name="add_depot">Depot hinzufügen</string>
-    <string name="add_health">Lebensstufe hinzufügen</string>
+    <string name="add_health_step">Lebensstufe hinzufügen</string>
     <string name="add_insanity">Geistesstörung hinzufügen</string>
     <string name="add_insanity_message">Geben Sie den Namen einer Geistesstörung ein:</string>
     <string name="add_item">Item hinzufügen</string>

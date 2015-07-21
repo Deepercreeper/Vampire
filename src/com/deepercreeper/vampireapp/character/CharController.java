@@ -14,7 +14,7 @@ import com.deepercreeper.vampireapp.character.instance.CharacterCompound;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.connection.ConnectionController;
 import com.deepercreeper.vampireapp.items.ItemProvider;
-import com.deepercreeper.vampireapp.util.FilesUtil;
+import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.view.CharacterContextMenu.CharacterListener;
 
@@ -147,7 +147,7 @@ public class CharController implements CharacterListener
 		CharacterInstance character = mCharacterCache.get(aName);
 		if (character == null)
 		{
-			final String data = FilesUtil.loadFile(aName + ".chr", mContext);
+			final String data = DataUtil.loadFile(aName + ".chr", mContext);
 			if (data != null)
 			{
 				character = new CharacterInstance(data, mItems, mContext, null, null, null, false);
@@ -166,7 +166,7 @@ public class CharController implements CharacterListener
 	 */
 	public void loadCharCompounds()
 	{
-		final String data = FilesUtil.loadFile(CHARACTER_LIST, mContext);
+		final String data = DataUtil.loadFile(CHARACTER_LIST, mContext);
 		if (data != null && !data.trim().isEmpty())
 		{
 			for (final String character : data.split("\n"))
@@ -186,7 +186,7 @@ public class CharController implements CharacterListener
 		final CharacterInstance character = loadChar(aName);
 		
 		final Intent intent = new Intent(mContext, PlayActivity.class);
-		intent.putExtra(PlayActivity.CHARACTER, FilesUtil.serialize(character));
+		intent.putExtra(PlayActivity.CHARACTER, DataUtil.serialize(character));
 		
 		mContext.startActivityForResult(intent, PlayActivity.PLAY_CHAR_REQUEST);
 	}
@@ -199,7 +199,7 @@ public class CharController implements CharacterListener
 	 */
 	public void saveChar(final CharacterInstance aCharacter)
 	{
-		FilesUtil.saveFile(FilesUtil.serialize(aCharacter), aCharacter.getName() + ".chr", mContext);
+		DataUtil.saveFile(DataUtil.serialize(aCharacter), aCharacter.getName() + ".chr", mContext);
 		mCharacterCache.put(aCharacter.getName(), aCharacter);
 	}
 	
@@ -282,6 +282,6 @@ public class CharController implements CharacterListener
 			characterNames.append(mCharacterCompoundsList.get(i));
 		}
 		
-		FilesUtil.saveFile(characterNames.toString(), CHARACTER_LIST, mContext);
+		DataUtil.saveFile(characterNames.toString(), CHARACTER_LIST, mContext);
 	}
 }

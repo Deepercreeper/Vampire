@@ -31,7 +31,7 @@ import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerIns
 import com.deepercreeper.vampireapp.mechanics.TimeListener.Type;
 import com.deepercreeper.vampireapp.util.ConnectionUtil;
 import com.deepercreeper.vampireapp.util.ContactsUtil;
-import com.deepercreeper.vampireapp.util.FilesUtil;
+import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.LanguageUtil;
 import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
 import android.app.Activity;
@@ -83,7 +83,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	@Override
 	public void applyChange(final String aChange, final String aType)
 	{
-		final Document doc = FilesUtil.loadDocument(aChange);
+		final Document doc = DataUtil.loadDocument(aChange);
 		final Element element = (Element) doc.getElementsByTagName(aType).item(0);
 		CharacterChange change = null;
 		if (aType.equals(HealthChange.TAG_NAME))
@@ -137,7 +137,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		switch (aAction)
 		{
 			case TAKE_ITEM :
-				final Element itemElement = (Element) FilesUtil.loadDocument(aMessage.getSaveables()[0]).getElementsByTagName("item").item(0);
+				final Element itemElement = (Element) DataUtil.loadDocument(aMessage.getSaveables()[0]).getElementsByTagName("item").item(0);
 				final Artifact item = Artifact.deserialize(itemElement, this, null, mChar);
 				if (inventory.canAddItem(item))
 				{
@@ -184,7 +184,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	@Override
 	public void connectedTo(final ConnectedDevice aDevice)
 	{
-		aDevice.send(MessageType.LOGIN, ContactsUtil.getPhoneNumber(this), FilesUtil.serialize(mChar));
+		aDevice.send(MessageType.LOGIN, ContactsUtil.getPhoneNumber(this), DataUtil.serialize(mChar));
 	}
 	
 	@Override
@@ -222,7 +222,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	{
 		mConnection.exit();
 		final Intent intent = new Intent();
-		intent.putExtra(CHARACTER, FilesUtil.serialize(mChar));
+		intent.putExtra(CHARACTER, DataUtil.serialize(mChar));
 		setResult(aSaveCharacter ? RESULT_OK : RESULT_CANCELED, intent);
 		finish();
 	}
@@ -315,13 +315,13 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	@Override
 	public void sendChange(final CharacterChange aChange)
 	{
-		mConnection.getHost().send(MessageType.UPDATE, FilesUtil.serialize(aChange), aChange.getType());
+		mConnection.getHost().send(MessageType.UPDATE, DataUtil.serialize(aChange), aChange.getType());
 	}
 	
 	@Override
 	public void sendMessage(final Message aMessage)
 	{
-		mConnection.getHost().send(MessageType.MESSAGE, FilesUtil.serialize(aMessage));
+		mConnection.getHost().send(MessageType.MESSAGE, DataUtil.serialize(aMessage));
 	}
 	
 	/**

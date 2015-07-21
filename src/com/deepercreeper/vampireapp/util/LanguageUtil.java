@@ -44,7 +44,7 @@ public class LanguageUtil
 			mInitialized = true;
 			return;
 		}
-		final Document pack = FilesUtil.loadDocument(mContext, "language", true);
+		final Document pack = DataUtil.loadDocument(mContext, "language", true);
 		if (pack == null)
 		{
 			mInitialized = true;
@@ -115,7 +115,7 @@ public class LanguageUtil
 	 *            Whether the current argument should be translated.
 	 * @return an array of translated strings.
 	 */
-	public String[] translateArray(String[] aArgs, boolean[] aTranslatedArgs)
+	public String[] translateArray(final String[] aArgs, final boolean[] aTranslatedArgs)
 	{
 		if ( !mInitialized)
 		{
@@ -134,10 +134,10 @@ public class LanguageUtil
 			{
 				try
 				{
-					int id = Integer.parseInt(aArgs[i]);
+					final int id = Integer.parseInt(aArgs[i]);
 					arguments[i] = mContext.getString(id);
 				}
-				catch (NumberFormatException e)
+				catch (final NumberFormatException e)
 				{
 					arguments[i] = LanguageUtil.instance().getValue(aArgs[i]);
 				}

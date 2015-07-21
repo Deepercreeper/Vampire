@@ -8,7 +8,6 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.InventoryControllerInstance;
 import com.deepercreeper.vampireapp.util.CodingUtil;
 import com.deepercreeper.vampireapp.util.DataUtil;
-import com.deepercreeper.vampireapp.util.FilesUtil;
 import com.deepercreeper.vampireapp.util.LanguageUtil;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.interfaces.ItemFinder;
@@ -197,7 +196,7 @@ public class Artifact implements InventoryItem
 	@Override
 	public final String getInfo()
 	{
-		return FilesUtil.buildMessage("{x}", LanguageUtil.instance().translateArray(getInfoArray(), getInfoTranslatedArray()));
+		return DataUtil.buildMessage("{x}", LanguageUtil.instance().translateArray(getInfoArray(), getInfoTranslatedArray()));
 	}
 	
 	@Override
@@ -291,7 +290,7 @@ public class Artifact implements InventoryItem
 	@Override
 	public String[] getInfoArray()
 	{
-		List<String> list = new ArrayList<String>();
+		final List<String> list = new ArrayList<String>();
 		list.add(getName() + getQuantitySuffix() + ": ");
 		list.add("" + R.string.weight);
 		list.add(": " + getWeight() + " ");
@@ -318,9 +317,10 @@ public class Artifact implements InventoryItem
 	 *            An item finder.
 	 * @return the new created item.
 	 */
-	public static Artifact deserialize(Element aElement, Context aContext, InventoryControllerInstance aController, ItemFinder aItems)
+	public static Artifact deserialize(final Element aElement, final Context aContext, final InventoryControllerInstance aController,
+			final ItemFinder aItems)
 	{
-		String type = aElement.getAttribute("type");
+		final String type = aElement.getAttribute("type");
 		if (type.equals(ARTIFACT_ITEM_TYPE))
 		{
 			return new Artifact(aElement, aContext, aController);

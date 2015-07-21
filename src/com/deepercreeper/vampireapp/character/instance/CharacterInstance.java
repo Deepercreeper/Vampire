@@ -24,7 +24,7 @@ import com.deepercreeper.vampireapp.lists.items.Clan;
 import com.deepercreeper.vampireapp.lists.items.Nature;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.CodingUtil;
-import com.deepercreeper.vampireapp.util.FilesUtil;
+import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.interfaces.ItemFinder;
 import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
@@ -163,7 +163,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		mHost = aHost;
 		mResizeListener = aResizeListener;
 		
-		final Document doc = FilesUtil.loadDocument(aXML);
+		final Document doc = DataUtil.loadDocument(aXML);
 		if (doc == null)
 		{
 			throw new IllegalArgumentException();
