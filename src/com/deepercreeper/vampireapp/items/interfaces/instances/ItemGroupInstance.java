@@ -1,7 +1,6 @@
 package com.deepercreeper.vampireapp.items.interfaces.instances;
 
 import java.util.List;
-import android.content.Context;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.character.instance.EPControllerInstance;
 import com.deepercreeper.vampireapp.character.instance.Mode;
@@ -9,6 +8,7 @@ import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
+import android.content.Context;
 
 /**
  * A group that contains several items.
@@ -17,6 +17,41 @@ import com.deepercreeper.vampireapp.util.interfaces.Viewable;
  */
 public interface ItemGroupInstance extends Comparable<ItemGroupInstance>, Saveable, Viewable
 {
+	/**
+	 * Asks the user to choose an item that is added afterwards.
+	 */
+	public void addItem();
+	
+	/**
+	 * Adds a new item instance with the given item type.
+	 * 
+	 * @param aItem
+	 *            The item type.
+	 * @param aSilent
+	 *            Whether the addition should send a change.
+	 */
+	public void addItem(Item aItem, boolean aSilent);
+	
+	/**
+	 * Removes the item with the given item type.
+	 * 
+	 * @param aItem
+	 *            The item type.
+	 * @param aSilent
+	 *            Whether a change should be sent.
+	 */
+	public void removeItem(Item aItem, boolean aSilent);
+	
+	/**
+	 * @return a list of items that are currently able to be added.
+	 */
+	public List<Item> getAddableItems();
+	
+	/**
+	 * @return whether items can be added or removed from this group.
+	 */
+	public boolean isMutable();
+	
 	/**
 	 * @return the underlying context.
 	 */

@@ -192,6 +192,7 @@
                 epCostMulti="7"
                 epCostNew="10"
                 freeMutable="true"
+                hostMutable="true"
                 freePointsCost="7"
                 maxLowLevelValue="5"
                 maxValue="6"

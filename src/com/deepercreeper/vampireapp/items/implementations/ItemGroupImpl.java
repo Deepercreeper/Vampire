@@ -15,35 +15,37 @@ import com.deepercreeper.vampireapp.util.Log;
  */
 public class ItemGroupImpl extends Named implements ItemGroup
 {
-	private static final String			TAG			= "ItemGroup";
+	private static final String TAG = "ItemGroup";
 	
-	private final List<Item>			mItemsList	= new ArrayList<Item>();
+	private final List<Item> mItemsList = new ArrayList<Item>();
 	
-	private final HashMap<String, Item>	mItems		= new HashMap<String, Item>();
+	private final HashMap<String, Item> mItems = new HashMap<String, Item>();
 	
-	private final int					mFreePointsCost;
+	private final int mFreePointsCost;
 	
-	private final int					mMaxLowLevelValue;
+	private final int mMaxLowLevelValue;
 	
-	private final int					mMaxItems;
+	private final int mMaxItems;
 	
-	private final int					mStartValue;
+	private final int mStartValue;
 	
-	private final int					mMaxValue;
+	private final int mMaxValue;
 	
-	private final int					mEPCost;
+	private final int mEPCost;
 	
-	private final int					mEPCostNew;
+	private final int mEPCostNew;
 	
-	private final int					mEPCostMultiplicator;
+	private final int mEPCostMultiplicator;
 	
-	private final boolean				mOrder;
+	private final boolean mOrder;
 	
-	private final boolean				mMutable;
+	private final boolean mMutable;
 	
-	private final boolean				mFreeMutable;
+	private final boolean mFreeMutable;
 	
-	private final boolean				mValueGroup;
+	private final boolean mHostMutable;
+	
+	private final boolean mValueGroup;
 	
 	/**
 	 * Creates a new item group.
@@ -56,6 +58,8 @@ public class ItemGroupImpl extends Named implements ItemGroup
 	 *            Whether the child items of this group have a specific order.
 	 * @param aFreeMutable
 	 *            Whether this group is mutable inside the free character creation.
+	 * @param aHostMutable
+	 *            Whether this group is mutable when the host sees the character.
 	 * @param aMaxLowLevelValue
 	 *            The group default maximum low level item value.
 	 * @param aStartValue
@@ -75,12 +79,13 @@ public class ItemGroupImpl extends Named implements ItemGroup
 	 * @param aEPCostMultiplicator
 	 *            The group default item value dependent experience cost.
 	 */
-	public ItemGroupImpl(final String aName, final boolean aMutable, final boolean aOrder, final boolean aFreeMutable, final int aMaxLowLevelValue,
-			final int aStartValue, final int aMaxValue, final int aFreePointsCost, final boolean aValueGroup, final int aMaxItems, final int aEPCost,
-			final int aEPCostNew, final int aEPCostMultiplicator)
+	public ItemGroupImpl(final String aName, final boolean aMutable, final boolean aOrder, final boolean aFreeMutable, final boolean aHostMutable,
+			final int aMaxLowLevelValue, final int aStartValue, final int aMaxValue, final int aFreePointsCost, final boolean aValueGroup,
+			final int aMaxItems, final int aEPCost, final int aEPCostNew, final int aEPCostMultiplicator)
 	{
 		super(aName);
 		mMutable = aMutable;
+		mHostMutable = aHostMutable;
 		mOrder = aOrder;
 		mFreeMutable = aFreeMutable;
 		mValueGroup = aValueGroup;
@@ -100,6 +105,12 @@ public class ItemGroupImpl extends Named implements ItemGroup
 		getItemsList().add(aItem);
 		mItems.put(aItem.getName(), aItem);
 		Collections.sort(getItemsList());
+	}
+	
+	@Override
+	public boolean isHostMutable()
+	{
+		return mHostMutable;
 	}
 	
 	@Override

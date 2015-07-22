@@ -68,7 +68,7 @@ public class Weapon extends Artifact
 		}
 		if (aElement.hasAttribute("additionalDamage"))
 		{
-			mAdditionalDamage = mItems.findItem(CodingUtil.decode(aElement.getAttribute("additionalDamage")));
+			mAdditionalDamage = mItems.findItemInstance(CodingUtil.decode(aElement.getAttribute("additionalDamage")));
 		}
 		else
 		{
@@ -124,7 +124,7 @@ public class Weapon extends Artifact
 		mItems = aItems;
 		if (aAdditionalDamage != null)
 		{
-			mAdditionalDamage = mItems.findItem(aAdditionalDamage);
+			mAdditionalDamage = mItems.findItemInstance(aAdditionalDamage);
 		}
 		else
 		{

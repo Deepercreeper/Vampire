@@ -77,6 +77,19 @@ public class ItemControllerImpl extends Named implements ItemController
 	}
 	
 	@Override
+	public boolean hasItem(final String aName)
+	{
+		for (final ItemGroup group : getGroupsList())
+		{
+			if (group.hasItem(aName))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	@Override
 	public Item getItem(final String aName)
 	{
 		for (final ItemGroup group : getGroupsList())
@@ -92,8 +105,8 @@ public class ItemControllerImpl extends Named implements ItemController
 	@Override
 	public List<Item> getItemsList()
 	{
-		List<Item> items = new ArrayList<Item>();
-		for (ItemGroup group : getGroupsList())
+		final List<Item> items = new ArrayList<Item>();
+		for (final ItemGroup group : getGroupsList())
 		{
 			items.addAll(group.getItemsList());
 		}

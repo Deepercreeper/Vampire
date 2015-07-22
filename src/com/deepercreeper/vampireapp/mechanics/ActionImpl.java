@@ -110,17 +110,17 @@ public class ActionImpl implements Action
 		
 		for (final String dice : mDiceNames)
 		{
-			mDices.add(aFinder.findItem(dice));
+			mDices.add(aFinder.findItemInstance(dice));
 		}
 		for (final String costDice : mCostDiceNames)
 		{
-			mCostDices.add(aFinder.findItem(costDice));
+			mCostDices.add(aFinder.findItemInstance(costDice));
 		}
 		for (final String cost : mCostNames)
 		{
 			final String costName = cost.split("=")[0];
 			final int costValue = Integer.parseInt(cost.split("=")[1]);
-			mCosts.put(aFinder.findItem(costName), costValue);
+			mCosts.put(aFinder.findItemInstance(costName), costValue);
 		}
 	}
 	

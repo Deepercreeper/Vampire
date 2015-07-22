@@ -18,6 +18,11 @@ public interface ItemGroup extends Nameable
 	public void addItem(Item aItem);
 	
 	/**
+	 * @return whether this item group is mutable when the host sees this group.
+	 */
+	public boolean isHostMutable();
+	
+	/**
 	 * @return the default maximum group values or {@code null} if this is no value group.
 	 */
 	public int[] getDefaultValues();

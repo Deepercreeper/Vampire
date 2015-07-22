@@ -49,7 +49,7 @@ public class ItemChange implements CharacterChange
 	@Override
 	public void applyChange(final CharacterInstance aCharacter)
 	{
-		aCharacter.findItem(mName).updateValue(mValue);
+		aCharacter.findItemInstance(mName).updateValue(mValue);
 	}
 	
 	@Override

@@ -125,7 +125,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 		mMessageListener = aMessageListener;
 		mHost = aHost;
 		
-		mMaxWeightItem = mItems.findItem(mInventory.getMaxWeightItem());
+		mMaxWeightItem = mItems.findItemInstance(mInventory.getMaxWeightItem());
 		mMaxWeightItem.addValueListener(this);
 		
 		updateMaxWeight();
@@ -177,7 +177,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 		mMessageListener = aMessageListener;
 		mHost = aHost;
 		
-		mMaxWeightItem = mItems.findItem(mInventory.getMaxWeightItem());
+		mMaxWeightItem = mItems.findItemInstance(mInventory.getMaxWeightItem());
 		mMaxWeightItem.addValueListener(this);
 		
 		updateMaxWeight();

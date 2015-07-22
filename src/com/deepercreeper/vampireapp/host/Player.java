@@ -19,6 +19,7 @@ import com.deepercreeper.vampireapp.host.change.HealthChange;
 import com.deepercreeper.vampireapp.host.change.InsanityChange;
 import com.deepercreeper.vampireapp.host.change.InventoryChange;
 import com.deepercreeper.vampireapp.host.change.ItemChange;
+import com.deepercreeper.vampireapp.host.change.ItemGroupChange;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.host.change.MoneyChange;
 import com.deepercreeper.vampireapp.items.ItemProvider;
@@ -193,7 +194,7 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 						ButtonAction.NOTHING, aMessage.getSaveables()));
 				break;
 			case ACCEPT_INCREASE :
-				mChar.findItem(aMessage.getSaveable(0)).increase(false, true);
+				mChar.findItemInstance(aMessage.getSaveable(0)).increase(false, true);
 				sendMessage(new Message(MessageGroup.SINGLE, "", R.string.accept_increase, aMessage.getArguments(), new boolean[] { true, false },
 						mContext, null, ButtonAction.NOTHING));
 				break;
@@ -334,6 +335,10 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 		{
 			change = new InsanityChange(element);
 		}
+		else if (aType.equals(ItemGroupChange.TAG_NAME))
+		{
+			change = new ItemGroupChange(element);
+		}
 		
 		// TODO Add other changes
 		
@@ -383,13 +388,10 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 		final LinearLayout controllerPanel = mControllerExpander.getContainer();
 		for (final ItemControllerInstance controller : mChar.getControllers())
 		{
-			if (controller.hasAnyItem())
-			{
-				controller.release();
-				controller.init();
-				controller.close();
-				controllerPanel.addView(controller.getContainer());
-			}
+			controller.release();
+			controller.init();
+			controller.close();
+			controllerPanel.addView(controller.getContainer());
 		}
 		
 		mTimeCheckBox = new CheckBox(mContext);

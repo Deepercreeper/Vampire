@@ -10,15 +10,6 @@ import java.util.Set;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import android.animation.ValueAnimator;
-import android.content.Context;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.character.instance.EPControllerInstance;
@@ -40,6 +31,15 @@ import com.deepercreeper.vampireapp.util.CodingUtil;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.interfaces.ItemFinder;
+import android.animation.ValueAnimator;
+import android.content.Context;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * An item instance implementation.
@@ -48,55 +48,53 @@ import com.deepercreeper.vampireapp.util.interfaces.ItemFinder;
  */
 public class ItemInstanceImpl extends InstanceRestrictionableImpl implements ItemInstance
 {
-	private static final String				TAG					= "ItemInstance";
+	private static final String TAG = "ItemInstance";
 	
-	private static final int				VALUE_MULTIPLICATOR	= 20;
+	private static final int VALUE_MULTIPLICATOR = 20;
 	
-	private final List<ItemInstance>		mChildrenList;
+	private final List<ItemInstance> mChildrenList;
 	
-	private final Map<String, ItemInstance>	mChildren;
+	private final Map<String, ItemInstance> mChildren;
 	
-	private final Set<Action>				mActions			= new HashSet<Action>();
+	private final Set<Action> mActions = new HashSet<Action>();
 	
-	private final List<ItemValueListener>	mValueListeners		= new ArrayList<ItemValueListener>();
+	private final List<ItemValueListener> mValueListeners = new ArrayList<ItemValueListener>();
 	
-	private final Item						mItem;
+	private final Item mItem;
 	
-	private final Context					mContext;
+	private final Context mContext;
 	
-	private final ItemGroupInstance			mItemGroup;
+	private final ItemGroupInstance mItemGroup;
 	
-	private final LinearLayout				mContainer;
+	private final LinearLayout mContainer;
 	
-	private final ItemInstance				mParentItem;
+	private final ItemInstance mParentItem;
 	
-	private final String					mDescription;
+	private final String mDescription;
 	
-	private final EPControllerInstance		mEP;
+	private final EPControllerInstance mEP;
 	
-	private final ValueAnimator				mAnimator;
+	private final ValueAnimator mAnimator;
 	
-	private final MessageListener			mMessageListener;
+	private final MessageListener mMessageListener;
 	
-	private final boolean					mHost;
+	private final boolean mHost;
 	
-	private LinearLayout					mChildrenContainer;
+	private LinearLayout mChildrenContainer;
 	
-	private ImageButton						mIncreaseButton;
+	private ImageButton mIncreaseButton;
 	
-	private ImageButton						mDecreaseButton;
+	private ImageButton mDecreaseButton;
 	
-	private ProgressBar						mValueBar;
+	private ProgressBar mValueBar;
 	
-	private TextView						mValueText;
+	private TextView mValueText;
 	
-	private TextView						mNameText;
+	private boolean mInitialized = false;
 	
-	private boolean							mInitialized		= false;
+	private Mode mMode;
 	
-	private Mode							mMode;
-	
-	private int								mValueId			= 0;
+	private int mValueId = 0;
 	
 	/**
 	 * Creates a new item out of the given XML data.
@@ -194,8 +192,9 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 				{
 					pos = Integer.parseInt(item.getAttribute("order"));
 				}
-				addChildSilent(new ItemInstanceImpl(item, getItemGroup(), getContext(), getMode(), getEP(), this, getCharacter(), mMessageListener,
-						mHost), pos);
+				addChildSilent(
+						new ItemInstanceImpl(item, getItemGroup(), getContext(), getMode(), getEP(), this, getCharacter(), mMessageListener, mHost),
+						pos);
 			}
 		}
 		if (hasChildren() && !hasOrder())
@@ -237,7 +236,6 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		mMode = aMode;
 		final int id = mHost ? R.layout.host_item_instance : R.layout.client_item_instance;
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
-		mNameText = new TextView(getContext());
 		mMessageListener = aMessageListener;
 		
 		if (isParent())
@@ -284,6 +282,74 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 				sortChildren();
 			}
 		}
+	}
+	
+	/**
+	 * Creates a new item instance.
+	 * 
+	 * @param aItem
+	 *            The item type.
+	 * @param aItemGroup
+	 *            The parent item group.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aCharacter
+	 *            The character.
+	 * @param aParentItem
+	 *            The parent item.
+	 * @param aMessageListener
+	 *            The message listener.
+	 * @param aHost
+	 *            Whether this is a host sided item.
+	 */
+	public ItemInstanceImpl(final Item aItem, final ItemGroupInstance aItemGroup, final Context aContext, final CharacterInstance aCharacter,
+			final ItemInstance aParentItem, final MessageListener aMessageListener, final boolean aHost)
+	{
+		super(aCharacter, aItemGroup.getItemController());
+		mItem = aItem;
+		mItemGroup = aItemGroup;
+		mContext = aContext;
+		mHost = aHost;
+		if (getItem().needsDescription())
+		{
+			// TODO Bad
+		}
+		mDescription = null;
+		mEP = aCharacter.getEPController();
+		mMode = aCharacter.getMode();
+		final int id = mHost ? R.layout.host_item_instance : R.layout.client_item_instance;
+		mContainer = (LinearLayout) View.inflate(mContext, id, null);
+		mMessageListener = aMessageListener;
+		
+		if (isParent())
+		{
+			mChildrenList = new ArrayList<ItemInstance>();
+			mChildren = new HashMap<String, ItemInstance>();
+		}
+		else
+		{
+			mChildrenList = null;
+			mChildren = null;
+		}
+		if (getItem().hasParentItem() && aParentItem == null || !getItem().hasParentItem() && aParentItem != null)
+		{
+			Log.w(TAG, "Tried to create an item with different parent item state and parent item.");
+			throw new IllegalArgumentException("ItemInstance error!");
+		}
+		mParentItem = aParentItem;
+		
+		if (isValueItem())
+		{
+			mValueId = getItem().getStartValue();
+			mAnimator = new ValueAnimator();
+			mAnimator.addUpdateListener(this);
+		}
+		else
+		{
+			mAnimator = null;
+		}
+		
+		init();
 	}
 	
 	@Override
@@ -627,9 +693,9 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		}
 		else
 		{
-			mMessageListener.sendMessage(new Message(MessageGroup.ITEM, getCharacter().getName(), R.string.ask_increase, new String[] { getName(),
-					"" + getItem().getValues()[mValueId + 1] }, new boolean[] { true, false }, mContext, null, ButtonAction.ACCEPT_INCREASE,
-					ButtonAction.DENY_INCREASE, getName()));
+			mMessageListener.sendMessage(new Message(MessageGroup.ITEM, getCharacter().getName(), R.string.ask_increase,
+					new String[] { getName(), "" + getItem().getValues()[mValueId + 1] }, new boolean[] { true, false }, mContext, null,
+					ButtonAction.ACCEPT_INCREASE, ButtonAction.DENY_INCREASE, getName()));
 		}
 	}
 	
@@ -698,17 +764,18 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	{
 		if ( !mInitialized)
 		{
-			mChildrenContainer = (LinearLayout) getContainer().findViewById(
-					mHost ? R.id.h_item_instance_children_list : R.id.c_item_instance_children_list);
+			mChildrenContainer = (LinearLayout) getContainer()
+					.findViewById(mHost ? R.id.h_item_instance_children_list : R.id.c_item_instance_children_list);
 			mValueText = (TextView) getContainer().findViewById(mHost ? R.id.h_item_instance_value_text : R.id.c_item_instance_value_text);
 			mValueBar = (ProgressBar) getContainer().findViewById(mHost ? R.id.h_item_instance_value_bar : R.id.c_item_instance_value_bar);
-			mIncreaseButton = (ImageButton) getContainer().findViewById(
-					mHost ? R.id.h_increase_item_instance_button : R.id.c_increase_item_instance_button);
+			mIncreaseButton = (ImageButton) getContainer()
+					.findViewById(mHost ? R.id.h_increase_item_instance_button : R.id.c_increase_item_instance_button);
 			mDecreaseButton = mHost ? (ImageButton) getContainer().findViewById(R.id.h_decrease_item_instance_button) : null;
-			mNameText = (TextView) getContainer().findViewById(mHost ? R.id.h_item_instance_name_label : R.id.c_item_instance_name_label);
+			final TextView name = (TextView) getContainer().findViewById(mHost ? R.id.h_item_instance_name_label : R.id.c_item_instance_name_label);
+			final ImageButton remove = mHost ? (ImageButton) getContainer().findViewById(R.id.h_remove_item_instance_button) : null;
 			
-			mNameText.setText(getItem().getDisplayName());
-			mNameText.setOnClickListener(new OnClickListener()
+			name.setText(getItem().getDisplayName());
+			name.setOnClickListener(new OnClickListener()
 			{
 				@Override
 				public void onClick(final View aV)
@@ -737,6 +804,22 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 							decrease();
 						}
 					});
+					if (getItemGroup().isMutable())
+					{
+						remove.setOnClickListener(new OnClickListener()
+						{
+							@Override
+							public void onClick(final View aV)
+							{
+								getItemGroup().removeItem(getItem(), false);
+							}
+						});
+						ViewUtil.setPxWidth(remove, (int) getContext().getResources().getDimension(R.dimen.button_width));
+					}
+					else
+					{
+						ViewUtil.hideWidth(remove);
+					}
 				}
 			}
 			else
@@ -745,6 +828,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 				ViewUtil.hideWidth(mIncreaseButton);
 				if (mHost)
 				{
+					ViewUtil.hideWidth(remove);
 					ViewUtil.hideWidth(mDecreaseButton);
 				}
 			}

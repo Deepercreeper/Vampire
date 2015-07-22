@@ -87,7 +87,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		mSteps = DataUtil.parseValues(aElement.getAttribute("steps"));
 		mHeavyWounds = Integer.parseInt(aElement.getAttribute("heavy"));
 		mValue = Integer.parseInt(aElement.getAttribute("value"));
-		mCost = mItems.findItem(aElement.getAttribute("cost"));
+		mCost = mItems.findItemInstance(aElement.getAttribute("cost"));
 		mChangeListener = aChangeListener;
 		mAnimator = new ValueAnimator();
 		mAnimator.addUpdateListener(this);
@@ -116,7 +116,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		final int id = mHost ? R.layout.host_health : R.layout.client_health;
 		mContainer = (LinearLayout) View.inflate(aContext, id, null);
 		mSteps = aHealth.getSteps();
-		mCost = mItems.findItem(aHealth.getCost());
+		mCost = mItems.findItemInstance(aHealth.getCost());
 		mChangeListener = aChangeListener;
 		mAnimator = new ValueAnimator();
 		mAnimator.addUpdateListener(this);

@@ -8,8 +8,6 @@ import java.util.Map;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import android.content.Context;
-import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.character.instance.EPControllerInstance;
 import com.deepercreeper.vampireapp.character.instance.Mode;
@@ -25,8 +23,11 @@ import com.deepercreeper.vampireapp.items.interfaces.instances.GroupOptionInstan
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemGroupInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
+import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
+import android.content.Context;
+import android.widget.LinearLayout;
 
 /**
  * An item controller implementation.
@@ -35,33 +36,33 @@ import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
  */
 public class ItemControllerInstanceImpl implements ItemControllerInstance
 {
-	private final ItemController								mItemController;
+	private final ItemController mItemController;
 	
-	private final Context										mContext;
+	private final Context mContext;
 	
-	private final LinearLayout									mContainer;
+	private final LinearLayout mContainer;
 	
-	private final List<ItemGroupInstance>						mGroupsList			= new ArrayList<ItemGroupInstance>();
+	private final List<ItemGroupInstance> mGroupsList = new ArrayList<ItemGroupInstance>();
 	
-	private final Map<String, ItemGroupInstance>				mGroups				= new HashMap<String, ItemGroupInstance>();
+	private final Map<String, ItemGroupInstance> mGroups = new HashMap<String, ItemGroupInstance>();
 	
-	private final List<GroupOptionInstance>						mGroupOptionsList	= new ArrayList<GroupOptionInstance>();
+	private final List<GroupOptionInstance> mGroupOptionsList = new ArrayList<GroupOptionInstance>();
 	
-	private final Map<ItemGroupInstance, GroupOptionInstance>	mGroupOptions		= new HashMap<ItemGroupInstance, GroupOptionInstance>();
+	private final Map<ItemGroupInstance, GroupOptionInstance> mGroupOptions = new HashMap<ItemGroupInstance, GroupOptionInstance>();
 	
-	private final Map<String, ItemInstance>						mItems				= new HashMap<String, ItemInstance>();
+	private final Map<String, ItemInstance> mItems = new HashMap<String, ItemInstance>();
 	
-	private final boolean										mHost;
+	private final boolean mHost;
 	
-	private final CharacterInstance								mCharacter;
+	private final CharacterInstance mCharacter;
 	
-	private final EPControllerInstance							mEP;
+	private final EPControllerInstance mEP;
 	
-	private final ResizeListener								mResizeListener;
+	private final ResizeListener mResizeListener;
 	
-	private boolean												mInitialized		= false;
+	private boolean mInitialized = false;
 	
-	private Mode												mMode;
+	private Mode mMode;
 	
 	/**
 	 * Creates a new item controller out of the given XML data.
@@ -122,7 +123,7 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 				{
 					continue;
 				}
-				addGroupOptionSilent(new GroupOptionInstanceImpl(groupOption, this, getContext(), getCharacter(), mResizeListener));
+				addGroupOptionSilent(new GroupOptionInstanceImpl(groupOption, this, getContext(), getCharacter(), mResizeListener, mHost));
 			}
 		}
 	}
@@ -168,7 +169,7 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 		}
 		for (final GroupOptionCreation groupOption : aItemController.getGroupOptionsList())
 		{
-			addGroupOptionSilent(new GroupOptionInstanceImpl(groupOption, this, getContext(), getCharacter(), mResizeListener));
+			addGroupOptionSilent(new GroupOptionInstanceImpl(groupOption, this, getContext(), getCharacter(), mResizeListener, mHost));
 		}
 	}
 	
@@ -192,6 +193,20 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	public void addItem(final ItemInstance aItem)
 	{
 		mItems.put(aItem.getName(), aItem);
+	}
+	
+	@Override
+	public void removeItem(final String aName)
+	{
+		if (mItems.get(aName).hasRestrictions())
+		{
+			for (final InstanceRestriction restriction : mItems.get(aName).getRestrictions())
+			{
+				restriction.clear();
+				// TODO What to do with inactive restrictions?
+			}
+		}
+		mItems.remove(aName);
 	}
 	
 	@Override
@@ -356,7 +371,7 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 		{
 			for (final GroupOptionInstance groupOption : getGroupOptionsList())
 			{
-				if (groupOption.hasAnyItem())
+				if (groupOption.hasMutableGroup() || groupOption.hasAnyItem())
 				{
 					groupOption.init();
 					getContainer().addView(groupOption.getContainer());

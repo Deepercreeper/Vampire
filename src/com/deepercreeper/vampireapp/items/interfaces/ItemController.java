@@ -52,6 +52,13 @@ public interface ItemController extends Nameable
 	/**
 	 * @param aName
 	 *            The item name.
+	 * @return whether this controller has an item with the given name.
+	 */
+	public boolean hasItem(String aName);
+	
+	/**
+	 * @param aName
+	 *            The item name.
 	 * @return the item with the given name.
 	 */
 	public Item getItem(String aName);

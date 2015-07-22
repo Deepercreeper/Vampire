@@ -1,7 +1,6 @@
 package com.deepercreeper.vampireapp.items.interfaces.instances;
 
 import java.util.List;
-import android.content.Context;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.character.instance.EPControllerInstance;
 import com.deepercreeper.vampireapp.character.instance.Mode;
@@ -10,6 +9,7 @@ import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
+import android.content.Context;
 
 /**
  * A controller handles a bunch of groups and a their group options.
@@ -50,6 +50,14 @@ public interface ItemControllerInstance extends Saveable, Viewable
 	 *            The item to add.
 	 */
 	public void addItem(ItemInstance aItem);
+	
+	/**
+	 * Removes the given name from the controller item shortcuts map.
+	 * 
+	 * @param aName
+	 *            The name to remove.
+	 */
+	public void removeItem(String aName);
 	
 	/**
 	 * @return the character.

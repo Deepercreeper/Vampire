@@ -83,7 +83,7 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		mItemController = aController;
 		mMode = aMode;
 		mPoints = aPoints;
-		mContainer = (LinearLayout) View.inflate(getContext(), R.layout.item_group_creation_view, null);
+		mContainer = (LinearLayout) View.inflate(getContext(), R.layout.item_group_view, null);
 		init();
 		if ( !isMutable())
 		{
@@ -487,9 +487,9 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 			item.clear();
 			mItems.remove(aItem);
 			getItemsList().remove(item);
+			getItemController().resize();
+			updateController();
 		}
-		getItemController().resize();
-		updateController();
 	}
 	
 	@Override

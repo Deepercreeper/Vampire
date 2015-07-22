@@ -14,6 +14,7 @@ import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
+import com.deepercreeper.vampireapp.items.interfaces.instances.ItemGroupInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction.InstanceRestrictionType;
@@ -256,12 +257,39 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		return mResizeListener;
 	}
 	
+	@Override
+	public ItemGroupInstance findGroupInstance(final String aName)
+	{
+		for (final ItemControllerInstance controller : getControllers())
+		{
+			if (controller.hasGroup(aName))
+			{
+				return controller.getGroup(aName);
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 * @return whether this character is host sided.
 	 */
 	public boolean isHost()
 	{
 		return mHost;
+	}
+	
+	@Override
+	public Item findItem(final String aName)
+	{
+		for (final ItemController controller : mItems.getControllers())
+		{
+			final Item item = controller.getItem(aName);
+			if (item != null)
+			{
+				return item;
+			}
+		}
+		return null;
 	}
 	
 	/**
@@ -274,7 +302,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	{
 		if (aRestriction.getType() == InstanceRestrictionType.ITEM_CHILD_EP_COST_MULTI_AT)
 		{
-			final ItemInstance item = findItem(aRestriction.getItemName());
+			final ItemInstance item = findItemInstance(aRestriction.getItemName());
 			if (item != null)
 			{
 				if (item.hasChildAt(aRestriction.getIndex()))
@@ -294,7 +322,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 				|| aRestriction.getType() == InstanceRestrictionType.ITEM_EP_COST_MULTI
 				|| aRestriction.getType() == InstanceRestrictionType.ITEM_EP_COST_NEW || aRestriction.getType() == InstanceRestrictionType.ITEM_VALUE)
 		{
-			final ItemInstance item = findItem(aRestriction.getItemName());
+			final ItemInstance item = findItemInstance(aRestriction.getItemName());
 			if (item != null)
 			{
 				item.addRestriction(aRestriction);
@@ -316,8 +344,8 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	@Override
 	public List<Item> getItemsList()
 	{
-		List<Item> items = new ArrayList<Item>();
-		for (ItemController controller : mItems.getControllers())
+		final List<Item> items = new ArrayList<Item>();
+		for (final ItemController controller : mItems.getControllers())
 		{
 			items.addAll(controller.getItemsList());
 		}
@@ -325,7 +353,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	}
 	
 	@Override
-	public ItemInstance findItem(final String aName)
+	public ItemInstance findItemInstance(final String aName)
 	{
 		for (final ItemControllerInstance controller : mControllers)
 		{
@@ -431,6 +459,14 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	public MoneyControllerInstance getMoney()
 	{
 		return mMoney;
+	}
+	
+	/**
+	 * @return the current character mode.
+	 */
+	public Mode getMode()
+	{
+		return mMode;
 	}
 	
 	/**

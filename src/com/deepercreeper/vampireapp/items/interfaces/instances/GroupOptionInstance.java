@@ -1,13 +1,13 @@
 package com.deepercreeper.vampireapp.items.interfaces.instances;
 
 import java.util.List;
-import android.content.Context;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.items.interfaces.GroupOption;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
+import android.content.Context;
 
 /**
  * A group option contains a few groups and manages the display button for them.
@@ -47,6 +47,11 @@ public interface GroupOptionInstance extends Comparable<GroupOptionInstance>, Sa
 	 * @return the group option name.
 	 */
 	public String getName();
+	
+	/**
+	 * @return whether this group option has any group which is mutable.
+	 */
+	public boolean hasMutableGroup();
 	
 	/**
 	 * @return whether this group option contains any item.

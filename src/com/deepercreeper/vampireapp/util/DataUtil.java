@@ -561,6 +561,7 @@ public class DataUtil
 				final String name = child.getAttribute("name");
 				final boolean mutable = Boolean.parseBoolean(child.getAttribute("mutable"));
 				final boolean freeMutable = Boolean.parseBoolean(child.getAttribute("freeMutable"));
+				final boolean hostMutable = Boolean.parseBoolean(child.getAttribute("hostMutable"));
 				final boolean valueGroup = Boolean.parseBoolean(child.getAttribute("value"));
 				final boolean order = Boolean.parseBoolean(child.getAttribute("order"));
 				int maxValue = Integer.MAX_VALUE;
@@ -610,8 +611,8 @@ public class DataUtil
 						startValue = Integer.parseInt(child.getAttribute("startValue"));
 					}
 				}
-				final ItemGroup group = new ItemGroupImpl(name, mutable, order, freeMutable, maxLowLevelValue, startValue, maxValue, freePointsCost,
-						valueGroup, maxItems, epCost, epCostNew, epCostMultiplicator);
+				final ItemGroup group = new ItemGroupImpl(name, mutable, order, freeMutable, hostMutable, maxLowLevelValue, startValue, maxValue,
+						freePointsCost, valueGroup, maxItems, epCost, epCostNew, epCostMultiplicator);
 				for (final Item item : loadItems(child, group, null))
 				{
 					group.addItem(item);

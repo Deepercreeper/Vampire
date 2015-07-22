@@ -8,9 +8,6 @@ import java.util.Map;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import android.content.Context;
-import android.view.View;
-import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.items.interfaces.GroupOption;
@@ -24,6 +21,9 @@ import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
 import com.deepercreeper.vampireapp.util.view.Expander;
+import android.content.Context;
+import android.view.View;
+import android.widget.LinearLayout;
 
 /**
  * A group option instance implementation.
@@ -32,25 +32,27 @@ import com.deepercreeper.vampireapp.util.view.Expander;
  */
 public class GroupOptionInstanceImpl implements GroupOptionInstance
 {
-	private static final String						TAG				= "GroupOptionInstance";
+	private static final String TAG = "GroupOptionInstance";
 	
-	private final GroupOption						mGroupOption;
+	private final GroupOption mGroupOption;
 	
-	private final Map<ItemGroup, ItemGroupInstance>	mGroups			= new HashMap<ItemGroup, ItemGroupInstance>();
+	private final Map<ItemGroup, ItemGroupInstance> mGroups = new HashMap<ItemGroup, ItemGroupInstance>();
 	
-	private final List<ItemGroupInstance>			mGroupsList		= new ArrayList<ItemGroupInstance>();
+	private final List<ItemGroupInstance> mGroupsList = new ArrayList<ItemGroupInstance>();
 	
-	private final Context							mContext;
+	private final Context mContext;
 	
-	private final LinearLayout						mContainer;
+	private final LinearLayout mContainer;
 	
-	private final CharacterInstance					mCharacter;
+	private final CharacterInstance mCharacter;
 	
-	private final ResizeListener					mResizeListener;
+	private final ResizeListener mResizeListener;
 	
-	private final Expander							mExpander;
+	private final Expander mExpander;
 	
-	private boolean									mInitialized	= false;
+	private final boolean mHost;
+	
+	private boolean mInitialized = false;
 	
 	/**
 	 * Creates a new group option out of the given XML data.
@@ -65,14 +67,17 @@ public class GroupOptionInstanceImpl implements GroupOptionInstance
 	 *            The character.
 	 * @param aResizeListener
 	 *            The parent resize listener.
+	 * @param aHost
+	 *            Whether this is a host sided group option.
 	 */
 	public GroupOptionInstanceImpl(final Element aElement, final ItemControllerInstance aItemController, final Context aContext,
-			final CharacterInstance aCharacter, ResizeListener aResizeListener)
+			final CharacterInstance aCharacter, final ResizeListener aResizeListener, final boolean aHost)
 	{
 		mGroupOption = aItemController.getItemController().getGroupOption(aElement.getAttribute("name"));
 		mContext = aContext;
 		mCharacter = aCharacter;
 		mResizeListener = aResizeListener;
+		mHost = aHost;
 		mContainer = (LinearLayout) View.inflate(getContext(), R.layout.group_option_instance_view, null);
 		mExpander = Expander.handle(R.id.view_group_option_instance_button, R.id.view_group_option_instance_panel, mContainer, mResizeListener);
 		
@@ -107,14 +112,17 @@ public class GroupOptionInstanceImpl implements GroupOptionInstance
 	 *            The character.
 	 * @param aResizeListener
 	 *            The parent resize listener.
+	 * @param aHost
+	 *            Whether this is a host sided group option.
 	 */
 	public GroupOptionInstanceImpl(final GroupOptionCreation aGroupOption, final ItemControllerInstance aItemController, final Context aContext,
-			final CharacterInstance aCharacter, ResizeListener aResizeListener)
+			final CharacterInstance aCharacter, final ResizeListener aResizeListener, final boolean aHost)
 	{
 		mGroupOption = aGroupOption.getGroupOption();
 		mContext = aContext;
 		mCharacter = aCharacter;
 		mResizeListener = aResizeListener;
+		mHost = aHost;
 		mContainer = (LinearLayout) View.inflate(getContext(), R.layout.group_option_instance_view, null);
 		mExpander = Expander.handle(R.id.view_group_option_instance_button, R.id.view_group_option_instance_panel, mContainer, mResizeListener);
 		
@@ -206,6 +214,23 @@ public class GroupOptionInstanceImpl implements GroupOptionInstance
 	}
 	
 	@Override
+	public boolean hasMutableGroup()
+	{
+		if (getGroupsList().isEmpty())
+		{
+			return false;
+		}
+		for (final ItemGroupInstance group : getGroupsList())
+		{
+			if (group.isMutable())
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	@Override
 	public boolean hasAnyItem()
 	{
 		if (getGroupsList().isEmpty())
@@ -293,7 +318,7 @@ public class GroupOptionInstanceImpl implements GroupOptionInstance
 		{
 			group.updateItems();
 		}
-		setEnabled(hasAnyItem());
+		setEnabled(hasAnyItem() || mHost && hasMutableGroup());
 	}
 	
 	private void addGroupSilent(final ItemGroupInstance aGroup)
