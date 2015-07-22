@@ -1,0 +1,1 @@
+COPY /Y bin\Vampire.apk %USERPROFILE%\Dropbox\Vampire\Vampire.apk
