@@ -25,7 +25,7 @@ public class Armor extends Artifact
 	
 	private final int mArmor;
 	
-	protected Armor(Element aElement, Context aContext, InventoryControllerInstance aController)
+	protected Armor(final Element aElement, final Context aContext, final InventoryControllerInstance aController)
 	{
 		super(CodingUtil.decode(aElement.getAttribute("name")), Integer.parseInt(aElement.getAttribute("weight")),
 				Integer.parseInt(aElement.getAttribute("quantity")), aContext, aController);
@@ -48,7 +48,8 @@ public class Armor extends Artifact
 	 * @param aController
 	 *            The parent controller.
 	 */
-	public Armor(String aName, int aWeight, int aQuantity, int aArmor, Context aContext, InventoryControllerInstance aController)
+	public Armor(final String aName, final int aWeight, final int aQuantity, final int aArmor, final Context aContext,
+			final InventoryControllerInstance aController)
 	{
 		super(aName, aWeight, aQuantity, aContext, aController);
 		mArmor = aArmor;
@@ -68,7 +69,7 @@ public class Armor extends Artifact
 	 * @param aController
 	 *            The parent controller.
 	 */
-	public Armor(String aName, int aWeight, int aArmor, Context aContext, InventoryControllerInstance aController)
+	public Armor(final String aName, final int aWeight, final int aArmor, final Context aContext, final InventoryControllerInstance aController)
 	{
 		super(aName, aWeight, aContext, aController);
 		mArmor = aArmor;
@@ -83,7 +84,7 @@ public class Armor extends Artifact
 	}
 	
 	@Override
-	public Element asElement(Document aDoc)
+	public Element asElement(final Document aDoc)
 	{
 		final Element element = super.asElement(aDoc);
 		element.setAttribute("armor", "" + getArmor());
@@ -91,10 +92,10 @@ public class Armor extends Artifact
 	}
 	
 	@Override
-	public String[] getInfoArray()
+	public String[] getInfoArray(final boolean aQuantity)
 	{
-		List<String> list = new ArrayList<String>();
-		list.addAll(Arrays.asList(super.getInfoArray()));
+		final List<String> list = new ArrayList<String>();
+		list.addAll(Arrays.asList(super.getInfoArray(aQuantity)));
 		list.add(", ");
 		list.add("" + R.string.armor);
 		list.add(": " + getArmor());
@@ -102,10 +103,10 @@ public class Armor extends Artifact
 	}
 	
 	@Override
-	public boolean[] getInfoTranslatedArray()
+	public boolean[] getInfoTranslatedArray(final boolean aQuantity)
 	{
-		StringBuilder flags = new StringBuilder();
-		flags.append(DataUtil.parseFlags(super.getInfoTranslatedArray()));
+		final StringBuilder flags = new StringBuilder();
+		flags.append(DataUtil.parseFlags(super.getInfoTranslatedArray(aQuantity)));
 		flags.append("010");
 		return DataUtil.parseFlags(flags.toString());
 	}

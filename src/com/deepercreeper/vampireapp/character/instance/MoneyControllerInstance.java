@@ -334,6 +334,10 @@ public class MoneyControllerInstance implements Saveable, Viewable
 	public void removeDepot(final String aName, final boolean aSilent)
 	{
 		final MoneyDepot depot = getDepot(aName);
+		if (mHost)
+		{
+			depot.takeAll();
+		}
 		if ( !depot.isEmpty())
 		{
 			getMessageListener().sendMessage(new Message(MessageGroup.MONEY, getCharacter().getName(), R.string.ask_delete_depot,

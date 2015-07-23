@@ -50,14 +50,18 @@ public interface InventoryItem extends Saveable, Viewable
 	public String getInfo();
 	
 	/**
+	 * @param aQuantity
+	 *            Whether the quantity of this item should be displayed.
 	 * @return an array of strings, that are used to display this item inside a message.
 	 */
-	public String[] getInfoArray();
+	public String[] getInfoArray(boolean aQuantity);
 	
 	/**
+	 * @param aQuantity
+	 *            Whether the quantity should be displayed.
 	 * @return a boolean array that determines which info array entries should be translated.
 	 */
-	public boolean[] getInfoTranslatedArray();
+	public boolean[] getInfoTranslatedArray(boolean aQuantity);
 	
 	/**
 	 * @return the item name.

@@ -11,6 +11,7 @@
     <string name="add_insanity">Add insanity</string>
     <string name="add_insanity_message">Enter the name of a insanity:</string>
     <string name="add_item">Add Item</string>
+    <string name="added_item">The following item was added: {0}</string>
     <string name="additional_damage">Additional damage</string>
     <string name="additional_info">Additional information</string>
     <string name="afk">(AFK)</string>
@@ -114,11 +115,13 @@
     <string name="player_lost_insanity">Lost the following insanity: {0}</string>
     <string name="quantity">Quantity</string>
     <string name="reload_time">Reload time</string>
+    <string name="removed_item">The following item was removed: {0}</string>
     <string name="reset">Reset</string>
     <string name="round">Round</string>
     <string name="service_name">Item provider</string>
     <string name="stash">Stash</string>
     <string name="to_much_weight">The item is too heavy.</string>
+    <string name="took_item">The following item was taken: {x}</string>
     <string name="unban">Unban</string>
     <string name="weight">Weight</string>
     <string name="weight_unit">kg</string>

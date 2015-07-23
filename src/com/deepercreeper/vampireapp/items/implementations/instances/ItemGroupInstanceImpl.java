@@ -12,6 +12,9 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.character.instance.EPControllerInstance;
 import com.deepercreeper.vampireapp.character.instance.Mode;
+import com.deepercreeper.vampireapp.host.Message;
+import com.deepercreeper.vampireapp.host.Message.ButtonAction;
+import com.deepercreeper.vampireapp.host.Message.MessageGroup;
 import com.deepercreeper.vampireapp.host.change.ItemGroupChange;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
@@ -23,8 +26,10 @@ import com.deepercreeper.vampireapp.items.interfaces.instances.ItemGroupInstance
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
+import com.deepercreeper.vampireapp.util.view.dialogs.CreateStringDialog;
 import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog;
 import com.deepercreeper.vampireapp.util.view.listeners.ItemSelectionListener;
+import com.deepercreeper.vampireapp.util.view.listeners.StringCreationListener;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -242,6 +247,8 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 			
 			if ( !aSilent)
 			{
+				mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, "", R.string.removed_item, new String[] { aItem.getName() },
+						new boolean[] { true }, getContext(), null, ButtonAction.NOTHING));
 				mMessageListener.sendChange(new ItemGroupChange(aItem.getName(), getName(), false));
 			}
 		}
@@ -260,7 +267,32 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 			Log.w(TAG, "Tried to add an already existing item.");
 			return;
 		}
-		final ItemInstance item = new ItemInstanceImpl(aItem, this, getContext(), getCharacter(), null, mMessageListener, mHost);
+		
+		final List<ItemInstance> itemContainer = new ArrayList<ItemInstance>();
+		if (aItem.needsDescription())
+		{
+			final StringCreationListener listener = new StringCreationListener()
+			{
+				@Override
+				public void create(final String aString)
+				{
+					itemContainer.add(new ItemInstanceImpl(aItem, aString, ItemGroupInstanceImpl.this, getContext(), getCharacter(), null,
+							mMessageListener, mHost));
+				}
+			};
+			CreateStringDialog.showCreateStringDialog("<EMPTY>", "Please enter the item description", getContext(), listener);
+		}
+		else
+		{
+			itemContainer
+					.add(new ItemInstanceImpl(aItem, null, ItemGroupInstanceImpl.this, getContext(), getCharacter(), null, mMessageListener, mHost));
+		}
+		final ItemInstance item = itemContainer.get(0);
+		if (item == null)
+		{
+			return;
+		}
+		
 		getItemsList().add(item);
 		mItems.put(aItem, item);
 		mItemsContainer.addView(item.getContainer());
@@ -269,6 +301,8 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 		updateController();
 		if ( !aSilent)
 		{
+			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, "", R.string.added_item, new String[] { aItem.getName() },
+					new boolean[] { true }, getContext(), null, ButtonAction.NOTHING));
 			mMessageListener.sendChange(new ItemGroupChange(aItem.getName(), getName(), true));
 		}
 	}

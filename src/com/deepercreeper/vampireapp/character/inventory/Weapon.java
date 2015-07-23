@@ -252,10 +252,10 @@ public class Weapon extends Artifact
 	}
 	
 	@Override
-	public String[] getInfoArray()
+	public String[] getInfoArray(final boolean aQuantity)
 	{
-		List<String> list = new ArrayList<String>();
-		list.addAll(Arrays.asList(super.getInfoArray()));
+		final List<String> list = new ArrayList<String>();
+		list.addAll(Arrays.asList(super.getInfoArray(aQuantity)));
 		list.add(", ");
 		list.add("" + R.string.difficulty);
 		list.add(": " + getDifficulty() + ", ");
@@ -286,10 +286,10 @@ public class Weapon extends Artifact
 	}
 	
 	@Override
-	public boolean[] getInfoTranslatedArray()
+	public boolean[] getInfoTranslatedArray(final boolean aQuantity)
 	{
-		StringBuilder flags = new StringBuilder();
-		flags.append(DataUtil.parseFlags(super.getInfoTranslatedArray()));
+		final StringBuilder flags = new StringBuilder();
+		flags.append(DataUtil.parseFlags(super.getInfoTranslatedArray(aQuantity)));
 		flags.append("01010");
 		if (mAdditionalDamage != null)
 		{

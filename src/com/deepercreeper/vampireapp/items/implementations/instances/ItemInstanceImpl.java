@@ -31,6 +31,10 @@ import com.deepercreeper.vampireapp.util.CodingUtil;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.interfaces.ItemFinder;
+import com.deepercreeper.vampireapp.util.view.dialogs.CreateStringDialog;
+import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog;
+import com.deepercreeper.vampireapp.util.view.listeners.ItemSelectionListener;
+import com.deepercreeper.vampireapp.util.view.listeners.StringCreationListener;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.view.View;
@@ -289,6 +293,8 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	 * 
 	 * @param aItem
 	 *            The item type.
+	 * @param aDescription
+	 *            The item description if needed. May be null for non described items.
 	 * @param aItemGroup
 	 *            The parent item group.
 	 * @param aContext
@@ -302,8 +308,8 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	 * @param aHost
 	 *            Whether this is a host sided item.
 	 */
-	public ItemInstanceImpl(final Item aItem, final ItemGroupInstance aItemGroup, final Context aContext, final CharacterInstance aCharacter,
-			final ItemInstance aParentItem, final MessageListener aMessageListener, final boolean aHost)
+	public ItemInstanceImpl(final Item aItem, final String aDescription, final ItemGroupInstance aItemGroup, final Context aContext,
+			final CharacterInstance aCharacter, final ItemInstance aParentItem, final MessageListener aMessageListener, final boolean aHost)
 	{
 		super(aCharacter, aItemGroup.getItemController());
 		mItem = aItem;
@@ -312,9 +318,12 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		mHost = aHost;
 		if (getItem().needsDescription())
 		{
-			// TODO Bad
+			mDescription = aDescription;
 		}
-		mDescription = null;
+		else
+		{
+			mDescription = null;
+		}
 		mEP = aCharacter.getEPController();
 		mMode = aCharacter.getMode();
 		final int id = mHost ? R.layout.host_item_instance : R.layout.client_item_instance;
@@ -762,6 +771,8 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	@Override
 	public void init()
 	{
+		final ImageButton remove = mHost ? (ImageButton) getContainer().findViewById(R.id.h_remove_item_instance_button) : null;
+		final ImageButton addChild = mHost ? (ImageButton) getContainer().findViewById(R.id.h_add_item_instance_child_button) : null;
 		if ( !mInitialized)
 		{
 			mChildrenContainer = (LinearLayout) getContainer()
@@ -772,7 +783,6 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 					.findViewById(mHost ? R.id.h_increase_item_instance_button : R.id.c_increase_item_instance_button);
 			mDecreaseButton = mHost ? (ImageButton) getContainer().findViewById(R.id.h_decrease_item_instance_button) : null;
 			final TextView name = (TextView) getContainer().findViewById(mHost ? R.id.h_item_instance_name_label : R.id.c_item_instance_name_label);
-			final ImageButton remove = mHost ? (ImageButton) getContainer().findViewById(R.id.h_remove_item_instance_button) : null;
 			
 			name.setText(getItem().getDisplayName());
 			name.setOnClickListener(new OnClickListener()
@@ -804,32 +814,35 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 							decrease();
 						}
 					});
-					if (getItemGroup().isMutable())
-					{
-						remove.setOnClickListener(new OnClickListener()
-						{
-							@Override
-							public void onClick(final View aV)
-							{
-								getItemGroup().removeItem(getItem(), false);
-							}
-						});
-						ViewUtil.setPxWidth(remove, (int) getContext().getResources().getDimension(R.dimen.button_width));
-					}
-					else
-					{
-						ViewUtil.hideWidth(remove);
-					}
 				}
 			}
-			else
+			if (mHost && getItemGroup().isMutable())
 			{
-				ViewUtil.hideWidth(mValueBar);
-				ViewUtil.hideWidth(mIncreaseButton);
-				if (mHost)
+				remove.setOnClickListener(new OnClickListener()
 				{
-					ViewUtil.hideWidth(remove);
-					ViewUtil.hideWidth(mDecreaseButton);
+					@Override
+					public void onClick(final View aV)
+					{
+						if (hasParentItem())
+						{
+							getParentItem().removeChild(getItem(), false);
+						}
+						else
+						{
+							getItemGroup().removeItem(getItem(), false);
+						}
+					}
+				});
+				if (getItem().isMutableParent())
+				{
+					addChild.setOnClickListener(new OnClickListener()
+					{
+						@Override
+						public void onClick(final View aV)
+						{
+							addChild();
+						}
+					});
 				}
 			}
 			
@@ -849,6 +862,35 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			
 			refreshValue();
 		}
+		else
+		{
+			ViewUtil.hideHeight(mValueBar);
+			ViewUtil.hideWidth(mIncreaseButton);
+			if (mHost)
+			{
+				ViewUtil.hideWidth(mDecreaseButton);
+			}
+		}
+		if (mHost)
+		{
+			if (getItemGroup().isMutable())
+			{
+				ViewUtil.setPxWidth(remove, (int) getContext().getResources().getDimension(R.dimen.button_width));
+				if (getItem().isMutableParent())
+				{
+					ViewUtil.setPxWidth(addChild, (int) getContext().getResources().getDimension(R.dimen.button_width));
+				}
+				else
+				{
+					ViewUtil.hideWidth(addChild);
+				}
+			}
+			else
+			{
+				ViewUtil.hideWidth(remove);
+				ViewUtil.hideWidth(addChild);
+			}
+		}
 		
 		if (hasChildren())
 		{
@@ -866,6 +908,129 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 				}
 			}
 		}
+	}
+	
+	@Override
+	public void removeChild(final Item aItem, final boolean aSilent)
+	{
+		if ( !getItem().isMutableParent())
+		{
+			Log.w(TAG, "Tried to remove a child from a non parent or non mutable item.");
+			return;
+		}
+		final ItemInstance item = mChildren.get(aItem.getName());
+		item.release();
+		getChildrenList().remove(item);
+		mChildren.remove(item.getName());
+		getItemGroup().getItemController().removeItem(aItem.getName());
+		getItemGroup().getItemController().resize();
+		getItemGroup().getItemController().updateGroups();
+		
+		if ( !aSilent)
+		{
+			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, "", R.string.removed_item, new String[] { aItem.getName() },
+					new boolean[] { true }, getContext(), null, ButtonAction.NOTHING));
+			mMessageListener.sendChange(new ItemChange(getName(), aItem.getName(), false));
+		}
+	}
+	
+	@Override
+	public void addChild()
+	{
+		if ( !getItem().isMutableParent())
+		{
+			Log.w(TAG, "Tried to add a child to a non mutable item.");
+			return;
+		}
+		if (SelectItemDialog.isDialogOpen())
+		{
+			return;
+		}
+		final List<Item> items = getAddableItems();
+		if (items.isEmpty())
+		{
+			return;
+		}
+		final ItemSelectionListener<Item> action = new ItemSelectionListener<Item>()
+		{
+			@Override
+			public void cancel()
+			{}
+			
+			@Override
+			public void select(final Item aChoosenItem)
+			{
+				addChild(aChoosenItem, false);
+			}
+		};
+		SelectItemDialog.showSelectionDialog(items, getContext().getString(R.string.add_item), getContext(), action);
+	}
+	
+	@Override
+	public void addChild(final Item aItem, final boolean aSilent)
+	{
+		if ( !getItem().isMutableParent())
+		{
+			Log.w(TAG, "Tried to add a child to a non parent or non mutable item.");
+			return;
+		}
+		if (getChildrenList().contains(aItem))
+		{
+			Log.w(TAG, "Tried to add a already existing child.");
+			return;
+		}
+		
+		final List<ItemInstance> itemContainer = new ArrayList<ItemInstance>();
+		if (aItem.needsDescription())
+		{
+			final StringCreationListener listener = new StringCreationListener()
+			{
+				@Override
+				public void create(final String aString)
+				{
+					itemContainer.add(new ItemInstanceImpl(aItem, aString, getItemGroup(), getContext(), getCharacter(), ItemInstanceImpl.this,
+							mMessageListener, mHost));
+				}
+			};
+			CreateStringDialog.showCreateStringDialog("<EMPTY>", "Please enter the item description", getContext(), listener);
+		}
+		else
+		{
+			itemContainer.add(
+					new ItemInstanceImpl(aItem, null, getItemGroup(), getContext(), getCharacter(), ItemInstanceImpl.this, mMessageListener, mHost));
+		}
+		final ItemInstance item = itemContainer.get(0);
+		if (item == null)
+		{
+			return;
+		}
+		
+		getChildrenList().add(item);
+		mChildren.put(item.getName(), item);
+		mChildrenContainer.addView(item.getContainer());
+		getItemGroup().getItemController().addItem(item);
+		getItemGroup().getItemController().resize();
+		getItemGroup().getItemController().updateGroups();
+		
+		if ( !aSilent)
+		{
+			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, "", R.string.added_item, new String[] { aItem.getName() },
+					new boolean[] { true }, getContext(), null, ButtonAction.NOTHING));
+			mMessageListener.sendChange(new ItemChange(getName(), aItem.getName(), true));
+		}
+	}
+	
+	private List<Item> getAddableItems()
+	{
+		final List<Item> children = new ArrayList<Item>();
+		for (final Item item : getItem().getChildrenList())
+		{
+			if ( !hasChild(item))
+			{
+				children.add(item);
+			}
+		}
+		return children;
 	}
 	
 	@Override

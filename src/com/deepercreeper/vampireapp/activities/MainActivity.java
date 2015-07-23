@@ -323,7 +323,7 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 		
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
 		
-		mChars = new CharController(this, mItems, mConnection);
+		mChars = new CharController(this, mConnection);
 		mHosts = new HostController(this, mConnection);
 		
 		setContentView(R.layout.main_activity);

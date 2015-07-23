@@ -51,7 +51,7 @@ public interface ItemControllerCreation extends CreationRestrictionable, Viewabl
 	 * @param aItem
 	 *            The item.
 	 */
-	public void addItemName(ItemCreation aItem);
+	public void addItem(ItemCreation aItem);
 	
 	/**
 	 * @param aGroup
@@ -190,7 +190,7 @@ public interface ItemControllerCreation extends CreationRestrictionable, Viewabl
 	 * @param aName
 	 *            The item name.
 	 */
-	public void removeItemName(String aName);
+	public void removeItem(String aName);
 	
 	/**
 	 * resets all temporary points spent in this controller.

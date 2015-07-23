@@ -2,8 +2,6 @@ package com.deepercreeper.vampireapp.items.interfaces.instances;
 
 import java.util.List;
 import java.util.Set;
-import android.animation.ValueAnimator.AnimatorUpdateListener;
-import android.content.Context;
 import com.deepercreeper.vampireapp.character.instance.EPControllerInstance;
 import com.deepercreeper.vampireapp.character.instance.Mode;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
@@ -12,6 +10,8 @@ import com.deepercreeper.vampireapp.mechanics.Action;
 import com.deepercreeper.vampireapp.util.interfaces.ItemFinder;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
+import android.animation.ValueAnimator.AnimatorUpdateListener;
+import android.content.Context;
 
 /**
  * This represents a final item that a character can have.
@@ -50,6 +50,16 @@ public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemIn
 	public void addValueListener(ItemValueListener aListener);
 	
 	/**
+	 * Removes the given child from this item.
+	 * 
+	 * @param aItem
+	 *            The item type.
+	 * @param aSilent
+	 *            Whether a change should be sent.
+	 */
+	public void removeChild(Item aItem, boolean aSilent);
+	
+	/**
 	 * @return the calculated experience cost depending on the current item value and restrictions.
 	 */
 	public int calcEPCost();
@@ -65,9 +75,24 @@ public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemIn
 	public boolean canEPIncrease();
 	
 	/**
+	 * Adds the given child to this item.
+	 * 
+	 * @param aItem
+	 *            The item to add.
+	 * @param aSilent
+	 *            Whether a change should be sent or not.
+	 */
+	public void addChild(Item aItem, boolean aSilent);
+	
+	/**
 	 * @return whether this item can be increased at all.
 	 */
 	public boolean canIncrease();
+	
+	/**
+	 * Asks the user which item to add.
+	 */
+	public void addChild();
 	
 	/**
 	 * Decreases this item if possible.

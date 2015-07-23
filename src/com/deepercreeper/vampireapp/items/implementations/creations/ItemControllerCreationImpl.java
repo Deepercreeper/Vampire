@@ -83,7 +83,7 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 	}
 	
 	@Override
-	public void addItemName(final ItemCreation aItem)
+	public void addItem(final ItemCreation aItem)
 	{
 		mItems.put(aItem.getName(), aItem);
 		if ( !mInactiveRestrictions.isEmpty())
@@ -406,7 +406,7 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 	}
 	
 	@Override
-	public void removeItemName(final String aName)
+	public void removeItem(final String aName)
 	{
 		if (mItems.get(aName).hasRestrictions())
 		{

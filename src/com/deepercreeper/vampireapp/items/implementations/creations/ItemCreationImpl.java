@@ -254,7 +254,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		getChildrenList().add(item);
 		mChildren.put(item.getName(), item);
 		mChildrenContainer.addView(item.getContainer());
-		getItemGroup().getItemController().addItemName(item);
+		getItemGroup().getItemController().addItem(item);
 		getItemGroup().getItemController().resize();
 		updateController();
 	}
@@ -1026,7 +1026,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		item.clear();
 		getChildrenList().remove(item);
 		mChildren.remove(item.getName());
-		getItemGroup().getItemController().removeItemName(aItem.getName());
+		getItemGroup().getItemController().removeItem(aItem.getName());
 		getItemGroup().getItemController().resize();
 		updateController();
 	}
@@ -1072,14 +1072,14 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			removeChild(oldItem.getItem());
 			return;
 		}
-		getItemGroup().getItemController().removeItemName(oldItem.getName());
+		getItemGroup().getItemController().removeItem(oldItem.getName());
 		oldItem.clear();
 		mChildren.remove(oldItem.getName());
 		final ItemCreation item = new ItemCreationImpl(aItem, getContext(), getItemGroup(), getCreationMode(), getItemGroup().getPoints(), this);
 		getChildrenList().set(aIndex, item);
 		mChildren.put(aItem.getName(), item);
 		mChildrenContainer.addView(item.getContainer(), aIndex + 1);
-		getItemGroup().getItemController().addItemName(item);
+		getItemGroup().getItemController().addItem(item);
 		getItemGroup().getItemController().resize();
 		updateController();
 	}

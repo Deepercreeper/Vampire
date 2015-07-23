@@ -11,6 +11,7 @@
     <string name="add_insanity">Geistesstörung hinzufügen</string>
     <string name="add_insanity_message">Geben Sie den Namen einer Geistesstörung ein:</string>
     <string name="add_item">Item hinzufügen</string>
+    <string name="added_item">Folgendes Item wurde hinzugefügt: {0}</string>
     <string name="additional_damage">Zusätzlicher Schaden</string>
     <string name="additional_info">Zusatzinformationen</string>
     <string name="afk">(AFK)</string>
@@ -114,11 +115,13 @@
     <string name="player_lost_insanity">Ist folgende Geistesstörung los: {0}</string>
     <string name="quantity">Anzahl</string>
     <string name="reload_time">Nachladezeit</string>
+    <string name="removed_item">Folgendes Item wurde entfernt: {0}</string>
     <string name="reset">Zurücksetzen</string>
     <string name="round">Runde</string>
     <string name="service_name">Item Provider</string>
     <string name="stash">Versteck</string>
     <string name="to_much_weight">Der Gegenstand wiegt zu viel.</string>
+    <string name="took_item">Folgendes Item wurde genommen: {x}</string>
     <string name="unban">Entbannen</string>
     <string name="weight">Gewicht</string>
     <string name="weight_unit">kg</string>

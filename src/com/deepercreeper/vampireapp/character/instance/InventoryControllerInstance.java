@@ -198,8 +198,8 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 			@Override
 			public void itemCreated(final Artifact aItem)
 			{
-				mMessageListener
-						.sendMessage(new Message(MessageGroup.SINGLE, "", R.string.got_item, aItem.getInfoArray(), aItem.getInfoTranslatedArray(),
+				mMessageListener.sendMessage(
+						new Message(MessageGroup.SINGLE, "", R.string.got_item, aItem.getInfoArray(true), aItem.getInfoTranslatedArray(true),
 								mContext, null, ButtonAction.TAKE_ITEM, ButtonAction.IGNORE_ITEM, DataUtil.serialize(aItem)));
 			}
 		};
@@ -398,11 +398,16 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 		if ( !aSilent)
 		{
 			mMessageListener.sendChange(new InventoryChange(aItem, false));
-		}
-		if ( !mHost)
-		{
-			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, mMessageListener.getCharacter().getName(), R.string.left_item,
-					aItem.getInfoArray(), aItem.getInfoTranslatedArray(), mContext, null, ButtonAction.NOTHING));
+			if (mHost)
+			{
+				mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, "", R.string.took_item, aItem.getInfoArray(false),
+						aItem.getInfoTranslatedArray(false), mContext, null, ButtonAction.NOTHING));
+			}
+			else
+			{
+				mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, mMessageListener.getCharacter().getName(), R.string.left_item,
+						aItem.getInfoArray(false), aItem.getInfoTranslatedArray(false), mContext, null, ButtonAction.NOTHING));
+			}
 		}
 	}
 	

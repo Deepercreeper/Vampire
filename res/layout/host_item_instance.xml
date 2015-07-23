@@ -55,6 +55,13 @@
             android:layout_height="@dimen/button_height"
             android:contentDescription="@string/content_description"
             android:src="@drawable/ic_right" />
+        
+        <ImageButton
+            android:id="@+id/h_add_item_instance_child_button"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_height"
+            android:contentDescription="@string/content_description"
+            android:src="@drawable/ic_increase" />
     </LinearLayout>
 
     <LinearLayout

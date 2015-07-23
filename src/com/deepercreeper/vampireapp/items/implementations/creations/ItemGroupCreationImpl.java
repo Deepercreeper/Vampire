@@ -155,7 +155,7 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		mItems.put(aItem, item);
 		mItemsContainer.addView(item.getContainer());
 		getItemController().resize();
-		getItemController().addItemName(item);
+		getItemController().addItem(item);
 		updateController();
 	}
 	
@@ -483,7 +483,7 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		if (mItems.containsKey(aItem))
 		{
 			final ItemCreation item = mItems.get(aItem);
-			getItemController().removeItemName(aItem.getName());
+			getItemController().removeItem(aItem.getName());
 			item.clear();
 			mItems.remove(aItem);
 			getItemsList().remove(item);
@@ -535,13 +535,13 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 			return;
 		}
 		final ItemCreation item = new ItemCreationImpl(aItem, getContext(), this, getCreationMode(), getPoints(), null);
-		getItemController().removeItemName(oldItem.getName());
+		getItemController().removeItem(oldItem.getName());
 		oldItem.clear();
 		mItems.remove(oldItem.getItem());
 		getItemsList().set(aIndex, item);
 		mItems.put(aItem, item);
 		mItemsContainer.addView(item.getContainer(), aIndex);
-		getItemController().addItemName(item);
+		getItemController().addItem(item);
 		updateController();
 	}
 	
@@ -629,7 +629,7 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		getItemsList().add(aItem);
 		mItems.put(aItem.getItem(), aItem);
 		mItemsContainer.addView(aItem.getContainer());
-		getItemController().addItemName(aItem);
+		getItemController().addItem(aItem);
 		getItemController().resize();
 		updateController();
 	}
@@ -666,7 +666,7 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 			Log.w(TAG, "Tried to remove a non added item.");
 			return;
 		}
-		getItemController().removeItemName(aItem.getName());
+		getItemController().removeItem(aItem.getName());
 		aItem.clear();
 		mItems.remove(aItem.getItem());
 		getItemsList().remove(aItem);

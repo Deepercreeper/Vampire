@@ -6,17 +6,16 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import android.app.Activity;
-import android.content.Intent;
-import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.activities.PlayActivity;
 import com.deepercreeper.vampireapp.character.instance.CharacterCompound;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.connection.ConnectionController;
-import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.view.CharacterContextMenu.CharacterListener;
+import android.app.Activity;
+import android.content.Intent;
+import android.widget.LinearLayout;
 
 /**
  * This controller is used to control all characters that were created before.
@@ -25,38 +24,33 @@ import com.deepercreeper.vampireapp.util.view.CharacterContextMenu.CharacterList
  */
 public class CharController implements CharacterListener
 {
-	private static final String						TAG						= "CharController";
+	private static final String TAG = "CharController";
 	
-	private static final String						CHARACTER_LIST			= "Chars.lst";
+	private static final String CHARACTER_LIST = "Chars.lst";
 	
-	private final ConnectionController				mConnection;
+	private final ConnectionController mConnection;
 	
-	private final List<CharacterCompound>			mCharacterCompoundsList	= new ArrayList<CharacterCompound>();
+	private final List<CharacterCompound> mCharacterCompoundsList = new ArrayList<CharacterCompound>();
 	
-	private final Map<String, CharacterCompound>	mCharacterCompounds		= new HashMap<String, CharacterCompound>();
+	private final Map<String, CharacterCompound> mCharacterCompounds = new HashMap<String, CharacterCompound>();
 	
-	private final Map<String, CharacterInstance>	mCharacterCache			= new HashMap<String, CharacterInstance>();
+	private final Map<String, String> mCharacterCache = new HashMap<String, String>();
 	
-	private final Activity							mContext;
+	private final Activity mContext;
 	
-	private final ItemProvider						mItems;
-	
-	private LinearLayout							mCharsList;
+	private LinearLayout mCharsList;
 	
 	/**
 	 * Creates a new character controller.
 	 * 
 	 * @param aContext
 	 *            The underlying context.
-	 * @param aItems
-	 *            The item provider of this Vampire.
 	 * @param aConnection
 	 *            The connection controller. Needed to make sure that characters can be played.
 	 */
-	public CharController(final Activity aContext, final ItemProvider aItems, final ConnectionController aConnection)
+	public CharController(final Activity aContext, final ConnectionController aConnection)
 	{
 		mContext = aContext;
-		mItems = aItems;
 		mConnection = aConnection;
 	}
 	
@@ -142,23 +136,20 @@ public class CharController implements CharacterListener
 	 *            The character name.
 	 * @return the loaded character.
 	 */
-	public CharacterInstance loadChar(final String aName)
+	public String loadChar(final String aName)
 	{
-		CharacterInstance character = mCharacterCache.get(aName);
-		if (character == null)
+		String character = mCharacterCache.get(aName);
+		if (character != null)
 		{
-			final String data = DataUtil.loadFile(aName + ".chr", mContext);
-			if (data != null)
-			{
-				character = new CharacterInstance(data, mItems, mContext, null, null, null, false);
-			}
+			return character;
 		}
-		if (character == null)
+		character = DataUtil.loadFile(aName + ".chr", mContext);
+		if (character != null)
 		{
-			return null;
+			mCharacterCache.put(aName, character);
+			return character;
 		}
-		mCharacterCache.put(character.getName(), character);
-		return character;
+		return null;
 	}
 	
 	/**
@@ -183,10 +174,10 @@ public class CharController implements CharacterListener
 	@Override
 	public void play(final String aName)
 	{
-		final CharacterInstance character = loadChar(aName);
+		final String character = loadChar(aName);
 		
 		final Intent intent = new Intent(mContext, PlayActivity.class);
-		intent.putExtra(PlayActivity.CHARACTER, DataUtil.serialize(character));
+		intent.putExtra(PlayActivity.CHARACTER, character);
 		
 		mContext.startActivityForResult(intent, PlayActivity.PLAY_CHAR_REQUEST);
 	}
@@ -199,8 +190,9 @@ public class CharController implements CharacterListener
 	 */
 	public void saveChar(final CharacterInstance aCharacter)
 	{
-		DataUtil.saveFile(DataUtil.serialize(aCharacter), aCharacter.getName() + ".chr", mContext);
-		mCharacterCache.put(aCharacter.getName(), aCharacter);
+		final String character = DataUtil.serialize(aCharacter);
+		DataUtil.saveFile(character, aCharacter.getName() + ".chr", mContext);
+		mCharacterCache.put(aCharacter.getName(), character);
 	}
 	
 	/**

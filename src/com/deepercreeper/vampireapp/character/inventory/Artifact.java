@@ -196,7 +196,7 @@ public class Artifact implements InventoryItem
 	@Override
 	public final String getInfo()
 	{
-		return DataUtil.buildMessage("{x}", LanguageUtil.instance().translateArray(getInfoArray(), getInfoTranslatedArray()));
+		return DataUtil.buildMessage("{x}", LanguageUtil.instance().translateArray(getInfoArray(true), getInfoTranslatedArray(true)));
 	}
 	
 	@Override
@@ -288,10 +288,10 @@ public class Artifact implements InventoryItem
 	}
 	
 	@Override
-	public String[] getInfoArray()
+	public String[] getInfoArray(final boolean aQuantity)
 	{
 		final List<String> list = new ArrayList<String>();
-		list.add(getName() + getQuantitySuffix() + ": ");
+		list.add(getName() + (aQuantity ? getQuantitySuffix() : "") + ": ");
 		list.add("" + R.string.weight);
 		list.add(": " + getWeight() + " ");
 		list.add("" + R.string.weight_unit);
@@ -299,7 +299,7 @@ public class Artifact implements InventoryItem
 	}
 	
 	@Override
-	public boolean[] getInfoTranslatedArray()
+	public boolean[] getInfoTranslatedArray(final boolean aQuantity)
 	{
 		return DataUtil.parseFlags("0101");
 	}
