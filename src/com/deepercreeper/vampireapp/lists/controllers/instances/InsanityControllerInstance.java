@@ -52,8 +52,8 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 		public void onDue()
 		{
 			removeInsanity(mInsanity, true);
-			int id = mHost ? R.string.player_lost_insanity : R.string.lost_insanity;
-			String sender = mHost ? mMessageListener.getCharacter().getName() : "";
+			final int id = mHost ? R.string.player_lost_insanity : R.string.lost_insanity;
+			final String sender = mHost ? mMessageListener.getCharacter().getName() : "";
 			mMessageListener.showMessage(
 					new Message(MessageGroup.SINGLE, sender, id, new String[] { mInsanity }, mContext, mMessageListener, ButtonAction.NOTHING));
 		}
@@ -62,7 +62,7 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 		public void timeUpdated()
 		{
 			// TODO Prevent this by adding insanity instances
-			TextView durationLabel = (TextView) mExpander.getContainer().getChildAt(mInsanities.indexOf(mInsanity))
+			final TextView durationLabel = (TextView) mExpander.getContainer().getChildAt(mInsanities.indexOf(mInsanity))
 					.findViewById(mHost ? R.id.h_insanity_duration_label : R.id.c_insanity_duration_label);
 			durationLabel.setText(getDurationOf(mInsanity).getName(mContext));
 		}
@@ -98,16 +98,16 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 	 * @param aResizeListener
 	 *            The parent resize listener.
 	 */
-	public InsanityControllerInstance(final Element aElement, Context aContext, boolean aHost, MessageListener aMessageListener,
-			ResizeListener aResizeListener)
+	public InsanityControllerInstance(final Element aElement, final Context aContext, final boolean aHost, final MessageListener aMessageListener,
+			final ResizeListener aResizeListener)
 	{
 		mHost = aHost;
 		mContext = aContext;
 		mMessageListener = aMessageListener;
-		int id = mHost ? R.layout.host_insanities : R.layout.client_insanities;
+		final int id = mHost ? R.layout.host_insanities : R.layout.client_insanities;
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
-		int buttonId = mHost ? R.id.h_insanities_button : R.id.c_insanities_button;
-		int containerId = mHost ? R.id.h_insanities_panel : R.id.c_insanities_panel;
+		final int buttonId = mHost ? R.id.h_insanities_button : R.id.c_insanities_button;
+		final int containerId = mHost ? R.id.h_insanities_panel : R.id.c_insanities_panel;
 		mExpander = Expander.handle(buttonId, containerId, getContainer(), aResizeListener);
 		
 		init();
@@ -142,16 +142,16 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 	 * @param aResizeListener
 	 *            The parent resize listener.
 	 */
-	public InsanityControllerInstance(final InsanityControllerCreation aController, Context aContext, boolean aHost, MessageListener aMessageListener,
-			ResizeListener aResizeListener)
+	public InsanityControllerInstance(final InsanityControllerCreation aController, final Context aContext, final boolean aHost,
+			final MessageListener aMessageListener, final ResizeListener aResizeListener)
 	{
 		mHost = aHost;
 		mContext = aContext;
 		mMessageListener = aMessageListener;
-		int id = mHost ? R.layout.host_insanities : R.layout.client_insanities;
+		final int id = mHost ? R.layout.host_insanities : R.layout.client_insanities;
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
-		int buttonId = mHost ? R.id.h_insanities_button : R.id.c_insanities_button;
-		int containerId = mHost ? R.id.h_insanities_panel : R.id.c_insanities_panel;
+		final int buttonId = mHost ? R.id.h_insanities_button : R.id.c_insanities_button;
+		final int containerId = mHost ? R.id.h_insanities_panel : R.id.c_insanities_panel;
 		mExpander = Expander.handle(buttonId, containerId, getContainer(), aResizeListener);
 		
 		init();
@@ -169,15 +169,15 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 	 */
 	public void addInsanity()
 	{
-		InsanityCreationListener listener = new InsanityCreationListener()
+		final InsanityCreationListener listener = new InsanityCreationListener()
 		{
 			@Override
-			public void insanityCreated(String aName, Duration aDuration)
+			public void insanityCreated(final String aName, final Duration aDuration)
 			{
 				addInsanity(aName, aDuration, false);
 			}
 		};
-		CreateInsanityDialog.showCreateInsanityDialog(mContext.getString(R.string.create_insanity), mContext, listener);
+		CreateInsanityDialog.showCreateInsanityDialog(mContext.getString(R.string.create_insanity), mContext, mInsanities, listener);
 	}
 	
 	/**
@@ -190,12 +190,16 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 	 * @param aSilent
 	 *            Whether a change should be sent.
 	 */
-	public void addInsanity(final String aInsanity, final Duration aDuration, boolean aSilent)
+	public void addInsanity(final String aInsanity, final Duration aDuration, final boolean aSilent)
 	{
+		if (mInsanities.contains(aInsanity))
+		{
+			return;
+		}
 		aDuration.addListener(new InsanityDurationListener(aInsanity));
 		mInsanities.add(aInsanity);
 		mInsanityDurations.put(aInsanity, aDuration);
-		View insanity = View.inflate(mContext, mHost ? R.layout.host_insanity : R.layout.client_insanity, null);
+		final View insanity = View.inflate(mContext, mHost ? R.layout.host_insanity : R.layout.client_insanity, null);
 		((TextView) insanity.findViewById(mHost ? R.id.h_insanity_name_label : R.id.c_insanity_name_label)).setText(aInsanity);
 		((TextView) insanity.findViewById(mHost ? R.id.h_insanity_duration_label : R.id.c_insanity_duration_label))
 				.setText(getDurationOf(aInsanity).getName(mContext));
@@ -204,7 +208,7 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 			insanity.findViewById(R.id.h_remove_insanity_button).setOnClickListener(new OnClickListener()
 			{
 				@Override
-				public void onClick(View aV)
+				public void onClick(final View aV)
 				{
 					removeInsanity(aInsanity, false);
 				}
@@ -278,7 +282,7 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 				getContainer().findViewById(R.id.h_add_insanity_button).setOnClickListener(new OnClickListener()
 				{
 					@Override
-					public void onClick(View aV)
+					public void onClick(final View aV)
 					{
 						addInsanity();
 					}
@@ -303,7 +307,7 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 	 * @param aSilent
 	 *            Whether a change should be sent or not.
 	 */
-	public void removeInsanity(final String aInsanity, boolean aSilent)
+	public void removeInsanity(final String aInsanity, final boolean aSilent)
 	{
 		mExpander.getContainer().removeViewAt(mInsanities.indexOf(aInsanity));
 		mInsanities.remove(aInsanity);
@@ -321,7 +325,7 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 	@Override
 	public void time(final Type aType, final int aAmount)
 	{
-		Set<Duration> durations = new HashSet<Duration>();
+		final Set<Duration> durations = new HashSet<Duration>();
 		durations.addAll(mInsanityDurations.values());
 		for (final Duration duration : durations)
 		{
@@ -335,7 +339,7 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 		{
 			return;
 		}
-		boolean hasInsanities = !getInsanities().isEmpty();
+		final boolean hasInsanities = !getInsanities().isEmpty();
 		if ( !hasInsanities)
 		{
 			mExpander.close();

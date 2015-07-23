@@ -1,5 +1,6 @@
 package com.deepercreeper.vampireapp.util.view.dialogs;
 
+import java.util.List;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.items.interfaces.Nameable;
 import com.deepercreeper.vampireapp.mechanics.Duration;
@@ -30,37 +31,41 @@ import android.widget.Spinner;
  */
 public class CreateInsanityDialog extends DefaultDialog<InsanityCreationListener, LinearLayout>
 {
+	private final ArrayAdapter<Nameable> mDuration;
+	
+	private final List<String> mInsanities;
+	
 	private EditText mName;
 	
 	private EditText mValue;
-	
-	private ArrayAdapter<Nameable> mDuration;
 	
 	private Button mOK;
 	
 	private boolean mForever = false;
 	
-	private CreateInsanityDialog(final String aTitle, final Context aContext, final InsanityCreationListener aListener)
+	private CreateInsanityDialog(final String aTitle, final Context aContext, final List<String> aInsanities,
+			final InsanityCreationListener aListener)
 	{
 		super(aTitle, aContext, aListener, R.layout.dialog_create_insanity, LinearLayout.class);
 		
+		mInsanities = aInsanities;
 		mDuration = new ArrayAdapter<Nameable>(getContext(), android.R.layout.simple_spinner_dropdown_item, Type.getTypesList(getContext()));
 	}
 	
 	@Override
-	protected Dialog createDialog(Builder aBuilder)
+	protected Dialog createDialog(final Builder aBuilder)
 	{
 		mOK = (Button) getContainer().findViewById(R.id.dialog_insanity_ok_button);
 		mName = (EditText) getContainer().findViewById(R.id.dialog_insanity_name_text);
 		mValue = (EditText) getContainer().findViewById(R.id.dialog_insanity_value_text);
 		final Spinner durationSpinner = (Spinner) getContainer().findViewById(R.id.dialog_insanity_duration_spinner);
-		CheckBox forever = (CheckBox) getContainer().findViewById(R.id.dialog_insanity_forever_box);
+		final CheckBox forever = (CheckBox) getContainer().findViewById(R.id.dialog_insanity_forever_box);
 		
 		durationSpinner.setAdapter(mDuration);
 		forever.setOnCheckedChangeListener(new OnCheckedChangeListener()
 		{
 			@Override
-			public void onCheckedChanged(CompoundButton aButtonView, boolean aIsChecked)
+			public void onCheckedChanged(final CompoundButton aButtonView, final boolean aIsChecked)
 			{
 				mForever = aIsChecked;
 				ViewUtil.setEnabled(durationSpinner, !mForever);
@@ -68,7 +73,7 @@ public class CreateInsanityDialog extends DefaultDialog<InsanityCreationListener
 				updateOKButton();
 			}
 		});
-		TextWatcher listener = new TextWatcher()
+		final TextWatcher listener = new TextWatcher()
 		{
 			@Override
 			public void afterTextChanged(final Editable aS)
@@ -89,9 +94,9 @@ public class CreateInsanityDialog extends DefaultDialog<InsanityCreationListener
 		mOK.setOnClickListener(new OnClickListener()
 		{
 			@Override
-			public void onClick(View aV)
+			public void onClick(final View aV)
 			{
-				String insanity = mName.getText().toString();
+				final String insanity = mName.getText().toString();
 				Duration duration = Duration.FOREVER;
 				if ( !mForever)
 				{
@@ -112,6 +117,7 @@ public class CreateInsanityDialog extends DefaultDialog<InsanityCreationListener
 	{
 		boolean enabled = true;
 		enabled &= isNameOk(mName);
+		enabled &= !mInsanities.contains(mName.getText().toString().trim());
 		enabled &= mForever || isNumberOk(mValue, 1);
 		ViewUtil.setEnabled(mOK, enabled);
 	}
@@ -131,15 +137,18 @@ public class CreateInsanityDialog extends DefaultDialog<InsanityCreationListener
 	 *            The dialog title.
 	 * @param aContext
 	 *            The underlying context.
+	 * @param aInsanities
+	 *            All existing insanities.
 	 * @param aListener
 	 *            The dialog listener.
 	 */
-	public static void showCreateInsanityDialog(final String aTitle, final Context aContext, final InsanityCreationListener aListener)
+	public static void showCreateInsanityDialog(final String aTitle, final Context aContext, final List<String> aInsanities,
+			final InsanityCreationListener aListener)
 	{
 		if (isDialogOpen())
 		{
 			return;
 		}
-		new CreateInsanityDialog(aTitle, aContext, aListener).show(((Activity) aContext).getFragmentManager(), aTitle);
+		new CreateInsanityDialog(aTitle, aContext, aInsanities, aListener).show(((Activity) aContext).getFragmentManager(), aTitle);
 	}
 }
