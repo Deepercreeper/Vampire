@@ -3,7 +3,6 @@ package com.deepercreeper.vampireapp.items.interfaces.instances;
 import java.util.List;
 import java.util.Set;
 import com.deepercreeper.vampireapp.character.instance.EPControllerInstance;
-import com.deepercreeper.vampireapp.character.instance.Mode;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestrictionable;
 import com.deepercreeper.vampireapp.mechanics.Action;
@@ -172,11 +171,6 @@ public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemIn
 	public ItemGroupInstance getItemGroup();
 	
 	/**
-	 * @return the character mode.
-	 */
-	public Mode getMode();
-	
-	/**
 	 * @return the item name.
 	 */
 	public String getName();
@@ -277,14 +271,6 @@ public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemIn
 	 *            The listener to remove.
 	 */
 	public void removeValueListener(ItemValueListener aListener);
-	
-	/**
-	 * Sets the character mode for this item and all of its child items.
-	 * 
-	 * @param aMode
-	 *            The new character mode.
-	 */
-	public void setMode(Mode aMode);
 	
 	/**
 	 * Updates all item buttons.

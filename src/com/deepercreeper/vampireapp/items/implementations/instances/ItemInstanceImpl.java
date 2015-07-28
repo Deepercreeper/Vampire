@@ -13,7 +13,6 @@ import org.w3c.dom.NodeList;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.character.instance.EPControllerInstance;
-import com.deepercreeper.vampireapp.character.instance.Mode;
 import com.deepercreeper.vampireapp.host.Message;
 import com.deepercreeper.vampireapp.host.Message.ButtonAction;
 import com.deepercreeper.vampireapp.host.Message.MessageGroup;
@@ -96,8 +95,6 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	
 	private boolean mInitialized = false;
 	
-	private Mode mMode;
-	
 	private int mValueId = 0;
 	
 	/**
@@ -109,8 +106,6 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	 *            The parent item group.
 	 * @param aContext
 	 *            The underlying context.
-	 * @param aMode
-	 *            The character mode.
 	 * @param aEP
 	 *            The experience controller.
 	 * @param aParentItem
@@ -122,9 +117,8 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	 * @param aHost
 	 *            Whether this is a host sided item.
 	 */
-	public ItemInstanceImpl(final Element aElement, final ItemGroupInstance aItemGroup, final Context aContext, final Mode aMode,
-			final EPControllerInstance aEP, final ItemInstance aParentItem, final CharacterInstance aCharacter,
-			final MessageListener aMessageListener, final boolean aHost)
+	public ItemInstanceImpl(final Element aElement, final ItemGroupInstance aItemGroup, final Context aContext, final EPControllerInstance aEP,
+			final ItemInstance aParentItem, final CharacterInstance aCharacter, final MessageListener aMessageListener, final boolean aHost)
 	{
 		super(aCharacter, aItemGroup.getItemController());
 		if (aParentItem == null)
@@ -147,7 +141,6 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		{
 			mDescription = null;
 		}
-		mMode = aMode;
 		final int id = mHost ? R.layout.host_item_instance : R.layout.client_item_instance;
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
 		mMessageListener = aMessageListener;
@@ -196,9 +189,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 				{
 					pos = Integer.parseInt(item.getAttribute("order"));
 				}
-				addChildSilent(
-						new ItemInstanceImpl(item, getItemGroup(), getContext(), getMode(), getEP(), this, getCharacter(), mMessageListener, mHost),
-						pos);
+				addChildSilent(new ItemInstanceImpl(item, getItemGroup(), getContext(), getEP(), this, getCharacter(), mMessageListener, mHost), pos);
 			}
 		}
 		if (hasChildren() && !hasOrder())
@@ -214,8 +205,6 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	 *            The item creation.
 	 * @param aItemGroup
 	 *            The parent item group.
-	 * @param aMode
-	 *            The character mode.
 	 * @param aEP
 	 *            The experience controller.
 	 * @param aParentItem
@@ -227,7 +216,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	 * @param aHost
 	 *            Whether this is a host sided item.
 	 */
-	public ItemInstanceImpl(final ItemCreation aItem, final ItemGroupInstance aItemGroup, final Mode aMode, final EPControllerInstance aEP,
+	public ItemInstanceImpl(final ItemCreation aItem, final ItemGroupInstance aItemGroup, final EPControllerInstance aEP,
 			final ItemInstance aParentItem, final CharacterInstance aCharacter, final MessageListener aMessageListener, final boolean aHost)
 	{
 		super(aCharacter, aItemGroup.getItemController());
@@ -237,7 +226,6 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		mHost = aHost;
 		mDescription = aItem.getDescription();
 		mEP = aEP;
-		mMode = aMode;
 		final int id = mHost ? R.layout.host_item_instance : R.layout.client_item_instance;
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
 		mMessageListener = aMessageListener;
@@ -278,7 +266,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			{
 				if ( !aItem.isMutableParent() || item.isImportant())
 				{
-					addChildSilent(new ItemInstanceImpl(item, getItemGroup(), getMode(), aEP, this, getCharacter(), aMessageListener, mHost), -1);
+					addChildSilent(new ItemInstanceImpl(item, getItemGroup(), aEP, this, getCharacter(), aMessageListener, mHost), -1);
 				}
 			}
 			if ( !hasOrder())
@@ -325,7 +313,6 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			mDescription = null;
 		}
 		mEP = aCharacter.getEPController();
-		mMode = aCharacter.getMode();
 		final int id = mHost ? R.layout.host_item_instance : R.layout.client_item_instance;
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
 		mMessageListener = aMessageListener;
@@ -567,12 +554,6 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	public ItemGroupInstance getItemGroup()
 	{
 		return mItemGroup;
-	}
-	
-	@Override
-	public Mode getMode()
-	{
-		return mMode;
 	}
 	
 	@Override
@@ -1111,19 +1092,6 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			}
 		}
 		ViewUtil.release(getContainer());
-	}
-	
-	@Override
-	public void setMode(final Mode aMode)
-	{
-		mMode = aMode;
-		if (isParent())
-		{
-			for (final ItemInstance child : getChildrenList())
-			{
-				child.setMode(getMode());
-			}
-		}
 	}
 	
 	@Override

@@ -25,6 +25,7 @@ import com.deepercreeper.vampireapp.host.change.InventoryChange;
 import com.deepercreeper.vampireapp.host.change.ItemChange;
 import com.deepercreeper.vampireapp.host.change.ItemGroupChange;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
+import com.deepercreeper.vampireapp.host.change.ModeChange;
 import com.deepercreeper.vampireapp.host.change.MoneyChange;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
@@ -118,6 +119,10 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		else if (aType.equals(ItemGroupChange.TAG_NAME))
 		{
 			change = new ItemGroupChange(element);
+		}
+		else if (aType.equals(ModeChange.TAG_NAME))
+		{
+			change = new ModeChange(element);
 		}
 		
 		// TODO Implement other changes
@@ -320,13 +325,19 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	@Override
 	public void sendChange(final CharacterChange aChange)
 	{
-		mConnection.getHost().send(MessageType.UPDATE, DataUtil.serialize(aChange), aChange.getType());
+		if (mConnection.hasHost())
+		{
+			mConnection.getHost().send(MessageType.UPDATE, DataUtil.serialize(aChange), aChange.getType());
+		}
 	}
 	
 	@Override
 	public void sendMessage(final Message aMessage)
 	{
-		mConnection.getHost().send(MessageType.MESSAGE, DataUtil.serialize(aMessage));
+		if (mConnection.hasHost())
+		{
+			mConnection.getHost().send(MessageType.MESSAGE, DataUtil.serialize(aMessage));
+		}
 	}
 	
 	/**
@@ -430,6 +441,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		
 		mChar.update();
 		
+		controllersPanel.addView(mChar.getMode().getContainer());
 		controllersPanel.addView(mChar.getEPController().getContainer());
 		controllersPanel.addView(mChar.getHealth().getContainer());
 		controllersPanel.addView(mChar.getGenerationController().getContainer());

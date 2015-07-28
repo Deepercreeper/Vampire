@@ -19,8 +19,6 @@ import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction.InstanceRestrictionType;
 import com.deepercreeper.vampireapp.lists.controllers.instances.DescriptionControllerInstance;
-import com.deepercreeper.vampireapp.lists.controllers.instances.GenerationControllerInstance;
-import com.deepercreeper.vampireapp.lists.controllers.instances.InsanityControllerInstance;
 import com.deepercreeper.vampireapp.lists.items.Clan;
 import com.deepercreeper.vampireapp.lists.items.Nature;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
@@ -79,7 +77,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	
 	private final ResizeListener mResizeListener;
 	
-	private Mode mMode;
+	private final ModeControllerInstance mMode;
 	
 	/**
 	 * Creates a new character out of the given character creation.
@@ -115,16 +113,15 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		mBehavior = aCreator.getBehavior();
 		mClan = aCreator.getClan();
 		
-		mMode = Mode.DEFAULT;
+		mMode = new ModeControllerInstance(this, getContext(), aMessageListener, mHost);
 		
 		for (final ItemControllerCreation controller : aCreator.getControllers())
 		{
-			mControllers.add(
-					new ItemControllerInstanceImpl(controller, getContext(), mMode, mEP, this, aControllerResizeListener, aMessageListener, mHost));
+			mControllers.add(new ItemControllerInstanceImpl(controller, getContext(), mEP, this, aControllerResizeListener, aMessageListener, mHost));
 		}
 		
-		mInventory = new InventoryControllerInstance(mItems.getInventory(), this, mContext, mResizeListener, aMessageListener, mHost);
-		mHealth = new HealthControllerInstance(aCreator.getHealth(), getContext(), this, aMessageListener, mHost);
+		mInventory = new InventoryControllerInstance(mItems.getInventory(), this, getContext(), mResizeListener, aMessageListener, mHost);
+		mHealth = new HealthControllerInstance(aCreator.getHealth(), getContext(), aMessageListener, this, mHost);
 		mTimeListeners.add(mHealth);
 		
 		for (final InstanceRestriction restriction : aCreator.getRestrictions())
@@ -176,28 +173,29 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		final Element root = (Element) doc.getElementsByTagName("character").item(0);
 		
 		// Meta data
-		final Element meta = (Element) root.getElementsByTagName("meta").item(0);
+		final Element meta = DataUtil.getElement(root, "meta");
 		mName = CodingUtil.decode(meta.getAttribute("name"));
 		mConcept = CodingUtil.decode(meta.getAttribute("concept"));
 		mNature = mItems.getNatures().getItemWithName(meta.getAttribute("nature"));
 		mBehavior = mItems.getNatures().getItemWithName(meta.getAttribute("behavior"));
 		mClan = mItems.getClans().getItemWithName(meta.getAttribute("clan"));
 		mEP = new EPControllerInstance(Integer.parseInt(meta.getAttribute("ep")), getContext(), aMessageListener, mHost, this);
-		mMode = Mode.valueOf(meta.getAttribute("mode"));
+		
+		// Mode
+		mMode = new ModeControllerInstance(DataUtil.getElement(root, "mode"), this, getContext(), aMessageListener, mHost);
 		
 		// Generation
-		mGeneration = new GenerationControllerInstance((Element) root.getElementsByTagName("generation").item(0), this, mHost, aMessageListener);
+		mGeneration = new GenerationControllerInstance(DataUtil.getElement(root, "generation"), this, mHost, aMessageListener);
 		
 		// Insanities
-		mInsanities = new InsanityControllerInstance((Element) root.getElementsByTagName("insanities").item(0), getContext(), mHost, aMessageListener,
-				mResizeListener);
+		mInsanities = new InsanityControllerInstance(DataUtil.getElement(root, "insanities"), getContext(), mHost, aMessageListener, mResizeListener);
 		mTimeListeners.add(mInsanities);
 		
 		// Descriptions
-		mDescriptions = new DescriptionControllerInstance((Element) root.getElementsByTagName("descriptions").item(0), mItems.getDescriptions());
+		mDescriptions = new DescriptionControllerInstance(DataUtil.getElement(root, "descriptions"), mItems.getDescriptions());
 		
 		// Controllers
-		final Element controllers = (Element) root.getElementsByTagName("controllers").item(0);
+		final Element controllers = DataUtil.getElement(root, "controllers");
 		for (int i = 0; i < controllers.getChildNodes().getLength(); i++ )
 		{
 			if (controllers.getChildNodes().item(i) instanceof Element)
@@ -205,26 +203,26 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 				final Element controller = (Element) controllers.getChildNodes().item(i);
 				if (controller.getTagName().equals("controller"))
 				{
-					mControllers.add(new ItemControllerInstanceImpl(controller, mItems, mContext, mMode, mEP, this, aControllerResizeListener,
+					mControllers.add(new ItemControllerInstanceImpl(controller, mItems, mContext, mEP, this, aControllerResizeListener,
 							aMessageListener, mHost));
 				}
 			}
 		}
 		
 		// Health
-		mHealth = new HealthControllerInstance((Element) root.getElementsByTagName("health").item(0), mContext, this, aMessageListener, mHost);
+		mHealth = new HealthControllerInstance(DataUtil.getElement(root, "health"), mContext, aMessageListener, this, mHost);
 		mTimeListeners.add(mHealth);
 		
 		// Money
-		mMoney = new MoneyControllerInstance(mItems.getCurrency(), (Element) root.getElementsByTagName("money").item(0), getContext(), mHost,
-				aMessageListener, mResizeListener);
+		mMoney = new MoneyControllerInstance(mItems.getCurrency(), DataUtil.getElement(root, "money"), getContext(), mHost, aMessageListener,
+				mResizeListener);
 				
 		// Inventory
-		mInventory = new InventoryControllerInstance((Element) root.getElementsByTagName("inventory").item(0), mItems.getInventory(), this,
-				getContext(), mResizeListener, aMessageListener, mHost);
+		mInventory = new InventoryControllerInstance(DataUtil.getElement(root, "inventory"), mItems.getInventory(), this, getContext(),
+				mResizeListener, aMessageListener, mHost);
 				
 		// Restrictions
-		final Element restrictions = (Element) root.getElementsByTagName("restrictions").item(0);
+		final Element restrictions = DataUtil.getElement(root, "restrictions");
 		final NodeList restrictionsList = restrictions.getChildNodes();
 		for (int i = 0; i < restrictionsList.getLength(); i++ )
 		{
@@ -464,7 +462,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	/**
 	 * @return the current character mode.
 	 */
-	public Mode getMode()
+	public ModeControllerInstance getMode()
 	{
 		return mMode;
 	}
@@ -526,8 +524,10 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		meta.setAttribute("behavior", getBehavior().getName());
 		meta.setAttribute("clan", getClan().getName());
 		meta.setAttribute("ep", "" + mEP.getExperience());
-		meta.setAttribute("mode", mMode.name());
 		root.appendChild(meta);
+		
+		// Mode
+		root.appendChild(mMode.asElement(aDoc));
 		
 		// Generation
 		root.appendChild(mGeneration.asElement(aDoc));
@@ -563,21 +563,6 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		}
 		root.appendChild(restrictionElement);
 		return root;
-	}
-	
-	/**
-	 * Sets the characters current mode to the given one.
-	 * 
-	 * @param aMode
-	 *            The mode.
-	 */
-	public void setMode(final Mode aMode)
-	{
-		mMode = aMode;
-		for (final ItemControllerInstance controller : mControllers)
-		{
-			controller.setMode(mMode);
-		}
 	}
 	
 	/**

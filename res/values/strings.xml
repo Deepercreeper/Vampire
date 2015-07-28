@@ -98,6 +98,7 @@
     <string name="magazine">Magazin</string>
     <string name="max">Max</string>
     <string name="max_weight">Maximales Gewicht</string>
+    <string name="mode_colon">Zustand:</string>
     <string name="money">Geld</string>
     <string name="money_sent">Sie haben {0} erhalten.</string>
     <string name="name_in_use">Der gewählte Charakter Name ist bereits an einen anderen Spieler vergeben.</string>
@@ -107,6 +108,7 @@
     <string name="no">Nein</string>
     <string name="no_banned_players">Sie haben derzeit keine Spieler gebannt.</string>
     <string name="no_paired_device">Sie haben keine gekoppelten Geräte.</string>
+    <string name="normal">Normal</string>
     <string name="ok">OK</string>
     <string name="play">Spielen</string>
     <string name="play_host">Starten</string>
@@ -114,11 +116,13 @@
     <string name="play_lobby">Lobby</string>
     <string name="player_lost_insanity">Ist folgende Geistesstörung los: {0}</string>
     <string name="quantity">Anzahl</string>
+    <string name="rage">Rasend</string>
     <string name="reload_time">Nachladezeit</string>
     <string name="removed_item">Folgendes Item wurde entfernt: {0}</string>
     <string name="reset">Zurücksetzen</string>
     <string name="round">Runde</string>
     <string name="service_name">Item Provider</string>
+    <string name="sleeping">Schlafend</string>
     <string name="stash">Versteck</string>
     <string name="to_much_weight">Der Gegenstand wiegt zu viel.</string>
     <string name="took_item">Folgendes Item wurde genommen: {x}</string>

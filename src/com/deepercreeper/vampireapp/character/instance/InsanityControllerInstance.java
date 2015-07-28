@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.lists.controllers.instances;
+package com.deepercreeper.vampireapp.character.instance;
 
 import java.util.ArrayList;
 import java.util.HashMap;

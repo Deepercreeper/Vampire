@@ -3,7 +3,6 @@ package com.deepercreeper.vampireapp.items.interfaces.instances;
 import java.util.List;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.character.instance.EPControllerInstance;
-import com.deepercreeper.vampireapp.character.instance.Mode;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
@@ -107,11 +106,6 @@ public interface ItemGroupInstance extends Comparable<ItemGroupInstance>, Saveab
 	public CharacterInstance getCharacter();
 	
 	/**
-	 * @return the character mode.
-	 */
-	public Mode getMode();
-	
-	/**
 	 * @return the group name.
 	 */
 	public String getName();
@@ -153,14 +147,6 @@ public interface ItemGroupInstance extends Comparable<ItemGroupInstance>, Saveab
 	 * @return whether this is a value group.
 	 */
 	public boolean isValueGroup();
-	
-	/**
-	 * Sets the character mode.
-	 * 
-	 * @param aMode
-	 *            The new mode.
-	 */
-	public void setMode(Mode aMode);
 	
 	/**
 	 * Updates the controller.

@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.lists.controllers.instances;
+package com.deepercreeper.vampireapp.character.instance;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -8,7 +8,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.host.change.GenerationChange;
 import com.deepercreeper.vampireapp.util.ViewUtil;

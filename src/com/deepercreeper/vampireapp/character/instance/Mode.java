@@ -1,5 +1,12 @@
 package com.deepercreeper.vampireapp.character.instance;
 
+import java.util.ArrayList;
+import java.util.List;
+import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.items.implementations.Named;
+import com.deepercreeper.vampireapp.items.interfaces.Nameable;
+import android.content.Context;
+
 /**
  * Represents the modes a character can be inside.
  * 
@@ -10,22 +17,22 @@ public enum Mode
 	/**
 	 * Default state. Nothing special.
 	 */
-	DEFAULT(true, false, true),
+	DEFAULT(R.string.normal, true, false, true),
 	
 	/**
 	 * The character is sleeping. No actions possible.
 	 */
-	SLEEPING(false, true, false),
+	SLEEPING(R.string.sleeping, false, true, false),
 	
 	/**
 	 * The character has been hurt so much, that he can't move anymore.
 	 */
-	KO(false, false, false),
+	KO(R.string.ko, false, false, false),
 	
 	/**
 	 * The character is raging and can't handle some actions.
 	 */
-	RAGE(false, false, true);
+	RAGE(R.string.rage, false, false, true);
 	
 	private final boolean mCanClientLeave;
 	
@@ -33,11 +40,24 @@ public enum Mode
 	
 	private final boolean mCanUseAction;
 	
-	private Mode(final boolean aCanClientLeave, final boolean aCanClientEnter, final boolean aCanUseActions)
+	private final int mResourceId;
+	
+	private Mode(final int aResourceId, final boolean aCanClientLeave, final boolean aCanClientEnter, final boolean aCanUseActions)
 	{
 		mCanClientLeave = aCanClientLeave;
 		mCanClientEnter = aCanClientEnter;
 		mCanUseAction = aCanUseActions;
+		mResourceId = aResourceId;
+	}
+	
+	/**
+	 * @param aContext
+	 *            The underlying context.
+	 * @return The name of this mode.
+	 */
+	public String getName(final Context aContext)
+	{
+		return aContext.getString(mResourceId);
 	}
 	
 	/**
@@ -62,5 +82,61 @@ public enum Mode
 	public boolean canUseAction()
 	{
 		return mCanUseAction;
+	}
+	
+	/**
+	 * @param aMode
+	 *            The mode.
+	 * @param aContext
+	 *            The underlying context.
+	 * @return a nameable that represents the given mode.
+	 */
+	public static Nameable getNameableOf(final Mode aMode, final Context aContext)
+	{
+		return new Named(aMode.name())
+		{
+			@Override
+			public String getDisplayName()
+			{
+				return aMode.getName(aContext);
+			}
+		};
+	}
+	
+	/**
+	 * @param aMode
+	 *            The current mode.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aHost
+	 *            Whether this is a host sided invoke.
+	 * @return a list of nameables, representing the possible list of modes.
+	 */
+	public static List<Nameable> getModesList(final Mode aMode, final Context aContext, final boolean aHost)
+	{
+		final List<Nameable> list = new ArrayList<Nameable>();
+		list.add(getNameableOf(aMode, aContext));
+		if ( !aHost && !aMode.mCanClientLeave)
+		{
+			return list;
+		}
+		for (final Mode mode : values())
+		{
+			if (mode != aMode && (aHost || mode.mCanClientEnter))
+			{
+				list.add(getNameableOf(mode, aContext));
+			}
+		}
+		return list;
+	}
+	
+	/**
+	 * @param aNameable
+	 *            The nameable.
+	 * @return The mode represented by the given nameable.
+	 */
+	public static Mode getModeOf(final Nameable aNameable)
+	{
+		return valueOf(aNameable.getName());
 	}
 }

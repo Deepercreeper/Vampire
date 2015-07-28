@@ -11,7 +11,6 @@ import org.w3c.dom.NodeList;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.character.instance.EPControllerInstance;
-import com.deepercreeper.vampireapp.character.instance.Mode;
 import com.deepercreeper.vampireapp.host.Message;
 import com.deepercreeper.vampireapp.host.Message.ButtonAction;
 import com.deepercreeper.vampireapp.host.Message.MessageGroup;
@@ -68,8 +67,6 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 	
 	private boolean mInitialized = false;
 	
-	private Mode mMode;
-	
 	private final EPControllerInstance mEP;
 	
 	/**
@@ -81,8 +78,6 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 	 *            The item controller.
 	 * @param aContext
 	 *            The underlying context.
-	 * @param aMode
-	 *            The character mode.
 	 * @param aEP
 	 *            The experience controller.
 	 * @param aCharacter
@@ -92,13 +87,12 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 	 * @param aHost
 	 *            Whether this is a host sided group.
 	 */
-	public ItemGroupInstanceImpl(final Element aElement, final ItemControllerInstance aItemController, final Context aContext, final Mode aMode,
+	public ItemGroupInstanceImpl(final Element aElement, final ItemControllerInstance aItemController, final Context aContext,
 			final EPControllerInstance aEP, final CharacterInstance aCharacter, final MessageListener aMessageListener, final boolean aHost)
 	{
 		mItemGroup = aItemController.getItemController().getGroup(aElement.getAttribute("name"));
 		mItemController = aItemController;
 		mContext = aContext;
-		mMode = aMode;
 		mHost = aHost;
 		mEP = aEP;
 		mMessageListener = aMessageListener;
@@ -122,7 +116,7 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 				{
 					pos = Integer.parseInt(item.getAttribute("order"));
 				}
-				addItemSilent(new ItemInstanceImpl(item, this, getContext(), getMode(), getEP(), null, getCharacter(), mMessageListener, mHost), pos);
+				addItemSilent(new ItemInstanceImpl(item, this, getContext(), getEP(), null, getCharacter(), mMessageListener, mHost), pos);
 			}
 		}
 		if ( !hasOrder())
@@ -140,8 +134,6 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 	 *            The item controller.
 	 * @param aContext
 	 *            The underlying context.
-	 * @param aMode
-	 *            The character mode.
 	 * @param aEP
 	 *            The experience controller.
 	 * @param aCharacter
@@ -152,13 +144,11 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 	 *            whether this is a host sided group.
 	 */
 	public ItemGroupInstanceImpl(final ItemGroupCreation aItemGroup, final ItemControllerInstance aItemController, final Context aContext,
-			final Mode aMode, final EPControllerInstance aEP, final CharacterInstance aCharacter, final MessageListener aMessageListener,
-			final boolean aHost)
+			final EPControllerInstance aEP, final CharacterInstance aCharacter, final MessageListener aMessageListener, final boolean aHost)
 	{
 		mItemGroup = aItemGroup.getItemGroup();
 		mContext = aContext;
 		mItemController = aItemController;
-		mMode = aMode;
 		mHost = aHost;
 		mEP = aEP;
 		mMessageListener = aMessageListener;
@@ -171,7 +161,7 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 		{
 			if ( !getItemGroup().isMutable() || item.isImportant())
 			{
-				addItemSilent(new ItemInstanceImpl(item, this, getMode(), getEP(), null, getCharacter(), mMessageListener, mHost), -1);
+				addItemSilent(new ItemInstanceImpl(item, this, getEP(), null, getCharacter(), mMessageListener, mHost), -1);
 			}
 		}
 		if ( !hasOrder())
@@ -386,12 +376,6 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 	}
 	
 	@Override
-	public Mode getMode()
-	{
-		return mMode;
-	}
-	
-	@Override
 	public String getName()
 	{
 		return getItemGroup().getName();
@@ -529,16 +513,6 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 			item.release();
 		}
 		ViewUtil.release(getContainer());
-	}
-	
-	@Override
-	public void setMode(final Mode aMode)
-	{
-		mMode = aMode;
-		for (final ItemInstance item : getItemsList())
-		{
-			item.setMode(aMode);
-		}
 	}
 	
 	@Override

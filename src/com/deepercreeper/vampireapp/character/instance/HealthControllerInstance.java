@@ -10,7 +10,6 @@ import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.ViewUtil;
-import com.deepercreeper.vampireapp.util.interfaces.ItemFinder;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 import android.animation.ValueAnimator;
@@ -37,13 +36,13 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	
 	private final ItemInstance mCost;
 	
-	private final ItemFinder mItems;
-	
 	private final MessageListener mChangeListener;
 	
 	private final boolean mHost;
 	
 	private final ValueAnimator mAnimator;
+	
+	private final CharacterInstance mChar;
 	
 	private ImageButton mHealButton;
 	
@@ -70,24 +69,24 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	 *            The XML data.
 	 * @param aContext
 	 *            the underlying context.
-	 * @param aItems
-	 *            The item finder.
 	 * @param aChangeListener
 	 *            The listener that is called, when changes happen.
+	 * @param aChar
+	 *            The parent character.
 	 * @param aHost
 	 *            Whether this controller is displayed at the host.
 	 */
-	public HealthControllerInstance(final Element aElement, final Context aContext, final ItemFinder aItems, final MessageListener aChangeListener,
-			final boolean aHost)
+	public HealthControllerInstance(final Element aElement, final Context aContext, final MessageListener aChangeListener,
+			final CharacterInstance aChar, final boolean aHost)
 	{
 		mHost = aHost;
-		mItems = aItems;
+		mChar = aChar;
 		final int id = mHost ? R.layout.host_health : R.layout.client_health;
 		mContainer = (LinearLayout) View.inflate(aContext, id, null);
 		mSteps = DataUtil.parseValues(aElement.getAttribute("steps"));
 		mHeavyWounds = Integer.parseInt(aElement.getAttribute("heavy"));
 		mValue = Integer.parseInt(aElement.getAttribute("value"));
-		mCost = mItems.findItemInstance(aElement.getAttribute("cost"));
+		mCost = mChar.findItemInstance(aElement.getAttribute("cost"));
 		mChangeListener = aChangeListener;
 		mAnimator = new ValueAnimator();
 		mAnimator.addUpdateListener(this);
@@ -101,22 +100,22 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	 *            The controller creation.
 	 * @param aContext
 	 *            The underlying context.
-	 * @param aItems
-	 *            The item finder.
 	 * @param aChangeListener
 	 *            The listener that is called, when changes happen.
+	 * @param aChar
+	 *            The parent character.
 	 * @param aHost
 	 *            Whether this controller is displayed at the host.
 	 */
-	public HealthControllerInstance(final HealthControllerCreation aHealth, final Context aContext, final ItemFinder aItems,
-			final MessageListener aChangeListener, final boolean aHost)
+	public HealthControllerInstance(final HealthControllerCreation aHealth, final Context aContext, final MessageListener aChangeListener,
+			final CharacterInstance aChar, final boolean aHost)
 	{
 		mHost = aHost;
-		mItems = aItems;
+		mChar = aChar;
 		final int id = mHost ? R.layout.host_health : R.layout.client_health;
 		mContainer = (LinearLayout) View.inflate(aContext, id, null);
 		mSteps = aHealth.getSteps();
-		mCost = mItems.findItemInstance(aHealth.getCost());
+		mCost = mChar.findItemInstance(aHealth.getCost());
 		mChangeListener = aChangeListener;
 		mAnimator = new ValueAnimator();
 		mAnimator.addUpdateListener(this);
@@ -396,6 +395,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		if (mValue == getStepsCount() - 1)
 		{
 			mStepLabel.setText("K.O.");
+			mChar.getMode().setMode(Mode.KO, true);
 		}
 		else
 		{

@@ -21,6 +21,7 @@ import com.deepercreeper.vampireapp.host.change.InventoryChange;
 import com.deepercreeper.vampireapp.host.change.ItemChange;
 import com.deepercreeper.vampireapp.host.change.ItemGroupChange;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
+import com.deepercreeper.vampireapp.host.change.ModeChange;
 import com.deepercreeper.vampireapp.host.change.MoneyChange;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
@@ -339,6 +340,10 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 		{
 			change = new ItemGroupChange(element);
 		}
+		else if (aType.equals(ModeChange.TAG_NAME))
+		{
+			change = new ModeChange(element);
+		}
 		
 		// TODO Add other changes
 		
@@ -376,12 +381,14 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 		final Button kick = (Button) mContainer.findViewById(R.id.view_kick_button);
 		final Button ban = (Button) mContainer.findViewById(R.id.view_ban_button);
 		
-		playerContainer.addView(mChar.getHealth().getContainer(), 0);
-		playerContainer.addView(mChar.getEPController().getContainer(), 1);
-		playerContainer.addView(mChar.getGenerationController().getContainer(), 2);
-		playerContainer.addView(mChar.getMoney().getContainer(), 3);
-		playerContainer.addView(mChar.getInventory().getContainer(), 4);
-		playerContainer.addView(mChar.getInsanities().getContainer(), 5);
+		int i = 0;
+		playerContainer.addView(mChar.getMode().getContainer(), i++ );
+		playerContainer.addView(mChar.getHealth().getContainer(), i++ );
+		playerContainer.addView(mChar.getEPController().getContainer(), i++ );
+		playerContainer.addView(mChar.getGenerationController().getContainer(), i++ );
+		playerContainer.addView(mChar.getMoney().getContainer(), i++ );
+		playerContainer.addView(mChar.getInventory().getContainer(), i++ );
+		playerContainer.addView(mChar.getInsanities().getContainer(), i++ );
 		
 		mControllerExpander.init();
 		

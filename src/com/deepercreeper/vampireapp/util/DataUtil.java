@@ -147,6 +147,27 @@ public class DataUtil
 	}
 	
 	/**
+	 * @param aTagName
+	 *            The element tag name.
+	 * @param aParent
+	 *            The parent element.
+	 * @return the first child element with the given tag name.
+	 */
+	public static Element getElement(final Element aParent, final String aTagName)
+	{
+		final NodeList children = aParent.getElementsByTagName(aTagName);
+		for (int i = 0; i < children.getLength(); i++ )
+		{
+			final Node node = children.item(i);
+			if (node instanceof Element)
+			{
+				return (Element) node;
+			}
+		}
+		return null;
+	}
+	
+	/**
 	 * @param aMap
 	 *            The string to integer map.
 	 * @return a string representing the given map.

@@ -10,7 +10,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.character.instance.EPControllerInstance;
-import com.deepercreeper.vampireapp.character.instance.Mode;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.interfaces.GroupOption;
@@ -62,8 +61,6 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	
 	private boolean mInitialized = false;
 	
-	private Mode mMode;
-	
 	/**
 	 * Creates a new item controller out of the given XML data.
 	 * 
@@ -73,8 +70,6 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	 *            The item provider.
 	 * @param aContext
 	 *            the underlying context.
-	 * @param aMode
-	 *            The character mode.
 	 * @param aEP
 	 *            the experience controller.
 	 * @param aCharacter
@@ -86,13 +81,11 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	 * @param aHost
 	 *            Whether this is a host sided controller.
 	 */
-	public ItemControllerInstanceImpl(final Element aElement, final ItemProvider aItems, final Context aContext, final Mode aMode,
-			final EPControllerInstance aEP, final CharacterInstance aCharacter, final ResizeListener aResizeListener,
-			final MessageListener aMessageListener, final boolean aHost)
+	public ItemControllerInstanceImpl(final Element aElement, final ItemProvider aItems, final Context aContext, final EPControllerInstance aEP,
+			final CharacterInstance aCharacter, final ResizeListener aResizeListener, final MessageListener aMessageListener, final boolean aHost)
 	{
 		mItemController = aItems.getController(aElement.getAttribute("name"));
 		mContext = aContext;
-		mMode = aMode;
 		mResizeListener = aResizeListener;
 		mHost = aHost;
 		mEP = aEP;
@@ -111,7 +104,7 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 				{
 					continue;
 				}
-				addGroupSilent(new ItemGroupInstanceImpl(group, this, getContext(), getMode(), getEP(), getCharacter(), aMessageListener, mHost));
+				addGroupSilent(new ItemGroupInstanceImpl(group, this, getContext(), getEP(), getCharacter(), aMessageListener, mHost));
 			}
 		}
 		for (int i = 0; i < children.getLength(); i++ )
@@ -135,8 +128,6 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	 *            The item controller creation.
 	 * @param aContext
 	 *            The underlying context.
-	 * @param aMode
-	 *            The character mode.
 	 * @param aEP
 	 *            The experience controller.
 	 * @param aCharacter
@@ -148,13 +139,11 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	 * @param aHost
 	 *            Whether this is a host sided controller.
 	 */
-	public ItemControllerInstanceImpl(final ItemControllerCreation aItemController, final Context aContext, final Mode aMode,
-			final EPControllerInstance aEP, final CharacterInstance aCharacter, final ResizeListener aResizeListener,
-			final MessageListener aMessageListener, final boolean aHost)
+	public ItemControllerInstanceImpl(final ItemControllerCreation aItemController, final Context aContext, final EPControllerInstance aEP,
+			final CharacterInstance aCharacter, final ResizeListener aResizeListener, final MessageListener aMessageListener, final boolean aHost)
 	{
 		mItemController = aItemController.getItemController();
 		mContext = aContext;
-		mMode = aMode;
 		mResizeListener = aResizeListener;
 		mHost = aHost;
 		mEP = aEP;
@@ -165,7 +154,7 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 		
 		for (final ItemGroupCreation group : aItemController.getGroupsList())
 		{
-			addGroupSilent(new ItemGroupInstanceImpl(group, this, getContext(), getMode(), getEP(), getCharacter(), aMessageListener, mHost));
+			addGroupSilent(new ItemGroupInstanceImpl(group, this, getContext(), getEP(), getCharacter(), aMessageListener, mHost));
 		}
 		for (final GroupOptionCreation groupOption : aItemController.getGroupOptionsList())
 		{
@@ -333,12 +322,6 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	}
 	
 	@Override
-	public Mode getMode()
-	{
-		return mMode;
-	}
-	
-	@Override
 	public String getName()
 	{
 		return getItemController().getName();
@@ -405,16 +388,6 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 		for (final GroupOptionInstance group : getGroupOptionsList())
 		{
 			group.setEnabled(aEnabled);
-		}
-	}
-	
-	@Override
-	public void setMode(final Mode aMode)
-	{
-		mMode = aMode;
-		for (final ItemGroupInstance group : getGroupsList())
-		{
-			group.setMode(getMode());
 		}
 	}
 	
