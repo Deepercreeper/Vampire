@@ -17,22 +17,22 @@ public enum Mode
 	/**
 	 * Default state. Nothing special.
 	 */
-	DEFAULT(R.string.normal, true, false, true),
+	DEFAULT(R.string.normal, true, false, true, true, true),
 	
 	/**
 	 * The character is sleeping. No actions possible.
 	 */
-	SLEEPING(R.string.sleeping, false, true, false),
+	SLEEPING(R.string.sleeping, false, true, false, false, false),
 	
 	/**
 	 * The character has been hurt so much, that he can't move anymore.
 	 */
-	KO(R.string.ko, false, false, false),
+	KO(R.string.ko, false, false, false, false, false),
 	
 	/**
 	 * The character is raging and can't handle some actions.
 	 */
-	RAGE(R.string.rage, false, false, true);
+	RAGE(R.string.rage, false, false, true, false, false);
 	
 	private final boolean mCanClientLeave;
 	
@@ -40,13 +40,20 @@ public enum Mode
 	
 	private final boolean mCanUseAction;
 	
+	private final boolean mCanIncreaseItems;
+	
+	private final boolean mCanHeal;
+	
 	private final int mResourceId;
 	
-	private Mode(final int aResourceId, final boolean aCanClientLeave, final boolean aCanClientEnter, final boolean aCanUseActions)
+	private Mode(final int aResourceId, final boolean aCanClientLeave, final boolean aCanClientEnter, final boolean aCanUseActions,
+			final boolean aCanIncreaseItems, final boolean aCanHeal)
 	{
 		mCanClientLeave = aCanClientLeave;
 		mCanClientEnter = aCanClientEnter;
 		mCanUseAction = aCanUseActions;
+		mCanIncreaseItems = aCanIncreaseItems;
+		mCanHeal = aCanHeal;
 		mResourceId = aResourceId;
 	}
 	
@@ -82,6 +89,22 @@ public enum Mode
 	public boolean canUseAction()
 	{
 		return mCanUseAction;
+	}
+	
+	/**
+	 * @return whether the client can increase items inside this mode.
+	 */
+	public boolean canIncreaseItems()
+	{
+		return mCanIncreaseItems;
+	}
+	
+	/**
+	 * @return whether the client can heal himself inside this mode.
+	 */
+	public boolean canHeal()
+	{
+		return mCanHeal;
 	}
 	
 	/**

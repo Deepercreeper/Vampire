@@ -434,6 +434,10 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		{
 			return false;
 		}
+		if ( !getCharacter().getMode().getMode().canIncreaseItems())
+		{
+			return false;
+		}
 		if (getCharacter().isLowLevel())
 		{
 			return mValueId < Math.min(getItem().getMaxLowLevelValue(), getMaxValue(InstanceRestrictionType.ITEM_VALUE));

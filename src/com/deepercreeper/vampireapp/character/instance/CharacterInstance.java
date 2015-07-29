@@ -570,6 +570,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	 */
 	public void update()
 	{
+		getHealth().updateValue();
 		for (final ItemControllerInstance controller : getControllers())
 		{
 			controller.updateGroups();

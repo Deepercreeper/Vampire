@@ -201,7 +201,10 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		{
 			return mValue > 0;
 		}
-		
+		if ( !mChar.getMode().getMode().canHeal())
+		{
+			return false;
+		}
 		return mHeavyWounds < mValue && mValue > 0 && mCost.getValue() > 0;
 	}
 	
