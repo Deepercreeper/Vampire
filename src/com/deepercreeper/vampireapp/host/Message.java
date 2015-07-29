@@ -1,8 +1,11 @@
 package com.deepercreeper.vampireapp.host;
 
+import java.util.HashSet;
+import java.util.Set;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.LanguageUtil;
@@ -135,9 +138,13 @@ public class Message implements Saveable, Viewable
 	
 	private static final String TAG_NAME = "message";
 	
+	private final Set<Button> mButtons = new HashSet<Button>();
+	
 	private final MessageType mType;
 	
 	private final MessageGroup mGroup;
+	
+	private final boolean mModeDepending;
 	
 	private final int mMessageId;
 	
@@ -164,6 +171,8 @@ public class Message implements Saveable, Viewable
 	 * 
 	 * @param aGroup
 	 *            The message group.
+	 * @param aModeDepending
+	 *            Whether this message is mode depending.
 	 * @param aSender
 	 *            The message sender.
 	 * @param aMessageId
@@ -181,10 +190,11 @@ public class Message implements Saveable, Viewable
 	 * @param aSaveables
 	 *            Saveable objects.
 	 */
-	public Message(final MessageGroup aGroup, final String aSender, final int aMessageId, final String[] aArguments, final Context aContext,
-			final MessageListener aListener, final ButtonAction aYesAction, final ButtonAction aNoAction, final String... aSaveables)
+	public Message(final MessageGroup aGroup, final boolean aModeDepending, final String aSender, final int aMessageId, final String[] aArguments,
+			final Context aContext, final MessageListener aListener, final ButtonAction aYesAction, final ButtonAction aNoAction,
+			final String... aSaveables)
 	{
-		this(MessageType.YES_NO, aGroup, aSender, aMessageId, aArguments, new boolean[aArguments.length], aContext, aListener,
+		this(MessageType.YES_NO, aGroup, aModeDepending, aSender, aMessageId, aArguments, new boolean[aArguments.length], aContext, aListener,
 				R.layout.message_yes_no, aYesAction, aNoAction, aSaveables);
 		init();
 	}
@@ -194,6 +204,8 @@ public class Message implements Saveable, Viewable
 	 * 
 	 * @param aGroup
 	 *            The message group.
+	 * @param aModeDepending
+	 *            Whether this message is mode depending.
 	 * @param aSender
 	 *            The message sender.
 	 * @param aMessageId
@@ -213,12 +225,12 @@ public class Message implements Saveable, Viewable
 	 * @param aSaveables
 	 *            Saveable objects.
 	 */
-	public Message(final MessageGroup aGroup, final String aSender, final int aMessageId, final String[] aArguments, final boolean[] aTranslated,
-			final Context aContext, final MessageListener aListener, final ButtonAction aYesAction, final ButtonAction aNoAction,
-			final String... aSaveables)
+	public Message(final MessageGroup aGroup, final boolean aModeDepending, final String aSender, final int aMessageId, final String[] aArguments,
+			final boolean[] aTranslated, final Context aContext, final MessageListener aListener, final ButtonAction aYesAction,
+			final ButtonAction aNoAction, final String... aSaveables)
 	{
-		this(MessageType.YES_NO, aGroup, aSender, aMessageId, aArguments, aTranslated, aContext, aListener, R.layout.message_yes_no, aYesAction,
-				aNoAction, aSaveables);
+		this(MessageType.YES_NO, aGroup, aModeDepending, aSender, aMessageId, aArguments, aTranslated, aContext, aListener, R.layout.message_yes_no,
+				aYesAction, aNoAction, aSaveables);
 		init();
 	}
 	
@@ -227,6 +239,8 @@ public class Message implements Saveable, Viewable
 	 * 
 	 * @param aGroup
 	 *            The message group.
+	 * @param aModeDepending
+	 *            Whether this message is mode depending.
 	 * @param aSender
 	 *            The message sender.
 	 * @param aMessageId
@@ -242,11 +256,11 @@ public class Message implements Saveable, Viewable
 	 * @param aSaveables
 	 *            Saveable objects.
 	 */
-	public Message(final MessageGroup aGroup, final String aSender, final int aMessageId, final String[] aArguments, final Context aContext,
-			final MessageListener aListener, final ButtonAction aOkAction, final String... aSaveables)
+	public Message(final MessageGroup aGroup, final boolean aModeDepending, final String aSender, final int aMessageId, final String[] aArguments,
+			final Context aContext, final MessageListener aListener, final ButtonAction aOkAction, final String... aSaveables)
 	{
-		this(MessageType.INFO, aGroup, aSender, aMessageId, aArguments, new boolean[aArguments.length], aContext, aListener, R.layout.message_info,
-				aOkAction, ButtonAction.NOTHING, aSaveables);
+		this(MessageType.INFO, aGroup, aModeDepending, aSender, aMessageId, aArguments, new boolean[aArguments.length], aContext, aListener,
+				R.layout.message_info, aOkAction, ButtonAction.NOTHING, aSaveables);
 		init();
 	}
 	
@@ -255,6 +269,8 @@ public class Message implements Saveable, Viewable
 	 * 
 	 * @param aGroup
 	 *            The message group.
+	 * @param aModeDepending
+	 *            Whether this message is mode depending.
 	 * @param aSender
 	 *            The message sender.
 	 * @param aMessageId
@@ -272,22 +288,24 @@ public class Message implements Saveable, Viewable
 	 * @param aSaveables
 	 *            Saveable objects.
 	 */
-	public Message(final MessageGroup aGroup, final String aSender, final int aMessageId, final String[] aArguments, final boolean[] aTranslated,
-			final Context aContext, final MessageListener aListener, final ButtonAction aOkAction, final String... aSaveables)
+	public Message(final MessageGroup aGroup, final boolean aModeDepending, final String aSender, final int aMessageId, final String[] aArguments,
+			final boolean[] aTranslated, final Context aContext, final MessageListener aListener, final ButtonAction aOkAction,
+			final String... aSaveables)
 	{
-		this(MessageType.INFO, aGroup, aSender, aMessageId, aArguments, aTranslated, aContext, aListener, R.layout.message_info, aOkAction,
-				ButtonAction.NOTHING, aSaveables);
+		this(MessageType.INFO, aGroup, aModeDepending, aSender, aMessageId, aArguments, aTranslated, aContext, aListener, R.layout.message_info,
+				aOkAction, ButtonAction.NOTHING, aSaveables);
 		init();
 	}
 	
-	private Message(final MessageType aType, final MessageGroup aGroup, final String aSender, final int aMessageId, final String[] aArguments,
-			final boolean[] aTranslated, final Context aContext, final MessageListener aListener, final int aViewId, final ButtonAction aYesAction,
-			final ButtonAction aNoAction, final String... aSaveables)
+	private Message(final MessageType aType, final MessageGroup aGroup, final boolean aModeDepending, final String aSender, final int aMessageId,
+			final String[] aArguments, final boolean[] aTranslated, final Context aContext, final MessageListener aListener, final int aViewId,
+			final ButtonAction aYesAction, final ButtonAction aNoAction, final String... aSaveables)
 	{
 		mType = aType;
 		mGroup = aGroup;
 		mSender = aSender;
 		mMessageId = aMessageId;
+		mModeDepending = aModeDepending;
 		mArguments = aArguments;
 		mTranslatedArguments = aTranslated;
 		mListener = aListener;
@@ -307,6 +325,7 @@ public class Message implements Saveable, Viewable
 		element.setAttribute("message", "" + mMessageId);
 		element.setAttribute("arguments", DataUtil.parseArray(mArguments));
 		element.setAttribute("sender", mSender);
+		element.setAttribute("mode-depending", "" + mModeDepending);
 		element.setAttribute("yes-action", mYesAction.name());
 		element.setAttribute("no-action", mNoAction.name());
 		element.setAttribute("saveables", DataUtil.parseArray(mSaveables));
@@ -409,6 +428,7 @@ public class Message implements Saveable, Viewable
 	private void initButton(final int aButtonId, final ButtonAction aAction)
 	{
 		final Button button = (Button) getContainer().findViewById(aButtonId);
+		mButtons.add(button);
 		button.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -435,6 +455,23 @@ public class Message implements Saveable, Viewable
 			return mGroup.equals(message.mGroup);
 		}
 		return false;
+	}
+	
+	/**
+	 * Updates the buttons if mode depending.
+	 * 
+	 * @param aChar
+	 *            The parent character.
+	 */
+	public void update(final CharacterInstance aChar)
+	{
+		if (mModeDepending)
+		{
+			for (final Button button : mButtons)
+			{
+				ViewUtil.setEnabled(button, aChar.getMode().getMode().canUseAction());
+			}
+		}
 	}
 	
 	@Override
@@ -480,14 +517,16 @@ public class Message implements Saveable, Viewable
 		final String sender = messageElement.getAttribute("sender");
 		final ButtonAction yesAction = ButtonAction.valueOf(messageElement.getAttribute("yes-action"));
 		final ButtonAction noAction = ButtonAction.valueOf(messageElement.getAttribute("no-action"));
+		final boolean modeDepending = Boolean.valueOf(messageElement.getAttribute("mode-depending"));
 		final String[] saveables = DataUtil.parseArray(messageElement.getAttribute("saveables"));
 		final boolean[] translated = DataUtil.parseFlags(messageElement.getAttribute("translated"));
 		switch (type)
 		{
 			case INFO :
-				return new Message(group, sender, messageId, arguments, translated, aContext, aListener, yesAction, saveables);
+				return new Message(group, modeDepending, sender, messageId, arguments, translated, aContext, aListener, yesAction, saveables);
 			case YES_NO :
-				return new Message(group, sender, messageId, arguments, translated, aContext, aListener, yesAction, noAction, saveables);
+				return new Message(group, modeDepending, sender, messageId, arguments, translated, aContext, aListener, yesAction, noAction,
+						saveables);
 			default :
 				return null;
 		}

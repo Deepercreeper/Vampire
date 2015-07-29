@@ -40,6 +40,8 @@ public class Artifact implements InventoryItem
 	
 	private final LinearLayout mContainer;
 	
+	private ImageButton mRemoveButton;
+	
 	private TextView mItemName;
 	
 	private int mQuantity = 1;
@@ -149,7 +151,7 @@ public class Artifact implements InventoryItem
 		{
 			mItemName = (TextView) getContainer().findViewById(R.id.view_inv_item_name_label);
 			final ImageButton infoButton = (ImageButton) getContainer().findViewById(R.id.view_inv_item_info_button);
-			final ImageButton removeButton = (ImageButton) getContainer().findViewById(R.id.view_remove_inv_item_button);
+			mRemoveButton = (ImageButton) getContainer().findViewById(R.id.view_remove_inv_item_button);
 			
 			infoButton.setOnClickListener(new OnClickListener()
 			{
@@ -160,7 +162,7 @@ public class Artifact implements InventoryItem
 				}
 			});
 			
-			removeButton.setOnClickListener(new OnClickListener()
+			mRemoveButton.setOnClickListener(new OnClickListener()
 			{
 				@Override
 				public void onClick(final View aV)
@@ -218,6 +220,10 @@ public class Artifact implements InventoryItem
 	public void updateValue()
 	{
 		mItemName.setText(getName() + getQuantitySuffix());
+		if (getController() != null)
+		{
+			ViewUtil.setEnabled(mRemoveButton, getController().isHost() || getController().getCharacter().getMode().getMode().canUseAction());
+		}
 	}
 	
 	@Override
@@ -268,6 +274,7 @@ public class Artifact implements InventoryItem
 	public final void addTo(final InventoryControllerInstance aController)
 	{
 		mController = aController;
+		updateValue();
 	}
 	
 	@Override

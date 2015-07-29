@@ -151,6 +151,12 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 	}
 	
 	@Override
+	public void updateMessages()
+	{
+		// Do nothing
+	}
+	
+	@Override
 	public boolean applyMessage(final Message aMessage, final ButtonAction aAction)
 	{
 		final boolean release = true;
@@ -163,44 +169,44 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 				final String deletedDepot = aMessage.getSaveable(0);
 				money.getDepot(deletedDepot).takeAll();
 				money.removeDepot(deletedDepot, false);
-				sendMessage(
-						new Message(MessageGroup.SINGLE, "", R.string.accept_delete, aMessage.getArguments(), mContext, null, ButtonAction.NOTHING));
+				sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.accept_delete, aMessage.getArguments(), mContext, null,
+						ButtonAction.NOTHING));
 				break;
 			case DENY_DELETE :
-				sendMessage(new Message(MessageGroup.SINGLE, "", R.string.deny_take_depot, new String[] { aMessage.getArgument(0) }, mContext, null,
-						ButtonAction.NOTHING, aMessage.getSaveables()));
+				sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.deny_take_depot, new String[] { aMessage.getArgument(0) }, mContext,
+						null, ButtonAction.NOTHING, aMessage.getSaveables()));
 				break;
 			case ACCEPT_TAKE :
 				final Map<String, Integer> takeValues = MoneyDepot.deserializeValues(",", " ", aMessage.getSaveable(0), money.getCurrency());
 				final String takeDepotName = aMessage.getSaveable(1);
 				money.getDepot(takeDepotName).remove(takeValues);
 				money.getDefaultDepot().add(takeValues);
-				sendMessage(
-						new Message(MessageGroup.SINGLE, "", R.string.accept_take, aMessage.getArguments(), mContext, null, ButtonAction.NOTHING));
+				sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.accept_take, aMessage.getArguments(), mContext, null,
+						ButtonAction.NOTHING));
 				break;
 			case DENY_TAKE :
-				sendMessage(new Message(MessageGroup.SINGLE, "", R.string.deny_take_depot, new String[] { aMessage.getArgument(1) }, mContext, null,
-						ButtonAction.NOTHING, aMessage.getSaveables()));
+				sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.deny_take_depot, new String[] { aMessage.getArgument(1) }, mContext,
+						null, ButtonAction.NOTHING, aMessage.getSaveables()));
 				break;
 			case ACCEPT_DEPOT :
 				final Map<String, Integer> depotValues = MoneyDepot.deserializeValues(",", " ", aMessage.getSaveable(0), money.getCurrency());
 				final String depotDepotName = aMessage.getSaveable(1);
 				money.getDefaultDepot().remove(depotValues);
 				money.getDepot(depotDepotName).add(depotValues);
-				sendMessage(
-						new Message(MessageGroup.SINGLE, "", R.string.accept_depot, aMessage.getArguments(), mContext, null, ButtonAction.NOTHING));
+				sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.accept_depot, aMessage.getArguments(), mContext, null,
+						ButtonAction.NOTHING));
 				break;
 			case DENY_DEPOT :
-				sendMessage(new Message(MessageGroup.SINGLE, "", R.string.deny_take_depot, new String[] { aMessage.getArgument(1) }, mContext, null,
-						ButtonAction.NOTHING, aMessage.getSaveables()));
+				sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.deny_take_depot, new String[] { aMessage.getArgument(1) }, mContext,
+						null, ButtonAction.NOTHING, aMessage.getSaveables()));
 				break;
 			case ACCEPT_INCREASE :
 				mChar.findItemInstance(aMessage.getSaveable(0)).increase(false, true);
-				sendMessage(new Message(MessageGroup.SINGLE, "", R.string.accept_increase, aMessage.getArguments(), new boolean[] { true, false },
-						mContext, null, ButtonAction.NOTHING));
+				sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.accept_increase, aMessage.getArguments(),
+						new boolean[] { true, false }, mContext, null, ButtonAction.NOTHING));
 				break;
 			case DENY_INCREASE :
-				sendMessage(new Message(MessageGroup.SINGLE, "", R.string.deny_increase, new String[] { aMessage.getArgument(0) },
+				sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.deny_increase, new String[] { aMessage.getArgument(0) },
 						new boolean[] { true }, mContext, null, ButtonAction.NOTHING));
 				break;
 			default :

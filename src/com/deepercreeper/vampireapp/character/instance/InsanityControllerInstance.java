@@ -54,8 +54,8 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 			removeInsanity(mInsanity, true);
 			final int id = mHost ? R.string.player_lost_insanity : R.string.lost_insanity;
 			final String sender = mHost ? mMessageListener.getCharacter().getName() : "";
-			mMessageListener.showMessage(
-					new Message(MessageGroup.SINGLE, sender, id, new String[] { mInsanity }, mContext, mMessageListener, ButtonAction.NOTHING));
+			mMessageListener.showMessage(new Message(MessageGroup.SINGLE, false, sender, id, new String[] { mInsanity }, mContext, mMessageListener,
+					ButtonAction.NOTHING));
 		}
 		
 		@Override
@@ -226,8 +226,8 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 		updateButton();
 		if ( !aSilent)
 		{
-			mMessageListener.sendMessage(
-					new Message(MessageGroup.SINGLE, "", R.string.got_insanity, new String[] { aInsanity }, mContext, null, ButtonAction.NOTHING));
+			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.got_insanity, new String[] { aInsanity }, mContext,
+					null, ButtonAction.NOTHING));
 			mMessageListener.sendChange(new InsanityChange(aInsanity, aDuration));
 		}
 	}
@@ -316,8 +316,8 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 		updateButton();
 		if ( !aSilent)
 		{
-			mMessageListener.sendMessage(
-					new Message(MessageGroup.SINGLE, "", R.string.lost_insanity, new String[] { aInsanity }, mContext, null, ButtonAction.NOTHING));
+			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.lost_insanity, new String[] { aInsanity }, mContext,
+					null, ButtonAction.NOTHING));
 			mMessageListener.sendChange(new InsanityChange(aInsanity));
 		}
 	}

@@ -160,7 +160,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 				}
 				break;
 			case IGNORE_ITEM :
-				sendMessage(new Message(MessageGroup.SINGLE, mChar.getName(), R.string.left_item, aMessage.getArguments(),
+				sendMessage(new Message(MessageGroup.SINGLE, false, mChar.getName(), R.string.left_item, aMessage.getArguments(),
 						aMessage.getTranslatedArguments(), this, null, ButtonAction.NOTHING));
 				break;
 			default :
@@ -172,6 +172,15 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 			mMessages.remove(aMessage);
 		}
 		return release;
+	}
+	
+	@Override
+	public void updateMessages()
+	{
+		for (final Message message : mMessages)
+		{
+			message.update(mChar);
+		}
 	}
 	
 	@Override
@@ -301,6 +310,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 				{
 					mMessages.add(message);
 					mMessageList.addView(message.getContainer());
+					message.update(mChar);
 				}
 			default :
 				break;

@@ -43,6 +43,8 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	
 	private final Context mContext;
 	
+	private final MessageListener mMessageListener;
+	
 	private final List<ItemControllerInstance> mControllers = new ArrayList<ItemControllerInstance>();
 	
 	private final List<TimeListener> mTimeListeners = new ArrayList<TimeListener>();
@@ -99,12 +101,13 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		mHost = aHost;
 		mResizeListener = aResizeListener;
 		mItems = aCreator.getItems();
+		mMessageListener = aMessageListener;
 		mContext = aCreator.getContext();
-		mGeneration = new GenerationControllerInstance(aCreator.getGenerationValue(), this, mHost, aMessageListener);
+		mGeneration = new GenerationControllerInstance(aCreator.getGenerationValue(), this, mHost, mMessageListener);
 		mDescriptions = new DescriptionControllerInstance(aCreator.getDescriptions());
-		mInsanities = new InsanityControllerInstance(aCreator.getInsanities(), getContext(), mHost, aMessageListener, mResizeListener);
-		mEP = new EPControllerInstance(getContext(), aMessageListener, mHost, this);
-		mMoney = new MoneyControllerInstance(mItems.getCurrency(), getContext(), mHost, aMessageListener, mResizeListener);
+		mInsanities = new InsanityControllerInstance(aCreator.getInsanities(), getContext(), mHost, mMessageListener, mResizeListener);
+		mEP = new EPControllerInstance(getContext(), mMessageListener, mHost, this);
+		mMoney = new MoneyControllerInstance(mItems.getCurrency(), getContext(), mHost, mMessageListener, mResizeListener);
 		mTimeListeners.add(mInsanities);
 		
 		mName = aCreator.getName();
@@ -113,15 +116,15 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		mBehavior = aCreator.getBehavior();
 		mClan = aCreator.getClan();
 		
-		mMode = new ModeControllerInstance(this, getContext(), aMessageListener, mHost);
+		mMode = new ModeControllerInstance(this, getContext(), mMessageListener, mHost);
 		
 		for (final ItemControllerCreation controller : aCreator.getControllers())
 		{
-			mControllers.add(new ItemControllerInstanceImpl(controller, getContext(), mEP, this, aControllerResizeListener, aMessageListener, mHost));
+			mControllers.add(new ItemControllerInstanceImpl(controller, getContext(), mEP, this, aControllerResizeListener, mMessageListener, mHost));
 		}
 		
-		mInventory = new InventoryControllerInstance(mItems.getInventory(), this, getContext(), mResizeListener, aMessageListener, mHost);
-		mHealth = new HealthControllerInstance(aCreator.getHealth(), getContext(), aMessageListener, this, mHost);
+		mInventory = new InventoryControllerInstance(mItems.getInventory(), this, getContext(), mResizeListener, mMessageListener, mHost);
+		mHealth = new HealthControllerInstance(aCreator.getHealth(), getContext(), mMessageListener, this, mHost);
 		mTimeListeners.add(mHealth);
 		
 		for (final InstanceRestriction restriction : aCreator.getRestrictions())
@@ -159,6 +162,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		mItems = aItems;
 		mContext = aContext;
 		mHost = aHost;
+		mMessageListener = aMessageListener;
 		mResizeListener = aResizeListener;
 		
 		final Document doc = DataUtil.loadDocument(aXML);
@@ -179,16 +183,16 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		mNature = mItems.getNatures().getItemWithName(meta.getAttribute("nature"));
 		mBehavior = mItems.getNatures().getItemWithName(meta.getAttribute("behavior"));
 		mClan = mItems.getClans().getItemWithName(meta.getAttribute("clan"));
-		mEP = new EPControllerInstance(Integer.parseInt(meta.getAttribute("ep")), getContext(), aMessageListener, mHost, this);
+		mEP = new EPControllerInstance(Integer.parseInt(meta.getAttribute("ep")), getContext(), mMessageListener, mHost, this);
 		
 		// Mode
-		mMode = new ModeControllerInstance(DataUtil.getElement(root, "mode"), this, getContext(), aMessageListener, mHost);
+		mMode = new ModeControllerInstance(DataUtil.getElement(root, "mode"), this, getContext(), mMessageListener, mHost);
 		
 		// Generation
-		mGeneration = new GenerationControllerInstance(DataUtil.getElement(root, "generation"), this, mHost, aMessageListener);
+		mGeneration = new GenerationControllerInstance(DataUtil.getElement(root, "generation"), this, mHost, mMessageListener);
 		
 		// Insanities
-		mInsanities = new InsanityControllerInstance(DataUtil.getElement(root, "insanities"), getContext(), mHost, aMessageListener, mResizeListener);
+		mInsanities = new InsanityControllerInstance(DataUtil.getElement(root, "insanities"), getContext(), mHost, mMessageListener, mResizeListener);
 		mTimeListeners.add(mInsanities);
 		
 		// Descriptions
@@ -204,22 +208,22 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 				if (controller.getTagName().equals("controller"))
 				{
 					mControllers.add(new ItemControllerInstanceImpl(controller, mItems, mContext, mEP, this, aControllerResizeListener,
-							aMessageListener, mHost));
+							mMessageListener, mHost));
 				}
 			}
 		}
 		
 		// Health
-		mHealth = new HealthControllerInstance(DataUtil.getElement(root, "health"), mContext, aMessageListener, this, mHost);
+		mHealth = new HealthControllerInstance(DataUtil.getElement(root, "health"), mContext, mMessageListener, this, mHost);
 		mTimeListeners.add(mHealth);
 		
 		// Money
-		mMoney = new MoneyControllerInstance(mItems.getCurrency(), DataUtil.getElement(root, "money"), getContext(), mHost, aMessageListener,
+		mMoney = new MoneyControllerInstance(mItems.getCurrency(), DataUtil.getElement(root, "money"), getContext(), mHost, mMessageListener,
 				mResizeListener);
 				
 		// Inventory
 		mInventory = new InventoryControllerInstance(DataUtil.getElement(root, "inventory"), mItems.getInventory(), this, getContext(),
-				mResizeListener, aMessageListener, mHost);
+				mResizeListener, mMessageListener, mHost);
 				
 		// Restrictions
 		final Element restrictions = DataUtil.getElement(root, "restrictions");
@@ -570,7 +574,19 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	 */
 	public void update()
 	{
-		getHealth().updateValue();
+		if (mHealth != null)
+		{
+			mHealth.update();
+		}
+		if (mInventory != null)
+		{
+			mInventory.update();
+		}
+		if (mMoney != null)
+		{
+			mMoney.update();
+		}
+		mMessageListener.updateMessages();
 		for (final ItemControllerInstance controller : getControllers())
 		{
 			controller.updateGroups();

@@ -138,7 +138,7 @@ public class MoneyControllerInstance implements Saveable, Viewable
 			}
 		}
 		mDefaultDepot = defaultDepot;
-		updateValues();
+		update();
 	}
 	
 	/**
@@ -309,7 +309,7 @@ public class MoneyControllerInstance implements Saveable, Viewable
 	/**
 	 * Updates all depot values.
 	 */
-	public void updateValues()
+	public void update()
 	{
 		for (final MoneyDepot depot : mDepots)
 		{
@@ -340,7 +340,7 @@ public class MoneyControllerInstance implements Saveable, Viewable
 		}
 		if ( !depot.isEmpty())
 		{
-			getMessageListener().sendMessage(new Message(MessageGroup.MONEY, getCharacter().getName(), R.string.ask_delete_depot,
+			getMessageListener().sendMessage(new Message(MessageGroup.MONEY, false, getCharacter().getName(), R.string.ask_delete_depot,
 					new String[] { depot.getName() }, mContext, null, ButtonAction.ACCEPT_DELETE, ButtonAction.DENY_DELETE, depot.getName()));
 		}
 		else

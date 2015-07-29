@@ -177,7 +177,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	public void updateSteps(final int[] aSteps)
 	{
 		mSteps = aSteps;
-		updateValue();
+		update();
 	}
 	
 	/**
@@ -189,7 +189,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	public void updateValue(final int aValue)
 	{
 		mValue = aValue;
-		updateValue();
+		update();
 	}
 	
 	/**
@@ -261,7 +261,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		{
 			mChangeListener.sendChange(new HealthChange(true, mHeavyWounds));
 		}
-		updateValue();
+		update();
 	}
 	
 	/**
@@ -289,7 +289,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 			mChangeListener.sendChange(new HealthChange(true, mHeavyWounds));
 		}
 		mChangeListener.sendChange(new HealthChange(false, mValue));
-		updateValue();
+		update();
 	}
 	
 	@Override
@@ -336,7 +336,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 			mInitialized = true;
 		}
 		
-		updateValue();
+		update();
 	}
 	
 	@Override
@@ -385,7 +385,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	/**
 	 * Updates the displayed health value and the heal button.
 	 */
-	public void updateValue()
+	public void update()
 	{
 		if (mAnimator.isRunning())
 		{

@@ -237,7 +237,7 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 			
 			if ( !aSilent)
 			{
-				mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, "", R.string.removed_item, new String[] { aItem.getName() },
+				mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.removed_item, new String[] { aItem.getName() },
 						new boolean[] { true }, getContext(), null, ButtonAction.NOTHING));
 				mMessageListener.sendChange(new ItemGroupChange(aItem.getName(), getName(), false));
 			}
@@ -291,7 +291,7 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 		updateController();
 		if ( !aSilent)
 		{
-			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, "", R.string.added_item, new String[] { aItem.getName() },
+			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.added_item, new String[] { aItem.getName() },
 					new boolean[] { true }, getContext(), null, ButtonAction.NOTHING));
 			mMessageListener.sendChange(new ItemGroupChange(aItem.getName(), getName(), true));
 		}

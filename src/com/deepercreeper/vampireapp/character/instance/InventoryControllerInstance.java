@@ -18,7 +18,6 @@ import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance.Item
 import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
-import com.deepercreeper.vampireapp.util.interfaces.ItemFinder;
 import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
@@ -44,6 +43,15 @@ import android.widget.TextView;
  */
 public class InventoryControllerInstance implements Saveable, ItemValueListener, Viewable
 {
+	private static class ItemType extends Named
+	{
+		private ItemType(final String aName)
+		{
+			super(aName);
+			ITEM_TYPES.add(this);
+		}
+	}
+	
 	private static final String TAG = "InventoryController";
 	
 	private static final List<ItemType> ITEM_TYPES = new ArrayList<ItemType>();
@@ -54,20 +62,11 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	
 	private static final ItemType ARMOR = new ItemType("Armor");
 	
-	private static class ItemType extends Named
-	{
-		private ItemType(final String aName)
-		{
-			super(aName);
-			ITEM_TYPES.add(this);
-		}
-	}
-	
 	private final Inventory mInventory;
 	
 	private final List<Artifact> mItemsList = new ArrayList<Artifact>();
 	
-	private final ItemFinder mItems;
+	private final CharacterInstance mChar;
 	
 	private final Context mContext;
 	
@@ -104,8 +103,8 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	 *            The XML data.
 	 * @param aInventory
 	 *            The default inventory settings.
-	 * @param aItems
-	 *            An item finder, that provides items by search name.
+	 * @param aChar
+	 *            The parent character.
 	 * @param aContext
 	 *            The underlying context.
 	 * @param aResizeListener
@@ -115,17 +114,17 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	 * @param aHost
 	 *            Whether this is a host sided controller.
 	 */
-	public InventoryControllerInstance(final Element aElement, final Inventory aInventory, final ItemFinder aItems, final Context aContext,
+	public InventoryControllerInstance(final Element aElement, final Inventory aInventory, final CharacterInstance aChar, final Context aContext,
 			final ResizeListener aResizeListener, final MessageListener aMessageListener, final boolean aHost)
 	{
 		mInventory = aInventory;
-		mItems = aItems;
 		mContext = aContext;
+		mChar = aChar;
 		mResizeListener = aResizeListener;
 		mMessageListener = aMessageListener;
 		mHost = aHost;
 		
-		mMaxWeightItem = mItems.findItemInstance(mInventory.getMaxWeightItem());
+		mMaxWeightItem = mChar.findItemInstance(mInventory.getMaxWeightItem());
 		mMaxWeightItem.addValueListener(this);
 		
 		updateMaxWeight();
@@ -156,8 +155,8 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	 * 
 	 * @param aInventory
 	 *            The default inventory settings.
-	 * @param aItems
-	 *            An item finder, that provides all items by their name.
+	 * @param aChar
+	 *            The parent character.
 	 * @param aContext
 	 *            The underlying context.
 	 * @param aResizeListener
@@ -167,17 +166,17 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	 * @param aHost
 	 *            Whether this is a host sided controller.
 	 */
-	public InventoryControllerInstance(final Inventory aInventory, final ItemFinder aItems, final Context aContext,
+	public InventoryControllerInstance(final Inventory aInventory, final CharacterInstance aChar, final Context aContext,
 			final ResizeListener aResizeListener, final MessageListener aMessageListener, final boolean aHost)
 	{
 		mInventory = aInventory;
-		mItems = aItems;
+		mChar = aChar;
 		mContext = aContext;
 		mResizeListener = aResizeListener;
 		mMessageListener = aMessageListener;
 		mHost = aHost;
 		
-		mMaxWeightItem = mItems.findItemInstance(mInventory.getMaxWeightItem());
+		mMaxWeightItem = mChar.findItemInstance(mInventory.getMaxWeightItem());
 		mMaxWeightItem.addValueListener(this);
 		
 		updateMaxWeight();
@@ -191,33 +190,6 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 		init();
 	}
 	
-	private void addItem(final Named aItemType)
-	{
-		final InventoryItemCreationListener listener = new InventoryItemCreationListener()
-		{
-			@Override
-			public void itemCreated(final Artifact aItem)
-			{
-				mMessageListener.sendMessage(
-						new Message(MessageGroup.SINGLE, "", R.string.got_item, aItem.getInfoArray(true), aItem.getInfoTranslatedArray(true),
-								mContext, null, ButtonAction.TAKE_ITEM, ButtonAction.IGNORE_ITEM, DataUtil.serialize(aItem)));
-			}
-		};
-		if (aItemType.equals(ITEM))
-		{
-			CreateInventoryItemDialog.showCreateInventoryItemDialog(mContext.getString(R.string.create_item), mContext, listener);
-		}
-		else if (aItemType.equals(WEAPON))
-		{
-			CreateWeaponItemDialog.showCreateWeaponItemDialog(mContext.getString(R.string.create_weapon), mContext, listener,
-					mMessageListener.getCharacter());
-		}
-		else if (aItemType.equals(ARMOR))
-		{
-			CreateArmorItemDialog.showCreateArmorItemDialog(mContext.getString(R.string.create_armor), mContext, listener);
-		}
-	}
-	
 	/**
 	 * Asks the user to create a new inventory item.
 	 */
@@ -226,14 +198,14 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 		final ItemSelectionListener<ItemType> listener = new ItemSelectionListener<ItemType>()
 		{
 			@Override
+			public void cancel()
+			{}
+			
+			@Override
 			public void select(final ItemType aItem)
 			{
 				addItem(aItem);
 			}
-			
-			@Override
-			public void cancel()
-			{}
 		};
 		SelectItemDialog.showSelectionDialog(ITEM_TYPES, mContext.getString(R.string.choose_item_type), mContext, listener);
 	}
@@ -296,6 +268,14 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	public boolean canAddItem(final Artifact aItem)
 	{
 		return getWeight() + aItem.getWeight() * aItem.getQuantity() <= getMaxWeight();
+	}
+	
+	/**
+	 * @return the parent character.
+	 */
+	public CharacterInstance getCharacter()
+	{
+		return mChar;
 	}
 	
 	@Override
@@ -362,6 +342,14 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 		mExpander.close();
 	}
 	
+	/**
+	 * @return whether this is a host sided controller.
+	 */
+	public boolean isHost()
+	{
+		return mHost;
+	}
+	
 	@Override
 	public void release()
 	{
@@ -400,12 +388,12 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 			mMessageListener.sendChange(new InventoryChange(aItem, false));
 			if (mHost)
 			{
-				mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, "", R.string.took_item, aItem.getInfoArray(false),
+				mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.took_item, aItem.getInfoArray(false),
 						aItem.getInfoTranslatedArray(false), mContext, null, ButtonAction.NOTHING));
 			}
 			else
 			{
-				mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, mMessageListener.getCharacter().getName(), R.string.left_item,
+				mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, mMessageListener.getCharacter().getName(), R.string.left_item,
 						aItem.getInfoArray(false), aItem.getInfoTranslatedArray(false), mContext, null, ButtonAction.NOTHING));
 			}
 		}
@@ -424,18 +412,22 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	}
 	
 	/**
+	 * Updates all items.
+	 */
+	public void update()
+	{
+		for (final Artifact item : mItemsList)
+		{
+			item.updateValue();
+		}
+	}
+	
+	/**
 	 * Recalculates the maximum weight out of the weight defining item of the character.
 	 */
 	public void updateMaxWeight()
 	{
 		mMaxWeight = mInventory.getMaxWeightOf(mMaxWeightItem.getValue());
-	}
-	
-	@Override
-	public void valueChanged()
-	{
-		updateMaxWeight();
-		setWeight();
 	}
 	
 	/**
@@ -449,6 +441,40 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 			mWeight += item.getWeight() * item.getQuantity();
 		}
 		setWeight();
+	}
+	
+	@Override
+	public void valueChanged()
+	{
+		updateMaxWeight();
+		setWeight();
+	}
+	
+	private void addItem(final Named aItemType)
+	{
+		final InventoryItemCreationListener listener = new InventoryItemCreationListener()
+		{
+			@Override
+			public void itemCreated(final Artifact aItem)
+			{
+				mMessageListener.sendMessage(
+						new Message(MessageGroup.SINGLE, true, "", R.string.got_item, aItem.getInfoArray(true), aItem.getInfoTranslatedArray(true),
+								mContext, null, ButtonAction.TAKE_ITEM, ButtonAction.IGNORE_ITEM, DataUtil.serialize(aItem)));
+			}
+		};
+		if (aItemType.equals(ITEM))
+		{
+			CreateInventoryItemDialog.showCreateInventoryItemDialog(mContext.getString(R.string.create_item), mContext, listener);
+		}
+		else if (aItemType.equals(WEAPON))
+		{
+			CreateWeaponItemDialog.showCreateWeaponItemDialog(mContext.getString(R.string.create_weapon), mContext, listener,
+					mMessageListener.getCharacter());
+		}
+		else if (aItemType.equals(ARMOR))
+		{
+			CreateArmorItemDialog.showCreateArmorItemDialog(mContext.getString(R.string.create_armor), mContext, listener);
+		}
 	}
 	
 	private void setWeight()

@@ -155,7 +155,7 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 		{
 			getValues().put(currency, getValues().get(currency) + aValues.get(currency));
 		}
-		mController.updateValues();
+		mController.update();
 		getMessageListener().sendChange(new MoneyChange(getName(), getValues()));
 	}
 	
@@ -191,8 +191,8 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 				if (mDefault)
 				{
 					args = new String[] { serializeValues(", ", " ", aMap, true, mCurrency) };
-					getMessageListener()
-							.sendMessage(new Message(MessageGroup.SINGLE, "", R.string.money_sent, args, mContext, null, ButtonAction.NOTHING));
+					getMessageListener().sendMessage(
+							new Message(MessageGroup.SINGLE, false, "", R.string.money_sent, args, mContext, null, ButtonAction.NOTHING));
 					add(aMap);
 				}
 				else
@@ -205,8 +205,8 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 					else
 					{
 						args = new String[] { serializeValues(", ", " ", aMap, true, mCurrency), getName() };
-						getMessageListener().sendMessage(new Message(MessageGroup.MONEY, mController.getCharacter().getName(), R.string.ask_depot_money,
-								args, mContext, null, ButtonAction.ACCEPT_DEPOT, ButtonAction.DENY_DEPOT,
+						getMessageListener().sendMessage(new Message(MessageGroup.MONEY, false, mController.getCharacter().getName(),
+								R.string.ask_depot_money, args, mContext, null, ButtonAction.ACCEPT_DEPOT, ButtonAction.DENY_DEPOT,
 								serializeValues(",", " ", aMap, false, mCurrency), getName()));
 					}
 				}
@@ -366,7 +366,7 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 			}
 			getValues().put(currency, newValue);
 		}
-		mController.updateValues();
+		mController.update();
 		getMessageListener().sendChange(new MoneyChange(getName(), getValues()));
 	}
 	
@@ -385,8 +385,8 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 				{
 					args = new String[] { serializeValues(", ", " ", aMap, true, mCurrency) };
 					remove(aMap);
-					getMessageListener().sendMessage(new Message(MessageGroup.SINGLE, mController.getCharacter().getName(), R.string.money_sent, args,
-							mContext, null, ButtonAction.NOTHING));
+					getMessageListener().sendMessage(new Message(MessageGroup.SINGLE, false, mController.getCharacter().getName(),
+							R.string.money_sent, args, mContext, null, ButtonAction.NOTHING));
 				}
 				else
 				{
@@ -398,8 +398,8 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 					else
 					{
 						args = new String[] { serializeValues(", ", " ", aMap, true, mCurrency), getName() };
-						getMessageListener().sendMessage(new Message(MessageGroup.MONEY, mController.getCharacter().getName(), R.string.ask_take_money,
-								args, mContext, null, ButtonAction.ACCEPT_TAKE, ButtonAction.DENY_TAKE,
+						getMessageListener().sendMessage(new Message(MessageGroup.MONEY, false, mController.getCharacter().getName(),
+								R.string.ask_take_money, args, mContext, null, ButtonAction.ACCEPT_TAKE, ButtonAction.DENY_TAKE,
 								serializeValues(",", " ", aMap, false, mCurrency), getName()));
 					}
 				}
@@ -428,11 +428,12 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 			final MoneyDepot defaultDepot = mController.getDefaultDepot();
 			if (defaultDepot != null)
 			{
-				ViewUtil.setEnabled(mDepotButton, !defaultDepot.isEmpty());
+				ViewUtil.setEnabled(mDepotButton,
+						!defaultDepot.isEmpty() && (mHost || mController.getCharacter().getMode().getMode().canUseAction()));
 			}
 		}
 		mValueText.setText(serializeValues("\n", " ", getValues(), false, mCurrency));
-		ViewUtil.setEnabled(mTakeButton, !isEmpty());
+		ViewUtil.setEnabled(mTakeButton, !isEmpty() && (mHost || mController.getCharacter().getMode().getMode().canUseAction()));
 	}
 	
 	/**
@@ -444,7 +445,7 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 	public void updateValues(final Map<String, Integer> aMap)
 	{
 		getValues().putAll(aMap);
-		mController.updateValues();
+		mController.update();
 	}
 	
 	private Map<String, Integer> createMap(final String aValues)

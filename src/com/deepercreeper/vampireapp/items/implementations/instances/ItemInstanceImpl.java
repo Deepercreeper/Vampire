@@ -634,7 +634,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		updateCharacter();
 		updateValueListeners();
 		mMessageListener.sendChange(new ItemChange(getName(), mValueId));
-		mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, "", R.string.host_decreased, new String[] { getName(), "" + getValue() },
+		mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.host_decreased, new String[] { getName(), "" + getValue() },
 				new boolean[] { true, false }, mContext, null, ButtonAction.NOTHING));
 	}
 	
@@ -682,12 +682,12 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		}
 		if (mHost)
 		{
-			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, "", R.string.host_increased, new String[] { getName(), "" + getValue() },
-					new boolean[] { true, false }, mContext, null, ButtonAction.NOTHING));
+			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.host_increased,
+					new String[] { getName(), "" + getValue() }, new boolean[] { true, false }, mContext, null, ButtonAction.NOTHING));
 		}
 		else
 		{
-			mMessageListener.sendMessage(new Message(MessageGroup.ITEM, getCharacter().getName(), R.string.ask_increase,
+			mMessageListener.sendMessage(new Message(MessageGroup.ITEM, false, getCharacter().getName(), R.string.ask_increase,
 					new String[] { getName(), "" + getItem().getValues()[mValueId + 1] }, new boolean[] { true, false }, mContext, null,
 					ButtonAction.ACCEPT_INCREASE, ButtonAction.DENY_INCREASE, getName()));
 		}
@@ -913,7 +913,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		
 		if ( !aSilent)
 		{
-			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, "", R.string.removed_item, new String[] { aItem.getName() },
+			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.removed_item, new String[] { aItem.getName() },
 					new boolean[] { true }, getContext(), null, ButtonAction.NOTHING));
 			mMessageListener.sendChange(new ItemChange(getName(), aItem.getName(), false));
 		}
@@ -999,7 +999,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		
 		if ( !aSilent)
 		{
-			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, "", R.string.added_item, new String[] { aItem.getName() },
+			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.added_item, new String[] { aItem.getName() },
 					new boolean[] { true }, getContext(), null, ButtonAction.NOTHING));
 			mMessageListener.sendChange(new ItemChange(getName(), aItem.getName(), true));
 		}

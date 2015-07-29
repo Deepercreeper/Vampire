@@ -46,7 +46,7 @@ public class Host implements TimeListener, Saveable
 	 * @param aFromXML
 	 *            whether this document should be created out of XML data or the first argument is the host name.
 	 */
-	public Host(final String aData, final Context aContext, boolean aFromXML)
+	public Host(final String aData, final Context aContext, final boolean aFromXML)
 	{
 		mContext = aContext;
 		if ( !aFromXML)

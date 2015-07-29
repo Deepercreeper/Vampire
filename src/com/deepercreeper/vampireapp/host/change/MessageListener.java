@@ -58,6 +58,11 @@ public interface MessageListener extends Toaster
 	public void showMessage(Message aMessage);
 	
 	/**
+	 * Updates all messages.
+	 */
+	public void updateMessages();
+	
+	/**
 	 * @return the character.
 	 */
 	public CharacterInstance getCharacter();
