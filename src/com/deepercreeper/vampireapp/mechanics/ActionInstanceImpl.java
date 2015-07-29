@@ -208,7 +208,7 @@ public class ActionInstanceImpl implements ActionInstance
 	@Override
 	public boolean canUse(final int aLevel)
 	{
-		if (aLevel >= 0 && aLevel < mAction.getMinLevel())
+		if (aLevel >= 0 && aLevel < mAction.getMinLevel() || !mChar.getMode().getMode().canUseAction())
 		{
 			return false;
 		}
