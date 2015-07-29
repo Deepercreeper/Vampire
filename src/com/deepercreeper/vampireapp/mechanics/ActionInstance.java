@@ -1,5 +1,6 @@
 package com.deepercreeper.vampireapp.mechanics;
 
+import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 
 /**
@@ -7,7 +8,7 @@ import com.deepercreeper.vampireapp.util.interfaces.Viewable;
  * 
  * @author Vincent
  */
-public interface ActionInstance extends Viewable
+public interface ActionInstance extends Viewable, Comparable<ActionInstance>
 {
 	/**
 	 * @param aLevel
@@ -33,4 +34,9 @@ public interface ActionInstance extends Viewable
 	 * Updates the use button.
 	 */
 	public void update();
+	
+	/**
+	 * @return the parent item or {@code null}.
+	 */
+	public ItemInstance getParent();
 }

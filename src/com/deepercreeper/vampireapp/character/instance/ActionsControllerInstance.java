@@ -1,6 +1,7 @@
 package com.deepercreeper.vampireapp.character.instance;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
@@ -97,6 +98,7 @@ public class ActionsControllerInstance implements Viewable
 		}
 		// TODO Add other actions
 		
+		Collections.sort(mActions);
 		for (final ActionInstance action : mActions)
 		{
 			action.init();

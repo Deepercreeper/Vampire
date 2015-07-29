@@ -114,6 +114,20 @@ public class ActionInstanceImpl implements ActionInstance
 	}
 	
 	@Override
+	public int compareTo(final ActionInstance aAnother)
+	{
+		if (getParent() == aAnother.getParent())
+		{
+			return getAction().getMinLevel() - aAnother.getAction().getMinLevel();
+		}
+		if (getParent() != null)
+		{
+			return getParent().compareTo(aAnother.getParent());
+		}
+		return -aAnother.getParent().compareTo(getParent());
+	}
+	
+	@Override
 	public void init()
 	{
 		// TODO Remove all mInitialized fields if possible.
@@ -124,7 +138,7 @@ public class ActionInstanceImpl implements ActionInstance
 			mUse = (Button) getContainer().findViewById(R.id.view_use_action_button);
 			final TextView name = (TextView) getContainer().findViewById(R.id.view_action_name_label);
 			
-			name.setText(getAction().getDisplayName() + " " + getDefaultDices());
+			name.setText(getAction().getDisplayName());
 			name.setOnClickListener(new OnClickListener()
 			{
 				@Override
@@ -158,6 +172,12 @@ public class ActionInstanceImpl implements ActionInstance
 		}
 		
 		update();
+	}
+	
+	@Override
+	public ItemInstance getParent()
+	{
+		return mParent;
 	}
 	
 	@Override
