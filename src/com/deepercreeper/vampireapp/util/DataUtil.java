@@ -377,17 +377,12 @@ public class DataUtil
 			{
 				final ActionType type = Action.ActionType.get(child.getAttribute("type"));
 				final String name = child.getAttribute("name");
-				String id = name;
 				int minLevel = 0;
 				int minDices = 0;
-				String[] dices = null;
-				String[] costDices = null;
-				String[] cost = null;
+				String[] dices = new String[0];
+				String[] costDices = new String[0];
+				String[] cost = new String[0];
 				
-				if (child.hasAttribute("id"))
-				{
-					id = child.getAttribute("id");
-				}
 				if (child.hasAttribute("minDices"))
 				{
 					minDices = Integer.parseInt(child.getAttribute("minDices"));
@@ -408,7 +403,7 @@ public class DataUtil
 				{
 					minLevel = Integer.parseInt(child.getAttribute("minLevel"));
 				}
-				actions.add(new ActionImpl(name, id, type, minLevel, minDices, dices, costDices, cost));
+				actions.add(new ActionImpl(name, type, minLevel, minDices, dices, costDices, cost));
 			}
 		}
 		return actions;

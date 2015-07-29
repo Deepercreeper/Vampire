@@ -31,7 +31,7 @@ public class Named implements Nameable
 	@Override
 	public int compareTo(final Nameable aAnother)
 	{
-		return getName().compareTo(aAnother.getName());
+		return getDisplayName().compareTo(aAnother.getDisplayName());
 	}
 	
 	@Override

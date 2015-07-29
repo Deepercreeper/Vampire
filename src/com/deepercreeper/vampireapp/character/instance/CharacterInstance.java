@@ -73,6 +73,8 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	
 	private final MoneyControllerInstance mMoney;
 	
+	private final ActionsControllerInstance mActions;
+	
 	private final InventoryControllerInstance mInventory;
 	
 	private final boolean mHost;
@@ -126,6 +128,8 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		mInventory = new InventoryControllerInstance(mItems.getInventory(), this, getContext(), mResizeListener, mMessageListener, mHost);
 		mHealth = new HealthControllerInstance(aCreator.getHealth(), getContext(), mMessageListener, this, mHost);
 		mTimeListeners.add(mHealth);
+		
+		mActions = mHost ? null : new ActionsControllerInstance(this, mContext);
 		
 		for (final InstanceRestriction restriction : aCreator.getRestrictions())
 		{
@@ -225,6 +229,9 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		mInventory = new InventoryControllerInstance(DataUtil.getElement(root, "inventory"), mItems.getInventory(), this, getContext(),
 				mResizeListener, mMessageListener, mHost);
 				
+		// Actions
+		mActions = mHost ? null : new ActionsControllerInstance(this, mContext);
+		
 		// Restrictions
 		final Element restrictions = DataUtil.getElement(root, "restrictions");
 		final NodeList restrictionsList = restrictions.getChildNodes();
@@ -257,6 +264,14 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	public ResizeListener getResizeListener()
 	{
 		return mResizeListener;
+	}
+	
+	/**
+	 * @return the message listener.
+	 */
+	public MessageListener getMessageListener()
+	{
+		return mMessageListener;
 	}
 	
 	@Override
@@ -332,6 +347,14 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 				mTimeListeners.add(aRestriction);
 			}
 		}
+	}
+	
+	/**
+	 * @return the actions controller.
+	 */
+	public ActionsControllerInstance getActions()
+	{
+		return mActions;
 	}
 	
 	@Override
@@ -586,10 +609,17 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		{
 			mMoney.update();
 		}
-		mMessageListener.updateMessages();
+		if (mMessageListener != null)
+		{
+			mMessageListener.updateMessages();
+		}
 		for (final ItemControllerInstance controller : getControllers())
 		{
 			controller.updateGroups();
+		}
+		if (mActions != null)
+		{
+			mActions.update();
 		}
 	}
 }

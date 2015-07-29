@@ -1,11 +1,13 @@
 package com.deepercreeper.vampireapp.items.interfaces.instances;
 
 import java.util.List;
+import java.util.Set;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.character.instance.EPControllerInstance;
 import com.deepercreeper.vampireapp.items.interfaces.GroupOption;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
+import com.deepercreeper.vampireapp.mechanics.ActionInstance;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 import android.content.Context;
@@ -31,6 +33,11 @@ public interface ItemControllerInstance extends Saveable, Viewable
 	 * @return whether this controller has any item.
 	 */
 	public boolean hasAnyItem();
+	
+	/**
+	 * @return a set of all item actions.
+	 */
+	public Set<ActionInstance> getActions();
 	
 	/**
 	 * @return a list of all items that have a description.

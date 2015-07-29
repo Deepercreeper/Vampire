@@ -3,8 +3,10 @@ package com.deepercreeper.vampireapp.items.implementations.instances;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -23,6 +25,7 @@ import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerIns
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemGroupInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction;
+import com.deepercreeper.vampireapp.mechanics.ActionInstance;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
 import android.content.Context;
@@ -196,6 +199,17 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 			}
 		}
 		mItems.remove(aName);
+	}
+	
+	@Override
+	public Set<ActionInstance> getActions()
+	{
+		final Set<ActionInstance> actions = new HashSet<ActionInstance>();
+		for (final ItemInstance item : mItems.values())
+		{
+			actions.addAll(item.getActions());
+		}
+		return actions;
 	}
 	
 	@Override

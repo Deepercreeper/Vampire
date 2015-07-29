@@ -5,8 +5,7 @@ import java.util.Set;
 import com.deepercreeper.vampireapp.character.instance.EPControllerInstance;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestrictionable;
-import com.deepercreeper.vampireapp.mechanics.Action;
-import com.deepercreeper.vampireapp.util.interfaces.ItemFinder;
+import com.deepercreeper.vampireapp.mechanics.ActionInstance;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
@@ -33,12 +32,19 @@ public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemIn
 	}
 	
 	/**
-	 * Sets the new value for this item.
-	 * 
-	 * @param aValue
-	 *            The new value.
+	 * Asks the user which item to add.
 	 */
-	public void updateValue(int aValue);
+	public void addChild();
+	
+	/**
+	 * Adds the given child to this item.
+	 * 
+	 * @param aItem
+	 *            The item to add.
+	 * @param aSilent
+	 *            Whether a change should be sent or not.
+	 */
+	public void addChild(Item aItem, boolean aSilent);
 	
 	/**
 	 * Adds the given value listener to this item.
@@ -47,16 +53,6 @@ public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemIn
 	 *            The value listener.
 	 */
 	public void addValueListener(ItemValueListener aListener);
-	
-	/**
-	 * Removes the given child from this item.
-	 * 
-	 * @param aItem
-	 *            The item type.
-	 * @param aSilent
-	 *            Whether a change should be sent.
-	 */
-	public void removeChild(Item aItem, boolean aSilent);
 	
 	/**
 	 * @return the calculated experience cost depending on the current item value and restrictions.
@@ -74,24 +70,9 @@ public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemIn
 	public boolean canEPIncrease();
 	
 	/**
-	 * Adds the given child to this item.
-	 * 
-	 * @param aItem
-	 *            The item to add.
-	 * @param aSilent
-	 *            Whether a change should be sent or not.
-	 */
-	public void addChild(Item aItem, boolean aSilent);
-	
-	/**
 	 * @return whether this item can be increased at all.
 	 */
 	public boolean canIncrease();
-	
-	/**
-	 * Asks the user which item to add.
-	 */
-	public void addChild();
 	
 	/**
 	 * Decreases this item if possible.
@@ -106,7 +87,7 @@ public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemIn
 	/**
 	 * @return a set of all actions this item contains.
 	 */
-	public Set<Action> getActions();
+	public Set<ActionInstance> getActions();
 	
 	/**
 	 * @return the sum of all values this and all children of this item have.
@@ -242,14 +223,6 @@ public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemIn
 	public int indexOfChild(ItemInstance aItem);
 	
 	/**
-	 * Initializes all actions of this item.
-	 * 
-	 * @param aFinder
-	 *            The item finder.
-	 */
-	public void initActions(ItemFinder aFinder);
-	
-	/**
 	 * @return whether this item is a parent item.
 	 */
 	public boolean isParent();
@@ -263,6 +236,16 @@ public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemIn
 	 * Updates the view shown value and information about this item.
 	 */
 	public void refreshValue();
+	
+	/**
+	 * Removes the given child from this item.
+	 * 
+	 * @param aItem
+	 *            The item type.
+	 * @param aSilent
+	 *            Whether a change should be sent.
+	 */
+	public void removeChild(Item aItem, boolean aSilent);
 	
 	/**
 	 * Removes the given value listener from this item.
@@ -281,4 +264,12 @@ public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemIn
 	 * Updates the character.
 	 */
 	public void updateCharacter();
+	
+	/**
+	 * Sets the new value for this item.
+	 * 
+	 * @param aValue
+	 *            The new value.
+	 */
+	public void updateValue(int aValue);
 }

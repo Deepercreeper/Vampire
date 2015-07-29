@@ -36,7 +36,7 @@ public interface Item extends Nameable
 	/**
 	 * @return a list of all actions of this item.
 	 */
-	public List<Action> getActionsList();
+	public List<Action> getActions();
 	
 	/**
 	 * @param aName

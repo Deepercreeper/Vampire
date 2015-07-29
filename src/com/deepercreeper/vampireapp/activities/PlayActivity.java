@@ -467,6 +467,8 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 			controller.close();
 		}
 		
+		controllersPanel.addView(mChar.getActions().getContainer());
+		
 		exit.setOnClickListener(new OnClickListener()
 		{
 			@Override

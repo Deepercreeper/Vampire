@@ -305,7 +305,7 @@
 
                     <action
                         name="Language of wilderness pleasure"
-                        dices="Manipulation,Animal Ken"
+                        dices="Manipulation,Animal ken"
                         minLevel="1"
                         type="Ability" />
 
@@ -323,19 +323,19 @@
 
                     <action
                         name="Ride on the wild ghost"
-                        dices="Charisma,Animal Ken"
+                        dices="Charisma,Animal ken"
                         minLevel="4"
                         type="Ability" />
 
                     <action
                         name="Animal expulsion"
-                        dices="Manipulation,Animal Ken"
+                        dices="Manipulation,Animal ken"
                         minLevel="5"
                         type="Ability" />
 
                     <action
                         name="Accelerated unity"
-                        dices="Perception,Animal Ken"
+                        dices="Perception,Animal ken"
                         minLevel="6"
                         type="Ability" />
                 </item>
@@ -395,7 +395,7 @@
 
                     <action
                         name="Tearing the skeleton"
-                        dices="Strenth,Crafts"
+                        dices="Strength,Crafts"
                         minLevel="3"
                         type="Ability" />
 

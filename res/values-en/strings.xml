@@ -5,6 +5,7 @@
     <string name="accept_depot">You did depot {0} at {1}.</string>
     <string name="accept_increase">{0} was increased to {1}.</string>
     <string name="accept_take">You took {0} of {1}.</string>
+	<string name="actions">Actions</string>
     <string name="add">Add</string>
     <string name="add_depot">Add depot</string>
     <string name="add_health_step">Add health step</string>
@@ -127,6 +128,7 @@
     <string name="to_much_weight">The item is too heavy.</string>
     <string name="took_item">The following item was taken: {x}</string>
     <string name="unban">Unban</string>
+    <string name="use">Use</string>
     <string name="weight">Weight</string>
     <string name="weight_unit">kg</string>
     <string name="yes">Yes</string>

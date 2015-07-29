@@ -141,7 +141,7 @@ public class ItemImpl extends Named implements Item
 	{
 		mActionsList.add(aAction);
 		mActions.put(aAction.getName(), aAction);
-		Collections.sort(getActionsList());
+		Collections.sort(getActions());
 	}
 	
 	@Override
@@ -175,7 +175,7 @@ public class ItemImpl extends Named implements Item
 	}
 	
 	@Override
-	public List<Action> getActionsList()
+	public List<Action> getActions()
 	{
 		return mActionsList;
 	}
@@ -211,7 +211,7 @@ public class ItemImpl extends Named implements Item
 		{
 			displayName += ":";
 			boolean first = true;
-			for (final Action action : getActionsList())
+			for (final Action action : getActions())
 			{
 				if (first)
 				{
@@ -315,7 +315,7 @@ public class ItemImpl extends Named implements Item
 	@Override
 	public boolean hasActions()
 	{
-		return !getActionsList().isEmpty();
+		return !getActions().isEmpty();
 	}
 	
 	@Override

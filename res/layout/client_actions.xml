@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical" >
     
+    <Button
+        android:id="@+id/c_actions_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableEnd="@android:drawable/arrow_down_float"
+        android:drawableRight="@android:drawable/arrow_down_float"
+        android:text="@string/actions" />
+
+    <LinearLayout
+        android:id="@+id/c_actions_panel"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical" />
 
 </LinearLayout>
