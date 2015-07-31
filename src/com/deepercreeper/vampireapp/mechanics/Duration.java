@@ -5,6 +5,7 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 import android.content.Context;
 
@@ -15,6 +16,8 @@ import android.content.Context;
  */
 public class Duration implements TimeListener, Saveable
 {
+	private static final String TAG = "Duration";
+	
 	/**
 	 * A listener that is used to wait for durations to get done.
 	 * 
@@ -39,7 +42,7 @@ public class Duration implements TimeListener, Saveable
 	public static final Duration FOREVER = new Duration()
 	{
 		@Override
-		public void time(Type aType, int aAmount)
+		public void time(final Type aType, final int aAmount)
 		{}
 	};
 	
@@ -138,7 +141,7 @@ public class Duration implements TimeListener, Saveable
 		}
 		if ( !mDue)
 		{
-			for (DurationListener listener : mListeners)
+			for (final DurationListener listener : mListeners)
 			{
 				listener.timeUpdated();
 			}
@@ -275,7 +278,7 @@ public class Duration implements TimeListener, Saveable
 	 *            The underlying context.
 	 * @return the display name of this duration.
 	 */
-	public String getName(Context aContext)
+	public String getName(final Context aContext)
 	{
 		if (this == FOREVER)
 		{
@@ -301,10 +304,15 @@ public class Duration implements TimeListener, Saveable
 	 */
 	public static Duration create(final Element aElement)
 	{
-		if (aElement.getAttribute("durationType").equals("forever"))
+		if (aElement != null)
 		{
-			return FOREVER;
+			if (aElement.getAttribute("durationType").equals("forever"))
+			{
+				return FOREVER;
+			}
+			return new Duration(aElement);
 		}
-		return new Duration(aElement);
+		Log.w(TAG, "Can't create duration out of null element.");
+		return null;
 	}
 }

@@ -2,10 +2,10 @@ package com.deepercreeper.vampireapp.host.change;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.mechanics.Duration;
 import com.deepercreeper.vampireapp.util.CodingUtil;
+import com.deepercreeper.vampireapp.util.DataUtil;
 
 /**
  * A change at insanity properties.
@@ -31,7 +31,7 @@ public class InsanityChange implements CharacterChange
 	 * @param aDuration
 	 *            The duration of the added insanity.
 	 */
-	public InsanityChange(String aInsanity, Duration aDuration)
+	public InsanityChange(final String aInsanity, final Duration aDuration)
 	{
 		mInsanity = aInsanity;
 		mDuration = aDuration;
@@ -43,7 +43,7 @@ public class InsanityChange implements CharacterChange
 	 * @param aInsanity
 	 *            The removed insanity.
 	 */
-	public InsanityChange(String aInsanity)
+	public InsanityChange(final String aInsanity)
 	{
 		mInsanity = aInsanity;
 		mDuration = null;
@@ -55,22 +55,14 @@ public class InsanityChange implements CharacterChange
 	 * @param aElement
 	 *            The data.
 	 */
-	public InsanityChange(Element aElement)
+	public InsanityChange(final Element aElement)
 	{
 		mInsanity = CodingUtil.decode(aElement.getAttribute("insanity"));
-		NodeList children = aElement.getElementsByTagName("duration");
-		if (children.getLength() > 0)
-		{
-			mDuration = Duration.create((Element) children.item(0));
-		}
-		else
-		{
-			mDuration = null;
-		}
+		mDuration = Duration.create(DataUtil.getElement(aElement, "duration"));
 	}
 	
 	@Override
-	public void applyChange(CharacterInstance aCharacter)
+	public void applyChange(final CharacterInstance aCharacter)
 	{
 		if (mDuration == null)
 		{
@@ -83,9 +75,9 @@ public class InsanityChange implements CharacterChange
 	}
 	
 	@Override
-	public Element asElement(Document aDoc)
+	public Element asElement(final Document aDoc)
 	{
-		Element element = aDoc.createElement(TAG_NAME);
+		final Element element = aDoc.createElement(TAG_NAME);
 		element.setAttribute("insanity", mInsanity);
 		if (mDuration != null)
 		{

@@ -509,7 +509,7 @@ public class Message implements Saveable, Viewable
 	 */
 	public static Message deserialize(final String aXML, final Context aContext, final MessageListener aListener)
 	{
-		final Element messageElement = (Element) DataUtil.loadDocument(aXML).getElementsByTagName(TAG_NAME).item(0);
+		final Element messageElement = DataUtil.getElement(DataUtil.loadDocument(aXML), TAG_NAME);
 		final MessageType type = MessageType.valueOf(messageElement.getAttribute("type"));
 		final MessageGroup group = MessageGroup.valueOf(messageElement.getAttribute("group"));
 		final int messageId = Integer.parseInt(messageElement.getAttribute("message"));

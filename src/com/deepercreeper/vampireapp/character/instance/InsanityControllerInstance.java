@@ -19,6 +19,7 @@ import com.deepercreeper.vampireapp.mechanics.Duration;
 import com.deepercreeper.vampireapp.mechanics.Duration.DurationListener;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.CodingUtil;
+import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
@@ -119,7 +120,7 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 				final Element insanity = (Element) aElement.getChildNodes().item(i);
 				if (insanity.getTagName().equals("insanity"))
 				{
-					final Duration duration = Duration.create((Element) insanity.getElementsByTagName("duration").item(0));
+					final Duration duration = Duration.create(DataUtil.getElement(insanity, "duration"));
 					addInsanity(CodingUtil.decode(insanity.getAttribute("name")), duration, true);
 				}
 			}

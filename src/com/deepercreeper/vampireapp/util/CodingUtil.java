@@ -11,7 +11,7 @@ import java.net.URLEncoder;
  */
 public class CodingUtil
 {
-	private static final String	TAG	= "CodingUtil";
+	private static final String TAG = "CodingUtil";
 	
 	private CodingUtil()
 	{}
@@ -51,7 +51,7 @@ public class CodingUtil
 		}
 		catch (final UnsupportedEncodingException e)
 		{
-			Log.e(TAG, "Could not encode value.");
+			Log.e(TAG, "Could not decode value.");
 		}
 		return null;
 	}

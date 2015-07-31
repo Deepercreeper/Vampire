@@ -79,16 +79,130 @@ public class DataUtil
 	
 	private static final String ACTION = "action";
 	
+	private static final String X_MATCHER = ".*\\{x\\}.*";
+	
+	private static final String NUMBER_MATCHER = ".*\\{[0-9]+\\}.*";
+	
 	private static Document sData;
 	
 	/**
+	 * @param aMessageId
+	 *            The message id.
+	 * @param aArgs
+	 *            The arguments.
 	 * @param aContext
 	 *            The underlying context.
-	 * @return the name of the generation item.
+	 * @return the given string with <code>{0}, {1}, ...</code> replaced with the given arguments.
 	 */
-	public static String loadGenerationItem(final Context aContext)
+	public static String buildMessage(final int aMessageId, final String[] aArgs, final Context aContext)
 	{
-		return getSpecialItems(aContext).getAttribute("generationItem");
+		return buildMessage(aContext.getString(aMessageId), aArgs);
+	}
+	
+	/**
+	 * @param aMessage
+	 *            The message.
+	 * @param aArgs
+	 *            The arguments.
+	 * @return the given string with <code>{0}, {1}, ...</code> replaced with the given arguments.
+	 */
+	public static String buildMessage(final String aMessage, final String[] aArgs)
+	{
+		if (aMessage == null || aArgs == null)
+		{
+			Log.w(TAG, "Message or arguments is null.");
+			return null;
+		}
+		String result = aMessage;
+		for (int i = 0; i < aArgs.length; i++ )
+		{
+			result = result.replace("{" + i + "}", aArgs[i]);
+		}
+		if (result.contains("{x}"))
+		{
+			final StringBuilder args = new StringBuilder();
+			for (final String arg : aArgs)
+			{
+				args.append(arg);
+			}
+			result = result.replace("{x}", args.toString());
+		}
+		if (result.matches(X_MATCHER) || result.matches(NUMBER_MATCHER))
+		{
+			Log.w(TAG, "Some unfilled wildcards were found inside the message: " + result);
+		}
+		return result;
+	}
+	
+	/**
+	 * @return a new empty XML document.
+	 */
+	public static Document createDocument()
+	{
+		Document doc = null;
+		try
+		{
+			doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+		}
+		catch (final ParserConfigurationException e)
+		{
+			Log.e(TAG, "Could not create a XML document.");
+		}
+		return doc;
+	}
+	
+	/**
+	 * @param aTagName
+	 *            The element tag name.
+	 * @param aParent
+	 *            The parent document.
+	 * @return the first child element with the given tag name.
+	 */
+	public static Element getElement(final Document aParent, final String aTagName)
+	{
+		if (aParent == null)
+		{
+			Log.w(TAG, "Parent is null.");
+			return null;
+		}
+		final NodeList children = aParent.getElementsByTagName(aTagName);
+		for (int i = 0; i < children.getLength(); i++ )
+		{
+			final Node node = children.item(i);
+			if (node instanceof Element)
+			{
+				return (Element) node;
+			}
+		}
+		Log.w(TAG, "Can't find any child element of the given document with name " + aTagName + ".");
+		return null;
+	}
+	
+	/**
+	 * @param aTagName
+	 *            The element tag name.
+	 * @param aParent
+	 *            The parent element.
+	 * @return the first child element with the given tag name.
+	 */
+	public static Element getElement(final Element aParent, final String aTagName)
+	{
+		if (aParent == null)
+		{
+			Log.w(TAG, "Parent is null.");
+			return null;
+		}
+		final NodeList children = aParent.getElementsByTagName(aTagName);
+		for (int i = 0; i < children.getLength(); i++ )
+		{
+			final Node node = children.item(i);
+			if (node instanceof Element)
+			{
+				return (Element) node;
+			}
+		}
+		Log.w(TAG, "Can't find any child element of the tag " + aParent.getTagName() + " with name " + aTagName + ".");
+		return null;
 	}
 	
 	/**
@@ -104,12 +218,159 @@ public class DataUtil
 	/**
 	 * @param aContext
 	 *            The underlying context.
+	 * @return the money settings.
+	 */
+	public static Currency loadCurrency(final Context aContext)
+	{
+		final Element element = getSpecialItems(aContext);
+		if (element != null)
+		{
+			final String[] currencies = parseArray(element.getAttribute("currencies"));
+			if (currencies.length != 0)
+			{
+				Log.w(TAG, "Currencies are empty.");
+			}
+			return new Currency(currencies);
+			
+		}
+		Log.w(TAG, "Can't find special items element.");
+		return null;
+	}
+	
+	/**
+	 * Loads the given document from the file system.
+	 * 
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aName
+	 *            The file name.
+	 * @param aLocale
+	 *            The language type of the file if existing.
+	 * @return the language depending document.
+	 */
+	public static Document loadDocument(final Context aContext, final String aName, final boolean aLocale)
+	{
+		Document doc = null;
+		try
+		{
+			final DocumentBuilderFactory DOMfactory = DocumentBuilderFactory.newInstance();
+			final DocumentBuilder DOMbuilder = DOMfactory.newDocumentBuilder();
+			final String postfix = aLocale ? "-" + Locale.getDefault().getLanguage() : "";
+			doc = DOMbuilder.parse(aContext.getAssets().open(aName + postfix + FILE_ENDING));
+		}
+		catch (final Exception e)
+		{
+			Log.e(TAG, "Can't load given document " + aName + ".");
+			return null;
+		}
+		return doc;
+	}
+	
+	/**
+	 * @param aXML
+	 *            The XML data.
+	 * @return a document created out of the given XML data.
+	 */
+	public static Document loadDocument(final String aXML)
+	{
+		final InputStream stream = new ByteArrayInputStream(aXML.getBytes(Charset.defaultCharset()));
+		Document doc = null;
+		try
+		{
+			doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(stream);
+		}
+		catch (final Exception e)
+		{
+			Log.e(TAG, "Could not read input stream.");
+		}
+		return doc;
+	}
+	
+	/**
+	 * Loads the given file and returns it as a string.
+	 * 
+	 * @param aFile
+	 *            The file name.
+	 * @param aContext
+	 *            The underlying context.
+	 * @return a string containing all contents of the given file.
+	 */
+	public static String loadFile(final String aFile, final Context aContext)
+	{
+		String data = null;
+		InputStreamReader reader = null;
+		try
+		{
+			reader = new InputStreamReader(aContext.openFileInput(aFile));
+			final StringBuilder list = new StringBuilder();
+			int c;
+			while ((c = reader.read()) != -1)
+			{
+				list.append((char) c);
+			}
+			data = list.toString();
+		}
+		catch (final FileNotFoundException e)
+		{
+			Log.i(TAG, "No characters saved.");
+		}
+		catch (final IOException e)
+		{
+			Log.e(TAG, "Could not load characters list.");
+		}
+		try
+		{
+			if (reader != null)
+			{
+				reader.close();
+			}
+		}
+		catch (final IOException e)
+		{
+			Log.e(TAG, "Could not close reader.");
+		}
+		return data;
+	}
+	
+	/**
+	 * @param aContext
+	 *            The underlying context.
+	 * @return the name of the generation item.
+	 */
+	public static String loadGenerationItem(final Context aContext)
+	{
+		final Element element = getSpecialItems(aContext);
+		if (element != null)
+		{
+			final String generationItem = element.getAttribute("generationItem");
+			if ( !generationItem.isEmpty())
+			{
+				return generationItem;
+			}
+		}
+		Log.w(TAG, "Can't load generation item.");
+		return null;
+	}
+	
+	/**
+	 * @param aContext
+	 *            The underlying context.
 	 * @return the health settings.
 	 */
 	public static Health loadHealth(final Context aContext)
 	{
 		final Element element = getSpecialItems(aContext);
-		return new Health(parseValues(element.getAttribute("defaultHealth")), element.getAttribute("healthCost"));
+		if (element != null)
+		{
+			final int[] defaultHealth = parseValues(element.getAttribute("defaultHealth"));
+			final String healthCost = element.getAttribute("healthCost");
+			if (defaultHealth.length > 0 && !healthCost.isEmpty())
+			{
+				return new Health(defaultHealth, healthCost);
+			}
+		}
+		Log.w(TAG, "Can't load health.");
+		return null;
 	}
 	
 	/**
@@ -120,8 +381,17 @@ public class DataUtil
 	public static Inventory loadInventory(final Context aContext)
 	{
 		final Element element = getSpecialItems(aContext);
-		final Inventory inventory = new Inventory(parseValues(element.getAttribute("maxWeightSteps")), element.getAttribute("maxWeightItem"));
-		return inventory;
+		if (element != null)
+		{
+			final int[] maxWeightSteps = parseValues(element.getAttribute("maxWeightSteps"));
+			final String maxWeightItem = element.getAttribute("maxWeightItem");
+			if (maxWeightSteps.length > 0 && !maxWeightItem.isEmpty())
+			{
+				return new Inventory(maxWeightSteps, maxWeightItem);
+			}
+		}
+		Log.w(TAG, "Can't load inventory.");
+		return null;
 	}
 	
 	/**
@@ -131,81 +401,138 @@ public class DataUtil
 	 */
 	public static List<ItemController> loadItems(final Context aContext)
 	{
-		// TODO Add information about errors inside the data file.
 		return loadControllers(getData(aContext));
 	}
 	
 	/**
-	 * @param aContext
-	 *            The underlying context.
-	 * @return the money settings.
+	 * Creates an array of string out of the given string.
+	 * 
+	 * @param aList
+	 *            The string that should be parsed into an array.
+	 * @return an array of strings, contained inside the given string.
 	 */
-	public static Currency loadCurrency(final Context aContext)
+	public static String[] parseArray(final String aList)
 	{
-		final Currency money = new Currency(parseArray(getSpecialItems(aContext).getAttribute("currencies")));
-		return money;
+		if (aList == null)
+		{
+			Log.w(TAG, "Array is null.");
+			return null;
+		}
+		final String[] result = aList.split(",");
+		for (int i = 0; i < result.length; i++ )
+		{
+			result[i] = CodingUtil.decode(result[i]);
+			if (result[i] == null)
+			{
+				Log.w(TAG, "Can't parse array: " + aList);
+				return null;
+			}
+		}
+		return result;
 	}
 	
 	/**
-	 * @param aTagName
-	 *            The element tag name.
-	 * @param aParent
-	 *            The parent element.
-	 * @return the first child element with the given tag name.
+	 * Writes all string inside the given array into one string.
+	 * 
+	 * @param aList
+	 *            The array of strings.
+	 * @return one string containing all strings of the given array.
 	 */
-	public static Element getElement(final Element aParent, final String aTagName)
+	public static String parseArray(final String[] aList)
 	{
-		final NodeList children = aParent.getElementsByTagName(aTagName);
-		for (int i = 0; i < children.getLength(); i++ )
+		if (aList == null)
 		{
-			final Node node = children.item(i);
-			if (node instanceof Element)
-			{
-				return (Element) node;
-			}
+			Log.w(TAG, "Array is null.");
+			return null;
 		}
-		return null;
+		final StringBuilder list = new StringBuilder();
+		for (int i = 0; i < aList.length; i++ )
+		{
+			if (i != 0)
+			{
+				list.append(",");
+			}
+			final String item = CodingUtil.encode(aList[i]);
+			if (item == null)
+			{
+				Log.w(TAG, "Can't parse array: " + list.toString() + " ... ");
+				return null;
+			}
+			list.append(item);
+		}
+		return list.toString();
 	}
 	
 	/**
-	 * @param aMap
-	 *            The string to integer map.
-	 * @return a string representing the given map.
+	 * @param aFlags
+	 *            The boolean array.
+	 * @return a string of <code>0</code> and <code>1</code> representing the array.
 	 */
-	public static String parseMap(final Map<String, Integer> aMap)
+	public static String parseFlags(final boolean[] aFlags)
 	{
-		final StringBuilder string = new StringBuilder();
-		boolean first = true;
-		for (final String key : aMap.keySet())
+		if (aFlags == null)
 		{
-			if (first)
-			{
-				first = false;
-			}
-			else
-			{
-				string.append(",");
-			}
-			string.append(CodingUtil.encode(key) + "=" + aMap.get(key));
+			Log.w(TAG, "Array is null.");
+			return null;
 		}
-		return string.toString();
+		final StringBuilder result = new StringBuilder();
+		for (final boolean flag : aFlags)
+		{
+			result.append(flag ? '1' : '0');
+		}
+		return result.toString();
 	}
 	
 	/**
-	 * @param aMap
-	 *            A string that represents a string to integer map.
-	 * @return a map out of the given string.
+	 * @param aFlags
+	 *            a string of <code>0</code> and <code>1</code>.
+	 * @return the boolean array represented by the given string.
 	 */
-	public static Map<String, Integer> parseMap(final String aMap)
+	public static boolean[] parseFlags(final String aFlags)
 	{
-		final Map<String, Integer> map = new HashMap<String, Integer>();
-		final String[] entries = aMap.split(",");
-		for (final String entry : entries)
+		if (aFlags == null)
 		{
-			final String[] keyAndValue = entry.split("=");
-			map.put(CodingUtil.decode(keyAndValue[0]), Integer.parseInt(keyAndValue[1]));
+			Log.w(TAG, "Array is null.");
+			return null;
 		}
-		return map;
+		final boolean[] result = new boolean[aFlags.length()];
+		for (int i = 0; i < aFlags.length(); i++ )
+		{
+			result[i] = aFlags.charAt(i) == '1';
+		}
+		return result;
+	}
+	
+	/**
+	 * Writes all strings of the given list into one string.
+	 * 
+	 * @param aList
+	 *            The string list.
+	 * @return one string containing all strings inside the list.
+	 */
+	public static String parseList(final List<String> aList)
+	{
+		if (aList == null)
+		{
+			Log.w(TAG, "List is null.");
+			return null;
+		}
+		final StringBuilder list = new StringBuilder();
+		for (int i = 0; i < aList.size(); i++ )
+		{
+			if (i != 0)
+			{
+				list.append(",");
+			}
+			final String string = aList.get(i);
+			if (string == null)
+			{
+				Log.w(TAG, "List contains null: " + aList.toString());
+				return null;
+			}
+			list.append(string);
+		}
+		return list.toString();
 	}
 	
 	/**
@@ -221,92 +548,83 @@ public class DataUtil
 	}
 	
 	/**
-	 * Writes all string of the given list into one string.
-	 * 
-	 * @param aList
-	 *            The string list.
-	 * @return one string containing all strings inside the list.
+	 * @param aMap
+	 *            The string to integer map.
+	 * @return a string representing the given map.
 	 */
-	public static String parseList(final List<String> aList)
+	public static String parseMap(final Map<String, Integer> aMap)
 	{
-		final StringBuilder list = new StringBuilder();
-		for (int i = 0; i < aList.size(); i++ )
+		if (aMap == null)
 		{
-			if (i != 0)
+			Log.w(TAG, "Map is null.");
+			return null;
+		}
+		final StringBuilder string = new StringBuilder();
+		boolean first = true;
+		for (final String key : aMap.keySet())
+		{
+			if (first)
 			{
-				list.append(",");
+				first = false;
 			}
-			list.append(aList.get(i));
-		}
-		return list.toString();
-	}
-	
-	/**
-	 * @param aFlags
-	 *            a string of <code>0</code> and <code>1</code>.
-	 * @return the boolean array represented by the given string.
-	 */
-	public static boolean[] parseFlags(final String aFlags)
-	{
-		final boolean[] result = new boolean[aFlags.length()];
-		for (int i = 0; i < aFlags.length(); i++ )
-		{
-			result[i] = aFlags.charAt(i) == '1';
-		}
-		return result;
-	}
-	
-	/**
-	 * @param aFlags
-	 *            The boolean array.
-	 * @return a string of <code>0</code> and <code>1</code> representing the array.
-	 */
-	public static String parseFlags(final boolean[] aFlags)
-	{
-		final StringBuilder result = new StringBuilder();
-		for (final boolean flag : aFlags)
-		{
-			result.append(flag ? '1' : '0');
-		}
-		return result.toString();
-	}
-	
-	/**
-	 * Writes all string inside the given array into one string.
-	 * 
-	 * @param aList
-	 *            The array of strings.
-	 * @return one string containing all strings of the given array.
-	 */
-	public static String parseArray(final String[] aList)
-	{
-		final StringBuilder list = new StringBuilder();
-		for (int i = 0; i < aList.length; i++ )
-		{
-			if (i != 0)
+			else
 			{
-				list.append(",");
+				string.append(",");
 			}
-			list.append(CodingUtil.encode(aList[i]));
+			if (key == null || aMap.get(key) == null)
+			{
+				Log.w(TAG, "Map contains null: " + aMap.toString());
+				return null;
+			}
+			final String encodedKey = CodingUtil.encode(key);
+			if (encodedKey == null)
+			{
+				Log.w(TAG, "Map contains unencodable key: " + key);
+				return null;
+			}
+			string.append(encodedKey + "=" + aMap.get(key));
 		}
-		return list.toString();
+		return string.toString();
 	}
 	
 	/**
-	 * Creates an array of string out of the given string.
-	 * 
-	 * @param aList
-	 *            The string that should be parsed into an array.
-	 * @return an array of strings, contained inside the given string.
+	 * @param aMap
+	 *            A string that represents a string to integer map.
+	 * @return a map out of the given string.
 	 */
-	public static String[] parseArray(final String aList)
+	public static Map<String, Integer> parseMap(final String aMap)
 	{
-		final String[] result = aList.split(",");
-		for (int i = 0; i < result.length; i++ )
+		if (aMap == null)
 		{
-			result[i] = CodingUtil.decode(result[i]);
+			Log.w(TAG, "Map is null.");
+			return null;
 		}
-		return result;
+		final Map<String, Integer> map = new HashMap<String, Integer>();
+		final String[] entries = aMap.split(",");
+		for (final String entry : entries)
+		{
+			final String[] keyAndValue = entry.split("=");
+			if (keyAndValue.length != 2)
+			{
+				Log.w(TAG, "Can't parse map entry: " + entry);
+				return null;
+			}
+			final String key = CodingUtil.decode(keyAndValue[0]);
+			Integer value = null;
+			try
+			{
+				value = Integer.parseInt(keyAndValue[1]);
+			}
+			catch (final NumberFormatException e)
+			{}
+			if (key == null || value == null)
+			{
+				Log.w(TAG, "Can't decode key or parse value: " + entry);
+				return null;
+			}
+			map.put(key, value);
+		}
+		return map;
 	}
 	
 	/**
@@ -318,6 +636,11 @@ public class DataUtil
 	 */
 	public static String parseValues(final int[] aValues)
 	{
+		if (aValues == null)
+		{
+			Log.w(TAG, "Array is null.");
+			return null;
+		}
 		final StringBuilder values = new StringBuilder();
 		for (int i = 0; i < aValues.length; i++ )
 		{
@@ -339,13 +662,104 @@ public class DataUtil
 	 */
 	public static int[] parseValues(final String aValues)
 	{
+		if (aValues == null)
+		{
+			Log.w(TAG, "Array is null.");
+			return null;
+		}
 		final String[] integers = aValues.split(",");
 		final int[] values = new int[integers.length];
 		for (int i = 0; i < integers.length; i++ )
 		{
-			values[i] = Integer.parseInt(integers[i]);
+			try
+			{
+				values[i] = Integer.parseInt(integers[i]);
+			}
+			catch (final NumberFormatException e)
+			{
+				Log.w(TAG, "Can't parse value: " + integers[i]);
+				return null;
+			}
 		}
 		return values;
+	}
+	
+	/**
+	 * @param aDoc
+	 *            A XML document.
+	 * @return a string containing the whole document.
+	 */
+	public static String readDocument(final Document aDoc)
+	{
+		final ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		final StreamResult result = new StreamResult(stream);
+		try
+		{
+			TransformerFactory.newInstance().newTransformer().transform(new DOMSource(aDoc), result);
+		}
+		catch (final TransformerException e)
+		{
+			Log.e(TAG, "Could not write document into stream.");
+		}
+		try
+		{
+			stream.close();
+		}
+		catch (final IOException e)
+		{
+			Log.e(TAG, "Could not close stream.");
+		}
+		
+		return new String(stream.toByteArray(), Charset.defaultCharset());
+	}
+	
+	/**
+	 * Saves the given data to the given file.
+	 * 
+	 * @param aData
+	 *            The data that should be saved.
+	 * @param aFile
+	 *            The file where to store the data.
+	 * @param aContext
+	 *            The underlying context.
+	 */
+	public static void saveFile(final String aData, final String aFile, final Context aContext)
+	{
+		try
+		{
+			final PrintWriter writer = new PrintWriter(aContext.openFileOutput(aFile, Context.MODE_PRIVATE));
+			writer.append(aData);
+			writer.flush();
+			writer.close();
+		}
+		catch (final IOException e)
+		{
+			Log.e(TAG, "Could not open file stream.");
+		}
+	}
+	
+	/**
+	 * @param aSaveable
+	 *            The item to serialize.
+	 * @return a string containing the given saveable.
+	 */
+	public static String serialize(final Saveable aSaveable)
+	{
+		if (aSaveable == null)
+		{
+			Log.w(TAG, "Can't serialize null.");
+			return null;
+		}
+		final Document doc = createDocument();
+		if (doc == null)
+		{
+			Log.w(TAG, "Can't create new document.");
+			return null;
+		}
+		
+		doc.appendChild(aSaveable.asElement(doc));
+		
+		return readDocument(doc);
 	}
 	
 	private static Document getData(final Context aContext)
@@ -359,11 +773,12 @@ public class DataUtil
 	
 	private static Element getSpecialItems(final Context aContext)
 	{
-		return (Element) getData(aContext).getElementsByTagName("special-items").item(0);
+		return getElement(getData(aContext), "special-items");
 	}
 	
 	private static Set<Action> loadActions(final Node aItem)
 	{
+		// TODO Make everything save from here on.
 		final Set<Action> actions = new HashSet<Action>();
 		final NodeList children = aItem.getChildNodes();
 		for (int i = 0; i < children.getLength(); i++ )
@@ -794,228 +1209,5 @@ public class DataUtil
 			}
 		}
 		return restrictions;
-	}
-	
-	/**
-	 * @return a new empty XML document.
-	 */
-	public static Document createDocument()
-	{
-		Document doc = null;
-		try
-		{
-			doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-		}
-		catch (final ParserConfigurationException e)
-		{
-			Log.e(TAG, "Could not create a XML document.");
-		}
-		return doc;
-	}
-	
-	/**
-	 * @param aSaveable
-	 *            The item to serialize.
-	 * @return a string containing the given saveable.
-	 */
-	public static String serialize(final Saveable aSaveable)
-	{
-		final Document doc = createDocument();
-		if (doc == null)
-		{
-			return null;
-		}
-		
-		doc.appendChild(aSaveable.asElement(doc));
-		
-		return readDocument(doc);
-	}
-	
-	/**
-	 * Loads the given document from the file system.
-	 * 
-	 * @param aContext
-	 *            The underlying context.
-	 * @param aName
-	 *            The file name.
-	 * @param aLocale
-	 *            The language type of the file if existing.
-	 * @return the language depending document.
-	 */
-	public static Document loadDocument(final Context aContext, final String aName, final boolean aLocale)
-	{
-		Document doc = null;
-		try
-		{
-			final DocumentBuilderFactory DOMfactory = DocumentBuilderFactory.newInstance();
-			final DocumentBuilder DOMbuilder = DOMfactory.newDocumentBuilder();
-			final String postfix = aLocale ? "-" + Locale.getDefault().getLanguage() : "";
-			doc = DOMbuilder.parse(aContext.getAssets().open(aName + postfix + FILE_ENDING));
-		}
-		catch (final Exception e)
-		{
-			return null;
-		}
-		return doc;
-	}
-	
-	/**
-	 * @param aXML
-	 *            The XML data.
-	 * @return a document created out of the given XML data.
-	 */
-	public static Document loadDocument(final String aXML)
-	{
-		final InputStream stream = new ByteArrayInputStream(aXML.getBytes(Charset.defaultCharset()));
-		Document doc = null;
-		try
-		{
-			doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(stream);
-		}
-		catch (final Exception e)
-		{
-			Log.e(TAG, "Could not read input stream.");
-		}
-		return doc;
-	}
-	
-	/**
-	 * @param aMessageId
-	 *            The message id.
-	 * @param aArgs
-	 *            The arguments.
-	 * @param aContext
-	 *            The underlying context.
-	 * @return the given string with <code>{0}, {1}, ...</code> replaced with the given arguments.
-	 */
-	public static String buildMessage(final int aMessageId, final String[] aArgs, final Context aContext)
-	{
-		return buildMessage(aContext.getString(aMessageId), aArgs);
-	}
-	
-	/**
-	 * @param aMessage
-	 *            The message.
-	 * @param aArgs
-	 *            The arguments.
-	 * @return the given string with <code>{0}, {1}, ...</code> replaced with the given arguments.
-	 */
-	public static String buildMessage(final String aMessage, final String[] aArgs)
-	{
-		String result = aMessage;
-		for (int i = 0; i < aArgs.length; i++ )
-		{
-			result = result.replace("{" + i + "}", aArgs[i]);
-		}
-		if (result.contains("{x}"))
-		{
-			final StringBuilder args = new StringBuilder();
-			for (final String arg : aArgs)
-			{
-				args.append(arg);
-			}
-			result = result.replace("{x}", args.toString());
-		}
-		return result;
-	}
-	
-	/**
-	 * Loads the given file and returns it as a string.
-	 * 
-	 * @param aFile
-	 *            The file name.
-	 * @param aContext
-	 *            The underlying context.
-	 * @return a string containing all contents of the given file.
-	 */
-	public static String loadFile(final String aFile, final Context aContext)
-	{
-		String data = null;
-		InputStreamReader reader = null;
-		try
-		{
-			reader = new InputStreamReader(aContext.openFileInput(aFile));
-			final StringBuilder list = new StringBuilder();
-			int c;
-			while ((c = reader.read()) != -1)
-			{
-				list.append((char) c);
-			}
-			data = list.toString();
-		}
-		catch (final FileNotFoundException e)
-		{
-			Log.i(TAG, "No characters saved.");
-		}
-		catch (final IOException e)
-		{
-			Log.e(TAG, "Could not load characters list.");
-		}
-		try
-		{
-			if (reader != null)
-			{
-				reader.close();
-			}
-		}
-		catch (final IOException e)
-		{
-			Log.e(TAG, "Could not close reader.");
-		}
-		return data;
-	}
-	
-	/**
-	 * @param aDoc
-	 *            A XML document.
-	 * @return a string containing the whole document.
-	 */
-	public static String readDocument(final Document aDoc)
-	{
-		final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		final StreamResult result = new StreamResult(stream);
-		try
-		{
-			TransformerFactory.newInstance().newTransformer().transform(new DOMSource(aDoc), result);
-		}
-		catch (final TransformerException e)
-		{
-			Log.e(TAG, "Could not write document into stream.");
-		}
-		try
-		{
-			stream.close();
-		}
-		catch (final IOException e)
-		{
-			Log.e(TAG, "Could not close stream.");
-		}
-		
-		return new String(stream.toByteArray(), Charset.defaultCharset());
-	}
-	
-	/**
-	 * Saves the given data to the given file.
-	 * 
-	 * @param aData
-	 *            The data that should be saved.
-	 * @param aFile
-	 *            The file where to store the data.
-	 * @param aContext
-	 *            The underlying context.
-	 */
-	public static void saveFile(final String aData, final String aFile, final Context aContext)
-	{
-		try
-		{
-			final PrintWriter writer = new PrintWriter(aContext.openFileOutput(aFile, Context.MODE_PRIVATE));
-			writer.append(aData);
-			writer.flush();
-			writer.close();
-		}
-		catch (final IOException e)
-		{
-			Log.e(TAG, "Could not open file stream.");
-		}
 	}
 }

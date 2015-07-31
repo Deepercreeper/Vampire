@@ -48,10 +48,10 @@ public class InventoryChange implements CharacterChange
 	 * @param aItems
 	 *            An item finder.
 	 */
-	public InventoryChange(final Element aElement, final Context aContext, ItemFinder aItems)
+	public InventoryChange(final Element aElement, final Context aContext, final ItemFinder aItems)
 	{
 		mAdded = Boolean.valueOf(aElement.getAttribute("added"));
-		final Element itemElement = (Element) DataUtil.loadDocument(aElement.getAttribute("item")).getElementsByTagName("item").item(0);
+		final Element itemElement = DataUtil.getElement(DataUtil.loadDocument(aElement.getAttribute("item")), "item");
 		mItem = Artifact.deserialize(itemElement, aContext, null, aItems);
 	}
 	

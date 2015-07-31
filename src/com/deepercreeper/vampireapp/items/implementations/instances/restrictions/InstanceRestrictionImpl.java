@@ -69,7 +69,7 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 		mMaximum = Integer.parseInt(aElement.getAttribute("maximum"));
 		mIndex = Integer.parseInt(aElement.getAttribute("index"));
 		mValue = Integer.parseInt(aElement.getAttribute("value"));
-		mDuration = Duration.create((Element) aElement.getElementsByTagName("duration").item(0));
+		mDuration = Duration.create(DataUtil.getElement(aElement, "duration"));
 		mDuration.addListener(this);
 	}
 	

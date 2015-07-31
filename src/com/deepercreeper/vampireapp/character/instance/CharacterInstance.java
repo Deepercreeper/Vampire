@@ -178,7 +178,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		Log.i(TAG, "Finished parsing character xml.");
 		
 		// Root element
-		final Element root = (Element) doc.getElementsByTagName("character").item(0);
+		final Element root = DataUtil.getElement(doc, "character");
 		
 		// Meta data
 		final Element meta = DataUtil.getElement(root, "meta");

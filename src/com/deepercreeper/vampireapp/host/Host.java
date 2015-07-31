@@ -62,14 +62,14 @@ public class Host implements TimeListener, Saveable
 		}
 		
 		// Root element
-		final Element root = (Element) doc.getElementsByTagName("host").item(0);
+		final Element root = DataUtil.getElement(doc, "host");
 		
 		// Meta data
-		final Element meta = (Element) root.getElementsByTagName("meta").item(0);
+		final Element meta = DataUtil.getElement(root, "meta");
 		mName = CodingUtil.decode(meta.getAttribute("name"));
 		
 		// Banned players
-		final Element bans = (Element) root.getElementsByTagName("bans").item(0);
+		final Element bans = DataUtil.getElement(root, "bans");
 		for (int i = 0; i < bans.getChildNodes().getLength(); i++ )
 		{
 			if (bans.getChildNodes().item(i) instanceof Element)

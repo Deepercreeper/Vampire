@@ -86,7 +86,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	public void applyChange(final String aChange, final String aType)
 	{
 		final Document doc = DataUtil.loadDocument(aChange);
-		final Element element = (Element) doc.getElementsByTagName(aType).item(0);
+		final Element element = DataUtil.getElement(doc, aType);
 		CharacterChange change = null;
 		if (aType.equals(HealthChange.TAG_NAME))
 		{
@@ -147,7 +147,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 		switch (aAction)
 		{
 			case TAKE_ITEM :
-				final Element itemElement = (Element) DataUtil.loadDocument(aMessage.getSaveables()[0]).getElementsByTagName("item").item(0);
+				final Element itemElement = DataUtil.getElement(DataUtil.loadDocument(aMessage.getSaveables()[0]), "item");
 				final Artifact item = Artifact.deserialize(itemElement, this, null, mChar);
 				if (inventory.canAddItem(item))
 				{

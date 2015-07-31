@@ -312,7 +312,7 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 	public void applyChange(final String aChange, final String aType)
 	{
 		final Document doc = DataUtil.loadDocument(aChange);
-		final Element element = (Element) doc.getElementsByTagName(aType).item(0);
+		final Element element = DataUtil.getElement(doc, aType);
 		CharacterChange change = null;
 		if (aType.equals(HealthChange.TAG_NAME))
 		{
