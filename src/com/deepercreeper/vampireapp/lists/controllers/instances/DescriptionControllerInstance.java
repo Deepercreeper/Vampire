@@ -11,6 +11,7 @@ import com.deepercreeper.vampireapp.lists.items.Description;
 import com.deepercreeper.vampireapp.lists.items.DescriptionCreation;
 import com.deepercreeper.vampireapp.lists.items.DescriptionInstance;
 import com.deepercreeper.vampireapp.util.CodingUtil;
+import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 
 /**
@@ -20,7 +21,7 @@ import com.deepercreeper.vampireapp.util.interfaces.Saveable;
  */
 public class DescriptionControllerInstance implements Saveable
 {
-	private final Map<String, DescriptionInstance>	mValues	= new HashMap<String, DescriptionInstance>();
+	private final Map<String, DescriptionInstance> mValues = new HashMap<String, DescriptionInstance>();
 	
 	/**
 	 * Creates a new description controller out of the given XML data.
@@ -33,16 +34,9 @@ public class DescriptionControllerInstance implements Saveable
 	public DescriptionControllerInstance(final Element aElement, final DescriptionController aController)
 	{
 		final Map<String, String> descriptionsMap = new HashMap<String, String>();
-		for (int i = 0; i < aElement.getChildNodes().getLength(); i++ )
+		for (Element description : DataUtil.getChildren(aElement, "description"))
 		{
-			if (aElement.getChildNodes().item(i) instanceof Element)
-			{
-				final Element description = (Element) aElement.getChildNodes().item(i);
-				if (description.getTagName().equals("description"))
-				{
-					descriptionsMap.put(description.getAttribute("key"), CodingUtil.decode(description.getAttribute("value")));
-				}
-			}
+			descriptionsMap.put(description.getAttribute("key"), CodingUtil.decode(description.getAttribute("value")));
 		}
 		for (final Description description : aController.getValuesList())
 		{

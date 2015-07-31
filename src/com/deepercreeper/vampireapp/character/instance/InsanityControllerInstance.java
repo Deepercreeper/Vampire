@@ -113,17 +113,10 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 		
 		init();
 		
-		for (int i = 0; i < aElement.getChildNodes().getLength(); i++ )
+		for (Element insanity : DataUtil.getChildren(aElement, "insanity"))
 		{
-			if (aElement.getChildNodes().item(i) instanceof Element)
-			{
-				final Element insanity = (Element) aElement.getChildNodes().item(i);
-				if (insanity.getTagName().equals("insanity"))
-				{
-					final Duration duration = Duration.create(DataUtil.getElement(insanity, "duration"));
-					addInsanity(CodingUtil.decode(insanity.getAttribute("name")), duration, true);
-				}
-			}
+			final Duration duration = Duration.create(DataUtil.getElement(insanity, "duration"));
+			addInsanity(CodingUtil.decode(insanity.getAttribute("name")), duration, true);
 		}
 		
 		updateButton();

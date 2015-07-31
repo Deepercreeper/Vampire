@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.items.interfaces.GroupOption;
@@ -17,6 +16,7 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.ItemGroupCreation
 import com.deepercreeper.vampireapp.items.interfaces.instances.GroupOptionInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemGroupInstance;
+import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
@@ -83,18 +83,9 @@ public class GroupOptionInstanceImpl implements GroupOptionInstance
 		
 		init();
 		
-		final NodeList children = aElement.getChildNodes();
-		for (int i = 0; i < children.getLength(); i++ )
+		for (Element group : DataUtil.getChildren(aElement, "group"))
 		{
-			if (children.item(i) instanceof Element)
-			{
-				final Element group = (Element) children.item(i);
-				if ( !group.getTagName().equals("group"))
-				{
-					continue;
-				}
-				addGroupSilent(aItemController.getGroup(group.getAttribute("name")));
-			}
+			addGroupSilent(aItemController.getGroup(group.getAttribute("name")));
 		}
 		sortGroups();
 	}

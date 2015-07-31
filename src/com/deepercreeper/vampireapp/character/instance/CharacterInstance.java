@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.items.ItemProvider;
@@ -203,18 +202,10 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		mDescriptions = new DescriptionControllerInstance(DataUtil.getElement(root, "descriptions"), mItems.getDescriptions());
 		
 		// Controllers
-		final Element controllers = DataUtil.getElement(root, "controllers");
-		for (int i = 0; i < controllers.getChildNodes().getLength(); i++ )
+		for (Element controller : DataUtil.getChildren(DataUtil.getElement(root, "controllers"), "controller"))
 		{
-			if (controllers.getChildNodes().item(i) instanceof Element)
-			{
-				final Element controller = (Element) controllers.getChildNodes().item(i);
-				if (controller.getTagName().equals("controller"))
-				{
-					mControllers.add(new ItemControllerInstanceImpl(controller, mItems, mContext, mEP, this, aControllerResizeListener,
-							mMessageListener, mHost));
-				}
-			}
+			mControllers
+					.add(new ItemControllerInstanceImpl(controller, mItems, mContext, mEP, this, aControllerResizeListener, mMessageListener, mHost));
 		}
 		
 		// Health
@@ -233,18 +224,9 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		mActions = mHost ? null : new ActionsControllerInstance(this, mContext);
 		
 		// Restrictions
-		final Element restrictions = DataUtil.getElement(root, "restrictions");
-		final NodeList restrictionsList = restrictions.getChildNodes();
-		for (int i = 0; i < restrictionsList.getLength(); i++ )
+		for (Element restriction : DataUtil.getChildren(DataUtil.getElement(root, "restrictions"), "restriction"))
 		{
-			if (restrictionsList.item(i) instanceof Element)
-			{
-				final Element restriction = (Element) restrictionsList.item(i);
-				if (restriction.getTagName().equals("restriction"))
-				{
-					addRestriction(new InstanceRestrictionImpl(restriction));
-				}
-			}
+			addRestriction(new InstanceRestrictionImpl(restriction));
 		}
 		
 		Log.i(TAG, "Finished loading character.");

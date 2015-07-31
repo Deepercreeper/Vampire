@@ -27,14 +27,14 @@ public class Clan extends Named
 	}
 	
 	/**
-	 * Adds a restriction to this clan.
+	 * Adds restrictions to this clan.
 	 * 
 	 * @param aRestriction
-	 *            The clan restriction.
+	 *            The clan restrictions.
 	 */
-	public void addRestriction(final CreationRestriction aRestriction)
+	public void addRestrictions(final Set<CreationRestriction> aRestriction)
 	{
-		mRestrictions.add(aRestriction);
+		mRestrictions.addAll(aRestriction);
 	}
 	
 	/**

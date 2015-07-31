@@ -137,16 +137,9 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 				
 		init();
 		
-		for (int i = 0; i < aElement.getChildNodes().getLength(); i++ )
+		for (Element artifact : DataUtil.getChildren(aElement, "item"))
 		{
-			if (aElement.getChildNodes().item(i) instanceof Element)
-			{
-				final Element child = (Element) aElement.getChildNodes().item(i);
-				if (child.getTagName().equals("item"))
-				{
-					addItem(Artifact.deserialize(child, mContext, this, mMessageListener.getCharacter()), true);
-				}
-			}
+			addItem(Artifact.deserialize(artifact, mContext, this, mMessageListener.getCharacter()), true);
 		}
 	}
 	

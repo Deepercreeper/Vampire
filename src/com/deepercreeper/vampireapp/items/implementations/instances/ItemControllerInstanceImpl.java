@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Set;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.character.instance.EPControllerInstance;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
@@ -26,6 +25,7 @@ import com.deepercreeper.vampireapp.items.interfaces.instances.ItemGroupInstance
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction;
 import com.deepercreeper.vampireapp.mechanics.ActionInstance;
+import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
 import android.content.Context;
@@ -97,30 +97,13 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 		
 		init();
 		
-		final NodeList children = aElement.getChildNodes();
-		for (int i = 0; i < children.getLength(); i++ )
+		for (Element group : DataUtil.getChildren(aElement, "group"))
 		{
-			if (children.item(i) instanceof Element)
-			{
-				final Element group = (Element) children.item(i);
-				if ( !group.getTagName().equals("group"))
-				{
-					continue;
-				}
-				addGroupSilent(new ItemGroupInstanceImpl(group, this, getContext(), getEP(), getCharacter(), aMessageListener, mHost));
-			}
+			addGroupSilent(new ItemGroupInstanceImpl(group, this, getContext(), getEP(), getCharacter(), aMessageListener, mHost));
 		}
-		for (int i = 0; i < children.getLength(); i++ )
+		for (Element groupOption : DataUtil.getChildren(aElement, "group-option"))
 		{
-			if (children.item(i) instanceof Element)
-			{
-				final Element groupOption = (Element) children.item(i);
-				if ( !groupOption.getTagName().equals("group-option"))
-				{
-					continue;
-				}
-				addGroupOptionSilent(new GroupOptionInstanceImpl(groupOption, this, getContext(), getCharacter(), mResizeListener, mHost));
-			}
+			addGroupOptionSilent(new GroupOptionInstanceImpl(groupOption, this, getContext(), getCharacter(), mResizeListener, mHost));
 		}
 	}
 	

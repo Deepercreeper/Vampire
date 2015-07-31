@@ -5,8 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.Currency;
 import com.deepercreeper.vampireapp.host.Message;
@@ -15,6 +13,7 @@ import com.deepercreeper.vampireapp.host.Message.MessageGroup;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.host.change.MoneyChange;
 import com.deepercreeper.vampireapp.util.CodingUtil;
+import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
@@ -123,18 +122,13 @@ public class MoneyControllerInstance implements Saveable, Viewable
 		init();
 		
 		MoneyDepot defaultDepot = null;
-		final NodeList childNodes = aElement.getChildNodes();
-		for (int i = 0; i < childNodes.getLength(); i++ )
+		for (Element child : DataUtil.getChildren(aElement, null))
 		{
-			final Node child = childNodes.item(i);
-			if (child instanceof Element)
+			final MoneyDepot depot = new MoneyDepot(CodingUtil.decode(child.getTagName()), child, mContext, mHost, this);
+			addDepot(depot, true);
+			if (depot.isDefault())
 			{
-				final MoneyDepot depot = new MoneyDepot(CodingUtil.decode(((Element) child).getTagName()), (Element) child, mContext, mHost, this);
-				addDepot(depot, true);
-				if (depot.isDefault())
-				{
-					defaultDepot = depot;
-				}
+				defaultDepot = depot;
 			}
 		}
 		mDefaultDepot = defaultDepot;

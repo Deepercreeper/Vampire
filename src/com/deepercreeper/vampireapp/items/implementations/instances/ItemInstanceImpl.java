@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Set;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.character.instance.EPControllerInstance;
@@ -29,6 +28,7 @@ import com.deepercreeper.vampireapp.mechanics.Action;
 import com.deepercreeper.vampireapp.mechanics.ActionInstance;
 import com.deepercreeper.vampireapp.mechanics.ActionInstanceImpl;
 import com.deepercreeper.vampireapp.util.CodingUtil;
+import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.dialogs.CreateStringDialog;
@@ -182,23 +182,14 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		
 		init();
 		
-		final NodeList children = aElement.getChildNodes();
-		for (int i = 0; i < children.getLength(); i++ )
+		for (Element item : DataUtil.getChildren(aElement, "item"))
 		{
-			if (children.item(i) instanceof Element)
+			int pos = -1;
+			if (hasOrder())
 			{
-				final Element item = (Element) children.item(i);
-				if ( !item.getTagName().equals("item"))
-				{
-					continue;
-				}
-				int pos = -1;
-				if (hasOrder())
-				{
-					pos = Integer.parseInt(item.getAttribute("order"));
-				}
-				addChildSilent(new ItemInstanceImpl(item, getItemGroup(), getContext(), getEP(), this, getCharacter(), mMessageListener, mHost), pos);
+				pos = Integer.parseInt(item.getAttribute("order"));
 			}
+			addChildSilent(new ItemInstanceImpl(item, getItemGroup(), getContext(), getEP(), this, getCharacter(), mMessageListener, mHost), pos);
 		}
 		if (hasChildren() && !hasOrder())
 		{

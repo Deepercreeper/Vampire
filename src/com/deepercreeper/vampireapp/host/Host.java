@@ -69,17 +69,9 @@ public class Host implements TimeListener, Saveable
 		mName = CodingUtil.decode(meta.getAttribute("name"));
 		
 		// Banned players
-		final Element bans = DataUtil.getElement(root, "bans");
-		for (int i = 0; i < bans.getChildNodes().getLength(); i++ )
+		for (Element banned : DataUtil.getChildren(DataUtil.getElement(root, "bans"), "banned"))
 		{
-			if (bans.getChildNodes().item(i) instanceof Element)
-			{
-				final Element banned = (Element) bans.getChildNodes().item(i);
-				if (banned.getTagName().equals("banned"))
-				{
-					mBanned.add(new BannedPlayer(banned, mContext));
-				}
-			}
+			mBanned.add(new BannedPlayer(banned, mContext));
 		}
 	}
 	

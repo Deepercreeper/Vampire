@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.character.instance.EPControllerInstance;
@@ -23,6 +22,7 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.ItemGroupCreation
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemGroupInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
+import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.dialogs.CreateStringDialog;
@@ -101,23 +101,14 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 		
 		init();
 		
-		final NodeList children = aElement.getChildNodes();
-		for (int i = 0; i < children.getLength(); i++ )
+		for (Element item : DataUtil.getChildren(aElement, "item"))
 		{
-			if (children.item(i) instanceof Element)
+			int pos = -1;
+			if (hasOrder())
 			{
-				final Element item = (Element) children.item(i);
-				if ( !item.getTagName().equals("item"))
-				{
-					continue;
-				}
-				int pos = -1;
-				if (hasOrder())
-				{
-					pos = Integer.parseInt(item.getAttribute("order"));
-				}
-				addItemSilent(new ItemInstanceImpl(item, this, getContext(), getEP(), null, getCharacter(), mMessageListener, mHost), pos);
+				pos = Integer.parseInt(item.getAttribute("order"));
 			}
+			addItemSilent(new ItemInstanceImpl(item, this, getContext(), getEP(), null, getCharacter(), mMessageListener, mHost), pos);
 		}
 		if ( !hasOrder())
 		{

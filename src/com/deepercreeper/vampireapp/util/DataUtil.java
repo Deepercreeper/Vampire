@@ -776,143 +776,285 @@ public class DataUtil
 		return getElement(getData(aContext), "special-items");
 	}
 	
-	private static Set<Action> loadActions(final Node aItem)
+	private static Set<Action> loadActions(final Element aItem)
 	{
-		// TODO Make everything save from here on.
-		final Set<Action> actions = new HashSet<Action>();
-		final NodeList children = aItem.getChildNodes();
-		for (int i = 0; i < children.getLength(); i++ )
+		if (aItem == null)
 		{
-			if ( !(children.item(i) instanceof Element))
+			Log.w(TAG, "Parent node is null.");
+			return null;
+		}
+		final Set<Action> actions = new HashSet<Action>();
+		for (Element child : getChildren(aItem, ACTION))
+		{
+			final ActionType type = Action.ActionType.get(child.getAttribute("type"));
+			if (type == null)
 			{
+				Log.w(TAG, "Can't find action type " + child.getAttribute("type"));
 				continue;
 			}
-			final Element child = (Element) children.item(i);
-			if (child.getTagName().equals(ACTION))
+			final String name = child.getAttribute("name");
+			if (name.isEmpty())
 			{
-				final ActionType type = Action.ActionType.get(child.getAttribute("type"));
-				final String name = child.getAttribute("name");
-				int minLevel = 0;
-				int minDices = 0;
-				String[] dices = new String[0];
-				String[] costDices = new String[0];
-				String[] cost = new String[0];
-				
-				if (child.hasAttribute("minDices"))
+				Log.w(TAG, "No action name defined.");
+				continue;
+			}
+			int minLevel = 0;
+			int minDices = 0;
+			String[] dices = new String[0];
+			String[] costDices = new String[0];
+			String[] cost = new String[0];
+			
+			if (child.hasAttribute("minDices"))
+			{
+				try
 				{
 					minDices = Integer.parseInt(child.getAttribute("minDices"));
 				}
-				if (child.hasAttribute("dices"))
+				catch (NumberFormatException e)
 				{
-					dices = parseArray(child.getAttribute("dices"));
+					Log.w(TAG, "Can't parse minimum dices of " + name + ".");
 				}
-				if (child.hasAttribute("costDices"))
+			}
+			if (child.hasAttribute("dices"))
+			{
+				dices = parseArray(child.getAttribute("dices"));
+				if (dices.length == 0)
 				{
-					costDices = parseArray(child.getAttribute("costDices"));
+					Log.w(TAG, "Dices of " + name + " is empty.");
 				}
-				if (child.hasAttribute("costs"))
+			}
+			if (child.hasAttribute("costDices"))
+			{
+				costDices = parseArray(child.getAttribute("costDices"));
+				if (costDices.length == 0)
 				{
-					cost = parseArray(child.getAttribute("cost"));
+					Log.w(TAG, "Cost dices of " + name + " is empty.");
 				}
-				if (child.hasAttribute("minLevel"))
+			}
+			if (child.hasAttribute("costs"))
+			{
+				cost = parseArray(child.getAttribute("cost"));
+				if (cost.length == 0)
+				{
+					Log.w(TAG, "Costs of " + name + " is empty.");
+				}
+			}
+			if (child.hasAttribute("minLevel"))
+			{
+				try
 				{
 					minLevel = Integer.parseInt(child.getAttribute("minLevel"));
 				}
-				actions.add(new ActionImpl(name, type, minLevel, minDices, dices, costDices, cost));
+				catch (NumberFormatException e)
+				{
+					Log.w(TAG, "Can't parse minimum level of " + name + ".");
+				}
 			}
+			actions.add(new ActionImpl(name, type, minLevel, minDices, dices, costDices, cost));
 		}
 		return actions;
 	}
 	
+	/**
+	 * @param aDoc
+	 *            The parent document.
+	 * @param aTagName
+	 *            The tag name. May be {@code null} if all children should be added.
+	 * @return a list of child elements with the given tag name.
+	 */
+	public static List<Element> getChildren(Document aDoc, String aTagName)
+	{
+		if (aDoc == null)
+		{
+			Log.w(TAG, "Document is null.");
+			return null;
+		}
+		List<Element> children = new ArrayList<Element>();
+		NodeList nodes;
+		if (aTagName == null)
+		{
+			nodes = aDoc.getChildNodes();
+		}
+		else
+		{
+			nodes = aDoc.getElementsByTagName(aTagName);
+		}
+		for (int i = 0; i < nodes.getLength(); i++ )
+		{
+			if (nodes.item(i) instanceof Element)
+			{
+				children.add((Element) nodes.item(i));
+			}
+		}
+		return children;
+	}
+	
+	/**
+	 * @param aElement
+	 *            The parent element.
+	 * @param aTagName
+	 *            The tag name. May be {@code null} if all children should be added.
+	 * @return a list of child elements with the given tag name.
+	 */
+	public static List<Element> getChildren(Element aElement, String aTagName)
+	{
+		if (aElement == null)
+		{
+			Log.w(TAG, "Parent element is null.");
+			return null;
+		}
+		List<Element> children = new ArrayList<Element>();
+		NodeList nodes;
+		if (aTagName == null)
+		{
+			nodes = aElement.getChildNodes();
+		}
+		else
+		{
+			nodes = aElement.getElementsByTagName(aTagName);
+		}
+		for (int i = 0; i < nodes.getLength(); i++ )
+		{
+			if (nodes.item(i) instanceof Element)
+			{
+				children.add((Element) nodes.item(i));
+			}
+		}
+		return children;
+	}
+	
 	private static ClanController loadClans(final Document aDoc)
 	{
+		if (aDoc == null)
+		{
+			Log.w(TAG, "The document is null.");
+			return null;
+		}
 		final ClanController controller = new ClanController();
 		final List<Clan> clansList = new ArrayList<Clan>();
-		final NodeList clans = aDoc.getElementsByTagName(CLAN);
-		for (int i = 0; i < clans.getLength(); i++ )
+		for (Element clanNode : getChildren(aDoc, CLAN))
 		{
-			if ( !(clans.item(i) instanceof Element))
+			String name = clanNode.getAttribute("name");
+			if (name.isEmpty())
 			{
+				Log.w(TAG, "Clan with empty name.");
 				continue;
 			}
-			final Element clanNode = (Element) clans.item(i);
-			final Clan clan = new Clan(clanNode.getAttribute("name"));
-			final Set<CreationRestriction> restrictions = loadRestrictions(clanNode);
-			for (final CreationRestriction restriction : restrictions)
-			{
-				clan.addRestriction(restriction);
-			}
+			final Clan clan = new Clan(name);
+			clan.addRestrictions(loadRestrictions(clanNode));
 			clansList.add(clan);
 		}
 		controller.init(clansList);
 		return controller;
 	}
 	
-	private static Set<CreationCondition> loadConditions(final Node aRestrictionNode)
+	private static Set<CreationCondition> loadConditions(final Element aRestrictionNode)
 	{
-		final Set<CreationCondition> conditions = new HashSet<CreationCondition>();
-		final NodeList children = aRestrictionNode.getChildNodes();
-		for (int i = 0; i < children.getLength(); i++ )
+		if (aRestrictionNode == null)
 		{
-			if ( !(children.item(i) instanceof Element))
+			Log.w(TAG, "Parent node is null.");
+			return null;
+		}
+		final Set<CreationCondition> conditions = new HashSet<CreationCondition>();
+		for (Element child : getChildren(aRestrictionNode, CONDITION))
+		{
+			final CreationConditionQuery query = CreationConditionQuery.getQuery(child.getAttribute("query"));
+			if (query == null)
 			{
+				Log.w(TAG, "Can't find condition query " + child.getAttribute("query") + ".");
 				continue;
 			}
-			final Element child = (Element) (children.item(i));
-			if (child.getTagName().equals(CONDITION))
+			String itemName = null;
+			int minimum = Integer.MIN_VALUE;
+			int maximum = Integer.MAX_VALUE;
+			int index = 0;
+			if (child.hasAttribute("range"))
 			{
-				final CreationConditionQuery query = CreationConditionQuery.getQuery(child.getAttribute("query"));
-				String itemName = null;
-				int minimum = Integer.MIN_VALUE;
-				int maximum = Integer.MAX_VALUE;
-				int index = 0;
-				if (child.hasAttribute("range"))
+				final String range = child.getAttribute("range");
+				
+				if (range.startsWith("="))
 				{
-					final String range = child.getAttribute("range");
-					
-					if (range.startsWith("="))
+					try
 					{
 						minimum = maximum = Integer.parseInt(range.substring(1));
 					}
-					else if (range.startsWith("<"))
+					catch (NumberFormatException e)
+					{
+						Log.w(TAG, "Can't parse range " + range + ".");
+					}
+				}
+				else if (range.startsWith("<"))
+				{
+					try
 					{
 						maximum = Integer.parseInt(range.substring(1)) - 1;
 					}
-					else if (range.startsWith(">"))
+					catch (NumberFormatException e)
+					{
+						Log.w(TAG, "Can't parse range " + range + ".");
+					}
+				}
+				else if (range.startsWith(">"))
+				{
+					try
 					{
 						minimum = Integer.parseInt(range.substring(1)) + 1;
 					}
-					else if (range.contains("-"))
+					catch (NumberFormatException e)
+					{
+						Log.w(TAG, "Can't parse range " + range + ".");
+					}
+				}
+				else if (range.contains("-"))
+				{
+					try
 					{
 						minimum = Integer.parseInt(range.split("-")[0]);
 						maximum = Integer.parseInt(range.split("-")[1]);
 					}
+					catch (NumberFormatException e)
+					{
+						Log.w(TAG, "Can't parse range " + range + ".");
+						minimum = Integer.MIN_VALUE;
+					}
 				}
-				if (child.hasAttribute("itemName"))
+			}
+			if (child.hasAttribute("itemName"))
+			{
+				itemName = child.getAttribute("itemName");
+				if (itemName.isEmpty())
 				{
-					itemName = child.getAttribute("itemName");
+					itemName = null;
+					Log.w(TAG, "Item name is empty.");
 				}
-				if (child.hasAttribute("index"))
+			}
+			if (child.hasAttribute("index"))
+			{
+				try
 				{
 					index = Integer.parseInt(child.getAttribute("index"));
 				}
-				conditions.add(new CreationConditionImpl(query, itemName, minimum, maximum, index));
+				catch (NumberFormatException e)
+				{
+					Log.w(TAG, "Can't parse index " + child.getAttribute("index") + ".");
+					continue;
+				}
 			}
+			conditions.add(new CreationConditionImpl(query, itemName, minimum, maximum, index));
 		}
 		return conditions;
 	}
 	
 	private static List<ItemController> loadControllers(final Document aDoc)
 	{
-		final List<ItemController> controllersList = new ArrayList<ItemController>();
-		final NodeList controllers = aDoc.getElementsByTagName(CONTROLLER);
-		for (int i = 0; i < controllers.getLength(); i++ )
+		if (aDoc == null)
 		{
-			if ( !(controllers.item(i) instanceof Element))
-			{
-				continue;
-			}
-			final Element controller = (Element) controllers.item(i);
+			Log.w(TAG, "Document is null.");
+			return null;
+		}
+		final List<ItemController> controllersList = new ArrayList<ItemController>();
+		for (Element controller : getChildren(aDoc, CONTROLLER))
+		{
 			final String name = controller.getAttribute("name");
 			final ItemController itemController = new ItemControllerImpl(name);
 			for (final ItemGroup group : loadGroups(controller))
@@ -928,285 +1070,419 @@ public class DataUtil
 		return controllersList;
 	}
 	
-	private static List<GroupOption> loadGroupOptions(final Node aController, final ItemController aParent)
+	private static List<GroupOption> loadGroupOptions(final Element aController, final ItemController aParent)
 	{
-		final List<GroupOption> groupOptionsList = new ArrayList<GroupOption>();
-		final NodeList children = aController.getChildNodes();
-		for (int i = 0; i < children.getLength(); i++ )
+		if (aController == null)
 		{
-			if ( !(children.item(i) instanceof Element))
+			Log.w(TAG, "Parent element is null.");
+			return null;
+		}
+		final List<GroupOption> groupOptionsList = new ArrayList<GroupOption>();
+		for (Element child : getChildren(aController, GROUP_OPTION))
+		{
+			final String name = child.getAttribute("name");
+			final boolean valuedGroupOption = Boolean.parseBoolean(child.getAttribute("value"));
+			int[] maxValues = null;
+			if (valuedGroupOption && child.hasAttribute("maxValues"))
 			{
-				continue;
+				maxValues = parseValues(child.getAttribute("maxValues"));
 			}
-			final Element child = (Element) (children.item(i));
-			if (child.getTagName().equals(GROUP_OPTION))
+			final GroupOption groupOption = new GroupOptionImpl(name, maxValues);
+			for (final ItemGroup group : loadGroups(child, aParent))
 			{
-				final String name = child.getAttribute("name");
-				final boolean valuedGroupOption = Boolean.parseBoolean(child.getAttribute("value"));
-				int[] maxValues = null;
-				if (valuedGroupOption && child.hasAttribute("maxValues"))
-				{
-					maxValues = parseValues(child.getAttribute("maxValues"));
-				}
-				final GroupOption groupOption = new GroupOptionImpl(name, maxValues);
-				for (final ItemGroup group : loadGroups(child, aParent))
-				{
-					groupOption.addGroup(group);
-				}
-				groupOptionsList.add(groupOption);
+				groupOption.addGroup(group);
 			}
+			groupOptionsList.add(groupOption);
 		}
 		return groupOptionsList;
 	}
 	
 	private static List<ItemGroup> loadGroups(final Element aGroupOption, final ItemController aController)
 	{
-		final List<ItemGroup> groupsList = new ArrayList<ItemGroup>();
-		final NodeList children = aGroupOption.getChildNodes();
-		for (int i = 0; i < children.getLength(); i++ )
+		if (aGroupOption == null)
 		{
-			if ( !(children.item(i) instanceof Element))
-			{
-				continue;
-			}
-			final Element child = (Element) children.item(i);
+			Log.w(TAG, "Parent element is null.");
+			return null;
+		}
+		final List<ItemGroup> groupsList = new ArrayList<ItemGroup>();
+		for (Element child : getChildren(aGroupOption, "group"))
+		{
 			final String groupName = child.getAttribute("name");
 			groupsList.add(aController.getGroup(groupName));
 		}
 		return groupsList;
 	}
 	
-	private static List<ItemGroup> loadGroups(final Node aController)
+	private static List<ItemGroup> loadGroups(final Element aController)
 	{
-		final List<ItemGroup> groupsList = new ArrayList<ItemGroup>();
-		final NodeList children = aController.getChildNodes();
-		for (int i = 0; i < children.getLength(); i++ )
+		if (aController == null)
 		{
-			if ( !(children.item(i) instanceof Element))
+			Log.w(TAG, "Parent element is null.");
+			return null;
+		}
+		final List<ItemGroup> groupsList = new ArrayList<ItemGroup>();
+		for (Element child : getChildren(aController, GROUP))
+		{
+			final String name = child.getAttribute("name");
+			final boolean mutable = Boolean.parseBoolean(child.getAttribute("mutable"));
+			final boolean freeMutable = Boolean.parseBoolean(child.getAttribute("freeMutable"));
+			final boolean hostMutable = Boolean.parseBoolean(child.getAttribute("hostMutable"));
+			final boolean valueGroup = Boolean.parseBoolean(child.getAttribute("value"));
+			final boolean order = Boolean.parseBoolean(child.getAttribute("order"));
+			int maxValue = Integer.MAX_VALUE;
+			int startValue = 0;
+			int maxLowLevelValue = 0;
+			int freePointsCost = 0;
+			int epCost = 0;
+			int epCostMultiplicator = 0;
+			int epCostNew = 0;
+			int maxItems = Integer.MAX_VALUE;
+			if (child.hasAttribute("maxItems"))
 			{
-				continue;
-			}
-			final Element child = (Element) (children.item(i));
-			if (child.getTagName().equals(GROUP))
-			{
-				final String name = child.getAttribute("name");
-				final boolean mutable = Boolean.parseBoolean(child.getAttribute("mutable"));
-				final boolean freeMutable = Boolean.parseBoolean(child.getAttribute("freeMutable"));
-				final boolean hostMutable = Boolean.parseBoolean(child.getAttribute("hostMutable"));
-				final boolean valueGroup = Boolean.parseBoolean(child.getAttribute("value"));
-				final boolean order = Boolean.parseBoolean(child.getAttribute("order"));
-				int maxValue = Integer.MAX_VALUE;
-				int startValue = 0;
-				int maxLowLevelValue = 0;
-				int freePointsCost = 0;
-				int epCost = 0;
-				int epCostMultiplicator = 0;
-				int epCostNew = 0;
-				int maxItems = Integer.MAX_VALUE;
-				if (child.hasAttribute("maxItems"))
+				try
 				{
 					maxItems = Integer.parseInt(child.getAttribute("maxItems"));
 				}
-				if (valueGroup)
+				catch (NumberFormatException e)
 				{
-					if (child.hasAttribute("epCost"))
+					Log.w(TAG, "Can't parse " + child.getAttribute("maxItems"));
+					continue;
+				}
+			}
+			if (valueGroup)
+			{
+				if (child.hasAttribute("epCost"))
+				{
+					try
 					{
 						epCost = Integer.parseInt(child.getAttribute("epCost"));
 					}
-					if (child.hasAttribute("epCostMulti"))
+					catch (NumberFormatException e)
+					{
+						Log.w(TAG, "Can't parse " + child.getAttribute("epCost"));
+						continue;
+					}
+				}
+				if (child.hasAttribute("epCostMulti"))
+				{
+					try
 					{
 						epCostMultiplicator = Integer.parseInt(child.getAttribute("epCostMulti"));
 					}
-					if (child.hasAttribute("epCostNew"))
+					catch (NumberFormatException e)
+					{
+						Log.w(TAG, "Can't parse " + child.getAttribute("epCostMulti"));
+						continue;
+					}
+				}
+				if (child.hasAttribute("epCostNew"))
+				{
+					try
 					{
 						epCostNew = Integer.parseInt(child.getAttribute("epCostNew"));
 					}
-					if (child.hasAttribute("maxValue"))
+					catch (NumberFormatException e)
+					{
+						Log.w(TAG, "Can't parse " + child.getAttribute("epCostNew"));
+						continue;
+					}
+				}
+				if (child.hasAttribute("maxValue"))
+				{
+					try
 					{
 						maxValue = Integer.parseInt(child.getAttribute("maxValue"));
 					}
-					if (child.hasAttribute("freePointsCost"))
+					catch (NumberFormatException e)
+					{
+						Log.w(TAG, "Can't parse " + child.getAttribute("maxValue"));
+						continue;
+					}
+				}
+				if (child.hasAttribute("freePointsCost"))
+				{
+					try
 					{
 						freePointsCost = Integer.parseInt(child.getAttribute("freePointsCost"));
 					}
-					if (child.hasAttribute("maxLowLevelValue"))
+					catch (NumberFormatException e)
+					{
+						Log.w(TAG, "Can't parse " + child.getAttribute("freePointsCost"));
+						continue;
+					}
+				}
+				if (child.hasAttribute("maxLowLevelValue"))
+				{
+					try
 					{
 						maxLowLevelValue = Integer.parseInt(child.getAttribute("maxLowLevelValue"));
 					}
-					else
+					catch (NumberFormatException e)
 					{
-						maxLowLevelValue = maxValue;
+						Log.w(TAG, "Can't parse " + child.getAttribute("maxLowLevelValue"));
+						continue;
 					}
-					if (child.hasAttribute("startValue"))
+				}
+				else
+				{
+					maxLowLevelValue = maxValue;
+				}
+				if (child.hasAttribute("startValue"))
+				{
+					try
 					{
 						startValue = Integer.parseInt(child.getAttribute("startValue"));
 					}
+					catch (NumberFormatException e)
+					{
+						Log.w(TAG, "Can't parse " + child.getAttribute("startValue"));
+						continue;
+					}
 				}
-				final ItemGroup group = new ItemGroupImpl(name, mutable, order, freeMutable, hostMutable, maxLowLevelValue, startValue, maxValue,
-						freePointsCost, valueGroup, maxItems, epCost, epCostNew, epCostMultiplicator);
-				for (final Item item : loadItems(child, group, null))
-				{
-					group.addItem(item);
-				}
-				groupsList.add(group);
 			}
+			final ItemGroup group = new ItemGroupImpl(name, mutable, order, freeMutable, hostMutable, maxLowLevelValue, startValue, maxValue,
+					freePointsCost, valueGroup, maxItems, epCost, epCostNew, epCostMultiplicator);
+			for (final Item item : loadItems(child, group, null))
+			{
+				group.addItem(item);
+			}
+			groupsList.add(group);
 		}
 		return groupsList;
 	}
 	
-	private static List<Item> loadItems(final Node aParentNode, final ItemGroup aParentGroup, final Item aParentItem)
+	private static List<Item> loadItems(final Element aParentNode, final ItemGroup aParentGroup, final Item aParentItem)
 	{
-		final List<Item> itemsList = new ArrayList<Item>();
-		final NodeList children = aParentNode.getChildNodes();
-		for (int i = 0; i < children.getLength(); i++ )
+		if (aParentNode == null)
 		{
-			if ( !(children.item(i) instanceof Element))
+			Log.w(TAG, "Parent element is null.");
+			return null;
+		}
+		final List<Item> itemsList = new ArrayList<Item>();
+		for (Element child : getChildren(aParentNode, ITEM))
+		{
+			final String name = child.getAttribute("name");
+			if (name.isEmpty())
 			{
+				Log.w(TAG, "Name is empty.");
 				continue;
 			}
-			final Element child = (Element) (children.item(i));
-			if (child.getTagName().equals(ITEM))
+			final boolean needsDescription = Boolean.parseBoolean(child.getAttribute("needsDescription"));
+			final boolean parent = Boolean.parseBoolean(child.getAttribute("parent"));
+			final boolean order = Boolean.parseBoolean(child.getAttribute("order"));
+			final boolean mutableParent = Boolean.parseBoolean(child.getAttribute("mutableParent"));
+			boolean valueItem = aParentGroup.isValueGroup();
+			int[] values = null;
+			int startValue = -1;
+			int epCost = -1;
+			int epCostNew = -1;
+			int epCostMultiplicator = -1;
+			
+			if (child.hasAttribute("epCost"))
 			{
-				final String name = child.getAttribute("name");
-				final boolean needsDescription = Boolean.parseBoolean(child.getAttribute("needsDescription"));
-				final boolean parent = Boolean.parseBoolean(child.getAttribute("parent"));
-				final boolean order = Boolean.parseBoolean(child.getAttribute("order"));
-				boolean valueItem = aParentGroup.isValueGroup();
-				int[] values = null;
-				int startValue = -1;
-				int epCost = -1;
-				int epCostNew = -1;
-				int epCostMultiplicator = -1;
-				
-				if (child.hasAttribute("epCost"))
+				try
 				{
 					epCost = Integer.parseInt(child.getAttribute("epCost"));
 				}
-				if (child.hasAttribute("epCostNew"))
+				catch (NumberFormatException e)
+				{
+					Log.w(TAG, "Can't parse " + child.getAttribute("epCost"));
+					continue;
+				}
+			}
+			if (child.hasAttribute("epCostNew"))
+			{
+				try
 				{
 					epCostNew = Integer.parseInt(child.getAttribute("epCostNew"));
 				}
-				if (child.hasAttribute("epCostMulti"))
+				catch (NumberFormatException e)
+				{
+					Log.w(TAG, "Can't parse " + child.getAttribute("epCostNew"));
+					continue;
+				}
+			}
+			if (child.hasAttribute("epCostMulti"))
+			{
+				try
 				{
 					epCostMultiplicator = Integer.parseInt(child.getAttribute("epCostMulti"));
 				}
-				if (child.hasAttribute("startValue"))
+				catch (NumberFormatException e)
+				{
+					Log.w(TAG, "Can't parse " + child.getAttribute("epCostMulti"));
+					continue;
+				}
+			}
+			if (child.hasAttribute("startValue"))
+			{
+				try
 				{
 					startValue = Integer.parseInt(child.getAttribute("startValue"));
 				}
-				if (child.hasAttribute("valueItem"))
+				catch (NumberFormatException e)
 				{
-					valueItem = Boolean.parseBoolean(child.getAttribute("valueItem"));
+					Log.w(TAG, "Can't parse " + child.getAttribute("startValue"));
+					continue;
 				}
-				if (valueItem)
-				{
-					if (child.hasAttribute("values"))
-					{
-						values = parseValues(child.getAttribute("values"));
-					}
-					else
-					{
-						values = aParentGroup.getDefaultValues();
-					}
-				}
-				
-				final Item item;
-				final boolean mutableParent = Boolean.parseBoolean(child.getAttribute("mutableParent"));
-				item = new ItemImpl(name, aParentGroup, needsDescription, parent, mutableParent, order, values, startValue, epCost, epCostNew,
-						epCostMultiplicator, aParentItem);
-				for (final Item childItem : loadItems(child, aParentGroup, item))
-				{
-					item.addChild(childItem);
-				}
-				for (final Action action : loadActions(child))
-				{
-					item.addAction(action);
-				}
-				itemsList.add(item);
 			}
+			if (child.hasAttribute("valueItem"))
+			{
+				valueItem = Boolean.parseBoolean(child.getAttribute("valueItem"));
+			}
+			if (valueItem)
+			{
+				if (child.hasAttribute("values"))
+				{
+					values = parseValues(child.getAttribute("values"));
+				}
+				else
+				{
+					values = aParentGroup.getDefaultValues();
+				}
+			}
+			
+			final Item item;
+			item = new ItemImpl(name, aParentGroup, needsDescription, parent, mutableParent, order, values, startValue, epCost, epCostNew,
+					epCostMultiplicator, aParentItem);
+			for (final Item childItem : loadItems(child, aParentGroup, item))
+			{
+				item.addChild(childItem);
+			}
+			for (final Action action : loadActions(child))
+			{
+				item.addAction(action);
+			}
+			itemsList.add(item);
 		}
 		return itemsList;
 	}
 	
-	private static Set<CreationRestriction> loadRestrictions(final Node aClanNode)
+	private static Set<CreationRestriction> loadRestrictions(final Element aClanNode)
 	{
-		final Set<CreationRestriction> restrictions = new HashSet<CreationRestriction>();
-		final NodeList children = aClanNode.getChildNodes();
-		for (int i = 0; i < children.getLength(); i++ )
+		if (aClanNode == null)
 		{
-			if ( !(children.item(i) instanceof Element))
+			Log.w(TAG, "Parent element is null.");
+			return null;
+		}
+		final Set<CreationRestriction> restrictions = new HashSet<CreationRestriction>();
+		for (Element child : getChildren(aClanNode, RESTRICTION))
+		{
+			final CreationRestrictionType type = CreationRestrictionType.get(child.getAttribute("type"));
+			
+			if (type == null)
 			{
+				Log.w(TAG, "Restriction type could not be found: " + child.getAttribute("type"));
 				continue;
 			}
-			final Element child = (Element) (children.item(i));
-			if (child.getTagName().equals(RESTRICTION))
+			
+			final boolean creationRestriction = Boolean.parseBoolean(child.getAttribute("creationRestriction"));
+			String itemName = null;
+			int minimum = Integer.MIN_VALUE;
+			int maximum = Integer.MAX_VALUE;
+			int index = 0;
+			int value = 0;
+			List<String> items = null;
+			
+			if (child.hasAttribute("itemName"))
 			{
-				final CreationRestrictionType type = CreationRestrictionType.get(child.getAttribute("type"));
-				
-				if (type == null)
+				itemName = child.getAttribute("itemName");
+				if (itemName.isEmpty())
 				{
-					Log.w(TAG, "Restriction type could not be found: " + child.getAttribute("type"));
+					Log.w(TAG, "Item name is empty.");
 				}
+			}
+			if (child.hasAttribute("range"))
+			{
+				final String range = child.getAttribute("range");
 				
-				final boolean creationRestriction = Boolean.parseBoolean(child.getAttribute("creationRestriction"));
-				String itemName = null;
-				int minimum = Integer.MIN_VALUE;
-				int maximum = Integer.MAX_VALUE;
-				int index = 0;
-				int value = 0;
-				List<String> items = null;
-				
-				if (child.hasAttribute("itemName"))
+				if (range.startsWith("="))
 				{
-					itemName = child.getAttribute("itemName");
-				}
-				if (child.hasAttribute("range"))
-				{
-					final String range = child.getAttribute("range");
-					
-					if (range.startsWith("="))
+					try
 					{
 						minimum = maximum = Integer.parseInt(range.substring(1));
 					}
-					else if (range.startsWith("<"))
+					catch (NumberFormatException e)
+					{
+						Log.w(TAG, "Can't parse range " + range + ".");
+						continue;
+					}
+				}
+				else if (range.startsWith("<"))
+				{
+					try
 					{
 						maximum = Integer.parseInt(range.substring(1)) - 1;
 					}
-					else if (range.startsWith(">"))
+					catch (NumberFormatException e)
+					{
+						Log.w(TAG, "Can't parse range " + range + ".");
+						continue;
+					}
+				}
+				else if (range.startsWith(">"))
+				{
+					try
 					{
 						minimum = Integer.parseInt(range.substring(1)) + 1;
 					}
-					else if (range.contains("-"))
+					catch (NumberFormatException e)
+					{
+						Log.w(TAG, "Can't parse range " + range + ".");
+						continue;
+					}
+				}
+				else if (range.contains("-"))
+				{
+					try
 					{
 						minimum = Integer.parseInt(range.split("-")[0]);
 						maximum = Integer.parseInt(range.split("-")[1]);
 					}
+					catch (NumberFormatException e)
+					{
+						Log.w(TAG, "Can't parse range " + range + ".");
+						continue;
+					}
 				}
-				if (child.hasAttribute("items"))
-				{
-					items = Arrays.asList(parseArray(child.getAttribute("items")));
-				}
-				if (child.hasAttribute("index"))
+			}
+			if (child.hasAttribute("items"))
+			{
+				items = Arrays.asList(parseArray(child.getAttribute("items")));
+			}
+			if (child.hasAttribute("index"))
+			{
+				try
 				{
 					index = Integer.parseInt(child.getAttribute("index"));
 				}
-				if (child.hasAttribute("value"))
+				catch (NumberFormatException e)
+				{
+					Log.w(TAG, "Can't parse " + child.getAttribute("index") + ".");
+					continue;
+				}
+			}
+			if (child.hasAttribute("value"))
+			{
+				try
 				{
 					value = Integer.parseInt(child.getAttribute("value"));
 				}
-				
-				final CreationRestriction restriction = new CreationRestrictionImpl(type, itemName, minimum, maximum, items, index, value,
-						creationRestriction);
-						
-				if (child.hasChildNodes())
+				catch (NumberFormatException e)
 				{
-					for (final CreationCondition condition : loadConditions(child))
-					{
-						restriction.addCondition(condition);
-					}
+					Log.w(TAG, "Can't parse " + child.getAttribute("value") + ".");
+					continue;
 				}
-				restrictions.add(restriction);
 			}
+			
+			final CreationRestriction restriction = new CreationRestrictionImpl(type, itemName, minimum, maximum, items, index, value,
+					creationRestriction);
+					
+			for (final CreationCondition condition : loadConditions(child))
+			{
+				restriction.addCondition(condition);
+			}
+			restrictions.add(restriction);
 		}
 		return restrictions;
 	}

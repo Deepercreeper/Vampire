@@ -4,8 +4,6 @@ import java.util.Locale;
 import java.util.TreeMap;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import android.content.Context;
 
 /**
@@ -51,24 +49,12 @@ public class LanguageUtil
 			Log.w(TAG, "No language file was detected for the current language.");
 			return;
 		}
-		Element language = null;
+		Element language = DataUtil.getElement(pack, LANGUAGE);
+		if (language == null)
 		{
-			final NodeList list = pack.getElementsByTagName(LANGUAGE);
-			for (int i = 0; i < list.getLength(); i++ )
-			{
-				final Node node = list.item(i);
-				if (node instanceof Element)
-				{
-					language = (Element) node;
-					break;
-				}
-			}
-			if (language == null)
-			{
-				Log.w(TAG, "Could not find language tag.");
-				mInitialized = true;
-				return;
-			}
+			Log.w(TAG, "Could not find language tag.");
+			mInitialized = true;
+			return;
 		}
 		final String content = language.getTextContent().trim();
 		for (String line : content.split("\n"))
