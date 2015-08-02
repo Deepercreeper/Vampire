@@ -231,7 +231,7 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 		
 		LanguageUtil.init(this);
 		
-		setContentView(R.layout.host_activity);
+		setContentView(R.layout.activity_host);
 		
 		setTitle(mHost.getName());
 		final EditText timeSetter = (EditText) findViewById(R.id.ha_time_text);

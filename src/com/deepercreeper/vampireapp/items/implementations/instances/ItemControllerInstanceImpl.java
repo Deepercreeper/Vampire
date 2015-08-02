@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.character.instance.EPControllerInstance;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
@@ -29,6 +30,7 @@ import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
 import android.content.Context;
+import android.view.View;
 import android.widget.LinearLayout;
 
 /**
@@ -62,8 +64,6 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	
 	private final ResizeListener mResizeListener;
 	
-	private boolean mInitialized = false;
-	
 	/**
 	 * Creates a new item controller out of the given XML data.
 	 * 
@@ -93,7 +93,7 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 		mHost = aHost;
 		mEP = aEP;
 		mCharacter = aCharacter;
-		mContainer = new LinearLayout(getContext());
+		mContainer = (LinearLayout) View.inflate(null, R.layout.view_controller_instance, null);
 		
 		init();
 		
@@ -134,7 +134,7 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 		mHost = aHost;
 		mEP = aEP;
 		mCharacter = aCharacter;
-		mContainer = new LinearLayout(getContext());
+		mContainer = (LinearLayout) View.inflate(null, R.layout.view_controller_instance, null);
 		
 		init();
 		
@@ -339,14 +339,6 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	@Override
 	public void init()
 	{
-		if ( !mInitialized)
-		{
-			getContainer().setLayoutParams(ViewUtil.getWrapHeight());
-			getContainer().setOrientation(LinearLayout.VERTICAL);
-			
-			mInitialized = true;
-		}
-		
 		if ( !getGroupOptionsList().isEmpty())
 		{
 			for (final GroupOptionInstance groupOption : getGroupOptionsList())

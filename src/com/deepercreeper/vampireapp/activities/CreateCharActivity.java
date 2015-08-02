@@ -13,8 +13,6 @@ import com.deepercreeper.vampireapp.lists.items.DescriptionCreation;
 import com.deepercreeper.vampireapp.util.ConnectionUtil;
 import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.ViewUtil;
-import com.deepercreeper.vampireapp.util.view.dialogs.CreateStringDialog;
-import com.deepercreeper.vampireapp.util.view.listeners.StringCreationListener;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -99,6 +97,7 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 				setState(State.GENERAL);
 				break;
 			case DESCRIPTIONS :
+				mChar.clearDescriptions();
 				if (mFreeCreation)
 				{
 					setState(State.GENERAL);
@@ -125,7 +124,6 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 		{
 			((TextView) findViewById(R.id.cc_free_points_label)).setText("" + aValue);
 			((ProgressBar) findViewById(R.id.cc_free_points_bar)).setProgress(aValue);
-			ViewUtil.setEnabled((findViewById(R.id.cc_free_points_next_button)), aValue == 0);
 		}
 	}
 	
@@ -156,25 +154,23 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 	
 	private void initDescriptions()
 	{
-		setContentView(R.layout.create_char_descriptions);
+		setContentView(R.layout.activity_create_char_descriptions);
 		
-		mChar.releaseViews();
+		mChar.release();
 		
 		mChar.setCreationMode(CreationMode.DESCRIPTIONS);
 		
-		final LinearLayout descriptionsPanel = (LinearLayout) findViewById(R.id.cc_descriptions_list);
-		final LinearLayout insanitiesPanel = (LinearLayout) findViewById(R.id.cc_insanities_list);
-		final Button addInsanity = (Button) findViewById(R.id.cc_add_insanity_button);
+		final LinearLayout itemsPanel = (LinearLayout) findViewById(R.id.cc_items_list);
 		final Button backButton = (Button) findViewById(R.id.cc_descriptions_back_button);
 		final Button nextButton = (Button) findViewById(R.id.cc_descriptions_next_button);
 		
 		backButton.requestFocus();
 		
-		setInsanitiesOk(mChar.insanitiesOk());
+		setInsanitiesOk(mChar.isInsanitiesOk());
 		
-		for (final ItemCreation item : mChar.getDescriptionValues())
+		for (final ItemCreation item : mChar.getDescriptionItems())
 		{
-			final EditText description = (EditText) View.inflate(this, R.layout.description_view, null);
+			final EditText description = (EditText) View.inflate(this, R.layout.view_description, null);
 			description.setHint(item.getItem().getDisplayName());
 			description.addTextChangedListener(new TextWatcher()
 			{
@@ -197,16 +193,14 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 					// Do nothing
 				}
 			});
-			descriptionsPanel.addView(description);
+			itemsPanel.addView(description);
 		}
 		
 		for (final DescriptionCreation description : mChar.getDescriptions().getValuesList())
 		{
-			final EditText value = new EditText(this);
-			value.setLayoutParams(ViewUtil.getWrapHeight());
+			// TODO Add description controller that handles all descriptions on its own.
+			final EditText value = (EditText) View.inflate(this, R.layout.view_description_creation, null);
 			value.setHint(description.getDisplayName());
-			value.setEms(10);
-			value.setSingleLine();
 			value.addTextChangedListener(new TextWatcher()
 			{
 				
@@ -228,36 +222,16 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 					// Do nothing
 				}
 			});
-			descriptionsPanel.addView(value);
+			itemsPanel.addView(value);
 		}
 		
-		mChar.initInsanities(insanitiesPanel);
-		
-		addInsanity.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(final View aV)
-			{
-				final StringCreationListener listener = new StringCreationListener()
-				{
-					@Override
-					public void create(final String aString)
-					{
-						mChar.addInsanity(aString);
-					}
-				};
-				CreateStringDialog.showCreateStringDialog(getString(R.string.add_insanity), getString(R.string.add_insanity_message),
-						CreateCharActivity.this, listener);
-			}
-		});
+		itemsPanel.addView(mChar.getInsanities().getContainer());
 		
 		backButton.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(final View aV)
 			{
-				mChar.clearDescriptions();
-				mChar.releaseInsanities();
 				onBackPressed();
 			}
 		});
@@ -278,9 +252,9 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 	
 	private void initFreePoints()
 	{
-		setContentView(R.layout.create_char_free_points);
+		setContentView(R.layout.activity_create_char_free_points);
 		
-		mChar.releaseViews();
+		mChar.release();
 		
 		mChar.setCreationMode(CreationMode.POINTS);
 		
@@ -298,6 +272,7 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 		
 		for (final ItemControllerCreation controller : mChar.getControllers())
 		{
+			// TODO This will be removed
 			controller.init();
 			controllersPanel.addView(controller.getContainer());
 			controller.close();
@@ -334,7 +309,7 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 	
 	private void initGeneral()
 	{
-		setContentView(R.layout.create_char_general);
+		setContentView(R.layout.activity_create_char_general);
 		
 		CreationMode mode = CreationMode.MAIN;
 		if (mFreeCreation)
@@ -348,13 +323,12 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 		}
 		
 		mChar.resetFreePoints();
-		mChar.releaseViews();
-		mChar.getGeneration().release();
+		mChar.release();
 		
 		mChar.setCreationMode(mode);
 		
-		final TextView nameTextView = (TextView) findViewById(R.id.cc_name_text);
-		final TextView conceptTextView = (TextView) findViewById(R.id.cc_concept_text);
+		final TextView nameText = (TextView) findViewById(R.id.cc_name_text);
+		final TextView conceptText = (TextView) findViewById(R.id.cc_concept_text);
 		final Spinner natureSpinner = (Spinner) findViewById(R.id.cc_nature_spinner);
 		final Spinner behaviorSpinner = (Spinner) findViewById(R.id.cc_behavior_spinner);
 		final NumberPicker generationPicker = (NumberPicker) findViewById(R.id.cc_generation_picker);
@@ -363,15 +337,15 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 		final Button nextButton = (Button) findViewById(R.id.cc_general_next_button);
 		final Button backButton = (Button) findViewById(R.id.cc_general_back_button);
 		
-		nameTextView.requestFocus();
+		backButton.requestFocus();
 		
-		nameTextView.setText(mChar.getName());
-		nameTextView.addTextChangedListener(new TextWatcher()
+		nameText.setText(mChar.getName());
+		nameText.addTextChangedListener(new TextWatcher()
 		{
 			@Override
 			public void afterTextChanged(final Editable aS)
 			{
-				mChar.setName(nameTextView.getText().toString());
+				mChar.setName(nameText.getText().toString());
 				ViewUtil.setEnabled(nextButton, isNameOk(mChar.getName()) && isConceptOk(mChar.getConcept()));
 			}
 			
@@ -388,13 +362,13 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 			}
 		});
 		
-		conceptTextView.setText(mChar.getConcept());
-		conceptTextView.addTextChangedListener(new TextWatcher()
+		conceptText.setText(mChar.getConcept());
+		conceptText.addTextChangedListener(new TextWatcher()
 		{
 			@Override
 			public void afterTextChanged(final Editable aS)
 			{
-				mChar.setConcept(conceptTextView.getText().toString());
+				mChar.setConcept(conceptText.getText().toString());
 				ViewUtil.setEnabled(nextButton, isNameOk(mChar.getName()) && isConceptOk(mChar.getConcept()));
 			}
 			

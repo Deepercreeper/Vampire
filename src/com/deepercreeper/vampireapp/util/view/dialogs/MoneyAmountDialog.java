@@ -55,7 +55,7 @@ public class MoneyAmountDialog extends DefaultDialog<MoneyAmountListener, Linear
 	{
 		for (final String currency : mCurrency.getCurrencies())
 		{
-			final LinearLayout currencyView = (LinearLayout) View.inflate(getContext(), R.layout.currency_chooser_view, null);
+			final LinearLayout currencyView = (LinearLayout) View.inflate(getContext(), R.layout.view_currency_chooser, null);
 			final EditText amount = (EditText) currencyView.findViewById(R.id.view_currency_value_text);
 			final Button max = (Button) currencyView.findViewById(R.id.view_max_currency_value_button);
 			

@@ -7,8 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import android.content.Context;
-import android.widget.LinearLayout;
+import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.creation.CreationMode;
 import com.deepercreeper.vampireapp.items.interfaces.GroupOption;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
@@ -20,6 +19,9 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.ItemGroupCreation
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
 import com.deepercreeper.vampireapp.util.ViewUtil;
+import android.content.Context;
+import android.view.View;
+import android.widget.LinearLayout;
 
 /**
  * An item controller creation implementation.
@@ -28,29 +30,27 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
  */
 public class ItemControllerCreationImpl implements ItemControllerCreation
 {
-	private final ItemController								mItemController;
+	private final ItemController mItemController;
 	
-	private final Context										mContext;
+	private final Context mContext;
 	
-	private final LinearLayout									mContainer;
+	private final LinearLayout mContainer;
 	
-	private final List<ItemGroupCreation>						mGroupsList				= new ArrayList<ItemGroupCreation>();
+	private final List<ItemGroupCreation> mGroupsList = new ArrayList<ItemGroupCreation>();
 	
-	private final Map<String, ItemGroupCreation>				mGroups					= new HashMap<String, ItemGroupCreation>();
+	private final Map<String, ItemGroupCreation> mGroups = new HashMap<String, ItemGroupCreation>();
 	
-	private final List<GroupOptionCreation>						mGroupOptionsList		= new ArrayList<GroupOptionCreation>();
+	private final List<GroupOptionCreation> mGroupOptionsList = new ArrayList<GroupOptionCreation>();
 	
-	private final Map<ItemGroupCreation, GroupOptionCreation>	mGroupOptions			= new HashMap<ItemGroupCreation, GroupOptionCreation>();
+	private final Map<ItemGroupCreation, GroupOptionCreation> mGroupOptions = new HashMap<ItemGroupCreation, GroupOptionCreation>();
 	
-	private final Map<String, ItemCreation>						mItems					= new HashMap<String, ItemCreation>();
+	private final Map<String, ItemCreation> mItems = new HashMap<String, ItemCreation>();
 	
-	private final Set<CreationRestriction>						mInactiveRestrictions	= new HashSet<CreationRestriction>();
+	private final Set<CreationRestriction> mInactiveRestrictions = new HashSet<CreationRestriction>();
 	
-	private boolean												mInitialized			= false;
+	private PointHandler mPoints;
 	
-	private PointHandler										mPoints;
-	
-	private CreationMode										mMode;
+	private CreationMode mMode;
 	
 	/**
 	 * Creates a new item controller.
@@ -70,7 +70,8 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 		mContext = aContext;
 		mMode = aMode;
 		mPoints = aPoints;
-		mContainer = new LinearLayout(getContext());
+		
+		mContainer = (LinearLayout) View.inflate(getContext(), R.layout.view_controller_creation, null);
 		init();
 		for (final ItemGroup group : getItemController().getGroupsList())
 		{
@@ -372,13 +373,6 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 	@Override
 	public void init()
 	{
-		if ( !mInitialized)
-		{
-			getContainer().setLayoutParams(ViewUtil.getWrapHeight());
-			getContainer().setOrientation(LinearLayout.VERTICAL);
-			mInitialized = true;
-		}
-		
 		if ( !getGroupOptionsList().isEmpty())
 		{
 			for (final GroupOptionCreation groupOption : getGroupOptionsList())

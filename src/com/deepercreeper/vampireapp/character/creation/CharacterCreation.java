@@ -2,8 +2,6 @@ package com.deepercreeper.vampireapp.character.creation;
 
 import java.util.ArrayList;
 import java.util.List;
-import android.content.Context;
-import android.widget.LinearLayout;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.implementations.creations.ItemControllerCreationImpl;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
@@ -15,10 +13,10 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.Crea
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction;
 import com.deepercreeper.vampireapp.lists.controllers.creations.DescriptionControllerCreation;
 import com.deepercreeper.vampireapp.lists.controllers.creations.GenerationControllerCreation;
-import com.deepercreeper.vampireapp.lists.controllers.creations.InsanityControllerCreation;
 import com.deepercreeper.vampireapp.lists.items.Clan;
 import com.deepercreeper.vampireapp.lists.items.Nature;
 import com.deepercreeper.vampireapp.util.Log;
+import android.content.Context;
 
 /**
  * This class is used to create characters. It handles all values that need to be created<br>
@@ -55,47 +53,47 @@ public class CharacterCreation
 	/**
 	 * The default minimum generation that is set, when creating a character.
 	 */
-	public static final int						MIN_GENERATION		= 8;
+	public static final int MIN_GENERATION = 8;
 	
 	/**
 	 * The default maximum generation that is set, when creating a character.
 	 */
-	public static final int						MAX_GENERATION		= 12;
+	public static final int MAX_GENERATION = 12;
 	
 	/**
 	 * The default number of free bonus points, a user can spend into his new created character.
 	 */
-	public static final int						START_FREE_POINTS	= 15;
+	public static final int START_FREE_POINTS = 15;
 	
-	private final ItemProvider					mItems;
+	private final ItemProvider mItems;
 	
-	private final Context						mContext;
+	private final Context mContext;
 	
-	private CreationMode						mMode;
+	private CreationMode mMode;
 	
-	private String								mName				= "";
+	private String mName = "";
 	
-	private String								mConcept			= "";
+	private String mConcept = "";
 	
-	private Nature								mNature;
+	private Nature mNature;
 	
-	private Nature								mBehavior;
+	private Nature mBehavior;
 	
-	private Clan								mClan;
+	private Clan mClan;
 	
-	private final GenerationControllerCreation	mGeneration;
+	private final GenerationControllerCreation mGeneration;
 	
-	private int									mFreePoints			= START_FREE_POINTS;
+	private int mFreePoints = START_FREE_POINTS;
 	
-	private final List<ItemControllerCreation>	mControllers;
+	private final List<ItemControllerCreation> mControllers;
 	
-	private final DescriptionControllerCreation	mDescriptions;
+	private final DescriptionControllerCreation mDescriptions;
 	
-	private final InsanityControllerCreation	mInsanities;
+	private final InsanityControllerCreation mInsanities;
 	
-	private final HealthControllerCreation		mHealth;
+	private final HealthControllerCreation mHealth;
 	
-	private final CharCreationListener			mListener;
+	private final CharCreationListener mListener;
 	
 	/**
 	 * Creates a new character creation.
@@ -148,17 +146,6 @@ public class CharacterCreation
 		mHealth = new HealthControllerCreation(mContext, mItems);
 		mBehavior = mNature = mItems.getNatures().getFirst();
 		setClan(mItems.getClans().getFirst());
-	}
-	
-	/**
-	 * Adds an insanity to the current list.
-	 * 
-	 * @param aInsanity
-	 *            The new insanity.
-	 */
-	public void addInsanity(final String aInsanity)
-	{
-		mInsanities.addInsanity(aInsanity);
 	}
 	
 	/**
@@ -232,6 +219,7 @@ public class CharacterCreation
 	 */
 	public CreationMode getCreationMode()
 	{
+		// TODO Remove the creation mode from each item class. That update should be done via update groups.
 		return mMode;
 	}
 	
@@ -246,7 +234,7 @@ public class CharacterCreation
 	/**
 	 * @return a list of all item values that currently need a description.
 	 */
-	public List<ItemCreation> getDescriptionValues()
+	public List<ItemCreation> getDescriptionItems()
 	{
 		final List<ItemCreation> list = new ArrayList<ItemCreation>();
 		for (final ItemControllerCreation controller : mControllers)
@@ -293,14 +281,6 @@ public class CharacterCreation
 	public HealthControllerCreation getHealth()
 	{
 		return mHealth;
-	}
-	
-	/**
-	 * @return the health steps of this character.
-	 */
-	public int[] getHealthSteps()
-	{
-		return mHealth.getSteps();
 	}
 	
 	/**
@@ -352,52 +332,25 @@ public class CharacterCreation
 	}
 	
 	/**
-	 * Initializes the insanities table into the given one.
-	 * 
-	 * @param aPanel
-	 *            The table.
-	 */
-	public void initInsanities(final LinearLayout aPanel)
-	{
-		mInsanities.init(aPanel);
-	}
-	
-	/**
 	 * @return whether the insanities are currently OK.
 	 */
-	public boolean insanitiesOk()
+	public boolean isInsanitiesOk()
 	{
 		return mInsanities.isOk();
 	}
 	
 	/**
-	 * Releases the insanities table.
-	 */
-	public void releaseInsanities()
-	{
-		mInsanities.release();
-	}
-	
-	/**
 	 * Releases all item controller views.
 	 */
-	public void releaseViews()
+	public void release()
 	{
 		for (final ItemControllerCreation controller : mControllers)
 		{
 			controller.release();
 		}
 		mHealth.release();
-	}
-	
-	/**
-	 * Removes an insanity from the current list.
-	 * 
-	 * @param aInsanity
-	 */
-	public void removeInsanity(final String aInsanity)
-	{
-		mInsanities.remove(aInsanity);
+		mGeneration.release();
+		mInsanities.release();
 	}
 	
 	/**
@@ -440,7 +393,6 @@ public class CharacterCreation
 			}
 			mClan = aClan;
 			addRestrictions();
-			// Toast.makeText(mVampire.getContext(), mClan.getDescription(), Toast.LENGTH_LONG).show();
 		}
 	}
 	

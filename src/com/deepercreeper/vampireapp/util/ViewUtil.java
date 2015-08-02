@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewParent;
-import android.widget.LinearLayout;
 
 /**
  * A helper class for view operations. It also contains all layout parameters.
@@ -69,15 +68,6 @@ public class ViewUtil
 		final int measuredWidth = aLayout.getMeasuredWidth();
 		params.width = width;
 		return measuredWidth;
-	}
-	
-	/**
-	 * @return layout parameters for wrap height views.
-	 */
-	public static LinearLayout.LayoutParams getWrapHeight()
-	{
-		// TODO Get away from programmatically created views
-		return new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 	}
 	
 	/**

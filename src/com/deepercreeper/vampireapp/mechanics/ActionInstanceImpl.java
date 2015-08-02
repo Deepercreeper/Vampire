@@ -64,7 +64,7 @@ public class ActionInstanceImpl implements ActionInstance
 		mParent = aParent;
 		mContext = aContext;
 		mChar = aChar;
-		mContainer = (LinearLayout) View.inflate(mContext, R.layout.action_view, null);
+		mContainer = (LinearLayout) View.inflate(mContext, R.layout.view_action, null);
 	}
 	
 	@Override

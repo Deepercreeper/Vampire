@@ -18,19 +18,7 @@
             android:textSize="@dimen/normal_text_size" />
 
         <LinearLayout
-            android:id="@+id/cc_descriptions_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
-
-        <Button
-            android:id="@+id/cc_add_insanity_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/add_insanity" />
-
-        <LinearLayout
-            android:id="@+id/cc_insanities_list"
+            android:id="@+id/cc_items_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" />

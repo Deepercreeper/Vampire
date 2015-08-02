@@ -97,7 +97,7 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 		mDevice = aDevice;
 		mContext = aContext;
 		mListener = aListener;
-		mContainer = (LinearLayout) View.inflate(mContext, R.layout.player_view, null);
+		mContainer = (LinearLayout) View.inflate(mContext, R.layout.view_player, null);
 		mExpander = Expander.handle(R.id.view_player_button, R.id.view_player_panel, mContainer);
 		mControllerExpander = Expander.handle(R.id.view_player_controller_button, R.id.view_player_controller_panel, mContainer, mExpander);
 		mChar = new CharacterInstance(aCharacter, aItems, aContext, this, mExpander, mControllerExpander, true);
@@ -407,8 +407,7 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 			controllerPanel.addView(controller.getContainer());
 		}
 		
-		mTimeCheckBox = new CheckBox(mContext);
-		mTimeCheckBox.setLayoutParams(ViewUtil.getWrapHeight());
+		mTimeCheckBox = (CheckBox) View.inflate(mContext, R.layout.view_time_checkbox, null);
 		mTimeCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener()
 		{
 			@Override
@@ -418,7 +417,6 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 			}
 		});
 		updateTime();
-		mTimeCheckBox.setChecked(true);
 		
 		mExpander.getButton().setText(getName());
 		kick.setOnClickListener(new OnClickListener()

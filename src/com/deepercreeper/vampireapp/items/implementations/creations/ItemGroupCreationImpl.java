@@ -83,7 +83,7 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		mItemController = aController;
 		mMode = aMode;
 		mPoints = aPoints;
-		mContainer = (LinearLayout) View.inflate(getContext(), R.layout.item_group_view, null);
+		mContainer = (LinearLayout) View.inflate(getContext(), R.layout.view_item_group, null);
 		init();
 		if ( !isMutable())
 		{

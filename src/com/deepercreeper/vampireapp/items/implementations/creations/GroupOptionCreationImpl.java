@@ -56,7 +56,7 @@ public class GroupOptionCreationImpl implements GroupOptionCreation
 	{
 		mGroupOption = aGroupOption;
 		mContext = aContext;
-		mContainer = (LinearLayout) View.inflate(mContext, R.layout.group_option_creation_view, null);
+		mContainer = (LinearLayout) View.inflate(mContext, R.layout.view_group_option_creation, null);
 		mExpander = Expander.handle(R.id.view_group_option_creation_button, R.id.view_group_option_creation_panel, mContainer);
 		
 		init();

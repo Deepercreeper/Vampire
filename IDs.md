@@ -1,6 +1,5 @@
  - View XML files: view_*
  - Any dialog XML file: dialog_*
- - Compound XML file: compound_*
  - Message XML file: m_<message type>_*
  - Host/Client XML file:
   - Host: h_*
@@ -9,7 +8,7 @@
   - Main: ma_*
   - CreateChar: cc_*
   - CreateHost: ch_*
-  - Play: pa_*
+  - Client: ca_*
   - Host: ha_*
  - Fragment XML file: f_*
  - TextView: *_label

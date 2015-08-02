@@ -31,7 +31,7 @@ public class HealthControllerCreation implements Viewable
 		public Step(final int aValue)
 		{
 			mValue = aValue;
-			mStepContainer = (LinearLayout) View.inflate(mContext, R.layout.step_view, null);
+			mStepContainer = (LinearLayout) View.inflate(mContext, R.layout.view_step, null);
 			final TextView value = ((TextView) mStepContainer.findViewById(R.id.view_step_value_label));
 			final ImageButton remove = ((ImageButton) mStepContainer.findViewById(R.id.view_remove_step_button));
 			final ImageButton increase = ((ImageButton) mStepContainer.findViewById(R.id.view_increase_step_button));
@@ -106,8 +106,6 @@ public class HealthControllerCreation implements Viewable
 	
 	private final String mCost;
 	
-	private boolean mInitialized = false;
-	
 	/**
 	 * Creates a new health controller creation.
 	 * 
@@ -121,7 +119,7 @@ public class HealthControllerCreation implements Viewable
 		mContext = aContext;
 		mCost = aItems.getHealth().getCost();
 		
-		mContainer = (LinearLayout) View.inflate(mContext, R.layout.health_creation_view, null);
+		mContainer = (LinearLayout) View.inflate(mContext, R.layout.view_health_creation, null);
 		
 		for (final int health : aItems.getHealth().getSteps())
 		{
@@ -161,20 +159,15 @@ public class HealthControllerCreation implements Viewable
 	@Override
 	public void init()
 	{
-		if ( !mInitialized)
+		final Button addButton = (Button) getContainer().findViewById(R.id.view_add_health_step_button);
+		addButton.setOnClickListener(new OnClickListener()
 		{
-			final Button addButton = (Button) getContainer().findViewById(R.id.view_add_health_step_button);
-			addButton.setOnClickListener(new OnClickListener()
+			@Override
+			public void onClick(final View aV)
 			{
-				@Override
-				public void onClick(final View aV)
-				{
-					addStep();
-				}
-			});
-			
-			mInitialized = true;
-		}
+				addStep();
+			}
+		});
 		
 		for (final Step step : mSteps)
 		{
@@ -186,10 +179,6 @@ public class HealthControllerCreation implements Viewable
 	public void release()
 	{
 		ViewUtil.release(getContainer());
-		for (final Step step : mSteps)
-		{
-			step.release();
-		}
 	}
 	
 	private void addStep()

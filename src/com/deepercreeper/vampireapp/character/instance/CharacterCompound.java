@@ -203,12 +203,12 @@ public class CharacterCompound implements Comparable<CharacterCompound>, Viewabl
 	@Override
 	public void init()
 	{
-		mContainer = (LinearLayout) View.inflate(mContext, R.layout.character_compound, null);
+		mContainer = (LinearLayout) View.inflate(mContext, R.layout.view_character_compound, null);
 		
-		final TextView concept = (TextView) mContainer.findViewById(R.id.compound_concept_label);
+		final TextView concept = (TextView) mContainer.findViewById(R.id.view_compound_concept_label);
 		concept.setText(mContext.getString(R.string.concept_colon) + " " + mConcept);
 		
-		final TextView name = (TextView) mContainer.findViewById(R.id.compound_name_label);
+		final TextView name = (TextView) mContainer.findViewById(R.id.view_compound_name_label);
 		mContainer.setLongClickable(true);
 		mContainer.setOnLongClickListener(new OnLongClickListener()
 		{
@@ -221,10 +221,10 @@ public class CharacterCompound implements Comparable<CharacterCompound>, Viewabl
 		});
 		name.setText(mName);
 		
-		final TextView generation = (TextView) mContainer.findViewById(R.id.compound_generation_label);
+		final TextView generation = (TextView) mContainer.findViewById(R.id.view_compound_generation_label);
 		generation.setText(mContext.getString(R.string.generation_colon) + " " + mGeneration);
 		
-		mPlay = (Button) mContainer.findViewById(R.id.compound_play_char_button);
+		mPlay = (Button) mContainer.findViewById(R.id.view_compound_play_char_button);
 		mPlay.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -235,13 +235,13 @@ public class CharacterCompound implements Comparable<CharacterCompound>, Viewabl
 			}
 		});
 		
-		final TextView ep = (TextView) mContainer.findViewById(R.id.compound_ep_label);
+		final TextView ep = (TextView) mContainer.findViewById(R.id.view_compound_ep_label);
 		ep.setText("EP: " + mEP);
 		
-		final TextView behavior = (TextView) mContainer.findViewById(R.id.compound_behavior_label);
+		final TextView behavior = (TextView) mContainer.findViewById(R.id.view_compound_behavior_label);
 		behavior.setText(mContext.getString(R.string.behavior_colon) + " " + LanguageUtil.instance().getValue(mBehavior));
 		
-		final TextView nature = (TextView) mContainer.findViewById(R.id.compound_nature_label);
+		final TextView nature = (TextView) mContainer.findViewById(R.id.view_compound_nature_label);
 		nature.setText(mContext.getString(R.string.nature_colon) + " " + LanguageUtil.instance().getValue(mNature));
 	}
 	

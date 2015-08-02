@@ -58,7 +58,7 @@ public class Artifact implements InventoryItem
 		mWeight = Integer.parseInt(aElement.getAttribute("weight"));
 		mQuantity = Integer.parseInt(aElement.getAttribute("quantity"));
 		
-		mContainer = (LinearLayout) View.inflate(mContext, R.layout.inventory_item_view, null);
+		mContainer = (LinearLayout) View.inflate(mContext, R.layout.view_inventory_item, null);
 		
 		init();
 	}
@@ -85,7 +85,7 @@ public class Artifact implements InventoryItem
 		mWeight = aWeight;
 		mQuantity = aQuantity;
 		
-		mContainer = (LinearLayout) View.inflate(mContext, R.layout.inventory_item_view, null);
+		mContainer = (LinearLayout) View.inflate(mContext, R.layout.view_inventory_item, null);
 		
 		init();
 	}

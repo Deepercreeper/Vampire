@@ -97,7 +97,7 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 		mEP = aEP;
 		mMessageListener = aMessageListener;
 		mCharacter = aCharacter;
-		mContainer = (LinearLayout) View.inflate(getContext(), R.layout.item_group_view, null);
+		mContainer = (LinearLayout) View.inflate(getContext(), R.layout.view_item_group, null);
 		
 		init();
 		
@@ -144,7 +144,7 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 		mEP = aEP;
 		mMessageListener = aMessageListener;
 		mCharacter = aCharacter;
-		mContainer = (LinearLayout) View.inflate(getContext(), R.layout.item_group_view, null);
+		mContainer = (LinearLayout) View.inflate(getContext(), R.layout.view_item_group, null);
 		
 		init();
 		

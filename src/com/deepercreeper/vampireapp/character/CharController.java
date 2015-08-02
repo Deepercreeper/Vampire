@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.deepercreeper.vampireapp.activities.PlayActivity;
+import com.deepercreeper.vampireapp.activities.ClientActivity;
 import com.deepercreeper.vampireapp.character.instance.CharacterCompound;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.connection.ConnectionController;
@@ -176,10 +176,10 @@ public class CharController implements CharacterListener
 	{
 		final String character = loadChar(aName);
 		
-		final Intent intent = new Intent(mContext, PlayActivity.class);
-		intent.putExtra(PlayActivity.CHARACTER, character);
+		final Intent intent = new Intent(mContext, ClientActivity.class);
+		intent.putExtra(ClientActivity.CHARACTER, character);
 		
-		mContext.startActivityForResult(intent, PlayActivity.PLAY_CHAR_REQUEST);
+		mContext.startActivityForResult(intent, ClientActivity.PLAY_CLIENT_REQUEST);
 	}
 	
 	/**

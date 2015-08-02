@@ -253,9 +253,9 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 				mChars.addChar(character);
 			}
 		}
-		else if (aRequestCode == PlayActivity.PLAY_CHAR_REQUEST && aResultCode == RESULT_OK)
+		else if (aRequestCode == ClientActivity.PLAY_CLIENT_REQUEST && aResultCode == RESULT_OK)
 		{
-			final String xml = aData.getStringExtra(PlayActivity.CHARACTER);
+			final String xml = aData.getStringExtra(ClientActivity.CHARACTER);
 			CharacterInstance character = null;
 			try
 			{
@@ -326,7 +326,7 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 		mChars = new CharController(this, mConnection);
 		mHosts = new HostController(this, mConnection);
 		
-		setContentView(R.layout.main_activity);
+		setContentView(R.layout.activity_main);
 		
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);

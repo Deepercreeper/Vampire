@@ -1,40 +1,65 @@
 package com.deepercreeper.vampireapp.lists.controllers.creations;
 
-import android.widget.NumberPicker;
+import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
 import com.deepercreeper.vampireapp.items.implementations.creations.restrictions.CreationRestrictionableImpl;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
 import com.deepercreeper.vampireapp.util.ViewUtil;
+import com.deepercreeper.vampireapp.util.interfaces.Viewable;
+import android.content.Context;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 
 /**
  * A controller for the character generation.
  * 
  * @author vrl
  */
-public class GenerationControllerCreation extends CreationRestrictionableImpl
+public class GenerationControllerCreation extends CreationRestrictionableImpl implements Viewable
 {
-	private NumberPicker	mPicker;
+	private final LinearLayout mContainer;
 	
-	/**
-	 * @return the current generation.
-	 */
-	public int getGeneration()
+	private final Context mContext;
+	
+	private NumberPicker mPicker;
+	
+	private boolean mFreeMode;
+	
+	public GenerationControllerCreation(Context aContext, boolean aFreeMode)
 	{
-		return mPicker.getValue();
+		mContext = aContext;
+		mFreeMode = aFreeMode;
+		mContainer = View.inflate(mContext, R.layout.view_generation_controller_creation, null);
+		
+		init();
+	}
+	
+	@Override
+	public void init()
+	{
+		mPicker = getContainer().findViewById(R.id.view_generation_picker);
+		update();
 	}
 	
 	/**
-	 * Adds the generation picker to the given layout.
+	 * Sets whether this generation controller is inside free mode.
 	 * 
-	 * @param aPicker
-	 *            The picker.
 	 * @param aFreeMode
-	 *            Whether the generation can be chosen in a free interval.
+	 *            Whether free mode is active.
 	 */
-	public void init(final NumberPicker aPicker, final boolean aFreeMode)
+	public void setFreeMode(boolean aFreeMode)
 	{
-		mPicker = aPicker;
-		if (aFreeMode)
+		mFreeMode = aFreeMode;
+		update();
+	}
+	
+	/**
+	 * Updates this controller.
+	 */
+	public void update()
+	{
+		if (mFreeMode)
 		{
 			mPicker.setMinValue(1);
 			mPicker.setMaxValue(13);
@@ -48,12 +73,27 @@ public class GenerationControllerCreation extends CreationRestrictionableImpl
 		}
 	}
 	
+	@Override
+	public LinearLayout getContainer()
+	{
+		return mContainer;
+	}
+	
+	/**
+	 * @return the current generation.
+	 */
+	public int getGeneration()
+	{
+		return mPicker.getValue();
+	}
+	
 	/**
 	 * Releases the picker.
 	 */
+	@Override
 	public void release()
 	{
-		ViewUtil.release(mPicker);
+		ViewUtil.release(getContainer());
 	}
 	
 	@Override

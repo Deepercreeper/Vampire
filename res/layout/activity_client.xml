@@ -10,13 +10,13 @@
         android:padding="@dimen/activity_margin" >
 
         <LinearLayout
-            android:id="@+id/pa_controllers_list"
+            android:id="@+id/ca_controllers_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" />
 
         <LinearLayout
-            android:id="@+id/pa_message_list"
+            android:id="@+id/ca_message_list"
             style="@style/List"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -24,7 +24,7 @@
             android:padding="@dimen/activity_margin" />
 
         <Button
-            android:id="@+id/pa_exit_button"
+            android:id="@+id/ca_exit_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/exit" />

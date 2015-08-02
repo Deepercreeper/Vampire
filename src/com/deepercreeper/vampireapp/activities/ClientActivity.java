@@ -52,13 +52,13 @@ import android.widget.Toast;
 
 /**
  * This activity is used to play a character, that was created before and connect to a host.<br>
- * This is the real play process that a non master user can do with this application.
+ * This is the real play process that a client user can do with this application.
  * 
  * @author vrl
  */
-public class PlayActivity extends Activity implements ItemConsumer, ConnectionListener, MessageListener, ResizeListener
+public class ClientActivity extends Activity implements ItemConsumer, ConnectionListener, MessageListener, ResizeListener
 {
-	private static final String TAG = "PlayActivity";
+	private static final String TAG = "ClientActivity";
 	
 	/**
 	 * The extra key for the character that is going to be played.
@@ -68,7 +68,7 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	/**
 	 * The request code for playing a character.
 	 */
-	public static final int PLAY_CHAR_REQUEST = 2;
+	public static final int PLAY_CLIENT_REQUEST = 2;
 	
 	private final List<Message> mMessages = new ArrayList<Message>();
 	
@@ -249,13 +249,13 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 	@Override
 	public void makeText(final int aResId, final int aDuration)
 	{
-		Toast.makeText(PlayActivity.this, aResId, aDuration).show();
+		Toast.makeText(ClientActivity.this, aResId, aDuration).show();
 	}
 	
 	@Override
 	public void makeText(final String aText, final int aDuration)
 	{
-		Toast.makeText(PlayActivity.this, aText, aDuration).show();
+		Toast.makeText(ClientActivity.this, aText, aDuration).show();
 	}
 	
 	@Override
@@ -442,12 +442,12 @@ public class PlayActivity extends Activity implements ItemConsumer, ConnectionLi
 			exit(false);
 		}
 		
-		setContentView(R.layout.play_activity);
+		setContentView(R.layout.activity_client);
 		
 		setTitle(mChar.getName());
-		mMessageList = (LinearLayout) findViewById(R.id.pa_message_list);
-		final LinearLayout controllersPanel = (LinearLayout) findViewById(R.id.pa_controllers_list);
-		final Button exit = (Button) findViewById(R.id.pa_exit_button);
+		mMessageList = (LinearLayout) findViewById(R.id.ca_message_list);
+		final LinearLayout controllersPanel = (LinearLayout) findViewById(R.id.ca_controllers_list);
+		final Button exit = (Button) findViewById(R.id.ca_exit_button);
 		
 		mChar.update();
 		
