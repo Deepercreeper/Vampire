@@ -26,11 +26,19 @@ public class GenerationControllerCreation extends CreationRestrictionableImpl im
 	
 	private boolean mFreeMode;
 	
-	public GenerationControllerCreation(Context aContext, boolean aFreeMode)
+	/**
+	 * Creates a new generation controller.
+	 * 
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aFreeMode
+	 *            Whether this controller is started in free mode.
+	 */
+	public GenerationControllerCreation(final Context aContext, final boolean aFreeMode)
 	{
 		mContext = aContext;
 		mFreeMode = aFreeMode;
-		mContainer = View.inflate(mContext, R.layout.view_generation_controller_creation, null);
+		mContainer = (LinearLayout) View.inflate(mContext, R.layout.view_generation_controller_creation, null);
 		
 		init();
 	}
@@ -38,8 +46,9 @@ public class GenerationControllerCreation extends CreationRestrictionableImpl im
 	@Override
 	public void init()
 	{
-		mPicker = getContainer().findViewById(R.id.view_generation_picker);
-		update();
+		mPicker = (NumberPicker) getContainer().findViewById(R.id.view_generation_picker);
+		mPicker.setValue(mFreeMode ? 10 : CharacterCreation.MIN_GENERATION);
+		updateRestrictions();
 	}
 	
 	/**
@@ -48,29 +57,10 @@ public class GenerationControllerCreation extends CreationRestrictionableImpl im
 	 * @param aFreeMode
 	 *            Whether free mode is active.
 	 */
-	public void setFreeMode(boolean aFreeMode)
+	public void setFreeMode(final boolean aFreeMode)
 	{
 		mFreeMode = aFreeMode;
-		update();
-	}
-	
-	/**
-	 * Updates this controller.
-	 */
-	public void update()
-	{
-		if (mFreeMode)
-		{
-			mPicker.setMinValue(1);
-			mPicker.setMaxValue(13);
-			mPicker.setValue(10);
-		}
-		else
-		{
-			mPicker.setMinValue(CharacterCreation.MIN_GENERATION);
-			mPicker.setMaxValue(CharacterCreation.MAX_GENERATION);
-			mPicker.setValue(CharacterCreation.MIN_GENERATION);
-		}
+		updateRestrictions();
 	}
 	
 	@Override
@@ -99,9 +89,17 @@ public class GenerationControllerCreation extends CreationRestrictionableImpl im
 	@Override
 	public void updateRestrictions()
 	{
-		mPicker.setMinValue(CharacterCreation.MIN_GENERATION);
-		mPicker.setMaxValue(CharacterCreation.MAX_GENERATION);
-		if ( !getRestrictions(CreationRestrictionType.GENERATION).isEmpty())
+		if (mFreeMode)
+		{
+			mPicker.setMinValue(1);
+			mPicker.setMaxValue(13);
+		}
+		else
+		{
+			mPicker.setMinValue(CharacterCreation.MIN_GENERATION);
+			mPicker.setMaxValue(CharacterCreation.MAX_GENERATION);
+		}
+		if (hasRestrictions(CreationRestrictionType.GENERATION))
 		{
 			mPicker.setMinValue(getMinValue(CreationRestrictionType.GENERATION));
 			mPicker.setMaxValue(getMaxValue(CreationRestrictionType.GENERATION));

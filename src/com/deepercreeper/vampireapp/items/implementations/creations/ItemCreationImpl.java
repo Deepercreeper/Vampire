@@ -6,10 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.character.creation.CreationMode;
+import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
 import com.deepercreeper.vampireapp.items.implementations.creations.restrictions.CreationRestrictionableImpl;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
-import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation.PointHandler;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemGroupCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction;
@@ -95,13 +94,13 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 	
 	private final ValueAnimator mAnimator;
 	
-	private ImageButton mIncreaseButton;
+	private final ImageButton mIncreaseButton;
 	
-	private ImageButton mDecreaseButton;
+	private final ImageButton mDecreaseButton;
 	
-	private ProgressBar mValueBar;
+	private final ProgressBar mValueBar;
 	
-	private TextView mValueText;
+	private final TextView mValueText;
 	
 	private final LinearLayout mContainer;
 	
@@ -111,21 +110,17 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 	
 	private final ItemCreation mParentItem;
 	
-	private LinearLayout mChildrenContainer;
+	private final CharacterCreation mChar;
 	
-	private ImageButton mAddButton;
+	private final LinearLayout mChildrenContainer;
 	
-	private ImageButton mEditButton;
+	private final ImageButton mAddButton;
 	
-	private ImageButton mRemoveButton;
+	private final ImageButton mEditButton;
 	
-	private TextView mNameText;
+	private final ImageButton mRemoveButton;
 	
-	private boolean mInitialized = false;
-	
-	private CreationMode mMode;
-	
-	private PointHandler mPoints;
+	private final TextView mNameText;
 	
 	private String mDescription;
 	
@@ -142,28 +137,29 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 	 *            The underlying context.
 	 * @param aGroup
 	 *            The parent item group.
-	 * @param aMode
-	 *            The creation mode.
-	 * @param aPoints
-	 *            The points handler.
+	 * @param aChar
+	 *            The parent character.
 	 * @param aParentItem
 	 *            The parent item.
 	 */
-	public ItemCreationImpl(final Item aItem, final Context aContext, final ItemGroupCreation aGroup, final CreationMode aMode,
-			final PointHandler aPoints, final ItemCreation aParentItem)
+	public ItemCreationImpl(final Item aItem, final Context aContext, final ItemGroupCreation aGroup, final CharacterCreation aChar,
+			final ItemCreation aParentItem)
 	{
 		super(aGroup.getItemController());
 		mItem = aItem;
 		mContext = aContext;
 		mItemGroup = aGroup;
-		mMode = aMode;
+		mChar = aChar;
 		mContainer = (LinearLayout) View.inflate(mContext, R.layout.view_item_creation, null);
+		if (getItem().hasParentItem() && aParentItem == null || !getItem().hasParentItem() && aParentItem != null)
+		{
+			Log.e(TAG, "Tried to create an item with different parent item state and parent item.");
+		}
 		if (isValueItem())
 		{
 			mAnimator = new ValueAnimator();
 			mAnimator.addUpdateListener(this);
 			mValueId = getItem().getStartValue();
-			mPoints = aPoints;
 		}
 		else
 		{
@@ -179,26 +175,198 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			mChildrenList = null;
 			mChildren = null;
 		}
-		if (getItem().hasParentItem() && aParentItem == null || !getItem().hasParentItem() && aParentItem != null)
-		{
-			Log.w(TAG, "Tried to create an item with different parent item state and parent item.");
-			throw new IllegalArgumentException("ItemCreation error!");
-		}
 		mParentItem = aParentItem;
+		mEditButton = (ImageButton) getContainer().findViewById(R.id.view_edit_item_creation_button);
+		mRemoveButton = (ImageButton) getContainer().findViewById(R.id.view_remove_item_creation_button);
+		mNameText = (TextView) getContainer().findViewById(R.id.view_item_creation_name_label);
+		mDecreaseButton = (ImageButton) getContainer().findViewById(R.id.view_decrease_item_creation_button);
+		mValueText = (TextView) getContainer().findViewById(R.id.view_item_creation_value_text);
+		mValueBar = (ProgressBar) getContainer().findViewById(R.id.view_item_creation_value_bar);
+		mIncreaseButton = (ImageButton) getContainer().findViewById(R.id.view_increase_item_creation_button);
+		mAddButton = (ImageButton) getContainer().findViewById(R.id.view_add_item_creation_child_button);
+		mChildrenContainer = (LinearLayout) getContainer().findViewById(R.id.view_item_creation_children_list);
 		
-		init();
+		mNameText.setText(getItem().getDisplayName());
+		mNameText.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				Toast.makeText(getContext(), getItem().getDescription(), Toast.LENGTH_LONG).show();
+			}
+		});
+		
+		mEditButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				if (hasParentItem())
+				{
+					if (mChar.getMode().canRemoveChild(ItemCreationImpl.this))
+					{
+						getParentItem().editChild(getItem());
+					}
+				}
+				else
+				{
+					if (mChar.getMode().canRemoveItem(ItemCreationImpl.this))
+					{
+						getItemGroup().editItem(getItem());
+					}
+				}
+			}
+		});
+		mRemoveButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				if (hasParentItem())
+				{
+					if (mChar.getMode().canRemoveChild(ItemCreationImpl.this))
+					{
+						getParentItem().removeChild(getItem());
+					}
+				}
+				else
+				{
+					if (mChar.getMode().canRemoveItem(ItemCreationImpl.this))
+					{
+						getItemGroup().removeItem(getItem());
+					}
+				}
+			}
+		});
+		mAddButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				addChild();
+			}
+		});
+		mDecreaseButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				decrease();
+			}
+		});
+		
+		mIncreaseButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				increase();
+			}
+		});
 		
 		if (isParent() && !isMutableParent())
 		{
 			for (final Item item : getItem().getChildrenList())
 			{
-				addChildSilent(new ItemCreationImpl(item, getContext(), getItemGroup(), getCreationMode(), getItemGroup().getPoints(), this));
+				addChildSilent(new ItemCreationImpl(item, getContext(), getItemGroup(), mChar, this));
 			}
 			if ( !hasOrder())
 			{
 				sortChildren();
 			}
 		}
+	}
+	
+	@Override
+	public void init()
+	{}
+	
+	@Override
+	public void updateUI()
+	{
+		final int buttonWidth = (int) getContext().getResources().getDimension(R.dimen.button_width);
+		
+		if (hasParentItem() && getParentItem().isMutableParent() || !hasParentItem() && getItemGroup().isMutable())
+		{
+			ViewUtil.setPxWidth(mEditButton, buttonWidth);
+			ViewUtil.setPxWidth(mRemoveButton, buttonWidth);
+			if (hasParentItem())
+			{
+				ViewUtil.setEnabled(mRemoveButton, mChar.getMode().canRemoveChild(this));
+			}
+			else
+			{
+				ViewUtil.setEnabled(mRemoveButton, mChar.getMode().canRemoveItem(this));
+			}
+			ViewUtil.setEnabled(mEditButton, mChar.getMode().canEditItem(this));
+		}
+		else
+		{
+			ViewUtil.hideWidth(mEditButton);
+			ViewUtil.hideWidth(mRemoveButton);
+		}
+		if (isParent() && isMutableParent())
+		{
+			ViewUtil.setPxWidth(mAddButton, buttonWidth);
+			ViewUtil.setEnabled(mAddButton, mChar.getMode().canAddChild(this, true) && !getAddableItems().isEmpty());
+		}
+		else
+		{
+			ViewUtil.hideWidth(mAddButton);
+		}
+		if (isValueItem())
+		{
+			ViewUtil.setPxWidth(mDecreaseButton, buttonWidth);
+			ViewUtil.setPxWidth(mIncreaseButton, buttonWidth);
+			ViewUtil.wrapWidth(mValueText);
+			ViewUtil.matchHeight(mValueBar);
+			setIncreasable();
+			setDecreasable();
+			if (mAnimator.isRunning())
+			{
+				mAnimator.cancel();
+			}
+			mValueBar.setMax(VALUE_MULTIPLICATOR * Math.abs(getItem().getValues()[getItem().getMaxValue()]));
+			mAnimator.setIntValues(mValueBar.getProgress(), VALUE_MULTIPLICATOR * getAbsoluteValue());
+			mAnimator.start();
+			mValueText.setText("" + getValue());
+		}
+		else
+		{
+			ViewUtil.hideHeight(mValueBar);
+			ViewUtil.hideWidth(mValueBar);
+			ViewUtil.hideWidth(mDecreaseButton);
+			ViewUtil.hideWidth(mIncreaseButton);
+			ViewUtil.hideWidth(mValueText);
+		}
+		if (hasChildren() && !hasOrder())
+		{
+			sortChildren();
+		}
+		if (hasChildren())
+		{
+			for (final ItemCreation child : getChildrenList())
+			{
+				child.updateUI();
+			}
+		}
+	}
+	
+	@Override
+	public void release()
+	{
+		ViewUtil.release(getContainer());
+	}
+	
+	@Override
+	public void clear()
+	{
+		if (getItem().isValueItem())
+		{
+			mValueId = getItem().getStartValue();
+			resetTempPoints();
+		}
+		release();
 	}
 	
 	@Override
@@ -250,13 +418,13 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		{
 			return;
 		}
-		final ItemCreation item = new ItemCreationImpl(aItem, getContext(), getItemGroup(), getCreationMode(), getItemGroup().getPoints(), this);
+		final ItemCreation item = new ItemCreationImpl(aItem, getContext(), getItemGroup(), mChar, this);
 		getChildrenList().add(item);
 		mChildren.put(item.getName(), item);
 		mChildrenContainer.addView(item.getContainer());
 		getItemGroup().getItemController().addItem(item);
 		getItemGroup().getItemController().resize();
-		updateController();
+		updateControllerUI();
 	}
 	
 	@Override
@@ -268,7 +436,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			return false;
 		}
 		boolean canDecreaseItemValue = mValueId > 0;
-		if ( !getCreationMode().isFreeMode())
+		if ( !mChar.getMode().isFreeMode())
 		{
 			canDecreaseItemValue &= mValueId > getMinValue(CreationRestrictionType.ITEM_VALUE) && mValueId > getItem().getStartValue();
 		}
@@ -304,7 +472,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			}
 		}
 		
-		return getCreationMode().canDecreaseItem(this, canDecreaseItemValue && canDecreaseChild, canDecreaseItemTempPoints && canDecreaseChild);
+		return mChar.getMode().canDecreaseItem(this, canDecreaseItemValue && canDecreaseChild, canDecreaseItemTempPoints && canDecreaseChild);
 	}
 	
 	@Override
@@ -316,7 +484,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			return false;
 		}
 		boolean canIncreaseItem = mValueId + mTempPoints < getItem().getMaxValue();
-		if ( !getCreationMode().isFreeMode())
+		if ( !mChar.getMode().isFreeMode())
 		{
 			canIncreaseItem &= mValueId + mTempPoints < getMaxValue(CreationRestrictionType.ITEM_VALUE)
 					&& mValueId + mTempPoints < getItem().getMaxLowLevelValue();
@@ -352,18 +520,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			}
 		}
 		
-		return getCreationMode().canIncreaseItem(this, canIncreaseItem && canIncreaseChild);
-	}
-	
-	@Override
-	public void clear()
-	{
-		if (getItem().isValueItem())
-		{
-			mValueId = getItem().getStartValue();
-			resetTempPoints();
-		}
-		release();
+		return mChar.getMode().canIncreaseItem(this, canIncreaseItem && canIncreaseChild);
 	}
 	
 	@Override
@@ -388,9 +545,9 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		{
 			return;
 		}
-		getCreationMode().decreaseItem(this);
-		refreshValue();
-		updateController();
+		mChar.getMode().decreaseItem(this);
+		updateControllerUI();
+		updateUI();
 	}
 	
 	@Override
@@ -531,12 +688,6 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 	}
 	
 	@Override
-	public CreationMode getCreationMode()
-	{
-		return mMode;
-	}
-	
-	@Override
 	public int getDecreasedValue()
 	{
 		if ( !getItem().isValueItem())
@@ -623,12 +774,6 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 	}
 	
 	@Override
-	public PointHandler getPoints()
-	{
-		return mPoints;
-	}
-	
-	@Override
 	public int getTempPoints()
 	{
 		if (isParent())
@@ -700,7 +845,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 	@Override
 	public boolean hasEnoughPoints()
 	{
-		return getItem().getItemGroup().getFreePointsCost() <= getPoints().getPoints();
+		return getItem().getItemGroup().getFreePointsCost() <= mChar.getFreePoints();
 	}
 	
 	@Override
@@ -733,185 +878,15 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		{
 			return;
 		}
-		getCreationMode().increaseItem(this);
-		refreshValue();
-		updateController();
+		mChar.getMode().increaseItem(this);
+		updateControllerUI();
+		updateUI();
 	}
 	
 	@Override
 	public int indexOfChild(final ItemCreation aItem)
 	{
 		return getChildrenList().indexOf(aItem);
-	}
-	
-	@Override
-	public void init()
-	{
-		final boolean canEditItem = getCreationMode().canEditItem(this);
-		final boolean canAddChildren = getCreationMode().canAddChild(this, false);
-		
-		if ( !mInitialized)
-		{
-			mEditButton = (ImageButton) getContainer().findViewById(R.id.view_edit_item_creation_button);
-			mRemoveButton = (ImageButton) getContainer().findViewById(R.id.view_remove_item_creation_button);
-			mNameText = (TextView) getContainer().findViewById(R.id.view_item_creation_name_label);
-			mDecreaseButton = (ImageButton) getContainer().findViewById(R.id.view_decrease_item_creation_button);
-			mValueText = (TextView) getContainer().findViewById(R.id.view_item_creation_value_text);
-			mValueBar = (ProgressBar) getContainer().findViewById(R.id.view_item_creation_value_bar);
-			mIncreaseButton = (ImageButton) getContainer().findViewById(R.id.view_increase_item_creation_button);
-			mAddButton = (ImageButton) getContainer().findViewById(R.id.view_add_item_creation_child_button);
-			mChildrenContainer = (LinearLayout) getContainer().findViewById(R.id.view_item_creation_children_list);
-			
-			mNameText.setText(getItem().getDisplayName());
-			mNameText.setOnClickListener(new OnClickListener()
-			{
-				@Override
-				public void onClick(final View aV)
-				{
-					Toast.makeText(getContext(), getItem().getDescription(), Toast.LENGTH_LONG).show();
-				}
-			});
-			
-			if (canEditItem)
-			{
-				mEditButton.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(final View aV)
-					{
-						if (hasParentItem())
-						{
-							if (getCreationMode().canRemoveChild(ItemCreationImpl.this))
-							{
-								getParentItem().editChild(getItem());
-							}
-						}
-						else
-						{
-							if (getCreationMode().canRemoveItem(ItemCreationImpl.this))
-							{
-								getItemGroup().editItem(getItem());
-							}
-						}
-					}
-				});
-				
-				mRemoveButton.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(final View aV)
-					{
-						if (hasParentItem())
-						{
-							if (getCreationMode().canRemoveChild(ItemCreationImpl.this))
-							{
-								getParentItem().removeChild(getItem());
-							}
-						}
-						else
-						{
-							if (getCreationMode().canRemoveItem(ItemCreationImpl.this))
-							{
-								getItemGroup().removeItem(getItem());
-							}
-						}
-					}
-				});
-				
-				updateEditRemoveButtons();
-			}
-			
-			if (isValueItem())
-			{
-				mDecreaseButton.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(final View aV)
-					{
-						decrease();
-					}
-				});
-				
-				mIncreaseButton.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(final View aV)
-					{
-						increase();
-					}
-				});
-				
-				refreshValue();
-			}
-			
-			if (canAddChildren)
-			{
-				mAddButton.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(final View aV)
-					{
-						addChild();
-					}
-				});
-				
-				updateAddButton();
-			}
-			mInitialized = true;
-		}
-		
-		if (canEditItem)
-		{
-			ViewUtil.setWidth(mEditButton, 30);
-			ViewUtil.setWidth(mRemoveButton, 30);
-		}
-		else
-		{
-			ViewUtil.hideWidth(mEditButton);
-			ViewUtil.hideWidth(mRemoveButton);
-		}
-		if (canAddChildren)
-		{
-			ViewUtil.setWidth(mAddButton, 30);
-		}
-		else
-		{
-			ViewUtil.hideWidth(mAddButton);
-		}
-		
-		if (isValueItem())
-		{
-			int buttonWidth = (int) getContext().getResources().getDimension(R.dimen.button_width);
-			ViewUtil.setPxWidth(mDecreaseButton, buttonWidth);
-			ViewUtil.setPxWidth(mIncreaseButton, buttonWidth);
-			ViewUtil.wrapWidth(mValueText);
-			ViewUtil.matchHeight(mValueBar);
-		}
-		else
-		{
-			// TODO Do this in another way
-			ViewUtil.hideHeight(mValueBar);
-			ViewUtil.hideWidth(mValueBar);
-			ViewUtil.hideWidth(mDecreaseButton);
-			ViewUtil.hideWidth(mIncreaseButton);
-			ViewUtil.hideWidth(mValueText);
-		}
-		
-		if (hasChildren())
-		{
-			if ( !hasOrder())
-			{
-				sortChildren();
-			}
-			else
-			{
-				for (final ItemCreation item : getChildrenList())
-				{
-					item.init();
-					mChildrenContainer.addView(item.getContainer());
-				}
-			}
-		}
 	}
 	
 	@Override
@@ -970,47 +945,6 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 	}
 	
 	@Override
-	public void refreshValue()
-	{
-		if ( !isValueItem() && !isParent())
-		{
-			Log.w(TAG, "Tried to refresh the value of a non value item.");
-			return;
-		}
-		if (isParent())
-		{
-			for (final ItemCreation item : getChildrenList())
-			{
-				item.refreshValue();
-			}
-		}
-		if (isValueItem())
-		{
-			if (mAnimator.isRunning())
-			{
-				mAnimator.cancel();
-			}
-			mValueBar.setMax(VALUE_MULTIPLICATOR * Math.abs(getItem().getValues()[getItem().getMaxValue()]));
-			mAnimator.setIntValues(mValueBar.getProgress(), VALUE_MULTIPLICATOR * getAbsoluteValue());
-			mAnimator.start();
-			mValueText.setText("" + getValue());
-		}
-	}
-	
-	@Override
-	public void release()
-	{
-		if (isParent())
-		{
-			for (final ItemCreation item : getChildrenList())
-			{
-				item.release();
-			}
-		}
-		ViewUtil.release(getContainer());
-	}
-	
-	@Override
 	public void removeChild(final Item aItem)
 	{
 		if ( !isMutableParent())
@@ -1028,7 +962,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		mChildren.remove(item.getName());
 		getItemGroup().getItemController().removeItem(aItem.getName());
 		getItemGroup().getItemController().resize();
-		updateController();
+		updateControllerUI();
 	}
 	
 	@Override
@@ -1042,8 +976,8 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		if (isValueItem())
 		{
 			mTempPoints = 0;
-			refreshValue();
 		}
+		updateUI();
 		if (isParent())
 		{
 			for (final ItemCreation item : getChildrenList())
@@ -1075,26 +1009,13 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		getItemGroup().getItemController().removeItem(oldItem.getName());
 		oldItem.clear();
 		mChildren.remove(oldItem.getName());
-		final ItemCreation item = new ItemCreationImpl(aItem, getContext(), getItemGroup(), getCreationMode(), getItemGroup().getPoints(), this);
+		final ItemCreation item = new ItemCreationImpl(aItem, getContext(), getItemGroup(), mChar, this);
 		getChildrenList().set(aIndex, item);
 		mChildren.put(aItem.getName(), item);
 		mChildrenContainer.addView(item.getContainer(), aIndex + 1);
 		getItemGroup().getItemController().addItem(item);
 		getItemGroup().getItemController().resize();
-		updateController();
-	}
-	
-	@Override
-	public void setCreationMode(final CreationMode aMode)
-	{
-		mMode = aMode;
-		if (isParent())
-		{
-			for (final ItemCreation item : getChildrenList())
-			{
-				item.setCreationMode(getCreationMode());
-			}
-		}
+		updateControllerUI();
 	}
 	
 	@Override
@@ -1126,47 +1047,15 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 	}
 	
 	@Override
-	public void setPoints(final PointHandler aPoints)
-	{
-		mPoints = aPoints;
-		if (isParent())
-		{
-			for (final ItemCreation item : getChildrenList())
-			{
-				item.setPoints(mPoints);
-			}
-		}
-	}
-	
-	@Override
 	public String toString()
 	{
 		return getName() + ": " + getValue();
 	}
 	
 	@Override
-	public void updateButtons()
+	public void updateControllerUI()
 	{
-		if (isValueItem())
-		{
-			setIncreasable();
-			setDecreasable();
-		}
-		updateEditRemoveButtons();
-		updateAddButton();
-		if (isParent())
-		{
-			for (final ItemCreation child : getChildrenList())
-			{
-				child.updateButtons();
-			}
-		}
-	}
-	
-	@Override
-	public void updateController()
-	{
-		getItemGroup().getItemController().updateGroups();
+		getItemGroup().getItemController().updateUI();
 	}
 	
 	@Override
@@ -1192,8 +1081,8 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			else
 			{
 				mValueId = getItem().getStartValue();
-				refreshValue();
-				updateController();
+				updateControllerUI();
+				updateUI();
 			}
 		}
 		if (isParent())
@@ -1203,7 +1092,6 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 				child.updateRestrictions();
 			}
 		}
-		updateButtons();
 	}
 	
 	private void addChildSilent(final ItemCreation aItem)
@@ -1250,29 +1138,9 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		}
 	}
 	
-	private void updateAddButton()
+	@Override
+	public CharacterCreation getCharacter()
 	{
-		if (isParent() && isMutableParent())
-		{
-			ViewUtil.setEnabled(mAddButton, getCreationMode().canAddChild(this, true) && !getAddableItems().isEmpty());
-		}
-	}
-	
-	private void updateEditRemoveButtons()
-	{
-		if (getCreationMode().canEditItem(this))
-		{
-			boolean canEditRemove;
-			if (hasParentItem())
-			{
-				canEditRemove = getCreationMode().canRemoveChild(this);
-			}
-			else
-			{
-				canEditRemove = getCreationMode().canRemoveItem(this);
-			}
-			ViewUtil.setEnabled(mEditButton, canEditRemove);
-			ViewUtil.setEnabled(mRemoveButton, canEditRemove);
-		}
+		return mChar;
 	}
 }

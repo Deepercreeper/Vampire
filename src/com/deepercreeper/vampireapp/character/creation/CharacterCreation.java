@@ -6,7 +6,6 @@ import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.implementations.creations.ItemControllerCreationImpl;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
-import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation.PointHandler;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
@@ -69,6 +68,18 @@ public class CharacterCreation
 	
 	private final Context mContext;
 	
+	private final List<ItemControllerCreation> mControllers;
+	
+	private final DescriptionControllerCreation mDescriptions;
+	
+	private final InsanityControllerCreation mInsanities;
+	
+	private final HealthControllerCreation mHealth;
+	
+	private final CharCreationListener mListener;
+	
+	private final GenerationControllerCreation mGeneration;
+	
 	private CreationMode mMode;
 	
 	private String mName = "";
@@ -81,19 +92,7 @@ public class CharacterCreation
 	
 	private Clan mClan;
 	
-	private final GenerationControllerCreation mGeneration;
-	
 	private int mFreePoints = START_FREE_POINTS;
-	
-	private final List<ItemControllerCreation> mControllers;
-	
-	private final DescriptionControllerCreation mDescriptions;
-	
-	private final InsanityControllerCreation mInsanities;
-	
-	private final HealthControllerCreation mHealth;
-	
-	private final CharCreationListener mListener;
 	
 	/**
 	 * Creates a new character creation.
@@ -113,36 +112,14 @@ public class CharacterCreation
 		mContext = aContext;
 		mListener = aListener;
 		mMode = aMode;
-		final PointHandler points = new PointHandler()
-		{
-			@Override
-			public void decrease(final int aValue)
-			{
-				mFreePoints -= aValue;
-				freePointsChanged();
-			}
-			
-			@Override
-			public int getPoints()
-			{
-				return mFreePoints;
-			}
-			
-			@Override
-			public void increase(final int aValue)
-			{
-				mFreePoints += aValue;
-				freePointsChanged();
-			}
-		};
 		mControllers = new ArrayList<ItemControllerCreation>();
 		for (final ItemController controller : mItems.getControllers())
 		{
-			mControllers.add(new ItemControllerCreationImpl(controller, mContext, getCreationMode(), points));
+			mControllers.add(new ItemControllerCreationImpl(controller, mContext, this));
 		}
 		mDescriptions = new DescriptionControllerCreation(mItems.getDescriptions());
 		mInsanities = new InsanityControllerCreation(mContext, this);
-		mGeneration = new GenerationControllerCreation();
+		mGeneration = new GenerationControllerCreation(mContext, aMode.isFreeMode());
 		mHealth = new HealthControllerCreation(mContext, mItems);
 		mBehavior = mNature = mItems.getNatures().getFirst();
 		setClan(mItems.getClans().getFirst());
@@ -155,6 +132,18 @@ public class CharacterCreation
 	{
 		mDescriptions.clear();
 		mInsanities.clear();
+	}
+	
+	/**
+	 * Decreases the current available points by {@code aValue} points.
+	 * 
+	 * @param aValue
+	 *            The points to add.
+	 */
+	public void decreaseFreePoints(final int aValue)
+	{
+		mFreePoints -= aValue;
+		freePointsChanged();
 	}
 	
 	/**
@@ -215,23 +204,6 @@ public class CharacterCreation
 	}
 	
 	/**
-	 * @return the current creation mode.
-	 */
-	public CreationMode getCreationMode()
-	{
-		// TODO Remove the creation mode from each item class. That update should be done via update groups.
-		return mMode;
-	}
-	
-	/**
-	 * @return the descriptions controller.
-	 */
-	public DescriptionControllerCreation getDescriptions()
-	{
-		return mDescriptions;
-	}
-	
-	/**
 	 * @return a list of all item values that currently need a description.
 	 */
 	public List<ItemCreation> getDescriptionItems()
@@ -242,6 +214,14 @@ public class CharacterCreation
 			list.addAll(controller.getDescriptionValues());
 		}
 		return list;
+	}
+	
+	/**
+	 * @return the descriptions controller.
+	 */
+	public DescriptionControllerCreation getDescriptions()
+	{
+		return mDescriptions;
 	}
 	
 	/**
@@ -300,6 +280,15 @@ public class CharacterCreation
 	}
 	
 	/**
+	 * @return the current creation mode.
+	 */
+	public CreationMode getMode()
+	{
+		// TODO Remove the creation mode from each item class. That update should be done via update groups.
+		return mMode;
+	}
+	
+	/**
 	 * @return the character name.
 	 */
 	public String getName()
@@ -329,6 +318,18 @@ public class CharacterCreation
 			}
 		}
 		return restrictions;
+	}
+	
+	/**
+	 * Increases the current available points by {@code aValue} points.
+	 * 
+	 * @param aValue
+	 *            The points to subtract.
+	 */
+	public void increaseFreePoints(final int aValue)
+	{
+		mFreePoints += aValue;
+		freePointsChanged();
 	}
 	
 	/**
@@ -418,7 +419,8 @@ public class CharacterCreation
 		mMode = aMode;
 		for (final ItemControllerCreation controller : mControllers)
 		{
-			controller.setCreationMode(getCreationMode());
+			// controller.updateGroups();
+			controller.updateUI();
 		}
 	}
 	
@@ -468,7 +470,7 @@ public class CharacterCreation
 	
 	private void addRestrictions()
 	{
-		if (getCreationMode().isFreeMode())
+		if (getMode().isFreeMode())
 		{
 			return;
 		}
@@ -511,7 +513,7 @@ public class CharacterCreation
 	{
 		for (final ItemControllerCreation controller : mControllers)
 		{
-			controller.updateGroups();
+			controller.updateUI();
 		}
 		mListener.setFreePoints(mFreePoints);
 	}

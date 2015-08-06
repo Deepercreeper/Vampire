@@ -1,13 +1,11 @@
 package com.deepercreeper.vampireapp.items.interfaces.creations;
 
 import java.util.List;
-import android.content.Context;
-import com.deepercreeper.vampireapp.character.creation.CreationMode;
-import com.deepercreeper.vampireapp.items.interfaces.GroupOption;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestrictionable;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
+import android.content.Context;
 
 /**
  * This controller controls several groups and a few group options.
@@ -16,35 +14,6 @@ import com.deepercreeper.vampireapp.util.interfaces.Viewable;
  */
 public interface ItemControllerCreation extends CreationRestrictionable, Viewable
 {
-	/**
-	 * Used to call the number of points from the parent.
-	 * 
-	 * @author Vincent
-	 */
-	public static interface PointHandler
-	{
-		/**
-		 * Decreases the current available points by {@code aValue} points.
-		 * 
-		 * @param aValue
-		 *            The points to add.
-		 */
-		public void decrease(int aValue);
-		
-		/**
-		 * @return the current number of free or experience points from the parent.
-		 */
-		public int getPoints();
-		
-		/**
-		 * Increases the current available points by {@code aValue} points.
-		 * 
-		 * @param aValue
-		 *            The points to subtract.
-		 */
-		public void increase(int aValue);
-	}
-	
 	/**
 	 * Adds a name shortcut for the given item.
 	 * 
@@ -78,11 +47,6 @@ public interface ItemControllerCreation extends CreationRestrictionable, Viewabl
 	public Context getContext();
 	
 	/**
-	 * @return whether this controller is in the creation mode.
-	 */
-	public CreationMode getCreationMode();
-	
-	/**
 	 * @return a list of all values, that need a description and have more than 0 as value.
 	 */
 	public List<ItemCreation> getDescriptionValues();
@@ -102,35 +66,9 @@ public interface ItemControllerCreation extends CreationRestrictionable, Viewabl
 	public ItemGroupCreation getGroup(String aName);
 	
 	/**
-	 * @param aGroupOption
-	 *            The group option type.
-	 * @return the group option with the given group option type.
-	 */
-	public GroupOptionCreation getGroupOption(GroupOption aGroupOption);
-	
-	/**
-	 * @param aName
-	 *            The group option name.
-	 * @return the group option with the given name.
-	 */
-	public GroupOptionCreation getGroupOption(String aName);
-	
-	/**
-	 * @return a list of all group options.
-	 */
-	public List<GroupOptionCreation> getGroupOptionsList();
-	
-	/**
 	 * @return a list of all groups.
 	 */
 	public List<ItemGroupCreation> getGroupsList();
-	
-	/**
-	 * @param aName
-	 *            The group name.
-	 * @return the value of he group with the given name.
-	 */
-	public int getGroupValue(String aName);
 	
 	/**
 	 * @param aName
@@ -145,21 +83,9 @@ public interface ItemControllerCreation extends CreationRestrictionable, Viewabl
 	public ItemController getItemController();
 	
 	/**
-	 * @param aName
-	 *            The item name.
-	 * @return the value of the item with the given name.
-	 */
-	public int getItemValue(String aName);
-	
-	/**
 	 * @return the controller name.
 	 */
 	public String getName();
-	
-	/**
-	 * @return the points handler.
-	 */
-	public PointHandler getPoints();
 	
 	/**
 	 * @return the number of temporary points spent inside this controller.
@@ -193,6 +119,11 @@ public interface ItemControllerCreation extends CreationRestrictionable, Viewabl
 	public void removeItem(String aName);
 	
 	/**
+	 * @return whether this controller has any group with items or that is mutable.
+	 */
+	public boolean isEmpty();
+	
+	/**
 	 * resets all temporary points spent in this controller.
 	 */
 	public void resetTempPoints();
@@ -203,14 +134,6 @@ public interface ItemControllerCreation extends CreationRestrictionable, Viewabl
 	public void resize();
 	
 	/**
-	 * Sets whether this controller is in the creation mode.
-	 * 
-	 * @param aMode
-	 *            Whether creation mode or not.
-	 */
-	public void setCreationMode(CreationMode aMode);
-	
-	/**
 	 * Enables or disabled the value groups for changing anything.
 	 * 
 	 * @param aEnabled
@@ -219,12 +142,9 @@ public interface ItemControllerCreation extends CreationRestrictionable, Viewabl
 	public void setEnabled(boolean aEnabled);
 	
 	/**
-	 * Sets the points handler.
-	 * 
-	 * @param aPoints
-	 *            The new points handler.
+	 * Updates the user interface for all views. Invoked after the update method.
 	 */
-	public void setPoints(PointHandler aPoints);
+	public void updateUI();
 	
 	/**
 	 * Updates all value groups.

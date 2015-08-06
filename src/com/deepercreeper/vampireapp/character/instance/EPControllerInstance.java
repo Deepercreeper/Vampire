@@ -214,7 +214,7 @@ public class EPControllerInstance implements Viewable
 			}
 			ViewUtil.setEnabled(mGiveEP, canGiveEp);
 		}
-		mChar.update();
+		mChar.updateUI();
 	}
 	
 	@Override

@@ -163,7 +163,7 @@ public class ModeControllerInstance implements Viewable, Saveable
 		mAdapter.clear();
 		mAdapter.addAll(Mode.getModesList(mMode, mContext, mHost));
 		mSpinner.setSelection(mAdapter.getPosition(Mode.getNameableOf(aMode, mContext)));
-		mChar.update();
+		mChar.updateUI();
 		if ( !aSilent)
 		{
 			mMessageListener.sendChange(new ModeChange(getMode()));

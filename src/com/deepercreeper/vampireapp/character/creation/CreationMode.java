@@ -33,7 +33,7 @@ public enum CreationMode
 	 */
 	FREE_MAIN();
 	
-	private final boolean	mValueMode, mTempPointsMode, mFreeMode;
+	private final boolean mValueMode, mTempPointsMode, mFreeMode;
 	
 	private CreationMode()
 	{
@@ -280,7 +280,7 @@ public enum CreationMode
 		else if (mTempPointsMode)
 		{
 			aItem.getChangeTempPoints().decrease();
-			aItem.getPoints().increase(aItem.getFreePointsCost());
+			aItem.getCharacter().increaseFreePoints(aItem.getFreePointsCost());
 		}
 	}
 	
@@ -299,7 +299,7 @@ public enum CreationMode
 		else if (mTempPointsMode)
 		{
 			aItem.getChangeTempPoints().increase();
-			aItem.getPoints().decrease(aItem.getFreePointsCost());
+			aItem.getCharacter().decreaseFreePoints(aItem.getFreePointsCost());
 		}
 	}
 	

@@ -1,13 +1,11 @@
 package com.deepercreeper.vampireapp.items.interfaces.creations;
 
 import java.util.List;
-import android.content.Context;
-import com.deepercreeper.vampireapp.character.creation.CreationMode;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
-import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation.PointHandler;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestrictionable;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
+import android.content.Context;
 
 /**
  * Used to create item groups.
@@ -59,11 +57,6 @@ public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, Creati
 	public Context getContext();
 	
 	/**
-	 * @return whether this group is in creation mode.
-	 */
-	public CreationMode getCreationMode();
-	
-	/**
 	 * @return a list of all values, that need a description and have more than 0 as value.
 	 */
 	public List<ItemCreation> getDescriptionItems();
@@ -108,11 +101,6 @@ public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, Creati
 	 * @return the group name.
 	 */
 	public String getName();
-	
-	/**
-	 * @return the point handler of this value group.
-	 */
-	public PointHandler getPoints();
 	
 	/**
 	 * @return the sum of all temporary points inside this value group.
@@ -176,14 +164,6 @@ public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, Creati
 	public void resetTempPoints();
 	
 	/**
-	 * Sets whether this group is in creation mode.
-	 * 
-	 * @param aMode
-	 *            Whether this group represents the values inside a character creation.
-	 */
-	public void setCreationMode(CreationMode aMode);
-	
-	/**
 	 * Replaces the item child at the given index with the given item.
 	 * 
 	 * @param aIndex
@@ -194,22 +174,14 @@ public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, Creati
 	public void setItemAt(int aIndex, Item aItem);
 	
 	/**
-	 * Sets the current points handler.
-	 * 
-	 * @param aPoints
-	 *            The new points handler.
-	 */
-	public void setPoints(PointHandler aPoints);
-	
-	/**
-	 * Updates whether the add child button is enabled.
-	 */
-	public void updateAddButton();
-	
-	/**
 	 * Updates the item controller.
 	 */
-	public void updateController();
+	public void updateControllerUI();
+	
+	/**
+	 * Updates the user interface for all views. Invoked after the update method.
+	 */
+	public void updateUI();
 	
 	/**
 	 * Updates all values and whether they can be increased and decreased.

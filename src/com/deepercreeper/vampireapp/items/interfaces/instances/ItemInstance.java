@@ -2,7 +2,6 @@ package com.deepercreeper.vampireapp.items.interfaces.instances;
 
 import java.util.List;
 import java.util.Set;
-import com.deepercreeper.vampireapp.character.instance.EPControllerInstance;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestrictionable;
 import com.deepercreeper.vampireapp.mechanics.ActionInstance;
@@ -122,11 +121,6 @@ public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemIn
 	public List<ItemInstance> getDescriptionItems();
 	
 	/**
-	 * @return the experience manager of the character.
-	 */
-	public EPControllerInstance getEP();
-	
-	/**
 	 * @return the default experience cost, each increase of this item costs.
 	 */
 	public int getEPCost();
@@ -233,11 +227,6 @@ public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemIn
 	public boolean isValueItem();
 	
 	/**
-	 * Updates the view shown value and information about this item.
-	 */
-	public void refreshValue();
-	
-	/**
 	 * Removes the given child from this item.
 	 * 
 	 * @param aItem
@@ -256,14 +245,14 @@ public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemIn
 	public void removeValueListener(ItemValueListener aListener);
 	
 	/**
-	 * Updates all item buttons.
-	 */
-	public void updateButtons();
-	
-	/**
 	 * Updates the character.
 	 */
 	public void updateCharacter();
+	
+	/**
+	 * Updates the user interface.
+	 */
+	public void updateUI();
 	
 	/**
 	 * Sets the new value for this item.

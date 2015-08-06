@@ -1,14 +1,13 @@
 package com.deepercreeper.vampireapp.items.interfaces.creations;
 
 import java.util.List;
+import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
+import com.deepercreeper.vampireapp.items.implementations.creations.ItemCreationImpl.ChangeAction;
+import com.deepercreeper.vampireapp.items.interfaces.Item;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestrictionable;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.Context;
 import android.widget.LinearLayout;
-import com.deepercreeper.vampireapp.character.creation.CreationMode;
-import com.deepercreeper.vampireapp.items.implementations.creations.ItemCreationImpl.ChangeAction;
-import com.deepercreeper.vampireapp.items.interfaces.Item;
-import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation.PointHandler;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestrictionable;
 
 /**
  * Each item can be instantiated. That creates an item value.<br>
@@ -86,6 +85,11 @@ public interface ItemCreation extends Comparable<ItemCreation>, CreationRestrict
 	public ChangeAction getChangeValue();
 	
 	/**
+	 * @return the parent character.
+	 */
+	public CharacterCreation getCharacter();
+	
+	/**
 	 * @param aIndex
 	 *            The child index.
 	 * @return the child item at the given index.
@@ -108,11 +112,6 @@ public interface ItemCreation extends Comparable<ItemCreation>, CreationRestrict
 	 * @return the context of this value.
 	 */
 	public Context getContext();
-	
-	/**
-	 * @return whether this group is in creation mode.
-	 */
-	public CreationMode getCreationMode();
 	
 	/**
 	 * @return the next value this item will have if it's decreased.
@@ -158,11 +157,6 @@ public interface ItemCreation extends Comparable<ItemCreation>, CreationRestrict
 	 * @return the parent item if existing.
 	 */
 	public ItemCreation getParentItem();
-	
-	/**
-	 * @return the current point handler of this value.
-	 */
-	public PointHandler getPoints();
 	
 	/**
 	 * Free bonus points are handled as temporary points. They need to be saved separately.
@@ -258,11 +252,6 @@ public interface ItemCreation extends Comparable<ItemCreation>, CreationRestrict
 	public boolean needsDescription();
 	
 	/**
-	 * Applies the value to the value display again.
-	 */
-	public void refreshValue();
-	
-	/**
 	 * Removes all widgets from their parent containers.
 	 */
 	public void release();
@@ -291,14 +280,6 @@ public interface ItemCreation extends Comparable<ItemCreation>, CreationRestrict
 	public void setChildAt(int aIndex, Item aItem);
 	
 	/**
-	 * Sets whether this group is in creation mode.
-	 * 
-	 * @param aMode
-	 *            Whether this group represents the values inside a character creation.
-	 */
-	public void setCreationMode(CreationMode aMode);
-	
-	/**
 	 * Updates whether this item can be decreased.
 	 */
 	public void setDecreasable();
@@ -316,20 +297,12 @@ public interface ItemCreation extends Comparable<ItemCreation>, CreationRestrict
 	public void setIncreasable();
 	
 	/**
-	 * Sets the current points handler.
-	 * 
-	 * @param aPoints
-	 *            The new points handler.
+	 * Updates the user interface for all views. Invoked after the update method.
 	 */
-	public void setPoints(PointHandler aPoints);
-	
-	/**
-	 * Updates all item buttons.
-	 */
-	public void updateButtons();
+	public void updateUI();
 	
 	/**
 	 * Updates all item controllers.
 	 */
-	public void updateController();
+	public void updateControllerUI();
 }

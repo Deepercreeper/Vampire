@@ -9,7 +9,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
-import com.deepercreeper.vampireapp.character.instance.EPControllerInstance;
 import com.deepercreeper.vampireapp.host.Message;
 import com.deepercreeper.vampireapp.host.Message.ButtonAction;
 import com.deepercreeper.vampireapp.host.Message.MessageGroup;
@@ -63,11 +62,7 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 	
 	private final MessageListener mMessageListener;
 	
-	private LinearLayout mItemsContainer;
-	
-	private boolean mInitialized = false;
-	
-	private final EPControllerInstance mEP;
+	private final LinearLayout mItemsContainer;
 	
 	/**
 	 * Creates a new group out of the given XML data.
@@ -78,8 +73,6 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 	 *            The item controller.
 	 * @param aContext
 	 *            The underlying context.
-	 * @param aEP
-	 *            The experience controller.
 	 * @param aCharacter
 	 *            The character.
 	 * @param aMessageListener
@@ -88,27 +81,44 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 	 *            Whether this is a host sided group.
 	 */
 	public ItemGroupInstanceImpl(final Element aElement, final ItemControllerInstance aItemController, final Context aContext,
-			final EPControllerInstance aEP, final CharacterInstance aCharacter, final MessageListener aMessageListener, final boolean aHost)
+			final CharacterInstance aCharacter, final MessageListener aMessageListener, final boolean aHost)
 	{
 		mItemGroup = aItemController.getItemController().getGroup(aElement.getAttribute("name"));
 		mItemController = aItemController;
 		mContext = aContext;
 		mHost = aHost;
-		mEP = aEP;
 		mMessageListener = aMessageListener;
 		mCharacter = aCharacter;
 		mContainer = (LinearLayout) View.inflate(getContext(), R.layout.view_item_group, null);
 		
-		init();
+		((TextView) getContainer().findViewById(R.id.view_item_group_name_label)).setText(getItemGroup().getDisplayName());
+		final Button addButton = (Button) getContainer().findViewById(R.id.view_item_group_add_button);
+		mItemsContainer = (LinearLayout) getContainer().findViewById(R.id.view_item_group_items_list);
 		
-		for (Element item : DataUtil.getChildren(aElement, "item"))
+		if (mHost && isMutable())
+		{
+			addButton.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					addItem();
+				}
+			});
+		}
+		else
+		{
+			ViewUtil.hideHeight(addButton);
+		}
+		
+		for (final Element item : DataUtil.getChildren(aElement, "item"))
 		{
 			int pos = -1;
 			if (hasOrder())
 			{
 				pos = Integer.parseInt(item.getAttribute("order"));
 			}
-			addItemSilent(new ItemInstanceImpl(item, this, getContext(), getEP(), null, getCharacter(), mMessageListener, mHost), pos);
+			addItemSilent(new ItemInstanceImpl(item, this, getContext(), null, getCharacter(), mMessageListener, mHost), pos);
 		}
 		if ( !hasOrder())
 		{
@@ -125,8 +135,6 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 	 *            The item controller.
 	 * @param aContext
 	 *            The underlying context.
-	 * @param aEP
-	 *            The experience controller.
 	 * @param aCharacter
 	 *            The character.
 	 * @param aMessageListener
@@ -135,24 +143,41 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 	 *            whether this is a host sided group.
 	 */
 	public ItemGroupInstanceImpl(final ItemGroupCreation aItemGroup, final ItemControllerInstance aItemController, final Context aContext,
-			final EPControllerInstance aEP, final CharacterInstance aCharacter, final MessageListener aMessageListener, final boolean aHost)
+			final CharacterInstance aCharacter, final MessageListener aMessageListener, final boolean aHost)
 	{
 		mItemGroup = aItemGroup.getItemGroup();
 		mContext = aContext;
 		mItemController = aItemController;
 		mHost = aHost;
-		mEP = aEP;
 		mMessageListener = aMessageListener;
 		mCharacter = aCharacter;
 		mContainer = (LinearLayout) View.inflate(getContext(), R.layout.view_item_group, null);
 		
-		init();
+		((TextView) getContainer().findViewById(R.id.view_item_group_name_label)).setText(getItemGroup().getDisplayName());
+		final Button addButton = (Button) getContainer().findViewById(R.id.view_item_group_add_button);
+		mItemsContainer = (LinearLayout) getContainer().findViewById(R.id.view_item_group_items_list);
+		
+		if (mHost && isMutable())
+		{
+			addButton.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					addItem();
+				}
+			});
+		}
+		else
+		{
+			ViewUtil.hideHeight(addButton);
+		}
 		
 		for (final ItemCreation item : aItemGroup.getItemsList())
 		{
 			if ( !getItemGroup().isMutable() || item.isImportant())
 			{
-				addItemSilent(new ItemInstanceImpl(item, this, getEP(), null, getCharacter(), mMessageListener, mHost), -1);
+				addItemSilent(new ItemInstanceImpl(item, this, null, getCharacter(), mMessageListener, mHost), -1);
 			}
 		}
 		if ( !hasOrder())
@@ -224,7 +249,11 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 			mItems.remove(aItem);
 			getItemsList().remove(item);
 			getItemController().resize();
-			updateController();
+			updateControllerUI();
+			if ( !mHost)
+			{
+				getItemController().getCharacter().getActions().removeActions(item.getActions());
+			}
 			
 			if ( !aSilent)
 			{
@@ -279,7 +308,11 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 		mItemsContainer.addView(item.getContainer());
 		getItemController().resize();
 		getItemController().addItem(item);
-		updateController();
+		updateControllerUI();
+		if ( !mHost)
+		{
+			getItemController().getCharacter().getActions().addActions(item.getActions());
+		}
 		if ( !aSilent)
 		{
 			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.added_item, new String[] { aItem.getName() },
@@ -328,12 +361,6 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 			}
 		}
 		return items;
-	}
-	
-	@Override
-	public EPControllerInstance getEP()
-	{
-		return mEP;
 	}
 	
 	@Override
@@ -418,45 +445,7 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 	
 	@Override
 	public void init()
-	{
-		if ( !mInitialized)
-		{
-			((TextView) getContainer().findViewById(R.id.view_item_group_name_label)).setText(getItemGroup().getDisplayName());
-			final Button addButton = (Button) getContainer().findViewById(R.id.view_item_group_add_button);
-			mItemsContainer = (LinearLayout) getContainer().findViewById(R.id.view_item_group_items_list);
-			
-			if (mHost && isMutable())
-			{
-				addButton.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(final View aV)
-					{
-						addItem();
-					}
-				});
-			}
-			else
-			{
-				ViewUtil.hideHeight(addButton);
-			}
-			
-			mInitialized = true;
-		}
-		
-		if ( !hasOrder())
-		{
-			sortItems();
-		}
-		else
-		{
-			for (final ItemInstance item : getItemsList())
-			{
-				item.init();
-				mItemsContainer.addView(item.getContainer());
-			}
-		}
-	}
+	{}
 	
 	@Override
 	public void addItem()
@@ -499,10 +488,6 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 	@Override
 	public void release()
 	{
-		for (final ItemInstance item : getItemsList())
-		{
-			item.release();
-		}
 		ViewUtil.release(getContainer());
 	}
 	
@@ -513,20 +498,21 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 	}
 	
 	@Override
-	public void updateController()
+	public void updateControllerUI()
 	{
-		getItemController().updateGroups();
+		getItemController().updateUI();
 	}
 	
 	@Override
-	public void updateItems()
+	public void updateUI()
 	{
+		if ( !hasOrder())
+		{
+			sortItems();
+		}
 		for (final ItemInstance item : getItemsList())
 		{
-			if (item.isValueItem() || item.isParent())
-			{
-				item.updateButtons();
-			}
+			item.updateUI();
 		}
 	}
 	
@@ -539,7 +525,6 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 		Collections.sort(getItemsList());
 		for (final ItemInstance item : getItemsList())
 		{
-			item.init();
 			mItemsContainer.addView(item.getContainer());
 		}
 	}
@@ -564,6 +549,6 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 		}
 		getItemController().resize();
 		getItemController().addItem(aItem);
-		updateController();
+		updateControllerUI();
 	}
 }

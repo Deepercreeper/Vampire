@@ -2,7 +2,6 @@ package com.deepercreeper.vampireapp.items.interfaces.instances;
 
 import java.util.List;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
-import com.deepercreeper.vampireapp.character.instance.EPControllerInstance;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
@@ -65,11 +64,6 @@ public interface ItemGroupInstance extends Comparable<ItemGroupInstance>, Saveab
 	 * @return whether the child items of this group have a specific order.
 	 */
 	public boolean hasOrder();
-	
-	/**
-	 * @return the experience controller.
-	 */
-	public EPControllerInstance getEP();
 	
 	/**
 	 * @param aItem
@@ -151,10 +145,10 @@ public interface ItemGroupInstance extends Comparable<ItemGroupInstance>, Saveab
 	/**
 	 * Updates the controller.
 	 */
-	public void updateController();
+	public void updateControllerUI();
 	
 	/**
-	 * Updates all items.
+	 * Updates the user interface.
 	 */
-	public void updateItems();
+	public void updateUI();
 }

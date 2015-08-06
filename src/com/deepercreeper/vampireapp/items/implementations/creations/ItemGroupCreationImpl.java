@@ -8,12 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.character.creation.CreationMode;
+import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
 import com.deepercreeper.vampireapp.items.implementations.creations.restrictions.CreationRestrictionableImpl;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
-import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation.PointHandler;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemGroupCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction;
@@ -50,15 +49,11 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 	
 	private final Map<Item, ItemCreation> mItems = new HashMap<Item, ItemCreation>();
 	
-	private LinearLayout mItemsContainer;
+	private final LinearLayout mItemsContainer;
 	
-	private Button mAddButton;
+	private final Button mAddButton;
 	
-	private boolean mInitialized = false;
-	
-	private CreationMode mMode;
-	
-	private PointHandler mPoints;
+	private final CharacterCreation mChar;
 	
 	/**
 	 * Creates a new group creation.
@@ -69,29 +64,38 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 	 *            The underlying context.
 	 * @param aController
 	 *            The item controller.
-	 * @param aMode
-	 *            The creation mode.
-	 * @param aPoints
-	 *            The points handler.
+	 * @param aChar
+	 *            The parent character.
 	 */
-	public ItemGroupCreationImpl(final ItemGroup aGroup, final Context aContext, final ItemControllerCreation aController, final CreationMode aMode,
-			final PointHandler aPoints)
+	public ItemGroupCreationImpl(final ItemGroup aGroup, final Context aContext, final ItemControllerCreation aController,
+			final CharacterCreation aChar)
 	{
 		super(aController);
 		mItemGroup = aGroup;
 		mContext = aContext;
 		mItemController = aController;
-		mMode = aMode;
-		mPoints = aPoints;
+		mChar = aChar;
 		mContainer = (LinearLayout) View.inflate(getContext(), R.layout.view_item_group, null);
-		init();
+		mAddButton = (Button) getContainer().findViewById(R.id.view_item_group_add_button);
+		mItemsContainer = (LinearLayout) getContainer().findViewById(R.id.view_item_group_items_list);
+		
+		((TextView) getContainer().findViewById(R.id.view_item_group_name_label)).setText(getItemGroup().getDisplayName());
+		mAddButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				addItem();
+			}
+		});
+		
 		if ( !isMutable())
 		{
 			for (final Item item : getItemGroup().getItemsList())
 			{
 				if (isItemOk(item))
 				{
-					addItemSilent(new ItemCreationImpl(item, getContext(), this, getCreationMode(), getPoints(), null));
+					addItemSilent(new ItemCreationImpl(item, getContext(), this, mChar, null));
 				}
 			}
 			if ( !hasOrder())
@@ -99,6 +103,73 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 				sortItems();
 			}
 		}
+	}
+	
+	@Override
+	public void init()
+	{}
+	
+	@Override
+	public void updateUI()
+	{
+		if (mChar.getMode().canAddItem(this))
+		{
+			ViewUtil.wrapHeight(mAddButton);
+			ViewUtil.setEnabled(mAddButton, canAddItem());
+		}
+		else
+		{
+			ViewUtil.hideHeight(mAddButton);
+		}
+		if ( !hasOrder())
+		{
+			sortItems();
+		}
+		
+		for (final ItemCreation item : getItemsList())
+		{
+			item.updateUI();
+		}
+	}
+	
+	private boolean canAddItem()
+	{
+		if ( !mChar.getMode().canAddItem(this))
+		{
+			return false;
+		}
+		if (getAddableItems().isEmpty())
+		{
+			return false;
+		}
+		if (getItemsList().size() >= getMaxValue(CreationRestrictionType.GROUP_CHILDREN_COUNT))
+		{
+			return false;
+		}
+		if (getItemsList().size() >= getItemGroup().getMaxItems())
+		{
+			return false;
+		}
+		return true;
+	}
+	
+	@Override
+	public void release()
+	{
+		ViewUtil.release(getContainer());
+	}
+	
+	@Override
+	public void clear()
+	{
+		for (final ItemCreation item : getItemsList())
+		{
+			item.clear();
+			item.release();
+		}
+		mItems.clear();
+		getItemsList().clear();
+		updateUI();
 	}
 	
 	@Override
@@ -150,13 +221,13 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		{
 			return;
 		}
-		final ItemCreation item = new ItemCreationImpl(aItem, getContext(), this, getCreationMode(), getPoints(), null);
+		final ItemCreation item = new ItemCreationImpl(aItem, getContext(), this, mChar, null);
 		getItemsList().add(item);
 		mItems.put(aItem, item);
 		mItemsContainer.addView(item.getContainer());
 		getItemController().resize();
 		getItemController().addItem(item);
-		updateController();
+		updateControllerUI();
 	}
 	
 	@Override
@@ -168,19 +239,6 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 			return false;
 		}
 		return getItemController().canChangeGroupBy(this, aValue);
-	}
-	
-	@Override
-	public void clear()
-	{
-		for (final ItemCreation item : getItemsList())
-		{
-			item.clear();
-			item.release();
-		}
-		mItems.clear();
-		getItemsList().clear();
-		updateAddButton();
 	}
 	
 	@Override
@@ -250,12 +308,6 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 	}
 	
 	@Override
-	public CreationMode getCreationMode()
-	{
-		return mMode;
-	}
-	
-	@Override
 	public List<ItemCreation> getDescriptionItems()
 	{
 		final List<ItemCreation> items = new ArrayList<ItemCreation>();
@@ -318,12 +370,6 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 	public String getName()
 	{
 		return getItemGroup().getName();
-	}
-	
-	@Override
-	public PointHandler getPoints()
-	{
-		return mPoints;
 	}
 	
 	@Override
@@ -399,53 +445,9 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 	}
 	
 	@Override
-	public void init()
-	{
-		if ( !mInitialized)
-		{
-			mAddButton = (Button) getContainer().findViewById(R.id.view_item_group_add_button);
-			mItemsContainer = (LinearLayout) getContainer().findViewById(R.id.view_item_group_items_list);
-			
-			((TextView) getContainer().findViewById(R.id.view_item_group_name_label)).setText(getItemGroup().getDisplayName());
-			mAddButton.setOnClickListener(new OnClickListener()
-			{
-				@Override
-				public void onClick(final View aV)
-				{
-					addItem();
-				}
-			});
-			mInitialized = true;
-		}
-		
-		if (getCreationMode().canAddItem(this))
-		{
-			ViewUtil.wrapHeight(mAddButton);
-		}
-		else
-		{
-			ViewUtil.hideHeight(mAddButton);
-		}
-		updateAddButton();
-		
-		if ( !hasOrder())
-		{
-			sortItems();
-		}
-		else
-		{
-			for (final ItemCreation item : getItemsList())
-			{
-				item.init();
-				mItemsContainer.addView(item.getContainer());
-			}
-		}
-	}
-	
-	@Override
 	public boolean isMutable()
 	{
-		if (getCreationMode().isFreeMode())
+		if (mChar.getMode().isFreeMode())
 		{
 			return getItemGroup().isMutable() || getItemGroup().isFreeMutable();
 		}
@@ -456,16 +458,6 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 	public boolean isValueGroup()
 	{
 		return getItemGroup().isValueGroup();
-	}
-	
-	@Override
-	public void release()
-	{
-		for (final ItemCreation item : getItemsList())
-		{
-			item.release();
-		}
-		ViewUtil.release(getContainer());
 	}
 	
 	@Override
@@ -488,7 +480,7 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 			mItems.remove(aItem);
 			getItemsList().remove(item);
 			getItemController().resize();
-			updateController();
+			updateControllerUI();
 		}
 	}
 	
@@ -503,16 +495,6 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		for (final ItemCreation item : getItemsList())
 		{
 			item.resetTempPoints();
-		}
-	}
-	
-	@Override
-	public void setCreationMode(final CreationMode aMode)
-	{
-		mMode = aMode;
-		for (final ItemCreation item : getItemsList())
-		{
-			item.setCreationMode(aMode);
 		}
 	}
 	
@@ -534,7 +516,7 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 			removeItem(oldItem.getItem());
 			return;
 		}
-		final ItemCreation item = new ItemCreationImpl(aItem, getContext(), this, getCreationMode(), getPoints(), null);
+		final ItemCreation item = new ItemCreationImpl(aItem, getContext(), this, mChar, null);
 		getItemController().removeItem(oldItem.getName());
 		oldItem.clear();
 		mItems.remove(oldItem.getItem());
@@ -542,17 +524,7 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		mItems.put(aItem, item);
 		mItemsContainer.addView(item.getContainer(), aIndex);
 		getItemController().addItem(item);
-		updateController();
-	}
-	
-	@Override
-	public void setPoints(final PointHandler aPoints)
-	{
-		mPoints = aPoints;
-		for (final ItemCreation item : getItemsList())
-		{
-			item.setPoints(mPoints);
-		}
+		updateControllerUI();
 	}
 	
 	@Override
@@ -562,20 +534,9 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 	}
 	
 	@Override
-	public void updateAddButton()
+	public void updateControllerUI()
 	{
-		if (isMutable())
-		{
-			ViewUtil.setEnabled(mAddButton,
-					!getAddableItems().isEmpty() && getItemsList().size() < getMaxValue(CreationRestrictionType.GROUP_CHILDREN_COUNT)
-							&& getItemsList().size() < getItemGroup().getMaxItems());
-		}
-	}
-	
-	@Override
-	public void updateController()
-	{
-		getItemController().updateGroups();
+		getItemController().updateUI();
 	}
 	
 	@Override
@@ -585,10 +546,9 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		{
 			if (item.isValueItem() || item.isParent())
 			{
-				item.updateButtons();
+				item.updateUI();
 			}
 		}
-		updateAddButton();
 	}
 	
 	@Override
@@ -612,11 +572,12 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 			{
 				if ( !hasItem(item) && isItemOk(item))
 				{
-					addItemSilent(new ItemCreationImpl(item, getContext(), this, getCreationMode(), getPoints(), null));
+					addItemSilent(new ItemCreationImpl(item, getContext(), this, mChar, null));
 				}
 			}
 		}
-		updateAddButton();
+		// TODO Done here?
+		updateUI();
 	}
 	
 	private void addItemSilent(final ItemCreation aItem)
@@ -631,7 +592,7 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		mItemsContainer.addView(aItem.getContainer());
 		getItemController().addItem(aItem);
 		getItemController().resize();
-		updateController();
+		updateControllerUI();
 	}
 	
 	private List<Item> getAddableItems()
@@ -671,7 +632,7 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		mItems.remove(aItem.getItem());
 		getItemsList().remove(aItem);
 		getItemController().resize();
-		updateController();
+		updateControllerUI();
 	}
 	
 	private void sortItems()

@@ -121,7 +121,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		
 		for (final ItemControllerCreation controller : aCreator.getControllers())
 		{
-			mControllers.add(new ItemControllerInstanceImpl(controller, getContext(), mEP, this, aControllerResizeListener, mMessageListener, mHost));
+			mControllers.add(new ItemControllerInstanceImpl(controller, getContext(), this, aControllerResizeListener, mMessageListener, mHost));
 		}
 		
 		mInventory = new InventoryControllerInstance(mItems.getInventory(), this, getContext(), mResizeListener, mMessageListener, mHost);
@@ -202,10 +202,9 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		mDescriptions = new DescriptionControllerInstance(DataUtil.getElement(root, "descriptions"), mItems.getDescriptions());
 		
 		// Controllers
-		for (Element controller : DataUtil.getChildren(DataUtil.getElement(root, "controllers"), "controller"))
+		for (final Element controller : DataUtil.getChildren(DataUtil.getElement(root, "controllers"), "controller"))
 		{
-			mControllers
-					.add(new ItemControllerInstanceImpl(controller, mItems, mContext, mEP, this, aControllerResizeListener, mMessageListener, mHost));
+			mControllers.add(new ItemControllerInstanceImpl(controller, mItems, mContext, this, aControllerResizeListener, mMessageListener, mHost));
 		}
 		
 		// Health
@@ -224,7 +223,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		mActions = mHost ? null : new ActionsControllerInstance(this, mContext);
 		
 		// Restrictions
-		for (Element restriction : DataUtil.getChildren(DataUtil.getElement(root, "restrictions"), "restriction"))
+		for (final Element restriction : DataUtil.getChildren(DataUtil.getElement(root, "restrictions"), "restriction"))
 		{
 			addRestriction(new InstanceRestrictionImpl(restriction));
 		}
@@ -577,7 +576,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	/**
 	 * Updates all item controllers.
 	 */
-	public void update()
+	public void updateUI()
 	{
 		if (mHealth != null)
 		{
@@ -597,7 +596,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		}
 		for (final ItemControllerInstance controller : getControllers())
 		{
-			controller.updateGroups();
+			controller.updateUI();
 		}
 		if (mActions != null)
 		{

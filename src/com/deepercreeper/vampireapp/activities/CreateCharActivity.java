@@ -27,7 +27,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.NumberPicker;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -272,11 +271,9 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 		
 		for (final ItemControllerCreation controller : mChar.getControllers())
 		{
-			// TODO This will be removed
-			controller.init();
-			controllersPanel.addView(controller.getContainer());
 			controller.close();
-			controller.updateGroups();
+			controllersPanel.addView(controller.getContainer());
+			controller.updateUI();
 		}
 		
 		resetTempPoints.setOnClickListener(new OnClickListener()
@@ -317,13 +314,16 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 			mode = CreationMode.FREE_MAIN;
 		}
 		
-		if (mChar == null)
+		final boolean newChar = mChar == null;
+		if (newChar)
 		{
 			mChar = new CharacterCreation(mItems, this, this, mode);
 		}
-		
-		mChar.resetFreePoints();
-		mChar.release();
+		else
+		{
+			mChar.resetFreePoints();
+			mChar.release();
+		}
 		
 		mChar.setCreationMode(mode);
 		
@@ -331,7 +331,7 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 		final TextView conceptText = (TextView) findViewById(R.id.cc_concept_text);
 		final Spinner natureSpinner = (Spinner) findViewById(R.id.cc_nature_spinner);
 		final Spinner behaviorSpinner = (Spinner) findViewById(R.id.cc_behavior_spinner);
-		final NumberPicker generationPicker = (NumberPicker) findViewById(R.id.cc_generation_picker);
+		final LinearLayout generationPanel = (LinearLayout) findViewById(R.id.cc_generation_panel);
 		final Spinner clanSpinner = (Spinner) findViewById(R.id.cc_clan_spinner);
 		final LinearLayout controllersPanel = (LinearLayout) findViewById(R.id.cc_controllers_list);
 		final Button nextButton = (Button) findViewById(R.id.cc_general_next_button);
@@ -421,8 +421,6 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 		});
 		behaviorSpinner.setSelection(mItems.getNatures().displayIndexOf(mChar.getBehavior()));
 		
-		mChar.getGeneration().init(generationPicker, mFreeCreation);
-		
 		clanSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, mItems.getClans().getDisplayNames()));
 		clanSpinner.setOnItemSelectedListener(new OnItemSelectedListener()
 		{
@@ -440,17 +438,17 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 		});
 		clanSpinner.setSelection(mItems.getClans().displayIndexOf(mChar.getClan()));
 		
+		generationPanel.addView(mChar.getGeneration().getContainer());
+		
 		for (final ItemControllerCreation controller : mChar.getControllers())
 		{
-			controller.init();
-			controllersPanel.addView(controller.getContainer());
 			controller.close();
-			controller.updateGroups();
+			controllersPanel.addView(controller.getContainer());
+			controller.updateUI();
 		}
 		
 		if (mFreeCreation)
 		{
-			mChar.getHealth().init();
 			controllersPanel.addView(mChar.getHealth().getContainer());
 		}
 		

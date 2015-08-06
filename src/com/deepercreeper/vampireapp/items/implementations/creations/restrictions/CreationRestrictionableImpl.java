@@ -14,9 +14,9 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.Crea
  */
 public abstract class CreationRestrictionableImpl implements CreationRestrictionable
 {
-	private final Set<CreationRestriction>	mRestrictions		= new HashSet<CreationRestriction>();
+	private final Set<CreationRestriction> mRestrictions = new HashSet<CreationRestriction>();
 	
-	private ItemControllerCreation			mControllerCreation	= null;
+	private ItemControllerCreation mControllerCreation = null;
 	
 	@Override
 	public final void addRestriction(final CreationRestriction aRestriction)
@@ -32,7 +32,7 @@ public abstract class CreationRestrictionableImpl implements CreationRestriction
 	 * @param aController
 	 *            The item controller.
 	 */
-	public CreationRestrictionableImpl(ItemControllerCreation aController)
+	public CreationRestrictionableImpl(final ItemControllerCreation aController)
 	{
 		mControllerCreation = aController;
 	}
@@ -99,9 +99,9 @@ public abstract class CreationRestrictionableImpl implements CreationRestriction
 	}
 	
 	@Override
-	public final boolean hasRestrictions()
+	public final boolean hasRestrictions(final CreationRestrictionType... aTypes)
 	{
-		return !getRestrictions().isEmpty();
+		return !getRestrictions(aTypes).isEmpty();
 	}
 	
 	@Override

@@ -449,7 +449,7 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 		final LinearLayout controllersPanel = (LinearLayout) findViewById(R.id.ca_controllers_list);
 		final Button exit = (Button) findViewById(R.id.ca_exit_button);
 		
-		mChar.update();
+		mChar.updateUI();
 		
 		controllersPanel.addView(mChar.getMode().getContainer());
 		controllersPanel.addView(mChar.getEPController().getContainer());
@@ -461,10 +461,11 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 		
 		for (final ItemControllerInstance controller : mChar.getControllers())
 		{
-			controller.release();
-			controller.init();
-			controllersPanel.addView(controller.getContainer());
-			controller.close();
+			if ( !controller.isEmpty() || controller.hasMutableGroup())
+			{
+				controller.close();
+				controllersPanel.addView(controller.getContainer());
+			}
 		}
 		
 		controllersPanel.addView(mChar.getActions().getContainer());

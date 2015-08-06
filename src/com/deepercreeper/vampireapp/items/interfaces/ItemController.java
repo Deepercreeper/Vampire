@@ -10,20 +10,36 @@ import java.util.List;
 public interface ItemController extends Nameable
 {
 	/**
-	 * Adds the given group.
+	 * Adds the given groups.
 	 * 
-	 * @param aGroup
-	 *            The group.
+	 * @param aGroups
+	 *            A list of groups.
 	 */
-	public void addGroup(ItemGroup aGroup);
+	public void addGroups(final List<ItemGroup> aGroups);
 	
 	/**
-	 * Adds the given group option.
-	 * 
-	 * @param aGroupOption
-	 *            The group option.
+	 * @param aGroup
+	 *            The group.
+	 * @return whether this group option contains the given group.
 	 */
-	public void addGroupOption(GroupOption aGroupOption);
+	public boolean hasGroup(ItemGroup aGroup);
+	
+	/**
+	 * @param aName
+	 *            The group name.
+	 * @return whether this group option contains a group with the given name.
+	 */
+	public boolean hasGroup(String aName);
+	
+	/**
+	 * @return the maximum values that are possible to be used inside this group option.
+	 */
+	public int[] getMaxValues();
+	
+	/**
+	 * @return whether this group option defines maximum values for its groups.
+	 */
+	public boolean hasMaxValues();
 	
 	/**
 	 * @param aName
@@ -31,18 +47,6 @@ public interface ItemController extends Nameable
 	 * @return the group with the given name.
 	 */
 	public ItemGroup getGroup(String aName);
-	
-	/**
-	 * @param aName
-	 *            The group option name.
-	 * @return the group option with the given name.
-	 */
-	public GroupOption getGroupOption(String aName);
-	
-	/**
-	 * @return a list of all group options.
-	 */
-	public List<GroupOption> getGroupOptionsList();
 	
 	/**
 	 * @return a list of all groups.

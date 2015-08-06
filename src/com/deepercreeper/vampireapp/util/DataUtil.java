@@ -30,13 +30,11 @@ import org.w3c.dom.NodeList;
 import com.deepercreeper.vampireapp.character.Currency;
 import com.deepercreeper.vampireapp.character.Health;
 import com.deepercreeper.vampireapp.character.inventory.Inventory;
-import com.deepercreeper.vampireapp.items.implementations.GroupOptionImpl;
 import com.deepercreeper.vampireapp.items.implementations.ItemControllerImpl;
 import com.deepercreeper.vampireapp.items.implementations.ItemGroupImpl;
 import com.deepercreeper.vampireapp.items.implementations.ItemImpl;
 import com.deepercreeper.vampireapp.items.implementations.creations.restrictions.CreationConditionImpl;
 import com.deepercreeper.vampireapp.items.implementations.creations.restrictions.CreationRestrictionImpl;
-import com.deepercreeper.vampireapp.items.interfaces.GroupOption;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
@@ -65,13 +63,15 @@ public class DataUtil
 	
 	private static final String CONTROLLER = "controller";
 	
+	private static final String CONTROLLERS = "controllers";
+	
 	private static final String ITEM = "item";
 	
 	private static final String GROUP = "group";
 	
-	private static final String GROUP_OPTION = "group-option";
-	
 	private static final String CLAN = "clan";
+	
+	private static final String CLANS = "clans";
 	
 	private static final String CONDITION = "condition";
 	
@@ -784,7 +784,7 @@ public class DataUtil
 			return null;
 		}
 		final Set<Action> actions = new HashSet<Action>();
-		for (Element child : getChildren(aItem, ACTION))
+		for (final Element child : getChildren(aItem, ACTION))
 		{
 			final ActionType type = Action.ActionType.get(child.getAttribute("type"));
 			if (type == null)
@@ -810,7 +810,7 @@ public class DataUtil
 				{
 					minDices = Integer.parseInt(child.getAttribute("minDices"));
 				}
-				catch (NumberFormatException e)
+				catch (final NumberFormatException e)
 				{
 					Log.w(TAG, "Can't parse minimum dices of " + name + ".");
 				}
@@ -845,7 +845,7 @@ public class DataUtil
 				{
 					minLevel = Integer.parseInt(child.getAttribute("minLevel"));
 				}
-				catch (NumberFormatException e)
+				catch (final NumberFormatException e)
 				{
 					Log.w(TAG, "Can't parse minimum level of " + name + ".");
 				}
@@ -860,33 +860,43 @@ public class DataUtil
 	 *            The parent document.
 	 * @param aTagName
 	 *            The tag name. May be {@code null} if all children should be added.
+	 * @param aChildren
+	 *            Whether the children of children should be added also.
 	 * @return a list of child elements with the given tag name.
 	 */
-	public static List<Element> getChildren(Document aDoc, String aTagName)
+	public static List<Element> getChildren(final Document aDoc, final String aTagName, final boolean aChildren)
 	{
 		if (aDoc == null)
 		{
 			Log.w(TAG, "Document is null.");
 			return null;
 		}
-		List<Element> children = new ArrayList<Element>();
+		final List<Element> children = new ArrayList<Element>();
 		NodeList nodes;
-		if (aTagName == null)
-		{
-			nodes = aDoc.getChildNodes();
-		}
-		else
-		{
-			nodes = aDoc.getElementsByTagName(aTagName);
-		}
+		nodes = aChildren && aTagName != null ? aDoc.getElementsByTagName(aTagName) : aDoc.getChildNodes();
 		for (int i = 0; i < nodes.getLength(); i++ )
 		{
 			if (nodes.item(i) instanceof Element)
 			{
-				children.add((Element) nodes.item(i));
+				if (aTagName == null || ((Element) nodes.item(i)).getTagName().equals(aTagName))
+				{
+					children.add((Element) nodes.item(i));
+				}
 			}
 		}
 		return children;
+	}
+	
+	/**
+	 * @param aDoc
+	 *            The parent document.
+	 * @param aTagName
+	 *            The tag name. May be {@code null} if all children should be added.
+	 * @return a list of child elements with the given tag name. No children children are added.
+	 */
+	public static List<Element> getChildren(final Document aDoc, final String aTagName)
+	{
+		return getChildren(aDoc, aTagName, false);
 	}
 	
 	/**
@@ -894,30 +904,40 @@ public class DataUtil
 	 *            The parent element.
 	 * @param aTagName
 	 *            The tag name. May be {@code null} if all children should be added.
+	 * @return a list of child elements with the given tag name. No children children are added.
+	 */
+	public static List<Element> getChildren(final Element aElement, final String aTagName)
+	{
+		return getChildren(aElement, aTagName, false);
+	}
+	
+	/**
+	 * @param aElement
+	 *            The parent element.
+	 * @param aTagName
+	 *            The tag name. May be {@code null} if all children should be added.
+	 * @param aChildren
+	 *            Whether the children of children should be added also.
 	 * @return a list of child elements with the given tag name.
 	 */
-	public static List<Element> getChildren(Element aElement, String aTagName)
+	public static List<Element> getChildren(final Element aElement, final String aTagName, final boolean aChildren)
 	{
 		if (aElement == null)
 		{
 			Log.w(TAG, "Parent element is null.");
 			return null;
 		}
-		List<Element> children = new ArrayList<Element>();
+		final List<Element> children = new ArrayList<Element>();
 		NodeList nodes;
-		if (aTagName == null)
-		{
-			nodes = aElement.getChildNodes();
-		}
-		else
-		{
-			nodes = aElement.getElementsByTagName(aTagName);
-		}
+		nodes = aChildren && aTagName != null ? aElement.getElementsByTagName(aTagName) : aElement.getChildNodes();
 		for (int i = 0; i < nodes.getLength(); i++ )
 		{
 			if (nodes.item(i) instanceof Element)
 			{
-				children.add((Element) nodes.item(i));
+				if (aTagName == null || ((Element) nodes.item(i)).getTagName().equals(aTagName))
+				{
+					children.add((Element) nodes.item(i));
+				}
 			}
 		}
 		return children;
@@ -932,9 +952,9 @@ public class DataUtil
 		}
 		final ClanController controller = new ClanController();
 		final List<Clan> clansList = new ArrayList<Clan>();
-		for (Element clanNode : getChildren(aDoc, CLAN))
+		for (final Element clanNode : getChildren(getElement(aDoc, CLANS), CLAN))
 		{
-			String name = clanNode.getAttribute("name");
+			final String name = clanNode.getAttribute("name");
 			if (name.isEmpty())
 			{
 				Log.w(TAG, "Clan with empty name.");
@@ -956,7 +976,7 @@ public class DataUtil
 			return null;
 		}
 		final Set<CreationCondition> conditions = new HashSet<CreationCondition>();
-		for (Element child : getChildren(aRestrictionNode, CONDITION))
+		for (final Element child : getChildren(aRestrictionNode, CONDITION))
 		{
 			final CreationConditionQuery query = CreationConditionQuery.getQuery(child.getAttribute("query"));
 			if (query == null)
@@ -978,7 +998,7 @@ public class DataUtil
 					{
 						minimum = maximum = Integer.parseInt(range.substring(1));
 					}
-					catch (NumberFormatException e)
+					catch (final NumberFormatException e)
 					{
 						Log.w(TAG, "Can't parse range " + range + ".");
 					}
@@ -989,7 +1009,7 @@ public class DataUtil
 					{
 						maximum = Integer.parseInt(range.substring(1)) - 1;
 					}
-					catch (NumberFormatException e)
+					catch (final NumberFormatException e)
 					{
 						Log.w(TAG, "Can't parse range " + range + ".");
 					}
@@ -1000,7 +1020,7 @@ public class DataUtil
 					{
 						minimum = Integer.parseInt(range.substring(1)) + 1;
 					}
-					catch (NumberFormatException e)
+					catch (final NumberFormatException e)
 					{
 						Log.w(TAG, "Can't parse range " + range + ".");
 					}
@@ -1012,7 +1032,7 @@ public class DataUtil
 						minimum = Integer.parseInt(range.split("-")[0]);
 						maximum = Integer.parseInt(range.split("-")[1]);
 					}
-					catch (NumberFormatException e)
+					catch (final NumberFormatException e)
 					{
 						Log.w(TAG, "Can't parse range " + range + ".");
 						minimum = Integer.MIN_VALUE;
@@ -1034,7 +1054,7 @@ public class DataUtil
 				{
 					index = Integer.parseInt(child.getAttribute("index"));
 				}
-				catch (NumberFormatException e)
+				catch (final NumberFormatException e)
 				{
 					Log.w(TAG, "Can't parse index " + child.getAttribute("index") + ".");
 					continue;
@@ -1053,64 +1073,19 @@ public class DataUtil
 			return null;
 		}
 		final List<ItemController> controllersList = new ArrayList<ItemController>();
-		for (Element controller : getChildren(aDoc, CONTROLLER))
+		for (final Element controller : getChildren(getElement(aDoc, CONTROLLERS), CONTROLLER))
 		{
 			final String name = controller.getAttribute("name");
-			final ItemController itemController = new ItemControllerImpl(name);
-			for (final ItemGroup group : loadGroups(controller))
+			int[] maxValues = null;
+			if (controller.hasAttribute("maxValues"))
 			{
-				itemController.addGroup(group);
+				maxValues = parseValues(controller.getAttribute("maxValues"));
 			}
-			for (final GroupOption groupOption : loadGroupOptions(controller, itemController))
-			{
-				itemController.addGroupOption(groupOption);
-			}
+			final ItemController itemController = new ItemControllerImpl(name, maxValues);
+			itemController.addGroups(loadGroups(controller));
 			controllersList.add(itemController);
 		}
 		return controllersList;
-	}
-	
-	private static List<GroupOption> loadGroupOptions(final Element aController, final ItemController aParent)
-	{
-		if (aController == null)
-		{
-			Log.w(TAG, "Parent element is null.");
-			return null;
-		}
-		final List<GroupOption> groupOptionsList = new ArrayList<GroupOption>();
-		for (Element child : getChildren(aController, GROUP_OPTION))
-		{
-			final String name = child.getAttribute("name");
-			final boolean valuedGroupOption = Boolean.parseBoolean(child.getAttribute("value"));
-			int[] maxValues = null;
-			if (valuedGroupOption && child.hasAttribute("maxValues"))
-			{
-				maxValues = parseValues(child.getAttribute("maxValues"));
-			}
-			final GroupOption groupOption = new GroupOptionImpl(name, maxValues);
-			for (final ItemGroup group : loadGroups(child, aParent))
-			{
-				groupOption.addGroup(group);
-			}
-			groupOptionsList.add(groupOption);
-		}
-		return groupOptionsList;
-	}
-	
-	private static List<ItemGroup> loadGroups(final Element aGroupOption, final ItemController aController)
-	{
-		if (aGroupOption == null)
-		{
-			Log.w(TAG, "Parent element is null.");
-			return null;
-		}
-		final List<ItemGroup> groupsList = new ArrayList<ItemGroup>();
-		for (Element child : getChildren(aGroupOption, "group"))
-		{
-			final String groupName = child.getAttribute("name");
-			groupsList.add(aController.getGroup(groupName));
-		}
-		return groupsList;
 	}
 	
 	private static List<ItemGroup> loadGroups(final Element aController)
@@ -1121,7 +1096,7 @@ public class DataUtil
 			return null;
 		}
 		final List<ItemGroup> groupsList = new ArrayList<ItemGroup>();
-		for (Element child : getChildren(aController, GROUP))
+		for (final Element child : getChildren(aController, GROUP))
 		{
 			final String name = child.getAttribute("name");
 			final boolean mutable = Boolean.parseBoolean(child.getAttribute("mutable"));
@@ -1143,7 +1118,7 @@ public class DataUtil
 				{
 					maxItems = Integer.parseInt(child.getAttribute("maxItems"));
 				}
-				catch (NumberFormatException e)
+				catch (final NumberFormatException e)
 				{
 					Log.w(TAG, "Can't parse " + child.getAttribute("maxItems"));
 					continue;
@@ -1157,7 +1132,7 @@ public class DataUtil
 					{
 						epCost = Integer.parseInt(child.getAttribute("epCost"));
 					}
-					catch (NumberFormatException e)
+					catch (final NumberFormatException e)
 					{
 						Log.w(TAG, "Can't parse " + child.getAttribute("epCost"));
 						continue;
@@ -1169,7 +1144,7 @@ public class DataUtil
 					{
 						epCostMultiplicator = Integer.parseInt(child.getAttribute("epCostMulti"));
 					}
-					catch (NumberFormatException e)
+					catch (final NumberFormatException e)
 					{
 						Log.w(TAG, "Can't parse " + child.getAttribute("epCostMulti"));
 						continue;
@@ -1181,7 +1156,7 @@ public class DataUtil
 					{
 						epCostNew = Integer.parseInt(child.getAttribute("epCostNew"));
 					}
-					catch (NumberFormatException e)
+					catch (final NumberFormatException e)
 					{
 						Log.w(TAG, "Can't parse " + child.getAttribute("epCostNew"));
 						continue;
@@ -1193,7 +1168,7 @@ public class DataUtil
 					{
 						maxValue = Integer.parseInt(child.getAttribute("maxValue"));
 					}
-					catch (NumberFormatException e)
+					catch (final NumberFormatException e)
 					{
 						Log.w(TAG, "Can't parse " + child.getAttribute("maxValue"));
 						continue;
@@ -1205,7 +1180,7 @@ public class DataUtil
 					{
 						freePointsCost = Integer.parseInt(child.getAttribute("freePointsCost"));
 					}
-					catch (NumberFormatException e)
+					catch (final NumberFormatException e)
 					{
 						Log.w(TAG, "Can't parse " + child.getAttribute("freePointsCost"));
 						continue;
@@ -1217,7 +1192,7 @@ public class DataUtil
 					{
 						maxLowLevelValue = Integer.parseInt(child.getAttribute("maxLowLevelValue"));
 					}
-					catch (NumberFormatException e)
+					catch (final NumberFormatException e)
 					{
 						Log.w(TAG, "Can't parse " + child.getAttribute("maxLowLevelValue"));
 						continue;
@@ -1233,7 +1208,7 @@ public class DataUtil
 					{
 						startValue = Integer.parseInt(child.getAttribute("startValue"));
 					}
-					catch (NumberFormatException e)
+					catch (final NumberFormatException e)
 					{
 						Log.w(TAG, "Can't parse " + child.getAttribute("startValue"));
 						continue;
@@ -1259,7 +1234,7 @@ public class DataUtil
 			return null;
 		}
 		final List<Item> itemsList = new ArrayList<Item>();
-		for (Element child : getChildren(aParentNode, ITEM))
+		for (final Element child : getChildren(aParentNode, ITEM))
 		{
 			final String name = child.getAttribute("name");
 			if (name.isEmpty())
@@ -1284,7 +1259,7 @@ public class DataUtil
 				{
 					epCost = Integer.parseInt(child.getAttribute("epCost"));
 				}
-				catch (NumberFormatException e)
+				catch (final NumberFormatException e)
 				{
 					Log.w(TAG, "Can't parse " + child.getAttribute("epCost"));
 					continue;
@@ -1296,7 +1271,7 @@ public class DataUtil
 				{
 					epCostNew = Integer.parseInt(child.getAttribute("epCostNew"));
 				}
-				catch (NumberFormatException e)
+				catch (final NumberFormatException e)
 				{
 					Log.w(TAG, "Can't parse " + child.getAttribute("epCostNew"));
 					continue;
@@ -1308,7 +1283,7 @@ public class DataUtil
 				{
 					epCostMultiplicator = Integer.parseInt(child.getAttribute("epCostMulti"));
 				}
-				catch (NumberFormatException e)
+				catch (final NumberFormatException e)
 				{
 					Log.w(TAG, "Can't parse " + child.getAttribute("epCostMulti"));
 					continue;
@@ -1320,7 +1295,7 @@ public class DataUtil
 				{
 					startValue = Integer.parseInt(child.getAttribute("startValue"));
 				}
-				catch (NumberFormatException e)
+				catch (final NumberFormatException e)
 				{
 					Log.w(TAG, "Can't parse " + child.getAttribute("startValue"));
 					continue;
@@ -1366,7 +1341,7 @@ public class DataUtil
 			return null;
 		}
 		final Set<CreationRestriction> restrictions = new HashSet<CreationRestriction>();
-		for (Element child : getChildren(aClanNode, RESTRICTION))
+		for (final Element child : getChildren(aClanNode, RESTRICTION))
 		{
 			final CreationRestrictionType type = CreationRestrictionType.get(child.getAttribute("type"));
 			
@@ -1402,7 +1377,7 @@ public class DataUtil
 					{
 						minimum = maximum = Integer.parseInt(range.substring(1));
 					}
-					catch (NumberFormatException e)
+					catch (final NumberFormatException e)
 					{
 						Log.w(TAG, "Can't parse range " + range + ".");
 						continue;
@@ -1414,7 +1389,7 @@ public class DataUtil
 					{
 						maximum = Integer.parseInt(range.substring(1)) - 1;
 					}
-					catch (NumberFormatException e)
+					catch (final NumberFormatException e)
 					{
 						Log.w(TAG, "Can't parse range " + range + ".");
 						continue;
@@ -1426,7 +1401,7 @@ public class DataUtil
 					{
 						minimum = Integer.parseInt(range.substring(1)) + 1;
 					}
-					catch (NumberFormatException e)
+					catch (final NumberFormatException e)
 					{
 						Log.w(TAG, "Can't parse range " + range + ".");
 						continue;
@@ -1439,7 +1414,7 @@ public class DataUtil
 						minimum = Integer.parseInt(range.split("-")[0]);
 						maximum = Integer.parseInt(range.split("-")[1]);
 					}
-					catch (NumberFormatException e)
+					catch (final NumberFormatException e)
 					{
 						Log.w(TAG, "Can't parse range " + range + ".");
 						continue;
@@ -1456,7 +1431,7 @@ public class DataUtil
 				{
 					index = Integer.parseInt(child.getAttribute("index"));
 				}
-				catch (NumberFormatException e)
+				catch (final NumberFormatException e)
 				{
 					Log.w(TAG, "Can't parse " + child.getAttribute("index") + ".");
 					continue;
@@ -1468,7 +1443,7 @@ public class DataUtil
 				{
 					value = Integer.parseInt(child.getAttribute("value"));
 				}
-				catch (NumberFormatException e)
+				catch (final NumberFormatException e)
 				{
 					Log.w(TAG, "Can't parse " + child.getAttribute("value") + ".");
 					continue;

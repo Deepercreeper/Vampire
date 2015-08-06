@@ -3,7 +3,9 @@
 
     <controllers>
 
-        <controller name="Attributes" >
+        <controller
+            name="Attributes"
+            maxValues="6,8,10" >
 
             <group
                 name="Physical"
@@ -58,21 +60,12 @@
 
                 <item name="Wits"/>
             </group>
-
-            <group-option
-                name="Attributes"
-                maxValues="6,8,10"
-                value="true" >
-
-                <group name="Physical" />
-
-                <group name="Social" />
-
-                <group name="Mental" />
-            </group-option>
         </controller>
 
-        <controller name="Abilities" >
+        <controller
+            name="Abilities"
+            name="Abilities"
+            maxValues="5,9,13" >
 
             <group
                 name="Talents"
@@ -171,29 +164,19 @@
 
                 <item name="Management"/>
             </group>
-
-            <group-option
-                name="Abilities"
-                maxValues="5,9,13"
-                value="true" >
-
-                <group name="Talents" />
-
-                <group name="Skills" />
-
-                <group name="Knowledges" />
-            </group-option>
         </controller>
 
-        <controller name="Advantages" >
+        <controller
+            name="Disciplines"
+            maxValues="4" >
 
             <group
                 name="Disciplines"
                 epCostMulti="7"
                 epCostNew="10"
                 freeMutable="true"
-                hostMutable="true"
                 freePointsCost="7"
+                hostMutable="true"
                 maxLowLevelValue="5"
                 maxValue="6"
                 mutable="false"
@@ -1023,6 +1006,11 @@
                     </item>
                 </item>
             </group>
+        </controller>
+
+        <controller
+            name="Backgrounds"
+            maxValues="5" >
 
             <group
                 name="Backgrounds"
@@ -1061,6 +1049,11 @@
                     name="Allies"
                     needsDescription="true"/>
             </group>
+        </controller>
+
+        <controller
+            name="Virtues"
+            maxValues="10" >
 
             <group
                 name="Virtues"
@@ -1077,33 +1070,11 @@
 
                 <item name="Courage"/>
             </group>
-
-            <group-option
-                name="Disciplines"
-                maxValues="4"
-                value="true" >
-
-                <group name="Disciplines" />
-            </group-option>
-
-            <group-option
-                name="Backgrounds"
-                maxValues="5"
-                value="true" >
-
-                <group name="Backgrounds" />
-            </group-option>
-
-            <group-option
-                name="Virtues"
-                maxValues="10"
-                value="true" >
-
-                <group name="Virtues" />
-            </group-option>
         </controller>
 
-        <controller name="Other traits" >
+        <controller
+            name="Other traits"
+            maxValues="0" >
 
             <group
                 name="Other traits"
@@ -1468,17 +1439,11 @@
                     name="Muteness"
                     values="0,-4"/>
             </group>
-
-            <group-option
-                name="Other traits"
-                maxValues="0"
-                value="true" >
-
-                <group name="Other traits" />
-            </group-option>
         </controller>
 
-        <controller name="Other" >
+        <controller
+            name="Road"
+            maxValues="5" >
 
             <group
                 name="Road"
@@ -1506,6 +1471,11 @@
 
                 <item name="Road of thyphon"/>
             </group>
+        </controller>
+
+        <controller
+            name="Willpower"
+            maxValues="10" >
 
             <group
                 name="Willpower"
@@ -1518,6 +1488,11 @@
 
                 <item name="Willpower"/>
             </group>
+        </controller>
+
+        <controller
+            name="Blood pool"
+            maxValues="10" >
 
             <group
                 name="Blood pool"
@@ -1528,30 +1503,6 @@
 
                 <item name="Blood pool"/>
             </group>
-
-            <group-option
-                name="Road"
-                maxValues="5"
-                value="true" >
-
-                <group name="Road" />
-            </group-option>
-
-            <group-option
-                name="Willpower"
-                maxValues="10"
-                value="true" >
-
-                <group name="Willpower" />
-            </group-option>
-
-            <group-option
-                name="Blood pool"
-                maxValues="10"
-                value="true" >
-
-                <group name="Blood pool" />
-            </group-option>
         </controller>
     </controllers>
 
@@ -1595,21 +1546,18 @@
             <restriction
                 itemName="Appearance"
                 type="ItemEpCostMulti"
-                value="0"
-                />
-            
+                value="0" />
+
             <restriction
                 itemName="Appearance"
                 type="ItemEpCost"
-                value="0"
-                />
-            
+                value="0" />
+
             <restriction
                 itemName="Appearance"
                 type="ItemEpCostNew"
-                value="0"
-                />
-            
+                value="0" />
+
             <restriction
                 itemName="Force"
                 type="ItemEpCostMulti"
@@ -1626,9 +1574,9 @@
                 value="5" />
 
             <restriction
+                creationRestriction="true"
                 itemName="Appearance"
                 range="=0"
-                creationRestriction="true"
                 type="ItemValue" />
 
             <restriction

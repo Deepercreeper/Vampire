@@ -3,8 +3,6 @@ package com.deepercreeper.vampireapp.items.interfaces.instances;
 import java.util.List;
 import java.util.Set;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
-import com.deepercreeper.vampireapp.character.instance.EPControllerInstance;
-import com.deepercreeper.vampireapp.items.interfaces.GroupOption;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.mechanics.ActionInstance;
@@ -30,11 +28,6 @@ public interface ItemControllerInstance extends Saveable, Viewable
 	public Context getContext();
 	
 	/**
-	 * @return whether this controller has any item.
-	 */
-	public boolean hasAnyItem();
-	
-	/**
 	 * @return a set of all item actions.
 	 */
 	public Set<ActionInstance> getActions();
@@ -43,11 +36,6 @@ public interface ItemControllerInstance extends Saveable, Viewable
 	 * @return a list of all items that have a description.
 	 */
 	public List<ItemInstance> getDescriptionValues();
-	
-	/**
-	 * @return the experience controller.
-	 */
-	public EPControllerInstance getEP();
 	
 	/**
 	 * Adds the given item to this controller to create a shortcut.
@@ -85,25 +73,6 @@ public interface ItemControllerInstance extends Saveable, Viewable
 	public ItemGroupInstance getGroup(String aName);
 	
 	/**
-	 * @param aGroupOption
-	 *            The group option type.
-	 * @return the group option with the given group option type.
-	 */
-	public GroupOptionInstance getGroupOption(GroupOption aGroupOption);
-	
-	/**
-	 * @param aName
-	 *            The group option name.
-	 * @return the group option with the given name.
-	 */
-	public GroupOptionInstance getGroupOption(String aName);
-	
-	/**
-	 * @return a list of all group options.
-	 */
-	public List<GroupOptionInstance> getGroupOptionsList();
-	
-	/**
 	 * @return a list of all groups.
 	 */
 	public List<ItemGroupInstance> getGroupsList();
@@ -119,13 +88,6 @@ public interface ItemControllerInstance extends Saveable, Viewable
 	 * @return the item controller type.
 	 */
 	public ItemController getItemController();
-	
-	/**
-	 * @param aName
-	 *            The item name.
-	 * @return the value of the item with the given name.
-	 */
-	public int getItemValue(String aName);
 	
 	/**
 	 * @return the controller name.
@@ -147,6 +109,16 @@ public interface ItemControllerInstance extends Saveable, Viewable
 	public boolean hasItem(String aName);
 	
 	/**
+	 * @return whether this controller is empty.
+	 */
+	public boolean isEmpty();
+	
+	/**
+	 * @return whether this controller has any mutable group.
+	 */
+	public boolean hasMutableGroup();
+	
+	/**
 	 * Resizes the controller view.
 	 */
 	public void resize();
@@ -160,7 +132,7 @@ public interface ItemControllerInstance extends Saveable, Viewable
 	public void setEnabled(boolean aEnabled);
 	
 	/**
-	 * Updates all groups.
+	 * Updates the user interface.
 	 */
-	public void updateGroups();
+	public void updateUI();
 }

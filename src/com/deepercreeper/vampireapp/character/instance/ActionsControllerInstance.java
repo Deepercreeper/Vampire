@@ -3,6 +3,7 @@ package com.deepercreeper.vampireapp.character.instance;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
 import com.deepercreeper.vampireapp.mechanics.ActionInstance;
@@ -76,7 +77,55 @@ public class ActionsControllerInstance implements Viewable
 		{
 			mExpander.close();
 		}
+		else
+		{
+			mExpander.resize();
+		}
 		ViewUtil.setEnabled(mExpander.getButton(), hasActions);
+	}
+	
+	/**
+	 * Adds all given actions and updates everything.
+	 * 
+	 * @param aActions
+	 *            A set of action instances.
+	 */
+	public void addActions(final Set<ActionInstance> aActions)
+	{
+		mActions.addAll(aActions);
+		sortActions();
+		update();
+	}
+	
+	/**
+	 * Removes all given actions and updates everything.
+	 * 
+	 * @param aActions
+	 *            A set of action instances.
+	 */
+	public void removeActions(final Set<ActionInstance> aActions)
+	{
+		for (final ActionInstance action : aActions)
+		{
+			action.release();
+		}
+		mActions.removeAll(aActions);
+		sortActions();
+		update();
+	}
+	
+	private void sortActions()
+	{
+		for (final ActionInstance action : mActions)
+		{
+			action.release();
+		}
+		Collections.sort(mActions);
+		for (final ActionInstance action : mActions)
+		{
+			action.init();
+			mExpander.getContainer().addView(action.getContainer());
+		}
 	}
 	
 	@Override
@@ -98,12 +147,7 @@ public class ActionsControllerInstance implements Viewable
 		}
 		// TODO Add other actions
 		
-		Collections.sort(mActions);
-		for (final ActionInstance action : mActions)
-		{
-			action.init();
-			mExpander.getContainer().addView(action.getContainer());
-		}
+		sortActions();
 		update();
 	}
 }

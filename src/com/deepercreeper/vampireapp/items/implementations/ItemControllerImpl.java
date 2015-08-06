@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.deepercreeper.vampireapp.items.interfaces.GroupOption;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
@@ -21,35 +20,31 @@ public class ItemControllerImpl extends Named implements ItemController
 	
 	private final List<ItemGroup> mGroupList = new ArrayList<ItemGroup>();
 	
-	private final Map<String, GroupOption> mGroupOptions = new HashMap<String, GroupOption>();
-	
-	private final List<GroupOption> mGroupOptionList = new ArrayList<GroupOption>();
+	private final int[] mMaxValues;
 	
 	/**
 	 * Creates a new item controller.
 	 * 
 	 * @param aName
 	 *            The item controller name.
+	 * @param aMaxValues
+	 *            The maximum group values or {@code null} if no restrictions given.
 	 */
-	public ItemControllerImpl(final String aName)
+	public ItemControllerImpl(final String aName, final int[] aMaxValues)
 	{
 		super(aName);
+		mMaxValues = aMaxValues;
 	}
 	
 	@Override
-	public void addGroup(final ItemGroup aGroup)
+	public void addGroups(final List<ItemGroup> aGroups)
 	{
-		mGroups.put(aGroup.getName(), aGroup);
-		getGroupsList().add(aGroup);
+		for (final ItemGroup group : aGroups)
+		{
+			mGroups.put(group.getName(), group);
+		}
+		getGroupsList().addAll(aGroups);
 		Collections.sort(getGroupsList());
-	}
-	
-	@Override
-	public void addGroupOption(final GroupOption aGroupOption)
-	{
-		mGroupOptions.put(aGroupOption.getName(), aGroupOption);
-		mGroupOptionList.add(aGroupOption);
-		Collections.sort(mGroupOptionList);
 	}
 	
 	@Override
@@ -59,21 +54,33 @@ public class ItemControllerImpl extends Named implements ItemController
 	}
 	
 	@Override
-	public GroupOption getGroupOption(final String aName)
-	{
-		return mGroupOptions.get(aName);
-	}
-	
-	@Override
-	public List<GroupOption> getGroupOptionsList()
-	{
-		return mGroupOptionList;
-	}
-	
-	@Override
 	public List<ItemGroup> getGroupsList()
 	{
 		return mGroupList;
+	}
+	
+	@Override
+	public int[] getMaxValues()
+	{
+		return mMaxValues;
+	}
+	
+	@Override
+	public boolean hasMaxValues()
+	{
+		return mMaxValues != null;
+	}
+	
+	@Override
+	public boolean hasGroup(final ItemGroup aGroup)
+	{
+		return hasGroup(aGroup.getName());
+	}
+	
+	@Override
+	public boolean hasGroup(final String aName)
+	{
+		return mGroups.containsKey(aName);
 	}
 	
 	@Override
@@ -116,6 +123,6 @@ public class ItemControllerImpl extends Named implements ItemController
 	@Override
 	public String toString()
 	{
-		return getDisplayName() + ": " + getGroupOptionsList().toString();
+		return getDisplayName() + ": " + getGroupsList().toString();
 	}
 }

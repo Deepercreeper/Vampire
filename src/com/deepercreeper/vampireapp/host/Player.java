@@ -381,7 +381,7 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 	{
 		mExpander.init();
 		
-		mChar.update();
+		mChar.updateUI();
 		
 		final LinearLayout playerContainer = mExpander.getContainer();
 		final Button kick = (Button) mContainer.findViewById(R.id.view_kick_button);
@@ -401,10 +401,11 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 		final LinearLayout controllerPanel = mControllerExpander.getContainer();
 		for (final ItemControllerInstance controller : mChar.getControllers())
 		{
-			controller.release();
-			controller.init();
-			controller.close();
-			controllerPanel.addView(controller.getContainer());
+			if ( !controller.isEmpty() || controller.hasMutableGroup())
+			{
+				controller.close();
+				controllerPanel.addView(controller.getContainer());
+			}
 		}
 		
 		mTimeCheckBox = (CheckBox) View.inflate(mContext, R.layout.view_time_checkbox, null);

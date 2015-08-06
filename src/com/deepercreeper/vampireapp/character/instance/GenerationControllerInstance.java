@@ -167,7 +167,7 @@ public class GenerationControllerInstance implements Viewable, Saveable
 	{
 		mGeneration = aGeneration;
 		updateValue();
-		mChar.update();
+		mChar.updateUI();
 	}
 	
 	/**

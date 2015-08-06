@@ -40,9 +40,11 @@ public interface CreationRestrictionable
 	public Set<CreationRestriction> getRestrictions(CreationRestrictionType... aTypes);
 	
 	/**
+	 * @param aTypes
+	 *            The types of restrictions that are tested.
 	 * @return whether restrictions are currently added to this field.
 	 */
-	public boolean hasRestrictions();
+	public boolean hasRestrictions(final CreationRestrictionType... aTypes);
 	
 	/**
 	 * @param aValue

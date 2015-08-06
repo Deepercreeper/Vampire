@@ -8,17 +8,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.character.creation.CreationMode;
-import com.deepercreeper.vampireapp.items.interfaces.GroupOption;
+import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
-import com.deepercreeper.vampireapp.items.interfaces.creations.GroupOptionCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemGroupCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
+import com.deepercreeper.vampireapp.util.ComparatorUtil;
+import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
+import com.deepercreeper.vampireapp.util.view.Expander;
 import android.content.Context;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -30,6 +31,8 @@ import android.widget.LinearLayout;
  */
 public class ItemControllerCreationImpl implements ItemControllerCreation
 {
+	private static final String TAG = "ItemControllerCreation";
+	
 	private final ItemController mItemController;
 	
 	private final Context mContext;
@@ -40,17 +43,13 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 	
 	private final Map<String, ItemGroupCreation> mGroups = new HashMap<String, ItemGroupCreation>();
 	
-	private final List<GroupOptionCreation> mGroupOptionsList = new ArrayList<GroupOptionCreation>();
-	
-	private final Map<ItemGroupCreation, GroupOptionCreation> mGroupOptions = new HashMap<ItemGroupCreation, GroupOptionCreation>();
-	
 	private final Map<String, ItemCreation> mItems = new HashMap<String, ItemCreation>();
 	
 	private final Set<CreationRestriction> mInactiveRestrictions = new HashSet<CreationRestriction>();
 	
-	private PointHandler mPoints;
+	private final Expander mExpander;
 	
-	private CreationMode mMode;
+	private final CharacterCreation mChar;
 	
 	/**
 	 * Creates a new item controller.
@@ -59,28 +58,57 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 	 *            The item controller type.
 	 * @param aContext
 	 *            The underlying context.
-	 * @param aMode
-	 *            The creation mode.
-	 * @param aPoints
-	 *            The points handler.
+	 * @param aChar
+	 *            The parent character.
 	 */
-	public ItemControllerCreationImpl(final ItemController aController, final Context aContext, final CreationMode aMode, final PointHandler aPoints)
+	public ItemControllerCreationImpl(final ItemController aController, final Context aContext, final CharacterCreation aChar)
 	{
 		mItemController = aController;
 		mContext = aContext;
-		mMode = aMode;
-		mPoints = aPoints;
+		mChar = aChar;
 		
 		mContainer = (LinearLayout) View.inflate(getContext(), R.layout.view_controller_creation, null);
-		init();
+		mExpander = Expander.handle(R.id.view_controller_creation_button, R.id.view_controller_creation_panel, mContainer);
+		
+		mExpander.init();
+		mExpander.getButton().setText(getItemController().getDisplayName());
+		
 		for (final ItemGroup group : getItemController().getGroupsList())
 		{
-			addGroupSilent(new ItemGroupCreationImpl(group, getContext(), this, getCreationMode(), getPoints()));
+			addGroupSilent(new ItemGroupCreationImpl(group, getContext(), this, mChar));
 		}
-		for (final GroupOption groupOption : getItemController().getGroupOptionsList())
+		
+		sortGroups();
+	}
+	
+	@Override
+	public void init()
+	{}
+	
+	@Override
+	public void updateUI()
+	{
+		for (final ItemGroupCreation group : getGroupsList())
 		{
-			addGroupOptionSilent(new GroupOptionCreationImpl(groupOption, this, getContext()));
+			group.updateUI();
 		}
+		setEnabled( !isEmpty());
+	}
+	
+	@Override
+	public void release()
+	{
+		ViewUtil.release(getContainer());
+	}
+	
+	@Override
+	public void clear()
+	{
+		for (final ItemGroupCreation group : getGroupsList())
+		{
+			group.clear();
+		}
+		resize();
 	}
 	
 	@Override
@@ -126,26 +154,82 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 	@Override
 	public boolean canChangeGroupBy(final ItemGroupCreation aGroup, final int aValue)
 	{
-		return mGroupOptions.get(aGroup).canChangeGroupBy(aGroup, aValue);
-	}
-	
-	@Override
-	public void clear()
-	{
-		for (final GroupOptionCreation group : getGroupOptionsList())
+		if ( !getItemController().hasMaxValues())
 		{
-			group.clear();
+			return true;
 		}
-		resize();
+		final List<Integer> maxValues = new ArrayList<Integer>();
+		{
+			final int groupValue = aGroup.getValue();
+			boolean isIrrelevantIncrease = true;
+			for (final int maxValue : getItemController().getMaxValues())
+			{
+				maxValues.add(maxValue);
+				if (isIrrelevantIncrease && (groupValue <= maxValue) != (groupValue + aValue <= maxValue))
+				{
+					isIrrelevantIncrease = false;
+				}
+			}
+			if (isIrrelevantIncrease)
+			{
+				return true;
+			}
+		}
+		
+		Collections.sort(maxValues);
+		
+		final List<ItemGroupCreation> groups = new ArrayList<ItemGroupCreation>();
+		
+		for (final ItemGroupCreation group : getGroupsList())
+		{
+			groups.add(group);
+		}
+		
+		ComparatorUtil.ITEM_GROUP_CREATION_COMPARATOR.setGroupChangeValue(aGroup.getName(), aValue);
+		
+		Collections.sort(groups, ComparatorUtil.ITEM_GROUP_CREATION_COMPARATOR);
+		
+		final boolean[] doneValues = new boolean[maxValues.size()];
+		
+		for (int groupIndex = groups.size() - 1; groupIndex >= 0; groupIndex-- )
+		{
+			boolean doneAnything = false;
+			
+			final ItemGroupCreation group = groups.get(groupIndex);
+			int groupValue = groups.get(groupIndex).getValue();
+			if (group.equals(aGroup))
+			{
+				groupValue += aValue;
+			}
+			
+			for (int doneIndex = doneValues.length - 1; doneIndex >= 0; doneIndex-- )
+			{
+				if (doneValues[doneIndex])
+				{
+					continue;
+				}
+				
+				if (groupValue > maxValues.get(doneIndex))
+				{
+					return false;
+				}
+				
+				doneValues[doneIndex] = true;
+				doneAnything = true;
+				break;
+			}
+			if ( !doneAnything)
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	@Override
 	public void close()
 	{
-		for (final GroupOptionCreation group : getGroupOptionsList())
-		{
-			group.close();
-		}
+		mExpander.close();
 	}
 	
 	@Override
@@ -172,12 +256,6 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 	}
 	
 	@Override
-	public CreationMode getCreationMode()
-	{
-		return mMode;
-	}
-	
-	@Override
 	public List<ItemCreation> getDescriptionValues()
 	{
 		final List<ItemCreation> items = new ArrayList<ItemCreation>();
@@ -201,47 +279,9 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 	}
 	
 	@Override
-	public GroupOptionCreation getGroupOption(final GroupOption aGroupOption)
-	{
-		for (final GroupOptionCreation group : getGroupOptionsList())
-		{
-			if (group.getGroupOption().equals(aGroupOption))
-			{
-				return group;
-			}
-		}
-		return null;
-	}
-	
-	@Override
-	public GroupOptionCreation getGroupOption(final String aName)
-	{
-		for (final GroupOptionCreation group : getGroupOptionsList())
-		{
-			if (group.getName().equals(aName))
-			{
-				return group;
-			}
-		}
-		return null;
-	}
-	
-	@Override
-	public List<GroupOptionCreation> getGroupOptionsList()
-	{
-		return mGroupOptionsList;
-	}
-	
-	@Override
 	public List<ItemGroupCreation> getGroupsList()
 	{
 		return mGroupsList;
-	}
-	
-	@Override
-	public int getGroupValue(final String aName)
-	{
-		return getGroup(aName).getValue();
 	}
 	
 	@Override
@@ -254,12 +294,6 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 	public ItemController getItemController()
 	{
 		return mItemController;
-	}
-	
-	@Override
-	public int getItemValue(final String aName)
-	{
-		return getItem(aName).getValue();
 	}
 	
 	@Override
@@ -278,12 +312,6 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 	public String getName()
 	{
 		return getItemController().getName();
-	}
-	
-	@Override
-	public PointHandler getPoints()
-	{
-		return mPoints;
 	}
 	
 	@Override
@@ -351,18 +379,18 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 	}
 	
 	@Override
-	public boolean hasRestrictions()
+	public boolean hasRestrictions(final CreationRestrictionType... aTypes)
 	{
 		for (final ItemCreation item : mItems.values())
 		{
-			if (item.hasRestrictions())
+			if (item.hasRestrictions(aTypes))
 			{
 				return true;
 			}
 		}
 		for (final ItemGroupCreation group : getGroupsList())
 		{
-			if (group.hasRestrictions())
+			if (group.hasRestrictions(aTypes))
 			{
 				return true;
 			}
@@ -371,16 +399,20 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 	}
 	
 	@Override
-	public void init()
+	public boolean isEmpty()
 	{
-		if ( !getGroupOptionsList().isEmpty())
+		if (getGroupsList().isEmpty())
 		{
-			for (final GroupOptionCreation groupOption : getGroupOptionsList())
+			return true;
+		}
+		for (final ItemGroupCreation group : getGroupsList())
+		{
+			if ( !group.getItemsList().isEmpty() || mChar.getMode().canAddItem(group))
 			{
-				groupOption.init();
-				getContainer().addView(groupOption.getContainer());
+				return false;
 			}
 		}
+		return true;
 	}
 	
 	@Override
@@ -389,14 +421,12 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 		return true;
 	}
 	
-	@Override
-	public void release()
+	/**
+	 * Removes all empty items if they are added to a mutable group.
+	 */
+	public void removeEmpty()
 	{
-		for (final GroupOptionCreation groupOption : getGroupOptionsList())
-		{
-			groupOption.release();
-		}
-		ViewUtil.release(getContainer());
+		// TODO Implement and use instead of re-adding all items
 	}
 	
 	@Override
@@ -434,38 +464,16 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 	@Override
 	public void resize()
 	{
-		for (final GroupOptionCreation group : getGroupOptionsList())
-		{
-			group.resize();
-		}
-	}
-	
-	@Override
-	public void setCreationMode(final CreationMode aMode)
-	{
-		mMode = aMode;
-		for (final ItemGroupCreation group : getGroupsList())
-		{
-			group.setCreationMode(getCreationMode());
-		}
+		mExpander.resize();
 	}
 	
 	@Override
 	public void setEnabled(final boolean aEnabled)
 	{
-		for (final GroupOptionCreation group : getGroupOptionsList())
+		ViewUtil.setEnabled(mExpander.getButton(), aEnabled);
+		if ( !aEnabled && mExpander.isOpen())
 		{
-			group.setEnabled(aEnabled);
-		}
-	}
-	
-	@Override
-	public void setPoints(final PointHandler aPoints)
-	{
-		mPoints = aPoints;
-		for (final ItemGroupCreation group : getGroupsList())
-		{
-			group.setPoints(getPoints());
+			close();
 		}
 	}
 	
@@ -478,9 +486,10 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 	@Override
 	public void updateGroups()
 	{
-		for (final GroupOptionCreation groupOption : getGroupOptionsList())
+		// TODO Remove
+		for (final ItemGroupCreation group : getGroupsList())
 		{
-			groupOption.updateGroups();
+			group.updateItems();
 		}
 	}
 	
@@ -503,20 +512,29 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 		}
 	}
 	
-	private void addGroupOptionSilent(final GroupOptionCreation aGroupOption)
-	{
-		getGroupOptionsList().add(aGroupOption);
-		for (final ItemGroup group : aGroupOption.getGroupOption().getGroups())
-		{
-			mGroupOptions.put(mGroups.get(group.getName()), aGroupOption);
-		}
-		Collections.sort(getGroupOptionsList());
-		getContainer().addView(aGroupOption.getContainer());
-	}
-	
 	private void addGroupSilent(final ItemGroupCreation aGroup)
 	{
-		getGroupsList().add(aGroup);
+		if (getGroupsList().contains(aGroup))
+		{
+			Log.w(TAG, "Tried to add a group twice.");
+			return;
+		}
 		mGroups.put(aGroup.getName(), aGroup);
+		getGroupsList().add(aGroup);
+		Collections.sort(getGroupsList());
+		mExpander.getContainer().addView(aGroup.getContainer());
+	}
+	
+	private void sortGroups()
+	{
+		for (final ItemGroupCreation group : getGroupsList())
+		{
+			group.release();
+		}
+		Collections.sort(getGroupsList());
+		for (final ItemGroupCreation group : getGroupsList())
+		{
+			mExpander.getContainer().addView(group.getContainer());
+		}
 	}
 }
