@@ -180,7 +180,7 @@
                 maxLowLevelValue="5"
                 maxValue="6"
                 mutable="false"
-                startValue="1"
+                startValue="0"
                 value="true" >
 
                 <item name="Auspex">

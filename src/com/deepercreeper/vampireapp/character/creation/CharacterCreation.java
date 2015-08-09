@@ -52,7 +52,7 @@ public class CharacterCreation
 	/**
 	 * The default minimum generation that is set, when creating a character.
 	 */
-	public static final int MIN_GENERATION = 8;
+	public static final int MIN_GENERATION = 12;
 	
 	/**
 	 * The default maximum generation that is set, when creating a character.
