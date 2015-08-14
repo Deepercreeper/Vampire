@@ -51,6 +51,7 @@ import com.deepercreeper.vampireapp.mechanics.Action.ActionType;
 import com.deepercreeper.vampireapp.mechanics.ActionImpl;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 import android.content.Context;
+import android.util.SparseArray;
 import android.util.SparseIntArray;
 
 /**
@@ -87,6 +88,8 @@ public class DataUtil
 	private static final String X_MATCHER = ".*\\{x\\}.*";
 	
 	private static final String NUMBER_MATCHER = ".*\\{[0-9]+\\}.*";
+	
+	private static final String RANGE_STRING = "-?[0-9]+\\.\\.\\.-?[0-9]+";
 	
 	private static Document sData;
 	
@@ -231,7 +234,7 @@ public class DataUtil
 		if (element != null)
 		{
 			final String[] currencies = parseArray(element.getAttribute("currencies"));
-			if (currencies.length != 0)
+			if (currencies.length == 0)
 			{
 				Log.w(TAG, "Currencies are empty.");
 			}
@@ -631,6 +634,88 @@ public class DataUtil
 			map.put(key, value);
 		}
 		return map;
+	}
+	
+	/**
+	 * @param aMap
+	 *            The map.
+	 * @return a map that returns an integer array for each value.
+	 */
+	public static SparseArray<int[]> parseValuesMap(String aMap)
+	{
+		if (aMap == null)
+		{
+			Log.w(TAG, "Map is null.");
+			return null;
+		}
+		SparseArray<int[]> map = new SparseArray<int[]>();
+		final String[] entries = aMap.split(";");
+		for (String entry : entries)
+		{
+			String[] keyAndValue = entry.split("=");
+			if (keyAndValue.length != 2)
+			{
+				Log.w(TAG, "Can't parse key and values: " + entry);
+				return null;
+			}
+			int key = -1;
+			try
+			{
+				key = Integer.parseInt(keyAndValue[0]);
+			}
+			catch (NumberFormatException e)
+			{
+				Log.w(TAG, "Can't parse key: " + keyAndValue[0]);
+				return null;
+			}
+			String[] valueStrings = keyAndValue[1].split(",");
+			if (valueStrings.length == 0)
+			{
+				Log.w(TAG, "Can't parse values: " + keyAndValue[1]);
+				return null;
+			}
+			int[] values;
+			if (valueStrings.length == 1 && valueStrings[0].matches(RANGE_STRING))
+			{
+				String[] startAndEnd = valueStrings[0].split("\\.\\.\\.");
+				values = createDefaultValues(Integer.parseInt(startAndEnd[0]), Integer.parseInt(startAndEnd[1]));
+			}
+			else
+			{
+				values = new int[valueStrings.length];
+				for (int i = 0; i < valueStrings.length; i++ )
+				{
+					try
+					{
+						values[i] = Integer.parseInt(valueStrings[i]);
+					}
+					catch (NumberFormatException e)
+					{
+						Log.w(TAG, "Can't parse value: " + valueStrings[i]);
+						return null;
+					}
+				}
+			}
+			map.put(key, values);
+		}
+		return map;
+	}
+	
+	/**
+	 * @param aStart
+	 *            The first value.
+	 * @param aEnd
+	 *            The last value.
+	 * @return a values array that is filled with all integers from {@code aStart} to {@code aEnd}.
+	 */
+	public static int[] createDefaultValues(int aStart, int aEnd)
+	{
+		int[] values = new int[aEnd - aStart + 1];
+		for (int i = aStart; i <= aEnd; i++ )
+		{
+			values[i - aStart] = i;
+		}
+		return values;
 	}
 	
 	/**
@@ -1287,18 +1372,25 @@ public class DataUtil
 		for (final Element child : getChildren(aParentNode, DEPENDENCY))
 		{
 			final Dependency.Type type = Dependency.Type.get(child.getAttribute("type"));
-			if (type == null)
+			final Dependency.DestinationType destinationType = Dependency.DestinationType.get(child.getAttribute("destinationType"));
+			if (type == null || destinationType == null)
 			{
-				Log.w(TAG, "Can't load dependency type: " + child.getAttribute("type"));
+				Log.w(TAG, "Can't load dependency type or destination type: " + child.getAttribute("type") + ", "
+						+ child.getAttribute("destinationType"));
 				continue;
 			}
-			SparseIntArray values = null;
+			SparseIntArray value = null;
+			SparseArray<int[]> values = null;
 			final String item = null;
+			if (child.hasAttribute("value"))
+			{
+				value = parseValueMap(child.getAttribute("value"));
+			}
 			if (child.hasAttribute("values"))
 			{
-				values = parseValueMap(child.getAttribute("values"));
+				values = parseValuesMap(child.getAttribute("values"));
 			}
-			final DependencyImpl dependency = new DependencyImpl(type, item, values);
+			final DependencyImpl dependency = new DependencyImpl(type, destinationType, item, value, values);
 			dependencies.add(dependency);
 		}
 		return dependencies;

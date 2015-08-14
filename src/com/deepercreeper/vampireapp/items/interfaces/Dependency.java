@@ -1,5 +1,6 @@
 package com.deepercreeper.vampireapp.items.interfaces;
 
+import android.util.SparseArray;
 import android.util.SparseIntArray;
 
 /**
@@ -19,7 +20,12 @@ public interface Dependency
 		/**
 		 * The maximum value of items.
 		 */
-		MAX_VALUE("maxValue");
+		MAX_VALUE("maxValue"),
+		
+		/**
+		 * All possible item values.
+		 */
+		VALUES("values");
 		
 		private final String mName;
 		
@@ -55,6 +61,56 @@ public interface Dependency
 	}
 	
 	/**
+	 * Types of destinations.
+	 * 
+	 * @author vrl
+	 */
+	public static enum DestinationType
+	{
+		/**
+		 * The destination is a normal item.
+		 */
+		ITEM("item"),
+		
+		/**
+		 * The destination is the character generation.
+		 */
+		GENERATION("generation");
+		
+		private final String mName;
+		
+		private DestinationType(String aName)
+		{
+			mName = aName;
+		}
+		
+		/**
+		 * @return the type name.
+		 */
+		public String getName()
+		{
+			return mName;
+		}
+		
+		/**
+		 * @param aName
+		 *            The destination type name.
+		 * @return the destination type with the given name.
+		 */
+		public static DestinationType get(final String aName)
+		{
+			for (final DestinationType type : values())
+			{
+				if (type.getName().equals(aName))
+				{
+					return type;
+				}
+			}
+			return null;
+		}
+	}
+	
+	/**
 	 * @return the destination item.
 	 */
 	public String getItem();
@@ -65,7 +121,17 @@ public interface Dependency
 	public Type getType();
 	
 	/**
-	 * @return the values map.
+	 * @return the destination type.
 	 */
-	public SparseIntArray getValues();
+	public DestinationType getDestinationType();
+	
+	/**
+	 * @return the value map.
+	 */
+	public SparseIntArray getValue();
+	
+	/**
+	 * @return a map that defines the values for each value.
+	 */
+	public SparseArray<int[]> getValues();
 }

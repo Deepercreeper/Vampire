@@ -10,6 +10,8 @@ import java.util.Set;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
 import com.deepercreeper.vampireapp.items.implementations.creations.restrictions.CreationRestrictionableImpl;
+import com.deepercreeper.vampireapp.items.interfaces.Dependency;
+import com.deepercreeper.vampireapp.items.interfaces.Dependency.Type;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
@@ -17,6 +19,7 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemGroupCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
+import com.deepercreeper.vampireapp.items.interfaces.instances.DependencyInstance;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog;
@@ -49,6 +52,8 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 	
 	private final Map<Item, ItemCreation> mItems = new HashMap<Item, ItemCreation>();
 	
+	private final Map<Type, DependencyInstance> mDependencies = new HashMap<Type, DependencyInstance>();
+	
 	private final LinearLayout mItemsContainer;
 	
 	private final Button mAddButton;
@@ -79,6 +84,11 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		mAddButton = (Button) getContainer().findViewById(R.id.view_item_group_add_button);
 		mItemsContainer = (LinearLayout) getContainer().findViewById(R.id.view_item_group_items_list);
 		
+		for (Dependency dependency : getItemGroup().getDependencies())
+		{
+			mDependencies.put(dependency.getType(), new DependencyCreationImpl(dependency, aChar));
+		}
+		
 		((TextView) getContainer().findViewById(R.id.view_item_group_name_label)).setText(getItemGroup().getDisplayName());
 		mAddButton.setOnClickListener(new OnClickListener()
 		{
@@ -108,6 +118,35 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 	@Override
 	public void init()
 	{}
+	
+	@Override
+	public DependencyInstance getDependency(Type aType)
+	{
+		return mDependencies.get(aType);
+	}
+	
+	@Override
+	public boolean hasDependency(Type aType)
+	{
+		return mDependencies.containsKey(aType);
+	}
+	
+	@Override
+	public int[] getValues()
+	{
+		return null;
+	}
+	
+	@Override
+	public int getMaxValue()
+	{
+		int value = getItemGroup().getMaxValue();
+		if (hasDependency(Type.MAX_VALUE))
+		{
+			value = getDependency(Type.MAX_VALUE).getValue();
+		}
+		return value;
+	}
 	
 	@Override
 	public void updateUI()
@@ -536,7 +575,7 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 	@Override
 	public void updateControllerUI()
 	{
-		getItemController().updateUI();
+		mChar.updateUI();
 	}
 	
 	@Override

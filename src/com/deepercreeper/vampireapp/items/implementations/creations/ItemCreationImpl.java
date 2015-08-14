@@ -8,11 +8,14 @@ import java.util.Map;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
 import com.deepercreeper.vampireapp.items.implementations.creations.restrictions.CreationRestrictionableImpl;
+import com.deepercreeper.vampireapp.items.interfaces.Dependency;
+import com.deepercreeper.vampireapp.items.interfaces.Dependency.Type;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemGroupCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
+import com.deepercreeper.vampireapp.items.interfaces.instances.DependencyInstance;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog;
@@ -108,6 +111,8 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 	
 	private final Map<String, ItemCreation> mChildren;
 	
+	private final Map<Type, DependencyInstance> mDependencies = new HashMap<Type, DependencyInstance>();
+	
 	private final ItemCreation mParentItem;
 	
 	private final CharacterCreation mChar;
@@ -185,6 +190,11 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		mIncreaseButton = (ImageButton) getContainer().findViewById(R.id.view_increase_item_creation_button);
 		mAddButton = (ImageButton) getContainer().findViewById(R.id.view_add_item_creation_child_button);
 		mChildrenContainer = (LinearLayout) getContainer().findViewById(R.id.view_item_creation_children_list);
+		
+		for (Dependency dependency : getItem().getDependencies())
+		{
+			mDependencies.put(dependency.getType(), new DependencyCreationImpl(dependency, aChar));
+		}
 		
 		mNameText.setText(getItem().getDisplayName());
 		mNameText.setOnClickListener(new OnClickListener()
@@ -326,7 +336,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			{
 				mAnimator.cancel();
 			}
-			mValueBar.setMax(VALUE_MULTIPLICATOR * Math.abs(getItem().getValues()[getItem().getMaxValue()]));
+			mValueBar.setMax(VALUE_MULTIPLICATOR * Math.abs(getMaxValue()));
 			mAnimator.setIntValues(mValueBar.getProgress(), VALUE_MULTIPLICATOR * getAbsoluteValue());
 			mAnimator.start();
 			mValueText.setText("" + getValue());
@@ -350,6 +360,44 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 				child.updateUI();
 			}
 		}
+	}
+	
+	@Override
+	public int[] getValues()
+	{
+		int[] values = getItem().getValues();
+		if (hasDependency(Type.VALUES))
+		{
+			values = getDependency(Type.VALUES).getValues();
+		}
+		return values;
+	}
+	
+	@Override
+	public int getMaxValue()
+	{
+		int maxValue = getValues()[getItem().getMaxValue()];
+		if (hasDependency(Type.MAX_VALUE))
+		{
+			int value = getDependency(Type.MAX_VALUE).getValue();
+			if (getValues().length > value)
+			{
+				maxValue = getValues()[value];
+			}
+		}
+		return maxValue;
+	}
+	
+	@Override
+	public DependencyInstance getDependency(Type aType)
+	{
+		return mDependencies.get(aType);
+	}
+	
+	@Override
+	public boolean hasDependency(Type aType)
+	{
+		return mDependencies.containsKey(aType) && mDependencies.get(aType).isActive();
 	}
 	
 	@Override
@@ -483,7 +531,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			Log.w(TAG, "Tried to ask whether a non value item can be increased.");
 			return false;
 		}
-		boolean canIncreaseItem = mValueId + mTempPoints < getItem().getMaxValue();
+		boolean canIncreaseItem = mValueId + mTempPoints < getMaxValue();
 		if ( !mChar.getMode().isFreeMode())
 		{
 			canIncreaseItem &= mValueId + mTempPoints < getMaxValue(CreationRestrictionType.ITEM_VALUE)
@@ -547,7 +595,6 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		}
 		mChar.getMode().decreaseItem(this);
 		updateControllerUI();
-		updateUI();
 	}
 	
 	@Override
@@ -695,7 +742,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			Log.w(TAG, "Tried to get the decreased value of a non value item.");
 			return 0;
 		}
-		return getItem().getValues()[Math.max(mValueId + mTempPoints - 1, 0)];
+		return getValues()[Math.max(mValueId + mTempPoints - 1, 0)];
 	}
 	
 	@Override
@@ -746,7 +793,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			Log.w(TAG, "Tried to get the increased value of a non value item.");
 			return 0;
 		}
-		return getItem().getValues()[Math.min(getItem().getMaxValue(), mValueId + mTempPoints + 1)];
+		return getValues()[Math.min(getMaxValue(), mValueId + mTempPoints + 1)];
 	}
 	
 	@Override
@@ -805,7 +852,16 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			Log.w(TAG, "Tried to get the value of a non value item.");
 			return 0;
 		}
-		return getItem().getValues()[mValueId + mTempPoints];
+		int[] values = getValues();
+		if (mValueId + mTempPoints >= values.length)
+		{
+			if (mTempPoints >= values.length)
+			{
+				resetTempPoints();
+			}
+			mValueId = values.length - mTempPoints - 1;
+		}
+		return values[mValueId + mTempPoints];
 	}
 	
 	@Override
@@ -880,7 +936,6 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		}
 		mChar.getMode().increaseItem(this);
 		updateControllerUI();
-		updateUI();
 	}
 	
 	@Override
@@ -1058,7 +1113,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 	@Override
 	public void updateControllerUI()
 	{
-		getItemGroup().getItemController().updateUI();
+		mChar.updateUI();
 	}
 	
 	@Override
@@ -1085,7 +1140,6 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			{
 				mValueId = getItem().getStartValue();
 				updateControllerUI();
-				updateUI();
 			}
 		}
 		if (isParent())

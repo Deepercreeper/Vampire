@@ -4,6 +4,7 @@ import java.util.List;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestrictionable;
+import com.deepercreeper.vampireapp.items.interfaces.instances.DependableInstance;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 import android.content.Context;
 
@@ -12,7 +13,7 @@ import android.content.Context;
  * 
  * @author vrl
  */
-public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, CreationRestrictionable, Viewable
+public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, CreationRestrictionable, Viewable, DependableInstance
 {
 	/**
 	 * Asks the user to choose an item that should be added to this group.

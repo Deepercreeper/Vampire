@@ -1,7 +1,6 @@
-package com.deepercreeper.vampireapp.lists.controllers.creations;
+package com.deepercreeper.vampireapp.character.creation;
 
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
 import com.deepercreeper.vampireapp.items.implementations.creations.restrictions.CreationRestrictionableImpl;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
 import com.deepercreeper.vampireapp.util.ViewUtil;
@@ -10,6 +9,7 @@ import android.content.Context;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
+import android.widget.NumberPicker.OnValueChangeListener;
 
 /**
  * A controller for the character generation.
@@ -22,6 +22,8 @@ public class GenerationControllerCreation extends CreationRestrictionableImpl im
 	
 	private final Context mContext;
 	
+	private final CharacterCreation mChar;
+	
 	private NumberPicker mPicker;
 	
 	private boolean mFreeMode;
@@ -31,12 +33,15 @@ public class GenerationControllerCreation extends CreationRestrictionableImpl im
 	 * 
 	 * @param aContext
 	 *            The underlying context.
+	 * @param aChar
+	 *            The parent character.
 	 * @param aFreeMode
 	 *            Whether this controller is started in free mode.
 	 */
-	public GenerationControllerCreation(final Context aContext, final boolean aFreeMode)
+	public GenerationControllerCreation(final Context aContext, CharacterCreation aChar, final boolean aFreeMode)
 	{
 		mContext = aContext;
+		mChar = aChar;
 		mFreeMode = aFreeMode;
 		mContainer = (LinearLayout) View.inflate(mContext, R.layout.view_generation_controller_creation, null);
 		
@@ -48,6 +53,14 @@ public class GenerationControllerCreation extends CreationRestrictionableImpl im
 	{
 		mPicker = (NumberPicker) getContainer().findViewById(R.id.view_generation_picker);
 		mPicker.setValue(mFreeMode ? 10 : CharacterCreation.MIN_GENERATION);
+		mPicker.setOnValueChangedListener(new OnValueChangeListener()
+		{
+			@Override
+			public void onValueChange(NumberPicker aPicker, int aOldVal, int aNewVal)
+			{
+				mChar.updateUI();
+			}
+		});
 		updateRestrictions();
 	}
 	

@@ -1,5 +1,7 @@
 package com.deepercreeper.vampireapp.items.interfaces;
 
+import java.util.Collection;
+
 /**
  * Any item that is able to contain dependencies is a dependable.
  * 
@@ -19,4 +21,9 @@ public interface Dependable
 	 * @return whether this group has any dependencies.
 	 */
 	public boolean hasDependencies();
+	
+	/**
+	 * @return a collection of all dependencies of this dependable.
+	 */
+	public Collection<Dependency> getDependencies();
 }

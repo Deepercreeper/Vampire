@@ -13,7 +13,7 @@ import android.content.Context;
  * 
  * @author vrl
  */
-public interface ItemGroupInstance extends Comparable<ItemGroupInstance>, Saveable, Viewable
+public interface ItemGroupInstance extends Comparable<ItemGroupInstance>, Saveable, Viewable, DependableInstance
 {
 	/**
 	 * Asks the user to choose an item that is added afterwards.

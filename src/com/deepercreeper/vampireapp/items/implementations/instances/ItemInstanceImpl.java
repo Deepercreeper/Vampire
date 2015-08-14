@@ -17,8 +17,11 @@ import com.deepercreeper.vampireapp.host.Message.MessageGroup;
 import com.deepercreeper.vampireapp.host.change.ItemChange;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.items.implementations.instances.restrictions.InstanceRestrictionableImpl;
+import com.deepercreeper.vampireapp.items.interfaces.Dependency;
+import com.deepercreeper.vampireapp.items.interfaces.Dependency.Type;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
+import com.deepercreeper.vampireapp.items.interfaces.instances.DependencyInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemGroupInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction;
@@ -58,6 +61,8 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	private final List<ItemInstance> mChildrenList;
 	
 	private final Map<String, ItemInstance> mChildren;
+	
+	private final Map<Type, DependencyInstance> mDependencies = new HashMap<Type, DependencyInstance>();
 	
 	private final Set<ActionInstance> mActions = new HashSet<ActionInstance>();
 	
@@ -170,6 +175,10 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		for (final Action action : getItem().getActions())
 		{
 			mActions.add(new ActionInstanceImpl(action, getContext(), getCharacter(), this));
+		}
+		for (Dependency dependency : getItem().getDependencies())
+		{
+			mDependencies.put(dependency.getType(), new DependencyInstanceImpl(dependency, getCharacter()));
 		}
 		
 		mChildrenContainer = (LinearLayout) getContainer()
@@ -332,6 +341,10 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		{
 			mActions.add(new ActionInstanceImpl(action, getContext(), getCharacter(), this));
 		}
+		for (Dependency dependency : getItem().getDependencies())
+		{
+			mDependencies.put(dependency.getType(), new DependencyInstanceImpl(dependency, getCharacter()));
+		}
 		
 		mChildrenContainer = (LinearLayout) getContainer()
 				.findViewById(mHost ? R.id.h_item_instance_children_list : R.id.c_item_instance_children_list);
@@ -468,6 +481,10 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		{
 			mActions.add(new ActionInstanceImpl(action, getContext(), getCharacter(), this));
 		}
+		for (Dependency dependency : getItem().getDependencies())
+		{
+			mDependencies.put(dependency.getType(), new DependencyInstanceImpl(dependency, getCharacter()));
+		}
 		
 		mChildrenContainer = (LinearLayout) getContainer()
 				.findViewById(mHost ? R.id.h_item_instance_children_list : R.id.c_item_instance_children_list);
@@ -588,6 +605,18 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			}
 		};
 		SelectItemDialog.showSelectionDialog(items, getContext().getString(R.string.add_item), getContext(), action);
+	}
+	
+	@Override
+	public DependencyInstance getDependency(Type aType)
+	{
+		return mDependencies.get(aType);
+	}
+	
+	@Override
+	public boolean hasDependency(Type aType)
+	{
+		return mDependencies.containsKey(aType) && mDependencies.get(aType).isActive();
 	}
 	
 	@Override
@@ -727,7 +756,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		}
 		if (mHost)
 		{
-			return mValueId < Math.min(getItem().getValues().length - 1, getMaxValue(InstanceRestrictionType.ITEM_VALUE));
+			return mValueId < Math.min(getValues().length - 1, getMaxValue(InstanceRestrictionType.ITEM_VALUE));
 		}
 		if ( !hasEnoughEP())
 		{
@@ -742,6 +771,17 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			return mValueId < Math.min(getItem().getMaxLowLevelValue(), getMaxValue(InstanceRestrictionType.ITEM_VALUE));
 		}
 		return mValueId < getMaxValue(InstanceRestrictionType.ITEM_VALUE);
+	}
+	
+	@Override
+	public int[] getValues()
+	{
+		int[] values = getItem().getValues();
+		if (hasDependency(Type.VALUES))
+		{
+			values = getDependency(Type.VALUES).getValues();
+		}
+		return values;
 	}
 	
 	@Override
@@ -861,6 +901,21 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	}
 	
 	@Override
+	public int getMaxValue()
+	{
+		int maxValue = getValues()[getItem().getMaxValue()];
+		if (hasDependency(Type.MAX_VALUE))
+		{
+			int value = getDependency(Type.MAX_VALUE).getValue();
+			if (getValues().length > value)
+			{
+				maxValue = getValues()[value];
+			}
+		}
+		return maxValue;
+	}
+	
+	@Override
 	public void updateUI()
 	{
 		final ImageButton remove = mHost ? (ImageButton) getContainer().findViewById(R.id.h_remove_item_instance_button) : null;
@@ -881,7 +936,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 			{
 				mAnimator.cancel();
 			}
-			mValueBar.setMax(VALUE_MULTIPLICATOR * Math.abs(getItem().getValues()[getItem().getMaxValue()]));
+			mValueBar.setMax(VALUE_MULTIPLICATOR * Math.abs(getMaxValue()));
 			mAnimator.setIntValues(mValueBar.getProgress(), VALUE_MULTIPLICATOR * getAbsoluteValue());
 			mAnimator.start();
 			mValueText.setText("" + getValue());
@@ -1015,7 +1070,12 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 	@Override
 	public int getValue()
 	{
-		return getItem().getValues()[mValueId];
+		int[] values = getValues();
+		if (mValueId >= values.length)
+		{
+			mValueId = values.length - 1;
+		}
+		return values[mValueId];
 	}
 	
 	@Override
@@ -1072,7 +1132,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		{
 			return;
 		}
-		if ((mHost || !aAsk) && mValueId < getItem().getValues().length - 1)
+		if ((mHost || !aAsk) && mValueId < getValues().length - 1)
 		{
 			mValueId++ ;
 			updateCharacter();
@@ -1095,7 +1155,7 @@ public class ItemInstanceImpl extends InstanceRestrictionableImpl implements Ite
 		else
 		{
 			mMessageListener.sendMessage(new Message(MessageGroup.ITEM, false, getCharacter().getName(), R.string.ask_increase,
-					new String[] { getName(), "" + getItem().getValues()[mValueId + 1] }, new boolean[] { true, false }, mContext, null,
+					new String[] { getName(), "" + getValues()[mValueId + 1] }, new boolean[] { true, false }, mContext, null,
 					ButtonAction.ACCEPT_INCREASE, ButtonAction.DENY_INCREASE, getName()));
 		}
 	}

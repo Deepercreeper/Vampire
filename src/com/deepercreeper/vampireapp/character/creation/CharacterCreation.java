@@ -11,7 +11,6 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.Crea
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction;
 import com.deepercreeper.vampireapp.lists.controllers.creations.DescriptionControllerCreation;
-import com.deepercreeper.vampireapp.lists.controllers.creations.GenerationControllerCreation;
 import com.deepercreeper.vampireapp.lists.items.Clan;
 import com.deepercreeper.vampireapp.lists.items.Nature;
 import com.deepercreeper.vampireapp.util.Log;
@@ -119,7 +118,7 @@ public class CharacterCreation
 		}
 		mDescriptions = new DescriptionControllerCreation(mItems.getDescriptions());
 		mInsanities = new InsanityControllerCreation(mContext, this);
-		mGeneration = new GenerationControllerCreation(mContext, aMode.isFreeMode());
+		mGeneration = new GenerationControllerCreation(mContext, this, aMode.isFreeMode());
 		mHealth = new HealthControllerCreation(mContext, mItems);
 		mBehavior = mNature = mItems.getNatures().getFirst();
 		setClan(mItems.getClans().getFirst());
@@ -245,7 +244,6 @@ public class CharacterCreation
 	 */
 	public int getGenerationValue()
 	{
-		// TODO Use this method to change the maximum number of blood points.
 		int generation = mGeneration.getGeneration();
 		final ItemCreation generationItem = findItem(mItems.getGenerationItem());
 		if (generationItem != null)
@@ -368,6 +366,17 @@ public class CharacterCreation
 	}
 	
 	/**
+	 * Updates the user interface for all controllers.
+	 */
+	public void updateUI()
+	{
+		for (ItemControllerCreation controller : getControllers())
+		{
+			controller.updateUI();
+		}
+	}
+	
+	/**
 	 * Sets the current behavior.
 	 * 
 	 * @param aBehavior
@@ -419,7 +428,6 @@ public class CharacterCreation
 		mMode = aMode;
 		for (final ItemControllerCreation controller : mControllers)
 		{
-			// controller.updateGroups();
 			controller.updateUI();
 		}
 	}

@@ -15,7 +15,8 @@ import android.content.Context;
  * 
  * @author vrl
  */
-public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemInstance>, Saveable, Viewable, AnimatorUpdateListener
+public interface ItemInstance
+		extends InstanceRestrictionable, Comparable<ItemInstance>, Saveable, Viewable, AnimatorUpdateListener, DependableInstance
 {
 	/**
 	 * If something depends on the value of any item this listener can be attached to an item.
@@ -52,6 +53,11 @@ public interface ItemInstance extends InstanceRestrictionable, Comparable<ItemIn
 	 *            The value listener.
 	 */
 	public void addValueListener(ItemValueListener aListener);
+	
+	/**
+	 * @return the current maximum item value.
+	 */
+	public int getMaxValue();
 	
 	/**
 	 * @return the calculated experience cost depending on the current item value and restrictions.

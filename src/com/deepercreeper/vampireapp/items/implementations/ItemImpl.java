@@ -1,11 +1,13 @@
 package com.deepercreeper.vampireapp.items.implementations;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.deepercreeper.vampireapp.items.interfaces.Dependency;
+import com.deepercreeper.vampireapp.items.interfaces.Dependency.Type;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.mechanics.Action;
@@ -22,7 +24,7 @@ public class ItemImpl extends Named implements Item
 	
 	private final Map<String, Action> mActions = new HashMap<String, Action>();
 	
-	private final List<Dependency> mDependencies = new ArrayList<Dependency>();
+	private final Map<Type, Dependency> mDependencies = new HashMap<Type, Dependency>();
 	
 	private final List<Action> mActionsList = new ArrayList<Action>();
 	
@@ -233,13 +235,19 @@ public class ItemImpl extends Named implements Item
 	@Override
 	public void addDependency(final Dependency aDependency)
 	{
-		mDependencies.add(aDependency);
+		mDependencies.put(aDependency.getType(), aDependency);
 	}
 	
 	@Override
 	public boolean hasDependencies()
 	{
 		return !mDependencies.isEmpty();
+	}
+	
+	@Override
+	public Collection<Dependency> getDependencies()
+	{
+		return mDependencies.values();
 	}
 	
 	@Override
@@ -285,6 +293,7 @@ public class ItemImpl extends Named implements Item
 			Log.w(TAG, "Tried to get the maximum low level value of a non value item.");
 			return 0;
 		}
+		// TODO This maybe should be done inside the item creation or instance
 		return Math.min(getItemGroup().getMaxLowLevelValue(), getValues().length - 1);
 	}
 	
