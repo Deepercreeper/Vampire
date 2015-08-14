@@ -145,9 +145,4 @@ public interface ItemControllerCreation extends CreationRestrictionable, Viewabl
 	 * Updates the user interface for all views. Invoked after the update method.
 	 */
 	public void updateUI();
-	
-	/**
-	 * Updates all value groups.
-	 */
-	public void updateGroups();
 }

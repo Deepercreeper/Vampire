@@ -484,16 +484,6 @@ public class ItemControllerCreationImpl implements ItemControllerCreation
 	}
 	
 	@Override
-	public void updateGroups()
-	{
-		// TODO Remove
-		for (final ItemGroupCreation group : getGroupsList())
-		{
-			group.updateItems();
-		}
-	}
-	
-	@Override
 	public void updateRestrictions()
 	{
 		for (final ItemCreation item : mItems.values())

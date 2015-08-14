@@ -1,5 +1,10 @@
 package com.deepercreeper.vampireapp.character.instance;
 
+import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.host.change.EPChange;
+import com.deepercreeper.vampireapp.host.change.MessageListener;
+import com.deepercreeper.vampireapp.util.ViewUtil;
+import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -9,11 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.host.change.MessageListener;
-import com.deepercreeper.vampireapp.host.change.EPChange;
-import com.deepercreeper.vampireapp.util.ViewUtil;
-import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 
 /**
  * This controller is used to control the experience a character collects.<br>
@@ -23,23 +23,21 @@ import com.deepercreeper.vampireapp.util.interfaces.Viewable;
  */
 public class EPControllerInstance implements Viewable
 {
-	private final LinearLayout		mContainer;
+	private final LinearLayout mContainer;
 	
-	private final boolean			mHost;
+	private final boolean mHost;
 	
-	private final MessageListener	mChangeListener;
+	private final MessageListener mChangeListener;
 	
-	private final CharacterInstance	mChar;
+	private final CharacterInstance mChar;
 	
-	private boolean					mInitialized	= false;
+	private final EditText mEPAmount;
 	
-	private EditText				mEPAmount;
+	private final ImageButton mGiveEP;
 	
-	private ImageButton				mGiveEP;
+	private final TextView mEPLabel;
 	
-	private TextView				mEPLabel;
-	
-	private int						mEP;
+	private int mEP;
 	
 	/**
 	 * Creates a new experience controller with no experience from start.
@@ -61,6 +59,41 @@ public class EPControllerInstance implements Viewable
 		mHost = aHost;
 		final int id = mHost ? R.layout.host_ep : R.layout.client_ep;
 		mContainer = (LinearLayout) View.inflate(aContext, id, null);
+		
+		mEPAmount = mHost ? (EditText) getContainer().findViewById(R.id.h_ep_amount_text) : null;
+		mGiveEP = mHost ? (ImageButton) getContainer().findViewById(R.id.h_give_ep_button) : null;
+		mEPLabel = (TextView) getContainer().findViewById(mHost ? R.id.h_ep_label : R.id.c_ep_label);
+		
+		if (mHost)
+		{
+			mEPAmount.addTextChangedListener(new TextWatcher()
+			{
+				@Override
+				public void onTextChanged(final CharSequence aS, final int aStart, final int aBefore, final int aCount)
+				{}
+				
+				@Override
+				public void beforeTextChanged(final CharSequence aS, final int aStart, final int aCount, final int aAfter)
+				{}
+				
+				@Override
+				public void afterTextChanged(final Editable aS)
+				{
+					updateValue();
+				}
+			});
+			mGiveEP.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					final int amount = Integer.parseInt(mEPAmount.getText().toString());
+					mEPAmount.setText("");
+					increaseBy(amount);
+				}
+			});
+		}
+		
 		init();
 	}
 	
@@ -87,6 +120,41 @@ public class EPControllerInstance implements Viewable
 		mHost = aHost;
 		final int id = mHost ? R.layout.host_ep : R.layout.client_ep;
 		mContainer = (LinearLayout) View.inflate(aContext, id, null);
+		
+		mEPAmount = mHost ? (EditText) getContainer().findViewById(R.id.h_ep_amount_text) : null;
+		mGiveEP = mHost ? (ImageButton) getContainer().findViewById(R.id.h_give_ep_button) : null;
+		mEPLabel = (TextView) getContainer().findViewById(mHost ? R.id.h_ep_label : R.id.c_ep_label);
+		
+		if (mHost)
+		{
+			mEPAmount.addTextChangedListener(new TextWatcher()
+			{
+				@Override
+				public void onTextChanged(final CharSequence aS, final int aStart, final int aBefore, final int aCount)
+				{}
+				
+				@Override
+				public void beforeTextChanged(final CharSequence aS, final int aStart, final int aCount, final int aAfter)
+				{}
+				
+				@Override
+				public void afterTextChanged(final Editable aS)
+				{
+					updateValue();
+				}
+			});
+			mGiveEP.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					final int amount = Integer.parseInt(mEPAmount.getText().toString());
+					mEPAmount.setText("");
+					increaseBy(amount);
+				}
+			});
+		}
+		
 		init();
 	}
 	
@@ -152,45 +220,6 @@ public class EPControllerInstance implements Viewable
 	@Override
 	public void init()
 	{
-		if ( !mInitialized)
-		{
-			mEPAmount = mHost ? (EditText) getContainer().findViewById(R.id.h_ep_amount_text) : null;
-			mGiveEP = mHost ? (ImageButton) getContainer().findViewById(R.id.h_give_ep_button) : null;
-			mEPLabel = (TextView) getContainer().findViewById(mHost ? R.id.h_ep_label : R.id.c_ep_label);
-			
-			if (mHost)
-			{
-				mEPAmount.addTextChangedListener(new TextWatcher()
-				{
-					@Override
-					public void onTextChanged(final CharSequence aS, final int aStart, final int aBefore, final int aCount)
-					{}
-					
-					@Override
-					public void beforeTextChanged(final CharSequence aS, final int aStart, final int aCount, final int aAfter)
-					{}
-					
-					@Override
-					public void afterTextChanged(final Editable aS)
-					{
-						updateValue();
-					}
-				});
-				mGiveEP.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(final View aV)
-					{
-						final int amount = Integer.parseInt(mEPAmount.getText().toString());
-						mEPAmount.setText("");
-						increaseBy(amount);
-					}
-				});
-			}
-			
-			mInitialized = true;
-		}
-		
 		updateValue();
 	}
 	

@@ -540,18 +540,6 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 	}
 	
 	@Override
-	public void updateItems()
-	{
-		for (final ItemCreation item : getItemsList())
-		{
-			if (item.isValueItem() || item.isParent())
-			{
-				item.updateUI();
-			}
-		}
-	}
-	
-	@Override
 	public void updateRestrictions()
 	{
 		final Set<ItemCreation> removableItems = new HashSet<ItemCreation>();

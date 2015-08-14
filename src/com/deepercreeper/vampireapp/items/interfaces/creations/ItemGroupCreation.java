@@ -182,9 +182,4 @@ public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, Creati
 	 * Updates the user interface for all views. Invoked after the update method.
 	 */
 	public void updateUI();
-	
-	/**
-	 * Updates all values and whether they can be increased and decreased.
-	 */
-	public void updateItems();
 }

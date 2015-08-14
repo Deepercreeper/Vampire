@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import com.deepercreeper.vampireapp.items.interfaces.Dependency;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.util.Log;
@@ -18,6 +19,8 @@ public class ItemGroupImpl extends Named implements ItemGroup
 	private static final String TAG = "ItemGroup";
 	
 	private final List<Item> mItemsList = new ArrayList<Item>();
+	
+	private final List<Dependency> mDependencies = new ArrayList<Dependency>();
 	
 	private final HashMap<String, Item> mItems = new HashMap<String, Item>();
 	
@@ -127,6 +130,16 @@ public class ItemGroupImpl extends Named implements ItemGroup
 			values[i] = i;
 		}
 		return values;
+	}
+	
+	public void addDependency(final Dependency aDependency)
+	{
+		mDependencies.add(aDependency);
+	}
+	
+	public boolean hasDependencies()
+	{
+		return !mDependencies.isEmpty();
 	}
 	
 	@Override

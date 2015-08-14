@@ -31,8 +31,6 @@ public class ActionsControllerInstance implements Viewable
 	
 	private final List<ActionInstance> mActions = new ArrayList<ActionInstance>();
 	
-	private boolean mInitialized = false;
-	
 	/**
 	 * Creates a new actions controller.
 	 * 
@@ -47,6 +45,8 @@ public class ActionsControllerInstance implements Viewable
 		mChar = aChar;
 		mContainer = (LinearLayout) View.inflate(mContext, R.layout.client_actions, null);
 		mExpander = Expander.handle(R.id.c_actions_button, R.id.c_actions_panel, getContainer());
+		
+		mExpander.init();
 		
 		init();
 	}
@@ -131,11 +131,6 @@ public class ActionsControllerInstance implements Viewable
 	@Override
 	public void init()
 	{
-		if ( !mInitialized)
-		{
-			mExpander.init();
-			mInitialized = true;
-		}
 		for (final ActionInstance action : mActions)
 		{
 			action.release();

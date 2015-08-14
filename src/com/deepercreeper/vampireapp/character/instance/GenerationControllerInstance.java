@@ -2,17 +2,17 @@ package com.deepercreeper.vampireapp.character.instance;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.host.change.GenerationChange;
+import com.deepercreeper.vampireapp.host.change.MessageListener;
+import com.deepercreeper.vampireapp.util.ViewUtil;
+import com.deepercreeper.vampireapp.util.interfaces.Saveable;
+import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.host.change.MessageListener;
-import com.deepercreeper.vampireapp.host.change.GenerationChange;
-import com.deepercreeper.vampireapp.util.ViewUtil;
-import com.deepercreeper.vampireapp.util.interfaces.Saveable;
-import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 
 /**
  * A controller for the character generation.
@@ -21,25 +21,23 @@ import com.deepercreeper.vampireapp.util.interfaces.Viewable;
  */
 public class GenerationControllerInstance implements Viewable, Saveable
 {
-	private static final int		MAX_LEVEL_POINTS	= 7;
+	private static final int MAX_LEVEL_POINTS = 7;
 	
-	private static final int		MIN_GENERATION		= 3;
+	private static final int MIN_GENERATION = 3;
 	
-	private final CharacterInstance	mChar;
+	private final CharacterInstance mChar;
 	
-	private final LinearLayout		mContainer;
+	private final LinearLayout mContainer;
 	
-	private final boolean			mHost;
+	private final boolean mHost;
 	
-	private final MessageListener	mChangeListener;
+	private final MessageListener mChangeListener;
 	
-	private ImageButton				mIncreaseButton;
+	private final ImageButton mIncreaseButton;
 	
-	private TextView				mGenerationText;
+	private final TextView mGenerationText;
 	
-	private boolean					mInitialized		= false;
-	
-	private int						mGeneration;
+	private int mGeneration;
 	
 	/**
 	 * Creates a new generation controller.
@@ -62,6 +60,22 @@ public class GenerationControllerInstance implements Viewable, Saveable
 		mHost = aHost;
 		final int id = mHost ? R.layout.host_generation : R.layout.client_generation;
 		mContainer = (LinearLayout) View.inflate(mChar.getContext(), id, null);
+		
+		mGenerationText = (TextView) getContainer().findViewById(mHost ? R.id.h_generation_label : R.id.c_generation_label);
+		mIncreaseButton = mHost ? (ImageButton) getContainer().findViewById(R.id.h_increase_generation_button) : null;
+		
+		if (mHost)
+		{
+			mIncreaseButton.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					increase();
+				}
+			});
+		}
+		
 		init();
 	}
 	
@@ -86,32 +100,28 @@ public class GenerationControllerInstance implements Viewable, Saveable
 		mHost = aHost;
 		final int id = mHost ? R.layout.host_generation : R.layout.client_generation;
 		mContainer = (LinearLayout) View.inflate(mChar.getContext(), id, null);
+		
+		mGenerationText = (TextView) getContainer().findViewById(mHost ? R.id.h_generation_label : R.id.c_generation_label);
+		mIncreaseButton = mHost ? (ImageButton) getContainer().findViewById(R.id.h_increase_generation_button) : null;
+		
+		if (mHost)
+		{
+			mIncreaseButton.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					increase();
+				}
+			});
+		}
+		
 		init();
 	}
 	
 	@Override
 	public void init()
 	{
-		if ( !mInitialized)
-		{
-			mGenerationText = (TextView) getContainer().findViewById(mHost ? R.id.h_generation_label : R.id.c_generation_label);
-			mIncreaseButton = mHost ? (ImageButton) getContainer().findViewById(R.id.h_increase_generation_button) : null;
-			
-			if (mHost)
-			{
-				mIncreaseButton.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(final View aV)
-					{
-						increase();
-					}
-				});
-			}
-			
-			mInitialized = true;
-		}
-		
 		updateValue();
 	}
 	

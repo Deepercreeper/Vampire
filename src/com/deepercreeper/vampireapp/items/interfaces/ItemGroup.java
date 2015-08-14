@@ -7,7 +7,7 @@ import java.util.List;
  * 
  * @author Vincent
  */
-public interface ItemGroup extends Nameable
+public interface ItemGroup extends Nameable, Dependable
 {
 	/**
 	 * Adds the given item to this group.

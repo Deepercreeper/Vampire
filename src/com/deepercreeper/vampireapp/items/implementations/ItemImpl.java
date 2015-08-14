@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.deepercreeper.vampireapp.items.interfaces.Dependency;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.mechanics.Action;
@@ -20,6 +21,8 @@ public class ItemImpl extends Named implements Item
 	private static final String TAG = "Item";
 	
 	private final Map<String, Action> mActions = new HashMap<String, Action>();
+	
+	private final List<Dependency> mDependencies = new ArrayList<Dependency>();
 	
 	private final List<Action> mActionsList = new ArrayList<Action>();
 	
@@ -225,6 +228,18 @@ public class ItemImpl extends Named implements Item
 			}
 		}
 		return displayName;
+	}
+	
+	@Override
+	public void addDependency(final Dependency aDependency)
+	{
+		mDependencies.add(aDependency);
+	}
+	
+	@Override
+	public boolean hasDependencies()
+	{
+		return !mDependencies.isEmpty();
 	}
 	
 	@Override

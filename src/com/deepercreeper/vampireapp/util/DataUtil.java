@@ -30,11 +30,13 @@ import org.w3c.dom.NodeList;
 import com.deepercreeper.vampireapp.character.Currency;
 import com.deepercreeper.vampireapp.character.Health;
 import com.deepercreeper.vampireapp.character.inventory.Inventory;
+import com.deepercreeper.vampireapp.items.implementations.DependencyImpl;
 import com.deepercreeper.vampireapp.items.implementations.ItemControllerImpl;
 import com.deepercreeper.vampireapp.items.implementations.ItemGroupImpl;
 import com.deepercreeper.vampireapp.items.implementations.ItemImpl;
 import com.deepercreeper.vampireapp.items.implementations.creations.restrictions.CreationConditionImpl;
 import com.deepercreeper.vampireapp.items.implementations.creations.restrictions.CreationRestrictionImpl;
+import com.deepercreeper.vampireapp.items.interfaces.Dependency;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
@@ -49,6 +51,7 @@ import com.deepercreeper.vampireapp.mechanics.Action.ActionType;
 import com.deepercreeper.vampireapp.mechanics.ActionImpl;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 import android.content.Context;
+import android.util.SparseIntArray;
 
 /**
  * Used to load all needed information for the item provider from the local data.
@@ -66,6 +69,8 @@ public class DataUtil
 	private static final String CONTROLLERS = "controllers";
 	
 	private static final String ITEM = "item";
+	
+	private static final String DEPENDENCY = "dependency";
 	
 	private static final String GROUP = "group";
 	
@@ -585,6 +590,47 @@ public class DataUtil
 			string.append(encodedKey + "=" + aMap.get(key));
 		}
 		return string.toString();
+	}
+	
+	/**
+	 * @param aMap
+	 *            The map to parse.
+	 * @return a sparse integer array that has integer keys and values.
+	 */
+	public static SparseIntArray parseValueMap(final String aMap)
+	{
+		if (aMap == null)
+		{
+			Log.w(TAG, "Map is null.");
+			return null;
+		}
+		final SparseIntArray map = new SparseIntArray();
+		final String[] entries = aMap.split(",");
+		for (final String entry : entries)
+		{
+			final String[] keyAndValue = entry.split("=");
+			if (keyAndValue.length != 2)
+			{
+				Log.w(TAG, "Can't parse map entry: " + entry);
+				return null;
+			}
+			Integer key = null;
+			Integer value = null;
+			try
+			{
+				key = Integer.parseInt(keyAndValue[0]);
+				value = Integer.parseInt(keyAndValue[1]);
+			}
+			catch (final NumberFormatException e)
+			{}
+			if (key == null || value == null)
+			{
+				Log.w(TAG, "Can't parse key or value: " + entry);
+				return null;
+			}
+			map.put(key, value);
+		}
+		return map;
 	}
 	
 	/**
@@ -1217,6 +1263,10 @@ public class DataUtil
 			}
 			final ItemGroup group = new ItemGroupImpl(name, mutable, order, freeMutable, hostMutable, maxLowLevelValue, startValue, maxValue,
 					freePointsCost, valueGroup, maxItems, epCost, epCostNew, epCostMultiplicator);
+			for (final Dependency dependency : loadDependencies(child))
+			{
+				group.addDependency(dependency);
+			}
 			for (final Item item : loadItems(child, group, null))
 			{
 				group.addItem(item);
@@ -1224,6 +1274,34 @@ public class DataUtil
 			groupsList.add(group);
 		}
 		return groupsList;
+	}
+	
+	private static List<Dependency> loadDependencies(final Element aParentNode)
+	{
+		if (aParentNode == null)
+		{
+			Log.w(TAG, "Parent element is null.");
+			return null;
+		}
+		final List<Dependency> dependencies = new ArrayList<Dependency>();
+		for (final Element child : getChildren(aParentNode, DEPENDENCY))
+		{
+			final Dependency.Type type = Dependency.Type.get(child.getAttribute("type"));
+			if (type == null)
+			{
+				Log.w(TAG, "Can't load dependency type: " + child.getAttribute("type"));
+				continue;
+			}
+			SparseIntArray values = null;
+			final String item = null;
+			if (child.hasAttribute("values"))
+			{
+				values = parseValueMap(child.getAttribute("values"));
+			}
+			final DependencyImpl dependency = new DependencyImpl(type, item, values);
+			dependencies.add(dependency);
+		}
+		return dependencies;
 	}
 	
 	private static List<Item> loadItems(final Element aParentNode, final ItemGroup aParentGroup, final Item aParentItem)
@@ -1323,6 +1401,10 @@ public class DataUtil
 			for (final Item childItem : loadItems(child, aParentGroup, item))
 			{
 				item.addChild(childItem);
+			}
+			for (final Dependency dependency : loadDependencies(child))
+			{
+				item.addDependency(dependency);
 			}
 			for (final Action action : loadActions(child))
 			{
