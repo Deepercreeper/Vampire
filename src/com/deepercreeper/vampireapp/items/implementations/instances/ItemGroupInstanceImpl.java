@@ -14,13 +14,14 @@ import com.deepercreeper.vampireapp.host.Message.ButtonAction;
 import com.deepercreeper.vampireapp.host.Message.MessageGroup;
 import com.deepercreeper.vampireapp.host.change.ItemGroupChange;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
+import com.deepercreeper.vampireapp.items.implementations.instances.dependencies.DependableInstanceImpl;
+import com.deepercreeper.vampireapp.items.implementations.instances.dependencies.DependencyInstanceImpl;
 import com.deepercreeper.vampireapp.items.interfaces.Dependency;
 import com.deepercreeper.vampireapp.items.interfaces.Dependency.Type;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemGroupCreation;
-import com.deepercreeper.vampireapp.items.interfaces.instances.DependencyInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemGroupInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
@@ -43,7 +44,7 @@ import android.widget.TextView;
  * 
  * @author vrl
  */
-public class ItemGroupInstanceImpl implements ItemGroupInstance
+public class ItemGroupInstanceImpl extends DependableInstanceImpl implements ItemGroupInstance
 {
 	private static final String TAG = "ItemGroupInstance";
 	
@@ -58,8 +59,6 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 	private final List<ItemInstance> mItemsList = new ArrayList<ItemInstance>();
 	
 	private final Map<Item, ItemInstance> mItems = new HashMap<Item, ItemInstance>();
-	
-	private final Map<Type, DependencyInstance> mDependencies = new HashMap<Type, DependencyInstance>();
 	
 	private final CharacterInstance mCharacter;
 	
@@ -96,9 +95,9 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 		mCharacter = aCharacter;
 		mContainer = (LinearLayout) View.inflate(getContext(), R.layout.view_item_group, null);
 		
-		for (Dependency dependency : getItemGroup().getDependencies())
+		for (final Dependency dependency : getItemGroup().getDependencies())
 		{
-			mDependencies.put(dependency.getType(), new DependencyInstanceImpl(dependency, getCharacter()));
+			addDependency(new DependencyInstanceImpl(dependency, getCharacter()));
 		}
 		
 		((TextView) getContainer().findViewById(R.id.view_item_group_name_label)).setText(getItemGroup().getDisplayName());
@@ -163,9 +162,9 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 		mCharacter = aCharacter;
 		mContainer = (LinearLayout) View.inflate(getContext(), R.layout.view_item_group, null);
 		
-		for (Dependency dependency : getItemGroup().getDependencies())
+		for (final Dependency dependency : getItemGroup().getDependencies())
 		{
-			mDependencies.put(dependency.getType(), new DependencyInstanceImpl(dependency, getCharacter()));
+			addDependency(new DependencyInstanceImpl(dependency, getCharacter()));
 		}
 		
 		((TextView) getContainer().findViewById(R.id.view_item_group_name_label)).setText(getItemGroup().getDisplayName());
@@ -216,18 +215,6 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 			group.appendChild(element);
 		}
 		return group;
-	}
-	
-	@Override
-	public DependencyInstance getDependency(Type aType)
-	{
-		return mDependencies.get(aType);
-	}
-	
-	@Override
-	public boolean hasDependency(Type aType)
-	{
-		return mDependencies.containsKey(aType);
 	}
 	
 	@Override
@@ -294,18 +281,12 @@ public class ItemGroupInstanceImpl implements ItemGroupInstance
 	@Override
 	public int getMaxValue()
 	{
-		int value = getItemGroup().getMaxValue();
+		int maxValue = getItemGroup().getMaxValue();
 		if (hasDependency(Type.MAX_VALUE))
 		{
-			value = getDependency(Type.MAX_VALUE).getValue();
+			maxValue = getDependency(Type.MAX_VALUE).getValue(maxValue);
 		}
-		return value;
-	}
-	
-	@Override
-	public int[] getValues()
-	{
-		return null;
+		return maxValue;
 	}
 	
 	@Override

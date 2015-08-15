@@ -1,49 +1,49 @@
-package com.deepercreeper.vampireapp.items.interfaces.creations.restrictions;
+package com.deepercreeper.vampireapp.items.interfaces.instances.restrictions;
 
 import java.util.HashMap;
 import java.util.Map;
-import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
-import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
-import com.deepercreeper.vampireapp.items.interfaces.creations.ItemGroupCreation;
+import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
+import com.deepercreeper.vampireapp.items.interfaces.instances.ItemGroupInstance;
+import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 
 /**
  * Restrictions sometimes have conditions. these are represented by this interface.
  * 
  * @author vrl
  */
-public interface CreationCondition
+public interface ConditionInstance
 {
 	/**
 	 * Each condition makes a query that tells whether something is positive of not.
 	 * 
 	 * @author vrl
 	 */
-	public abstract class CreationConditionQuery
+	public abstract class InstanceConditionQuery
 	{
 		/**
 		 * @param aName
 		 *            The query name.
 		 * @return the query with the given name.
 		 */
-		public static CreationConditionQuery getQuery(final String aName)
+		public static InstanceConditionQuery getQuery(final String aName)
 		{
 			return CONDITION_QUERIES.get(aName);
 		}
 		
-		private static final Map<String, CreationConditionQuery>	CONDITION_QUERIES			= new HashMap<String, CreationConditionQuery>();
+		private static final Map<String, InstanceConditionQuery>	CONDITION_QUERIES			= new HashMap<String, InstanceConditionQuery>();
 		
 		/**
-		 * Complies if the value of the item with name {@link CreationCondition#getItemName()} has a value that approves {@link CreationCondition#isInRange(int)}.
+		 * Complies if the value of the item with name {@link ConditionInstance#getItemName()} has a value that approves {@link ConditionInstance#isInRange(int)}.
 		 */
-		public static final CreationConditionQuery					ITEM_VALUE					= new CreationConditionQuery("ItemValue")
+		public static final InstanceConditionQuery					ITEM_VALUE					= new InstanceConditionQuery("ItemValue")
 																								{
 																									
 																									@Override
 																									public boolean complied(
-																											final ItemControllerCreation aController,
-																											final CreationCondition aCondition)
+																											final ItemControllerInstance aController,
+																											final ConditionInstance aCondition)
 																									{
-																										final ItemCreation item = aController
+																										final ItemInstance item = aController
 																												.getItem(aCondition.getItemName());
 																										if (item.isValueItem()
 																												&& aCondition.isInRange(item
@@ -56,14 +56,14 @@ public interface CreationCondition
 																								};
 		
 		/**
-		 * Complies if {@link CreationConditionQuery#ITEM_VALUE} does not comply.
+		 * Complies if {@link InstanceConditionQuery#ITEM_VALUE} does not comply.
 		 */
-		public static final CreationConditionQuery					NOT_ITEM_VALUE				= new CreationConditionQuery("NotItemVale")
+		public static final InstanceConditionQuery					NOT_ITEM_VALUE				= new InstanceConditionQuery("NotItemVale")
 																								{
 																									@Override
 																									public boolean complied(
-																											final ItemControllerCreation aController,
-																											final CreationCondition aCondition)
+																											final ItemControllerInstance aController,
+																											final ConditionInstance aCondition)
 																									{
 																										return !ITEM_VALUE.complied(aController,
 																												aCondition);
@@ -71,15 +71,15 @@ public interface CreationCondition
 																								};
 		
 		/**
-		 * Complies if the given controller has an item with name {@link CreationCondition#getItemName()}.
+		 * Complies if the given controller has an item with name {@link ConditionInstance#getItemName()}.
 		 */
-		public static final CreationConditionQuery					HAS_ITEM					= new CreationConditionQuery("HasItem")
+		public static final InstanceConditionQuery					HAS_ITEM					= new InstanceConditionQuery("HasItem")
 																								{
 																									
 																									@Override
 																									public boolean complied(
-																											final ItemControllerCreation aController,
-																											final CreationCondition aCondition)
+																											final ItemControllerInstance aController,
+																											final ConditionInstance aCondition)
 																									{
 																										return aController.hasItem(aCondition
 																												.getItemName());
@@ -87,14 +87,14 @@ public interface CreationCondition
 																								};
 		
 		/**
-		 * Complies if {@link CreationConditionQuery#HAS_ITEM} does not comply.
+		 * Complies if {@link InstanceConditionQuery#HAS_ITEM} does not comply.
 		 */
-		public static final CreationConditionQuery					NOT_HAS_ITEM				= new CreationConditionQuery("NotHasItem")
+		public static final InstanceConditionQuery					NOT_HAS_ITEM				= new InstanceConditionQuery("NotHasItem")
 																								{
 																									@Override
 																									public boolean complied(
-																											final ItemControllerCreation aController,
-																											final CreationCondition aCondition)
+																											final ItemControllerInstance aController,
+																											final ConditionInstance aCondition)
 																									{
 																										return !HAS_ITEM.complied(aController,
 																												aCondition);
@@ -102,17 +102,17 @@ public interface CreationCondition
 																								};
 		
 		/**
-		 * Complies if the item with name {@link CreationCondition#getItemName()} has a child at index {@link CreationCondition#getIndex()} and that child has a value that approves
-		 * {@link CreationCondition#isInRange(int)}.
+		 * Complies if the item with name {@link ConditionInstance#getItemName()} has a child at index {@link ConditionInstance#getIndex()} and that child has a value that approves
+		 * {@link ConditionInstance#isInRange(int)}.
 		 */
-		public static final CreationConditionQuery					ITEM_CHILD_VALUE_AT			= new CreationConditionQuery("ItemChildValueAt")
+		public static final InstanceConditionQuery					ITEM_CHILD_VALUE_AT			= new InstanceConditionQuery("ItemChildValueAt")
 																								{
 																									@Override
 																									public boolean complied(
-																											final ItemControllerCreation aController,
-																											final CreationCondition aCondition)
+																											final ItemControllerInstance aController,
+																											final ConditionInstance aCondition)
 																									{
-																										final ItemCreation item = aController
+																										final ItemInstance item = aController
 																												.getItem(aCondition.getItemName());
 																										if ( !item.isParent())
 																										{
@@ -122,7 +122,7 @@ public interface CreationCondition
 																										{
 																											return false;
 																										}
-																										final ItemCreation child = item
+																										final ItemInstance child = item
 																												.getChildAt(aCondition.getIndex());
 																										return child.isValueItem()
 																												&& aCondition.isInRange(child
@@ -131,14 +131,14 @@ public interface CreationCondition
 																								};
 		
 		/**
-		 * Complies if {@link CreationConditionQuery#ITEM_CHILD_VALUE_AT} does not comply.
+		 * Complies if {@link InstanceConditionQuery#ITEM_CHILD_VALUE_AT} does not comply.
 		 */
-		public static final CreationConditionQuery					NOT_ITEM_CHILD_VALUE_AT		= new CreationConditionQuery("NotItemChildValueAt")
+		public static final InstanceConditionQuery					NOT_ITEM_CHILD_VALUE_AT		= new InstanceConditionQuery("NotItemChildValueAt")
 																								{
 																									@Override
 																									public boolean complied(
-																											final ItemControllerCreation aController,
-																											final CreationCondition aCondition)
+																											final ItemControllerInstance aController,
+																											final ConditionInstance aCondition)
 																									{
 																										return !ITEM_CHILD_VALUE_AT.complied(
 																												aController, aCondition);
@@ -146,23 +146,23 @@ public interface CreationCondition
 																								};
 		
 		/**
-		 * Complies if the item with name {@link CreationCondition#getItemName()} has a child item with a value that approves {@link CreationCondition#isInRange(int)}.
+		 * Complies if the item with name {@link ConditionInstance#getItemName()} has a child item with a value that approves {@link ConditionInstance#isInRange(int)}.
 		 */
-		public static final CreationConditionQuery					ITEM_HAS_CHILD_VALUE		= new CreationConditionQuery("ItemHasChildValue")
+		public static final InstanceConditionQuery					ITEM_HAS_CHILD_VALUE		= new InstanceConditionQuery("ItemHasChildValue")
 																								{
 																									
 																									@Override
 																									public boolean complied(
-																											final ItemControllerCreation aController,
-																											final CreationCondition aCondition)
+																											final ItemControllerInstance aController,
+																											final ConditionInstance aCondition)
 																									{
-																										final ItemCreation item = aController
+																										final ItemInstance item = aController
 																												.getItem(aCondition.getItemName());
 																										if ( !item.isParent())
 																										{
 																											return false;
 																										}
-																										for (final ItemCreation child : item
+																										for (final ItemInstance child : item
 																												.getChildrenList())
 																										{
 																											if (child.isValueItem()
@@ -177,14 +177,14 @@ public interface CreationCondition
 																								};
 		
 		/**
-		 * Complies if {@link CreationConditionQuery#ITEM_HAS_CHILD_VALUE} does not comply.
+		 * Complies if {@link InstanceConditionQuery#ITEM_HAS_CHILD_VALUE} does not comply.
 		 */
-		public static final CreationConditionQuery					NOT_ITEM_HAS_CHILD_VALUE	= new CreationConditionQuery("NotItemHasChildValue")
+		public static final InstanceConditionQuery					NOT_ITEM_HAS_CHILD_VALUE	= new InstanceConditionQuery("NotItemHasChildValue")
 																								{
 																									@Override
 																									public boolean complied(
-																											final ItemControllerCreation aController,
-																											final CreationCondition aCondition)
+																											final ItemControllerInstance aController,
+																											final ConditionInstance aCondition)
 																									{
 																										return !ITEM_HAS_CHILD_VALUE.complied(
 																												aController, aCondition);
@@ -192,19 +192,19 @@ public interface CreationCondition
 																								};
 		
 		/**
-		 * Complies if the group with name {@link CreationCondition#getItemName()} has a child item with a value that approves {@link CreationCondition#isInRange(int)}.
+		 * Complies if the group with name {@link ConditionInstance#getItemName()} has a child item with a value that approves {@link ConditionInstance#isInRange(int)}.
 		 */
-		public static final CreationConditionQuery					GROUP_HAS_CHILD_VALUE		= new CreationConditionQuery("GroupHasChildValue")
+		public static final InstanceConditionQuery					GROUP_HAS_CHILD_VALUE		= new InstanceConditionQuery("GroupHasChildValue")
 																								{
 																									
 																									@Override
 																									public boolean complied(
-																											final ItemControllerCreation aController,
-																											final CreationCondition aCondition)
+																											final ItemControllerInstance aController,
+																											final ConditionInstance aCondition)
 																									{
-																										final ItemGroupCreation group = aController
+																										final ItemGroupInstance group = aController
 																												.getGroup(aCondition.getItemName());
-																										for (final ItemCreation item : group
+																										for (final ItemInstance item : group
 																												.getItemsList())
 																										{
 																											if (item.isValueItem()
@@ -219,14 +219,14 @@ public interface CreationCondition
 																								};
 		
 		/**
-		 * Complies if {@link CreationConditionQuery#GROUP_HAS_CHILD_VALUE} does not comply.
+		 * Complies if {@link InstanceConditionQuery#GROUP_HAS_CHILD_VALUE} does not comply.
 		 */
-		public static final CreationConditionQuery					NOT_GROUP_HAS_CHILD_VALUE	= new CreationConditionQuery("NotGroupHasChildValue")
+		public static final InstanceConditionQuery					NOT_GROUP_HAS_CHILD_VALUE	= new InstanceConditionQuery("NotGroupHasChildValue")
 																								{
 																									@Override
 																									public boolean complied(
-																											final ItemControllerCreation aController,
-																											final CreationCondition aCondition)
+																											final ItemControllerInstance aController,
+																											final ConditionInstance aCondition)
 																									{
 																										return !GROUP_HAS_CHILD_VALUE.complied(
 																												aController, aCondition);
@@ -235,7 +235,7 @@ public interface CreationCondition
 		
 		private final String										mName;
 		
-		private CreationConditionQuery(final String aName)
+		private InstanceConditionQuery(final String aName)
 		{
 			mName = aName;
 			CONDITION_QUERIES.put(mName, this);
@@ -248,7 +248,7 @@ public interface CreationCondition
 		 *            The condition that starts this query.
 		 * @return {@code true} if this query complies and {@code false} if not.
 		 */
-		public abstract boolean complied(ItemControllerCreation aController, CreationCondition aCondition);
+		public abstract boolean complied(ItemControllerInstance aController, ConditionInstance aCondition);
 	}
 	
 	/**
@@ -256,7 +256,7 @@ public interface CreationCondition
 	 *            The item controller.
 	 * @return {@code true} if the query of this condition complies and {@code false} if not.
 	 */
-	public boolean complied(ItemControllerCreation aController);
+	public boolean complied(ItemControllerInstance aController);
 	
 	/**
 	 * @return the item index defined by this condition.

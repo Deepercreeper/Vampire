@@ -3,8 +3,8 @@ package com.deepercreeper.vampireapp.character.creation;
 import java.util.ArrayList;
 import java.util.List;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.items.implementations.creations.restrictions.CreationRestrictionableImpl;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
+import com.deepercreeper.vampireapp.items.implementations.creations.restrictions.RestrictionableCreationImpl;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation.CreationRestrictionType;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 import com.deepercreeper.vampireapp.util.view.dialogs.CreateStringDialog;
@@ -21,7 +21,7 @@ import android.widget.TextView;
  * 
  * @author vrl
  */
-public class InsanityControllerCreation extends CreationRestrictionableImpl implements Viewable
+public class InsanityControllerCreation extends RestrictionableCreationImpl implements Viewable
 {
 	private final List<String> mInsanities = new ArrayList<String>();
 	

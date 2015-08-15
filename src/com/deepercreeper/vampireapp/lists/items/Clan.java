@@ -3,7 +3,7 @@ package com.deepercreeper.vampireapp.lists.items;
 import java.util.HashSet;
 import java.util.Set;
 import com.deepercreeper.vampireapp.items.implementations.Named;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation;
 
 /**
  * Each character has to have a single clan. The clan defines, which disciplines and restrictions<br>
@@ -13,7 +13,7 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.Crea
  */
 public class Clan extends Named
 {
-	private final HashSet<CreationRestriction> mRestrictions = new HashSet<CreationRestriction>();
+	private final HashSet<RestrictionCreation> mRestrictions = new HashSet<RestrictionCreation>();
 	
 	/**
 	 * Creates a new clan with the given name.
@@ -32,7 +32,7 @@ public class Clan extends Named
 	 * @param aRestriction
 	 *            The clan restrictions.
 	 */
-	public void addRestrictions(final Set<CreationRestriction> aRestriction)
+	public void addRestrictions(final Set<RestrictionCreation> aRestriction)
 	{
 		mRestrictions.addAll(aRestriction);
 	}
@@ -40,7 +40,7 @@ public class Clan extends Named
 	/**
 	 * @return a set of all restrictions of this clan.
 	 */
-	public Set<CreationRestriction> getRestrictions()
+	public Set<RestrictionCreation> getRestrictions()
 	{
 		return mRestrictions;
 	}

@@ -1,10 +1,10 @@
-package com.deepercreeper.vampireapp.items.implementations.instances;
+package com.deepercreeper.vampireapp.items.implementations.instances.dependencies;
 
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.items.interfaces.Dependency;
 import com.deepercreeper.vampireapp.items.interfaces.Dependency.DestinationType;
 import com.deepercreeper.vampireapp.items.interfaces.Dependency.Type;
-import com.deepercreeper.vampireapp.items.interfaces.instances.DependencyInstance;
+import com.deepercreeper.vampireapp.items.interfaces.instances.dependencies.DependencyInstance;
 
 /**
  * The instance implementation of dependency instances.
@@ -25,26 +25,26 @@ public class DependencyInstanceImpl implements DependencyInstance
 	 * @param aChar
 	 *            The parent character.
 	 */
-	public DependencyInstanceImpl(Dependency aDependency, CharacterInstance aChar)
+	public DependencyInstanceImpl(final Dependency aDependency, final CharacterInstance aChar)
 	{
 		mDependency = aDependency;
 		mChar = aChar;
 	}
 	
 	@Override
-	public int getValue()
+	public int getValue(final int aDefault)
 	{
-		return mDependency.getValue().get(getDestinationvalue());
+		return mDependency.getValue().get(getDestinationValue(), aDefault);
 	}
 	
 	@Override
-	public int[] getValues()
+	public int[] getValues(final int[] aDefault)
 	{
-		return mDependency.getValues().get(getDestinationvalue());
+		return mDependency.getValues().get(getDestinationValue(), aDefault);
 	}
 	
 	@Override
-	public int getDestinationvalue()
+	public int getDestinationValue()
 	{
 		switch (getDestinationType())
 		{

@@ -4,18 +4,18 @@ import java.util.HashSet;
 import java.util.Set;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
-import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction;
-import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction.InstanceRestrictionType;
-import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestrictionable;
+import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionInstance;
+import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionInstance.InstanceRestrictionType;
+import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionableInstance;
 
 /**
  * A restrictionable implementation.
  * 
  * @author vrl
  */
-public abstract class InstanceRestrictionableImpl implements InstanceRestrictionable
+public abstract class RestrictionableInstanceImpl implements RestrictionableInstance
 {
-	private final Set<InstanceRestriction>	mRestrictions		= new HashSet<InstanceRestriction>();
+	private final Set<RestrictionInstance>	mRestrictions		= new HashSet<RestrictionInstance>();
 	
 	private final CharacterInstance			mCharacter;
 	
@@ -29,7 +29,7 @@ public abstract class InstanceRestrictionableImpl implements InstanceRestriction
 	 * @param aController
 	 *            The item controller.
 	 */
-	public InstanceRestrictionableImpl(final CharacterInstance aCharacter, ItemControllerInstance aController)
+	public RestrictionableInstanceImpl(final CharacterInstance aCharacter, ItemControllerInstance aController)
 	{
 		mCharacter = aCharacter;
 		mControllerInstance = aController;
@@ -41,7 +41,7 @@ public abstract class InstanceRestrictionableImpl implements InstanceRestriction
 	 * @param aCharacter
 	 *            The character.
 	 */
-	public InstanceRestrictionableImpl(final CharacterInstance aCharacter)
+	public RestrictionableInstanceImpl(final CharacterInstance aCharacter)
 	{
 		this(aCharacter, null);
 	}
@@ -53,7 +53,7 @@ public abstract class InstanceRestrictionableImpl implements InstanceRestriction
 	}
 	
 	@Override
-	public final void addRestriction(final InstanceRestriction aRestriction)
+	public final void addRestriction(final RestrictionInstance aRestriction)
 	{
 		getRestrictions().add(aRestriction);
 		aRestriction.setParent(this);
@@ -64,7 +64,7 @@ public abstract class InstanceRestrictionableImpl implements InstanceRestriction
 	public final int getMaxValue(final InstanceRestrictionType... aTypes)
 	{
 		int maxValue = Integer.MAX_VALUE;
-		for (final InstanceRestriction restriction : getRestrictions(aTypes))
+		for (final RestrictionInstance restriction : getRestrictions(aTypes))
 		{
 			if (restriction.isActive(mControllerInstance))
 			{
@@ -79,7 +79,7 @@ public abstract class InstanceRestrictionableImpl implements InstanceRestriction
 	public final int getMinValue(final InstanceRestrictionType... aTypes)
 	{
 		int minValue = Integer.MIN_VALUE;
-		for (final InstanceRestriction restriction : getRestrictions(aTypes))
+		for (final RestrictionInstance restriction : getRestrictions(aTypes))
 		{
 			if (restriction.isActive(mControllerInstance))
 			{
@@ -91,9 +91,9 @@ public abstract class InstanceRestrictionableImpl implements InstanceRestriction
 	}
 	
 	@Override
-	public final Set<InstanceRestriction> getRestrictions(final InstanceRestrictionType... aTypes)
+	public final Set<RestrictionInstance> getRestrictions(final InstanceRestrictionType... aTypes)
 	{
-		final Set<InstanceRestriction> restrictions = new HashSet<InstanceRestriction>();
+		final Set<RestrictionInstance> restrictions = new HashSet<RestrictionInstance>();
 		final Set<InstanceRestrictionType> types = new HashSet<InstanceRestrictionType>();
 		for (final InstanceRestrictionType type : aTypes)
 		{
@@ -103,7 +103,7 @@ public abstract class InstanceRestrictionableImpl implements InstanceRestriction
 		{
 			return mRestrictions;
 		}
-		for (final InstanceRestriction restriction : mRestrictions)
+		for (final RestrictionInstance restriction : mRestrictions)
 		{
 			if (types.contains(restriction.getType()))
 			{
@@ -126,7 +126,7 @@ public abstract class InstanceRestrictionableImpl implements InstanceRestriction
 	}
 	
 	@Override
-	public final void removeRestriction(final InstanceRestriction aRestriction)
+	public final void removeRestriction(final RestrictionInstance aRestriction)
 	{
 		getRestrictions().remove(aRestriction);
 		getCharacter().removeRestriction(aRestriction);

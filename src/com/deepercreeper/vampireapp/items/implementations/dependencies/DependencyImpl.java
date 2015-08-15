@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.items.implementations;
+package com.deepercreeper.vampireapp.items.implementations.dependencies;
 
 import com.deepercreeper.vampireapp.items.interfaces.Dependency;
 import android.util.SparseArray;

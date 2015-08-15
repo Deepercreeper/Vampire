@@ -23,6 +23,18 @@ public interface Dependency
 		MAX_VALUE("maxValue"),
 		
 		/**
+		 * Maximum values for a controller.
+		 */
+		MAX_VALUES("maxValues"),
+		
+		/**
+		 * The start value for groups or items.
+		 * NOTE Groups' start value is only used when items are created.
+		 * TODO Remove the start value field and make a dynamic invoke.
+		 */
+		START_VALUE("startValue"),
+		
+		/**
 		 * All possible item values.
 		 */
 		VALUES("values");
@@ -79,7 +91,7 @@ public interface Dependency
 		
 		private final String mName;
 		
-		private DestinationType(String aName)
+		private DestinationType(final String aName)
 		{
 			mName = aName;
 		}

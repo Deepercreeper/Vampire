@@ -7,7 +7,7 @@ import java.util.List;
  * 
  * @author Vincent
  */
-public interface ItemController extends Nameable
+public interface ItemController extends Nameable, Dependable
 {
 	/**
 	 * Adds the given groups.
@@ -35,11 +35,6 @@ public interface ItemController extends Nameable
 	 * @return the maximum values that are possible to be used inside this group option.
 	 */
 	public int[] getMaxValues();
-	
-	/**
-	 * @return whether this group option defines maximum values for its groups.
-	 */
-	public boolean hasMaxValues();
 	
 	/**
 	 * @param aName

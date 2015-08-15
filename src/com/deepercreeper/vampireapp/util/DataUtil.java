@@ -30,20 +30,20 @@ import org.w3c.dom.NodeList;
 import com.deepercreeper.vampireapp.character.Currency;
 import com.deepercreeper.vampireapp.character.Health;
 import com.deepercreeper.vampireapp.character.inventory.Inventory;
-import com.deepercreeper.vampireapp.items.implementations.DependencyImpl;
 import com.deepercreeper.vampireapp.items.implementations.ItemControllerImpl;
 import com.deepercreeper.vampireapp.items.implementations.ItemGroupImpl;
 import com.deepercreeper.vampireapp.items.implementations.ItemImpl;
-import com.deepercreeper.vampireapp.items.implementations.creations.restrictions.CreationConditionImpl;
-import com.deepercreeper.vampireapp.items.implementations.creations.restrictions.CreationRestrictionImpl;
+import com.deepercreeper.vampireapp.items.implementations.creations.restrictions.ConditionCreationImpl;
+import com.deepercreeper.vampireapp.items.implementations.creations.restrictions.RestrictionCreationImpl;
+import com.deepercreeper.vampireapp.items.implementations.dependencies.DependencyImpl;
 import com.deepercreeper.vampireapp.items.interfaces.Dependency;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationCondition;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationCondition.CreationConditionQuery;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.ConditionCreation;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.ConditionCreation.CreationConditionQuery;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation.CreationRestrictionType;
 import com.deepercreeper.vampireapp.lists.controllers.ClanController;
 import com.deepercreeper.vampireapp.lists.items.Clan;
 import com.deepercreeper.vampireapp.mechanics.Action;
@@ -1099,14 +1099,14 @@ public class DataUtil
 		return controller;
 	}
 	
-	private static Set<CreationCondition> loadConditions(final Element aRestrictionNode)
+	private static Set<ConditionCreation> loadConditions(final Element aRestrictionNode)
 	{
 		if (aRestrictionNode == null)
 		{
 			Log.w(TAG, "Parent node is null.");
 			return null;
 		}
-		final Set<CreationCondition> conditions = new HashSet<CreationCondition>();
+		final Set<ConditionCreation> conditions = new HashSet<ConditionCreation>();
 		for (final Element child : getChildren(aRestrictionNode, CONDITION))
 		{
 			final CreationConditionQuery query = CreationConditionQuery.getQuery(child.getAttribute("query"));
@@ -1191,7 +1191,7 @@ public class DataUtil
 					continue;
 				}
 			}
-			conditions.add(new CreationConditionImpl(query, itemName, minimum, maximum, index));
+			conditions.add(new ConditionCreationImpl(query, itemName, minimum, maximum, index));
 		}
 		return conditions;
 	}
@@ -1507,14 +1507,14 @@ public class DataUtil
 		return itemsList;
 	}
 	
-	private static Set<CreationRestriction> loadRestrictions(final Element aClanNode)
+	private static Set<RestrictionCreation> loadRestrictions(final Element aClanNode)
 	{
 		if (aClanNode == null)
 		{
 			Log.w(TAG, "Parent element is null.");
 			return null;
 		}
-		final Set<CreationRestriction> restrictions = new HashSet<CreationRestriction>();
+		final Set<RestrictionCreation> restrictions = new HashSet<RestrictionCreation>();
 		for (final Element child : getChildren(aClanNode, RESTRICTION))
 		{
 			final CreationRestrictionType type = CreationRestrictionType.get(child.getAttribute("type"));
@@ -1624,10 +1624,10 @@ public class DataUtil
 				}
 			}
 			
-			final CreationRestriction restriction = new CreationRestrictionImpl(type, itemName, minimum, maximum, items, index, value,
+			final RestrictionCreation restriction = new RestrictionCreationImpl(type, itemName, minimum, maximum, items, index, value,
 					creationRestriction);
 					
-			for (final CreationCondition condition : loadConditions(child))
+			for (final ConditionCreation condition : loadConditions(child))
 			{
 				restriction.addCondition(condition);
 			}

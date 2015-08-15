@@ -13,6 +13,9 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.items.ItemProvider;
+import com.deepercreeper.vampireapp.items.implementations.instances.dependencies.DependableInstanceImpl;
+import com.deepercreeper.vampireapp.items.implementations.instances.dependencies.DependencyInstanceImpl;
+import com.deepercreeper.vampireapp.items.interfaces.Dependency;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
@@ -20,7 +23,7 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.ItemGroupCreation
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemGroupInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
-import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction;
+import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionInstance;
 import com.deepercreeper.vampireapp.mechanics.ActionInstance;
 import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.Log;
@@ -36,7 +39,7 @@ import android.widget.LinearLayout;
  * 
  * @author vrl
  */
-public class ItemControllerInstanceImpl implements ItemControllerInstance
+public class ItemControllerInstanceImpl extends DependableInstanceImpl implements ItemControllerInstance
 {
 	private static final String TAG = "ItemControllerInstance";
 	
@@ -52,7 +55,7 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	
 	private final Map<String, ItemInstance> mItems = new HashMap<String, ItemInstance>();
 	
-	private final CharacterInstance mCharacter;
+	private final CharacterInstance mChar;
 	
 	private final ResizeListener mResizeListener;
 	
@@ -85,7 +88,13 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 		mContext = aContext;
 		mResizeListener = aResizeListener;
 		mHost = aHost;
-		mCharacter = aCharacter;
+		mChar = aCharacter;
+		
+		for (final Dependency dependency : getItemController().getDependencies())
+		{
+			addDependency(new DependencyInstanceImpl(dependency, aCharacter));
+		}
+		
 		mContainer = (LinearLayout) View.inflate(getContext(), R.layout.view_controller_instance, null);
 		mExpander = Expander.handle(R.id.view_controller_instance_button, R.id.view_controller_instance_panel, mContainer, mResizeListener);
 		
@@ -106,8 +115,8 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	 *            The item controller creation.
 	 * @param aContext
 	 *            The underlying context.
-	 * @param aCharacter
-	 *            The character.
+	 * @param aChar
+	 *            The parent character.
 	 * @param aResizeListener
 	 *            The parent resize listener.
 	 * @param aMessageListener
@@ -115,14 +124,20 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	 * @param aHost
 	 *            Whether this is a host sided controller.
 	 */
-	public ItemControllerInstanceImpl(final ItemControllerCreation aItemController, final Context aContext, final CharacterInstance aCharacter,
+	public ItemControllerInstanceImpl(final ItemControllerCreation aItemController, final Context aContext, final CharacterInstance aChar,
 			final ResizeListener aResizeListener, final MessageListener aMessageListener, final boolean aHost)
 	{
 		mItemController = aItemController.getItemController();
 		mContext = aContext;
 		mResizeListener = aResizeListener;
 		mHost = aHost;
-		mCharacter = aCharacter;
+		mChar = aChar;
+		
+		for (final Dependency dependency : getItemController().getDependencies())
+		{
+			addDependency(new DependencyInstanceImpl(dependency, aChar));
+		}
+		
 		mContainer = (LinearLayout) View.inflate(getContext(), R.layout.view_controller_instance, null);
 		mExpander = Expander.handle(R.id.view_controller_instance_button, R.id.view_controller_instance_panel, mContainer, mResizeListener);
 		
@@ -184,7 +199,7 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	@Override
 	public CharacterInstance getCharacter()
 	{
-		return mCharacter;
+		return mChar;
 	}
 	
 	@Override
@@ -307,7 +322,7 @@ public class ItemControllerInstanceImpl implements ItemControllerInstance
 	{
 		if (mItems.get(aName).hasRestrictions())
 		{
-			for (final InstanceRestriction restriction : mItems.get(aName).getRestrictions())
+			for (final RestrictionInstance restriction : mItems.get(aName).getRestrictions())
 			{
 				restriction.clear();
 				// TODO What to do with inactive restrictions?

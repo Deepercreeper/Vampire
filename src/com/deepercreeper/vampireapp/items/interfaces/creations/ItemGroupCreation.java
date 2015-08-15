@@ -3,8 +3,8 @@ package com.deepercreeper.vampireapp.items.interfaces.creations;
 import java.util.List;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestrictionable;
-import com.deepercreeper.vampireapp.items.interfaces.instances.DependableInstance;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionableCreation;
+import com.deepercreeper.vampireapp.items.interfaces.instances.dependencies.DependableInstance;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 import android.content.Context;
 
@@ -13,7 +13,7 @@ import android.content.Context;
  * 
  * @author vrl
  */
-public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, CreationRestrictionable, Viewable, DependableInstance
+public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, RestrictionableCreation, Viewable, DependableInstance
 {
 	/**
 	 * Asks the user to choose an item that should be added to this group.

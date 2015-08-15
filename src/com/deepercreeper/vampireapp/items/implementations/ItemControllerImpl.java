@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.deepercreeper.vampireapp.items.implementations.dependencies.NamedDependableImpl;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
@@ -14,7 +15,7 @@ import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
  * 
  * @author vrl
  */
-public class ItemControllerImpl extends Named implements ItemController
+public class ItemControllerImpl extends NamedDependableImpl implements ItemController
 {
 	private final Map<String, ItemGroup> mGroups = new HashMap<String, ItemGroup>();
 	
@@ -63,12 +64,6 @@ public class ItemControllerImpl extends Named implements ItemController
 	public int[] getMaxValues()
 	{
 		return mMaxValues;
-	}
-	
-	@Override
-	public boolean hasMaxValues()
-	{
-		return mMaxValues != null;
 	}
 	
 	@Override

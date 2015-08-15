@@ -6,9 +6,9 @@ import java.util.Set;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
-import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceCondition;
-import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction;
-import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestrictionable;
+import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.ConditionInstance;
+import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionInstance;
+import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionableInstance;
 import com.deepercreeper.vampireapp.mechanics.Duration;
 import com.deepercreeper.vampireapp.util.DataUtil;
 
@@ -18,13 +18,13 @@ import com.deepercreeper.vampireapp.util.DataUtil;
  * 
  * @author vrl
  */
-public class InstanceRestrictionImpl implements InstanceRestriction
+public class RestrictionInstanceImpl implements RestrictionInstance
 {
 	private final String mItemName;
 	
 	private final List<String> mItems;
 	
-	private final Set<InstanceCondition> mConditions = new HashSet<InstanceCondition>();
+	private final Set<ConditionInstance> mConditions = new HashSet<ConditionInstance>();
 	
 	private final InstanceRestrictionType mType;
 	
@@ -38,7 +38,7 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 	
 	private final int mIndex;
 	
-	private InstanceRestrictionable mParent;
+	private RestrictionableInstance mParent;
 	
 	/**
 	 * Creates a new restriction out of the given XML data.
@@ -46,7 +46,7 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 	 * @param aElement
 	 *            The XML data.
 	 */
-	public InstanceRestrictionImpl(final Element aElement)
+	public RestrictionInstanceImpl(final Element aElement)
 	{
 		mType = InstanceRestrictionType.get(aElement.getAttribute("type"));
 		if (aElement.hasAttribute("itemName"))
@@ -93,7 +93,7 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 	 * @param aDuration
 	 *            The restriction duration.
 	 */
-	public InstanceRestrictionImpl(final InstanceRestrictionType aType, final String aItemName, final int aMinimum, final int aMaximum,
+	public RestrictionInstanceImpl(final InstanceRestrictionType aType, final String aItemName, final int aMinimum, final int aMaximum,
 			final List<String> aItems, final int aIndex, final int aValue, final Duration aDuration)
 	{
 		mType = aType;
@@ -108,7 +108,7 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 	}
 	
 	@Override
-	public void addCondition(final InstanceCondition aCondition)
+	public void addCondition(final ConditionInstance aCondition)
 	{
 		mConditions.add(aCondition);
 	}
@@ -170,11 +170,11 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 		{
 			return false;
 		}
-		if ( !(obj instanceof InstanceRestrictionImpl))
+		if ( !(obj instanceof RestrictionInstanceImpl))
 		{
 			return false;
 		}
-		final InstanceRestrictionImpl other = (InstanceRestrictionImpl) obj;
+		final RestrictionInstanceImpl other = (RestrictionInstanceImpl) obj;
 		if (mConditions == null)
 		{
 			if (other.mConditions != null)
@@ -239,7 +239,7 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 	}
 	
 	@Override
-	public Set<InstanceCondition> getConditions()
+	public Set<ConditionInstance> getConditions()
 	{
 		return mConditions;
 	}
@@ -281,7 +281,7 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 	}
 	
 	@Override
-	public InstanceRestrictionable getParent()
+	public RestrictionableInstance getParent()
 	{
 		return mParent;
 	}
@@ -323,7 +323,7 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 	@Override
 	public boolean isActive(final ItemControllerInstance aController)
 	{
-		for (final InstanceCondition condition : mConditions)
+		for (final ConditionInstance condition : mConditions)
 		{
 			if ( !condition.complied(aController))
 			{
@@ -353,7 +353,7 @@ public class InstanceRestrictionImpl implements InstanceRestriction
 	 *            The parent.
 	 */
 	@Override
-	public void setParent(final InstanceRestrictionable aParent)
+	public void setParent(final RestrictionableInstance aParent)
 	{
 		mParent = aParent;
 	}

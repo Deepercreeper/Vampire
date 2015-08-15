@@ -3,7 +3,8 @@ package com.deepercreeper.vampireapp.items.interfaces.creations;
 import java.util.List;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestrictionable;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionableCreation;
+import com.deepercreeper.vampireapp.items.interfaces.instances.dependencies.DependableInstance;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 import android.content.Context;
 
@@ -12,7 +13,7 @@ import android.content.Context;
  * 
  * @author vrl
  */
-public interface ItemControllerCreation extends CreationRestrictionable, Viewable
+public interface ItemControllerCreation extends RestrictionableCreation, Viewable, DependableInstance
 {
 	/**
 	 * Adds a name shortcut for the given item.
@@ -45,6 +46,11 @@ public interface ItemControllerCreation extends CreationRestrictionable, Viewabl
 	 * @return the context of this value controller.
 	 */
 	public Context getContext();
+	
+	/**
+	 * @return whether this controller has currently maximum values.
+	 */
+	public boolean hasMaxValues();
 	
 	/**
 	 * @return a list of all values, that need a description and have more than 0 as value.

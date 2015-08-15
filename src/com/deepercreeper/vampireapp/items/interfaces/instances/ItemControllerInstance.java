@@ -5,6 +5,7 @@ import java.util.Set;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
+import com.deepercreeper.vampireapp.items.interfaces.instances.dependencies.DependableInstance;
 import com.deepercreeper.vampireapp.mechanics.ActionInstance;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
@@ -15,7 +16,7 @@ import android.content.Context;
  * 
  * @author vrl
  */
-public interface ItemControllerInstance extends Saveable, Viewable
+public interface ItemControllerInstance extends Saveable, Viewable, DependableInstance
 {
 	/**
 	 * Closes the whole controller.

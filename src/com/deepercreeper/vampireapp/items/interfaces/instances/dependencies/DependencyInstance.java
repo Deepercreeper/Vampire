@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.items.interfaces.instances;
+package com.deepercreeper.vampireapp.items.interfaces.instances.dependencies;
 
 import com.deepercreeper.vampireapp.items.interfaces.Dependency.DestinationType;
 import com.deepercreeper.vampireapp.items.interfaces.Dependency.Type;
@@ -11,19 +11,23 @@ import com.deepercreeper.vampireapp.items.interfaces.Dependency.Type;
 public interface DependencyInstance
 {
 	/**
+	 * @param aDefault
+	 *            The default value that is returned, when no value is set for the current value.
 	 * @return the current depending value.
 	 */
-	public int getValue();
+	public int getValue(int aDefault);
 	
 	/**
+	 * @param aDefault
+	 *            The default value that is returned, when no value is set for the current value.
 	 * @return the current depending values array.
 	 */
-	public int[] getValues();
+	public int[] getValues(int[] aDefault);
 	
 	/**
 	 * @return the current value of the destination.
 	 */
-	public int getDestinationvalue();
+	public int getDestinationValue();
 	
 	/**
 	 * @return The dependency type.

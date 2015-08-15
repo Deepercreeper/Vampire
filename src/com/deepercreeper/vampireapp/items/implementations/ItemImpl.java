@@ -1,13 +1,11 @@
 package com.deepercreeper.vampireapp.items.implementations;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.deepercreeper.vampireapp.items.interfaces.Dependency;
-import com.deepercreeper.vampireapp.items.interfaces.Dependency.Type;
+import com.deepercreeper.vampireapp.items.implementations.dependencies.NamedDependableImpl;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.mechanics.Action;
@@ -18,13 +16,11 @@ import com.deepercreeper.vampireapp.util.Log;
  * 
  * @author Vincent
  */
-public class ItemImpl extends Named implements Item
+public class ItemImpl extends NamedDependableImpl implements Item
 {
 	private static final String TAG = "Item";
 	
 	private final Map<String, Action> mActions = new HashMap<String, Action>();
-	
-	private final Map<Type, Dependency> mDependencies = new HashMap<Type, Dependency>();
 	
 	private final List<Action> mActionsList = new ArrayList<Action>();
 	
@@ -230,24 +226,6 @@ public class ItemImpl extends Named implements Item
 			}
 		}
 		return displayName;
-	}
-	
-	@Override
-	public void addDependency(final Dependency aDependency)
-	{
-		mDependencies.put(aDependency.getType(), aDependency);
-	}
-	
-	@Override
-	public boolean hasDependencies()
-	{
-		return !mDependencies.isEmpty();
-	}
-	
-	@Override
-	public Collection<Dependency> getDependencies()
-	{
-		return mDependencies.values();
 	}
 	
 	@Override

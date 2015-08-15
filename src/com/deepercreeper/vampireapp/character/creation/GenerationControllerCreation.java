@@ -1,8 +1,8 @@
 package com.deepercreeper.vampireapp.character.creation;
 
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.items.implementations.creations.restrictions.CreationRestrictionableImpl;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
+import com.deepercreeper.vampireapp.items.implementations.creations.restrictions.RestrictionableCreationImpl;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation.CreationRestrictionType;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 import android.content.Context;
@@ -16,7 +16,7 @@ import android.widget.NumberPicker.OnValueChangeListener;
  * 
  * @author vrl
  */
-public class GenerationControllerCreation extends CreationRestrictionableImpl implements Viewable
+public class GenerationControllerCreation extends RestrictionableCreationImpl implements Viewable
 {
 	private final LinearLayout mContainer;
 	

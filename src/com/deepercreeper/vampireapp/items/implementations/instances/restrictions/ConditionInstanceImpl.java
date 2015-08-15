@@ -1,14 +1,14 @@
 package com.deepercreeper.vampireapp.items.implementations.instances.restrictions;
 
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
-import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceCondition;
+import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.ConditionInstance;
 
 /**
  * An instance condition implementation.
  * 
  * @author vrl
  */
-public class InstanceConditionImpl implements InstanceCondition
+public class ConditionInstanceImpl implements ConditionInstance
 {
 	private final InstanceConditionQuery	mQuery;
 	
@@ -34,7 +34,7 @@ public class InstanceConditionImpl implements InstanceCondition
 	 * @param aIndex
 	 *            The index.
 	 */
-	public InstanceConditionImpl(final InstanceConditionQuery aQuery, final String aItemName, final int aMinimum, final int aMaximum, final int aIndex)
+	public ConditionInstanceImpl(final InstanceConditionQuery aQuery, final String aItemName, final int aMinimum, final int aMaximum, final int aIndex)
 	{
 		mQuery = aQuery;
 		mItemName = aItemName;
@@ -60,11 +60,11 @@ public class InstanceConditionImpl implements InstanceCondition
 		{
 			return false;
 		}
-		if ( !(obj instanceof InstanceConditionImpl))
+		if ( !(obj instanceof ConditionInstanceImpl))
 		{
 			return false;
 		}
-		final InstanceConditionImpl other = (InstanceConditionImpl) obj;
+		final ConditionInstanceImpl other = (ConditionInstanceImpl) obj;
 		if (mIndex != other.mIndex)
 		{
 			return false;

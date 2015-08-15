@@ -4,6 +4,7 @@ import java.util.List;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
+import com.deepercreeper.vampireapp.items.interfaces.instances.dependencies.DependableInstance;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 import android.content.Context;

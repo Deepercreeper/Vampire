@@ -3,12 +3,12 @@ package com.deepercreeper.vampireapp.items.implementations.creations.restriction
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import com.deepercreeper.vampireapp.items.implementations.instances.restrictions.InstanceRestrictionImpl;
+import com.deepercreeper.vampireapp.items.implementations.instances.restrictions.RestrictionInstanceImpl;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationCondition;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestrictionable;
-import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.ConditionCreation;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionableCreation;
+import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionInstance;
 import com.deepercreeper.vampireapp.mechanics.Duration;
 
 /**
@@ -17,7 +17,7 @@ import com.deepercreeper.vampireapp.mechanics.Duration;
  * 
  * @author vrl
  */
-public class CreationRestrictionImpl implements CreationRestriction
+public class RestrictionCreationImpl implements RestrictionCreation
 {
 	private final String					mItemName;
 	
@@ -35,9 +35,9 @@ public class CreationRestrictionImpl implements CreationRestriction
 	
 	private final boolean					mCreationRestriction;
 	
-	private final Set<CreationCondition>	mConditions	= new HashSet<CreationCondition>();
+	private final Set<ConditionCreation>	mConditions	= new HashSet<ConditionCreation>();
 	
-	private CreationRestrictionable			mParent;
+	private RestrictionableCreation			mParent;
 	
 	/**
 	 * Creates a new creation restriction.
@@ -59,7 +59,7 @@ public class CreationRestrictionImpl implements CreationRestriction
 	 * @param aCreationRestriction
 	 *            Whether this is a creation only restriction.
 	 */
-	public CreationRestrictionImpl(final CreationRestrictionType aType, final String aItemName, final int aMinimum, final int aMaximum,
+	public RestrictionCreationImpl(final CreationRestrictionType aType, final String aItemName, final int aMinimum, final int aMaximum,
 			final List<String> aItems, final int aIndex, final int aValue, final boolean aCreationRestriction)
 	{
 		mType = aType;
@@ -73,13 +73,13 @@ public class CreationRestrictionImpl implements CreationRestriction
 	}
 	
 	@Override
-	public InstanceRestriction createInstance()
+	public RestrictionInstance createInstance()
 	{
 		if ( !isPersistent())
 		{
 			return null;
 		}
-		return new InstanceRestrictionImpl(getType().getInstanceType(), getItemName(), getMinimum(), getMaximum(), getItems(), getIndex(),
+		return new RestrictionInstanceImpl(getType().getInstanceType(), getItemName(), getMinimum(), getMaximum(), getItems(), getIndex(),
 				getValue(), Duration.FOREVER);
 		// TODO Maybe add the conditions too
 	}
@@ -109,7 +109,7 @@ public class CreationRestrictionImpl implements CreationRestriction
 	}
 	
 	@Override
-	public void addCondition(final CreationCondition aCondition)
+	public void addCondition(final ConditionCreation aCondition)
 	{
 		mConditions.add(aCondition);
 	}
@@ -123,7 +123,7 @@ public class CreationRestrictionImpl implements CreationRestriction
 	@Override
 	public boolean isActive(final ItemControllerCreation aController)
 	{
-		for (final CreationCondition condition : mConditions)
+		for (final ConditionCreation condition : mConditions)
 		{
 			if ( !condition.complied(aController))
 			{
@@ -147,7 +147,7 @@ public class CreationRestrictionImpl implements CreationRestriction
 	 *            The parent.
 	 */
 	@Override
-	public void setParent(final CreationRestrictionable aParent)
+	public void setParent(final RestrictionableCreation aParent)
 	{
 		mParent = aParent;
 	}
@@ -172,7 +172,7 @@ public class CreationRestrictionImpl implements CreationRestriction
 	}
 	
 	@Override
-	public CreationRestrictionable getParent()
+	public RestrictionableCreation getParent()
 	{
 		return mParent;
 	}
@@ -208,7 +208,7 @@ public class CreationRestrictionImpl implements CreationRestriction
 	}
 	
 	@Override
-	public Set<CreationCondition> getConditions()
+	public Set<ConditionCreation> getConditions()
 	{
 		return mConditions;
 	}
@@ -239,11 +239,11 @@ public class CreationRestrictionImpl implements CreationRestriction
 		{
 			return false;
 		}
-		if ( !(obj instanceof CreationRestrictionImpl))
+		if ( !(obj instanceof RestrictionCreationImpl))
 		{
 			return false;
 		}
-		final CreationRestrictionImpl other = (CreationRestrictionImpl) obj;
+		final RestrictionCreationImpl other = (RestrictionCreationImpl) obj;
 		if (mConditions == null)
 		{
 			if (other.mConditions != null)

@@ -9,7 +9,8 @@ import java.util.Map;
 import java.util.Set;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
-import com.deepercreeper.vampireapp.items.implementations.creations.restrictions.CreationRestrictionableImpl;
+import com.deepercreeper.vampireapp.items.implementations.creations.dependencies.DependencyCreationImpl;
+import com.deepercreeper.vampireapp.items.implementations.creations.dependencies.RestrictionableDependableCreationImpl;
 import com.deepercreeper.vampireapp.items.interfaces.Dependency;
 import com.deepercreeper.vampireapp.items.interfaces.Dependency.Type;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
@@ -17,9 +18,8 @@ import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemGroupCreation;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
-import com.deepercreeper.vampireapp.items.interfaces.instances.DependencyInstance;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation.CreationRestrictionType;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog;
@@ -36,7 +36,7 @@ import android.widget.TextView;
  * 
  * @author vrl
  */
-public class ItemGroupCreationImpl extends CreationRestrictionableImpl implements ItemGroupCreation
+public class ItemGroupCreationImpl extends RestrictionableDependableCreationImpl implements ItemGroupCreation
 {
 	private static final String TAG = "ItemGroupCreation";
 	
@@ -51,8 +51,6 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 	private final List<ItemCreation> mItemsList = new ArrayList<ItemCreation>();
 	
 	private final Map<Item, ItemCreation> mItems = new HashMap<Item, ItemCreation>();
-	
-	private final Map<Type, DependencyInstance> mDependencies = new HashMap<Type, DependencyInstance>();
 	
 	private final LinearLayout mItemsContainer;
 	
@@ -84,9 +82,9 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 		mAddButton = (Button) getContainer().findViewById(R.id.view_item_group_add_button);
 		mItemsContainer = (LinearLayout) getContainer().findViewById(R.id.view_item_group_items_list);
 		
-		for (Dependency dependency : getItemGroup().getDependencies())
+		for (final Dependency dependency : getItemGroup().getDependencies())
 		{
-			mDependencies.put(dependency.getType(), new DependencyCreationImpl(dependency, aChar));
+			addDependency(new DependencyCreationImpl(dependency, aChar));
 		}
 		
 		((TextView) getContainer().findViewById(R.id.view_item_group_name_label)).setText(getItemGroup().getDisplayName());
@@ -120,32 +118,14 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 	{}
 	
 	@Override
-	public DependencyInstance getDependency(Type aType)
-	{
-		return mDependencies.get(aType);
-	}
-	
-	@Override
-	public boolean hasDependency(Type aType)
-	{
-		return mDependencies.containsKey(aType);
-	}
-	
-	@Override
-	public int[] getValues()
-	{
-		return null;
-	}
-	
-	@Override
 	public int getMaxValue()
 	{
-		int value = getItemGroup().getMaxValue();
+		int maxValue = getItemGroup().getMaxValue();
 		if (hasDependency(Type.MAX_VALUE))
 		{
-			value = getDependency(Type.MAX_VALUE).getValue();
+			maxValue = getDependency(Type.MAX_VALUE).getValue(maxValue);
 		}
-		return value;
+		return maxValue;
 	}
 	
 	@Override
@@ -637,7 +617,7 @@ public class ItemGroupCreationImpl extends CreationRestrictionableImpl implement
 	
 	private boolean isItemOk(final Item aItem)
 	{
-		for (final CreationRestriction restriction : getRestrictions(CreationRestrictionType.GROUP_CHILDREN))
+		for (final RestrictionCreation restriction : getRestrictions(CreationRestrictionType.GROUP_CHILDREN))
 		{
 			if ( !restriction.getItems().contains(aItem.getName()))
 			{

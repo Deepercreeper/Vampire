@@ -7,15 +7,15 @@ import java.util.List;
 import java.util.Map;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
-import com.deepercreeper.vampireapp.items.implementations.creations.restrictions.CreationRestrictionableImpl;
+import com.deepercreeper.vampireapp.items.implementations.creations.dependencies.DependencyCreationImpl;
+import com.deepercreeper.vampireapp.items.implementations.creations.dependencies.RestrictionableDependableCreationImpl;
 import com.deepercreeper.vampireapp.items.interfaces.Dependency;
 import com.deepercreeper.vampireapp.items.interfaces.Dependency.Type;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemGroupCreation;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
-import com.deepercreeper.vampireapp.items.interfaces.instances.DependencyInstance;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation.CreationRestrictionType;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog;
@@ -35,7 +35,7 @@ import android.widget.Toast;
  * 
  * @author vrl
  */
-public class ItemCreationImpl extends CreationRestrictionableImpl implements ItemCreation
+public class ItemCreationImpl extends RestrictionableDependableCreationImpl implements ItemCreation
 {
 	/**
 	 * The change action tells, what to change, when increasing or decreasing an item.
@@ -111,8 +111,6 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 	
 	private final Map<String, ItemCreation> mChildren;
 	
-	private final Map<Type, DependencyInstance> mDependencies = new HashMap<Type, DependencyInstance>();
-	
 	private final ItemCreation mParentItem;
 	
 	private final CharacterCreation mChar;
@@ -164,7 +162,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		{
 			mAnimator = new ValueAnimator();
 			mAnimator.addUpdateListener(this);
-			mValueId = getItem().getStartValue();
+			mValueId = getStartValue();
 		}
 		else
 		{
@@ -191,9 +189,9 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		mAddButton = (ImageButton) getContainer().findViewById(R.id.view_add_item_creation_child_button);
 		mChildrenContainer = (LinearLayout) getContainer().findViewById(R.id.view_item_creation_children_list);
 		
-		for (Dependency dependency : getItem().getDependencies())
+		for (final Dependency dependency : getItem().getDependencies())
 		{
-			mDependencies.put(dependency.getType(), new DependencyCreationImpl(dependency, aChar));
+			addDependency(new DependencyCreationImpl(dependency, aChar));
 		}
 		
 		mNameText.setText(getItem().getDisplayName());
@@ -288,136 +286,6 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 	}
 	
 	@Override
-	public void init()
-	{}
-	
-	@Override
-	public void updateUI()
-	{
-		final int buttonWidth = (int) getContext().getResources().getDimension(R.dimen.button_width);
-		
-		if (hasParentItem() && getParentItem().isMutableParent() || !hasParentItem() && getItemGroup().isMutable())
-		{
-			ViewUtil.setPxWidth(mEditButton, buttonWidth);
-			ViewUtil.setPxWidth(mRemoveButton, buttonWidth);
-			if (hasParentItem())
-			{
-				ViewUtil.setEnabled(mRemoveButton, mChar.getMode().canRemoveChild(this));
-			}
-			else
-			{
-				ViewUtil.setEnabled(mRemoveButton, mChar.getMode().canRemoveItem(this));
-			}
-			ViewUtil.setEnabled(mEditButton, mChar.getMode().canEditItem(this));
-		}
-		else
-		{
-			ViewUtil.hideWidth(mEditButton);
-			ViewUtil.hideWidth(mRemoveButton);
-		}
-		if (isParent() && isMutableParent())
-		{
-			ViewUtil.setPxWidth(mAddButton, buttonWidth);
-			ViewUtil.setEnabled(mAddButton, mChar.getMode().canAddChild(this, true) && !getAddableItems().isEmpty());
-		}
-		else
-		{
-			ViewUtil.hideWidth(mAddButton);
-		}
-		if (isValueItem())
-		{
-			ViewUtil.setPxWidth(mDecreaseButton, buttonWidth);
-			ViewUtil.setPxWidth(mIncreaseButton, buttonWidth);
-			ViewUtil.wrapWidth(mValueText);
-			ViewUtil.matchHeight(mValueBar);
-			setIncreasable();
-			setDecreasable();
-			if (mAnimator.isRunning())
-			{
-				mAnimator.cancel();
-			}
-			mValueBar.setMax(VALUE_MULTIPLICATOR * Math.abs(getMaxValue()));
-			mAnimator.setIntValues(mValueBar.getProgress(), VALUE_MULTIPLICATOR * getAbsoluteValue());
-			mAnimator.start();
-			mValueText.setText("" + getValue());
-		}
-		else
-		{
-			ViewUtil.hideHeight(mValueBar);
-			ViewUtil.hideWidth(mValueBar);
-			ViewUtil.hideWidth(mDecreaseButton);
-			ViewUtil.hideWidth(mIncreaseButton);
-			ViewUtil.hideWidth(mValueText);
-		}
-		if (hasChildren() && !hasOrder())
-		{
-			sortChildren();
-		}
-		if (hasChildren())
-		{
-			for (final ItemCreation child : getChildrenList())
-			{
-				child.updateUI();
-			}
-		}
-	}
-	
-	@Override
-	public int[] getValues()
-	{
-		int[] values = getItem().getValues();
-		if (hasDependency(Type.VALUES))
-		{
-			values = getDependency(Type.VALUES).getValues();
-		}
-		return values;
-	}
-	
-	@Override
-	public int getMaxValue()
-	{
-		int maxValue = getValues()[getItem().getMaxValue()];
-		if (hasDependency(Type.MAX_VALUE))
-		{
-			int value = getDependency(Type.MAX_VALUE).getValue();
-			if (getValues().length > value)
-			{
-				maxValue = getValues()[value];
-			}
-		}
-		return maxValue;
-	}
-	
-	@Override
-	public DependencyInstance getDependency(Type aType)
-	{
-		return mDependencies.get(aType);
-	}
-	
-	@Override
-	public boolean hasDependency(Type aType)
-	{
-		return mDependencies.containsKey(aType) && mDependencies.get(aType).isActive();
-	}
-	
-	@Override
-	public void release()
-	{
-		ViewUtil.release(getContainer());
-	}
-	
-	@Override
-	public void clear()
-	{
-		if (getItem().isValueItem())
-		{
-			mValueId = getItem().getStartValue();
-			resetTempPoints();
-		}
-		release();
-	}
-	
-	@Override
 	public void addChild()
 	{
 		if ( !isMutableParent())
@@ -486,14 +354,14 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		boolean canDecreaseItemValue = mValueId > 0;
 		if ( !mChar.getMode().isFreeMode())
 		{
-			canDecreaseItemValue &= mValueId > getMinValue(CreationRestrictionType.ITEM_VALUE) && mValueId > getItem().getStartValue();
+			canDecreaseItemValue &= mValueId > getMinValue(CreationRestrictionType.ITEM_VALUE) && mValueId > getStartValue();
 		}
 		final boolean canDecreaseItemTempPoints = mTempPoints > 0;
 		boolean canDecreaseChild = true;
 		
 		if (hasParentItem())
 		{
-			for (final CreationRestriction restriction : getParentItem().getRestrictions(CreationRestrictionType.ITEM_CHILD_VALUE_AT))
+			for (final RestrictionCreation restriction : getParentItem().getRestrictions(CreationRestrictionType.ITEM_CHILD_VALUE_AT))
 			{
 				if (getParentItem().indexOfChild(this) == restriction.getIndex())
 				{
@@ -507,7 +375,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		}
 		else
 		{
-			for (final CreationRestriction restriction : getItemGroup().getRestrictions(CreationRestrictionType.GROUP_ITEM_VALUE_AT))
+			for (final RestrictionCreation restriction : getItemGroup().getRestrictions(CreationRestrictionType.GROUP_ITEM_VALUE_AT))
 			{
 				if (getItemGroup().indexOfItem(this) == restriction.getIndex())
 				{
@@ -541,7 +409,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		
 		if (hasParentItem())
 		{
-			for (final CreationRestriction restriction : getParentItem().getRestrictions(CreationRestrictionType.ITEM_CHILD_VALUE_AT))
+			for (final RestrictionCreation restriction : getParentItem().getRestrictions(CreationRestrictionType.ITEM_CHILD_VALUE_AT))
 			{
 				if (getParentItem().indexOfChild(this) == restriction.getIndex())
 				{
@@ -555,7 +423,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		}
 		else
 		{
-			for (final CreationRestriction restriction : getItemGroup().getRestrictions(CreationRestrictionType.GROUP_ITEM_VALUE_AT))
+			for (final RestrictionCreation restriction : getItemGroup().getRestrictions(CreationRestrictionType.GROUP_ITEM_VALUE_AT))
 			{
 				if (getItemGroup().indexOfItem(this) == restriction.getIndex())
 				{
@@ -569,6 +437,17 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 		}
 		
 		return mChar.getMode().canIncreaseItem(this, canIncreaseItem && canIncreaseChild);
+	}
+	
+	@Override
+	public void clear()
+	{
+		if (getItem().isValueItem())
+		{
+			mValueId = getStartValue();
+			resetTempPoints();
+		}
+		release();
 	}
 	
 	@Override
@@ -701,6 +580,12 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 	}
 	
 	@Override
+	public CharacterCreation getCharacter()
+	{
+		return mChar;
+	}
+	
+	@Override
 	public ItemCreation getChildAt(final int aIndex)
 	{
 		if ( !getItem().isParent())
@@ -809,6 +694,21 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 	}
 	
 	@Override
+	public int getMaxValue()
+	{
+		int maxValue = getValues()[getItem().getMaxValue()];
+		if (hasDependency(Type.MAX_VALUE))
+		{
+			final int value = getDependency(Type.MAX_VALUE).getValue(maxValue);
+			if (getValues().length > value)
+			{
+				maxValue = getValues()[value];
+			}
+		}
+		return maxValue;
+	}
+	
+	@Override
 	public String getName()
 	{
 		return getItem().getName();
@@ -818,6 +718,17 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 	public ItemCreation getParentItem()
 	{
 		return mParentItem;
+	}
+	
+	@Override
+	public int getStartValue()
+	{
+		int startValue = getItem().getStartValue();
+		if (hasDependency(Type.START_VALUE))
+		{
+			startValue = getDependency(Type.START_VALUE).getValue(startValue);
+		}
+		return startValue;
 	}
 	
 	@Override
@@ -852,7 +763,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			Log.w(TAG, "Tried to get the value of a non value item.");
 			return 0;
 		}
-		int[] values = getValues();
+		final int[] values = getValues();
 		if (mValueId + mTempPoints >= values.length)
 		{
 			if (mTempPoints >= values.length)
@@ -873,6 +784,17 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			return 0;
 		}
 		return mValueId;
+	}
+	
+	@Override
+	public int[] getValues()
+	{
+		int[] values = getItem().getValues();
+		if (hasDependency(Type.VALUES))
+		{
+			values = getDependency(Type.VALUES).getValues(values);
+		}
+		return values;
 	}
 	
 	@Override
@@ -945,6 +867,10 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 	}
 	
 	@Override
+	public void init()
+	{}
+	
+	@Override
 	public boolean isImportant()
 	{
 		if (isValueItem() && getValue() != 0)
@@ -1000,6 +926,12 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 	public void onAnimationUpdate(final ValueAnimator aAnimation)
 	{
 		mValueBar.setProgress((Integer) aAnimation.getAnimatedValue());
+	}
+	
+	@Override
+	public void release()
+	{
+		ViewUtil.release(getContainer());
 	}
 	
 	@Override
@@ -1138,7 +1070,7 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			}
 			else
 			{
-				mValueId = getItem().getStartValue();
+				mValueId = getStartValue();
 				updateControllerUI();
 			}
 		}
@@ -1147,6 +1079,77 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			for (final ItemCreation child : getChildrenList())
 			{
 				child.updateRestrictions();
+			}
+		}
+	}
+	
+	@Override
+	public void updateUI()
+	{
+		final int buttonWidth = (int) getContext().getResources().getDimension(R.dimen.button_width);
+		
+		if (hasParentItem() && getParentItem().isMutableParent() || !hasParentItem() && getItemGroup().isMutable())
+		{
+			ViewUtil.setPxWidth(mEditButton, buttonWidth);
+			ViewUtil.setPxWidth(mRemoveButton, buttonWidth);
+			if (hasParentItem())
+			{
+				ViewUtil.setEnabled(mRemoveButton, mChar.getMode().canRemoveChild(this));
+			}
+			else
+			{
+				ViewUtil.setEnabled(mRemoveButton, mChar.getMode().canRemoveItem(this));
+			}
+			ViewUtil.setEnabled(mEditButton, mChar.getMode().canEditItem(this));
+		}
+		else
+		{
+			ViewUtil.hideWidth(mEditButton);
+			ViewUtil.hideWidth(mRemoveButton);
+		}
+		if (isParent() && isMutableParent())
+		{
+			ViewUtil.setPxWidth(mAddButton, buttonWidth);
+			ViewUtil.setEnabled(mAddButton, mChar.getMode().canAddChild(this, true) && !getAddableItems().isEmpty());
+		}
+		else
+		{
+			ViewUtil.hideWidth(mAddButton);
+		}
+		if (isValueItem())
+		{
+			ViewUtil.setPxWidth(mDecreaseButton, buttonWidth);
+			ViewUtil.setPxWidth(mIncreaseButton, buttonWidth);
+			ViewUtil.wrapWidth(mValueText);
+			ViewUtil.matchHeight(mValueBar);
+			setIncreasable();
+			setDecreasable();
+			if (mAnimator.isRunning())
+			{
+				mAnimator.cancel();
+			}
+			mValueBar.setMax(VALUE_MULTIPLICATOR * Math.abs(getMaxValue()));
+			mAnimator.setIntValues(mValueBar.getProgress(), VALUE_MULTIPLICATOR * getAbsoluteValue());
+			mAnimator.start();
+			mValueText.setText("" + getValue());
+		}
+		else
+		{
+			ViewUtil.hideHeight(mValueBar);
+			ViewUtil.hideWidth(mValueBar);
+			ViewUtil.hideWidth(mDecreaseButton);
+			ViewUtil.hideWidth(mIncreaseButton);
+			ViewUtil.hideWidth(mValueText);
+		}
+		if (hasChildren() && !hasOrder())
+		{
+			sortChildren();
+		}
+		if (hasChildren())
+		{
+			for (final ItemCreation child : getChildrenList())
+			{
+				child.updateUI();
 			}
 		}
 	}
@@ -1193,11 +1196,5 @@ public class ItemCreationImpl extends CreationRestrictionableImpl implements Ite
 			item.init();
 			mChildrenContainer.addView(item.getContainer());
 		}
-	}
-	
-	@Override
-	public CharacterCreation getCharacter()
-	{
-		return mChar;
 	}
 }

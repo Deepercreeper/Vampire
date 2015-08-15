@@ -8,15 +8,15 @@ import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.implementations.instances.ItemControllerInstanceImpl;
-import com.deepercreeper.vampireapp.items.implementations.instances.restrictions.InstanceRestrictionImpl;
+import com.deepercreeper.vampireapp.items.implementations.instances.restrictions.RestrictionInstanceImpl;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemGroupInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
-import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction;
-import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction.InstanceRestrictionType;
+import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionInstance;
+import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionInstance.InstanceRestrictionType;
 import com.deepercreeper.vampireapp.lists.controllers.instances.DescriptionControllerInstance;
 import com.deepercreeper.vampireapp.lists.items.Clan;
 import com.deepercreeper.vampireapp.lists.items.Nature;
@@ -48,7 +48,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	
 	private final List<TimeListener> mTimeListeners = new ArrayList<TimeListener>();
 	
-	private final List<InstanceRestriction> mRestrictions = new ArrayList<InstanceRestriction>();
+	private final List<RestrictionInstance> mRestrictions = new ArrayList<RestrictionInstance>();
 	
 	private final GenerationControllerInstance mGeneration;
 	
@@ -130,7 +130,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		
 		mActions = mHost ? null : new ActionsControllerInstance(this, mContext);
 		
-		for (final InstanceRestriction restriction : aCreator.getRestrictions())
+		for (final RestrictionInstance restriction : aCreator.getRestrictions())
 		{
 			addRestriction(restriction);
 		}
@@ -225,7 +225,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		// Restrictions
 		for (final Element restriction : DataUtil.getChildren(DataUtil.getElement(root, "restrictions"), "restriction"))
 		{
-			addRestriction(new InstanceRestrictionImpl(restriction));
+			addRestriction(new RestrictionInstanceImpl(restriction));
 		}
 		
 		Log.i(TAG, "Finished loading character.");
@@ -296,7 +296,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	 * @param aRestriction
 	 *            The new restriction.
 	 */
-	public void addRestriction(final InstanceRestriction aRestriction)
+	public void addRestriction(final RestrictionInstance aRestriction)
 	{
 		if (aRestriction.getType() == InstanceRestrictionType.ITEM_CHILD_EP_COST_MULTI_AT)
 		{
@@ -306,7 +306,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 				if (item.hasChildAt(aRestriction.getIndex()))
 				{
 					final ItemInstance child = item.getChildAt(aRestriction.getIndex());
-					final InstanceRestriction restriction = new InstanceRestrictionImpl(InstanceRestrictionType.ITEM_EP_COST_MULTI, child.getName(),
+					final RestrictionInstance restriction = new RestrictionInstanceImpl(InstanceRestrictionType.ITEM_EP_COST_MULTI, child.getName(),
 							aRestriction.getMinimum(), aRestriction.getMaximum(), aRestriction.getItems(), 0, aRestriction.getValue(),
 							aRestriction.getDuration());
 					child.addRestriction(restriction);
@@ -494,7 +494,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	/**
 	 * @return a list of all current character restrictions.
 	 */
-	public List<InstanceRestriction> getRestrictions()
+	public List<RestrictionInstance> getRestrictions()
 	{
 		return mRestrictions;
 	}
@@ -513,7 +513,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	 * @param aRestriction
 	 *            The restriction to remove.
 	 */
-	public void removeRestriction(final InstanceRestriction aRestriction)
+	public void removeRestriction(final RestrictionInstance aRestriction)
 	{
 		mRestrictions.remove(aRestriction);
 		mTimeListeners.remove(aRestriction);
@@ -565,7 +565,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		
 		// Restrictions
 		final Element restrictionElement = aDoc.createElement("restrictions");
-		for (final InstanceRestriction restriction : getRestrictions())
+		for (final RestrictionInstance restriction : getRestrictions())
 		{
 			restrictionElement.appendChild(restriction.asElement(aDoc));
 		}

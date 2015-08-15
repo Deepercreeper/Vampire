@@ -15,7 +15,7 @@ import com.deepercreeper.vampireapp.mechanics.TimeListener;
  * 
  * @author vrl
  */
-public interface InstanceRestriction extends Saveable, TimeListener, DurationListener
+public interface RestrictionInstance extends Saveable, TimeListener, DurationListener
 {
 	/**
 	 * Each restriction has a type that defines, what is restricted.
@@ -114,7 +114,7 @@ public interface InstanceRestriction extends Saveable, TimeListener, DurationLis
 	 * @param aCondition
 	 *            The condition to add.
 	 */
-	public void addCondition(InstanceCondition aCondition);
+	public void addCondition(ConditionInstance aCondition);
 	
 	/**
 	 * Clears this restriction.
@@ -124,7 +124,7 @@ public interface InstanceRestriction extends Saveable, TimeListener, DurationLis
 	/**
 	 * @return a set of all conditions this restriction has.
 	 */
-	public Set<InstanceCondition> getConditions();
+	public Set<ConditionInstance> getConditions();
 	
 	/**
 	 * @return he duration of this restriction.
@@ -159,7 +159,7 @@ public interface InstanceRestriction extends Saveable, TimeListener, DurationLis
 	/**
 	 * @return the current restrictionable parent, that is restricted by this restriction.
 	 */
-	public InstanceRestrictionable getParent();
+	public RestrictionableInstance getParent();
 	
 	/**
 	 * @return the restriction type of this restriction.
@@ -198,7 +198,7 @@ public interface InstanceRestriction extends Saveable, TimeListener, DurationLis
 	 * @param aParent
 	 *            the restrictionable parent.
 	 */
-	public void setParent(InstanceRestrictionable aParent);
+	public void setParent(RestrictionableInstance aParent);
 	
 	/**
 	 * Updates this restriction.

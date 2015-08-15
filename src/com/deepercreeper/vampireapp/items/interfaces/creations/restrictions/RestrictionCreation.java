@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
-import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction;
-import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction.InstanceRestrictionType;
+import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionInstance;
+import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionInstance.InstanceRestrictionType;
 
 /**
  * A restriction that is created and used inside the character creation.<br>
@@ -14,7 +14,7 @@ import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.Inst
  * 
  * @author vrl
  */
-public interface CreationRestriction
+public interface RestrictionCreation
 {
 	/**
 	 * The type of restriction. It tells what is restricted.
@@ -181,7 +181,7 @@ public interface CreationRestriction
 	 * @param aCondition
 	 *            The condition to add.
 	 */
-	public void addCondition(CreationCondition aCondition);
+	public void addCondition(ConditionCreation aCondition);
 	
 	/**
 	 * Clears this restriction.
@@ -191,12 +191,12 @@ public interface CreationRestriction
 	/**
 	 * @return the instance restriction for this creation restriction.
 	 */
-	public InstanceRestriction createInstance();
+	public RestrictionInstance createInstance();
 	
 	/**
 	 * @return a set of all conditions this restriction has.
 	 */
-	public Set<CreationCondition> getConditions();
+	public Set<ConditionCreation> getConditions();
 	
 	/**
 	 * @return the index of anything defined inside the restriction type.
@@ -226,7 +226,7 @@ public interface CreationRestriction
 	/**
 	 * @return the current restrictionable parent, that is restricted by this restriction.
 	 */
-	public CreationRestrictionable getParent();
+	public RestrictionableCreation getParent();
 	
 	/**
 	 * @return the restriction type of this restriction.
@@ -275,7 +275,7 @@ public interface CreationRestriction
 	 * @param aParent
 	 *            the restrictionable parent.
 	 */
-	public void setParent(CreationRestrictionable aParent);
+	public void setParent(RestrictionableCreation aParent);
 	
 	/**
 	 * Updates this restriction.

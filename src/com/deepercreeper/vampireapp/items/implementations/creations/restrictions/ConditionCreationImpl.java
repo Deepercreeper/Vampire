@@ -1,14 +1,14 @@
 package com.deepercreeper.vampireapp.items.implementations.creations.restrictions;
 
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationCondition;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.ConditionCreation;
 
 /**
  * A creation condition implementation.
  * 
  * @author vrl
  */
-public class CreationConditionImpl implements CreationCondition
+public class ConditionCreationImpl implements ConditionCreation
 {
 	private final CreationConditionQuery	mQuery;
 	
@@ -34,7 +34,7 @@ public class CreationConditionImpl implements CreationCondition
 	 * @param aIndex
 	 *            The index.
 	 */
-	public CreationConditionImpl(final CreationConditionQuery aQuery, final String aItemName, final int aMinimum, final int aMaximum, final int aIndex)
+	public ConditionCreationImpl(final CreationConditionQuery aQuery, final String aItemName, final int aMinimum, final int aMaximum, final int aIndex)
 	{
 		mQuery = aQuery;
 		mItemName = aItemName;
@@ -91,11 +91,11 @@ public class CreationConditionImpl implements CreationCondition
 		{
 			return false;
 		}
-		if ( !(obj instanceof CreationConditionImpl))
+		if ( !(obj instanceof ConditionCreationImpl))
 		{
 			return false;
 		}
-		final CreationConditionImpl other = (CreationConditionImpl) obj;
+		final ConditionCreationImpl other = (ConditionCreationImpl) obj;
 		if (mIndex != other.mIndex)
 		{
 			return false;

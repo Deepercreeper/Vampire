@@ -3,7 +3,8 @@ package com.deepercreeper.vampireapp.items.interfaces.instances;
 import java.util.List;
 import java.util.Set;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
-import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestrictionable;
+import com.deepercreeper.vampireapp.items.interfaces.instances.dependencies.DependableInstance;
+import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionableInstance;
 import com.deepercreeper.vampireapp.mechanics.ActionInstance;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
@@ -16,7 +17,7 @@ import android.content.Context;
  * @author vrl
  */
 public interface ItemInstance
-		extends InstanceRestrictionable, Comparable<ItemInstance>, Saveable, Viewable, AnimatorUpdateListener, DependableInstance
+		extends RestrictionableInstance, Comparable<ItemInstance>, Saveable, Viewable, AnimatorUpdateListener, DependableInstance
 {
 	/**
 	 * If something depends on the value of any item this listener can be attached to an item.

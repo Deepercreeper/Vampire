@@ -1,13 +1,10 @@
 package com.deepercreeper.vampireapp.items.implementations;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import com.deepercreeper.vampireapp.items.interfaces.Dependency;
-import com.deepercreeper.vampireapp.items.interfaces.Dependency.Type;
+import com.deepercreeper.vampireapp.items.implementations.dependencies.NamedDependableImpl;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.util.Log;
@@ -17,13 +14,11 @@ import com.deepercreeper.vampireapp.util.Log;
  * 
  * @author Vincent
  */
-public class ItemGroupImpl extends Named implements ItemGroup
+public class ItemGroupImpl extends NamedDependableImpl implements ItemGroup
 {
 	private static final String TAG = "ItemGroup";
 	
 	private final List<Item> mItemsList = new ArrayList<Item>();
-	
-	private final Map<Type, Dependency> mDependencies = new HashMap<Type, Dependency>();
 	
 	private final HashMap<String, Item> mItems = new HashMap<String, Item>();
 	
@@ -133,24 +128,6 @@ public class ItemGroupImpl extends Named implements ItemGroup
 			values[i] = i;
 		}
 		return values;
-	}
-	
-	@Override
-	public void addDependency(final Dependency aDependency)
-	{
-		mDependencies.put(aDependency.getType(), aDependency);
-	}
-	
-	@Override
-	public boolean hasDependencies()
-	{
-		return !mDependencies.isEmpty();
-	}
-	
-	@Override
-	public Collection<Dependency> getDependencies()
-	{
-		return mDependencies.values();
 	}
 	
 	@Override

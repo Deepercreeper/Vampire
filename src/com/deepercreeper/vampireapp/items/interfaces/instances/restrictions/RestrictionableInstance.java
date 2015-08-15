@@ -2,14 +2,14 @@ package com.deepercreeper.vampireapp.items.interfaces.instances.restrictions;
 
 import java.util.Set;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
-import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction.InstanceRestrictionType;
+import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionInstance.InstanceRestrictionType;
 
 /**
  * All values and fields that can be restricted have to implements this interface.
  * 
  * @author vrl
  */
-public interface InstanceRestrictionable
+public interface RestrictionableInstance
 {
 	/**
 	 * Removes the given restriction from the current restriction set and updates all values.
@@ -17,7 +17,7 @@ public interface InstanceRestrictionable
 	 * @param aRestriction
 	 *            The restriction that has to be removed.
 	 */
-	public void removeRestriction(InstanceRestriction aRestriction);
+	public void removeRestriction(RestrictionInstance aRestriction);
 	
 	/**
 	 * Adds the given restriction to the current set of restrictions and updates all values.
@@ -25,7 +25,7 @@ public interface InstanceRestrictionable
 	 * @param aRestriction
 	 *            The restriction that has to be added.
 	 */
-	public void addRestriction(InstanceRestriction aRestriction);
+	public void addRestriction(RestrictionInstance aRestriction);
 	
 	/**
 	 * @param aTypes
@@ -44,7 +44,7 @@ public interface InstanceRestrictionable
 	 *            The restriction types.
 	 * @return a set of restrictions that have one of the given types.
 	 */
-	public Set<InstanceRestriction> getRestrictions(InstanceRestrictionType... aTypes);
+	public Set<RestrictionInstance> getRestrictions(InstanceRestrictionType... aTypes);
 	
 	/**
 	 * Updates all restrictions.

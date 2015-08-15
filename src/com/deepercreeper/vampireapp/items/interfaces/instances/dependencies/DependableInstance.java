@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.items.interfaces.instances;
+package com.deepercreeper.vampireapp.items.interfaces.instances.dependencies;
 
 import com.deepercreeper.vampireapp.items.interfaces.Dependency.Type;
 
@@ -24,6 +24,13 @@ public interface DependableInstance
 	public DependencyInstance getDependency(Type aType);
 	
 	/**
+	 * Adds the given dependency to this dependable.
+	 * 
+	 * @param aDependency
+	 */
+	public void addDependency(DependencyInstance aDependency);
+	
+	/**
 	 * @return the values array.
 	 */
 	public int[] getValues();
@@ -32,4 +39,14 @@ public interface DependableInstance
 	 * @return the maximum value.
 	 */
 	public int getMaxValue();
+	
+	/**
+	 * @return the maximum values.
+	 */
+	public int[] getMaxValues();
+	
+	/**
+	 * @return the start value.
+	 */
+	public int getStartValue();
 }

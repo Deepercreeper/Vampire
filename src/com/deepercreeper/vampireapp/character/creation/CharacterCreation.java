@@ -7,9 +7,9 @@ import com.deepercreeper.vampireapp.items.implementations.creations.ItemControll
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestriction.CreationRestrictionType;
-import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.InstanceRestriction;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation.CreationRestrictionType;
+import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionInstance;
 import com.deepercreeper.vampireapp.lists.controllers.creations.DescriptionControllerCreation;
 import com.deepercreeper.vampireapp.lists.items.Clan;
 import com.deepercreeper.vampireapp.lists.items.Nature;
@@ -305,10 +305,10 @@ public class CharacterCreation
 	/**
 	 * @return all persistent non creation restrictions.
 	 */
-	public List<InstanceRestriction> getRestrictions()
+	public List<RestrictionInstance> getRestrictions()
 	{
-		final List<InstanceRestriction> restrictions = new ArrayList<InstanceRestriction>();
-		for (final CreationRestriction restriction : mClan.getRestrictions())
+		final List<RestrictionInstance> restrictions = new ArrayList<RestrictionInstance>();
+		for (final RestrictionCreation restriction : mClan.getRestrictions())
 		{
 			if (restriction.isPersistent() && !restriction.isCreationRestriction())
 			{
@@ -482,7 +482,7 @@ public class CharacterCreation
 		{
 			return;
 		}
-		for (final CreationRestriction restriction : mClan.getRestrictions())
+		for (final RestrictionCreation restriction : mClan.getRestrictions())
 		{
 			final CreationRestrictionType type = restriction.getType();
 			if (type.equals(CreationRestrictionType.ITEM_VALUE) || type.equals(CreationRestrictionType.ITEM_CHILDREN_COUNT)
@@ -528,7 +528,7 @@ public class CharacterCreation
 	
 	private void removeRestrictions()
 	{
-		for (final CreationRestriction restriction : mClan.getRestrictions())
+		for (final RestrictionCreation restriction : mClan.getRestrictions())
 		{
 			restriction.clear();
 		}

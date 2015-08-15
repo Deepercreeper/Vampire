@@ -4,8 +4,8 @@ import java.util.List;
 import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
 import com.deepercreeper.vampireapp.items.implementations.creations.ItemCreationImpl.ChangeAction;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.CreationRestrictionable;
-import com.deepercreeper.vampireapp.items.interfaces.instances.DependableInstance;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionableCreation;
+import com.deepercreeper.vampireapp.items.interfaces.instances.dependencies.DependableInstance;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.Context;
 import android.widget.LinearLayout;
@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
  * @author Vincent
  *         The parent item type.
  */
-public interface ItemCreation extends Comparable<ItemCreation>, CreationRestrictionable, AnimatorUpdateListener, DependableInstance
+public interface ItemCreation extends Comparable<ItemCreation>, RestrictionableCreation, AnimatorUpdateListener, DependableInstance
 {
 	/**
 	 * Asks the user to choose a child item that is going to be added to this item.
