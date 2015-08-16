@@ -644,7 +644,7 @@ public class ItemGroupCreationImpl extends RestrictionableDependableCreationImpl
 		Collections.sort(getItemsList());
 		for (final ItemCreation item : getItemsList())
 		{
-			item.init();
+			item.updateUI();
 			mItemsContainer.addView(item.getContainer());
 		}
 	}

@@ -7,7 +7,6 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.Rest
 import com.deepercreeper.vampireapp.items.interfaces.instances.dependencies.DependableInstance;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.Context;
-import android.widget.LinearLayout;
 
 /**
  * Each item can be instantiated. That creates an item value.<br>
@@ -92,14 +91,6 @@ public interface ItemCreation extends Comparable<ItemCreation>, RestrictionableC
 	public List<ItemCreation> getChildrenList();
 	
 	/**
-	 * Each value has a specified widget that contains some buttons and text views to handle its value.
-	 * 
-	 * @return the value container.
-	 */
-	@Override
-	public LinearLayout getContainer();
-	
-	/**
 	 * @return the context of this value.
 	 */
 	public Context getContext();
@@ -138,12 +129,6 @@ public interface ItemCreation extends Comparable<ItemCreation>, RestrictionableC
 	 * @return The parent item group.
 	 */
 	public ItemGroupCreation getItemGroup();
-	
-	/**
-	 * @return the current maximum item value.
-	 */
-	@Override
-	public int getMaxValue();
 	
 	/**
 	 * @return the item name.
@@ -219,11 +204,6 @@ public interface ItemCreation extends Comparable<ItemCreation>, RestrictionableC
 	public int indexOfChild(ItemCreation aItem);
 	
 	/**
-	 * Initializes this item into its view.
-	 */
-	public void init();
-	
-	/**
 	 * @return whether this item will be added to the character even if it has no value.
 	 */
 	public boolean isImportant();
@@ -247,12 +227,6 @@ public interface ItemCreation extends Comparable<ItemCreation>, RestrictionableC
 	 * @return whether this item needs a description.
 	 */
 	public boolean needsDescription();
-	
-	/**
-	 * Removes all widgets from their parent containers.
-	 */
-	@Override
-	public void release();
 	
 	/**
 	 * Removes the given child from this item.
@@ -298,10 +272,4 @@ public interface ItemCreation extends Comparable<ItemCreation>, RestrictionableC
 	 * Updates all item controllers.
 	 */
 	public void updateControllerUI();
-	
-	/**
-	 * Updates the user interface for all views. Invoked after the update method.
-	 */
-	@Override
-	public void updateUI();
 }

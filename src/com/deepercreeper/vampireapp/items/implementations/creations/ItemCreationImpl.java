@@ -826,10 +826,6 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 	}
 	
 	@Override
-	public void init()
-	{}
-	
-	@Override
 	public boolean isImportant()
 	{
 		if (isValueItem() && getValue() != 0)
@@ -1142,7 +1138,7 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 		Collections.sort(getChildrenList());
 		for (final ItemCreation item : getChildrenList())
 		{
-			item.init();
+			item.updateUI();
 			mChildrenContainer.addView(item.getContainer());
 		}
 	}
