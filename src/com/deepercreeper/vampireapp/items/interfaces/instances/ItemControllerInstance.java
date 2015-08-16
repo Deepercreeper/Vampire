@@ -19,26 +19,6 @@ import android.content.Context;
 public interface ItemControllerInstance extends Saveable, Viewable, DependableInstance
 {
 	/**
-	 * Closes the whole controller.
-	 */
-	public void close();
-	
-	/**
-	 * @return the underlying context.
-	 */
-	public Context getContext();
-	
-	/**
-	 * @return a set of all item actions.
-	 */
-	public Set<ActionInstance> getActions();
-	
-	/**
-	 * @return a list of all items that have a description.
-	 */
-	public List<ItemInstance> getDescriptionValues();
-	
-	/**
 	 * Adds the given item to this controller to create a shortcut.
 	 * 
 	 * @param aItem
@@ -47,17 +27,29 @@ public interface ItemControllerInstance extends Saveable, Viewable, DependableIn
 	public void addItem(ItemInstance aItem);
 	
 	/**
-	 * Removes the given name from the controller item shortcuts map.
-	 * 
-	 * @param aName
-	 *            The name to remove.
+	 * Closes the whole controller.
 	 */
-	public void removeItem(String aName);
+	public void close();
+	
+	/**
+	 * @return a set of all item actions.
+	 */
+	public Set<ActionInstance> getActions();
 	
 	/**
 	 * @return the character.
 	 */
 	public CharacterInstance getCharacter();
+	
+	/**
+	 * @return the underlying context.
+	 */
+	public Context getContext();
+	
+	/**
+	 * @return a list of all items that have a description.
+	 */
+	public List<ItemInstance> getDescriptionValues();
 	
 	/**
 	 * @param aGroup
@@ -110,14 +102,22 @@ public interface ItemControllerInstance extends Saveable, Viewable, DependableIn
 	public boolean hasItem(String aName);
 	
 	/**
+	 * @return whether this controller has any mutable group.
+	 */
+	public boolean hasMutableGroup();
+	
+	/**
 	 * @return whether this controller is empty.
 	 */
 	public boolean isEmpty();
 	
 	/**
-	 * @return whether this controller has any mutable group.
+	 * Removes the given name from the controller item shortcuts map.
+	 * 
+	 * @param aName
+	 *            The name to remove.
 	 */
-	public boolean hasMutableGroup();
+	public void removeItem(String aName);
 	
 	/**
 	 * Resizes the controller view.

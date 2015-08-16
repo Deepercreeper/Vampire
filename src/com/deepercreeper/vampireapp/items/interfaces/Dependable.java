@@ -18,12 +18,12 @@ public interface Dependable
 	public void addDependency(Dependency aDependency);
 	
 	/**
-	 * @return whether this group has any dependencies.
-	 */
-	public boolean hasDependencies();
-	
-	/**
 	 * @return a collection of all dependencies of this dependable.
 	 */
 	public Collection<Dependency> getDependencies();
+	
+	/**
+	 * @return whether this group has any dependencies.
+	 */
+	public boolean hasDependencies();
 }

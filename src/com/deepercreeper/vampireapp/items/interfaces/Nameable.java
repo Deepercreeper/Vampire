@@ -8,12 +8,12 @@ package com.deepercreeper.vampireapp.items.interfaces;
 public interface Nameable extends Comparable<Nameable>, CharSequence
 {
 	/**
-	 * @return the name of this entity.
-	 */
-	public String getName();
-	
-	/**
 	 * @return the locale depending display name.
 	 */
 	public String getDisplayName();
+	
+	/**
+	 * @return the name of this entity.
+	 */
+	public String getName();
 }

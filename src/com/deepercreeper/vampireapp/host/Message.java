@@ -91,24 +91,6 @@ public class Message implements Saveable, Viewable
 	}
 	
 	/**
-	 * All types of host client messages.
-	 * 
-	 * @author Vincent
-	 */
-	public static enum MessageType
-	{
-		/**
-		 * One of them is informed about something.
-		 */
-		INFO,
-		
-		/**
-		 * Asks the host or the player to approve something.
-		 */
-		YES_NO
-	}
-	
-	/**
 	 * Used for checking, whether multiple messages of one type can be displayed at once.
 	 * 
 	 * @author Vincent
@@ -134,6 +116,24 @@ public class Message implements Saveable, Viewable
 		 * All item messages
 		 */
 		ITEM
+	}
+	
+	/**
+	 * All types of host client messages.
+	 * 
+	 * @author Vincent
+	 */
+	public static enum MessageType
+	{
+		/**
+		 * One of them is informed about something.
+		 */
+		INFO,
+		
+		/**
+		 * Asks the host or the player to approve something.
+		 */
+		YES_NO
 	}
 	
 	private static final String TAG_NAME = "message";
@@ -179,39 +179,6 @@ public class Message implements Saveable, Viewable
 	 *            The message text.
 	 * @param aArguments
 	 *            The message arguments.
-	 * @param aContext
-	 *            The underlying context.
-	 * @param aListener
-	 *            The message listener.
-	 * @param aYesAction
-	 *            The yes action.
-	 * @param aNoAction
-	 *            The no action.
-	 * @param aSaveables
-	 *            Saveable objects.
-	 */
-	public Message(final MessageGroup aGroup, final boolean aModeDepending, final String aSender, final int aMessageId, final String[] aArguments,
-			final Context aContext, final MessageListener aListener, final ButtonAction aYesAction, final ButtonAction aNoAction,
-			final String... aSaveables)
-	{
-		this(MessageType.YES_NO, aGroup, aModeDepending, aSender, aMessageId, aArguments, new boolean[aArguments.length], aContext, aListener,
-				R.layout.message_yes_no, aYesAction, aNoAction, aSaveables);
-		init();
-	}
-	
-	/**
-	 * Creates a yes/no message.
-	 * 
-	 * @param aGroup
-	 *            The message group.
-	 * @param aModeDepending
-	 *            Whether this message is mode depending.
-	 * @param aSender
-	 *            The message sender.
-	 * @param aMessageId
-	 *            The message text.
-	 * @param aArguments
-	 *            The message arguments.
 	 * @param aTranslated
 	 *            The arguments, that should be translated.
 	 * @param aContext
@@ -231,37 +198,6 @@ public class Message implements Saveable, Viewable
 	{
 		this(MessageType.YES_NO, aGroup, aModeDepending, aSender, aMessageId, aArguments, aTranslated, aContext, aListener, R.layout.message_yes_no,
 				aYesAction, aNoAction, aSaveables);
-		init();
-	}
-	
-	/**
-	 * Creates a info message.
-	 * 
-	 * @param aGroup
-	 *            The message group.
-	 * @param aModeDepending
-	 *            Whether this message is mode depending.
-	 * @param aSender
-	 *            The message sender.
-	 * @param aMessageId
-	 *            The message text.
-	 * @param aArguments
-	 *            The message arguments.
-	 * @param aContext
-	 *            The underlying context.
-	 * @param aListener
-	 *            The message listener.
-	 * @param aOkAction
-	 *            When the message is approved, this action happens.
-	 * @param aSaveables
-	 *            Saveable objects.
-	 */
-	public Message(final MessageGroup aGroup, final boolean aModeDepending, final String aSender, final int aMessageId, final String[] aArguments,
-			final Context aContext, final MessageListener aListener, final ButtonAction aOkAction, final String... aSaveables)
-	{
-		this(MessageType.INFO, aGroup, aModeDepending, aSender, aMessageId, aArguments, new boolean[aArguments.length], aContext, aListener,
-				R.layout.message_info, aOkAction, ButtonAction.NOTHING, aSaveables);
-		init();
 	}
 	
 	/**
@@ -294,7 +230,67 @@ public class Message implements Saveable, Viewable
 	{
 		this(MessageType.INFO, aGroup, aModeDepending, aSender, aMessageId, aArguments, aTranslated, aContext, aListener, R.layout.message_info,
 				aOkAction, ButtonAction.NOTHING, aSaveables);
-		init();
+	}
+	
+	/**
+	 * Creates a yes/no message.
+	 * 
+	 * @param aGroup
+	 *            The message group.
+	 * @param aModeDepending
+	 *            Whether this message is mode depending.
+	 * @param aSender
+	 *            The message sender.
+	 * @param aMessageId
+	 *            The message text.
+	 * @param aArguments
+	 *            The message arguments.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aListener
+	 *            The message listener.
+	 * @param aYesAction
+	 *            The yes action.
+	 * @param aNoAction
+	 *            The no action.
+	 * @param aSaveables
+	 *            Saveable objects.
+	 */
+	public Message(final MessageGroup aGroup, final boolean aModeDepending, final String aSender, final int aMessageId, final String[] aArguments,
+			final Context aContext, final MessageListener aListener, final ButtonAction aYesAction, final ButtonAction aNoAction,
+			final String... aSaveables)
+	{
+		this(MessageType.YES_NO, aGroup, aModeDepending, aSender, aMessageId, aArguments, new boolean[aArguments.length], aContext, aListener,
+				R.layout.message_yes_no, aYesAction, aNoAction, aSaveables);
+	}
+	
+	/**
+	 * Creates a info message.
+	 * 
+	 * @param aGroup
+	 *            The message group.
+	 * @param aModeDepending
+	 *            Whether this message is mode depending.
+	 * @param aSender
+	 *            The message sender.
+	 * @param aMessageId
+	 *            The message text.
+	 * @param aArguments
+	 *            The message arguments.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aListener
+	 *            The message listener.
+	 * @param aOkAction
+	 *            When the message is approved, this action happens.
+	 * @param aSaveables
+	 *            Saveable objects.
+	 */
+	public Message(final MessageGroup aGroup, final boolean aModeDepending, final String aSender, final int aMessageId, final String[] aArguments,
+			final Context aContext, final MessageListener aListener, final ButtonAction aOkAction, final String... aSaveables)
+	{
+		this(MessageType.INFO, aGroup, aModeDepending, aSender, aMessageId, aArguments, new boolean[aArguments.length], aContext, aListener,
+				R.layout.message_info, aOkAction, ButtonAction.NOTHING, aSaveables);
 	}
 	
 	private Message(final MessageType aType, final MessageGroup aGroup, final boolean aModeDepending, final String aSender, final int aMessageId,
@@ -314,6 +310,21 @@ public class Message implements Saveable, Viewable
 		mNoAction = aNoAction;
 		mSaveables = aSaveables;
 		mContainer = (LinearLayout) View.inflate(mContext, aViewId, null);
+		
+		switch (mType)
+		{
+			case INFO :
+				initMessageText(R.id.m_info_message_label);
+				initButton(R.id.m_info_ok_button, mYesAction);
+				break;
+			case YES_NO :
+				initMessageText(R.id.m_yes_no_message_label);
+				initButton(R.id.m_yes_no_positive_button, mYesAction);
+				initButton(R.id.m_yes_no_negative_button, mNoAction);
+				break;
+			default :
+				break;
+		}
 	}
 	
 	@Override
@@ -333,34 +344,19 @@ public class Message implements Saveable, Viewable
 		return element;
 	}
 	
-	/**
-	 * @return the list of message arguments for the message text.
-	 */
-	public String[] getArguments()
-	{
-		return mArguments;
-	}
-	
-	/**
-	 * @return an array of booleans indicating, whether the argument at the position should be translated.
-	 */
-	public boolean[] getTranslatedArguments()
-	{
-		return mTranslatedArguments;
-	}
-	
 	@Override
-	public LinearLayout getContainer()
+	public boolean equals(final Object aO)
 	{
-		return mContainer;
-	}
-	
-	/**
-	 * @return a list of all stored saveables.
-	 */
-	public String[] getSaveables()
-	{
-		return mSaveables;
+		if (mGroup.equals(MessageGroup.SINGLE))
+		{
+			return false;
+		}
+		if (aO instanceof Message)
+		{
+			final Message message = (Message) aO;
+			return mGroup.equals(message.mGroup);
+		}
+		return false;
 	}
 	
 	/**
@@ -374,6 +370,20 @@ public class Message implements Saveable, Viewable
 	}
 	
 	/**
+	 * @return the list of message arguments for the message text.
+	 */
+	public String[] getArguments()
+	{
+		return mArguments;
+	}
+	
+	@Override
+	public LinearLayout getContainer()
+	{
+		return mContainer;
+	}
+	
+	/**
 	 * @param aIndex
 	 *            The index.
 	 * @return the serialized saveable at the given index.
@@ -381,6 +391,22 @@ public class Message implements Saveable, Viewable
 	public String getSaveable(final int aIndex)
 	{
 		return mSaveables[aIndex];
+	}
+	
+	/**
+	 * @return a list of all stored saveables.
+	 */
+	public String[] getSaveables()
+	{
+		return mSaveables;
+	}
+	
+	/**
+	 * @return an array of booleans indicating, whether the argument at the position should be translated.
+	 */
+	public boolean[] getTranslatedArguments()
+	{
+		return mTranslatedArguments;
 	}
 	
 	/**
@@ -392,22 +418,13 @@ public class Message implements Saveable, Viewable
 	}
 	
 	@Override
-	public void init()
+	public int hashCode()
 	{
-		switch (mType)
+		if (mGroup.equals(MessageGroup.SINGLE))
 		{
-			case INFO :
-				initMessageText(R.id.m_info_message_label);
-				initButton(R.id.m_info_ok_button, mYesAction);
-				break;
-			case YES_NO :
-				initMessageText(R.id.m_yes_no_message_label);
-				initButton(R.id.m_yes_no_positive_button, mYesAction);
-				initButton(R.id.m_yes_no_negative_button, mNoAction);
-				break;
-			default :
-				break;
+			return super.hashCode();
 		}
+		return mGroup.name().hashCode();
 	}
 	
 	@Override
@@ -415,6 +432,27 @@ public class Message implements Saveable, Viewable
 	{
 		ViewUtil.release(getContainer());
 	}
+	
+	/**
+	 * Updates the buttons if mode depending.
+	 * 
+	 * @param aChar
+	 *            The parent character.
+	 */
+	public void update(final CharacterInstance aChar)
+	{
+		if (mModeDepending)
+		{
+			for (final Button button : mButtons)
+			{
+				ViewUtil.setEnabled(button, aChar.getMode().getMode().canUseAction());
+			}
+		}
+	}
+	
+	@Override
+	public void updateUI()
+	{}
 	
 	private String getText()
 	{
@@ -440,48 +478,6 @@ public class Message implements Saveable, Viewable
 				}
 			}
 		});
-	}
-	
-	@Override
-	public boolean equals(final Object aO)
-	{
-		if (mGroup.equals(MessageGroup.SINGLE))
-		{
-			return false;
-		}
-		if (aO instanceof Message)
-		{
-			final Message message = (Message) aO;
-			return mGroup.equals(message.mGroup);
-		}
-		return false;
-	}
-	
-	/**
-	 * Updates the buttons if mode depending.
-	 * 
-	 * @param aChar
-	 *            The parent character.
-	 */
-	public void update(final CharacterInstance aChar)
-	{
-		if (mModeDepending)
-		{
-			for (final Button button : mButtons)
-			{
-				ViewUtil.setEnabled(button, aChar.getMode().getMode().canUseAction());
-			}
-		}
-	}
-	
-	@Override
-	public int hashCode()
-	{
-		if (mGroup.equals(MessageGroup.SINGLE))
-		{
-			return super.hashCode();
-		}
-		return mGroup.name().hashCode();
 	}
 	
 	private void initMessageText(final int aTextId)

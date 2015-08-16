@@ -51,6 +51,12 @@ public abstract class DefaultDialog <L, C extends View> extends DialogFragment
 	}
 	
 	@Override
+	public final Dialog onCreateDialog(final Bundle aSavedInstanceState)
+	{
+		return createDialog(new AlertDialog.Builder(mContext).setTitle(mTitle).setView(mContainer));
+	}
+	
+	@Override
 	public final void onDestroy()
 	{
 		super.onDestroy();
@@ -78,13 +84,27 @@ public abstract class DefaultDialog <L, C extends View> extends DialogFragment
 		}
 	}
 	
-	@Override
-	public final Dialog onCreateDialog(final Bundle aSavedInstanceState)
+	protected void cancel()
 	{
-		return createDialog(new AlertDialog.Builder(mContext).setTitle(mTitle).setView(mContainer));
+		// Do nothing
 	}
 	
 	protected abstract Dialog createDialog(AlertDialog.Builder aBuilder);
+	
+	protected final C getContainer()
+	{
+		return mContainer;
+	}
+	
+	protected final Context getContext()
+	{
+		return mContext;
+	}
+	
+	protected final L getListener()
+	{
+		return mListener;
+	}
 	
 	protected boolean isNameOk(EditText aText)
 	{
@@ -101,26 +121,6 @@ public abstract class DefaultDialog <L, C extends View> extends DialogFragment
 		catch (NumberFormatException e)
 		{}
 		return value >= aMin;
-	}
-	
-	protected void cancel()
-	{
-		// Do nothing
-	}
-	
-	protected final C getContainer()
-	{
-		return mContainer;
-	}
-	
-	protected final Context getContext()
-	{
-		return mContext;
-	}
-	
-	protected final L getListener()
-	{
-		return mListener;
 	}
 	
 	/**

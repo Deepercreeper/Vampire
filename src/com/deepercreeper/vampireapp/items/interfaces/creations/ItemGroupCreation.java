@@ -5,7 +5,6 @@ import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionableCreation;
 import com.deepercreeper.vampireapp.items.interfaces.instances.dependencies.DependableInstance;
-import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 import android.content.Context;
 
 /**
@@ -13,7 +12,7 @@ import android.content.Context;
  * 
  * @author vrl
  */
-public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, RestrictionableCreation, Viewable, DependableInstance
+public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, RestrictionableCreation, DependableInstance
 {
 	/**
 	 * Asks the user to choose an item that should be added to this group.
@@ -34,11 +33,6 @@ public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, Restri
 	 * @return whether this groups value can be changed by the given value.
 	 */
 	public boolean canChangeBy(int aValue);
-	
-	/**
-	 * @return whether the child items of this group have a specific order.
-	 */
-	public boolean hasOrder();
 	
 	/**
 	 * Clears all child items and properties of this group.
@@ -135,6 +129,11 @@ public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, Restri
 	public boolean hasItem(String aName);
 	
 	/**
+	 * @return whether the child items of this group have a specific order.
+	 */
+	public boolean hasOrder();
+	
+	/**
 	 * @param aItem
 	 *            The item child.
 	 * @return the index of the given item child.
@@ -182,5 +181,6 @@ public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, Restri
 	/**
 	 * Updates the user interface for all views. Invoked after the update method.
 	 */
+	@Override
 	public void updateUI();
 }

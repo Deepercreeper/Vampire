@@ -45,37 +45,6 @@ public class Weapon extends Artifact
 	
 	private final String mAmmo;
 	
-	protected Weapon(final Element aElement, final ItemFinder aItems, final Context aContext, final InventoryControllerInstance aController)
-	{
-		super(CodingUtil.decode(aElement.getAttribute("name")), Integer.parseInt(aElement.getAttribute("weight")),
-				Integer.parseInt(aElement.getAttribute("quantity")), aContext, aController);
-		mItems = aItems;
-		mDistanceWeapon = Boolean.valueOf(aElement.getAttribute("distance-weapon"));
-		mDifficulty = Integer.parseInt(aElement.getAttribute("difficulty"));
-		mDamage = Integer.parseInt(aElement.getAttribute("damage"));
-		mStash = CodingUtil.decode(aElement.getAttribute("stash"));
-		if (mDistanceWeapon)
-		{
-			mDistance = Integer.parseInt(aElement.getAttribute("distance"));
-			mReloadTime = Integer.parseInt(aElement.getAttribute("reloadTime"));
-			mMagazine = Integer.parseInt(aElement.getAttribute("magazine"));
-			mAmmo = CodingUtil.decode(aElement.getAttribute("ammo"));
-		}
-		else
-		{
-			mDistance = mReloadTime = mMagazine = -1;
-			mAmmo = null;
-		}
-		if (aElement.hasAttribute("additionalDamage"))
-		{
-			mAdditionalDamage = mItems.findItemInstance(CodingUtil.decode(aElement.getAttribute("additionalDamage")));
-		}
-		else
-		{
-			mAdditionalDamage = null;
-		}
-	}
-	
 	/**
 	 * Creates a new weapon.
 	 * 
@@ -229,6 +198,37 @@ public class Weapon extends Artifact
 		this(aName, aWeight, 1, aDifficulty, aDamage, aAdditionalDamage, aStash, aItems, aContext, aController);
 	}
 	
+	protected Weapon(final Element aElement, final ItemFinder aItems, final Context aContext, final InventoryControllerInstance aController)
+	{
+		super(CodingUtil.decode(aElement.getAttribute("name")), Integer.parseInt(aElement.getAttribute("weight")),
+				Integer.parseInt(aElement.getAttribute("quantity")), aContext, aController);
+		mItems = aItems;
+		mDistanceWeapon = Boolean.valueOf(aElement.getAttribute("distance-weapon"));
+		mDifficulty = Integer.parseInt(aElement.getAttribute("difficulty"));
+		mDamage = Integer.parseInt(aElement.getAttribute("damage"));
+		mStash = CodingUtil.decode(aElement.getAttribute("stash"));
+		if (mDistanceWeapon)
+		{
+			mDistance = Integer.parseInt(aElement.getAttribute("distance"));
+			mReloadTime = Integer.parseInt(aElement.getAttribute("reloadTime"));
+			mMagazine = Integer.parseInt(aElement.getAttribute("magazine"));
+			mAmmo = CodingUtil.decode(aElement.getAttribute("ammo"));
+		}
+		else
+		{
+			mDistance = mReloadTime = mMagazine = -1;
+			mAmmo = null;
+		}
+		if (aElement.hasAttribute("additionalDamage"))
+		{
+			mAdditionalDamage = mItems.findItemInstance(CodingUtil.decode(aElement.getAttribute("additionalDamage")));
+		}
+		else
+		{
+			mAdditionalDamage = null;
+		}
+	}
+	
 	@Override
 	public Element asElement(final Document aDoc)
 	{
@@ -249,6 +249,50 @@ public class Weapon extends Artifact
 			element.setAttribute("ammo", CodingUtil.encode(getAmmo()));
 		}
 		return element;
+	}
+	
+	/**
+	 * @return the current value of the item, that causes additional damage or {@code 0} if there is no additional damage.
+	 */
+	public int getAdditionalDamage()
+	{
+		if (mAdditionalDamage == null)
+		{
+			return 0;
+		}
+		return mAdditionalDamage.getValue();
+	}
+	
+	/**
+	 * @return The type of ammo this weapon needs or {@code null} if this is a melee weapon.
+	 */
+	public String getAmmo()
+	{
+		return mAmmo;
+	}
+	
+	/**
+	 * @return the default damage, the weapon takes.
+	 */
+	public int getDamage()
+	{
+		return mDamage;
+	}
+	
+	/**
+	 * @return The difficulty of using this weapon.
+	 */
+	public int getDifficulty()
+	{
+		return mDifficulty;
+	}
+	
+	/**
+	 * @return the maximum distance of this weapon or {@code -1} if this i a melee weapon.
+	 */
+	public int getDistance()
+	{
+		return mDistance;
 	}
 	
 	@Override
@@ -303,56 +347,6 @@ public class Weapon extends Artifact
 		return DataUtil.parseFlags(flags.toString());
 	}
 	
-	@Override
-	public String getType()
-	{
-		return WEAPON_ITEM_TYPE;
-	}
-	
-	/**
-	 * @return the current value of the item, that causes additional damage or {@code 0} if there is no additional damage.
-	 */
-	public int getAdditionalDamage()
-	{
-		if (mAdditionalDamage == null)
-		{
-			return 0;
-		}
-		return mAdditionalDamage.getValue();
-	}
-	
-	/**
-	 * @return The type of ammo this weapon needs or {@code null} if this is a melee weapon.
-	 */
-	public String getAmmo()
-	{
-		return mAmmo;
-	}
-	
-	/**
-	 * @return the default damage, the weapon takes.
-	 */
-	public int getDamage()
-	{
-		return mDamage;
-	}
-	
-	/**
-	 * @return The difficulty of using this weapon.
-	 */
-	public int getDifficulty()
-	{
-		return mDifficulty;
-	}
-	
-	/**
-	 * @return the maximum distance of this weapon or {@code -1} if this i a melee weapon.
-	 */
-	public int getDistance()
-	{
-		return mDistance;
-	}
-	
 	/**
 	 * @return the maximum number of bullets that can be stored, before reload is necessary or {@code -1} if this is a melee weapon.
 	 */
@@ -375,5 +369,11 @@ public class Weapon extends Artifact
 	public String getStash()
 	{
 		return mStash;
+	}
+	
+	@Override
+	public String getType()
+	{
+		return WEAPON_ITEM_TYPE;
 	}
 }

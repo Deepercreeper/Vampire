@@ -49,18 +49,18 @@ public class Currency
 	}
 	
 	/**
-	 * @return the maximum value, that can be transmitted per money transmission.
-	 */
-	public Map<String, Integer> getMaxAmounts()
-	{
-		return mMaxAmounts;
-	}
-	
-	/**
 	 * @return an array of possible currencies.
 	 */
 	public String[] getCurrencies()
 	{
 		return mCurrencies;
+	}
+	
+	/**
+	 * @return the maximum value, that can be transmitted per money transmission.
+	 */
+	public Map<String, Integer> getMaxAmounts()
+	{
+		return mMaxAmounts;
 	}
 }

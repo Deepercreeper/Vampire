@@ -28,21 +28,9 @@ public abstract class DependableInstanceImpl implements DependableInstance
 	}
 	
 	@Override
-	public final boolean hasDependency(final Type aType)
-	{
-		return mDependencies.containsKey(aType) && getDependency(aType).isActive();
-	}
-	
-	@Override
 	public int getMaxValue()
 	{
 		return 0;
-	}
-	
-	@Override
-	public int[] getValues()
-	{
-		return null;
 	}
 	
 	@Override
@@ -55,5 +43,17 @@ public abstract class DependableInstanceImpl implements DependableInstance
 	public int getStartValue()
 	{
 		return 0;
+	}
+	
+	@Override
+	public int[] getValues()
+	{
+		return null;
+	}
+	
+	@Override
+	public final boolean hasDependency(final Type aType)
+	{
+		return mDependencies.containsKey(aType) && getDependency(aType).isActive();
 	}
 }

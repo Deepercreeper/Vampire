@@ -8,16 +8,6 @@ package com.deepercreeper.vampireapp.util.interfaces;
 public interface Toaster
 {
 	/**
-	 * Displays the given text for the given time.
-	 * 
-	 * @param aText
-	 *            The text to display.
-	 * @param aDuration
-	 *            The display length.
-	 */
-	public void makeText(String aText, int aDuration);
-	
-	/**
 	 * Displays the resource string with the given id for the given time.
 	 * 
 	 * @param aResId
@@ -26,4 +16,14 @@ public interface Toaster
 	 *            The display length.
 	 */
 	public void makeText(int aResId, int aDuration);
+	
+	/**
+	 * Displays the given text for the given time.
+	 * 
+	 * @param aText
+	 *            The text to display.
+	 * @param aDuration
+	 *            The display length.
+	 */
+	public void makeText(String aText, int aDuration);
 }

@@ -22,8 +22,6 @@ import com.deepercreeper.vampireapp.util.Log;
  */
 public class CharacterContextMenu extends DialogFragment
 {
-	private static final String	TAG	= "CharacterContextMenu";
-	
 	/**
 	 * Each context menu needs a context menu listener, that is called, if any option is selected.
 	 * 
@@ -64,6 +62,8 @@ public class CharacterContextMenu extends DialogFragment
 			return mResId;
 		}
 	}
+	
+	private static final String	TAG	= "CharacterContextMenu";
 	
 	private static boolean			sDialogOpen	= false;
 	
@@ -113,14 +113,6 @@ public class CharacterContextMenu extends DialogFragment
 		sDialogOpen = false;
 	}
 	
-	/**
-	 * @return whether any dialog is open at this time.
-	 */
-	public static boolean isDialogOpen()
-	{
-		return sDialogOpen;
-	}
-	
 	private void selectItem(final Action aAction)
 	{
 		switch (aAction)
@@ -129,6 +121,14 @@ public class CharacterContextMenu extends DialogFragment
 				mListener.deleteChar(mName);
 				break;
 		}
+	}
+	
+	/**
+	 * @return whether any dialog is open at this time.
+	 */
+	public static boolean isDialogOpen()
+	{
+		return sDialogOpen;
 	}
 	
 	/**

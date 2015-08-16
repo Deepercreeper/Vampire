@@ -201,92 +201,35 @@ public class ItemGroupInstanceImpl extends DependableInstanceImpl implements Ite
 	}
 	
 	@Override
-	public Element asElement(final Document aDoc)
-	{
-		final Element group = aDoc.createElement("group");
-		group.setAttribute("name", getName());
-		for (int i = 0; i < getItemsList().size(); i++ )
-		{
-			final Element element = getItemsList().get(i).asElement(aDoc);
-			if (hasOrder())
-			{
-				element.setAttribute("order", "" + i);
-			}
-			group.appendChild(element);
-		}
-		return group;
-	}
-	
-	@Override
-	public boolean hasOrder()
-	{
-		return getItemGroup().hasOrder();
-	}
-	
-	@Override
-	public int compareTo(final ItemGroupInstance aAnother)
-	{
-		if (aAnother == null)
-		{
-			return getItemGroup().compareTo(null);
-		}
-		return getItemGroup().compareTo(aAnother.getItemGroup());
-	}
-	
-	@Override
-	public List<Item> getAddableItems()
-	{
-		final List<Item> items = new ArrayList<Item>();
-		for (final Item item : getItemGroup().getItemsList())
-		{
-			if ( !hasItem(item))
-			{
-				items.add(item);
-			}
-		}
-		return items;
-	}
-	
-	@Override
-	public void removeItem(final Item aItem, final boolean aSilent)
+	public void addItem()
 	{
 		if ( !isMutable())
 		{
 			Log.w(TAG, "Tried to add an item to a non mutable group.");
 			return;
 		}
-		if (mItems.containsKey(aItem))
+		if (SelectItemDialog.isDialogOpen())
 		{
-			final ItemInstance item = mItems.get(aItem);
-			getItemController().removeItem(aItem.getName());
-			item.release();
-			mItems.remove(aItem);
-			getItemsList().remove(item);
-			getItemController().resize();
-			updateControllerUI();
-			if ( !mHost)
-			{
-				getItemController().getCharacter().getActions().removeActions(item.getActions());
-			}
+			return;
+		}
+		final List<Item> items = getAddableItems();
+		if (items.isEmpty())
+		{
+			return;
+		}
+		final ItemSelectionListener<Item> action = new ItemSelectionListener<Item>()
+		{
+			@Override
+			public void cancel()
+			{}
 			
-			if ( !aSilent)
+			@Override
+			public void select(final Item aChoosenItem)
 			{
-				mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.removed_item, new String[] { aItem.getName() },
-						new boolean[] { true }, getContext(), null, ButtonAction.NOTHING));
-				mMessageListener.sendChange(new ItemGroupChange(aItem.getName(), getName(), false));
+				addItem(aChoosenItem, false);
 			}
-		}
-	}
-	
-	@Override
-	public int getMaxValue()
-	{
-		int maxValue = getItemGroup().getMaxValue();
-		if (hasDependency(Type.MAX_VALUE))
-		{
-			maxValue = getDependency(Type.MAX_VALUE).getValue(maxValue);
-		}
-		return maxValue;
+		};
+		SelectItemDialog.showSelectionDialog(items, getContext().getString(R.string.add_item), getContext(), action);
 	}
 	
 	@Override
@@ -347,9 +290,44 @@ public class ItemGroupInstanceImpl extends DependableInstanceImpl implements Ite
 	}
 	
 	@Override
-	public boolean isMutable()
+	public Element asElement(final Document aDoc)
 	{
-		return getItemGroup().isHostMutable();
+		final Element group = aDoc.createElement("group");
+		group.setAttribute("name", getName());
+		for (int i = 0; i < getItemsList().size(); i++ )
+		{
+			final Element element = getItemsList().get(i).asElement(aDoc);
+			if (hasOrder())
+			{
+				element.setAttribute("order", "" + i);
+			}
+			group.appendChild(element);
+		}
+		return group;
+	}
+	
+	@Override
+	public int compareTo(final ItemGroupInstance aAnother)
+	{
+		if (aAnother == null)
+		{
+			return getItemGroup().compareTo(null);
+		}
+		return getItemGroup().compareTo(aAnother.getItemGroup());
+	}
+	
+	@Override
+	public List<Item> getAddableItems()
+	{
+		final List<Item> items = new ArrayList<Item>();
+		for (final Item item : getItemGroup().getItemsList())
+		{
+			if ( !hasItem(item))
+			{
+				items.add(item);
+			}
+		}
+		return items;
 	}
 	
 	@Override
@@ -419,6 +397,17 @@ public class ItemGroupInstanceImpl extends DependableInstanceImpl implements Ite
 	}
 	
 	@Override
+	public int getMaxValue()
+	{
+		int maxValue = getItemGroup().getMaxValue();
+		if (hasDependency(Type.MAX_VALUE))
+		{
+			maxValue = getDependency(Type.MAX_VALUE).getValue(maxValue);
+		}
+		return maxValue;
+	}
+	
+	@Override
 	public String getName()
 	{
 		return getItemGroup().getName();
@@ -463,45 +452,21 @@ public class ItemGroupInstanceImpl extends DependableInstanceImpl implements Ite
 	}
 	
 	@Override
+	public boolean hasOrder()
+	{
+		return getItemGroup().hasOrder();
+	}
+	
+	@Override
 	public int indexOfItem(final ItemInstance aItem)
 	{
 		return getItemsList().indexOf(aItem);
 	}
 	
 	@Override
-	public void init()
-	{}
-	
-	@Override
-	public void addItem()
+	public boolean isMutable()
 	{
-		if ( !isMutable())
-		{
-			Log.w(TAG, "Tried to add an item to a non mutable group.");
-			return;
-		}
-		if (SelectItemDialog.isDialogOpen())
-		{
-			return;
-		}
-		final List<Item> items = getAddableItems();
-		if (items.isEmpty())
-		{
-			return;
-		}
-		final ItemSelectionListener<Item> action = new ItemSelectionListener<Item>()
-		{
-			@Override
-			public void cancel()
-			{}
-			
-			@Override
-			public void select(final Item aChoosenItem)
-			{
-				addItem(aChoosenItem, false);
-			}
-		};
-		SelectItemDialog.showSelectionDialog(items, getContext().getString(R.string.add_item), getContext(), action);
+		return getItemGroup().isHostMutable();
 	}
 	
 	@Override
@@ -517,6 +482,37 @@ public class ItemGroupInstanceImpl extends DependableInstanceImpl implements Ite
 	}
 	
 	@Override
+	public void removeItem(final Item aItem, final boolean aSilent)
+	{
+		if ( !isMutable())
+		{
+			Log.w(TAG, "Tried to add an item to a non mutable group.");
+			return;
+		}
+		if (mItems.containsKey(aItem))
+		{
+			final ItemInstance item = mItems.get(aItem);
+			getItemController().removeItem(aItem.getName());
+			item.release();
+			mItems.remove(aItem);
+			getItemsList().remove(item);
+			getItemController().resize();
+			updateControllerUI();
+			if ( !mHost)
+			{
+				getItemController().getCharacter().getActions().removeActions(item.getActions());
+			}
+			
+			if ( !aSilent)
+			{
+				mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.removed_item, new String[] { aItem.getName() },
+						new boolean[] { true }, getContext(), null, ButtonAction.NOTHING));
+				mMessageListener.sendChange(new ItemGroupChange(aItem.getName(), getName(), false));
+			}
+		}
+	}
+	
+	@Override
 	public String toString()
 	{
 		return getItemGroup().getDisplayName();
@@ -525,6 +521,7 @@ public class ItemGroupInstanceImpl extends DependableInstanceImpl implements Ite
 	@Override
 	public void updateControllerUI()
 	{
+		// TODO Rename to updateCharacter
 		getItemController().updateUI();
 	}
 	
@@ -538,19 +535,6 @@ public class ItemGroupInstanceImpl extends DependableInstanceImpl implements Ite
 		for (final ItemInstance item : getItemsList())
 		{
 			item.updateUI();
-		}
-	}
-	
-	private void sortItems()
-	{
-		for (final ItemInstance item : getItemsList())
-		{
-			item.release();
-		}
-		Collections.sort(getItemsList());
-		for (final ItemInstance item : getItemsList())
-		{
-			mItemsContainer.addView(item.getContainer());
 		}
 	}
 	
@@ -575,5 +559,18 @@ public class ItemGroupInstanceImpl extends DependableInstanceImpl implements Ite
 		getItemController().resize();
 		getItemController().addItem(aItem);
 		updateControllerUI();
+	}
+	
+	private void sortItems()
+	{
+		for (final ItemInstance item : getItemsList())
+		{
+			item.release();
+		}
+		Collections.sort(getItemsList());
+		for (final ItemInstance item : getItemsList())
+		{
+			mItemsContainer.addView(item.getContainer());
+		}
 	}
 }

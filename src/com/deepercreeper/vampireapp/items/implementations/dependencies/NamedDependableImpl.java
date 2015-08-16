@@ -35,14 +35,14 @@ public abstract class NamedDependableImpl extends Named implements Dependable
 	}
 	
 	@Override
-	public boolean hasDependencies()
-	{
-		return !mDependencies.isEmpty();
-	}
-	
-	@Override
 	public Collection<Dependency> getDependencies()
 	{
 		return mDependencies.values();
+	}
+	
+	@Override
+	public boolean hasDependencies()
+	{
+		return !mDependencies.isEmpty();
 	}
 }

@@ -37,6 +37,12 @@ public class CreateHostActivity extends Activity
 	private String[]			mHostNames;
 	
 	@Override
+	public void onBackPressed()
+	{
+		exit(null);
+	}
+	
+	@Override
 	protected void onCreate(final Bundle aSavedInstanceState)
 	{
 		super.onCreate(aSavedInstanceState);
@@ -72,18 +78,18 @@ public class CreateHostActivity extends Activity
 		name.addTextChangedListener(new TextWatcher()
 		{
 			@Override
-			public void onTextChanged(final CharSequence aS, final int aStart, final int aBefore, final int aCount)
-			{}
+			public void afterTextChanged(final Editable aS)
+			{
+				updateButtons();
+			}
 			
 			@Override
 			public void beforeTextChanged(final CharSequence aS, final int aStart, final int aCount, final int aAfter)
 			{}
 			
 			@Override
-			public void afterTextChanged(final Editable aS)
-			{
-				updateButtons();
-			}
+			public void onTextChanged(final CharSequence aS, final int aStart, final int aBefore, final int aCount)
+			{}
 		});
 		finish.setOnClickListener(new OnClickListener()
 		{
@@ -122,11 +128,5 @@ public class CreateHostActivity extends Activity
 			}
 		}
 		ViewUtil.setEnabled(findViewById(R.id.ch_finish_button), enabled);
-	}
-	
-	@Override
-	public void onBackPressed()
-	{
-		exit(null);
 	}
 }

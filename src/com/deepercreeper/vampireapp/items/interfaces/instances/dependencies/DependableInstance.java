@@ -10,20 +10,6 @@ import com.deepercreeper.vampireapp.items.interfaces.Dependency.Type;
 public interface DependableInstance
 {
 	/**
-	 * @param aType
-	 *            The dependency type.
-	 * @return whether this dependable is depending on a dependency with the given type.
-	 */
-	public boolean hasDependency(Type aType);
-	
-	/**
-	 * @param aType
-	 *            The dependency type.
-	 * @return the dependency instance with the given type.
-	 */
-	public DependencyInstance getDependency(Type aType);
-	
-	/**
 	 * Adds the given dependency to this dependable.
 	 * 
 	 * @param aDependency
@@ -31,9 +17,11 @@ public interface DependableInstance
 	public void addDependency(DependencyInstance aDependency);
 	
 	/**
-	 * @return the values array.
+	 * @param aType
+	 *            The dependency type.
+	 * @return the dependency instance with the given type.
 	 */
-	public int[] getValues();
+	public DependencyInstance getDependency(Type aType);
 	
 	/**
 	 * @return the maximum value.
@@ -49,4 +37,16 @@ public interface DependableInstance
 	 * @return the start value.
 	 */
 	public int getStartValue();
+	
+	/**
+	 * @return the values array.
+	 */
+	public int[] getValues();
+	
+	/**
+	 * @param aType
+	 *            The dependency type.
+	 * @return whether this dependable is depending on a dependency with the given type.
+	 */
+	public boolean hasDependency(Type aType);
 }

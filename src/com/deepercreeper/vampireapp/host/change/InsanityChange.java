@@ -24,17 +24,15 @@ public class InsanityChange implements CharacterChange
 	private final Duration mDuration;
 	
 	/**
-	 * Creates a new insanity change for adding the given one.
+	 * Creates a new insanity change out of the given XML data.
 	 * 
-	 * @param aInsanity
-	 *            The added insanity.
-	 * @param aDuration
-	 *            The duration of the added insanity.
+	 * @param aElement
+	 *            The data.
 	 */
-	public InsanityChange(final String aInsanity, final Duration aDuration)
+	public InsanityChange(final Element aElement)
 	{
-		mInsanity = aInsanity;
-		mDuration = aDuration;
+		mInsanity = CodingUtil.decode(aElement.getAttribute("insanity"));
+		mDuration = Duration.create(DataUtil.getElement(aElement, "duration"));
 	}
 	
 	/**
@@ -50,15 +48,17 @@ public class InsanityChange implements CharacterChange
 	}
 	
 	/**
-	 * Creates a new insanity change out of the given XML data.
+	 * Creates a new insanity change for adding the given one.
 	 * 
-	 * @param aElement
-	 *            The data.
+	 * @param aInsanity
+	 *            The added insanity.
+	 * @param aDuration
+	 *            The duration of the added insanity.
 	 */
-	public InsanityChange(final Element aElement)
+	public InsanityChange(final String aInsanity, final Duration aDuration)
 	{
-		mInsanity = CodingUtil.decode(aElement.getAttribute("insanity"));
-		mDuration = Duration.create(DataUtil.getElement(aElement, "duration"));
+		mInsanity = aInsanity;
+		mDuration = aDuration;
 	}
 	
 	@Override

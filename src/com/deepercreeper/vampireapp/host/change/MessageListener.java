@@ -13,14 +13,6 @@ import com.deepercreeper.vampireapp.util.interfaces.Toaster;
 public interface MessageListener extends Toaster
 {
 	/**
-	 * The given change has to be sent to the corresponding device.
-	 * 
-	 * @param aChange
-	 *            The change done.
-	 */
-	public void sendChange(CharacterChange aChange);
-	
-	/**
 	 * The given change has to be done to the character.
 	 * 
 	 * @param aChange
@@ -42,6 +34,19 @@ public interface MessageListener extends Toaster
 	public boolean applyMessage(Message aMessage, ButtonAction aAction);
 	
 	/**
+	 * @return the character.
+	 */
+	public CharacterInstance getCharacter();
+	
+	/**
+	 * The given change has to be sent to the corresponding device.
+	 * 
+	 * @param aChange
+	 *            The change done.
+	 */
+	public void sendChange(CharacterChange aChange);
+	
+	/**
 	 * Sends the given message to the other connection side.
 	 * 
 	 * @param aMessage
@@ -61,9 +66,4 @@ public interface MessageListener extends Toaster
 	 * Updates all messages.
 	 */
 	public void updateMessages();
-	
-	/**
-	 * @return the character.
-	 */
-	public CharacterInstance getCharacter();
 }

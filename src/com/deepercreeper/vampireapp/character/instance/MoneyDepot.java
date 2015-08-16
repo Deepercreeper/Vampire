@@ -69,17 +69,15 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 	
 	private final MoneyControllerInstance mController;
 	
-	private boolean mInitialized = false;
+	private final TextView mNameText;
 	
-	private TextView mNameText;
+	private final TextView mValueText;
 	
-	private TextView mValueText;
+	private final ImageButton mTakeButton;
 	
-	private ImageButton mTakeButton;
+	private final ImageButton mDepotButton;
 	
-	private ImageButton mDepotButton;
-	
-	private ImageButton mDeleteButton;
+	private final ImageButton mDeleteButton;
 	
 	/**
 	 * Creates a new money depot.
@@ -111,7 +109,52 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 		}
 		final int id = mHost ? R.layout.host_depot : R.layout.client_depot;
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
-		init();
+		mTakeButton = (ImageButton) getContainer().findViewById(mHost ? R.id.h_take_button : R.id.c_take_button);
+		mDepotButton = (ImageButton) getContainer().findViewById(mHost ? R.id.h_depot_button : R.id.c_depot_button);
+		mDeleteButton = (ImageButton) getContainer().findViewById(mHost ? R.id.h_delete_depot_button : R.id.c_delete_depot_button);
+		mNameText = (TextView) getContainer().findViewById(mHost ? R.id.h_depot_name_label : R.id.c_depot_name_label);
+		mValueText = (TextView) getContainer().findViewById(mHost ? R.id.h_depot_value_text : R.id.c_depot_value_text);
+		
+		mTakeButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				take();
+			}
+		});
+		mDepotButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				depot();
+			}
+		});
+		mNameText.setText(getName() + ":");
+		if ( !mDefault)
+		{
+			mDeleteButton.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					delete();
+				}
+			});
+		}
+		else
+		{
+			if (mHost)
+			{
+				ViewUtil.hideWidth(mTakeButton);
+			}
+			else
+			{
+				ViewUtil.hideWidth(mDepotButton);
+			}
+			ViewUtil.hideWidth(mDeleteButton);
+		}
 	}
 	
 	/**
@@ -140,7 +183,52 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 		mValues = createMap(aElement.getAttribute("values"));
 		final int id = mHost ? R.layout.host_depot : R.layout.client_depot;
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
-		init();
+		mTakeButton = (ImageButton) getContainer().findViewById(mHost ? R.id.h_take_button : R.id.c_take_button);
+		mDepotButton = (ImageButton) getContainer().findViewById(mHost ? R.id.h_depot_button : R.id.c_depot_button);
+		mDeleteButton = (ImageButton) getContainer().findViewById(mHost ? R.id.h_delete_depot_button : R.id.c_delete_depot_button);
+		mNameText = (TextView) getContainer().findViewById(mHost ? R.id.h_depot_name_label : R.id.c_depot_name_label);
+		mValueText = (TextView) getContainer().findViewById(mHost ? R.id.h_depot_value_text : R.id.c_depot_value_text);
+		
+		mTakeButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				take();
+			}
+		});
+		mDepotButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				depot();
+			}
+		});
+		mNameText.setText(getName() + ":");
+		if ( !mDefault)
+		{
+			mDeleteButton.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					delete();
+				}
+			});
+		}
+		else
+		{
+			if (mHost)
+			{
+				ViewUtil.hideWidth(mTakeButton);
+			}
+			else
+			{
+				ViewUtil.hideWidth(mDepotButton);
+			}
+			ViewUtil.hideWidth(mDeleteButton);
+		}
 	}
 	
 	/**
@@ -155,7 +243,7 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 		{
 			getValues().put(currency, getValues().get(currency) + aValues.get(currency));
 		}
-		mController.update();
+		mController.updateUI();
 		getMessageListener().sendChange(new MoneyChange(getName(), getValues()));
 	}
 	
@@ -224,14 +312,6 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 		MoneyAmountDialog.showMoneyAmountDialog(mCurrency, maxValues, mContext.getString(R.string.choose_money_amount), mContext, listener);
 	}
 	
-	/**
-	 * @return the message listener of the parent controller.
-	 */
-	public MessageListener getMessageListener()
-	{
-		return mController.getMessageListener();
-	}
-	
 	@Override
 	public LinearLayout getContainer()
 	{
@@ -242,6 +322,14 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 	public String getDisplayName()
 	{
 		return getName();
+	}
+	
+	/**
+	 * @return the message listener of the parent controller.
+	 */
+	public MessageListener getMessageListener()
+	{
+		return mController.getMessageListener();
 	}
 	
 	/**
@@ -260,64 +348,6 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 	public Map<String, Integer> getValues()
 	{
 		return mValues;
-	}
-	
-	@Override
-	public void init()
-	{
-		if ( !mInitialized)
-		{
-			mTakeButton = (ImageButton) getContainer().findViewById(mHost ? R.id.h_take_button : R.id.c_take_button);
-			mDepotButton = (ImageButton) getContainer().findViewById(mHost ? R.id.h_depot_button : R.id.c_depot_button);
-			mDeleteButton = (ImageButton) getContainer().findViewById(mHost ? R.id.h_delete_depot_button : R.id.c_delete_depot_button);
-			mNameText = (TextView) getContainer().findViewById(mHost ? R.id.h_depot_name_label : R.id.c_depot_name_label);
-			mValueText = (TextView) getContainer().findViewById(mHost ? R.id.h_depot_value_text : R.id.c_depot_value_text);
-			
-			mTakeButton.setOnClickListener(new OnClickListener()
-			{
-				@Override
-				public void onClick(final View aV)
-				{
-					take();
-				}
-			});
-			mDepotButton.setOnClickListener(new OnClickListener()
-			{
-				@Override
-				public void onClick(final View aV)
-				{
-					depot();
-				}
-			});
-			mNameText.setText(getName() + ":");
-			if ( !mDefault)
-			{
-				mDeleteButton.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(final View aV)
-					{
-						delete();
-					}
-				});
-			}
-			else
-			{
-				if (mHost)
-				{
-					ViewUtil.hideWidth(mTakeButton);
-				}
-				else
-				{
-					ViewUtil.hideWidth(mDepotButton);
-				}
-				ViewUtil.hideWidth(mDeleteButton);
-			}
-			
-			mInitialized = true;
-		}
-		
-		updateValue();
 	}
 	
 	/**
@@ -366,7 +396,7 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 			}
 			getValues().put(currency, newValue);
 		}
-		mController.update();
+		mController.updateUI();
 		getMessageListener().sendChange(new MoneyChange(getName(), getValues()));
 	}
 	
@@ -418,10 +448,8 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 		getMessageListener().sendChange(new MoneyChange(getName(), getValues()));
 	}
 	
-	/**
-	 * Updates the UI of this viewable.
-	 */
-	public void updateValue()
+	@Override
+	public void updateUI()
 	{
 		if ( !isDefault())
 		{
@@ -445,7 +473,7 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 	public void updateValues(final Map<String, Integer> aMap)
 	{
 		getValues().putAll(aMap);
-		mController.update();
+		mController.updateUI();
 	}
 	
 	private Map<String, Integer> createMap(final String aValues)

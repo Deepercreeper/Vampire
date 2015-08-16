@@ -66,7 +66,41 @@ public class CharacterCompound implements Comparable<CharacterCompound>, Viewabl
 		mLastUsed = 0;
 		
 		mListener = aListener;
-		init();
+		
+		mContainer = (LinearLayout) View.inflate(mContext, R.layout.view_character_compound, null);
+		mPlay = (Button) mContainer.findViewById(R.id.view_compound_play_char_button);
+		final TextView concept = (TextView) mContainer.findViewById(R.id.view_compound_concept_label);
+		final TextView name = (TextView) mContainer.findViewById(R.id.view_compound_name_label);
+		final TextView generation = (TextView) mContainer.findViewById(R.id.view_compound_generation_label);
+		final TextView ep = (TextView) mContainer.findViewById(R.id.view_compound_ep_label);
+		final TextView behavior = (TextView) mContainer.findViewById(R.id.view_compound_behavior_label);
+		final TextView nature = (TextView) mContainer.findViewById(R.id.view_compound_nature_label);
+		
+		concept.setText(mContext.getString(R.string.concept_colon) + " " + mConcept);
+		mContainer.setLongClickable(true);
+		mContainer.setOnLongClickListener(new OnLongClickListener()
+		{
+			@Override
+			public boolean onLongClick(final View aV)
+			{
+				CharacterContextMenu.showCharacterContextMenu(mListener, mContext, mName);
+				return true;
+			}
+		});
+		name.setText(mName);
+		generation.setText(mContext.getString(R.string.generation_colon) + " " + mGeneration);
+		mPlay.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				use();
+				mListener.play(mName);
+			}
+		});
+		ep.setText("EP: " + mEP);
+		behavior.setText(mContext.getString(R.string.behavior_colon) + " " + LanguageUtil.instance().getValue(mBehavior));
+		nature.setText(mContext.getString(R.string.nature_colon) + " " + LanguageUtil.instance().getValue(mNature));
 	}
 	
 	/**
@@ -99,7 +133,41 @@ public class CharacterCompound implements Comparable<CharacterCompound>, Viewabl
 		}
 		
 		mListener = aListener;
-		init();
+		
+		mContainer = (LinearLayout) View.inflate(mContext, R.layout.view_character_compound, null);
+		mPlay = (Button) mContainer.findViewById(R.id.view_compound_play_char_button);
+		final TextView concept = (TextView) mContainer.findViewById(R.id.view_compound_concept_label);
+		final TextView name = (TextView) mContainer.findViewById(R.id.view_compound_name_label);
+		final TextView generation = (TextView) mContainer.findViewById(R.id.view_compound_generation_label);
+		final TextView ep = (TextView) mContainer.findViewById(R.id.view_compound_ep_label);
+		final TextView behavior = (TextView) mContainer.findViewById(R.id.view_compound_behavior_label);
+		final TextView nature = (TextView) mContainer.findViewById(R.id.view_compound_nature_label);
+		
+		concept.setText(mContext.getString(R.string.concept_colon) + " " + mConcept);
+		mContainer.setLongClickable(true);
+		mContainer.setOnLongClickListener(new OnLongClickListener()
+		{
+			@Override
+			public boolean onLongClick(final View aV)
+			{
+				CharacterContextMenu.showCharacterContextMenu(mListener, mContext, mName);
+				return true;
+			}
+		});
+		name.setText(mName);
+		generation.setText(mContext.getString(R.string.generation_colon) + " " + mGeneration);
+		mPlay.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				use();
+				mListener.play(mName);
+			}
+		});
+		ep.setText("EP: " + mEP);
+		behavior.setText(mContext.getString(R.string.behavior_colon) + " " + LanguageUtil.instance().getValue(mBehavior));
+		nature.setText(mContext.getString(R.string.nature_colon) + " " + LanguageUtil.instance().getValue(mNature));
 	}
 	
 	@Override
@@ -172,17 +240,6 @@ public class CharacterCompound implements Comparable<CharacterCompound>, Viewabl
 		return mName;
 	}
 	
-	/**
-	 * Sets whether this character can be played.
-	 * 
-	 * @param aEnabled
-	 *            Whether this character can be played.
-	 */
-	public void setPlayingEnabled(final boolean aEnabled)
-	{
-		ViewUtil.setEnabled(mPlay, aEnabled);
-	}
-	
 	@Override
 	public int hashCode()
 	{
@@ -201,54 +258,20 @@ public class CharacterCompound implements Comparable<CharacterCompound>, Viewabl
 	}
 	
 	@Override
-	public void init()
-	{
-		mContainer = (LinearLayout) View.inflate(mContext, R.layout.view_character_compound, null);
-		
-		final TextView concept = (TextView) mContainer.findViewById(R.id.view_compound_concept_label);
-		concept.setText(mContext.getString(R.string.concept_colon) + " " + mConcept);
-		
-		final TextView name = (TextView) mContainer.findViewById(R.id.view_compound_name_label);
-		mContainer.setLongClickable(true);
-		mContainer.setOnLongClickListener(new OnLongClickListener()
-		{
-			@Override
-			public boolean onLongClick(final View aV)
-			{
-				CharacterContextMenu.showCharacterContextMenu(mListener, mContext, mName);
-				return true;
-			}
-		});
-		name.setText(mName);
-		
-		final TextView generation = (TextView) mContainer.findViewById(R.id.view_compound_generation_label);
-		generation.setText(mContext.getString(R.string.generation_colon) + " " + mGeneration);
-		
-		mPlay = (Button) mContainer.findViewById(R.id.view_compound_play_char_button);
-		mPlay.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(final View aV)
-			{
-				use();
-				mListener.play(mName);
-			}
-		});
-		
-		final TextView ep = (TextView) mContainer.findViewById(R.id.view_compound_ep_label);
-		ep.setText("EP: " + mEP);
-		
-		final TextView behavior = (TextView) mContainer.findViewById(R.id.view_compound_behavior_label);
-		behavior.setText(mContext.getString(R.string.behavior_colon) + " " + LanguageUtil.instance().getValue(mBehavior));
-		
-		final TextView nature = (TextView) mContainer.findViewById(R.id.view_compound_nature_label);
-		nature.setText(mContext.getString(R.string.nature_colon) + " " + LanguageUtil.instance().getValue(mNature));
-	}
-	
-	@Override
 	public void release()
 	{
 		ViewUtil.release(getContainer());
+	}
+	
+	/**
+	 * Sets whether this character can be played.
+	 * 
+	 * @param aEnabled
+	 *            Whether this character can be played.
+	 */
+	public void setPlayingEnabled(final boolean aEnabled)
+	{
+		ViewUtil.setEnabled(mPlay, aEnabled);
 	}
 	
 	@Override
@@ -264,6 +287,10 @@ public class CharacterCompound implements Comparable<CharacterCompound>, Viewabl
 		character.append(mLastUsed);
 		return character.toString();
 	}
+	
+	@Override
+	public void updateUI()
+	{}
 	
 	/**
 	 * Sets the last used time to the current system time.

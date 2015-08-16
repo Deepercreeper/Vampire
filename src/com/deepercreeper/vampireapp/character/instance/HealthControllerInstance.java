@@ -44,17 +44,15 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	
 	private final CharacterInstance mChar;
 	
-	private ImageButton mHealButton;
+	private final ImageButton mHealButton;
 	
-	private ImageButton mHurtButton;
+	private final ImageButton mHurtButton;
 	
-	private ImageButton mHeavyHurt;
+	private final ImageButton mHeavyHurt;
 	
-	private ProgressBar mValueBar;
+	private final ProgressBar mValueBar;
 	
-	private TextView mStepLabel;
-	
-	private boolean mInitialized = false;
+	private final TextView mStepLabel;
 	
 	private int[] mSteps;
 	
@@ -90,7 +88,42 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		mChangeListener = aChangeListener;
 		mAnimator = new ValueAnimator();
 		mAnimator.addUpdateListener(this);
-		init();
+		
+		mHealButton = (ImageButton) getContainer().findViewById(mHost ? R.id.h_heal_button : R.id.c_heal_button);
+		mHurtButton = mHost ? (ImageButton) getContainer().findViewById(R.id.h_hurt_button) : null;
+		mHeavyHurt = mHost ? (ImageButton) getContainer().findViewById(R.id.h_heavy_hurt_button) : null;
+		mValueBar = (ProgressBar) getContainer().findViewById(mHost ? R.id.h_health_bar : R.id.c_health_bar);
+		mStepLabel = (TextView) getContainer().findViewById(mHost ? R.id.h_step_label : R.id.c_step_label);
+		
+		mHealButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				heal(1);
+			}
+		});
+		
+		if (mHost)
+		{
+			mHeavyHurt.setOnClickListener(new OnClickListener()
+			{
+				
+				@Override
+				public void onClick(final View aV)
+				{
+					hurt(1, true);
+				}
+			});
+			mHurtButton.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					hurt(1, false);
+				}
+			});
+		}
 	}
 	
 	/**
@@ -119,7 +152,42 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		mChangeListener = aChangeListener;
 		mAnimator = new ValueAnimator();
 		mAnimator.addUpdateListener(this);
-		init();
+		
+		mHealButton = (ImageButton) getContainer().findViewById(mHost ? R.id.h_heal_button : R.id.c_heal_button);
+		mHurtButton = mHost ? (ImageButton) getContainer().findViewById(R.id.h_hurt_button) : null;
+		mHeavyHurt = mHost ? (ImageButton) getContainer().findViewById(R.id.h_heavy_hurt_button) : null;
+		mValueBar = (ProgressBar) getContainer().findViewById(mHost ? R.id.h_health_bar : R.id.c_health_bar);
+		mStepLabel = (TextView) getContainer().findViewById(mHost ? R.id.h_step_label : R.id.c_step_label);
+		
+		mHealButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				heal(1);
+			}
+		});
+		
+		if (mHost)
+		{
+			mHeavyHurt.setOnClickListener(new OnClickListener()
+			{
+				
+				@Override
+				public void onClick(final View aV)
+				{
+					hurt(1, true);
+				}
+			});
+			mHurtButton.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					hurt(1, false);
+				}
+			});
+		}
 	}
 	
 	/**
@@ -154,42 +222,6 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	public boolean canAct()
 	{
 		return mSteps[mValue] != -1;
-	}
-	
-	/**
-	 * Updates the heavy wounds flag.
-	 * 
-	 * @param aHeavyWounds
-	 *            Whether the character has heavy wounds.
-	 */
-	public void updateHeavyWounds(final int aHeavyWounds)
-	{
-		mHeavyWounds = aHeavyWounds;
-		updateButtons();
-	}
-	
-	/**
-	 * Updates the health steps.
-	 * 
-	 * @param aSteps
-	 *            The new health steps.
-	 */
-	public void updateSteps(final int[] aSteps)
-	{
-		mSteps = aSteps;
-		update();
-	}
-	
-	/**
-	 * Sets the current health level.
-	 * 
-	 * @param aValue
-	 *            The new health level.
-	 */
-	public void updateValue(final int aValue)
-	{
-		mValue = aValue;
-		update();
 	}
 	
 	/**
@@ -235,6 +267,14 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	}
 	
 	/**
+	 * @return the number of steps the current health has.
+	 */
+	public int getStepsCount()
+	{
+		return mSteps.length;
+	}
+	
+	/**
 	 * Heals the character by the given amount of steps if possible.
 	 * 
 	 * @param aValue
@@ -261,7 +301,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		{
 			mChangeListener.sendChange(new HealthChange(true, mHeavyWounds));
 		}
-		update();
+		updateUI();
 	}
 	
 	/**
@@ -289,54 +329,13 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 			mChangeListener.sendChange(new HealthChange(true, mHeavyWounds));
 		}
 		mChangeListener.sendChange(new HealthChange(false, mValue));
-		update();
+		updateUI();
 	}
 	
 	@Override
-	public void init()
+	public void onAnimationUpdate(final ValueAnimator aAnimation)
 	{
-		if ( !mInitialized)
-		{
-			mHealButton = (ImageButton) getContainer().findViewById(mHost ? R.id.h_heal_button : R.id.c_heal_button);
-			mHurtButton = mHost ? (ImageButton) getContainer().findViewById(R.id.h_hurt_button) : null;
-			mHeavyHurt = mHost ? (ImageButton) getContainer().findViewById(R.id.h_heavy_hurt_button) : null;
-			mValueBar = (ProgressBar) getContainer().findViewById(mHost ? R.id.h_health_bar : R.id.c_health_bar);
-			mStepLabel = (TextView) getContainer().findViewById(mHost ? R.id.h_step_label : R.id.c_step_label);
-			
-			mHealButton.setOnClickListener(new OnClickListener()
-			{
-				@Override
-				public void onClick(final View aV)
-				{
-					heal(1);
-				}
-			});
-			
-			if (mHost)
-			{
-				mHeavyHurt.setOnClickListener(new OnClickListener()
-				{
-					
-					@Override
-					public void onClick(final View aV)
-					{
-						hurt(1, true);
-					}
-				});
-				mHurtButton.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(final View aV)
-					{
-						hurt(1, false);
-					}
-				});
-			}
-			
-			mInitialized = true;
-		}
-		
-		update();
+		mValueBar.setProgress((Integer) aAnimation.getAnimatedValue());
 	}
 	
 	@Override
@@ -354,38 +353,36 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 			{
 				mHeavyWounds-- ;
 			}
-			updateButtons();
+			updateUI();
 		}
 	}
 	
 	/**
-	 * @return the number of steps the current health has.
+	 * Updates the heavy wounds flag.
+	 * 
+	 * @param aHeavyWounds
+	 *            Whether the character has heavy wounds.
 	 */
-	public int getStepsCount()
+	public void updateHeavyWounds(final int aHeavyWounds)
 	{
-		return mSteps.length;
+		mHeavyWounds = aHeavyWounds;
+		updateUI();
+	}
+	
+	/**
+	 * Updates the health steps.
+	 * 
+	 * @param aSteps
+	 *            The new health steps.
+	 */
+	public void updateSteps(final int[] aSteps)
+	{
+		mSteps = aSteps;
+		updateUI();
 	}
 	
 	@Override
-	public void onAnimationUpdate(final ValueAnimator aAnimation)
-	{
-		mValueBar.setProgress((Integer) aAnimation.getAnimatedValue());
-	}
-	
-	/**
-	 * Updates all buttons.
-	 */
-	public void updateButtons()
-	{
-		ViewUtil.setEnabled(mHealButton, canHeal());
-		ViewUtil.setEnabled(mHurtButton, canHurt());
-		ViewUtil.setEnabled(mHeavyHurt, canHurt());
-	}
-	
-	/**
-	 * Updates the displayed health value and the heal button.
-	 */
-	public void update()
+	public void updateUI()
 	{
 		if (mAnimator.isRunning())
 		{
@@ -404,6 +401,20 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		{
 			mStepLabel.setText("" + -getStep());
 		}
-		updateButtons();
+		ViewUtil.setEnabled(mHealButton, canHeal());
+		ViewUtil.setEnabled(mHurtButton, canHurt());
+		ViewUtil.setEnabled(mHeavyHurt, canHurt());
+	}
+	
+	/**
+	 * Sets the current health level.
+	 * 
+	 * @param aValue
+	 *            The new health level.
+	 */
+	public void updateValue(final int aValue)
+	{
+		mValue = aValue;
+		updateUI();
 	}
 }

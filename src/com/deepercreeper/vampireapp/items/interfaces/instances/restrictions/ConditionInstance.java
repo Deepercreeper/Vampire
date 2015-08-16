@@ -20,16 +20,6 @@ public interface ConditionInstance
 	 */
 	public abstract class InstanceConditionQuery
 	{
-		/**
-		 * @param aName
-		 *            The query name.
-		 * @return the query with the given name.
-		 */
-		public static InstanceConditionQuery getQuery(final String aName)
-		{
-			return CONDITION_QUERIES.get(aName);
-		}
-		
 		private static final Map<String, InstanceConditionQuery>	CONDITION_QUERIES			= new HashMap<String, InstanceConditionQuery>();
 		
 		/**
@@ -249,6 +239,16 @@ public interface ConditionInstance
 		 * @return {@code true} if this query complies and {@code false} if not.
 		 */
 		public abstract boolean complied(ItemControllerInstance aController, ConditionInstance aCondition);
+		
+		/**
+		 * @param aName
+		 *            The query name.
+		 * @return the query with the given name.
+		 */
+		public static InstanceConditionQuery getQuery(final String aName)
+		{
+			return CONDITION_QUERIES.get(aName);
+		}
 	}
 	
 	/**

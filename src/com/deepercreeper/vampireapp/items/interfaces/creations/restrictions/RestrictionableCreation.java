@@ -2,13 +2,14 @@ package com.deepercreeper.vampireapp.items.interfaces.creations.restrictions;
 
 import java.util.Set;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation.CreationRestrictionType;
+import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 
 /**
  * All values and fields that can be restricted have to implements this interface.
  * 
  * @author vrl
  */
-public interface RestrictionableCreation
+public interface RestrictionableCreation extends Viewable
 {
 	/**
 	 * Adds the given restriction to the current set of restrictions and updates all values.
@@ -62,9 +63,4 @@ public interface RestrictionableCreation
 	 *            The restriction that has to be removed.
 	 */
 	public void removeRestriction(RestrictionCreation aRestriction);
-	
-	/**
-	 * Updates all restrictions.
-	 */
-	public void updateRestrictions();
 }

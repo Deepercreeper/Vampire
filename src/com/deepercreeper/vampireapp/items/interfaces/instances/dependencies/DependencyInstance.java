@@ -11,6 +11,21 @@ import com.deepercreeper.vampireapp.items.interfaces.Dependency.Type;
 public interface DependencyInstance
 {
 	/**
+	 * @return the dependency destination type.
+	 */
+	public DestinationType getDestinationType();
+	
+	/**
+	 * @return the current value of the destination.
+	 */
+	public int getDestinationValue();
+	
+	/**
+	 * @return The dependency type.
+	 */
+	public Type getType();
+	
+	/**
 	 * @param aDefault
 	 *            The default value that is returned, when no value is set for the current value.
 	 * @return the current depending value.
@@ -25,22 +40,7 @@ public interface DependencyInstance
 	public int[] getValues(int[] aDefault);
 	
 	/**
-	 * @return the current value of the destination.
-	 */
-	public int getDestinationValue();
-	
-	/**
-	 * @return The dependency type.
-	 */
-	public Type getType();
-	
-	/**
 	 * @return whether this dependency has a destination.
 	 */
 	public boolean isActive();
-	
-	/**
-	 * @return the dependency destination type.
-	 */
-	public DestinationType getDestinationType();
 }

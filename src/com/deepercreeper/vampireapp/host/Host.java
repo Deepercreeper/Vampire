@@ -76,6 +76,21 @@ public class Host implements TimeListener, Saveable
 	}
 	
 	/**
+	 * A player message was sent.
+	 * 
+	 * @param aMessage
+	 *            The message.
+	 */
+	public void addMessage(final Message aMessage)
+	{
+		if ( !mMessages.contains(aMessage))
+		{
+			mMessages.add(aMessage);
+			mMessageList.addView(aMessage.getContainer());
+		}
+	}
+	
+	/**
 	 * Adds a player to the players list.
 	 * 
 	 * @param aPlayer
@@ -92,6 +107,26 @@ public class Host implements TimeListener, Saveable
 		mPlayersList.addView(aPlayer.getContainer());
 		mPlayersTimeList.addView(aPlayer.getPlayerCheckBox());
 		return true;
+	}
+	
+	@Override
+	public Element asElement(final Document aDoc)
+	{
+		final Element root = aDoc.createElement("host");
+		
+		// Meta data
+		final Element meta = aDoc.createElement("meta");
+		meta.setAttribute("name", CodingUtil.encode(getName()));
+		root.appendChild(meta);
+		
+		// Banned players
+		final Element bans = aDoc.createElement("bans");
+		for (final BannedPlayer player : getBannedPlayers())
+		{
+			bans.appendChild(player.asElement(aDoc));
+		}
+		root.appendChild(bans);
+		return root;
 	}
 	
 	/**
@@ -158,6 +193,17 @@ public class Host implements TimeListener, Saveable
 	}
 	
 	/**
+	 * Removes the given message from the messages list.
+	 * 
+	 * @param aMessage
+	 *            The message.
+	 */
+	public void releaseMessage(final Message aMessage)
+	{
+		mMessages.remove(aMessage);
+	}
+	
+	/**
 	 * Finds the player with the given device and removes it from the players list.
 	 * 
 	 * @param aDevice
@@ -173,35 +219,15 @@ public class Host implements TimeListener, Saveable
 		}
 	}
 	
-	@Override
-	public Element asElement(final Document aDoc)
-	{
-		final Element root = aDoc.createElement("host");
-		
-		// Meta data
-		final Element meta = aDoc.createElement("meta");
-		meta.setAttribute("name", CodingUtil.encode(getName()));
-		root.appendChild(meta);
-		
-		// Banned players
-		final Element bans = aDoc.createElement("bans");
-		for (final BannedPlayer player : getBannedPlayers())
-		{
-			bans.appendChild(player.asElement(aDoc));
-		}
-		root.appendChild(bans);
-		return root;
-	}
-	
 	/**
-	 * Removes the given message from the messages list.
+	 * Sets the list, all messages from players are displayed in.
 	 * 
-	 * @param aMessage
-	 *            The message.
+	 * @param aMessageList
+	 *            The message list.
 	 */
-	public void releaseMessage(final Message aMessage)
+	public void setMessageList(final LinearLayout aMessageList)
 	{
-		mMessages.remove(aMessage);
+		mMessageList = aMessageList;
 	}
 	
 	/**
@@ -216,29 +242,14 @@ public class Host implements TimeListener, Saveable
 	}
 	
 	/**
-	 * Sets the list, all messages from players are displayed in.
+	 * Sets the list of player checkboxes for time management.
 	 * 
-	 * @param aMessageList
-	 *            The message list.
+	 * @param aList
+	 *            The list.
 	 */
-	public void setMessageList(final LinearLayout aMessageList)
+	public void setPlayersTimeList(final LinearLayout aList)
 	{
-		mMessageList = aMessageList;
-	}
-	
-	/**
-	 * A player message was sent.
-	 * 
-	 * @param aMessage
-	 *            The message.
-	 */
-	public void addMessage(final Message aMessage)
-	{
-		if ( !mMessages.contains(aMessage))
-		{
-			mMessages.add(aMessage);
-			mMessageList.addView(aMessage.getContainer());
-		}
+		mPlayersTimeList = aList;
 	}
 	
 	@Override
@@ -248,17 +259,6 @@ public class Host implements TimeListener, Saveable
 		{
 			player.time(aType, aAmount);
 		}
-	}
-	
-	/**
-	 * Sets the list of player checkboxes for time management.
-	 * 
-	 * @param aList
-	 *            The list.
-	 */
-	public void setPlayersTimeList(final LinearLayout aList)
-	{
-		mPlayersTimeList = aList;
 	}
 	
 	/**

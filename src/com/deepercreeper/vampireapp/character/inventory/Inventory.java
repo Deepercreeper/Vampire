@@ -26,6 +26,14 @@ public class Inventory
 	}
 	
 	/**
+	 * @return the name of the weight carry defining item.
+	 */
+	public String getMaxWeightItem()
+	{
+		return mMaxWeightItem;
+	}
+	
+	/**
 	 * @param aValue
 	 *            The weight item value.
 	 * @return the maximum weight of the given weight item value.
@@ -33,13 +41,5 @@ public class Inventory
 	public int getMaxWeightOf(final int aValue)
 	{
 		return mMaxWeights[aValue];
-	}
-	
-	/**
-	 * @return the name of the weight carry defining item.
-	 */
-	public String getMaxWeightItem()
-	{
-		return mMaxWeightItem;
 	}
 }

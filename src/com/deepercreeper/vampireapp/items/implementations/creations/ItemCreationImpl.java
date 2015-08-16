@@ -37,57 +37,9 @@ import android.widget.Toast;
  */
 public class ItemCreationImpl extends RestrictionableDependableCreationImpl implements ItemCreation
 {
-	/**
-	 * The change action tells, what to change, when increasing or decreasing an item.
-	 * 
-	 * @author vrl
-	 */
-	public interface ChangeAction
-	{
-		/**
-		 * Invoked, when the item is decreased.
-		 */
-		void decrease();
-		
-		/**
-		 * Invoked, when the item is increased.
-		 */
-		void increase();
-	}
-	
 	private static final String TAG = "ItemCreation";
 	
 	private static final int VALUE_MULTIPLICATOR = 20;
-	
-	private final ChangeAction mChangeValue = new ChangeAction()
-	{
-		@Override
-		public void decrease()
-		{
-			mValueId-- ;
-		}
-		
-		@Override
-		public void increase()
-		{
-			mValueId++ ;
-		}
-	};
-	
-	private final ChangeAction mChangeTempPoints = new ChangeAction()
-	{
-		@Override
-		public void decrease()
-		{
-			mTempPoints-- ;
-		}
-		
-		@Override
-		public void increase()
-		{
-			mTempPoints++ ;
-		}
-	};
 	
 	private final Item mItem;
 	
@@ -125,6 +77,8 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 	
 	private final TextView mNameText;
 	
+	private final int mButtonWidth;
+	
 	private String mDescription;
 	
 	private int mValueId;
@@ -151,6 +105,7 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 		super(aGroup.getItemController());
 		mItem = aItem;
 		mContext = aContext;
+		mButtonWidth = (int) getContext().getResources().getDimension(R.dimen.button_width);
 		mItemGroup = aGroup;
 		mChar = aChar;
 		mContainer = (LinearLayout) View.inflate(mContext, R.layout.view_item_creation, null);
@@ -472,7 +427,15 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 		{
 			return;
 		}
-		mChar.getMode().decreaseItem(this);
+		if (mChar.getMode().isValueMode())
+		{
+			mValueId-- ;
+		}
+		else if (mChar.getMode().isTempPointsMode())
+		{
+			mTempPoints-- ;
+			getCharacter().increaseFreePoints(getFreePointsCost());
+		}
 		updateControllerUI();
 	}
 	
@@ -565,18 +528,6 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 			}
 		}
 		return values;
-	}
-	
-	@Override
-	public ChangeAction getChangeTempPoints()
-	{
-		return mChangeTempPoints;
-	}
-	
-	@Override
-	public ChangeAction getChangeValue()
-	{
-		return mChangeValue;
 	}
 	
 	@Override
@@ -856,7 +807,15 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 		{
 			return;
 		}
-		mChar.getMode().increaseItem(this);
+		if (getCharacter().getMode().isValueMode())
+		{
+			mValueId++ ;
+		}
+		else if (getCharacter().getMode().isTempPointsMode())
+		{
+			mTempPoints++ ;
+			getCharacter().decreaseFreePoints(getFreePointsCost());
+		}
 		updateControllerUI();
 	}
 	
@@ -1049,49 +1008,39 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 	}
 	
 	@Override
-	public void updateRestrictions()
+	public void updateUI()
 	{
 		if (isValueItem())
 		{
-			resetTempPoints();
-			if (hasRestrictions())
+			// TODO Find out what else can change the possible value
+			if (hasRestrictions() && !isValueOk(getValue(), CreationRestrictionType.ITEM_VALUE))
 			{
-				if ( !isValueOk(getValue(), CreationRestrictionType.ITEM_VALUE))
+				while (getValue() < getMinValue(CreationRestrictionType.ITEM_VALUE))
 				{
-					while (mValueId < getMinValue(CreationRestrictionType.ITEM_VALUE))
-					{
-						increase();
-					}
-					while (mValueId > getMaxValue(CreationRestrictionType.ITEM_VALUE))
-					{
-						decrease();
-					}
+					increase();
+				}
+				while (getValue() > getMaxValue(CreationRestrictionType.ITEM_VALUE))
+				{
+					decrease();
 				}
 			}
-			else
+			if ( !getCharacter().getMode().isFreeMode())
 			{
-				mValueId = getStartValue();
-				updateControllerUI();
+				while (getValue() < getStartValue())
+				{
+					increase();
+				}
+			}
+			while (getValue() > getMaxValue())
+			{
+				decrease();
 			}
 		}
-		if (isParent())
-		{
-			for (final ItemCreation child : getChildrenList())
-			{
-				child.updateRestrictions();
-			}
-		}
-	}
-	
-	@Override
-	public void updateUI()
-	{
-		final int buttonWidth = (int) getContext().getResources().getDimension(R.dimen.button_width);
 		
 		if (hasParentItem() && getParentItem().isMutableParent() || !hasParentItem() && getItemGroup().isMutable())
 		{
-			ViewUtil.setPxWidth(mEditButton, buttonWidth);
-			ViewUtil.setPxWidth(mRemoveButton, buttonWidth);
+			ViewUtil.setPxWidth(mEditButton, mButtonWidth);
+			ViewUtil.setPxWidth(mRemoveButton, mButtonWidth);
 			if (hasParentItem())
 			{
 				ViewUtil.setEnabled(mRemoveButton, mChar.getMode().canRemoveChild(this));
@@ -1109,7 +1058,7 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 		}
 		if (isParent() && isMutableParent())
 		{
-			ViewUtil.setPxWidth(mAddButton, buttonWidth);
+			ViewUtil.setPxWidth(mAddButton, mButtonWidth);
 			ViewUtil.setEnabled(mAddButton, mChar.getMode().canAddChild(this, true) && !getAddableItems().isEmpty());
 		}
 		else
@@ -1118,8 +1067,8 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 		}
 		if (isValueItem())
 		{
-			ViewUtil.setPxWidth(mDecreaseButton, buttonWidth);
-			ViewUtil.setPxWidth(mIncreaseButton, buttonWidth);
+			ViewUtil.setPxWidth(mDecreaseButton, mButtonWidth);
+			ViewUtil.setPxWidth(mIncreaseButton, mButtonWidth);
 			ViewUtil.wrapWidth(mValueText);
 			ViewUtil.matchHeight(mValueBar);
 			setIncreasable();

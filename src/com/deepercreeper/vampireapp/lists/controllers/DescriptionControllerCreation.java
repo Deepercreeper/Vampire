@@ -1,9 +1,8 @@
-package com.deepercreeper.vampireapp.lists.controllers.creations;
+package com.deepercreeper.vampireapp.lists.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
 import com.deepercreeper.vampireapp.lists.ListControllerImpl;
-import com.deepercreeper.vampireapp.lists.controllers.DescriptionController;
 import com.deepercreeper.vampireapp.lists.items.Description;
 import com.deepercreeper.vampireapp.lists.items.DescriptionCreation;
 

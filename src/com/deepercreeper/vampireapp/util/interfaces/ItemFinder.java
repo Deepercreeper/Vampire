@@ -14,15 +14,10 @@ public interface ItemFinder
 {
 	/**
 	 * @param aName
-	 *            The item name.
-	 * @return the item instance with the given name.
+	 *            The group name.
+	 * @return the group instance with the given name.
 	 */
-	public ItemInstance findItemInstance(String aName);
-	
-	/**
-	 * @return a list of all items.
-	 */
-	public List<Item> getItemsList();
+	public ItemGroupInstance findGroupInstance(String aName);
 	
 	/**
 	 * @param aName
@@ -33,8 +28,13 @@ public interface ItemFinder
 	
 	/**
 	 * @param aName
-	 *            The group name.
-	 * @return the group instance with the given name.
+	 *            The item name.
+	 * @return the item instance with the given name.
 	 */
-	public ItemGroupInstance findGroupInstance(String aName);
+	public ItemInstance findItemInstance(String aName);
+	
+	/**
+	 * @return a list of all items.
+	 */
+	public List<Item> getItemsList();
 }

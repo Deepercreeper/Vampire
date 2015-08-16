@@ -11,6 +11,56 @@ import android.util.SparseIntArray;
 public interface Dependency
 {
 	/**
+	 * Types of destinations.
+	 * 
+	 * @author vrl
+	 */
+	public static enum DestinationType
+	{
+		/**
+		 * The destination is a normal item.
+		 */
+		ITEM("item"),
+		
+		/**
+		 * The destination is the character generation.
+		 */
+		GENERATION("generation");
+		
+		private final String mName;
+		
+		private DestinationType(final String aName)
+		{
+			mName = aName;
+		}
+		
+		/**
+		 * @return the type name.
+		 */
+		public String getName()
+		{
+			return mName;
+		}
+		
+		/**
+		 * @param aName
+		 *            The destination type name.
+		 * @return the destination type with the given name.
+		 */
+		public static DestinationType get(final String aName)
+		{
+			for (final DestinationType type : values())
+			{
+				if (type.getName().equals(aName))
+				{
+					return type;
+				}
+			}
+			return null;
+		}
+	}
+	
+	/**
 	 * A dependency type.
 	 * 
 	 * @author Vincent
@@ -73,54 +123,9 @@ public interface Dependency
 	}
 	
 	/**
-	 * Types of destinations.
-	 * 
-	 * @author vrl
+	 * @return the destination type.
 	 */
-	public static enum DestinationType
-	{
-		/**
-		 * The destination is a normal item.
-		 */
-		ITEM("item"),
-		
-		/**
-		 * The destination is the character generation.
-		 */
-		GENERATION("generation");
-		
-		private final String mName;
-		
-		private DestinationType(final String aName)
-		{
-			mName = aName;
-		}
-		
-		/**
-		 * @return the type name.
-		 */
-		public String getName()
-		{
-			return mName;
-		}
-		
-		/**
-		 * @param aName
-		 *            The destination type name.
-		 * @return the destination type with the given name.
-		 */
-		public static DestinationType get(final String aName)
-		{
-			for (final DestinationType type : values())
-			{
-				if (type.getName().equals(aName))
-				{
-					return type;
-				}
-			}
-			return null;
-		}
-	}
+	public DestinationType getDestinationType();
 	
 	/**
 	 * @return the destination item.
@@ -131,11 +136,6 @@ public interface Dependency
 	 * @return the dependency type.
 	 */
 	public Type getType();
-	
-	/**
-	 * @return the destination type.
-	 */
-	public DestinationType getDestinationType();
 	
 	/**
 	 * @return the value map.

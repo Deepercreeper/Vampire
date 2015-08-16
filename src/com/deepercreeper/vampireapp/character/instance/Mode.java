@@ -58,16 +58,6 @@ public enum Mode
 	}
 	
 	/**
-	 * @param aContext
-	 *            The underlying context.
-	 * @return The name of this mode.
-	 */
-	public String getName(final Context aContext)
-	{
-		return aContext.getString(mResourceId);
-	}
-	
-	/**
 	 * @return whether the client is able to enter this mode from every leavable other mode.
 	 */
 	public boolean canClientEnter()
@@ -84,11 +74,11 @@ public enum Mode
 	}
 	
 	/**
-	 * @return whether the client is able to use actions inside this mode.
+	 * @return whether the client can heal himself inside this mode.
 	 */
-	public boolean canUseAction()
+	public boolean canHeal()
 	{
-		return mCanUseAction;
+		return mCanHeal;
 	}
 	
 	/**
@@ -100,30 +90,31 @@ public enum Mode
 	}
 	
 	/**
-	 * @return whether the client can heal himself inside this mode.
+	 * @return whether the client is able to use actions inside this mode.
 	 */
-	public boolean canHeal()
+	public boolean canUseAction()
 	{
-		return mCanHeal;
+		return mCanUseAction;
 	}
 	
 	/**
-	 * @param aMode
-	 *            The mode.
 	 * @param aContext
 	 *            The underlying context.
-	 * @return a nameable that represents the given mode.
+	 * @return The name of this mode.
 	 */
-	public static Nameable getNameableOf(final Mode aMode, final Context aContext)
+	public String getName(final Context aContext)
 	{
-		return new Named(aMode.name())
-		{
-			@Override
-			public String getDisplayName()
-			{
-				return aMode.getName(aContext);
-			}
-		};
+		return aContext.getString(mResourceId);
+	}
+	
+	/**
+	 * @param aNameable
+	 *            The nameable.
+	 * @return The mode represented by the given nameable.
+	 */
+	public static Mode getModeOf(final Nameable aNameable)
+	{
+		return valueOf(aNameable.getName());
 	}
 	
 	/**
@@ -154,12 +145,21 @@ public enum Mode
 	}
 	
 	/**
-	 * @param aNameable
-	 *            The nameable.
-	 * @return The mode represented by the given nameable.
+	 * @param aMode
+	 *            The mode.
+	 * @param aContext
+	 *            The underlying context.
+	 * @return a nameable that represents the given mode.
 	 */
-	public static Mode getModeOf(final Nameable aNameable)
+	public static Nameable getNameableOf(final Mode aMode, final Context aContext)
 	{
-		return valueOf(aNameable.getName());
+		return new Named(aMode.name())
+		{
+			@Override
+			public String getDisplayName()
+			{
+				return aMode.getName(aContext);
+			}
+		};
 	}
 }

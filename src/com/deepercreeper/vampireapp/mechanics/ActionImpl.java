@@ -63,33 +63,13 @@ public class ActionImpl implements Action
 	}
 	
 	@Override
-	public int getMinLevel()
+	public int compareTo(final Action aAnother)
 	{
-		return mMinLevel;
-	}
-	
-	@Override
-	public String getDisplayName()
-	{
-		return LanguageUtil.instance().getValue(getName());
-	}
-	
-	@Override
-	public String getName()
-	{
-		return mName;
-	}
-	
-	@Override
-	public String[] getDiceNames()
-	{
-		return mDiceNames;
-	}
-	
-	@Override
-	public Map<String, Integer> getCostNames()
-	{
-		return mCostNames;
+		if (getMinLevel() == aAnother.getMinLevel())
+		{
+			return getName().compareTo(aAnother.getName());
+		}
+		return getMinLevel() - aAnother.getMinLevel();
 	}
 	
 	@Override
@@ -99,24 +79,44 @@ public class ActionImpl implements Action
 	}
 	
 	@Override
+	public Map<String, Integer> getCostNames()
+	{
+		return mCostNames;
+	}
+	
+	@Override
+	public String[] getDiceNames()
+	{
+		return mDiceNames;
+	}
+	
+	@Override
+	public String getDisplayName()
+	{
+		return LanguageUtil.instance().getValue(getName());
+	}
+	
+	@Override
 	public int getMinDices()
 	{
 		return mMinDices;
 	}
 	
 	@Override
-	public ActionType getType()
+	public int getMinLevel()
 	{
-		return mType;
+		return mMinLevel;
 	}
 	
 	@Override
-	public int compareTo(final Action aAnother)
+	public String getName()
 	{
-		if (getMinLevel() == aAnother.getMinLevel())
-		{
-			return getName().compareTo(aAnother.getName());
-		}
-		return getMinLevel() - aAnother.getMinLevel();
+		return mName;
+	}
+	
+	@Override
+	public ActionType getType()
+	{
+		return mType;
 	}
 }

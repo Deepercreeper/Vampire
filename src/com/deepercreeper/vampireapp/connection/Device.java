@@ -35,12 +35,6 @@ public class Device extends Named
 		return false;
 	}
 	
-	@Override
-	public int hashCode()
-	{
-		return getAddress().hashCode();
-	}
-	
 	/**
 	 * @return the device address.
 	 */
@@ -49,17 +43,23 @@ public class Device extends Named
 		return mDevice.getAddress();
 	}
 	
-	@Override
-	public String getDisplayName()
-	{
-		return getName();
-	}
-	
 	/**
 	 * @return the original Bluetooth device.
 	 */
 	public BluetoothDevice getDevice()
 	{
 		return mDevice;
+	}
+	
+	@Override
+	public String getDisplayName()
+	{
+		return getName();
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return getAddress().hashCode();
 	}
 }

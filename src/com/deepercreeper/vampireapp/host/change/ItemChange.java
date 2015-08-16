@@ -27,6 +27,28 @@ public class ItemChange implements CharacterChange
 	private final boolean mAdded;
 	
 	/**
+	 * Creates a new item change out of the given XML data.
+	 * 
+	 * @param aElement
+	 *            The data.
+	 */
+	public ItemChange(final Element aElement)
+	{
+		mName = aElement.getAttribute("name");
+		mValue = Integer.parseInt(aElement.getAttribute("value"));
+		if (mValue == -1)
+		{
+			mChild = aElement.getAttribute("child");
+			mAdded = Boolean.valueOf(aElement.getAttribute("added"));
+		}
+		else
+		{
+			mChild = null;
+			mAdded = false;
+		}
+	}
+	
+	/**
 	 * Creates a new item change.
 	 * 
 	 * @param aName
@@ -58,28 +80,6 @@ public class ItemChange implements CharacterChange
 		mValue = -1;
 		mChild = aChild;
 		mAdded = aAdded;
-	}
-	
-	/**
-	 * Creates a new item change out of the given XML data.
-	 * 
-	 * @param aElement
-	 *            The data.
-	 */
-	public ItemChange(final Element aElement)
-	{
-		mName = aElement.getAttribute("name");
-		mValue = Integer.parseInt(aElement.getAttribute("value"));
-		if (mValue == -1)
-		{
-			mChild = aElement.getAttribute("child");
-			mAdded = Boolean.valueOf(aElement.getAttribute("added"));
-		}
-		else
-		{
-			mChild = null;
-			mAdded = false;
-		}
 	}
 	
 	@Override

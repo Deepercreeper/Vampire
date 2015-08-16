@@ -53,24 +53,9 @@ public interface Action extends Comparable<Action>
 	}
 	
 	/**
-	 * @return the action type.
+	 * @return a list of items that can be spent by a user defined amount to have a special effect.
 	 */
-	public ActionType getType();
-	
-	/**
-	 * @return the action display name.
-	 */
-	public String getDisplayName();
-	
-	/**
-	 * @return the locale depending action name.
-	 */
-	public String getName();
-	
-	/**
-	 * @return a list of names for the items whose value are added to the minimum dice number
-	 */
-	public String[] getDiceNames();
+	public String[] getCostDiceNames();
 	
 	/**
 	 * @return a map of item names and a value for each. It defines, how many item points<br>
@@ -79,9 +64,19 @@ public interface Action extends Comparable<Action>
 	public Map<String, Integer> getCostNames();
 	
 	/**
-	 * @return a list of items that can be spent by a user defined amount to have a special effect.
+	 * @return a list of names for the items whose value are added to the minimum dice number
 	 */
-	public String[] getCostDiceNames();
+	public String[] getDiceNames();
+	
+	/**
+	 * @return the action display name.
+	 */
+	public String getDisplayName();
+	
+	/**
+	 * @return the minimum number of dices that can be used to count hits for this action.
+	 */
+	public int getMinDices();
 	
 	/**
 	 * @return the minimum item instance level to use this action.
@@ -89,8 +84,13 @@ public interface Action extends Comparable<Action>
 	public int getMinLevel();
 	
 	/**
-	 * @return the minimum number of dices that can be used to count hits for this action.
+	 * @return the locale depending action name.
 	 */
-	public int getMinDices();
+	public String getName();
+	
+	/**
+	 * @return the action type.
+	 */
+	public ActionType getType();
 	
 }

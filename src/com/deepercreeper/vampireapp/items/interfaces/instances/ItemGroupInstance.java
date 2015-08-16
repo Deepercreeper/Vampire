@@ -32,24 +32,14 @@ public interface ItemGroupInstance extends Comparable<ItemGroupInstance>, Saveab
 	public void addItem(Item aItem, boolean aSilent);
 	
 	/**
-	 * Removes the item with the given item type.
-	 * 
-	 * @param aItem
-	 *            The item type.
-	 * @param aSilent
-	 *            Whether a change should be sent.
-	 */
-	public void removeItem(Item aItem, boolean aSilent);
-	
-	/**
 	 * @return a list of items that are currently able to be added.
 	 */
 	public List<Item> getAddableItems();
 	
 	/**
-	 * @return whether items can be added or removed from this group.
+	 * @return the character.
 	 */
-	public boolean isMutable();
+	public CharacterInstance getCharacter();
 	
 	/**
 	 * @return the underlying context.
@@ -60,11 +50,6 @@ public interface ItemGroupInstance extends Comparable<ItemGroupInstance>, Saveab
 	 * @return a list of all items that have a description.
 	 */
 	public List<ItemInstance> getDescriptionItems();
-	
-	/**
-	 * @return whether the child items of this group have a specific order.
-	 */
-	public boolean hasOrder();
 	
 	/**
 	 * @param aItem
@@ -94,11 +79,6 @@ public interface ItemGroupInstance extends Comparable<ItemGroupInstance>, Saveab
 	 * @return a list of all child items.
 	 */
 	public List<ItemInstance> getItemsList();
-	
-	/**
-	 * @return the character.
-	 */
-	public CharacterInstance getCharacter();
 	
 	/**
 	 * @return the group name.
@@ -132,6 +112,11 @@ public interface ItemGroupInstance extends Comparable<ItemGroupInstance>, Saveab
 	public boolean hasItem(String aName);
 	
 	/**
+	 * @return whether the child items of this group have a specific order.
+	 */
+	public boolean hasOrder();
+	
+	/**
 	 * @param aItem
 	 *            The item.
 	 * @return the index of the given item inside this group.
@@ -139,9 +124,24 @@ public interface ItemGroupInstance extends Comparable<ItemGroupInstance>, Saveab
 	public int indexOfItem(ItemInstance aItem);
 	
 	/**
+	 * @return whether items can be added or removed from this group.
+	 */
+	public boolean isMutable();
+	
+	/**
 	 * @return whether this is a value group.
 	 */
 	public boolean isValueGroup();
+	
+	/**
+	 * Removes the item with the given item type.
+	 * 
+	 * @param aItem
+	 *            The item type.
+	 * @param aSilent
+	 *            Whether a change should be sent.
+	 */
+	public void removeItem(Item aItem, boolean aSilent);
 	
 	/**
 	 * Updates the controller.

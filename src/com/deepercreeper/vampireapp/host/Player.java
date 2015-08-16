@@ -106,54 +106,54 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 	}
 	
 	@Override
-	public void resize()
+	public void applyChange(final String aChange, final String aType)
 	{
-		if (mExpander != null)
+		final Document doc = DataUtil.loadDocument(aChange);
+		final Element element = DataUtil.getElement(doc, aType);
+		CharacterChange change = null;
+		if (aType.equals(HealthChange.TAG_NAME))
 		{
-			mExpander.resize();
+			change = new HealthChange(element);
 		}
-	}
-	
-	@Override
-	public void makeText(final int aResId, final int aDuration)
-	{
-		mListener.makeText(aResId, aDuration);
-	}
-	
-	@Override
-	public void makeText(final String aText, final int aDuration)
-	{
-		mListener.makeText(aText, aDuration);
-	}
-	
-	@Override
-	public void sendChange(final CharacterChange aChange)
-	{
-		mDevice.send(MessageType.UPDATE, DataUtil.serialize(aChange), aChange.getType());
-	}
-	
-	@Override
-	public void sendMessage(final Message aMessage)
-	{
-		mDevice.send(MessageType.MESSAGE, DataUtil.serialize(aMessage));
-	}
-	
-	@Override
-	public void showMessage(final Message aMessage)
-	{
-		mHost.addMessage(aMessage);
-	}
-	
-	@Override
-	public CharacterInstance getCharacter()
-	{
-		return mChar;
-	}
-	
-	@Override
-	public void updateMessages()
-	{
-		// Do nothing
+		else if (aType.equals(EPChange.TAG_NAME))
+		{
+			change = new EPChange(element);
+		}
+		else if (aType.equals(GenerationChange.TAG_NAME))
+		{
+			change = new GenerationChange(element);
+		}
+		else if (aType.equals(MoneyChange.TAG_NAME))
+		{
+			change = new MoneyChange(element);
+		}
+		else if (aType.equals(InventoryChange.TAG_NAME))
+		{
+			change = new InventoryChange(element, mContext, mChar);
+		}
+		else if (aType.equals(ItemChange.TAG_NAME))
+		{
+			change = new ItemChange(element);
+		}
+		else if (aType.equals(InsanityChange.TAG_NAME))
+		{
+			change = new InsanityChange(element);
+		}
+		else if (aType.equals(ItemGroupChange.TAG_NAME))
+		{
+			change = new ItemGroupChange(element);
+		}
+		else if (aType.equals(ModeChange.TAG_NAME))
+		{
+			change = new ModeChange(element);
+		}
+		
+		// TODO Add other changes
+		
+		if (change != null)
+		{
+			change.applyChange(mChar);
+		}
 	}
 	
 	@Override
@@ -222,6 +222,136 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 	}
 	
 	@Override
+	public boolean equals(final Object obj)
+	{
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		final Player other = (Player) obj;
+		if (mChar == null)
+		{
+			if (other.mChar != null) return false;
+		}
+		else if ( !mChar.equals(other.mChar)) return false;
+		return true;
+	}
+	
+	@Override
+	public CharacterInstance getCharacter()
+	{
+		return mChar;
+	}
+	
+	@Override
+	public LinearLayout getContainer()
+	{
+		return mContainer;
+	}
+	
+	/**
+	 * @return the players device.
+	 */
+	public ConnectedDevice getDevice()
+	{
+		return mDevice;
+	}
+	
+	/**
+	 * @return the players name.
+	 */
+	public String getName()
+	{
+		return mChar.getName();
+	}
+	
+	/**
+	 * @return the players phone number.
+	 */
+	public String getNumber()
+	{
+		return mNumber;
+	}
+	
+	/**
+	 * @return the checkbox used for enabling the time management.
+	 */
+	public CheckBox getPlayerCheckBox()
+	{
+		return mTimeCheckBox;
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((mChar == null) ? 0 : mChar.hashCode());
+		return result;
+	}
+	
+	@Override
+	public void makeText(final int aResId, final int aDuration)
+	{
+		mListener.makeText(aResId, aDuration);
+	}
+	
+	@Override
+	public void makeText(final String aText, final int aDuration)
+	{
+		mListener.makeText(aText, aDuration);
+	}
+	
+	@Override
+	public void release()
+	{
+		ViewUtil.release(mContainer);
+		ViewUtil.release(mTimeCheckBox);
+	}
+	
+	@Override
+	public void resize()
+	{
+		if (mExpander != null)
+		{
+			mExpander.resize();
+		}
+	}
+	
+	@Override
+	public void sendChange(final CharacterChange aChange)
+	{
+		mDevice.send(MessageType.UPDATE, DataUtil.serialize(aChange), aChange.getType());
+	}
+	
+	@Override
+	public void sendMessage(final Message aMessage)
+	{
+		mDevice.send(MessageType.MESSAGE, DataUtil.serialize(aMessage));
+	}
+	
+	/**
+	 * Sets the display of this player to AFK or active.
+	 * 
+	 * @param aAFK
+	 *            whether the player is AFK.
+	 */
+	public void setAFK(final boolean aAFK)
+	{
+		mExpander.getButton().setText(getName() + (aAFK ? " " + mContext.getString(R.string.afk) : ""));
+		if (aAFK)
+		{
+			mExpander.close();
+		}
+		ViewUtil.setEnabled(mExpander.getButton(), !aAFK);
+	}
+	
+	@Override
+	public void showMessage(final Message aMessage)
+	{
+		mHost.addMessage(aMessage);
+	}
+	
+	@Override
 	public void time(final Type aType, final int aAmount)
 	{
 		if (mTimeEnabled)
@@ -255,6 +385,12 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 		updateTime();
 	}
 	
+	@Override
+	public void updateMessages()
+	{
+		// Do nothing
+	}
+	
 	/**
 	 * Updates the checkbox and displays the current player time behind it.
 	 */
@@ -264,120 +400,10 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 	}
 	
 	@Override
-	public boolean equals(final Object obj)
-	{
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
-		final Player other = (Player) obj;
-		if (mChar == null)
-		{
-			if (other.mChar != null) return false;
-		}
-		else if ( !mChar.equals(other.mChar)) return false;
-		return true;
-	}
+	public void updateUI()
+	{}
 	
-	@Override
-	public LinearLayout getContainer()
-	{
-		return mContainer;
-	}
-	
-	/**
-	 * @return the checkbox used for enabling the time management.
-	 */
-	public CheckBox getPlayerCheckBox()
-	{
-		return mTimeCheckBox;
-	}
-	
-	/**
-	 * @return the players device.
-	 */
-	public ConnectedDevice getDevice()
-	{
-		return mDevice;
-	}
-	
-	/**
-	 * @return the players name.
-	 */
-	public String getName()
-	{
-		return mChar.getName();
-	}
-	
-	@Override
-	public void applyChange(final String aChange, final String aType)
-	{
-		final Document doc = DataUtil.loadDocument(aChange);
-		final Element element = DataUtil.getElement(doc, aType);
-		CharacterChange change = null;
-		if (aType.equals(HealthChange.TAG_NAME))
-		{
-			change = new HealthChange(element);
-		}
-		else if (aType.equals(EPChange.TAG_NAME))
-		{
-			change = new EPChange(element);
-		}
-		else if (aType.equals(GenerationChange.TAG_NAME))
-		{
-			change = new GenerationChange(element);
-		}
-		else if (aType.equals(MoneyChange.TAG_NAME))
-		{
-			change = new MoneyChange(element);
-		}
-		else if (aType.equals(InventoryChange.TAG_NAME))
-		{
-			change = new InventoryChange(element, mContext, mChar);
-		}
-		else if (aType.equals(ItemChange.TAG_NAME))
-		{
-			change = new ItemChange(element);
-		}
-		else if (aType.equals(InsanityChange.TAG_NAME))
-		{
-			change = new InsanityChange(element);
-		}
-		else if (aType.equals(ItemGroupChange.TAG_NAME))
-		{
-			change = new ItemGroupChange(element);
-		}
-		else if (aType.equals(ModeChange.TAG_NAME))
-		{
-			change = new ModeChange(element);
-		}
-		
-		// TODO Add other changes
-		
-		if (change != null)
-		{
-			change.applyChange(mChar);
-		}
-	}
-	
-	/**
-	 * @return the players phone number.
-	 */
-	public String getNumber()
-	{
-		return mNumber;
-	}
-	
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((mChar == null) ? 0 : mChar.hashCode());
-		return result;
-	}
-	
-	@Override
-	public void init()
+	private void init()
 	{
 		mExpander.init();
 		
@@ -437,28 +463,5 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 				mListener.banned(Player.this);
 			}
 		});
-	}
-	
-	@Override
-	public void release()
-	{
-		ViewUtil.release(mContainer);
-		ViewUtil.release(mTimeCheckBox);
-	}
-	
-	/**
-	 * Sets the display of this player to AFK or active.
-	 * 
-	 * @param aAFK
-	 *            whether the player is AFK.
-	 */
-	public void setAFK(final boolean aAFK)
-	{
-		mExpander.getButton().setText(getName() + (aAFK ? " " + mContext.getString(R.string.afk) : ""));
-		if (aAFK)
-		{
-			mExpander.close();
-		}
-		ViewUtil.setEnabled(mExpander.getButton(), !aAFK);
 	}
 }

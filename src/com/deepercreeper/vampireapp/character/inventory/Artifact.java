@@ -40,27 +40,29 @@ public class Artifact implements InventoryItem
 	
 	private final LinearLayout mContainer;
 	
-	private ImageButton mRemoveButton;
+	private final ImageButton mRemoveButton;
 	
-	private TextView mItemName;
+	private final TextView mItemName;
 	
 	private int mQuantity = 1;
 	
 	private InventoryControllerInstance mController;
 	
-	private boolean mInitialized = false;
-	
-	private Artifact(final Element aElement, final Context aContext, final InventoryControllerInstance aController)
+	/**
+	 * Creates a new inventory item.
+	 * 
+	 * @param aName
+	 *            The item name.
+	 * @param aWeight
+	 *            The item weight.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aController
+	 *            the parent inventory controller.
+	 */
+	public Artifact(final String aName, final int aWeight, final Context aContext, final InventoryControllerInstance aController)
 	{
-		mContext = aContext;
-		mController = aController;
-		mName = CodingUtil.decode(aElement.getAttribute("name"));
-		mWeight = Integer.parseInt(aElement.getAttribute("weight"));
-		mQuantity = Integer.parseInt(aElement.getAttribute("quantity"));
-		
-		mContainer = (LinearLayout) View.inflate(mContext, R.layout.view_inventory_item, null);
-		
-		init();
+		this(aName, aWeight, 1, aContext, aController);
 	}
 	
 	/**
@@ -87,153 +89,89 @@ public class Artifact implements InventoryItem
 		
 		mContainer = (LinearLayout) View.inflate(mContext, R.layout.view_inventory_item, null);
 		
-		init();
+		mItemName = (TextView) getContainer().findViewById(R.id.view_inv_item_name_label);
+		final ImageButton infoButton = (ImageButton) getContainer().findViewById(R.id.view_inv_item_info_button);
+		mRemoveButton = (ImageButton) getContainer().findViewById(R.id.view_remove_inv_item_button);
+		
+		infoButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				Toast.makeText(mContext, getInfo(), Toast.LENGTH_LONG).show();
+			}
+		});
+		
+		mRemoveButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				getController().removeItem(Artifact.this, false);
+			}
+		});
 	}
 	
-	/**
-	 * Creates a new inventory item.
-	 * 
-	 * @param aName
-	 *            The item name.
-	 * @param aWeight
-	 *            The item weight.
-	 * @param aContext
-	 *            The underlying context.
-	 * @param aController
-	 *            the parent inventory controller.
-	 */
-	public Artifact(final String aName, final int aWeight, final Context aContext, final InventoryControllerInstance aController)
+	private Artifact(final Element aElement, final Context aContext, final InventoryControllerInstance aController)
 	{
-		this(aName, aWeight, 1, aContext, aController);
+		mContext = aContext;
+		mController = aController;
+		mName = CodingUtil.decode(aElement.getAttribute("name"));
+		mWeight = Integer.parseInt(aElement.getAttribute("weight"));
+		mQuantity = Integer.parseInt(aElement.getAttribute("quantity"));
+		
+		mContainer = (LinearLayout) View.inflate(mContext, R.layout.view_inventory_item, null);
+		
+		mItemName = (TextView) getContainer().findViewById(R.id.view_inv_item_name_label);
+		final ImageButton infoButton = (ImageButton) getContainer().findViewById(R.id.view_inv_item_info_button);
+		mRemoveButton = (ImageButton) getContainer().findViewById(R.id.view_remove_inv_item_button);
+		
+		infoButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				Toast.makeText(mContext, getInfo(), Toast.LENGTH_LONG).show();
+			}
+		});
+		
+		mRemoveButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				getController().removeItem(Artifact.this, false);
+			}
+		});
 	}
 	
 	@Override
-	public final void increase(final int aAmount)
+	public final void addTo(final InventoryControllerInstance aController)
 	{
-		mQuantity += aAmount;
-		updateValue();
-		getController().updateWeight();
+		mController = aController;
+		updateUI();
 	}
 	
 	@Override
-	public final int getQuantity()
+	public Element asElement(final Document aDoc)
 	{
-		return mQuantity;
+		final Element element = aDoc.createElement("item");
+		element.setAttribute("type", getType());
+		element.setAttribute("name", CodingUtil.encode(getName()));
+		element.setAttribute("weight", "" + getWeight());
+		element.setAttribute("quantity", "" + getQuantity());
+		return element;
 	}
 	
 	@Override
 	public final void decrease()
 	{
 		mQuantity-- ;
-		updateValue();
+		updateUI();
 		if (mQuantity > 0)
 		{
 			getController().updateWeight();
 		}
-	}
-	
-	@Override
-	public final LinearLayout getContainer()
-	{
-		return mContainer;
-	}
-	
-	@Override
-	public final void release()
-	{
-		ViewUtil.release(getContainer());
-	}
-	
-	@Override
-	public void init()
-	{
-		if ( !mInitialized)
-		{
-			mItemName = (TextView) getContainer().findViewById(R.id.view_inv_item_name_label);
-			final ImageButton infoButton = (ImageButton) getContainer().findViewById(R.id.view_inv_item_info_button);
-			mRemoveButton = (ImageButton) getContainer().findViewById(R.id.view_remove_inv_item_button);
-			
-			infoButton.setOnClickListener(new OnClickListener()
-			{
-				@Override
-				public void onClick(final View aV)
-				{
-					Toast.makeText(mContext, getInfo(), Toast.LENGTH_LONG).show();
-				}
-			});
-			
-			mRemoveButton.setOnClickListener(new OnClickListener()
-			{
-				@Override
-				public void onClick(final View aV)
-				{
-					getController().removeItem(Artifact.this, false);
-				}
-			});
-			
-			mInitialized = true;
-		}
-		
-		updateValue();
-	}
-	
-	@Override
-	public final InventoryControllerInstance getController()
-	{
-		return mController;
-	}
-	
-	@Override
-	public final String getName()
-	{
-		return mName;
-	}
-	
-	@Override
-	public final int getWeight()
-	{
-		return mWeight;
-	}
-	
-	@Override
-	public final String getInfo()
-	{
-		return DataUtil.buildMessage("{x}", LanguageUtil.instance().translateArray(getInfoArray(true), getInfoTranslatedArray(true)));
-	}
-	
-	@Override
-	public final Context getContext()
-	{
-		return mContext;
-	}
-	
-	protected final String getQuantitySuffix()
-	{
-		if (getQuantity() > 1)
-		{
-			return " (" + getQuantity() + ")";
-		}
-		return "";
-	}
-	
-	@Override
-	public void updateValue()
-	{
-		mItemName.setText(getName() + getQuantitySuffix());
-		if (getController() != null)
-		{
-			ViewUtil.setEnabled(mRemoveButton, getController().isHost() || getController().getCharacter().getMode().getMode().canUseAction());
-		}
-	}
-	
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((mName == null) ? 0 : mName.hashCode());
-		result = prime * result + mWeight;
-		return result;
 	}
 	
 	@Override
@@ -271,27 +209,27 @@ public class Artifact implements InventoryItem
 	}
 	
 	@Override
-	public final void addTo(final InventoryControllerInstance aController)
+	public final LinearLayout getContainer()
 	{
-		mController = aController;
-		updateValue();
+		return mContainer;
 	}
 	
 	@Override
-	public String getType()
+	public final Context getContext()
 	{
-		return ARTIFACT_ITEM_TYPE;
+		return mContext;
 	}
 	
 	@Override
-	public Element asElement(final Document aDoc)
+	public final InventoryControllerInstance getController()
 	{
-		final Element element = aDoc.createElement("item");
-		element.setAttribute("type", getType());
-		element.setAttribute("name", CodingUtil.encode(getName()));
-		element.setAttribute("weight", "" + getWeight());
-		element.setAttribute("quantity", "" + getQuantity());
-		return element;
+		return mController;
+	}
+	
+	@Override
+	public final String getInfo()
+	{
+		return DataUtil.buildMessage("{x}", LanguageUtil.instance().translateArray(getInfoArray(true), getInfoTranslatedArray(true)));
 	}
 	
 	@Override
@@ -309,6 +247,73 @@ public class Artifact implements InventoryItem
 	public boolean[] getInfoTranslatedArray(final boolean aQuantity)
 	{
 		return DataUtil.parseFlags("0101");
+	}
+	
+	@Override
+	public final String getName()
+	{
+		return mName;
+	}
+	
+	@Override
+	public final int getQuantity()
+	{
+		return mQuantity;
+	}
+	
+	@Override
+	public String getType()
+	{
+		return ARTIFACT_ITEM_TYPE;
+	}
+	
+	@Override
+	public final int getWeight()
+	{
+		return mWeight;
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((mName == null) ? 0 : mName.hashCode());
+		result = prime * result + mWeight;
+		return result;
+	}
+	
+	@Override
+	public final void increase(final int aAmount)
+	{
+		mQuantity += aAmount;
+		updateUI();
+		getController().updateWeight();
+	}
+	
+	@Override
+	public final void release()
+	{
+		ViewUtil.release(getContainer());
+	}
+	
+	@Override
+	public void updateUI()
+	{
+		mItemName.setText(getName() + getQuantitySuffix());
+		if (getController() != null)
+		{
+			ViewUtil.setEnabled(mRemoveButton, getController().isHost() || getController().getCharacter().getMode().getMode().canUseAction());
+		}
+	}
+	
+	protected final String getQuantitySuffix()
+	{
+		if (getQuantity() > 1)
+		{
+			return " (" + getQuantity() + ")";
+		}
+		return "";
 	}
 	
 	/**

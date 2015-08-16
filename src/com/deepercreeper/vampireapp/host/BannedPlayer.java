@@ -56,12 +56,38 @@ public class BannedPlayer extends Named implements Saveable
 		mPlayer = aPlayer;
 	}
 	
+	@Override
+	public Element asElement(final Document aDoc)
+	{
+		final Element element = aDoc.createElement("banned");
+		element.setAttribute("address", getAddress());
+		element.setAttribute("number", getNumber());
+		element.setAttribute("player", getPlayer());
+		return element;
+	}
+	
+	/**
+	 * @return the players address.
+	 */
+	public String getAddress()
+	{
+		return mAddress;
+	}
+	
 	/**
 	 * @return the phone number of the player.
 	 */
 	public String getNumber()
 	{
 		return mNumber;
+	}
+	
+	/**
+	 * @return the last player name.
+	 */
+	public String getPlayer()
+	{
+		return mPlayer;
 	}
 	
 	/**
@@ -79,22 +105,6 @@ public class BannedPlayer extends Named implements Saveable
 	}
 	
 	/**
-	 * @return the players address.
-	 */
-	public String getAddress()
-	{
-		return mAddress;
-	}
-	
-	/**
-	 * @return the last player name.
-	 */
-	public String getPlayer()
-	{
-		return mPlayer;
-	}
-	
-	/**
 	 * Updates the player name.
 	 * 
 	 * @param aPlayer
@@ -103,15 +113,5 @@ public class BannedPlayer extends Named implements Saveable
 	public void setPlayer(final String aPlayer)
 	{
 		mPlayer = aPlayer;
-	}
-	
-	@Override
-	public Element asElement(final Document aDoc)
-	{
-		final Element element = aDoc.createElement("banned");
-		element.setAttribute("address", getAddress());
-		element.setAttribute("number", getNumber());
-		element.setAttribute("player", getPlayer());
-		return element;
 	}
 }

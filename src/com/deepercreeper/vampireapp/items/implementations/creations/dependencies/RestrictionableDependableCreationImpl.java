@@ -47,21 +47,9 @@ public abstract class RestrictionableDependableCreationImpl extends Restrictiona
 	}
 	
 	@Override
-	public final boolean hasDependency(final Type aType)
-	{
-		return mDependencies.containsKey(aType) && getDependency(aType).isActive();
-	}
-	
-	@Override
 	public int getMaxValue()
 	{
 		return 0;
-	}
-	
-	@Override
-	public int[] getValues()
-	{
-		return null;
 	}
 	
 	@Override
@@ -74,5 +62,17 @@ public abstract class RestrictionableDependableCreationImpl extends Restrictiona
 	public int getStartValue()
 	{
 		return 0;
+	}
+	
+	@Override
+	public int[] getValues()
+	{
+		return null;
+	}
+	
+	@Override
+	public final boolean hasDependency(final Type aType)
+	{
+		return mDependencies.containsKey(aType) && getDependency(aType).isActive();
 	}
 }

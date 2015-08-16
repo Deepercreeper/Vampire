@@ -37,14 +37,6 @@ public class Clan extends Named
 		mRestrictions.addAll(aRestriction);
 	}
 	
-	/**
-	 * @return a set of all restrictions of this clan.
-	 */
-	public Set<RestrictionCreation> getRestrictions()
-	{
-		return mRestrictions;
-	}
-	
 	@Override
 	public boolean equals(final Object aO)
 	{
@@ -62,5 +54,13 @@ public class Clan extends Named
 	public String getDescription()
 	{
 		return getName();
+	}
+	
+	/**
+	 * @return a set of all restrictions of this clan.
+	 */
+	public Set<RestrictionCreation> getRestrictions()
+	{
+		return mRestrictions;
 	}
 }

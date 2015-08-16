@@ -143,6 +143,23 @@ public class DataUtil
 	}
 	
 	/**
+	 * @param aStart
+	 *            The first value.
+	 * @param aEnd
+	 *            The last value.
+	 * @return a values array that is filled with all integers from {@code aStart} to {@code aEnd}.
+	 */
+	public static int[] createDefaultValues(int aStart, int aEnd)
+	{
+		int[] values = new int[aEnd - aStart + 1];
+		for (int i = aStart; i <= aEnd; i++ )
+		{
+			values[i - aStart] = i;
+		}
+		return values;
+	}
+	
+	/**
 	 * @return a new empty XML document.
 	 */
 	public static Document createDocument()
@@ -157,6 +174,94 @@ public class DataUtil
 			Log.e(TAG, "Could not create a XML document.");
 		}
 		return doc;
+	}
+	
+	/**
+	 * @param aDoc
+	 *            The parent document.
+	 * @param aTagName
+	 *            The tag name. May be {@code null} if all children should be added.
+	 * @return a list of child elements with the given tag name. No children children are added.
+	 */
+	public static List<Element> getChildren(final Document aDoc, final String aTagName)
+	{
+		return getChildren(aDoc, aTagName, false);
+	}
+	
+	/**
+	 * @param aDoc
+	 *            The parent document.
+	 * @param aTagName
+	 *            The tag name. May be {@code null} if all children should be added.
+	 * @param aChildren
+	 *            Whether the children of children should be added also.
+	 * @return a list of child elements with the given tag name.
+	 */
+	public static List<Element> getChildren(final Document aDoc, final String aTagName, final boolean aChildren)
+	{
+		if (aDoc == null)
+		{
+			Log.w(TAG, "Document is null.");
+			return null;
+		}
+		final List<Element> children = new ArrayList<Element>();
+		NodeList nodes;
+		nodes = aChildren && aTagName != null ? aDoc.getElementsByTagName(aTagName) : aDoc.getChildNodes();
+		for (int i = 0; i < nodes.getLength(); i++ )
+		{
+			if (nodes.item(i) instanceof Element)
+			{
+				if (aTagName == null || ((Element) nodes.item(i)).getTagName().equals(aTagName))
+				{
+					children.add((Element) nodes.item(i));
+				}
+			}
+		}
+		return children;
+	}
+	
+	/**
+	 * @param aElement
+	 *            The parent element.
+	 * @param aTagName
+	 *            The tag name. May be {@code null} if all children should be added.
+	 * @return a list of child elements with the given tag name. No children children are added.
+	 */
+	public static List<Element> getChildren(final Element aElement, final String aTagName)
+	{
+		return getChildren(aElement, aTagName, false);
+	}
+	
+	/**
+	 * @param aElement
+	 *            The parent element.
+	 * @param aTagName
+	 *            The tag name. May be {@code null} if all children should be added.
+	 * @param aChildren
+	 *            Whether the children of children should be added also.
+	 * @return a list of child elements with the given tag name.
+	 */
+	public static List<Element> getChildren(final Element aElement, final String aTagName, final boolean aChildren)
+	{
+		if (aElement == null)
+		{
+			Log.w(TAG, "Parent element is null.");
+			return null;
+		}
+		final List<Element> children = new ArrayList<Element>();
+		NodeList nodes;
+		nodes = aChildren && aTagName != null ? aElement.getElementsByTagName(aTagName) : aElement.getChildNodes();
+		for (int i = 0; i < nodes.getLength(); i++ )
+		{
+			if (nodes.item(i) instanceof Element)
+			{
+				if (aTagName == null || ((Element) nodes.item(i)).getTagName().equals(aTagName))
+				{
+					children.add((Element) nodes.item(i));
+				}
+			}
+		}
+		return children;
 	}
 	
 	/**
@@ -597,6 +702,46 @@ public class DataUtil
 	
 	/**
 	 * @param aMap
+	 *            A string that represents a string to integer map.
+	 * @return a map out of the given string.
+	 */
+	public static Map<String, Integer> parseMap(final String aMap)
+	{
+		if (aMap == null)
+		{
+			Log.w(TAG, "Map is null.");
+			return null;
+		}
+		final Map<String, Integer> map = new HashMap<String, Integer>();
+		final String[] entries = aMap.split(",");
+		for (final String entry : entries)
+		{
+			final String[] keyAndValue = entry.split("=");
+			if (keyAndValue.length != 2)
+			{
+				Log.w(TAG, "Can't parse map entry: " + entry);
+				return null;
+			}
+			final String key = CodingUtil.decode(keyAndValue[0]);
+			Integer value = null;
+			try
+			{
+				value = Integer.parseInt(keyAndValue[1]);
+			}
+			catch (final NumberFormatException e)
+			{}
+			if (key == null || value == null)
+			{
+				Log.w(TAG, "Can't decode key or parse value: " + entry);
+				return null;
+			}
+			map.put(key, value);
+		}
+		return map;
+	}
+	
+	/**
+	 * @param aMap
 	 *            The map to parse.
 	 * @return a sparse integer array that has integer keys and values.
 	 */
@@ -634,6 +779,63 @@ public class DataUtil
 			map.put(key, value);
 		}
 		return map;
+	}
+	
+	/**
+	 * Writes the given integer array into one string.
+	 * 
+	 * @param aValues
+	 *            The array of integers.
+	 * @return a string, containing all integers.
+	 */
+	public static String parseValues(final int[] aValues)
+	{
+		if (aValues == null)
+		{
+			Log.w(TAG, "Array is null.");
+			return null;
+		}
+		final StringBuilder values = new StringBuilder();
+		for (int i = 0; i < aValues.length; i++ )
+		{
+			if (i != 0)
+			{
+				values.append(",");
+			}
+			values.append(aValues[i]);
+		}
+		return values.toString();
+	}
+	
+	/**
+	 * Parses the given string into an array of integers.
+	 * 
+	 * @param aValues
+	 *            The string to parse.
+	 * @return an array of integers, contained inside the given string.
+	 */
+	public static int[] parseValues(final String aValues)
+	{
+		if (aValues == null)
+		{
+			Log.w(TAG, "Array is null.");
+			return null;
+		}
+		final String[] integers = aValues.split(",");
+		final int[] values = new int[integers.length];
+		for (int i = 0; i < integers.length; i++ )
+		{
+			try
+			{
+				values[i] = Integer.parseInt(integers[i]);
+			}
+			catch (final NumberFormatException e)
+			{
+				Log.w(TAG, "Can't parse value: " + integers[i]);
+				return null;
+			}
+		}
+		return values;
 	}
 	
 	/**
@@ -699,120 +901,6 @@ public class DataUtil
 			map.put(key, values);
 		}
 		return map;
-	}
-	
-	/**
-	 * @param aStart
-	 *            The first value.
-	 * @param aEnd
-	 *            The last value.
-	 * @return a values array that is filled with all integers from {@code aStart} to {@code aEnd}.
-	 */
-	public static int[] createDefaultValues(int aStart, int aEnd)
-	{
-		int[] values = new int[aEnd - aStart + 1];
-		for (int i = aStart; i <= aEnd; i++ )
-		{
-			values[i - aStart] = i;
-		}
-		return values;
-	}
-	
-	/**
-	 * @param aMap
-	 *            A string that represents a string to integer map.
-	 * @return a map out of the given string.
-	 */
-	public static Map<String, Integer> parseMap(final String aMap)
-	{
-		if (aMap == null)
-		{
-			Log.w(TAG, "Map is null.");
-			return null;
-		}
-		final Map<String, Integer> map = new HashMap<String, Integer>();
-		final String[] entries = aMap.split(",");
-		for (final String entry : entries)
-		{
-			final String[] keyAndValue = entry.split("=");
-			if (keyAndValue.length != 2)
-			{
-				Log.w(TAG, "Can't parse map entry: " + entry);
-				return null;
-			}
-			final String key = CodingUtil.decode(keyAndValue[0]);
-			Integer value = null;
-			try
-			{
-				value = Integer.parseInt(keyAndValue[1]);
-			}
-			catch (final NumberFormatException e)
-			{}
-			if (key == null || value == null)
-			{
-				Log.w(TAG, "Can't decode key or parse value: " + entry);
-				return null;
-			}
-			map.put(key, value);
-		}
-		return map;
-	}
-	
-	/**
-	 * Writes the given integer array into one string.
-	 * 
-	 * @param aValues
-	 *            The array of integers.
-	 * @return a string, containing all integers.
-	 */
-	public static String parseValues(final int[] aValues)
-	{
-		if (aValues == null)
-		{
-			Log.w(TAG, "Array is null.");
-			return null;
-		}
-		final StringBuilder values = new StringBuilder();
-		for (int i = 0; i < aValues.length; i++ )
-		{
-			if (i != 0)
-			{
-				values.append(",");
-			}
-			values.append(aValues[i]);
-		}
-		return values.toString();
-	}
-	
-	/**
-	 * Parses the given string into an array of integers.
-	 * 
-	 * @param aValues
-	 *            The string to parse.
-	 * @return an array of integers, contained inside the given string.
-	 */
-	public static int[] parseValues(final String aValues)
-	{
-		if (aValues == null)
-		{
-			Log.w(TAG, "Array is null.");
-			return null;
-		}
-		final String[] integers = aValues.split(",");
-		final int[] values = new int[integers.length];
-		for (int i = 0; i < integers.length; i++ )
-		{
-			try
-			{
-				values[i] = Integer.parseInt(integers[i]);
-			}
-			catch (final NumberFormatException e)
-			{
-				Log.w(TAG, "Can't parse value: " + integers[i]);
-				return null;
-			}
-		}
-		return values;
 	}
 	
 	/**
@@ -986,94 +1074,6 @@ public class DataUtil
 		return actions;
 	}
 	
-	/**
-	 * @param aDoc
-	 *            The parent document.
-	 * @param aTagName
-	 *            The tag name. May be {@code null} if all children should be added.
-	 * @param aChildren
-	 *            Whether the children of children should be added also.
-	 * @return a list of child elements with the given tag name.
-	 */
-	public static List<Element> getChildren(final Document aDoc, final String aTagName, final boolean aChildren)
-	{
-		if (aDoc == null)
-		{
-			Log.w(TAG, "Document is null.");
-			return null;
-		}
-		final List<Element> children = new ArrayList<Element>();
-		NodeList nodes;
-		nodes = aChildren && aTagName != null ? aDoc.getElementsByTagName(aTagName) : aDoc.getChildNodes();
-		for (int i = 0; i < nodes.getLength(); i++ )
-		{
-			if (nodes.item(i) instanceof Element)
-			{
-				if (aTagName == null || ((Element) nodes.item(i)).getTagName().equals(aTagName))
-				{
-					children.add((Element) nodes.item(i));
-				}
-			}
-		}
-		return children;
-	}
-	
-	/**
-	 * @param aDoc
-	 *            The parent document.
-	 * @param aTagName
-	 *            The tag name. May be {@code null} if all children should be added.
-	 * @return a list of child elements with the given tag name. No children children are added.
-	 */
-	public static List<Element> getChildren(final Document aDoc, final String aTagName)
-	{
-		return getChildren(aDoc, aTagName, false);
-	}
-	
-	/**
-	 * @param aElement
-	 *            The parent element.
-	 * @param aTagName
-	 *            The tag name. May be {@code null} if all children should be added.
-	 * @return a list of child elements with the given tag name. No children children are added.
-	 */
-	public static List<Element> getChildren(final Element aElement, final String aTagName)
-	{
-		return getChildren(aElement, aTagName, false);
-	}
-	
-	/**
-	 * @param aElement
-	 *            The parent element.
-	 * @param aTagName
-	 *            The tag name. May be {@code null} if all children should be added.
-	 * @param aChildren
-	 *            Whether the children of children should be added also.
-	 * @return a list of child elements with the given tag name.
-	 */
-	public static List<Element> getChildren(final Element aElement, final String aTagName, final boolean aChildren)
-	{
-		if (aElement == null)
-		{
-			Log.w(TAG, "Parent element is null.");
-			return null;
-		}
-		final List<Element> children = new ArrayList<Element>();
-		NodeList nodes;
-		nodes = aChildren && aTagName != null ? aElement.getElementsByTagName(aTagName) : aElement.getChildNodes();
-		for (int i = 0; i < nodes.getLength(); i++ )
-		{
-			if (nodes.item(i) instanceof Element)
-			{
-				if (aTagName == null || ((Element) nodes.item(i)).getTagName().equals(aTagName))
-				{
-					children.add((Element) nodes.item(i));
-				}
-			}
-		}
-		return children;
-	}
-	
 	private static ClanController loadClans(final Document aDoc)
 	{
 		if (aDoc == null)
@@ -1219,6 +1219,41 @@ public class DataUtil
 		return controllersList;
 	}
 	
+	private static List<Dependency> loadDependencies(final Element aParentNode)
+	{
+		if (aParentNode == null)
+		{
+			Log.w(TAG, "Parent element is null.");
+			return null;
+		}
+		final List<Dependency> dependencies = new ArrayList<Dependency>();
+		for (final Element child : getChildren(aParentNode, DEPENDENCY))
+		{
+			final Dependency.Type type = Dependency.Type.get(child.getAttribute("type"));
+			final Dependency.DestinationType destinationType = Dependency.DestinationType.get(child.getAttribute("destinationType"));
+			if (type == null || destinationType == null)
+			{
+				Log.w(TAG, "Can't load dependency type or destination type: " + child.getAttribute("type") + ", "
+						+ child.getAttribute("destinationType"));
+				continue;
+			}
+			SparseIntArray value = null;
+			SparseArray<int[]> values = null;
+			final String item = null;
+			if (child.hasAttribute("value"))
+			{
+				value = parseValueMap(child.getAttribute("value"));
+			}
+			if (child.hasAttribute("values"))
+			{
+				values = parseValuesMap(child.getAttribute("values"));
+			}
+			final DependencyImpl dependency = new DependencyImpl(type, destinationType, item, value, values);
+			dependencies.add(dependency);
+		}
+		return dependencies;
+	}
+	
 	private static List<ItemGroup> loadGroups(final Element aController)
 	{
 		if (aController == null)
@@ -1359,41 +1394,6 @@ public class DataUtil
 			groupsList.add(group);
 		}
 		return groupsList;
-	}
-	
-	private static List<Dependency> loadDependencies(final Element aParentNode)
-	{
-		if (aParentNode == null)
-		{
-			Log.w(TAG, "Parent element is null.");
-			return null;
-		}
-		final List<Dependency> dependencies = new ArrayList<Dependency>();
-		for (final Element child : getChildren(aParentNode, DEPENDENCY))
-		{
-			final Dependency.Type type = Dependency.Type.get(child.getAttribute("type"));
-			final Dependency.DestinationType destinationType = Dependency.DestinationType.get(child.getAttribute("destinationType"));
-			if (type == null || destinationType == null)
-			{
-				Log.w(TAG, "Can't load dependency type or destination type: " + child.getAttribute("type") + ", "
-						+ child.getAttribute("destinationType"));
-				continue;
-			}
-			SparseIntArray value = null;
-			SparseArray<int[]> values = null;
-			final String item = null;
-			if (child.hasAttribute("value"))
-			{
-				value = parseValueMap(child.getAttribute("value"));
-			}
-			if (child.hasAttribute("values"))
-			{
-				values = parseValuesMap(child.getAttribute("values"));
-			}
-			final DependencyImpl dependency = new DependencyImpl(type, destinationType, item, value, values);
-			dependencies.add(dependency);
-		}
-		return dependencies;
 	}
 	
 	private static List<Item> loadItems(final Element aParentNode, final ItemGroup aParentGroup, final Item aParentItem)

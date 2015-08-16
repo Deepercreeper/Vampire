@@ -16,23 +16,6 @@ import com.deepercreeper.vampireapp.items.ItemConsumer;
  */
 public class ConnectionUtil
 {
-	/**
-	 * Loads all items by binding a service. When a service is found and bound<br>
-	 * the connector will invoke the {@link ItemConsumer#consumeItems(com.deepercreeper.vampireapp.items.ItemProvider)} with the found provider.
-	 * 
-	 * @param aContext
-	 *            The underlying context.
-	 * @param aConsumer
-	 *            The item consumer that requests the item provider.
-	 */
-	public static void loadItems(final Activity aContext, final ItemConsumer aConsumer)
-	{
-		final ItemConnection connection = new ItemConnection(aConsumer, aContext);
-		final Intent itemProvider = new Intent(aContext, ItemProviderService.class);
-		aContext.startService(itemProvider);
-		aContext.bindService(itemProvider, connection, Context.BIND_AUTO_CREATE);
-	}
-	
 	private static class ItemConnection implements ServiceConnection
 	{
 		private final ItemConsumer	mConsumer;
@@ -56,5 +39,22 @@ public class ConnectionUtil
 		@Override
 		public void onServiceDisconnected(final ComponentName aName)
 		{}
+	}
+	
+	/**
+	 * Loads all items by binding a service. When a service is found and bound<br>
+	 * the connector will invoke the {@link ItemConsumer#consumeItems(com.deepercreeper.vampireapp.items.ItemProvider)} with the found provider.
+	 * 
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aConsumer
+	 *            The item consumer that requests the item provider.
+	 */
+	public static void loadItems(final Activity aContext, final ItemConsumer aConsumer)
+	{
+		final ItemConnection connection = new ItemConnection(aConsumer, aContext);
+		final Intent itemProvider = new Intent(aContext, ItemProviderService.class);
+		aContext.startService(itemProvider);
+		aContext.bindService(itemProvider, connection, Context.BIND_AUTO_CREATE);
 	}
 }

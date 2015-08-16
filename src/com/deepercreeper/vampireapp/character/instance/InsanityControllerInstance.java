@@ -83,8 +83,6 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 	
 	private final Expander mExpander;
 	
-	private boolean mInitialized = false;
-	
 	/**
 	 * Creates a new insanity controller out of the given XML data.
 	 * 
@@ -111,15 +109,27 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 		final int containerId = mHost ? R.id.h_insanities_panel : R.id.c_insanities_panel;
 		mExpander = Expander.handle(buttonId, containerId, getContainer(), aResizeListener);
 		
-		init();
+		mExpander.init();
 		
-		for (Element insanity : DataUtil.getChildren(aElement, "insanity"))
+		if (mHost)
+		{
+			getContainer().findViewById(R.id.h_add_insanity_button).setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					addInsanity();
+				}
+			});
+		}
+		
+		for (final Element insanity : DataUtil.getChildren(aElement, "insanity"))
 		{
 			final Duration duration = Duration.create(DataUtil.getElement(insanity, "duration"));
 			addInsanity(CodingUtil.decode(insanity.getAttribute("name")), duration, true);
 		}
 		
-		updateButton();
+		updateUI();
 	}
 	
 	/**
@@ -148,14 +158,26 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 		final int containerId = mHost ? R.id.h_insanities_panel : R.id.c_insanities_panel;
 		mExpander = Expander.handle(buttonId, containerId, getContainer(), aResizeListener);
 		
-		init();
+		mExpander.init();
+		
+		if (mHost)
+		{
+			getContainer().findViewById(R.id.h_add_insanity_button).setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					addInsanity();
+				}
+			});
+		}
 		
 		for (final String insanity : aController.getInsanities())
 		{
 			addInsanity(insanity, Duration.FOREVER, true);
 		}
 		
-		updateButton();
+		updateUI();
 	}
 	
 	/**
@@ -217,7 +239,7 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 			mExpander.getContainer().addView(insanity);
 		}
 		mExpander.resize();
-		updateButton();
+		updateUI();
 		if ( !aSilent)
 		{
 			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.got_insanity, new String[] { aInsanity }, mContext,
@@ -265,29 +287,6 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 	}
 	
 	@Override
-	public void init()
-	{
-		if ( !mInitialized)
-		{
-			mExpander.init();
-			
-			if (mHost)
-			{
-				getContainer().findViewById(R.id.h_add_insanity_button).setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(final View aV)
-					{
-						addInsanity();
-					}
-				});
-			}
-			
-			mInitialized = true;
-		}
-	}
-	
-	@Override
 	public void release()
 	{
 		ViewUtil.release(getContainer());
@@ -307,7 +306,7 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 		mInsanities.remove(aInsanity);
 		mInsanityDurations.remove(aInsanity);
 		mExpander.resize();
-		updateButton();
+		updateUI();
 		if ( !aSilent)
 		{
 			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.lost_insanity, new String[] { aInsanity }, mContext,
@@ -327,7 +326,8 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 		}
 	}
 	
-	private void updateButton()
+	@Override
+	public void updateUI()
 	{
 		if (mHost)
 		{

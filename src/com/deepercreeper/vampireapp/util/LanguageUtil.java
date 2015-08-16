@@ -28,54 +28,6 @@ public class LanguageUtil
 	private LanguageUtil()
 	{}
 	
-	private void setContext(final Context aContext)
-	{
-		if (mContext != null)
-		{
-			return;
-		}
-		mInitialized = false;
-		mContext = aContext;
-		mValues.clear();
-		if (Locale.getDefault().getLanguage().equals("en"))
-		{
-			mInitialized = true;
-			return;
-		}
-		final Document pack = DataUtil.loadDocument(mContext, "language", true);
-		if (pack == null)
-		{
-			mInitialized = true;
-			Log.w(TAG, "No language file was detected for the current language.");
-			return;
-		}
-		Element language = DataUtil.getElement(pack, LANGUAGE);
-		if (language == null)
-		{
-			Log.w(TAG, "Could not find language tag.");
-			mInitialized = true;
-			return;
-		}
-		final String content = language.getTextContent().trim();
-		for (String line : content.split("\n"))
-		{
-			line = line.replace("\r", "").replace("\n", "").trim();
-			if ( !line.isEmpty())
-			{
-				final String[] keyAndValue = line.split("=");
-				if (keyAndValue.length < 2)
-				{
-					Log.w(TAG, "The following line is no statement: " + line);
-				}
-				else
-				{
-					mValues.put(keyAndValue[0], keyAndValue[1]);
-				}
-			}
-		}
-		mInitialized = true;
-	}
-	
 	/**
 	 * @param aKey
 	 * @return the display string if different from the given one.<br>
@@ -134,6 +86,54 @@ public class LanguageUtil
 			}
 		}
 		return arguments;
+	}
+	
+	private void setContext(final Context aContext)
+	{
+		if (mContext != null)
+		{
+			return;
+		}
+		mInitialized = false;
+		mContext = aContext;
+		mValues.clear();
+		if (Locale.getDefault().getLanguage().equals("en"))
+		{
+			mInitialized = true;
+			return;
+		}
+		final Document pack = DataUtil.loadDocument(mContext, "language", true);
+		if (pack == null)
+		{
+			mInitialized = true;
+			Log.w(TAG, "No language file was detected for the current language.");
+			return;
+		}
+		Element language = DataUtil.getElement(pack, LANGUAGE);
+		if (language == null)
+		{
+			Log.w(TAG, "Could not find language tag.");
+			mInitialized = true;
+			return;
+		}
+		final String content = language.getTextContent().trim();
+		for (String line : content.split("\n"))
+		{
+			line = line.replace("\r", "").replace("\n", "").trim();
+			if ( !line.isEmpty())
+			{
+				final String[] keyAndValue = line.split("=");
+				if (keyAndValue.length < 2)
+				{
+					Log.w(TAG, "The following line is no statement: " + line);
+				}
+				else
+				{
+					mValues.put(keyAndValue[0], keyAndValue[1]);
+				}
+			}
+		}
+		mInitialized = true;
 	}
 	
 	/**

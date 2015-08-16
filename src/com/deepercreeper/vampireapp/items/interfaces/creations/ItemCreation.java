@@ -2,7 +2,6 @@ package com.deepercreeper.vampireapp.items.interfaces.creations;
 
 import java.util.List;
 import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
-import com.deepercreeper.vampireapp.items.implementations.creations.ItemCreationImpl.ChangeAction;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionableCreation;
 import com.deepercreeper.vampireapp.items.interfaces.instances.dependencies.DependableInstance;
@@ -53,11 +52,6 @@ public interface ItemCreation extends Comparable<ItemCreation>, RestrictionableC
 	public void decrease();
 	
 	/**
-	 * @return the current maximum item value.
-	 */
-	public int getMaxValue();
-	
-	/**
 	 * Asks the user to replace the given item with any other.
 	 * 
 	 * @param aItem
@@ -81,16 +75,6 @@ public interface ItemCreation extends Comparable<ItemCreation>, RestrictionableC
 	public int getAllValues();
 	
 	/**
-	 * @return the change action for changing temporary points
-	 */
-	public ChangeAction getChangeTempPoints();
-	
-	/**
-	 * @return the change action for changing the value.
-	 */
-	public ChangeAction getChangeValue();
-	
-	/**
 	 * @return the parent character.
 	 */
 	public CharacterCreation getCharacter();
@@ -112,6 +96,7 @@ public interface ItemCreation extends Comparable<ItemCreation>, RestrictionableC
 	 * 
 	 * @return the value container.
 	 */
+	@Override
 	public LinearLayout getContainer();
 	
 	/**
@@ -153,6 +138,12 @@ public interface ItemCreation extends Comparable<ItemCreation>, RestrictionableC
 	 * @return The parent item group.
 	 */
 	public ItemGroupCreation getItemGroup();
+	
+	/**
+	 * @return the current maximum item value.
+	 */
+	@Override
+	public int getMaxValue();
 	
 	/**
 	 * @return the item name.
@@ -260,6 +251,7 @@ public interface ItemCreation extends Comparable<ItemCreation>, RestrictionableC
 	/**
 	 * Removes all widgets from their parent containers.
 	 */
+	@Override
 	public void release();
 	
 	/**
@@ -303,12 +295,13 @@ public interface ItemCreation extends Comparable<ItemCreation>, RestrictionableC
 	public void setIncreasable();
 	
 	/**
-	 * Updates the user interface for all views. Invoked after the update method.
-	 */
-	public void updateUI();
-	
-	/**
 	 * Updates all item controllers.
 	 */
 	public void updateControllerUI();
+	
+	/**
+	 * Updates the user interface for all views. Invoked after the update method.
+	 */
+	@Override
+	public void updateUI();
 }

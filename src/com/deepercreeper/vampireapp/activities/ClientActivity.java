@@ -134,12 +134,6 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 	}
 	
 	@Override
-	public CharacterInstance getCharacter()
-	{
-		return mChar;
-	}
-	
-	@Override
 	public boolean applyMessage(final Message aMessage, final ButtonAction aAction)
 	{
 		boolean release = true;
@@ -172,15 +166,6 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 			mMessages.remove(aMessage);
 		}
 		return release;
-	}
-	
-	@Override
-	public void updateMessages()
-	{
-		for (final Message message : mMessages)
-		{
-			message.update(mChar);
-		}
 	}
 	
 	@Override
@@ -244,6 +229,12 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 		intent.putExtra(CHARACTER, DataUtil.serialize(mChar));
 		setResult(aSaveCharacter ? RESULT_OK : RESULT_CANCELED, intent);
 		finish();
+	}
+	
+	@Override
+	public CharacterInstance getCharacter()
+	{
+		return mChar;
 	}
 	
 	@Override
@@ -319,16 +310,6 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 	}
 	
 	@Override
-	public void showMessage(final Message aMessage)
-	{
-		if ( !mMessages.contains(aMessage))
-		{
-			mMessages.add(aMessage);
-			mMessageList.addView(aMessage.getContainer());
-		}
-	}
-	
-	@Override
 	public void resize()
 	{}
 	
@@ -381,6 +362,25 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 					findViewById(android.R.id.content).setBackgroundColor(Color.BLACK);
 				}
 			});
+		}
+	}
+	
+	@Override
+	public void showMessage(final Message aMessage)
+	{
+		if ( !mMessages.contains(aMessage))
+		{
+			mMessages.add(aMessage);
+			mMessageList.addView(aMessage.getContainer());
+		}
+	}
+	
+	@Override
+	public void updateMessages()
+	{
+		for (final Message message : mMessages)
+		{
+			message.update(mChar);
 		}
 	}
 	

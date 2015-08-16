@@ -150,29 +150,6 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 		return super.onOptionsItemSelected(aItem);
 	}
 	
-	private void unban()
-	{
-		final List<BannedPlayer> players = mHost.getBannedPlayers();
-		if (players.isEmpty())
-		{
-			makeText(R.string.no_banned_players, Toast.LENGTH_SHORT);
-			return;
-		}
-		final ItemSelectionListener<BannedPlayer> action = new ItemSelectionListener<BannedPlayer>()
-		{
-			@Override
-			public void select(final BannedPlayer aPlayer)
-			{
-				mHost.unban(aPlayer);
-			}
-			
-			@Override
-			public void cancel()
-			{}
-		};
-		SelectItemDialog.<BannedPlayer> showSelectionDialog(players, getString(R.string.unban), this, action);
-	}
-	
 	@Override
 	public void receiveMessage(final ConnectedDevice aDevice, final MessageType aType, final String[] aArgs)
 	{
@@ -319,5 +296,28 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 		{
 			aDevice.send(MessageType.ACCEPT);
 		}
+	}
+	
+	private void unban()
+	{
+		final List<BannedPlayer> players = mHost.getBannedPlayers();
+		if (players.isEmpty())
+		{
+			makeText(R.string.no_banned_players, Toast.LENGTH_SHORT);
+			return;
+		}
+		final ItemSelectionListener<BannedPlayer> action = new ItemSelectionListener<BannedPlayer>()
+		{
+			@Override
+			public void cancel()
+			{}
+			
+			@Override
+			public void select(final BannedPlayer aPlayer)
+			{
+				mHost.unban(aPlayer);
+			}
+		};
+		SelectItemDialog.<BannedPlayer> showSelectionDialog(players, getString(R.string.unban), this, action);
 	}
 }

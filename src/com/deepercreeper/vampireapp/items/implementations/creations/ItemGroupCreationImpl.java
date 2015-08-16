@@ -114,84 +114,6 @@ public class ItemGroupCreationImpl extends RestrictionableDependableCreationImpl
 	}
 	
 	@Override
-	public void init()
-	{}
-	
-	@Override
-	public int getMaxValue()
-	{
-		int maxValue = getItemGroup().getMaxValue();
-		if (hasDependency(Type.MAX_VALUE))
-		{
-			maxValue = getDependency(Type.MAX_VALUE).getValue(maxValue);
-		}
-		return maxValue;
-	}
-	
-	@Override
-	public void updateUI()
-	{
-		if (mChar.getMode().canAddItem(this))
-		{
-			ViewUtil.wrapHeight(mAddButton);
-			ViewUtil.setEnabled(mAddButton, canAddItem());
-		}
-		else
-		{
-			ViewUtil.hideHeight(mAddButton);
-		}
-		if ( !hasOrder())
-		{
-			sortItems();
-		}
-		
-		for (final ItemCreation item : getItemsList())
-		{
-			item.updateUI();
-		}
-	}
-	
-	private boolean canAddItem()
-	{
-		if ( !mChar.getMode().canAddItem(this))
-		{
-			return false;
-		}
-		if (getAddableItems().isEmpty())
-		{
-			return false;
-		}
-		if (getItemsList().size() >= getMaxValue(CreationRestrictionType.GROUP_CHILDREN_COUNT))
-		{
-			return false;
-		}
-		if (getItemsList().size() >= getItemGroup().getMaxItems())
-		{
-			return false;
-		}
-		return true;
-	}
-	
-	@Override
-	public void release()
-	{
-		ViewUtil.release(getContainer());
-	}
-	
-	@Override
-	public void clear()
-	{
-		for (final ItemCreation item : getItemsList())
-		{
-			item.clear();
-			item.release();
-		}
-		mItems.clear();
-		getItemsList().clear();
-		updateUI();
-	}
-	
-	@Override
 	public void addItem()
 	{
 		if ( !isMutable())
@@ -258,6 +180,19 @@ public class ItemGroupCreationImpl extends RestrictionableDependableCreationImpl
 			return false;
 		}
 		return getItemController().canChangeGroupBy(this, aValue);
+	}
+	
+	@Override
+	public void clear()
+	{
+		for (final ItemCreation item : getItemsList())
+		{
+			item.clear();
+			item.release();
+		}
+		mItems.clear();
+		getItemsList().clear();
+		updateUI();
 	}
 	
 	@Override
@@ -386,6 +321,17 @@ public class ItemGroupCreationImpl extends RestrictionableDependableCreationImpl
 	}
 	
 	@Override
+	public int getMaxValue()
+	{
+		int maxValue = getItemGroup().getMaxValue();
+		if (hasDependency(Type.MAX_VALUE))
+		{
+			maxValue = getDependency(Type.MAX_VALUE).getValue(maxValue);
+		}
+		return maxValue;
+	}
+	
+	@Override
 	public String getName()
 	{
 		return getItemGroup().getName();
@@ -480,6 +426,12 @@ public class ItemGroupCreationImpl extends RestrictionableDependableCreationImpl
 	}
 	
 	@Override
+	public void release()
+	{
+		ViewUtil.release(getContainer());
+	}
+	
+	@Override
 	public void removeItem(final Item aItem)
 	{
 		if ( !isMutable())
@@ -559,32 +511,52 @@ public class ItemGroupCreationImpl extends RestrictionableDependableCreationImpl
 	}
 	
 	@Override
-	public void updateRestrictions()
+	public void updateUI()
 	{
-		final Set<ItemCreation> removableItems = new HashSet<ItemCreation>();
-		for (final ItemCreation item : getItemsList())
+		if (hasRestrictions(CreationRestrictionType.GROUP_CHILDREN))
 		{
-			if ( !isItemOk(item.getItem()))
+			final Set<ItemCreation> prohibitedItems = new HashSet<ItemCreation>();
+			for (final ItemCreation item : getItemsList())
 			{
-				removableItems.add(item);
-			}
-		}
-		for (final ItemCreation item : removableItems)
-		{
-			removeItemSilent(item);
-		}
-		if ( !isMutable())
-		{
-			for (final Item item : getItemGroup().getItemsList())
-			{
-				if ( !hasItem(item) && isItemOk(item))
+				if ( !isItemOk(item.getItem()))
 				{
-					addItemSilent(new ItemCreationImpl(item, getContext(), this, mChar, null));
+					prohibitedItems.add(item);
+				}
+			}
+			for (final ItemCreation item : prohibitedItems)
+			{
+				removeItemSilent(item);
+			}
+			if ( !isMutable())
+			{
+				for (final Item item : getItemGroup().getItemsList())
+				{
+					if ( !hasItem(item) && isItemOk(item))
+					{
+						addItemSilent(new ItemCreationImpl(item, getContext(), this, mChar, null));
+					}
 				}
 			}
 		}
-		// TODO Done here?
-		updateUI();
+		
+		if (mChar.getMode().canAddItem(this))
+		{
+			ViewUtil.wrapHeight(mAddButton);
+			ViewUtil.setEnabled(mAddButton, canAddItem());
+		}
+		else
+		{
+			ViewUtil.hideHeight(mAddButton);
+		}
+		if ( !hasOrder())
+		{
+			sortItems();
+		}
+		
+		for (final ItemCreation item : getItemsList())
+		{
+			item.updateUI();
+		}
 	}
 	
 	private void addItemSilent(final ItemCreation aItem)
@@ -600,6 +572,27 @@ public class ItemGroupCreationImpl extends RestrictionableDependableCreationImpl
 		getItemController().addItem(aItem);
 		getItemController().resize();
 		updateControllerUI();
+	}
+	
+	private boolean canAddItem()
+	{
+		if ( !mChar.getMode().canAddItem(this))
+		{
+			return false;
+		}
+		if (getAddableItems().isEmpty())
+		{
+			return false;
+		}
+		if (getItemsList().size() >= getMaxValue(CreationRestrictionType.GROUP_CHILDREN_COUNT))
+		{
+			return false;
+		}
+		if (getItemsList().size() >= getItemGroup().getMaxItems())
+		{
+			return false;
+		}
+		return true;
 	}
 	
 	private List<Item> getAddableItems()

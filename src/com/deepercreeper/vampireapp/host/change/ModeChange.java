@@ -20,17 +20,6 @@ public class ModeChange implements CharacterChange
 	private final Mode mMode;
 	
 	/**
-	 * Creates a new mode change.
-	 * 
-	 * @param aMode
-	 *            The mode.
-	 */
-	public ModeChange(final Mode aMode)
-	{
-		mMode = aMode;
-	}
-	
-	/**
 	 * Creates a new mode change out of the given XML data.
 	 * 
 	 * @param aElement
@@ -39,6 +28,17 @@ public class ModeChange implements CharacterChange
 	public ModeChange(final Element aElement)
 	{
 		mMode = Mode.valueOf(aElement.getAttribute("mode"));
+	}
+	
+	/**
+	 * Creates a new mode change.
+	 * 
+	 * @param aMode
+	 *            The mode.
+	 */
+	public ModeChange(final Mode aMode)
+	{
+		mMode = aMode;
 	}
 	
 	@Override

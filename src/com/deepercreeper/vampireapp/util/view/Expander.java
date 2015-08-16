@@ -33,6 +33,11 @@ public class Expander implements ResizeListener
 	
 	private boolean					mOpen;
 	
+	private Expander(final int aButtonId, final int aContainerId, final View aContainer)
+	{
+		this(aButtonId, aContainerId, aContainer, null);
+	}
+	
 	private Expander(final int aButtonId, final int aContainerId, final View aParent, final ResizeListener aResizeParent)
 	{
 		mButtonId = aButtonId;
@@ -41,9 +46,45 @@ public class Expander implements ResizeListener
 		mParent = aParent;
 	}
 	
-	private Expander(final int aButtonId, final int aContainerId, final View aContainer)
+	/**
+	 * Closes the expander.
+	 */
+	public void close()
 	{
-		this(aButtonId, aContainerId, aContainer, null);
+		if ( !mInitialized)
+		{
+			Log.w(TAG, "Expander not initialized!");
+			return;
+		}
+		mOpen = false;
+		mButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
+		resize();
+	}
+	
+	/**
+	 * @return the currently set expand button.
+	 */
+	public Button getButton()
+	{
+		if ( !mInitialized)
+		{
+			Log.w(TAG, "Expander not initialized!");
+			return null;
+		}
+		return mButton;
+	}
+	
+	/**
+	 * @return the currently set expandable panel.
+	 */
+	public LinearLayout getContainer()
+	{
+		if ( !mInitialized)
+		{
+			Log.w(TAG, "Expander not initialized!");
+			return null;
+		}
+		return mContainer;
 	}
 	
 	/**
@@ -81,18 +122,19 @@ public class Expander implements ResizeListener
 	}
 	
 	/**
-	 * Closes the expander.
+	 * @return whether this expander has been initialized yet.
 	 */
-	public void close()
+	public boolean isInitialized()
 	{
-		if ( !mInitialized)
-		{
-			Log.w(TAG, "Expander not initialized!");
-			return;
-		}
-		mOpen = false;
-		mButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
-		resize();
+		return mInitialized;
+	}
+	
+	/**
+	 * @return whether this expander is open.
+	 */
+	public boolean isOpen()
+	{
+		return mOpen;
 	}
 	
 	@Override
@@ -104,32 +146,6 @@ public class Expander implements ResizeListener
 			return;
 		}
 		ViewUtil.resizeRecursive(this);
-	}
-	
-	/**
-	 * @return the currently set expand button.
-	 */
-	public Button getButton()
-	{
-		if ( !mInitialized)
-		{
-			Log.w(TAG, "Expander not initialized!");
-			return null;
-		}
-		return mButton;
-	}
-	
-	/**
-	 * @return the currently set expandable panel.
-	 */
-	public LinearLayout getContainer()
-	{
-		if ( !mInitialized)
-		{
-			Log.w(TAG, "Expander not initialized!");
-			return null;
-		}
-		return mContainer;
 	}
 	
 	/**
@@ -155,19 +171,19 @@ public class Expander implements ResizeListener
 	}
 	
 	/**
-	 * @return whether this expander has been initialized yet.
+	 * Creates a new expander that handles the given arguments.
+	 * 
+	 * @param aButtonId
+	 *            The expand button id.
+	 * @param aContainerId
+	 *            The expandable container id.
+	 * @param aParent
+	 *            The parent container.
+	 * @return the created expander.
 	 */
-	public boolean isInitialized()
+	public static Expander handle(final int aButtonId, final int aContainerId, final View aParent)
 	{
-		return mInitialized;
-	}
-	
-	/**
-	 * @return whether this expander is open.
-	 */
-	public boolean isOpen()
-	{
-		return mOpen;
+		return new Expander(aButtonId, aContainerId, aParent);
 	}
 	
 	/**
@@ -186,21 +202,5 @@ public class Expander implements ResizeListener
 	public static Expander handle(final int aButtonId, final int aContainerId, final View aParent, final ResizeListener aResizeParent)
 	{
 		return new Expander(aButtonId, aContainerId, aParent, aResizeParent);
-	}
-	
-	/**
-	 * Creates a new expander that handles the given arguments.
-	 * 
-	 * @param aButtonId
-	 *            The expand button id.
-	 * @param aContainerId
-	 *            The expandable container id.
-	 * @param aParent
-	 *            The parent container.
-	 * @return the created expander.
-	 */
-	public static Expander handle(final int aButtonId, final int aContainerId, final View aParent)
-	{
-		return new Expander(aButtonId, aContainerId, aParent);
 	}
 }

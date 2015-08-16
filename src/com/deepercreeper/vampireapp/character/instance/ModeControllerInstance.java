@@ -36,9 +36,7 @@ public class ModeControllerInstance implements Viewable, Saveable
 	
 	private final MessageListener mMessageListener;
 	
-	private Spinner mSpinner;
-	
-	private boolean mInitialized = false;
+	private final Spinner mSpinner;
 	
 	private Mode mMode;
 	
@@ -65,7 +63,20 @@ public class ModeControllerInstance implements Viewable, Saveable
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
 		mAdapter = new ArrayAdapter<Nameable>(mContext, android.R.layout.simple_spinner_dropdown_item, Mode.getModesList(mMode, mContext, mHost));
 		
-		init();
+		mSpinner = (Spinner) getContainer().findViewById(mHost ? R.id.h_mode_spinner : R.id.c_mode_spinner);
+		mSpinner.setAdapter(mAdapter);
+		mSpinner.setOnItemSelectedListener(new OnItemSelectedListener()
+		{
+			@Override
+			public void onItemSelected(final AdapterView<?> aParent, final View aView, final int aPosition, final long aId)
+			{
+				setMode(Mode.getModeOf(mAdapter.getItem(aPosition)), false);
+			}
+			
+			@Override
+			public void onNothingSelected(final AdapterView<?> aParent)
+			{}
+		});
 	}
 	
 	/**
@@ -94,43 +105,20 @@ public class ModeControllerInstance implements Viewable, Saveable
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
 		mAdapter = new ArrayAdapter<Nameable>(mContext, android.R.layout.simple_spinner_dropdown_item, Mode.getModesList(mMode, mContext, mHost));
 		
-		init();
-	}
-	
-	@Override
-	public void release()
-	{
-		ViewUtil.release(getContainer());
-	}
-	
-	@Override
-	public View getContainer()
-	{
-		return mContainer;
-	}
-	
-	@Override
-	public void init()
-	{
-		if ( !mInitialized)
+		mSpinner = (Spinner) getContainer().findViewById(mHost ? R.id.h_mode_spinner : R.id.c_mode_spinner);
+		mSpinner.setAdapter(mAdapter);
+		mSpinner.setOnItemSelectedListener(new OnItemSelectedListener()
 		{
-			mSpinner = (Spinner) getContainer().findViewById(mHost ? R.id.h_mode_spinner : R.id.c_mode_spinner);
-			mSpinner.setAdapter(mAdapter);
-			mSpinner.setOnItemSelectedListener(new OnItemSelectedListener()
+			@Override
+			public void onItemSelected(final AdapterView<?> aParent, final View aView, final int aPosition, final long aId)
 			{
-				@Override
-				public void onItemSelected(final AdapterView<?> aParent, final View aView, final int aPosition, final long aId)
-				{
-					setMode(Mode.getModeOf(mAdapter.getItem(aPosition)), false);
-				}
-				
-				@Override
-				public void onNothingSelected(final AdapterView<?> aParent)
-				{}
-			});
+				setMode(Mode.getModeOf(mAdapter.getItem(aPosition)), false);
+			}
 			
-			mInitialized = true;
-		}
+			@Override
+			public void onNothingSelected(final AdapterView<?> aParent)
+			{}
+		});
 	}
 	
 	@Override
@@ -141,12 +129,24 @@ public class ModeControllerInstance implements Viewable, Saveable
 		return element;
 	}
 	
+	@Override
+	public View getContainer()
+	{
+		return mContainer;
+	}
+	
 	/**
 	 * @return the current character mode.
 	 */
 	public Mode getMode()
 	{
 		return mMode;
+	}
+	
+	@Override
+	public void release()
+	{
+		ViewUtil.release(getContainer());
 	}
 	
 	/**
@@ -169,4 +169,8 @@ public class ModeControllerInstance implements Viewable, Saveable
 			mMessageListener.sendChange(new ModeChange(getMode()));
 		}
 	}
+	
+	@Override
+	public void updateUI()
+	{}
 }

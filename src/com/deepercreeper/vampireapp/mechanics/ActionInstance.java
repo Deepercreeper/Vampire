@@ -18,22 +18,17 @@ public interface ActionInstance extends Viewable, Comparable<ActionInstance>
 	public boolean canUse(final int aLevel);
 	
 	/**
+	 * @return the action type.
+	 */
+	public Action getAction();
+	
+	/**
 	 * By default the number of dices is the number of minimum dices added to all necessary<br>
 	 * item values for this action.
 	 * 
 	 * @return the default number of dices.
 	 */
 	public int getDefaultDices();
-	
-	/**
-	 * @return the action type.
-	 */
-	public Action getAction();
-	
-	/**
-	 * Updates the use button.
-	 */
-	public void update();
 	
 	/**
 	 * @return the parent item or {@code null}.

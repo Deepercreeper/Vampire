@@ -42,7 +42,7 @@ public abstract class RestrictionableCreationImpl implements RestrictionableCrea
 	{
 		getRestrictions().add(aRestriction);
 		aRestriction.setParent(this);
-		updateRestrictions();
+		updateUI();
 	}
 	
 	@Override
@@ -114,6 +114,6 @@ public abstract class RestrictionableCreationImpl implements RestrictionableCrea
 	public final void removeRestriction(final RestrictionCreation aRestriction)
 	{
 		getRestrictions().remove(aRestriction);
-		updateRestrictions();
+		updateUI();
 	}
 }

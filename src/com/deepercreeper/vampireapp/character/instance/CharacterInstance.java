@@ -17,7 +17,7 @@ import com.deepercreeper.vampireapp.items.interfaces.instances.ItemGroupInstance
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionInstance.InstanceRestrictionType;
-import com.deepercreeper.vampireapp.lists.controllers.instances.DescriptionControllerInstance;
+import com.deepercreeper.vampireapp.lists.controllers.DescriptionControllerInstance;
 import com.deepercreeper.vampireapp.lists.items.Clan;
 import com.deepercreeper.vampireapp.lists.items.Nature;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
@@ -232,65 +232,6 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	}
 	
 	/**
-	 * @return the insanities controller.
-	 */
-	public InsanityControllerInstance getInsanities()
-	{
-		return mInsanities;
-	}
-	
-	/**
-	 * @return the resize listener of this character.
-	 */
-	public ResizeListener getResizeListener()
-	{
-		return mResizeListener;
-	}
-	
-	/**
-	 * @return the message listener.
-	 */
-	public MessageListener getMessageListener()
-	{
-		return mMessageListener;
-	}
-	
-	@Override
-	public ItemGroupInstance findGroupInstance(final String aName)
-	{
-		for (final ItemControllerInstance controller : getControllers())
-		{
-			if (controller.hasGroup(aName))
-			{
-				return controller.getGroup(aName);
-			}
-		}
-		return null;
-	}
-	
-	/**
-	 * @return whether this character is host sided.
-	 */
-	public boolean isHost()
-	{
-		return mHost;
-	}
-	
-	@Override
-	public Item findItem(final String aName)
-	{
-		for (final ItemController controller : mItems.getControllers())
-		{
-			final Item item = controller.getItem(aName);
-			if (item != null)
-			{
-				return item;
-			}
-		}
-		return null;
-	}
-	
-	/**
 	 * Adds a new restriction to this character.
 	 * 
 	 * @param aRestriction
@@ -330,32 +271,85 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		}
 	}
 	
-	/**
-	 * @return the actions controller.
-	 */
-	public ActionsControllerInstance getActions()
-	{
-		return mActions;
-	}
-	
 	@Override
-	public void time(final Type aType, final int aAmount)
+	public Element asElement(final Document aDoc)
 	{
-		for (final TimeListener listener : mTimeListeners)
+		final Element root = aDoc.createElement("character");
+		
+		// Meta data
+		final Element meta = aDoc.createElement("meta");
+		meta.setAttribute("name", CodingUtil.encode(getName()));
+		meta.setAttribute("concept", CodingUtil.encode(getConcept()));
+		meta.setAttribute("nature", getNature().getName());
+		meta.setAttribute("behavior", getBehavior().getName());
+		meta.setAttribute("clan", getClan().getName());
+		meta.setAttribute("ep", "" + mEP.getExperience());
+		root.appendChild(meta);
+		
+		// Mode
+		root.appendChild(mMode.asElement(aDoc));
+		
+		// Generation
+		root.appendChild(mGeneration.asElement(aDoc));
+		
+		// Health
+		root.appendChild(mHealth.asElement(aDoc));
+		
+		// Money
+		root.appendChild(mMoney.asElement(aDoc));
+		
+		// Inventory
+		root.appendChild(mInventory.asElement(aDoc));
+		
+		// Insanities
+		root.appendChild(mInsanities.asElement(aDoc));
+		
+		// Descriptions
+		root.appendChild(mDescriptions.asElement(aDoc));
+		
+		// Controllers
+		final Element controllers = aDoc.createElement("controllers");
+		for (final ItemControllerInstance controller : mControllers)
 		{
-			listener.time(aType, aAmount);
+			controllers.appendChild(controller.asElement(aDoc));
 		}
+		root.appendChild(controllers);
+		
+		// Restrictions
+		final Element restrictionElement = aDoc.createElement("restrictions");
+		for (final RestrictionInstance restriction : getRestrictions())
+		{
+			restrictionElement.appendChild(restriction.asElement(aDoc));
+		}
+		root.appendChild(restrictionElement);
+		return root;
 	}
 	
 	@Override
-	public List<Item> getItemsList()
+	public ItemGroupInstance findGroupInstance(final String aName)
 	{
-		final List<Item> items = new ArrayList<Item>();
+		for (final ItemControllerInstance controller : getControllers())
+		{
+			if (controller.hasGroup(aName))
+			{
+				return controller.getGroup(aName);
+			}
+		}
+		return null;
+	}
+	
+	@Override
+	public Item findItem(final String aName)
+	{
 		for (final ItemController controller : mItems.getControllers())
 		{
-			items.addAll(controller.getItemsList());
+			final Item item = controller.getItem(aName);
+			if (item != null)
+			{
+				return item;
+			}
 		}
-		return items;
+		return null;
 	}
 	
 	@Override
@@ -369,6 +363,14 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * @return the actions controller.
+	 */
+	public ActionsControllerInstance getActions()
+	{
+		return mActions;
 	}
 	
 	/**
@@ -428,19 +430,19 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	}
 	
 	/**
-	 * @return the generation controller.
-	 */
-	public GenerationControllerInstance getGenerationController()
-	{
-		return mGeneration;
-	}
-	
-	/**
 	 * @return The current character generation.
 	 */
 	public int getGeneration()
 	{
 		return mGeneration.getGeneration();
+	}
+	
+	/**
+	 * @return the generation controller.
+	 */
+	public GenerationControllerInstance getGenerationController()
+	{
+		return mGeneration;
 	}
 	
 	/**
@@ -452,6 +454,14 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	}
 	
 	/**
+	 * @return the insanities controller.
+	 */
+	public InsanityControllerInstance getInsanities()
+	{
+		return mInsanities;
+	}
+	
+	/**
 	 * @return the characters inventory controller.
 	 */
 	public InventoryControllerInstance getInventory()
@@ -459,12 +469,23 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		return mInventory;
 	}
 	
-	/**
-	 * @return the characters money controller.
-	 */
-	public MoneyControllerInstance getMoney()
+	@Override
+	public List<Item> getItemsList()
 	{
-		return mMoney;
+		final List<Item> items = new ArrayList<Item>();
+		for (final ItemController controller : mItems.getControllers())
+		{
+			items.addAll(controller.getItemsList());
+		}
+		return items;
+	}
+	
+	/**
+	 * @return the message listener.
+	 */
+	public MessageListener getMessageListener()
+	{
+		return mMessageListener;
 	}
 	
 	/**
@@ -473,6 +494,14 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	public ModeControllerInstance getMode()
 	{
 		return mMode;
+	}
+	
+	/**
+	 * @return the characters money controller.
+	 */
+	public MoneyControllerInstance getMoney()
+	{
+		return mMoney;
 	}
 	
 	/**
@@ -492,11 +521,27 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	}
 	
 	/**
+	 * @return the resize listener of this character.
+	 */
+	public ResizeListener getResizeListener()
+	{
+		return mResizeListener;
+	}
+	
+	/**
 	 * @return a list of all current character restrictions.
 	 */
 	public List<RestrictionInstance> getRestrictions()
 	{
 		return mRestrictions;
+	}
+	
+	/**
+	 * @return whether this character is host sided.
+	 */
+	public boolean isHost()
+	{
+		return mHost;
 	}
 	
 	/**
@@ -520,57 +565,12 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	}
 	
 	@Override
-	public Element asElement(final Document aDoc)
+	public void time(final Type aType, final int aAmount)
 	{
-		final Element root = aDoc.createElement("character");
-		
-		// Meta data
-		final Element meta = aDoc.createElement("meta");
-		meta.setAttribute("name", CodingUtil.encode(getName()));
-		meta.setAttribute("concept", CodingUtil.encode(getConcept()));
-		meta.setAttribute("nature", getNature().getName());
-		meta.setAttribute("behavior", getBehavior().getName());
-		meta.setAttribute("clan", getClan().getName());
-		meta.setAttribute("ep", "" + mEP.getExperience());
-		root.appendChild(meta);
-		
-		// Mode
-		root.appendChild(mMode.asElement(aDoc));
-		
-		// Generation
-		root.appendChild(mGeneration.asElement(aDoc));
-		
-		// Health
-		root.appendChild(mHealth.asElement(aDoc));
-		
-		// Money
-		root.appendChild(mMoney.asElement(aDoc));
-		
-		// Inventory
-		root.appendChild(mInventory.asElement(aDoc));
-		
-		// Insanities
-		root.appendChild(mInsanities.asElement(aDoc));
-		
-		// Descriptions
-		root.appendChild(mDescriptions.asElement(aDoc));
-		
-		// Controllers
-		final Element controllers = aDoc.createElement("controllers");
-		for (final ItemControllerInstance controller : mControllers)
+		for (final TimeListener listener : mTimeListeners)
 		{
-			controllers.appendChild(controller.asElement(aDoc));
+			listener.time(aType, aAmount);
 		}
-		root.appendChild(controllers);
-		
-		// Restrictions
-		final Element restrictionElement = aDoc.createElement("restrictions");
-		for (final RestrictionInstance restriction : getRestrictions())
-		{
-			restrictionElement.appendChild(restriction.asElement(aDoc));
-		}
-		root.appendChild(restrictionElement);
-		return root;
 	}
 	
 	/**
@@ -580,19 +580,23 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	{
 		if (mHealth != null)
 		{
-			mHealth.update();
+			mHealth.updateUI();
 		}
 		if (mInventory != null)
 		{
-			mInventory.update();
+			mInventory.updateUI();
 		}
 		if (mMoney != null)
 		{
-			mMoney.update();
+			mMoney.updateUI();
 		}
 		if (mMessageListener != null)
 		{
 			mMessageListener.updateMessages();
+		}
+		if (mGeneration != null)
+		{
+			mGeneration.updateUI();
 		}
 		for (final ItemControllerInstance controller : getControllers())
 		{
@@ -600,7 +604,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		}
 		if (mActions != null)
 		{
-			mActions.update();
+			mActions.updateUI();
 		}
 	}
 }

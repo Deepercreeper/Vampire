@@ -23,94 +23,80 @@ public interface RestrictionCreation
 	 */
 	public static class CreationRestrictionType
 	{
-		/**
-		 * @param aName
-		 *            The restriction type name.
-		 * @return the restriction type with the given name.
-		 */
-		public static CreationRestrictionType get(final String aName)
-		{
-			return RESTRICTION_TYPES.get(aName);
-		}
-		
-		private static final Map<String, CreationRestrictionType>	RESTRICTION_TYPES			= new HashMap<String, CreationRestrictionType>();
+		private static final Map<String, CreationRestrictionType> RESTRICTION_TYPES = new HashMap<String, CreationRestrictionType>();
 		
 		/**
 		 * The value of a specific item is restricted.
 		 */
-		public static final CreationRestrictionType					ITEM_VALUE					= new CreationRestrictionType("ItemValue",
-																										InstanceRestrictionType.ITEM_VALUE);
+		public static final CreationRestrictionType ITEM_VALUE = new CreationRestrictionType("ItemValue", InstanceRestrictionType.ITEM_VALUE);
 		
 		/**
 		 * The value of the child item at the given position is restricted.
 		 */
-		public static final CreationRestrictionType					ITEM_CHILD_VALUE_AT			= new CreationRestrictionType("ItemChildValueAt");
+		public static final CreationRestrictionType ITEM_CHILD_VALUE_AT = new CreationRestrictionType("ItemChildValueAt");
 		
 		/**
 		 * The number of children of one specific item is restricted.
 		 */
-		public static final CreationRestrictionType					ITEM_CHILDREN_COUNT			= new CreationRestrictionType("ItemChildrenCount");
+		public static final CreationRestrictionType ITEM_CHILDREN_COUNT = new CreationRestrictionType("ItemChildrenCount");
 		
 		/**
 		 * Restricts, which items can be inside a group.
 		 */
-		public static final CreationRestrictionType					GROUP_CHILDREN				= new CreationRestrictionType("GroupChildren");
+		public static final CreationRestrictionType GROUP_CHILDREN = new CreationRestrictionType("GroupChildren");
 		
 		/**
 		 * Restricts the number of children inside a group.
 		 */
-		public static final CreationRestrictionType					GROUP_CHILDREN_COUNT		= new CreationRestrictionType("GroupChildrenCount");
+		public static final CreationRestrictionType GROUP_CHILDREN_COUNT = new CreationRestrictionType("GroupChildrenCount");
 		
 		/**
 		 * The value of the child at the given position inside a group is restricted.
 		 */
-		public static final CreationRestrictionType					GROUP_ITEM_VALUE_AT			= new CreationRestrictionType("GroupItemValueAt");
+		public static final CreationRestrictionType GROUP_ITEM_VALUE_AT = new CreationRestrictionType("GroupItemValueAt");
 		
 		/**
 		 * The normal experience cost for a item is restricted.
 		 */
-		public static final CreationRestrictionType					ITEM_EP_COST				= new CreationRestrictionType("ItemEpCost",
-																										InstanceRestrictionType.ITEM_EP_COST);
+		public static final CreationRestrictionType ITEM_EP_COST = new CreationRestrictionType("ItemEpCost", InstanceRestrictionType.ITEM_EP_COST);
 		
 		/**
 		 * The additional experience depending on the current value of the item is restricted.
 		 */
-		public static final CreationRestrictionType					ITEM_EP_COST_MULTI			= new CreationRestrictionType("ItemEpCostMulti",
-																										InstanceRestrictionType.ITEM_EP_COST_MULTI);
+		public static final CreationRestrictionType ITEM_EP_COST_MULTI = new CreationRestrictionType("ItemEpCostMulti",
+				InstanceRestrictionType.ITEM_EP_COST_MULTI);
 		
 		/**
 		 * The experience cost for the first point of an item is restricted.
 		 */
-		public static final CreationRestrictionType					ITEM_EP_COST_NEW			= new CreationRestrictionType("ItemEpCostNew",
-																										InstanceRestrictionType.ITEM_EP_COST_NEW);
-		
+		public static final CreationRestrictionType ITEM_EP_COST_NEW = new CreationRestrictionType("ItemEpCostNew",
+				InstanceRestrictionType.ITEM_EP_COST_NEW);
+				
 		/**
 		 * The value depending experience cost of the child at the given position is restricted.
 		 */
-		public static final CreationRestrictionType					ITEM_CHILD_EP_COST_MULTI_AT	= new CreationRestrictionType(
-																										"ItemChildEpCostMultiAt",
-																										InstanceRestrictionType.ITEM_CHILD_EP_COST_MULTI_AT);
-		
+		public static final CreationRestrictionType ITEM_CHILD_EP_COST_MULTI_AT = new CreationRestrictionType("ItemChildEpCostMultiAt",
+				InstanceRestrictionType.ITEM_CHILD_EP_COST_MULTI_AT);
+				
 		/**
 		 * The experience cost for the first point of the child item at the given position is restricted.
 		 */
-		public static final CreationRestrictionType					ITEM_CHILD_EP_COST_NEW		= new CreationRestrictionType(
-																										"ItemChildEpCostNew",
-																										InstanceRestrictionType.ITEM_CHILD_EP_COST_NEW);
-		
+		public static final CreationRestrictionType ITEM_CHILD_EP_COST_NEW = new CreationRestrictionType("ItemChildEpCostNew",
+				InstanceRestrictionType.ITEM_CHILD_EP_COST_NEW);
+				
 		/**
 		 * The number of insanities a character has to have is restricted.
 		 */
-		public static final CreationRestrictionType					INSANITY					= new CreationRestrictionType("Insanity");
-		
+		public static final CreationRestrictionType INSANITY = new CreationRestrictionType("Insanity");
+				
 		/**
 		 * The generation of a character is restricted.
 		 */
-		public static final CreationRestrictionType					GENERATION					= new CreationRestrictionType("Generation");
+		public static final CreationRestrictionType GENERATION = new CreationRestrictionType("Generation");
 		
-		private final String										mName;
+		private final String mName;
 		
-		private final InstanceRestrictionType						mInstanceType;
+		private final InstanceRestrictionType mInstanceType;
 		
 		private CreationRestrictionType(final String aName)
 		{
@@ -127,12 +113,12 @@ public interface RestrictionCreation
 		}
 		
 		@Override
-		public boolean equals(Object obj)
+		public boolean equals(final Object obj)
 		{
 			if (this == obj) return true;
 			if (obj == null) return false;
 			if (getClass() != obj.getClass()) return false;
-			CreationRestrictionType other = (CreationRestrictionType) obj;
+			final CreationRestrictionType other = (CreationRestrictionType) obj;
 			if (mName == null)
 			{
 				if (other.mName != null) return false;
@@ -172,6 +158,16 @@ public interface RestrictionCreation
 		public boolean isPersistent()
 		{
 			return mInstanceType != null;
+		}
+		
+		/**
+		 * @param aName
+		 *            The restriction type name.
+		 * @return the restriction type with the given name.
+		 */
+		public static CreationRestrictionType get(final String aName)
+		{
+			return RESTRICTION_TYPES.get(aName);
 		}
 	}
 	
@@ -278,7 +274,7 @@ public interface RestrictionCreation
 	public void setParent(RestrictionableCreation aParent);
 	
 	/**
-	 * Updates this restriction.
+	 * Updates this restrictions user interface.
 	 */
-	public void update();
+	public void updateUI();
 }

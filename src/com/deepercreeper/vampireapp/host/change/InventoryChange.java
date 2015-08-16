@@ -56,15 +56,6 @@ public class InventoryChange implements CharacterChange
 	}
 	
 	@Override
-	public Element asElement(final Document aDoc)
-	{
-		final Element element = aDoc.createElement(TAG_NAME);
-		element.setAttribute("added", "" + mAdded);
-		element.setAttribute("item", DataUtil.serialize(mItem));
-		return element;
-	}
-	
-	@Override
 	public void applyChange(final CharacterInstance aCharacter)
 	{
 		if (mAdded)
@@ -75,6 +66,15 @@ public class InventoryChange implements CharacterChange
 		{
 			aCharacter.getInventory().removeItem(mItem, true);
 		}
+	}
+	
+	@Override
+	public Element asElement(final Document aDoc)
+	{
+		final Element element = aDoc.createElement(TAG_NAME);
+		element.setAttribute("added", "" + mAdded);
+		element.setAttribute("item", DataUtil.serialize(mItem));
+		return element;
 	}
 	
 	@Override

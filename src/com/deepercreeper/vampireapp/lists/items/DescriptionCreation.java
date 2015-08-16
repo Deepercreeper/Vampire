@@ -28,25 +28,6 @@ public class DescriptionCreation extends Named
 	}
 	
 	/**
-	 * Sets the user defined description value.
-	 * 
-	 * @param aValue
-	 *            The description.
-	 */
-	public void setValue(final String aValue)
-	{
-		mValue = aValue;
-	}
-	
-	/**
-	 * @return the current user defined description.
-	 */
-	public String getValue()
-	{
-		return mValue;
-	}
-	
-	/**
 	 * Removes the user defined description.
 	 */
 	public void clear()
@@ -60,5 +41,24 @@ public class DescriptionCreation extends Named
 	public Description getItem()
 	{
 		return mItem;
+	}
+	
+	/**
+	 * @return the current user defined description.
+	 */
+	public String getValue()
+	{
+		return mValue;
+	}
+	
+	/**
+	 * Sets the user defined description value.
+	 * 
+	 * @param aValue
+	 *            The description.
+	 */
+	public void setValue(final String aValue)
+	{
+		mValue = aValue;
 	}
 }

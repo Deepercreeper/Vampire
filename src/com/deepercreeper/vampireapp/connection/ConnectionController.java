@@ -297,22 +297,6 @@ public class ConnectionController implements ConnectionListener
 	}
 	
 	/**
-	 * Sends the given message to all connected devices.
-	 * 
-	 * @param aType
-	 *            The message type.
-	 * @param aArgs
-	 *            The message arguments.
-	 */
-	public void sendToAll(final MessageType aType, final String... aArgs)
-	{
-		for (final ConnectedDevice device : mDevices)
-		{
-			device.send(aType, aArgs);
-		}
-	}
-	
-	/**
 	 * @return the connected host or {@code null} if no host is connected.
 	 */
 	public ConnectedDevice getHost()
@@ -435,6 +419,22 @@ public class ConnectionController implements ConnectionListener
 				mConnectionListener.receiveMessage(aDevice, aType, aArgs);
 			}
 		});
+	}
+	
+	/**
+	 * Sends the given message to all connected devices.
+	 * 
+	 * @param aType
+	 *            The message type.
+	 * @param aArgs
+	 *            The message arguments.
+	 */
+	public void sendToAll(final MessageType aType, final String... aArgs)
+	{
+		for (final ConnectedDevice device : mDevices)
+		{
+			device.send(aType, aArgs);
+		}
 	}
 	
 	/**

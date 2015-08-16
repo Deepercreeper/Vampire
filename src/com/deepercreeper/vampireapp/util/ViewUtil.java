@@ -71,6 +71,17 @@ public class ViewUtil
 	}
 	
 	/**
+	 * Hides the given view by setting the height to {@code 0}.
+	 * 
+	 * @param aView
+	 *            The view.
+	 */
+	public static void hideHeight(final View aView)
+	{
+		setHeight(aView, 0);
+	}
+	
+	/**
 	 * Hides the given view by setting the width to {@code 0}.
 	 * 
 	 * @param aView
@@ -82,14 +93,25 @@ public class ViewUtil
 	}
 	
 	/**
-	 * Hides the given view by setting the height to {@code 0}.
+	 * Sets the height of the given view to {@link LayoutParams#MATCH_PARENT}.
 	 * 
 	 * @param aView
-	 *            The view.
+	 *            The view to match in height.
 	 */
-	public static void hideHeight(final View aView)
+	public static void matchHeight(View aView)
 	{
-		setHeight(aView, 0);
+		aView.getLayoutParams().height = LayoutParams.MATCH_PARENT;
+	}
+	
+	/**
+	 * Sets the width of the given view to {@link LayoutParams#MATCH_PARENT}.
+	 * 
+	 * @param aView
+	 *            The view to match in width.
+	 */
+	public static void matchWidth(View aView)
+	{
+		aView.getLayoutParams().width = LayoutParams.MATCH_PARENT;
 	}
 	
 	/**
@@ -159,50 +181,6 @@ public class ViewUtil
 	}
 	
 	/**
-	 * Sets the width of the given view to {@link LayoutParams#WRAP_CONTENT}.
-	 * 
-	 * @param aView
-	 *            The view to wrap in width.
-	 */
-	public static void wrapWidth(View aView)
-	{
-		aView.getLayoutParams().width = LayoutParams.WRAP_CONTENT;
-	}
-	
-	/**
-	 * Sets the height of the given view to {@link LayoutParams#WRAP_CONTENT}.
-	 * 
-	 * @param aView
-	 *            The view to wrap in height.
-	 */
-	public static void wrapHeight(View aView)
-	{
-		aView.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
-	}
-	
-	/**
-	 * Sets the width of the given view to {@link LayoutParams#MATCH_PARENT}.
-	 * 
-	 * @param aView
-	 *            The view to match in width.
-	 */
-	public static void matchWidth(View aView)
-	{
-		aView.getLayoutParams().width = LayoutParams.MATCH_PARENT;
-	}
-	
-	/**
-	 * Sets the height of the given view to {@link LayoutParams#MATCH_PARENT}.
-	 * 
-	 * @param aView
-	 *            The view to match in height.
-	 */
-	public static void matchHeight(View aView)
-	{
-		aView.getLayoutParams().height = LayoutParams.MATCH_PARENT;
-	}
-	
-	/**
 	 * Sets the width of the given view to the given value calculated into pixels.
 	 * 
 	 * @param aView
@@ -252,5 +230,27 @@ public class ViewUtil
 	public static void setWidth(final View aView, final int aWidth)
 	{
 		aView.getLayoutParams().width = calcPx(aWidth, aView.getContext());
+	}
+	
+	/**
+	 * Sets the height of the given view to {@link LayoutParams#WRAP_CONTENT}.
+	 * 
+	 * @param aView
+	 *            The view to wrap in height.
+	 */
+	public static void wrapHeight(View aView)
+	{
+		aView.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
+	}
+	
+	/**
+	 * Sets the width of the given view to {@link LayoutParams#WRAP_CONTENT}.
+	 * 
+	 * @param aView
+	 *            The view to wrap in width.
+	 */
+	public static void wrapWidth(View aView)
+	{
+		aView.getLayoutParams().width = LayoutParams.WRAP_CONTENT;
 	}
 }

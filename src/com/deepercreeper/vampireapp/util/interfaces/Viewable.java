@@ -15,12 +15,12 @@ public interface Viewable
 	public View getContainer();
 	
 	/**
-	 * Initializes all views and sets their values.
-	 */
-	public void init();
-	
-	/**
 	 * Releases all views from their parent, so they can be added again.
 	 */
 	public void release();
+	
+	/**
+	 * Updates the user interface.
+	 */
+	public void updateUI();
 }

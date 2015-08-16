@@ -17,6 +17,35 @@ import android.widget.EditText;
  */
 public class CreateStringDialog extends DefaultDialog<StringCreationListener, EditText>
 {
+	private final String mMessage;
+	
+	private CreateStringDialog(final String aTitle, final String aMessage, final Context aContext, final StringCreationListener aListener)
+	{
+		super(aTitle, aContext, aListener, R.layout.dialog_create_string, EditText.class);
+		mMessage = aMessage;
+	}
+	
+	@Override
+	public Dialog createDialog(final Builder aBuilder)
+	{
+		return aBuilder.setMessage(mMessage).setPositiveButton("OK", new OnClickListener()
+		{
+			@Override
+			public void onClick(final DialogInterface aDialog, final int aWhich)
+			{
+				getListener().create(getContainer().getText().toString());
+			}
+		}).create();
+	}
+	
+	/**
+	 * @return whether any of this classes dialogs is open.
+	 */
+	public static boolean isDialogOpen()
+	{
+		return isDialogOpen(CreateStringDialog.class);
+	}
+	
 	/**
 	 * Shows a create string dialog that returns the new created string to the listener.<br>
 	 * Only one dialog can be shown at one time.
@@ -37,34 +66,5 @@ public class CreateStringDialog extends DefaultDialog<StringCreationListener, Ed
 			return;
 		}
 		new CreateStringDialog(aTitle, aMessage, aContext, aListener).show(((Activity) aContext).getFragmentManager(), aTitle);
-	}
-	
-	private final String mMessage;
-	
-	/**
-	 * @return whether any of this classes dialogs is open.
-	 */
-	public static boolean isDialogOpen()
-	{
-		return isDialogOpen(CreateStringDialog.class);
-	}
-	
-	private CreateStringDialog(final String aTitle, final String aMessage, final Context aContext, final StringCreationListener aListener)
-	{
-		super(aTitle, aContext, aListener, R.layout.dialog_create_string, EditText.class);
-		mMessage = aMessage;
-	}
-	
-	@Override
-	public Dialog createDialog(final Builder aBuilder)
-	{
-		return aBuilder.setMessage(mMessage).setPositiveButton("OK", new OnClickListener()
-		{
-			@Override
-			public void onClick(final DialogInterface aDialog, final int aWhich)
-			{
-				getListener().create(getContainer().getText().toString());
-			}
-		}).create();
 	}
 }

@@ -46,9 +46,20 @@ public class DependencyImpl implements Dependency
 	}
 	
 	@Override
-	public Type getType()
+	public boolean equals(Object aO)
 	{
-		return mType;
+		if (aO instanceof Dependency)
+		{
+			Dependency dependency = (Dependency) aO;
+			return getType().equals(dependency.getType());
+		}
+		return false;
+	}
+	
+	@Override
+	public DestinationType getDestinationType()
+	{
+		return mDestinationType;
 	}
 	
 	@Override
@@ -58,9 +69,9 @@ public class DependencyImpl implements Dependency
 	}
 	
 	@Override
-	public DestinationType getDestinationType()
+	public Type getType()
 	{
-		return mDestinationType;
+		return mType;
 	}
 	
 	@Override
@@ -79,16 +90,5 @@ public class DependencyImpl implements Dependency
 	public int hashCode()
 	{
 		return getType().hashCode();
-	}
-	
-	@Override
-	public boolean equals(Object aO)
-	{
-		if (aO instanceof Dependency)
-		{
-			Dependency dependency = (Dependency) aO;
-			return getType().equals(dependency.getType());
-		}
-		return false;
 	}
 }

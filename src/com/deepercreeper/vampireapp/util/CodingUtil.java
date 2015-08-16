@@ -17,26 +17,6 @@ public class CodingUtil
 	{}
 	
 	/**
-	 * Encodes the given string using UTF-8.
-	 * 
-	 * @param aString
-	 *            The string to encode.
-	 * @return the encoded string.
-	 */
-	public static String encode(final String aString)
-	{
-		try
-		{
-			return URLEncoder.encode(aString, "UTF-8");
-		}
-		catch (final UnsupportedEncodingException e)
-		{
-			Log.e(TAG, "Could not encode value.");
-		}
-		return null;
-	}
-	
-	/**
 	 * Decodes the given encoded string using UTF-8.
 	 * 
 	 * @param aString
@@ -52,6 +32,26 @@ public class CodingUtil
 		catch (final UnsupportedEncodingException e)
 		{
 			Log.e(TAG, "Could not decode value.");
+		}
+		return null;
+	}
+	
+	/**
+	 * Encodes the given string using UTF-8.
+	 * 
+	 * @param aString
+	 *            The string to encode.
+	 * @return the encoded string.
+	 */
+	public static String encode(final String aString)
+	{
+		try
+		{
+			return URLEncoder.encode(aString, "UTF-8");
+		}
+		catch (final UnsupportedEncodingException e)
+		{
+			Log.e(TAG, "Could not encode value.");
 		}
 		return null;
 	}

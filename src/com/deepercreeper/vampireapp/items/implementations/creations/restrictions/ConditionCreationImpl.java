@@ -44,40 +44,9 @@ public class ConditionCreationImpl implements ConditionCreation
 	}
 	
 	@Override
-	public int getIndex()
-	{
-		return mIndex;
-	}
-	
-	@Override
 	public boolean complied(final ItemControllerCreation aController)
 	{
 		return mQuery.complied(aController, this);
-	}
-	
-	@Override
-	public String getItemName()
-	{
-		return mItemName;
-	}
-	
-	@Override
-	public boolean isInRange(final int aValue)
-	{
-		return mMinimum <= aValue && aValue <= mMaximum;
-	}
-	
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + mIndex;
-		result = prime * result + ((mItemName == null) ? 0 : mItemName.hashCode());
-		result = prime * result + mMaximum;
-		result = prime * result + mMinimum;
-		result = prime * result + ((mQuery == null) ? 0 : mQuery.hashCode());
-		return result;
 	}
 	
 	@Override
@@ -131,6 +100,37 @@ public class ConditionCreationImpl implements ConditionCreation
 			return false;
 		}
 		return true;
+	}
+	
+	@Override
+	public int getIndex()
+	{
+		return mIndex;
+	}
+	
+	@Override
+	public String getItemName()
+	{
+		return mItemName;
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + mIndex;
+		result = prime * result + ((mItemName == null) ? 0 : mItemName.hashCode());
+		result = prime * result + mMaximum;
+		result = prime * result + mMinimum;
+		result = prime * result + ((mQuery == null) ? 0 : mQuery.hashCode());
+		return result;
+	}
+	
+	@Override
+	public boolean isInRange(final int aValue)
+	{
+		return mMinimum <= aValue && aValue <= mMaximum;
 	}
 	
 }

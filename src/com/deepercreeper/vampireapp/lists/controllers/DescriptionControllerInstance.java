@@ -1,12 +1,10 @@
-package com.deepercreeper.vampireapp.lists.controllers.instances;
+package com.deepercreeper.vampireapp.lists.controllers;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import com.deepercreeper.vampireapp.lists.controllers.DescriptionController;
-import com.deepercreeper.vampireapp.lists.controllers.creations.DescriptionControllerCreation;
 import com.deepercreeper.vampireapp.lists.items.Description;
 import com.deepercreeper.vampireapp.lists.items.DescriptionCreation;
 import com.deepercreeper.vampireapp.lists.items.DescriptionInstance;
@@ -22,6 +20,19 @@ import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 public class DescriptionControllerInstance implements Saveable
 {
 	private final Map<String, DescriptionInstance> mValues = new HashMap<String, DescriptionInstance>();
+	
+	/**
+	 * Creates a new description controller out of the given description controller creation.
+	 * 
+	 * @param aController
+	 */
+	public DescriptionControllerInstance(final DescriptionControllerCreation aController)
+	{
+		for (final DescriptionCreation value : aController.getValuesList())
+		{
+			mValues.put(value.getName(), new DescriptionInstance(value.getItem(), value.getValue()));
+		}
+	}
 	
 	/**
 	 * Creates a new description controller out of the given XML data.
@@ -46,19 +57,6 @@ public class DescriptionControllerInstance implements Saveable
 				value = "";
 			}
 			mValues.put(description.getName(), new DescriptionInstance(description, value));
-		}
-	}
-	
-	/**
-	 * Creates a new description controller out of the given description controller creation.
-	 * 
-	 * @param aController
-	 */
-	public DescriptionControllerInstance(final DescriptionControllerCreation aController)
-	{
-		for (final DescriptionCreation value : aController.getValuesList())
-		{
-			mValues.put(value.getName(), new DescriptionInstance(value.getItem(), value.getValue()));
 		}
 	}
 	

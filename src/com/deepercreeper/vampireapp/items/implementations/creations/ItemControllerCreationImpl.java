@@ -91,36 +91,6 @@ public class ItemControllerCreationImpl extends DependableInstanceImpl implement
 	}
 	
 	@Override
-	public void init()
-	{}
-	
-	@Override
-	public void updateUI()
-	{
-		for (final ItemGroupCreation group : getGroupsList())
-		{
-			group.updateUI();
-		}
-		setEnabled( !isEmpty());
-	}
-	
-	@Override
-	public void release()
-	{
-		ViewUtil.release(getContainer());
-	}
-	
-	@Override
-	public void clear()
-	{
-		for (final ItemGroupCreation group : getGroupsList())
-		{
-			group.clear();
-		}
-		resize();
-	}
-	
-	@Override
 	public void addItem(final ItemCreation aItem)
 	{
 		mItems.put(aItem.getName(), aItem);
@@ -158,24 +128,6 @@ public class ItemControllerCreationImpl extends DependableInstanceImpl implement
 			mInactiveRestrictions.add(aRestriction);
 			aRestriction.setParent(this);
 		}
-	}
-	
-	@Override
-	public int[] getMaxValues()
-	{
-		int[] maxValues = getItemController().getMaxValues();
-		if (hasDependency(Type.MAX_VALUES))
-		{
-			maxValues = getDependency(Type.MAX_VALUES).getValues(maxValues);
-		}
-		return maxValues;
-	}
-	
-	@Override
-	public boolean hasMaxValues()
-	{
-		final int[] maxValues = getMaxValues();
-		return maxValues != null && maxValues.length > 0;
 	}
 	
 	@Override
@@ -251,6 +203,16 @@ public class ItemControllerCreationImpl extends DependableInstanceImpl implement
 			}
 		}
 		return true;
+	}
+	
+	@Override
+	public void clear()
+	{
+		for (final ItemGroupCreation group : getGroupsList())
+		{
+			group.clear();
+		}
+		resize();
 	}
 	
 	@Override
@@ -330,6 +292,17 @@ public class ItemControllerCreationImpl extends DependableInstanceImpl implement
 	}
 	
 	@Override
+	public int[] getMaxValues()
+	{
+		int[] maxValues = getItemController().getMaxValues();
+		if (hasDependency(Type.MAX_VALUES))
+		{
+			maxValues = getDependency(Type.MAX_VALUES).getValues(maxValues);
+		}
+		return maxValues;
+	}
+	
+	@Override
 	public int getMinValue(final CreationRestrictionType... aTypes)
 	{
 		return Integer.MIN_VALUE;
@@ -406,6 +379,13 @@ public class ItemControllerCreationImpl extends DependableInstanceImpl implement
 	}
 	
 	@Override
+	public boolean hasMaxValues()
+	{
+		final int[] maxValues = getMaxValues();
+		return maxValues != null && maxValues.length > 0;
+	}
+	
+	@Override
 	public boolean hasRestrictions(final CreationRestrictionType... aTypes)
 	{
 		for (final ItemCreation item : mItems.values())
@@ -446,6 +426,12 @@ public class ItemControllerCreationImpl extends DependableInstanceImpl implement
 	public boolean isValueOk(final int aValue, final CreationRestrictionType... aTypes)
 	{
 		return true;
+	}
+	
+	@Override
+	public void release()
+	{
+		ViewUtil.release(getContainer());
 	}
 	
 	/**
@@ -511,22 +497,13 @@ public class ItemControllerCreationImpl extends DependableInstanceImpl implement
 	}
 	
 	@Override
-	public void updateRestrictions()
+	public void updateUI()
 	{
-		for (final ItemCreation item : mItems.values())
-		{
-			if (item.hasRestrictions())
-			{
-				item.updateRestrictions();
-			}
-		}
 		for (final ItemGroupCreation group : getGroupsList())
 		{
-			if (group.hasRestrictions())
-			{
-				group.updateRestrictions();
-			}
+			group.updateUI();
 		}
+		setEnabled( !isEmpty());
 	}
 	
 	private void addGroupSilent(final ItemGroupCreation aGroup)

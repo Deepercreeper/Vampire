@@ -21,6 +21,35 @@ public class ContactsUtil
 	 */
 	public static final String	EMPTY_NUMBER	= "<empty>";
 	
+	private ContactsUtil()
+	{}
+	
+	/**
+	 * @param aAddress
+	 *            The device address.
+	 * @return the Bluetooth name of the given address if bonded or the address itself otherwise.
+	 */
+	public static String getBluetoothName(String aAddress)
+	{
+		BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+		if (bluetoothAdapter == null)
+		{
+			return aAddress;
+		}
+		
+		for (BluetoothDevice device : bluetoothAdapter.getBondedDevices())
+		{
+			if (device.getAddress().equals(aAddress))
+			{
+				if (device.getName() != null)
+				{
+					return device.getName();
+				}
+			}
+		}
+		return aAddress;
+	}
+	
 	/**
 	 * @param aContext
 	 *            The underlying context.
@@ -73,33 +102,4 @@ public class ContactsUtil
 		}
 		return phoneNumber;
 	}
-	
-	/**
-	 * @param aAddress
-	 *            The device address.
-	 * @return the Bluetooth name of the given address if bonded or the address itself otherwise.
-	 */
-	public static String getBluetoothName(String aAddress)
-	{
-		BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-		if (bluetoothAdapter == null)
-		{
-			return aAddress;
-		}
-		
-		for (BluetoothDevice device : bluetoothAdapter.getBondedDevices())
-		{
-			if (device.getAddress().equals(aAddress))
-			{
-				if (device.getName() != null)
-				{
-					return device.getName();
-				}
-			}
-		}
-		return aAddress;
-	}
-	
-	private ContactsUtil()
-	{}
 }

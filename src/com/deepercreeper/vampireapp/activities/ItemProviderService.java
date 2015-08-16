@@ -91,6 +91,12 @@ public class ItemProviderService extends Service implements ItemProvider
 	}
 	
 	@Override
+	public Currency getCurrency()
+	{
+		return mCurrency;
+	}
+	
+	@Override
 	public DescriptionController getDescriptions()
 	{
 		return mDescriptions;
@@ -112,12 +118,6 @@ public class ItemProviderService extends Service implements ItemProvider
 	public Inventory getInventory()
 	{
 		return mInventory;
-	}
-	
-	@Override
-	public Currency getCurrency()
-	{
-		return mCurrency;
 	}
 	
 	@Override

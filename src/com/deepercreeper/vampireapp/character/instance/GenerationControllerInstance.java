@@ -40,46 +40,6 @@ public class GenerationControllerInstance implements Viewable, Saveable
 	private int mGeneration;
 	
 	/**
-	 * Creates a new generation controller.
-	 * 
-	 * @param aGeneration
-	 *            The character creation.
-	 * @param aChar
-	 *            The character.
-	 * @param aHost
-	 *            whether this is a host side controller.
-	 * @param aChangeListener
-	 *            A listener for generation changes.
-	 */
-	public GenerationControllerInstance(final int aGeneration, final CharacterInstance aChar, final boolean aHost,
-			final MessageListener aChangeListener)
-	{
-		mChar = aChar;
-		mGeneration = aGeneration;
-		mChangeListener = aChangeListener;
-		mHost = aHost;
-		final int id = mHost ? R.layout.host_generation : R.layout.client_generation;
-		mContainer = (LinearLayout) View.inflate(mChar.getContext(), id, null);
-		
-		mGenerationText = (TextView) getContainer().findViewById(mHost ? R.id.h_generation_label : R.id.c_generation_label);
-		mIncreaseButton = mHost ? (ImageButton) getContainer().findViewById(R.id.h_increase_generation_button) : null;
-		
-		if (mHost)
-		{
-			mIncreaseButton.setOnClickListener(new OnClickListener()
-			{
-				@Override
-				public void onClick(final View aV)
-				{
-					increase();
-				}
-			});
-		}
-		
-		init();
-	}
-	
-	/**
 	 * Creates a generation controller out of the given XML data.
 	 * 
 	 * @param aElement
@@ -115,14 +75,44 @@ public class GenerationControllerInstance implements Viewable, Saveable
 				}
 			});
 		}
-		
-		init();
 	}
 	
-	@Override
-	public void init()
+	/**
+	 * Creates a new generation controller.
+	 * 
+	 * @param aGeneration
+	 *            The character creation.
+	 * @param aChar
+	 *            The character.
+	 * @param aHost
+	 *            whether this is a host side controller.
+	 * @param aChangeListener
+	 *            A listener for generation changes.
+	 */
+	public GenerationControllerInstance(final int aGeneration, final CharacterInstance aChar, final boolean aHost,
+			final MessageListener aChangeListener)
 	{
-		updateValue();
+		mChar = aChar;
+		mGeneration = aGeneration;
+		mChangeListener = aChangeListener;
+		mHost = aHost;
+		final int id = mHost ? R.layout.host_generation : R.layout.client_generation;
+		mContainer = (LinearLayout) View.inflate(mChar.getContext(), id, null);
+		
+		mGenerationText = (TextView) getContainer().findViewById(mHost ? R.id.h_generation_label : R.id.c_generation_label);
+		mIncreaseButton = mHost ? (ImageButton) getContainer().findViewById(R.id.h_increase_generation_button) : null;
+		
+		if (mHost)
+		{
+			mIncreaseButton.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					increase();
+				}
+			});
+		}
 	}
 	
 	@Override
@@ -134,15 +124,17 @@ public class GenerationControllerInstance implements Viewable, Saveable
 	}
 	
 	@Override
-	public void release()
-	{
-		ViewUtil.release(getContainer());
-	}
-	
-	@Override
 	public LinearLayout getContainer()
 	{
 		return mContainer;
+	}
+	
+	/**
+	 * @return the current generation.
+	 */
+	public int getGeneration()
+	{
+		return mGeneration;
 	}
 	
 	/**
@@ -156,15 +148,22 @@ public class GenerationControllerInstance implements Viewable, Saveable
 			mGeneration-- ;
 		}
 		mChangeListener.sendChange(new GenerationChange(mGeneration));
-		updateValue();
+		// TODO Maybe update the whole character because of blood pool changes
+		updateUI();
 	}
 	
 	/**
-	 * @return the current generation.
+	 * @return whether the character is a low level character.
 	 */
-	public int getGeneration()
+	public boolean isLowLevel()
 	{
-		return mGeneration;
+		return mGeneration > MAX_LEVEL_POINTS;
+	}
+	
+	@Override
+	public void release()
+	{
+		ViewUtil.release(getContainer());
 	}
 	
 	/**
@@ -176,22 +175,14 @@ public class GenerationControllerInstance implements Viewable, Saveable
 	public void updateGeneration(final int aGeneration)
 	{
 		mGeneration = aGeneration;
-		updateValue();
 		mChar.updateUI();
-	}
-	
-	/**
-	 * @return whether the character is a low level character.
-	 */
-	public boolean isLowLevel()
-	{
-		return mGeneration > MAX_LEVEL_POINTS;
 	}
 	
 	/**
 	 * Updates the generation value.
 	 */
-	public void updateValue()
+	@Override
+	public void updateUI()
 	{
 		mGenerationText.setText("" + mGeneration);
 	}

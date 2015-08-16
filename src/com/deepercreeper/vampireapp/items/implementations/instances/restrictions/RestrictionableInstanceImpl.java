@@ -15,25 +15,11 @@ import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.Rest
  */
 public abstract class RestrictionableInstanceImpl implements RestrictionableInstance
 {
-	private final Set<RestrictionInstance>	mRestrictions		= new HashSet<RestrictionInstance>();
+	private final Set<RestrictionInstance> mRestrictions = new HashSet<RestrictionInstance>();
 	
-	private final CharacterInstance			mCharacter;
+	private final CharacterInstance mCharacter;
 	
-	private ItemControllerInstance			mControllerInstance	= null;
-	
-	/**
-	 * Creates a new restrictionable.
-	 * 
-	 * @param aCharacter
-	 *            The character.
-	 * @param aController
-	 *            The item controller.
-	 */
-	public RestrictionableInstanceImpl(final CharacterInstance aCharacter, ItemControllerInstance aController)
-	{
-		mCharacter = aCharacter;
-		mControllerInstance = aController;
-	}
+	private ItemControllerInstance mControllerInstance = null;
 	
 	/**
 	 * Creates a new restrictionable with no item controller.
@@ -46,10 +32,18 @@ public abstract class RestrictionableInstanceImpl implements RestrictionableInst
 		this(aCharacter, null);
 	}
 	
-	@Override
-	public CharacterInstance getCharacter()
+	/**
+	 * Creates a new restrictionable.
+	 * 
+	 * @param aCharacter
+	 *            The character.
+	 * @param aController
+	 *            The item controller.
+	 */
+	public RestrictionableInstanceImpl(final CharacterInstance aCharacter, final ItemControllerInstance aController)
 	{
-		return mCharacter;
+		mCharacter = aCharacter;
+		mControllerInstance = aController;
 	}
 	
 	@Override
@@ -57,7 +51,13 @@ public abstract class RestrictionableInstanceImpl implements RestrictionableInst
 	{
 		getRestrictions().add(aRestriction);
 		aRestriction.setParent(this);
-		updateRestrictions();
+		updateUI();
+	}
+	
+	@Override
+	public CharacterInstance getCharacter()
+	{
+		return mCharacter;
 	}
 	
 	@Override
@@ -130,6 +130,6 @@ public abstract class RestrictionableInstanceImpl implements RestrictionableInst
 	{
 		getRestrictions().remove(aRestriction);
 		getCharacter().removeRestriction(aRestriction);
-		updateRestrictions();
+		updateUI();
 	}
 }

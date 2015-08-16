@@ -29,41 +29,15 @@ public class Named implements Nameable
 	}
 	
 	@Override
+	public char charAt(final int aIndex)
+	{
+		return getName().charAt(aIndex);
+	}
+	
+	@Override
 	public int compareTo(final Nameable aAnother)
 	{
 		return getDisplayName().compareTo(aAnother.getDisplayName());
-	}
-	
-	@Override
-	public String getDisplayName()
-	{
-		return LanguageUtil.instance().getValue(getName());
-	}
-	
-	/**
-	 * Sets the name of this.
-	 * 
-	 * @param aName
-	 *            The new name.
-	 */
-	public void setName(final String aName)
-	{
-		mName = aName;
-	}
-	
-	@Override
-	public String getName()
-	{
-		return mName;
-	}
-	
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((getName() == null) ? 0 : getName().hashCode());
-		return result;
 	}
 	
 	@Override
@@ -82,15 +56,41 @@ public class Named implements Nameable
 	}
 	
 	@Override
-	public char charAt(final int aIndex)
+	public String getDisplayName()
 	{
-		return getName().charAt(aIndex);
+		return LanguageUtil.instance().getValue(getName());
+	}
+	
+	@Override
+	public String getName()
+	{
+		return mName;
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((getName() == null) ? 0 : getName().hashCode());
+		return result;
 	}
 	
 	@Override
 	public int length()
 	{
 		return getName().length();
+	}
+	
+	/**
+	 * Sets the name of this.
+	 * 
+	 * @param aName
+	 *            The new name.
+	 */
+	public void setName(final String aName)
+	{
+		mName = aName;
 	}
 	
 	@Override

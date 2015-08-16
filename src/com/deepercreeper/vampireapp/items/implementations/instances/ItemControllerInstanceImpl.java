@@ -158,16 +158,6 @@ public class ItemControllerInstanceImpl extends DependableInstanceImpl implement
 	}
 	
 	@Override
-	public void updateUI()
-	{
-		for (final ItemGroupInstance group : getGroupsList())
-		{
-			group.updateUI();
-		}
-		setEnabled( !isEmpty() || mHost && hasMutableGroup());
-	}
-	
-	@Override
 	public Element asElement(final Document aDoc)
 	{
 		final Element controller = aDoc.createElement("controller");
@@ -262,20 +252,15 @@ public class ItemControllerInstanceImpl extends DependableInstanceImpl implement
 	}
 	
 	@Override
-	public boolean isEmpty()
+	public boolean hasGroup(final String aName)
 	{
-		if (getGroupsList().isEmpty())
-		{
-			return true;
-		}
-		for (final ItemGroupInstance group : getGroupsList())
-		{
-			if ( !group.getItemsList().isEmpty())
-			{
-				return false;
-			}
-		}
-		return true;
+		return mGroups.containsKey(aName);
+	}
+	
+	@Override
+	public boolean hasItem(final String aName)
+	{
+		return mItems.containsKey(aName);
 	}
 	
 	@Override
@@ -296,20 +281,21 @@ public class ItemControllerInstanceImpl extends DependableInstanceImpl implement
 	}
 	
 	@Override
-	public boolean hasGroup(final String aName)
+	public boolean isEmpty()
 	{
-		return mGroups.containsKey(aName);
+		if (getGroupsList().isEmpty())
+		{
+			return true;
+		}
+		for (final ItemGroupInstance group : getGroupsList())
+		{
+			if ( !group.getItemsList().isEmpty())
+			{
+				return false;
+			}
+		}
+		return true;
 	}
-	
-	@Override
-	public boolean hasItem(final String aName)
-	{
-		return mItems.containsKey(aName);
-	}
-	
-	@Override
-	public void init()
-	{}
 	
 	@Override
 	public void release()
@@ -345,6 +331,16 @@ public class ItemControllerInstanceImpl extends DependableInstanceImpl implement
 		{
 			mExpander.close();
 		}
+	}
+	
+	@Override
+	public void updateUI()
+	{
+		for (final ItemGroupInstance group : getGroupsList())
+		{
+			group.updateUI();
+		}
+		setEnabled( !isEmpty() || mHost && hasMutableGroup());
 	}
 	
 	private void addGroupSilent(final ItemGroupInstance aGroup)

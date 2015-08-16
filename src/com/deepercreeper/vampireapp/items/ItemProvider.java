@@ -35,6 +35,11 @@ public interface ItemProvider
 	public List<ItemController> getControllers();
 	
 	/**
+	 * @return the money controller.
+	 */
+	public Currency getCurrency();
+	
+	/**
 	 * @return the description controller.
 	 */
 	public DescriptionController getDescriptions();
@@ -53,11 +58,6 @@ public interface ItemProvider
 	 * @return the inventory controller.
 	 */
 	public Inventory getInventory();
-	
-	/**
-	 * @return the money controller.
-	 */
-	public Currency getCurrency();
 	
 	/**
 	 * @return the nature controller.

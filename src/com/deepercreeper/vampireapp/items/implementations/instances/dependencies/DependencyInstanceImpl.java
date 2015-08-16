@@ -32,15 +32,9 @@ public class DependencyInstanceImpl implements DependencyInstance
 	}
 	
 	@Override
-	public int getValue(final int aDefault)
+	public DestinationType getDestinationType()
 	{
-		return mDependency.getValue().get(getDestinationValue(), aDefault);
-	}
-	
-	@Override
-	public int[] getValues(final int[] aDefault)
-	{
-		return mDependency.getValues().get(getDestinationValue(), aDefault);
+		return mDependency.getDestinationType();
 	}
 	
 	@Override
@@ -57,6 +51,24 @@ public class DependencyInstanceImpl implements DependencyInstance
 	}
 	
 	@Override
+	public Type getType()
+	{
+		return mDependency.getType();
+	}
+	
+	@Override
+	public int getValue(final int aDefault)
+	{
+		return mDependency.getValue().get(getDestinationValue(), aDefault);
+	}
+	
+	@Override
+	public int[] getValues(final int[] aDefault)
+	{
+		return mDependency.getValues().get(getDestinationValue(), aDefault);
+	}
+	
+	@Override
 	public boolean isActive()
 	{
 		switch (getDestinationType())
@@ -67,17 +79,5 @@ public class DependencyInstanceImpl implements DependencyInstance
 				return true;
 		}
 		return false;
-	}
-	
-	@Override
-	public DestinationType getDestinationType()
-	{
-		return mDependency.getDestinationType();
-	}
-	
-	@Override
-	public Type getType()
-	{
-		return mDependency.getType();
 	}
 }

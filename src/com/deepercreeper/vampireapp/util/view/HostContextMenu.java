@@ -19,8 +19,6 @@ import com.deepercreeper.vampireapp.util.Log;
  */
 public class HostContextMenu extends DialogFragment
 {
-	private static final String	TAG	= "HostContextMenu";
-	
 	/**
 	 * A listener that is invoked, when host context menu events occur.
 	 * 
@@ -64,6 +62,8 @@ public class HostContextMenu extends DialogFragment
 			return mResId;
 		}
 	}
+	
+	private static final String	TAG	= "HostContextMenu";
 	
 	private static boolean		sDialogOpen	= false;
 	
@@ -113,14 +113,6 @@ public class HostContextMenu extends DialogFragment
 		sDialogOpen = false;
 	}
 	
-	/**
-	 * @return whether any dialog is open at this time.
-	 */
-	public static boolean isDialogOpen()
-	{
-		return sDialogOpen;
-	}
-	
 	private void selectItem(final Action aAction)
 	{
 		switch (aAction)
@@ -129,6 +121,14 @@ public class HostContextMenu extends DialogFragment
 				mListener.deleteHost(mName);
 				break;
 		}
+	}
+	
+	/**
+	 * @return whether any dialog is open at this time.
+	 */
+	public static boolean isDialogOpen()
+	{
+		return sDialogOpen;
 	}
 	
 	/**

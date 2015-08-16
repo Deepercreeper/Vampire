@@ -123,10 +123,20 @@ public class HealthControllerCreation implements Viewable
 		
 		for (final int health : aItems.getHealth().getSteps())
 		{
-			mSteps.add(new Step(health));
+			final Step step = new Step(health);
+			getContainer().addView(step.getContainer());
+			mSteps.add(step);
 		}
 		
-		init();
+		final Button addButton = (Button) getContainer().findViewById(R.id.view_add_health_step_button);
+		addButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				addStep();
+			}
+		});
 	}
 	
 	@Override
@@ -157,29 +167,14 @@ public class HealthControllerCreation implements Viewable
 	}
 	
 	@Override
-	public void init()
-	{
-		final Button addButton = (Button) getContainer().findViewById(R.id.view_add_health_step_button);
-		addButton.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(final View aV)
-			{
-				addStep();
-			}
-		});
-		
-		for (final Step step : mSteps)
-		{
-			getContainer().addView(step.getContainer());
-		}
-	}
-	
-	@Override
 	public void release()
 	{
 		ViewUtil.release(getContainer());
 	}
+	
+	@Override
+	public void updateUI()
+	{}
 	
 	private void addStep()
 	{

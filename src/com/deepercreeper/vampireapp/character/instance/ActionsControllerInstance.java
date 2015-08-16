@@ -48,40 +48,14 @@ public class ActionsControllerInstance implements Viewable
 		
 		mExpander.init();
 		
-		init();
-	}
-	
-	@Override
-	public void release()
-	{
-		ViewUtil.release(getContainer());
-	}
-	
-	@Override
-	public LinearLayout getContainer()
-	{
-		return mContainer;
-	}
-	
-	/**
-	 * Updates the expander button.
-	 */
-	public void update()
-	{
-		for (final ActionInstance action : mActions)
+		for (final ItemControllerInstance controller : mChar.getControllers())
 		{
-			action.update();
+			mActions.addAll(controller.getActions());
 		}
-		final boolean hasActions = !mActions.isEmpty();
-		if ( !hasActions)
-		{
-			mExpander.close();
-		}
-		else
-		{
-			mExpander.resize();
-		}
-		ViewUtil.setEnabled(mExpander.getButton(), hasActions);
+		// TODO Add other actions
+		
+		sortActions();
+		updateUI();
 	}
 	
 	/**
@@ -94,7 +68,19 @@ public class ActionsControllerInstance implements Viewable
 	{
 		mActions.addAll(aActions);
 		sortActions();
-		update();
+		updateUI();
+	}
+	
+	@Override
+	public LinearLayout getContainer()
+	{
+		return mContainer;
+	}
+	
+	@Override
+	public void release()
+	{
+		ViewUtil.release(getContainer());
 	}
 	
 	/**
@@ -111,7 +97,26 @@ public class ActionsControllerInstance implements Viewable
 		}
 		mActions.removeAll(aActions);
 		sortActions();
-		update();
+		updateUI();
+	}
+	
+	@Override
+	public void updateUI()
+	{
+		for (final ActionInstance action : mActions)
+		{
+			action.updateUI();
+		}
+		final boolean hasActions = !mActions.isEmpty();
+		if ( !hasActions)
+		{
+			mExpander.close();
+		}
+		else
+		{
+			mExpander.resize();
+		}
+		ViewUtil.setEnabled(mExpander.getButton(), hasActions);
 	}
 	
 	private void sortActions()
@@ -123,26 +128,8 @@ public class ActionsControllerInstance implements Viewable
 		Collections.sort(mActions);
 		for (final ActionInstance action : mActions)
 		{
-			action.init();
+			action.updateUI();
 			mExpander.getContainer().addView(action.getContainer());
 		}
-	}
-	
-	@Override
-	public void init()
-	{
-		for (final ActionInstance action : mActions)
-		{
-			action.release();
-		}
-		mActions.clear();
-		for (final ItemControllerInstance controller : mChar.getControllers())
-		{
-			mActions.addAll(controller.getActions());
-		}
-		// TODO Add other actions
-		
-		sortActions();
-		update();
 	}
 }

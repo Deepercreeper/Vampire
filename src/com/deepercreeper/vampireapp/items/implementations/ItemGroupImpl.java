@@ -109,12 +109,6 @@ public class ItemGroupImpl extends NamedDependableImpl implements ItemGroup
 	}
 	
 	@Override
-	public boolean isHostMutable()
-	{
-		return mHostMutable;
-	}
-	
-	@Override
 	public int[] getDefaultValues()
 	{
 		if ( !isValueGroup())
@@ -226,6 +220,12 @@ public class ItemGroupImpl extends NamedDependableImpl implements ItemGroup
 	public boolean isFreeMutable()
 	{
 		return mFreeMutable;
+	}
+	
+	@Override
+	public boolean isHostMutable()
+	{
+		return mHostMutable;
 	}
 	
 	@Override

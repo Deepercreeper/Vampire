@@ -61,6 +61,30 @@ public class ItemControllerImpl extends NamedDependableImpl implements ItemContr
 	}
 	
 	@Override
+	public Item getItem(final String aName)
+	{
+		for (final ItemGroup group : getGroupsList())
+		{
+			if (group.hasItem(aName))
+			{
+				return group.getItem(aName);
+			}
+		}
+		return null;
+	}
+	
+	@Override
+	public List<Item> getItemsList()
+	{
+		final List<Item> items = new ArrayList<Item>();
+		for (final ItemGroup group : getGroupsList())
+		{
+			items.addAll(group.getItemsList());
+		}
+		return items;
+	}
+	
+	@Override
 	public int[] getMaxValues()
 	{
 		return mMaxValues;
@@ -89,30 +113,6 @@ public class ItemControllerImpl extends NamedDependableImpl implements ItemContr
 			}
 		}
 		return false;
-	}
-	
-	@Override
-	public Item getItem(final String aName)
-	{
-		for (final ItemGroup group : getGroupsList())
-		{
-			if (group.hasItem(aName))
-			{
-				return group.getItem(aName);
-			}
-		}
-		return null;
-	}
-	
-	@Override
-	public List<Item> getItemsList()
-	{
-		final List<Item> items = new ArrayList<Item>();
-		for (final ItemGroup group : getGroupsList())
-		{
-			items.addAll(group.getItemsList());
-		}
-		return items;
 	}
 	
 	@Override

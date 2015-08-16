@@ -16,8 +16,6 @@ import android.content.Context;
  */
 public class Duration implements TimeListener, Saveable
 {
-	private static final String TAG = "Duration";
-	
 	/**
 	 * A listener that is used to wait for durations to get done.
 	 * 
@@ -35,6 +33,8 @@ public class Duration implements TimeListener, Saveable
 		 */
 		public void timeUpdated();
 	}
+	
+	private static final String TAG = "Duration";
 	
 	/**
 	 * This duration won't end.
@@ -89,14 +89,6 @@ public class Duration implements TimeListener, Saveable
 	}
 	
 	/**
-	 * @return whether this duration is over.
-	 */
-	public boolean isDue()
-	{
-		return mDue;
-	}
-	
-	/**
 	 * Adds a duration listener to this duration.
 	 * 
 	 * @param aListener
@@ -123,6 +115,44 @@ public class Duration implements TimeListener, Saveable
 		return element;
 	}
 	
+	/**
+	 * @param aContext
+	 *            The underlying context.
+	 * @return the display name of this duration.
+	 */
+	public String getName(final Context aContext)
+	{
+		if (this == FOREVER)
+		{
+			return aContext.getString(R.string.forever);
+		}
+		return getType().getName(aContext) + ": " + getValue();
+	}
+	
+	/**
+	 * @return the duration type.
+	 */
+	public Type getType()
+	{
+		return mType;
+	}
+	
+	/**
+	 * @return the number of times, the duration method needs to be called to make this duration end.
+	 */
+	public int getValue()
+	{
+		return mValue;
+	}
+	
+	/**
+	 * @return whether this duration is over.
+	 */
+	public boolean isDue()
+	{
+		return mDue;
+	}
+	
 	@Override
 	public void time(final Type aType, final int aAmount)
 	{
@@ -146,6 +176,16 @@ public class Duration implements TimeListener, Saveable
 				listener.timeUpdated();
 			}
 		}
+	}
+	
+	@Override
+	public String toString()
+	{
+		if (this == FOREVER)
+		{
+			return "Forever";
+		}
+		return getType().name() + ": " + getValue();
 	}
 	
 	private void day(final int aAmount)
@@ -196,22 +236,6 @@ public class Duration implements TimeListener, Saveable
 		}
 	}
 	
-	/**
-	 * @return the duration type.
-	 */
-	public Type getType()
-	{
-		return mType;
-	}
-	
-	/**
-	 * @return the number of times, the duration method needs to be called to make this duration end.
-	 */
-	public int getValue()
-	{
-		return mValue;
-	}
-	
 	private void hour(final int aAmount)
 	{
 		switch (mType)
@@ -242,6 +266,14 @@ public class Duration implements TimeListener, Saveable
 		}
 	}
 	
+	private void onDue()
+	{
+		for (final DurationListener listener : mListeners)
+		{
+			listener.onDue();
+		}
+	}
+	
 	private void round(final int aAmount)
 	{
 		if (mType != Type.ROUND)
@@ -260,38 +292,6 @@ public class Duration implements TimeListener, Saveable
 		{
 			onDue();
 			mDue = true;
-		}
-	}
-	
-	@Override
-	public String toString()
-	{
-		if (this == FOREVER)
-		{
-			return "Forever";
-		}
-		return getType().name() + ": " + getValue();
-	}
-	
-	/**
-	 * @param aContext
-	 *            The underlying context.
-	 * @return the display name of this duration.
-	 */
-	public String getName(final Context aContext)
-	{
-		if (this == FOREVER)
-		{
-			return aContext.getString(R.string.forever);
-		}
-		return getType().getName(aContext) + ": " + getValue();
-	}
-	
-	private void onDue()
-	{
-		for (final DurationListener listener : mListeners)
-		{
-			listener.onDue();
 		}
 	}
 	

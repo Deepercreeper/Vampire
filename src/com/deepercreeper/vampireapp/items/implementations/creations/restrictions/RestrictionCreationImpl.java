@@ -19,25 +19,25 @@ import com.deepercreeper.vampireapp.mechanics.Duration;
  */
 public class RestrictionCreationImpl implements RestrictionCreation
 {
-	private final String					mItemName;
+	private final String mItemName;
 	
-	private final List<String>				mItems;
+	private final List<String> mItems;
 	
-	private final CreationRestrictionType	mType;
+	private final CreationRestrictionType mType;
 	
-	private final int						mMinimum;
+	private final int mMinimum;
 	
-	private final int						mMaximum;
+	private final int mMaximum;
 	
-	private final int						mIndex;
+	private final int mIndex;
 	
-	private final int						mValue;
+	private final int mValue;
 	
-	private final boolean					mCreationRestriction;
+	private final boolean mCreationRestriction;
 	
-	private final Set<ConditionCreation>	mConditions	= new HashSet<ConditionCreation>();
+	private final Set<ConditionCreation> mConditions = new HashSet<ConditionCreation>();
 	
-	private RestrictionableCreation			mParent;
+	private RestrictionableCreation mParent;
 	
 	/**
 	 * Creates a new creation restriction.
@@ -73,83 +73,9 @@ public class RestrictionCreationImpl implements RestrictionCreation
 	}
 	
 	@Override
-	public RestrictionInstance createInstance()
-	{
-		if ( !isPersistent())
-		{
-			return null;
-		}
-		return new RestrictionInstanceImpl(getType().getInstanceType(), getItemName(), getMinimum(), getMaximum(), getItems(), getIndex(),
-				getValue(), Duration.FOREVER);
-		// TODO Maybe add the conditions too
-	}
-	
-	@Override
-	public int getValue()
-	{
-		return mValue;
-	}
-	
-	@Override
-	public boolean isPersistent()
-	{
-		return getType().isPersistent();
-	}
-	
-	@Override
-	public int getIndex()
-	{
-		return mIndex;
-	}
-	
-	@Override
-	public boolean isCreationRestriction()
-	{
-		return mCreationRestriction;
-	}
-	
-	@Override
 	public void addCondition(final ConditionCreation aCondition)
 	{
 		mConditions.add(aCondition);
-	}
-	
-	@Override
-	public boolean hasConditions()
-	{
-		return !mConditions.isEmpty();
-	}
-	
-	@Override
-	public boolean isActive(final ItemControllerCreation aController)
-	{
-		for (final ConditionCreation condition : mConditions)
-		{
-			if ( !condition.complied(aController))
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	@Override
-	public void update()
-	{
-		getParent().updateRestrictions();
-	}
-	
-	/**
-	 * Adds a restricted parent to this restriction. That makes sure,<br>
-	 * that the removal of restrictions is done for each restricted value of this restriction.
-	 * 
-	 * @param aParent
-	 *            The parent.
-	 */
-	@Override
-	public void setParent(final RestrictionableCreation aParent)
-	{
-		mParent = aParent;
 	}
 	
 	/**
@@ -166,66 +92,15 @@ public class RestrictionCreationImpl implements RestrictionCreation
 	}
 	
 	@Override
-	public int getMinimum()
+	public RestrictionInstance createInstance()
 	{
-		return mMinimum;
-	}
-	
-	@Override
-	public RestrictionableCreation getParent()
-	{
-		return mParent;
-	}
-	
-	@Override
-	public int getMaximum()
-	{
-		return mMaximum;
-	}
-	
-	@Override
-	public boolean isInRange(final int aValue)
-	{
-		return mMinimum <= aValue && aValue <= mMaximum;
-	}
-	
-	@Override
-	public String getItemName()
-	{
-		return mItemName;
-	}
-	
-	@Override
-	public List<String> getItems()
-	{
-		return mItems;
-	}
-	
-	@Override
-	public CreationRestrictionType getType()
-	{
-		return mType;
-	}
-	
-	@Override
-	public Set<ConditionCreation> getConditions()
-	{
-		return mConditions;
-	}
-	
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((mConditions == null) ? 0 : mConditions.hashCode());
-		result = prime * result + mIndex;
-		result = prime * result + ((mItemName == null) ? 0 : mItemName.hashCode());
-		result = prime * result + ((mItems == null) ? 0 : mItems.hashCode());
-		result = prime * result + mMaximum;
-		result = prime * result + mMinimum;
-		result = prime * result + ((mType == null) ? 0 : mType.hashCode());
-		return result;
+		if ( !isPersistent())
+		{
+			return null;
+		}
+		return new RestrictionInstanceImpl(getType().getInstanceType(), getItemName(), getMinimum(), getMaximum(), getItems(), getIndex(), getValue(),
+				Duration.FOREVER);
+		// TODO Maybe add the conditions too
 	}
 	
 	@Override
@@ -301,5 +176,130 @@ public class RestrictionCreationImpl implements RestrictionCreation
 			return false;
 		}
 		return true;
+	}
+	
+	@Override
+	public Set<ConditionCreation> getConditions()
+	{
+		return mConditions;
+	}
+	
+	@Override
+	public int getIndex()
+	{
+		return mIndex;
+	}
+	
+	@Override
+	public String getItemName()
+	{
+		return mItemName;
+	}
+	
+	@Override
+	public List<String> getItems()
+	{
+		return mItems;
+	}
+	
+	@Override
+	public int getMaximum()
+	{
+		return mMaximum;
+	}
+	
+	@Override
+	public int getMinimum()
+	{
+		return mMinimum;
+	}
+	
+	@Override
+	public RestrictionableCreation getParent()
+	{
+		return mParent;
+	}
+	
+	@Override
+	public CreationRestrictionType getType()
+	{
+		return mType;
+	}
+	
+	@Override
+	public int getValue()
+	{
+		return mValue;
+	}
+	
+	@Override
+	public boolean hasConditions()
+	{
+		return !mConditions.isEmpty();
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((mConditions == null) ? 0 : mConditions.hashCode());
+		result = prime * result + mIndex;
+		result = prime * result + ((mItemName == null) ? 0 : mItemName.hashCode());
+		result = prime * result + ((mItems == null) ? 0 : mItems.hashCode());
+		result = prime * result + mMaximum;
+		result = prime * result + mMinimum;
+		result = prime * result + ((mType == null) ? 0 : mType.hashCode());
+		return result;
+	}
+	
+	@Override
+	public boolean isActive(final ItemControllerCreation aController)
+	{
+		for (final ConditionCreation condition : mConditions)
+		{
+			if ( !condition.complied(aController))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	@Override
+	public boolean isCreationRestriction()
+	{
+		return mCreationRestriction;
+	}
+	
+	@Override
+	public boolean isInRange(final int aValue)
+	{
+		return mMinimum <= aValue && aValue <= mMaximum;
+	}
+	
+	@Override
+	public boolean isPersistent()
+	{
+		return getType().isPersistent();
+	}
+	
+	/**
+	 * Adds a restricted parent to this restriction. That makes sure,<br>
+	 * that the removal of restrictions is done for each restricted value of this restriction.
+	 * 
+	 * @param aParent
+	 *            The parent.
+	 */
+	@Override
+	public void setParent(final RestrictionableCreation aParent)
+	{
+		mParent = aParent;
+	}
+	
+	@Override
+	public void updateUI()
+	{
+		getParent().updateUI();
 	}
 }

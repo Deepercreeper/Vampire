@@ -25,11 +25,24 @@ public class Armor extends Artifact
 	
 	private final int mArmor;
 	
-	protected Armor(final Element aElement, final Context aContext, final InventoryControllerInstance aController)
+	/**
+	 * Creates a new armor item.
+	 * 
+	 * @param aName
+	 *            The item name.
+	 * @param aWeight
+	 *            The item weight.
+	 * @param aArmor
+	 *            The armor value.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aController
+	 *            The parent controller.
+	 */
+	public Armor(final String aName, final int aWeight, final int aArmor, final Context aContext, final InventoryControllerInstance aController)
 	{
-		super(CodingUtil.decode(aElement.getAttribute("name")), Integer.parseInt(aElement.getAttribute("weight")),
-				Integer.parseInt(aElement.getAttribute("quantity")), aContext, aController);
-		mArmor = Integer.parseInt(aElement.getAttribute("armor"));
+		super(aName, aWeight, aContext, aController);
+		mArmor = aArmor;
 	}
 	
 	/**
@@ -55,32 +68,11 @@ public class Armor extends Artifact
 		mArmor = aArmor;
 	}
 	
-	/**
-	 * Creates a new armor item.
-	 * 
-	 * @param aName
-	 *            The item name.
-	 * @param aWeight
-	 *            The item weight.
-	 * @param aArmor
-	 *            The armor value.
-	 * @param aContext
-	 *            The underlying context.
-	 * @param aController
-	 *            The parent controller.
-	 */
-	public Armor(final String aName, final int aWeight, final int aArmor, final Context aContext, final InventoryControllerInstance aController)
+	protected Armor(final Element aElement, final Context aContext, final InventoryControllerInstance aController)
 	{
-		super(aName, aWeight, aContext, aController);
-		mArmor = aArmor;
-	}
-	
-	/**
-	 * @return the armor value.
-	 */
-	public int getArmor()
-	{
-		return mArmor;
+		super(CodingUtil.decode(aElement.getAttribute("name")), Integer.parseInt(aElement.getAttribute("weight")),
+				Integer.parseInt(aElement.getAttribute("quantity")), aContext, aController);
+		mArmor = Integer.parseInt(aElement.getAttribute("armor"));
 	}
 	
 	@Override
@@ -89,6 +81,14 @@ public class Armor extends Artifact
 		final Element element = super.asElement(aDoc);
 		element.setAttribute("armor", "" + getArmor());
 		return element;
+	}
+	
+	/**
+	 * @return the armor value.
+	 */
+	public int getArmor()
+	{
+		return mArmor;
 	}
 	
 	@Override

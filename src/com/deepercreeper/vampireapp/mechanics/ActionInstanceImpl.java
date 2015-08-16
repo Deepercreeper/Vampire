@@ -42,9 +42,7 @@ public class ActionInstanceImpl implements ActionInstance
 	
 	private final LinearLayout mContainer;
 	
-	private Button mUse;
-	
-	private boolean mInitialized = false;
+	private final Button mUse;
 	
 	/**
 	 * Creates a new action.
@@ -65,12 +63,120 @@ public class ActionInstanceImpl implements ActionInstance
 		mContext = aContext;
 		mChar = aChar;
 		mContainer = (LinearLayout) View.inflate(mContext, R.layout.view_action, null);
+		
+		initDices();
+		
+		mUse = (Button) getContainer().findViewById(R.id.view_use_action_button);
+		final TextView name = (TextView) getContainer().findViewById(R.id.view_action_name_label);
+		
+		name.setText(getAction().getDisplayName());
+		name.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				final StringBuilder costs = new StringBuilder();
+				boolean first = true;
+				for (final ItemInstance item : mDices)
+				{
+					if (first)
+					{
+						first = false;
+					}
+					else
+					{
+						costs.append(" + ");
+					}
+					costs.append(item.getItem().getDisplayName());
+				}
+				String parent = "";
+				if (mParent != null)
+				{
+					parent = mParent.getItem().getDisplayName() + " " + getAction().getMinLevel() + ": ";
+				}
+				mChar.getMessageListener().makeText(parent + getAction().getDisplayName() + ": " + costs.toString() + " = " + getDefaultDices(),
+						Toast.LENGTH_SHORT);
+			}
+		});
+	}
+	
+	@Override
+	public boolean canUse(final int aLevel)
+	{
+		if (aLevel >= 0 && aLevel < mAction.getMinLevel() || !mChar.getMode().getMode().canUseAction())
+		{
+			return false;
+		}
+		for (final ItemInstance cost : mCosts.keySet())
+		{
+			if (cost.getValue() < mCosts.get(cost))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	@Override
+	public int compareTo(final ActionInstance aAnother)
+	{
+		if (getParent() == aAnother.getParent())
+		{
+			return getAction().getMinLevel() - aAnother.getAction().getMinLevel();
+		}
+		if (getParent() != null)
+		{
+			return getParent().compareTo(aAnother.getParent());
+		}
+		return getParent().compareTo(aAnother.getParent());
+	}
+	
+	@Override
+	public Action getAction()
+	{
+		return mAction;
 	}
 	
 	@Override
 	public View getContainer()
 	{
 		return mContainer;
+	}
+	
+	@Override
+	public int getDefaultDices()
+	{
+		int dices = mAction.getMinDices();
+		for (final ItemInstance dice : mDices)
+		{
+			dices += dice.getValue();
+		}
+		return dices;
+	}
+	
+	@Override
+	public ItemInstance getParent()
+	{
+		return mParent;
+	}
+	
+	@Override
+	public void release()
+	{
+		ViewUtil.release(getContainer());
+	}
+	
+	@Override
+	public void updateUI()
+	{
+		if (mParent != null)
+		{
+			ViewUtil.setEnabled(mUse, canUse(mParent.getValue()));
+		}
+		else
+		{
+			ViewUtil.setEnabled(mUse, canUse( -1));
+		}
 	}
 	
 	private void initDices()
@@ -111,125 +217,5 @@ public class ActionInstanceImpl implements ActionInstance
 				mCosts.put(item, mAction.getCostNames().get(costName));
 			}
 		}
-	}
-	
-	@Override
-	public int compareTo(final ActionInstance aAnother)
-	{
-		if (getParent() == aAnother.getParent())
-		{
-			return getAction().getMinLevel() - aAnother.getAction().getMinLevel();
-		}
-		if (getParent() != null)
-		{
-			return getParent().compareTo(aAnother.getParent());
-		}
-		return -aAnother.getParent().compareTo(getParent());
-	}
-	
-	@Override
-	public void init()
-	{
-		// TODO Remove all mInitialized fields if possible.
-		if ( !mInitialized)
-		{
-			initDices();
-			
-			mUse = (Button) getContainer().findViewById(R.id.view_use_action_button);
-			final TextView name = (TextView) getContainer().findViewById(R.id.view_action_name_label);
-			
-			name.setText(getAction().getDisplayName());
-			name.setOnClickListener(new OnClickListener()
-			{
-				@Override
-				public void onClick(final View aV)
-				{
-					final StringBuilder costs = new StringBuilder();
-					boolean first = true;
-					for (final ItemInstance item : mDices)
-					{
-						if (first)
-						{
-							first = false;
-						}
-						else
-						{
-							costs.append(" + ");
-						}
-						costs.append(item.getItem().getDisplayName());
-					}
-					String parent = "";
-					if (mParent != null)
-					{
-						parent = mParent.getItem().getDisplayName() + " " + getAction().getMinLevel() + ": ";
-					}
-					mChar.getMessageListener().makeText(parent + getAction().getDisplayName() + ": " + costs.toString() + " = " + getDefaultDices(),
-							Toast.LENGTH_SHORT);
-				}
-			});
-			
-			mInitialized = true;
-		}
-		
-		update();
-	}
-	
-	@Override
-	public ItemInstance getParent()
-	{
-		return mParent;
-	}
-	
-	@Override
-	public void update()
-	{
-		if (mParent != null)
-		{
-			ViewUtil.setEnabled(mUse, canUse(mParent.getValue()));
-		}
-		else
-		{
-			ViewUtil.setEnabled(mUse, canUse( -1));
-		}
-	}
-	
-	@Override
-	public Action getAction()
-	{
-		return mAction;
-	}
-	
-	@Override
-	public void release()
-	{
-		ViewUtil.release(getContainer());
-	}
-	
-	@Override
-	public boolean canUse(final int aLevel)
-	{
-		if (aLevel >= 0 && aLevel < mAction.getMinLevel() || !mChar.getMode().getMode().canUseAction())
-		{
-			return false;
-		}
-		for (final ItemInstance cost : mCosts.keySet())
-		{
-			if (cost.getValue() < mCosts.get(cost))
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	@Override
-	public int getDefaultDices()
-	{
-		int dices = mAction.getMinDices();
-		for (final ItemInstance dice : mDices)
-		{
-			dices += dice.getValue();
-		}
-		return dices;
 	}
 }

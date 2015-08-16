@@ -19,17 +19,6 @@ public class EPChange implements CharacterChange
 	private final int			mValue;
 	
 	/**
-	 * Creates a new experience change.
-	 * 
-	 * @param aValue
-	 *            The new experience value.
-	 */
-	public EPChange(final int aValue)
-	{
-		mValue = aValue;
-	}
-	
-	/**
 	 * Creates a new experience change out of the given XML data.
 	 * 
 	 * @param aElement
@@ -38,6 +27,17 @@ public class EPChange implements CharacterChange
 	public EPChange(final Element aElement)
 	{
 		mValue = Integer.parseInt(aElement.getAttribute("value"));
+	}
+	
+	/**
+	 * Creates a new experience change.
+	 * 
+	 * @param aValue
+	 *            The new experience value.
+	 */
+	public EPChange(final int aValue)
+	{
+		mValue = aValue;
 	}
 	
 	@Override

@@ -82,19 +82,17 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	
 	private final Expander mExpander;
 	
-	private LinearLayout mInventoryList;
+	private final LinearLayout mInventoryList;
 	
-	private TextView mWeightLabel;
+	private final TextView mWeightLabel;
 	
-	private TextView mMaxWeightLabel;
+	private final TextView mMaxWeightLabel;
 	
-	private Button mAddItemButton;
+	private final Button mAddItemButton;
 	
 	private int mWeight = 0;
 	
 	private int mMaxWeight;
-	
-	private boolean mInitialized = false;
 	
 	/**
 	 * Creates a new inventory controller from the given XML document.
@@ -135,9 +133,38 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 		mExpander = Expander.handle(mHost ? R.id.h_inventory_button : R.id.c_inventory_button,
 				mHost ? R.id.h_inventory_panel : R.id.c_inventory_panel, mContainer, mResizeListener);
 				
-		init();
+		mExpander.init();
 		
-		for (Element artifact : DataUtil.getChildren(aElement, "item"))
+		mInventoryList = (LinearLayout) getContainer().findViewById(mHost ? R.id.h_inventory_list : R.id.c_inventory_list);
+		mWeightLabel = (TextView) getContainer().findViewById(mHost ? R.id.h_weight_label : R.id.c_weight_label);
+		mMaxWeightLabel = (TextView) getContainer().findViewById(mHost ? R.id.h_max_weight_label : R.id.c_max_weight_label);
+		mAddItemButton = mHost ? (Button) getContainer().findViewById(R.id.h_add_item_button) : null;
+		
+		if (mHost)
+		{
+			mAddItemButton.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					addItem();
+				}
+			});
+		}
+		
+		setWeight();
+		for (final Artifact item : mItemsList)
+		{
+			item.release();
+		}
+		for (final Artifact item : mItemsList)
+		{
+			item.updateUI();
+			mInventoryList.addView(item.getContainer());
+		}
+		mExpander.close();
+		
+		for (final Element artifact : DataUtil.getChildren(aElement, "item"))
 		{
 			addItem(Artifact.deserialize(artifact, mContext, this, mMessageListener.getCharacter()), true);
 		}
@@ -180,7 +207,36 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 		mExpander = Expander.handle(mHost ? R.id.h_inventory_button : R.id.c_inventory_button,
 				mHost ? R.id.h_inventory_panel : R.id.c_inventory_panel, mContainer, mResizeListener);
 				
-		init();
+		mExpander.init();
+		
+		mInventoryList = (LinearLayout) getContainer().findViewById(mHost ? R.id.h_inventory_list : R.id.c_inventory_list);
+		mWeightLabel = (TextView) getContainer().findViewById(mHost ? R.id.h_weight_label : R.id.c_weight_label);
+		mMaxWeightLabel = (TextView) getContainer().findViewById(mHost ? R.id.h_max_weight_label : R.id.c_max_weight_label);
+		mAddItemButton = mHost ? (Button) getContainer().findViewById(R.id.h_add_item_button) : null;
+		
+		if (mHost)
+		{
+			mAddItemButton.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					addItem();
+				}
+			});
+		}
+		
+		setWeight();
+		for (final Artifact item : mItemsList)
+		{
+			item.release();
+		}
+		for (final Artifact item : mItemsList)
+		{
+			item.updateUI();
+			mInventoryList.addView(item.getContainer());
+		}
+		mExpander.close();
 	}
 	
 	/**
@@ -227,7 +283,7 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 			mItemsList.add(aItem);
 			mWeight += aItem.getWeight() * aItem.getQuantity();
 			setWeight();
-			aItem.init();
+			aItem.updateUI();
 			mInventoryList.addView(aItem.getContainer());
 			aItem.addTo(this);
 			if (mExpander != null)
@@ -291,48 +347,6 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	public int getWeight()
 	{
 		return mWeight;
-	}
-	
-	@Override
-	public void init()
-	{
-		if ( !mInitialized)
-		{
-			mExpander.init();
-			
-			mInventoryList = (LinearLayout) getContainer().findViewById(mHost ? R.id.h_inventory_list : R.id.c_inventory_list);
-			mWeightLabel = (TextView) getContainer().findViewById(mHost ? R.id.h_weight_label : R.id.c_weight_label);
-			mMaxWeightLabel = (TextView) getContainer().findViewById(mHost ? R.id.h_max_weight_label : R.id.c_max_weight_label);
-			mAddItemButton = mHost ? (Button) getContainer().findViewById(R.id.h_add_item_button) : null;
-			
-			if (mHost)
-			{
-				mAddItemButton.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(final View aV)
-					{
-						addItem();
-					}
-				});
-			}
-			
-			setWeight();
-			
-			mInitialized = true;
-		}
-		
-		for (final Artifact item : mItemsList)
-		{
-			item.release();
-		}
-		for (final Artifact item : mItemsList)
-		{
-			item.init();
-			mInventoryList.addView(item.getContainer());
-		}
-		
-		mExpander.close();
 	}
 	
 	/**
@@ -405,22 +419,20 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 	}
 	
 	/**
-	 * Updates all items.
-	 */
-	public void update()
-	{
-		for (final Artifact item : mItemsList)
-		{
-			item.updateValue();
-		}
-	}
-	
-	/**
 	 * Recalculates the maximum weight out of the weight defining item of the character.
 	 */
 	public void updateMaxWeight()
 	{
 		mMaxWeight = mInventory.getMaxWeightOf(mMaxWeightItem.getValue());
+	}
+	
+	@Override
+	public void updateUI()
+	{
+		for (final Artifact item : mItemsList)
+		{
+			item.updateUI();
+		}
 	}
 	
 	/**

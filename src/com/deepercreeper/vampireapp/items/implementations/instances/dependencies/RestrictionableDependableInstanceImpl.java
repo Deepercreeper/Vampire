@@ -19,6 +19,17 @@ public abstract class RestrictionableDependableInstanceImpl extends Restrictiona
 	private final Map<Type, DependencyInstance> mDependencies = new HashMap<Type, DependencyInstance>();
 	
 	/**
+	 * Creates a new restrictionable dependable with no item controller.
+	 * 
+	 * @param aCharacter
+	 *            The parent character.
+	 */
+	public RestrictionableDependableInstanceImpl(final CharacterInstance aCharacter)
+	{
+		super(aCharacter);
+	}
+	
+	/**
 	 * Creates a new restrictionable dependable.
 	 * 
 	 * @param aCharacter
@@ -31,15 +42,10 @@ public abstract class RestrictionableDependableInstanceImpl extends Restrictiona
 		super(aCharacter, aController);
 	}
 	
-	/**
-	 * Creates a new restrictionable dependable with no item controller.
-	 * 
-	 * @param aCharacter
-	 *            The parent character.
-	 */
-	public RestrictionableDependableInstanceImpl(final CharacterInstance aCharacter)
+	@Override
+	public final void addDependency(final DependencyInstance aDependency)
 	{
-		super(aCharacter);
+		mDependencies.put(aDependency.getType(), aDependency);
 	}
 	
 	@Override
@@ -49,27 +55,9 @@ public abstract class RestrictionableDependableInstanceImpl extends Restrictiona
 	}
 	
 	@Override
-	public final void addDependency(final DependencyInstance aDependency)
-	{
-		mDependencies.put(aDependency.getType(), aDependency);
-	}
-	
-	@Override
-	public final boolean hasDependency(final Type aType)
-	{
-		return mDependencies.containsKey(aType);
-	}
-	
-	@Override
 	public int getMaxValue()
 	{
 		return 0;
-	}
-	
-	@Override
-	public int[] getValues()
-	{
-		return null;
 	}
 	
 	@Override
@@ -82,5 +70,17 @@ public abstract class RestrictionableDependableInstanceImpl extends Restrictiona
 	public int getStartValue()
 	{
 		return 0;
+	}
+	
+	@Override
+	public int[] getValues()
+	{
+		return null;
+	}
+	
+	@Override
+	public final boolean hasDependency(final Type aType)
+	{
+		return mDependencies.containsKey(aType);
 	}
 }

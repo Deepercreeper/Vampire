@@ -114,18 +114,6 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 	}
 	
 	@Override
-	public void time(final Type aType, final int aAmount)
-	{
-		mDuration.time(aType, aAmount);
-	}
-	
-	@Override
-	public void timeUpdated()
-	{
-		// TODO Implement when restrictions have views
-	}
-	
-	@Override
 	public Element asElement(final Document aDoc)
 	{
 		final Element element = aDoc.createElement("restriction");
@@ -359,6 +347,18 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 	}
 	
 	@Override
+	public void time(final Type aType, final int aAmount)
+	{
+		mDuration.time(aType, aAmount);
+	}
+	
+	@Override
+	public void timeUpdated()
+	{
+		// TODO Implement when restrictions have views
+	}
+	
+	@Override
 	public String toString()
 	{
 		final StringBuilder string = new StringBuilder();
@@ -399,8 +399,8 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 	}
 	
 	@Override
-	public void update()
+	public void updateUI()
 	{
-		getParent().updateRestrictions();
+		getParent().updateUI();
 	}
 }

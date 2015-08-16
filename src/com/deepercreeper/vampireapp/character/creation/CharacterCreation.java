@@ -10,7 +10,7 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation.CreationRestrictionType;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionInstance;
-import com.deepercreeper.vampireapp.lists.controllers.creations.DescriptionControllerCreation;
+import com.deepercreeper.vampireapp.lists.controllers.DescriptionControllerCreation;
 import com.deepercreeper.vampireapp.lists.items.Clan;
 import com.deepercreeper.vampireapp.lists.items.Nature;
 import com.deepercreeper.vampireapp.util.Log;
@@ -366,17 +366,6 @@ public class CharacterCreation
 	}
 	
 	/**
-	 * Updates the user interface for all controllers.
-	 */
-	public void updateUI()
-	{
-		for (ItemControllerCreation controller : getControllers())
-		{
-			controller.updateUI();
-		}
-	}
-	
-	/**
 	 * Sets the current behavior.
 	 * 
 	 * @param aBehavior
@@ -474,6 +463,17 @@ public class CharacterCreation
 	public void setNature(final Nature aNature)
 	{
 		mNature = aNature;
+	}
+	
+	/**
+	 * Updates the user interface for all controllers.
+	 */
+	public void updateUI()
+	{
+		for (ItemControllerCreation controller : getControllers())
+		{
+			controller.updateUI();
+		}
 	}
 	
 	private void addRestrictions()

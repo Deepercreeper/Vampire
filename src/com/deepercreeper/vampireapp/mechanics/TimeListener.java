@@ -43,6 +43,38 @@ public interface TimeListener
 		 */
 		SET( -1, false);
 		
+		private final int mId;
+		
+		private final boolean mTypical;
+		
+		private Type(int aId, boolean aTypical)
+		{
+			mId = aId;
+			mTypical = aTypical;
+		}
+		
+		/**
+		 * @param aContext
+		 *            The underlying context.
+		 * @return the duration type name.
+		 */
+		public String getName(Context aContext)
+		{
+			if (mId == -1)
+			{
+				return name();
+			}
+			return aContext.getString(mId);
+		}
+		
+		/**
+		 * @return whether this type is visible for users.
+		 */
+		public boolean isTypicalType()
+		{
+			return mTypical;
+		}
+		
 		/**
 		 * @param aType
 		 *            The type nameable.
@@ -77,38 +109,6 @@ public interface TimeListener
 				}
 			}
 			return list;
-		}
-		
-		private final int mId;
-		
-		private final boolean mTypical;
-		
-		private Type(int aId, boolean aTypical)
-		{
-			mId = aId;
-			mTypical = aTypical;
-		}
-		
-		/**
-		 * @param aContext
-		 *            The underlying context.
-		 * @return the duration type name.
-		 */
-		public String getName(Context aContext)
-		{
-			if (mId == -1)
-			{
-				return name();
-			}
-			return aContext.getString(mId);
-		}
-		
-		/**
-		 * @return whether this type is visible for users.
-		 */
-		public boolean isTypicalType()
-		{
-			return mTypical;
 		}
 	}
 	

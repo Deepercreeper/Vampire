@@ -13,6 +13,11 @@ import com.deepercreeper.vampireapp.util.DataUtil;
  */
 public class HealthChange implements CharacterChange
 {
+	private enum Type
+	{
+		VALUE, HEAVY_WOUNDS, STEPS
+	}
+	
 	/**
 	 * The XML tag for health changes.
 	 */
@@ -23,11 +28,6 @@ public class HealthChange implements CharacterChange
 	private int					mIntegerValue	= -1;
 	
 	private int[]				mSteps			= null;
-	
-	private enum Type
-	{
-		VALUE, HEAVY_WOUNDS, STEPS
-	}
 	
 	/**
 	 * Creates a health value change.
@@ -41,24 +41,6 @@ public class HealthChange implements CharacterChange
 	{
 		mType = aWoundsOrValue ? Type.HEAVY_WOUNDS : Type.VALUE;
 		mIntegerValue = aValue;
-	}
-	
-	@Override
-	public String getType()
-	{
-		return TAG_NAME;
-	}
-	
-	/**
-	 * Creates a health steps change.
-	 * 
-	 * @param aSteps
-	 *            The new health steps.
-	 */
-	public HealthChange(final int[] aSteps)
-	{
-		mType = Type.STEPS;
-		mSteps = aSteps;
 	}
 	
 	/**
@@ -81,6 +63,18 @@ public class HealthChange implements CharacterChange
 			default :
 				break;
 		}
+	}
+	
+	/**
+	 * Creates a health steps change.
+	 * 
+	 * @param aSteps
+	 *            The new health steps.
+	 */
+	public HealthChange(final int[] aSteps)
+	{
+		mType = Type.STEPS;
+		mSteps = aSteps;
 	}
 	
 	@Override
@@ -121,5 +115,11 @@ public class HealthChange implements CharacterChange
 		}
 		element.setAttribute("value", value);
 		return element;
+	}
+	
+	@Override
+	public String getType()
+	{
+		return TAG_NAME;
 	}
 }

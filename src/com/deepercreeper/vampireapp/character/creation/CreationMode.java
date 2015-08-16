@@ -266,48 +266,26 @@ public enum CreationMode
 	}
 	
 	/**
-	 * Decreases the given item depending on the current mode.
-	 * 
-	 * @param aItem
-	 *            The item to decrease.
-	 */
-	public void decreaseItem(final ItemCreation aItem)
-	{
-		if (mValueMode)
-		{
-			aItem.getChangeValue().decrease();
-		}
-		else if (mTempPointsMode)
-		{
-			aItem.getChangeTempPoints().decrease();
-			aItem.getCharacter().increaseFreePoints(aItem.getFreePointsCost());
-		}
-	}
-	
-	/**
-	 * Increases the given item depending on the current mode.
-	 * 
-	 * @param aItem
-	 *            The item to increase.
-	 */
-	public void increaseItem(final ItemCreation aItem)
-	{
-		if (mValueMode)
-		{
-			aItem.getChangeValue().increase();
-		}
-		else if (mTempPointsMode)
-		{
-			aItem.getChangeTempPoints().increase();
-			aItem.getCharacter().decreaseFreePoints(aItem.getFreePointsCost());
-		}
-	}
-	
-	/**
 	 * @return whether this is a free creation mode.
 	 */
 	public boolean isFreeMode()
 	{
 		return mFreeMode;
+	}
+	
+	/**
+	 * @return whether this mode is for temporary point changes.
+	 */
+	public boolean isTempPointsMode()
+	{
+		return mTempPointsMode;
+	}
+	
+	/**
+	 * @return whether this mode is for value changes.
+	 */
+	public boolean isValueMode()
+	{
+		return mValueMode;
 	}
 }

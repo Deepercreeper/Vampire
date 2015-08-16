@@ -13,14 +13,6 @@ import android.content.Context;
 public interface InventoryItem extends Saveable, Viewable
 {
 	/**
-	 * Increases the amount of this items by the given amount.
-	 * 
-	 * @param aAmount
-	 *            The amount.
-	 */
-	public void increase(final int aAmount);
-	
-	/**
 	 * Sets the parent inventory controller.
 	 * 
 	 * @param aController
@@ -74,17 +66,20 @@ public interface InventoryItem extends Saveable, Viewable
 	public int getQuantity();
 	
 	/**
+	 * @return the inventory item string identifier.
+	 */
+	public String getType();
+	
+	/**
 	 * @return the item weight.
 	 */
 	public int getWeight();
 	
 	/**
-	 * Updates the name value.
+	 * Increases the amount of this items by the given amount.
+	 * 
+	 * @param aAmount
+	 *            The amount.
 	 */
-	public void updateValue();
-	
-	/**
-	 * @return the inventory item string identifier.
-	 */
-	public String getType();
+	public void increase(final int aAmount);
 }

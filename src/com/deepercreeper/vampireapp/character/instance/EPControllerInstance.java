@@ -69,18 +69,18 @@ public class EPControllerInstance implements Viewable
 			mEPAmount.addTextChangedListener(new TextWatcher()
 			{
 				@Override
-				public void onTextChanged(final CharSequence aS, final int aStart, final int aBefore, final int aCount)
-				{}
+				public void afterTextChanged(final Editable aS)
+				{
+					updateUI();
+				}
 				
 				@Override
 				public void beforeTextChanged(final CharSequence aS, final int aStart, final int aCount, final int aAfter)
 				{}
 				
 				@Override
-				public void afterTextChanged(final Editable aS)
-				{
-					updateValue();
-				}
+				public void onTextChanged(final CharSequence aS, final int aStart, final int aBefore, final int aCount)
+				{}
 			});
 			mGiveEP.setOnClickListener(new OnClickListener()
 			{
@@ -93,8 +93,6 @@ public class EPControllerInstance implements Viewable
 				}
 			});
 		}
-		
-		init();
 	}
 	
 	/**
@@ -130,18 +128,18 @@ public class EPControllerInstance implements Viewable
 			mEPAmount.addTextChangedListener(new TextWatcher()
 			{
 				@Override
-				public void onTextChanged(final CharSequence aS, final int aStart, final int aBefore, final int aCount)
-				{}
+				public void afterTextChanged(final Editable aS)
+				{
+					updateUI();
+				}
 				
 				@Override
 				public void beforeTextChanged(final CharSequence aS, final int aStart, final int aCount, final int aAfter)
 				{}
 				
 				@Override
-				public void afterTextChanged(final Editable aS)
-				{
-					updateValue();
-				}
+				public void onTextChanged(final CharSequence aS, final int aStart, final int aBefore, final int aCount)
+				{}
 			});
 			mGiveEP.setOnClickListener(new OnClickListener()
 			{
@@ -154,8 +152,6 @@ public class EPControllerInstance implements Viewable
 				}
 			});
 		}
-		
-		init();
 	}
 	
 	/**
@@ -172,19 +168,7 @@ public class EPControllerInstance implements Viewable
 			mEP = 0;
 		}
 		mChangeListener.sendChange(new EPChange(mEP));
-		updateValue();
-	}
-	
-	/**
-	 * Updates the current experience value.
-	 * 
-	 * @param aValue
-	 *            The new value.
-	 */
-	public void updateValue(final int aValue)
-	{
-		mEP = aValue;
-		updateValue();
+		updateUI();
 	}
 	
 	/**
@@ -214,19 +198,17 @@ public class EPControllerInstance implements Viewable
 	{
 		mEP += aValue;
 		mChangeListener.sendChange(new EPChange(mEP));
-		updateValue();
+		updateUI();
 	}
 	
 	@Override
-	public void init()
+	public void release()
 	{
-		updateValue();
+		ViewUtil.release(getContainer());
 	}
 	
-	/**
-	 * Updates the experience value.
-	 */
-	public void updateValue()
+	@Override
+	public void updateUI()
 	{
 		mEPLabel.setText("" + mEP);
 		if (mHost)
@@ -246,9 +228,15 @@ public class EPControllerInstance implements Viewable
 		mChar.updateUI();
 	}
 	
-	@Override
-	public void release()
+	/**
+	 * Updates the current experience value.
+	 * 
+	 * @param aValue
+	 *            The new value.
+	 */
+	public void updateValue(final int aValue)
 	{
-		ViewUtil.release(getContainer());
+		mEP = aValue;
+		updateUI();
 	}
 }

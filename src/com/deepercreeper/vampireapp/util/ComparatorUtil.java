@@ -11,11 +11,6 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.ItemGroupCreation
 public class ComparatorUtil
 {
 	/**
-	 * Sorts item group creations for their value.
-	 */
-	public static final GroupComparator	ITEM_GROUP_CREATION_COMPARATOR	= new GroupComparator();
-	
-	/**
 	 * A group comparator that sorts for their current value.
 	 * 
 	 * @author vrl
@@ -59,4 +54,9 @@ public class ComparatorUtil
 			mValue = aValue;
 		}
 	}
+	
+	/**
+	 * Sorts item group creations for their value.
+	 */
+	public static final GroupComparator	ITEM_GROUP_CREATION_COMPARATOR	= new GroupComparator();
 }

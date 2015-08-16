@@ -20,16 +20,6 @@ public interface ConditionCreation
 	 */
 	public abstract class CreationConditionQuery
 	{
-		/**
-		 * @param aName
-		 *            The query name.
-		 * @return the query with the given name.
-		 */
-		public static CreationConditionQuery getQuery(final String aName)
-		{
-			return CONDITION_QUERIES.get(aName);
-		}
-		
 		private static final Map<String, CreationConditionQuery>	CONDITION_QUERIES			= new HashMap<String, CreationConditionQuery>();
 		
 		/**
@@ -249,6 +239,16 @@ public interface ConditionCreation
 		 * @return {@code true} if this query complies and {@code false} if not.
 		 */
 		public abstract boolean complied(ItemControllerCreation aController, ConditionCreation aCondition);
+		
+		/**
+		 * @param aName
+		 *            The query name.
+		 * @return the query with the given name.
+		 */
+		public static CreationConditionQuery getQuery(final String aName)
+		{
+			return CONDITION_QUERIES.get(aName);
+		}
 	}
 	
 	/**

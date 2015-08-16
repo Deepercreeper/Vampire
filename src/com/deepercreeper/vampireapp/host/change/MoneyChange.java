@@ -26,21 +26,6 @@ public class MoneyChange implements CharacterChange
 	private final boolean				mCreated;
 	
 	/**
-	 * Creates a new money change.
-	 * 
-	 * @param aDepot
-	 *            The depot name.
-	 * @param aValues
-	 *            The new depot values.
-	 */
-	public MoneyChange(final String aDepot, final Map<String, Integer> aValues)
-	{
-		mDepot = aDepot;
-		mValues = aValues;
-		mCreated = false;
-	}
-	
-	/**
 	 * Creates a money change out of the given XML data.
 	 * 
 	 * @param aElement
@@ -76,20 +61,19 @@ public class MoneyChange implements CharacterChange
 		mValues = null;
 	}
 	
-	@Override
-	public Element asElement(final Document aDoc)
+	/**
+	 * Creates a new money change.
+	 * 
+	 * @param aDepot
+	 *            The depot name.
+	 * @param aValues
+	 *            The new depot values.
+	 */
+	public MoneyChange(final String aDepot, final Map<String, Integer> aValues)
 	{
-		final Element element = aDoc.createElement(TAG_NAME);
-		element.setAttribute("depot", mDepot);
-		if (mValues != null)
-		{
-			element.setAttribute("values", "" + DataUtil.parseMap(mValues));
-		}
-		else
-		{
-			element.setAttribute("created", "" + mCreated);
-		}
-		return element;
+		mDepot = aDepot;
+		mValues = aValues;
+		mCreated = false;
 	}
 	
 	@Override
@@ -111,6 +95,22 @@ public class MoneyChange implements CharacterChange
 		{
 			aCharacter.getMoney().getDepot(mDepot).updateValues(mValues);
 		}
+	}
+	
+	@Override
+	public Element asElement(final Document aDoc)
+	{
+		final Element element = aDoc.createElement(TAG_NAME);
+		element.setAttribute("depot", mDepot);
+		if (mValues != null)
+		{
+			element.setAttribute("values", "" + DataUtil.parseMap(mValues));
+		}
+		else
+		{
+			element.setAttribute("created", "" + mCreated);
+		}
+		return element;
 	}
 	
 	@Override

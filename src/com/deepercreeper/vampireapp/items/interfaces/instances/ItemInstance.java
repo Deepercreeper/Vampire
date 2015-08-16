@@ -7,7 +7,6 @@ import com.deepercreeper.vampireapp.items.interfaces.instances.dependencies.Depe
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionableInstance;
 import com.deepercreeper.vampireapp.mechanics.ActionInstance;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
-import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.Context;
 
@@ -16,8 +15,7 @@ import android.content.Context;
  * 
  * @author vrl
  */
-public interface ItemInstance
-		extends RestrictionableInstance, Comparable<ItemInstance>, Saveable, Viewable, AnimatorUpdateListener, DependableInstance
+public interface ItemInstance extends RestrictionableInstance, Comparable<ItemInstance>, Saveable, AnimatorUpdateListener, DependableInstance
 {
 	/**
 	 * If something depends on the value of any item this listener can be attached to an item.
@@ -54,11 +52,6 @@ public interface ItemInstance
 	 *            The value listener.
 	 */
 	public void addValueListener(ItemValueListener aListener);
-	
-	/**
-	 * @return the current maximum item value.
-	 */
-	public int getMaxValue();
 	
 	/**
 	 * @return the calculated experience cost depending on the current item value and restrictions.
@@ -151,6 +144,12 @@ public interface ItemInstance
 	 * @return the parent item group.
 	 */
 	public ItemGroupInstance getItemGroup();
+	
+	/**
+	 * @return the current maximum item value.
+	 */
+	@Override
+	public int getMaxValue();
 	
 	/**
 	 * @return the item name.
@@ -259,6 +258,7 @@ public interface ItemInstance
 	/**
 	 * Updates the user interface.
 	 */
+	@Override
 	public void updateUI();
 	
 	/**

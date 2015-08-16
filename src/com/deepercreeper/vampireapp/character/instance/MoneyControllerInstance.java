@@ -53,9 +53,7 @@ public class MoneyControllerInstance implements Saveable, Viewable
 	
 	private final Expander mExpander;
 	
-	private LinearLayout mDepotsList;
-	
-	private boolean mInitialized = false;
+	private final LinearLayout mDepotsList;
 	
 	/**
 	 * Creates a new money controller.
@@ -84,7 +82,19 @@ public class MoneyControllerInstance implements Saveable, Viewable
 		mExpander = Expander.handle(mHost ? R.id.h_money_button : R.id.c_money_button, mHost ? R.id.h_money_list : R.id.c_money_list, mContainer,
 				mResizeListener);
 				
-		init();
+		mExpander.init();
+		
+		mDepotsList = (LinearLayout) getContainer().findViewById(mHost ? R.id.h_depot_list : R.id.c_depot_list);
+		final Button addDepot = (Button) getContainer().findViewById(mHost ? R.id.h_add_depot_button : R.id.c_add_depot_button);
+		
+		addDepot.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				addDepot();
+			}
+		});
 		
 		mDefaultDepot = new MoneyDepot(mContext.getString(R.string.bag), mContext, mHost, true, this);
 		addDepot(mDefaultDepot, true);
@@ -119,10 +129,22 @@ public class MoneyControllerInstance implements Saveable, Viewable
 		mExpander = Expander.handle(mHost ? R.id.h_money_button : R.id.c_money_button, mHost ? R.id.h_money_list : R.id.c_money_list, mContainer,
 				mResizeListener);
 				
-		init();
+		mExpander.init();
+		
+		mDepotsList = (LinearLayout) getContainer().findViewById(mHost ? R.id.h_depot_list : R.id.c_depot_list);
+		final Button addDepot = (Button) getContainer().findViewById(mHost ? R.id.h_add_depot_button : R.id.c_add_depot_button);
+		
+		addDepot.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				addDepot();
+			}
+		});
 		
 		MoneyDepot defaultDepot = null;
-		for (Element child : DataUtil.getChildren(aElement, null))
+		for (final Element child : DataUtil.getChildren(aElement, null))
 		{
 			final MoneyDepot depot = new MoneyDepot(CodingUtil.decode(child.getTagName()), child, mContext, mHost, this);
 			addDepot(depot, true);
@@ -132,40 +154,7 @@ public class MoneyControllerInstance implements Saveable, Viewable
 			}
 		}
 		mDefaultDepot = defaultDepot;
-		update();
-	}
-	
-	/**
-	 * @return the message listener.
-	 */
-	public MessageListener getMessageListener()
-	{
-		return mMessageListener;
-	}
-	
-	/**
-	 * @return the parent char.
-	 */
-	public CharacterInstance getCharacter()
-	{
-		return mMessageListener.getCharacter();
-	}
-	
-	/**
-	 * @param aName
-	 *            The depot name.
-	 * @return the depot with the give name.
-	 */
-	public MoneyDepot getDepot(final String aName)
-	{
-		for (final MoneyDepot depot : mDepots)
-		{
-			if (depot.getName().equals(aName))
-			{
-				return depot;
-			}
-		}
-		return null;
+		updateUI();
 	}
 	
 	/**
@@ -195,23 +184,6 @@ public class MoneyControllerInstance implements Saveable, Viewable
 		};
 		CreateStringDialog.showCreateStringDialog(mContext.getString(R.string.create_depot_title), mContext.getString(R.string.create_depot),
 				mContext, listener);
-	}
-	
-	/**
-	 * @param aName
-	 *            The new depot name.
-	 * @return whether a depot with the given name already exists.
-	 */
-	public boolean hasDepot(final String aName)
-	{
-		for (final MoneyDepot depot : mDepots)
-		{
-			if (depot.getName().equals(aName))
-			{
-				return true;
-			}
-		}
-		return false;
 	}
 	
 	/**
@@ -255,41 +227,18 @@ public class MoneyControllerInstance implements Saveable, Viewable
 		return element;
 	}
 	
+	/**
+	 * @return the parent char.
+	 */
+	public CharacterInstance getCharacter()
+	{
+		return mMessageListener.getCharacter();
+	}
+	
 	@Override
 	public LinearLayout getContainer()
 	{
 		return mContainer;
-	}
-	
-	/**
-	 * @return the characters default depot alias his bag.
-	 */
-	public MoneyDepot getDefaultDepot()
-	{
-		return mDefaultDepot;
-	}
-	
-	@Override
-	public void init()
-	{
-		if ( !mInitialized)
-		{
-			mExpander.init();
-			
-			mDepotsList = (LinearLayout) getContainer().findViewById(mHost ? R.id.h_depot_list : R.id.c_depot_list);
-			final Button addDepot = (Button) getContainer().findViewById(mHost ? R.id.h_add_depot_button : R.id.c_add_depot_button);
-			
-			addDepot.setOnClickListener(new OnClickListener()
-			{
-				@Override
-				public void onClick(final View aV)
-				{
-					addDepot();
-				}
-			});
-			
-			mInitialized = true;
-		}
 	}
 	
 	/**
@@ -301,14 +250,53 @@ public class MoneyControllerInstance implements Saveable, Viewable
 	}
 	
 	/**
-	 * Updates all depot values.
+	 * @return the characters default depot alias his bag.
 	 */
-	public void update()
+	public MoneyDepot getDefaultDepot()
+	{
+		return mDefaultDepot;
+	}
+	
+	/**
+	 * @param aName
+	 *            The depot name.
+	 * @return the depot with the give name.
+	 */
+	public MoneyDepot getDepot(final String aName)
 	{
 		for (final MoneyDepot depot : mDepots)
 		{
-			depot.updateValue();
+			if (depot.getName().equals(aName))
+			{
+				return depot;
+			}
 		}
+		return null;
+	}
+	
+	/**
+	 * @return the message listener.
+	 */
+	public MessageListener getMessageListener()
+	{
+		return mMessageListener;
+	}
+	
+	/**
+	 * @param aName
+	 *            The new depot name.
+	 * @return whether a depot with the given name already exists.
+	 */
+	public boolean hasDepot(final String aName)
+	{
+		for (final MoneyDepot depot : mDepots)
+		{
+			if (depot.getName().equals(aName))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	@Override
@@ -346,6 +334,15 @@ public class MoneyControllerInstance implements Saveable, Viewable
 			{
 				getMessageListener().sendChange(new MoneyChange(aName, false));
 			}
+		}
+	}
+	
+	@Override
+	public void updateUI()
+	{
+		for (final MoneyDepot depot : mDepots)
+		{
+			depot.updateUI();
 		}
 	}
 }

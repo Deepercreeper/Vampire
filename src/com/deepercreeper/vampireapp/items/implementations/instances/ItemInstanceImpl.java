@@ -760,17 +760,6 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 	}
 	
 	@Override
-	public int[] getValues()
-	{
-		int[] values = getItem().getValues();
-		if (hasDependency(Type.VALUES))
-		{
-			values = getDependency(Type.VALUES).getValues(values);
-		}
-		return values;
-	}
-	
-	@Override
 	public int compareTo(final ItemInstance aAnother)
 	{
 		if (aAnother == null)
@@ -887,103 +876,6 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 	}
 	
 	@Override
-	public int getMaxValue()
-	{
-		int maxValue = getValues()[getItem().getMaxValue()];
-		if (hasDependency(Type.MAX_VALUE))
-		{
-			final int value = getDependency(Type.MAX_VALUE).getValue(maxValue);
-			if (getValues().length > value)
-			{
-				maxValue = getValues()[value];
-			}
-		}
-		return maxValue;
-	}
-	
-	@Override
-	public void updateUI()
-	{
-		final ImageButton remove = mHost ? (ImageButton) getContainer().findViewById(R.id.h_remove_item_instance_button) : null;
-		final int buttonWidth = (int) getContext().getResources().getDimension(R.dimen.button_width);
-		
-		if (isValueItem())
-		{
-			if (mHost || canEPIncrease())
-			{
-				ViewUtil.setPxWidth(mIncreaseButton, buttonWidth);
-			}
-			else
-			{
-				ViewUtil.hideWidth(mIncreaseButton);
-			}
-			
-			if (mAnimator.isRunning())
-			{
-				mAnimator.cancel();
-			}
-			mValueBar.setMax(VALUE_MULTIPLICATOR * Math.abs(getMaxValue()));
-			mAnimator.setIntValues(mValueBar.getProgress(), VALUE_MULTIPLICATOR * getAbsoluteValue());
-			mAnimator.start();
-			mValueText.setText("" + getValue());
-			ViewUtil.setEnabled(mIncreaseButton, canIncrease());
-			if (mHost)
-			{
-				ViewUtil.setEnabled(mDecreaseButton, canDecrease());
-			}
-		}
-		else
-		{
-			ViewUtil.hideHeight(mValueBar);
-			ViewUtil.hideWidth(mIncreaseButton);
-			if (mHost)
-			{
-				ViewUtil.hideWidth(mDecreaseButton);
-			}
-		}
-		if (mHost)
-		{
-			if (getItemGroup().isMutable())
-			{
-				ViewUtil.setPxWidth(remove, buttonWidth);
-				if (getItem().isMutableParent())
-				{
-					ViewUtil.setPxWidth(mAddButton, buttonWidth);
-				}
-				else
-				{
-					ViewUtil.hideWidth(mAddButton);
-				}
-			}
-			else
-			{
-				ViewUtil.hideWidth(remove);
-				ViewUtil.hideWidth(mAddButton);
-			}
-		}
-		if (isParent())
-		{
-			if (mHost && getItemGroup().isMutable() && getItem().isMutableParent())
-			{
-				ViewUtil.setEnabled(mAddButton, !getAddableItems().isEmpty());
-			}
-		}
-		
-		if (hasChildren() && !hasOrder())
-		{
-			sortChildren();
-		}
-		
-		if (isParent())
-		{
-			for (final ItemInstance item : getChildrenList())
-			{
-				item.updateUI();
-			}
-		}
-	}
-	
-	@Override
 	public int getEPCost()
 	{
 		if (hasRestrictions(InstanceRestrictionType.ITEM_EP_COST))
@@ -1042,6 +934,21 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 	}
 	
 	@Override
+	public int getMaxValue()
+	{
+		int maxValue = getValues()[getItem().getMaxValue()];
+		if (hasDependency(Type.MAX_VALUE))
+		{
+			final int value = getDependency(Type.MAX_VALUE).getValue(maxValue);
+			if (getValues().length > value)
+			{
+				maxValue = getValues()[value];
+			}
+		}
+		return maxValue;
+	}
+	
+	@Override
 	public String getName()
 	{
 		return getItem().getName();
@@ -1062,6 +969,17 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 			mValueId = values.length - 1;
 		}
 		return values[mValueId];
+	}
+	
+	@Override
+	public int[] getValues()
+	{
+		int[] values = getItem().getValues();
+		if (hasDependency(Type.VALUES))
+		{
+			values = getDependency(Type.VALUES).getValues(values);
+		}
+		return values;
 	}
 	
 	@Override
@@ -1153,10 +1071,6 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 	}
 	
 	@Override
-	public void init()
-	{}
-	
-	@Override
 	public boolean isParent()
 	{
 		return getItem().isParent();
@@ -1221,23 +1135,103 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 	}
 	
 	@Override
-	public void updateRestrictions()
+	public void updateUI()
 	{
 		if (isValueItem())
 		{
-			if (hasRestrictions())
+			// TODO Find out what else can change the possible value
+			if (hasRestrictions(InstanceRestrictionType.ITEM_VALUE) && !isValueOk(getValue(), InstanceRestrictionType.ITEM_VALUE))
 			{
-				if ( !isValueOk(getValue(), InstanceRestrictionType.ITEM_VALUE))
+				while (getValue() < getMinValue(InstanceRestrictionType.ITEM_VALUE))
 				{
-					while (mValueId < getMinValue(InstanceRestrictionType.ITEM_VALUE))
-					{
-						increase(false, false);
-					}
-					while (mValueId > getMaxValue(InstanceRestrictionType.ITEM_VALUE))
-					{
-						decrease();
-					}
+					increase(false, false);
 				}
+				while (getValue() > getMaxValue(InstanceRestrictionType.ITEM_VALUE))
+				{
+					decrease();
+				}
+			}
+			while (getValue() > getMaxValue())
+			{
+				decrease();
+			}
+		}
+		
+		final ImageButton remove = mHost ? (ImageButton) getContainer().findViewById(R.id.h_remove_item_instance_button) : null;
+		final int buttonWidth = (int) getContext().getResources().getDimension(R.dimen.button_width);
+		
+		if (isValueItem())
+		{
+			if (mHost || canEPIncrease())
+			{
+				ViewUtil.setPxWidth(mIncreaseButton, buttonWidth);
+			}
+			else
+			{
+				ViewUtil.hideWidth(mIncreaseButton);
+			}
+			
+			if (mAnimator.isRunning())
+			{
+				mAnimator.cancel();
+			}
+			mValueBar.setMax(VALUE_MULTIPLICATOR * Math.abs(getMaxValue()));
+			mAnimator.setIntValues(mValueBar.getProgress(), VALUE_MULTIPLICATOR * getAbsoluteValue());
+			mAnimator.start();
+			mValueText.setText("" + getValue());
+			ViewUtil.setEnabled(mIncreaseButton, canIncrease());
+			if (mHost)
+			{
+				ViewUtil.setEnabled(mDecreaseButton, canDecrease());
+			}
+		}
+		else
+		{
+			ViewUtil.hideHeight(mValueBar);
+			ViewUtil.hideWidth(mIncreaseButton);
+			if (mHost)
+			{
+				ViewUtil.hideWidth(mDecreaseButton);
+			}
+		}
+		if (mHost)
+		{
+			if (getItemGroup().isMutable())
+			{
+				ViewUtil.setPxWidth(remove, buttonWidth);
+				if (getItem().isMutableParent())
+				{
+					ViewUtil.setPxWidth(mAddButton, buttonWidth);
+				}
+				else
+				{
+					ViewUtil.hideWidth(mAddButton);
+				}
+			}
+			else
+			{
+				ViewUtil.hideWidth(remove);
+				ViewUtil.hideWidth(mAddButton);
+			}
+		}
+		if (isParent())
+		{
+			if (mHost && getItemGroup().isMutable() && getItem().isMutableParent())
+			{
+				ViewUtil.setEnabled(mAddButton, !getAddableItems().isEmpty());
+			}
+		}
+		
+		if (hasChildren() && !hasOrder())
+		{
+			sortChildren();
+		}
+		
+		if (isParent())
+		{
+			for (final ItemInstance item : getChildrenList())
+			{
+				item.updateUI();
 			}
 		}
 	}
@@ -1303,7 +1297,7 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 		Collections.sort(getChildrenList());
 		for (final ItemInstance item : getChildrenList())
 		{
-			item.init();
+			item.updateUI();
 			mChildrenContainer.addView(item.getContainer());
 		}
 	}
