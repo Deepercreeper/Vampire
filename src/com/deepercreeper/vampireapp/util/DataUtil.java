@@ -36,7 +36,9 @@ import com.deepercreeper.vampireapp.items.implementations.ItemImpl;
 import com.deepercreeper.vampireapp.items.implementations.creations.restrictions.ConditionCreationImpl;
 import com.deepercreeper.vampireapp.items.implementations.creations.restrictions.RestrictionCreationImpl;
 import com.deepercreeper.vampireapp.items.implementations.dependencies.DependencyImpl;
+import com.deepercreeper.vampireapp.items.interfaces.Dependable;
 import com.deepercreeper.vampireapp.items.interfaces.Dependency;
+import com.deepercreeper.vampireapp.items.interfaces.Dependency.DestinationType;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
@@ -1216,7 +1218,92 @@ public class DataUtil
 			itemController.addGroups(loadGroups(controller));
 			controllersList.add(itemController);
 		}
+		if ( !checkDependencies(controllersList))
+		{
+			Log.w(TAG, "Found cyclic dependencies!");
+			return null;
+		}
 		return controllersList;
+	}
+	
+	private static boolean checkDependencies(List<ItemController> aControllers)
+	{
+		Map<Dependency, Dependable> dependencies = new HashMap<Dependency, Dependable>();
+		for (ItemController controller : aControllers)
+		{
+			// Use when dependencies are able to have a controller or group destination.
+			// for (Dependency dependency : controller.getDependencies())
+			// {
+			// dependencies.put(dependency, controller);
+			// }
+			for (ItemGroup group : controller.getGroupsList())
+			{
+				// for (Dependency dependency : group.getDependencies())
+				// {
+				// dependencies.put(dependency, group);
+				// }
+				for (Item item : group.getItemsList())
+				{
+					for (Dependency dependency : item.getDependencies())
+					{
+						dependencies.put(dependency, item);
+					}
+				}
+			}
+		}
+		Set<Dependency> seen = new HashSet<Dependency>();
+		Set<Dependency> done = new HashSet<Dependency>();
+		for (Dependency dependency : dependencies.keySet())
+		{
+			if (done.contains(dependency))
+			{
+				continue;
+			}
+			seen.clear();
+			Set<Dependency> currents = new HashSet<Dependency>();
+			currents.add(dependency);
+			boolean hasItemDependensies;
+			do
+			{
+				Set<Dependency> newCurrents = new HashSet<Dependency>();
+				for (Dependency current : currents)
+				{
+					seen.add(current);
+					for (Dependable dependable : dependencies.values())
+					{
+						if (dependable instanceof Item)
+						{
+							Item item = (Item) dependable;
+							if (item.getName().equals(current.getItem()))
+							{
+								for (Dependency newDependency : item.getDependencies())
+								{
+									if (seen.contains(newDependency))
+									{
+										Log.w(TAG, "Cyclic dependency: " + newDependency.getItem());
+										return false;
+									}
+									newCurrents.add(newDependency);
+								}
+							}
+						}
+					}
+				}
+				currents.clear();
+				currents.addAll(newCurrents);
+				hasItemDependensies = false;
+				for (Dependency current : currents)
+				{
+					if (current.getDestinationType().equals(DestinationType.ITEM))
+					{
+						hasItemDependensies = true;
+					}
+				}
+			}
+			while (hasItemDependensies);
+			done.addAll(seen);
+		}
+		return true;
 	}
 	
 	private static List<Dependency> loadDependencies(final Element aParentNode)
