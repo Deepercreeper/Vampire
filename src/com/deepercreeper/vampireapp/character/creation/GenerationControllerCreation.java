@@ -17,6 +17,8 @@ import android.widget.NumberPicker.OnValueChangeListener;
  */
 public class GenerationControllerCreation extends RestrictionableCreationImpl
 {
+	private static final int MAX_LEVEL_POINTS = 7;
+	
 	private final LinearLayout mContainer;
 	
 	private final Context mContext;
@@ -69,6 +71,14 @@ public class GenerationControllerCreation extends RestrictionableCreationImpl
 	public int getGeneration()
 	{
 		return mPicker.getValue();
+	}
+	
+	/**
+	 * @return whether the character is a low level character.
+	 */
+	public boolean isLowLevel()
+	{
+		return getGeneration() > MAX_LEVEL_POINTS;
 	}
 	
 	/**

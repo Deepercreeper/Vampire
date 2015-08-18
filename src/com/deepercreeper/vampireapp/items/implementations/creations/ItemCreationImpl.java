@@ -358,7 +358,7 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 		if ( !mChar.getMode().isFreeMode())
 		{
 			canIncreaseItem &= mValueId + mTempPoints < getMaxValue(CreationRestrictionType.ITEM_VALUE)
-					&& mValueId + mTempPoints < getItem().getMaxLowLevelValue();
+					&& ( !mChar.isLowLevel() || mValueId + mTempPoints < getItem().getMaxLowLevelValue());
 		}
 		boolean canIncreaseChild = true;
 		
@@ -1138,7 +1138,6 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 		Collections.sort(getChildrenList());
 		for (final ItemCreation item : getChildrenList())
 		{
-			item.updateUI();
 			mChildrenContainer.addView(item.getContainer());
 		}
 	}

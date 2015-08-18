@@ -46,6 +46,8 @@ public class DependencyCreationImpl implements DependencyInstance
 				return mChar.findItem(mDependency.getItem()).getValue();
 			case GENERATION :
 				return mChar.getGenerationValue();
+			case CORE_GENERATION :
+				return mChar.getGeneration().getGeneration();
 		}
 		return 0;
 	}
@@ -76,6 +78,7 @@ public class DependencyCreationImpl implements DependencyInstance
 			case ITEM :
 				return mChar.findItem(mDependency.getItem()) != null;
 			case GENERATION :
+			case CORE_GENERATION :
 				return true;
 		}
 		return false;

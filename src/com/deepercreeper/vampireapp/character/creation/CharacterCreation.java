@@ -112,15 +112,15 @@ public class CharacterCreation
 		mListener = aListener;
 		mMode = aMode;
 		mControllers = new ArrayList<ItemControllerCreation>();
-		for (final ItemController controller : mItems.getControllers())
-		{
-			mControllers.add(new ItemControllerCreationImpl(controller, mContext, this));
-		}
 		mDescriptions = new DescriptionControllerCreation(mItems.getDescriptions());
 		mInsanities = new InsanityControllerCreation(mContext, this);
 		mGeneration = new GenerationControllerCreation(mContext, this, aMode.isFreeMode());
 		mHealth = new HealthControllerCreation(mContext, mItems);
 		mBehavior = mNature = mItems.getNatures().getFirst();
+		for (final ItemController controller : mItems.getControllers())
+		{
+			mControllers.add(new ItemControllerCreationImpl(controller, mContext, this));
+		}
 		setClan(mItems.getClans().getFirst());
 	}
 	
@@ -168,6 +168,14 @@ public class CharacterCreation
 	public Nature getBehavior()
 	{
 		return mBehavior;
+	}
+	
+	/**
+	 * @return whether this character is still a low level character.
+	 */
+	public boolean isLowLevel()
+	{
+		return mGeneration.isLowLevel();
 	}
 	
 	/**

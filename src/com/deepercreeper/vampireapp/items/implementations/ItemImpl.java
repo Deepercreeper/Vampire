@@ -38,6 +38,8 @@ public class ItemImpl extends NamedDependableImpl implements Item
 	
 	private final boolean mOrder;
 	
+	private final boolean mHasLowLevelMax;
+	
 	private final int mStartValue;
 	
 	private final int mEPCost;
@@ -67,6 +69,8 @@ public class ItemImpl extends NamedDependableImpl implements Item
 	 *            Whether this is a mutable parent item.
 	 * @param aOrder
 	 *            whether the child items of this item have a specific order.
+	 * @param aHasLowLevelMax
+	 *            Whether this item is depending on the maximum low level value.
 	 * @param aValues
 	 *            The values this item can get.
 	 * @param aStartValue
@@ -81,8 +85,8 @@ public class ItemImpl extends NamedDependableImpl implements Item
 	 *            The parent item or {@code null} if this is no child item.
 	 */
 	public ItemImpl(final String aName, final ItemGroup aGroup, final boolean aNeedsDescription, final boolean aParent, final boolean aMutableParent,
-			final boolean aOrder, final int[] aValues, final int aStartValue, final int aEPCost, final int aEPCostNew, final int aEPCostMultiplicator,
-			final Item aParentItem)
+			final boolean aOrder, boolean aHasLowLevelMax, final int[] aValues, final int aStartValue, final int aEPCost, final int aEPCostNew,
+			final int aEPCostMultiplicator, final Item aParentItem)
 	{
 		super(aName);
 		mItemGroup = aGroup;
@@ -90,6 +94,7 @@ public class ItemImpl extends NamedDependableImpl implements Item
 		mParent = aParent;
 		mMutableParent = aMutableParent;
 		mOrder = aOrder;
+		mHasLowLevelMax = aHasLowLevelMax;
 		mValues = aValues;
 		mValueItem = mValues != null;
 		mParentItem = aParentItem;
@@ -272,7 +277,11 @@ public class ItemImpl extends NamedDependableImpl implements Item
 			return 0;
 		}
 		// TODO This maybe should be done inside the item creation or instance
-		return Math.min(getItemGroup().getMaxLowLevelValue(), getValues().length - 1);
+		if (mHasLowLevelMax)
+		{
+			return Math.min(getItemGroup().getMaxLowLevelValue(), Integer.MAX_VALUE);
+		}
+		return Integer.MAX_VALUE;
 	}
 	
 	@Override

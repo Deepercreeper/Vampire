@@ -1416,6 +1416,7 @@ public class DataUtil
 			final boolean parent = Boolean.parseBoolean(child.getAttribute("parent"));
 			final boolean order = Boolean.parseBoolean(child.getAttribute("order"));
 			final boolean mutableParent = Boolean.parseBoolean(child.getAttribute("mutableParent"));
+			boolean hasLowLevelMax = true;
 			boolean valueItem = aParentGroup.isValueGroup();
 			int[] values = null;
 			int startValue = -1;
@@ -1423,6 +1424,10 @@ public class DataUtil
 			int epCostNew = -1;
 			int epCostMultiplicator = -1;
 			
+			if (child.hasAttribute("hasLowLevelMax"))
+			{
+				hasLowLevelMax = Boolean.parseBoolean(child.getAttribute("hasLowLevelMax"));
+			}
 			if (child.hasAttribute("epCost"))
 			{
 				try
@@ -1488,8 +1493,8 @@ public class DataUtil
 			}
 			
 			final Item item;
-			item = new ItemImpl(name, aParentGroup, needsDescription, parent, mutableParent, order, values, startValue, epCost, epCostNew,
-					epCostMultiplicator, aParentItem);
+			item = new ItemImpl(name, aParentGroup, needsDescription, parent, mutableParent, order, hasLowLevelMax, values, startValue, epCost,
+					epCostNew, epCostMultiplicator, aParentItem);
 			for (final Item childItem : loadItems(child, aParentGroup, item))
 			{
 				item.addChild(childItem);

@@ -111,6 +111,8 @@ public class ItemGroupCreationImpl extends RestrictionableDependableCreationImpl
 				sortItems();
 			}
 		}
+		
+		updateUI();
 	}
 	
 	@Override
@@ -644,7 +646,6 @@ public class ItemGroupCreationImpl extends RestrictionableDependableCreationImpl
 		Collections.sort(getItemsList());
 		for (final ItemCreation item : getItemsList())
 		{
-			item.updateUI();
 			mItemsContainer.addView(item.getContainer());
 		}
 	}

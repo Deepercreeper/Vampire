@@ -25,7 +25,12 @@ public interface Dependency
 		/**
 		 * The destination is the character generation.
 		 */
-		GENERATION("generation");
+		GENERATION("generation"),
+		
+		/**
+		 * The destination is the character generation without generation modifying items.
+		 */
+		CORE_GENERATION("core-generation");
 		
 		private final String mName;
 		
