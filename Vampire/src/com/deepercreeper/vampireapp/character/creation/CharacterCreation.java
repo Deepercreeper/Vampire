@@ -112,7 +112,7 @@ public class CharacterCreation
 		mListener = aListener;
 		mMode = aMode;
 		mControllers = new ArrayList<ItemControllerCreation>();
-		mDescriptions = new DescriptionControllerCreation(mItems.getDescriptions());
+		mDescriptions = new DescriptionControllerCreation(mItems.getDescriptions(), mContext);
 		mInsanities = new InsanityControllerCreation(mContext, this);
 		mGeneration = new GenerationControllerCreation(mContext, this, aMode.isFreeMode());
 		mHealth = new HealthControllerCreation(mContext, mItems);
@@ -129,7 +129,7 @@ public class CharacterCreation
 	 */
 	public void clearDescriptions()
 	{
-		mDescriptions.clear();
+		mDescriptions.resetValues();
 		mInsanities.clear();
 	}
 	
@@ -478,7 +478,7 @@ public class CharacterCreation
 	 */
 	public void updateUI()
 	{
-		for (ItemControllerCreation controller : getControllers())
+		for (final ItemControllerCreation controller : getControllers())
 		{
 			controller.updateUI();
 		}

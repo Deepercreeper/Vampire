@@ -282,7 +282,7 @@ public class ItemGroupInstanceImpl extends DependableInstanceImpl implements Ite
 		mItemsContainer.addView(item.getContainer());
 		getItemController().resize();
 		getItemController().addItem(item);
-		updateControllerUI();
+		updateCharacterUI();
 		if ( !mHost)
 		{
 			getItemController().getCharacter().getActions().addActions(item.getActions());
@@ -503,7 +503,7 @@ public class ItemGroupInstanceImpl extends DependableInstanceImpl implements Ite
 			mItems.remove(aItem);
 			getItemsList().remove(item);
 			getItemController().resize();
-			updateControllerUI();
+			updateCharacterUI();
 			if ( !mHost)
 			{
 				getItemController().getCharacter().getActions().removeActions(item.getActions());
@@ -525,9 +525,8 @@ public class ItemGroupInstanceImpl extends DependableInstanceImpl implements Ite
 	}
 	
 	@Override
-	public void updateControllerUI()
+	public void updateCharacterUI()
 	{
-		// TODO Rename to updateCharacter
 		getItemController().updateUI();
 	}
 	
@@ -564,7 +563,7 @@ public class ItemGroupInstanceImpl extends DependableInstanceImpl implements Ite
 		}
 		getItemController().resize();
 		getItemController().addItem(aItem);
-		updateControllerUI();
+		updateCharacterUI();
 	}
 	
 	private void sortItems()

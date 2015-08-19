@@ -1,63 +1,41 @@
 package com.deepercreeper.vampireserver;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import javax.swing.BoxLayout;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import javax.swing.border.BevelBorder;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
-/**
- * This server handles the communication between vampire clients and hosts.
- * 
- * @author vrl
- */
-public class ServerFrame extends JFrame
+public class ServerFrame
 {
-	private static final long serialVersionUID = 1L;
-	
-	private static final int WIDTH = 800;
-	
-	private static final int HEIGHT = 600;
-	
 	private final ServerEngine mEngine;
-	
-	private final JLabel mStatusLabel = new JLabel("Ready");
 	
 	public ServerFrame()
 	{
-		mEngine = new ServerEngine(this);
-		setSize(WIDTH, HEIGHT);
-		addWindowListener(new WindowAdapter()
+		mEngine = new ServerEngine();
+	}
+	
+	public void stop()
+	{
+		mEngine.stop();
+	}
+	
+	public static void main(final String[] args)
+	{
+		System.out.println("Starting...");
+		final ServerFrame frame = new ServerFrame();
+		System.out.println("Running");
+		final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+		try
 		{
-			@Override
-			public void windowClosing(WindowEvent e)
+			while ( !reader.readLine().equals("exit"))
 			{
-				mEngine.stop();
-				System.exit(0);
-			};
-		});
-		init();
-		setVisible(true);
-	}
-	
-	public void setStatus(String aStatus)
-	{
-		mStatusLabel.setText(aStatus);
-	}
-	
-	private void init()
-	{
-		JPanel statusPanel = new JPanel();
-		statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
-		add(statusPanel, BorderLayout.SOUTH);
-		statusPanel.setPreferredSize(new Dimension(WIDTH, 16));
-		statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
-		mStatusLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		statusPanel.add(mStatusLabel);
+				// Do nothing
+			}
+		}
+		catch (final IOException e)
+		{
+			e.printStackTrace();
+		}
+		System.out.println("Exiting...");
+		frame.stop();
 	}
 }

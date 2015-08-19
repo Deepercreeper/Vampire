@@ -1,87 +1,50 @@
 package com.deepercreeper.vampireserver;
 
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
 
-public class ServerEngine
+public class ServerEngine implements HttpHandler
 {
-	private static final int PORT = 123;
+	private static final String IP = "134.255.218.105";
 	
-	private final List<Socket> mSockets = new ArrayList<>();
+	private static final int PORT = 3114;
 	
-	private final ServerFrame mFrame;
+	private HttpServer mServer;
 	
-	private boolean mListening;
-	
-	private Listener mListener;
-	
-	private ServerSocket mSocket;
-	
-	public ServerEngine(ServerFrame aFrame)
+	public ServerEngine()
 	{
-		mFrame = aFrame;
 		try
 		{
-			mSocket = new ServerSocket(PORT);
+			mServer = HttpServer.create(new InetSocketAddress(PORT), 0);
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			e.printStackTrace();
 		}
-		if (mSocket != null)
+		if (mServer != null)
 		{
-			mListener = new Listener();
-			mListener.start();
+			mServer.createContext("/vampire", this);
+			mServer.setExecutor(null);
+			mServer.start();
 		}
-	}
-	
-	private void addSocket(Socket aSocket)
-	{
-		mSockets.add(aSocket);
-		mFrame.setStatus("Added socket: " + aSocket.getInetAddress().getHostAddress());
-		try
-		{
-			Thread.sleep(100);
-		}
-		catch (InterruptedException e)
-		{
-			e.printStackTrace();
-		}
-		mFrame.setStatus("Ready");
 	}
 	
 	public void stop()
 	{
-		mListening = false;
-		try
-		{
-			mSocket.close();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+		mServer.stop(0);
 	}
 	
-	private class Listener extends Thread
+	@Override
+	public void handle(final HttpExchange aArg0) throws IOException
 	{
-		@Override
-		public void run()
-		{
-			while (mListening)
-			{
-				try
-				{
-					addSocket(mSocket.accept());
-				}
-				catch (IOException e)
-				{
-					e.printStackTrace();
-				}
-			}
-		}
+		final String response = "This is the response";
+		aArg0.sendResponseHeaders(200, response.length());
+		final OutputStream os = aArg0.getResponseBody();
+		os.write(response.getBytes());
+		os.close();
 	}
 }

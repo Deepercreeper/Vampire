@@ -146,7 +146,7 @@ public interface ItemGroupInstance extends Comparable<ItemGroupInstance>, Saveab
 	/**
 	 * Updates the controller.
 	 */
-	public void updateControllerUI();
+	public void updateCharacterUI();
 	
 	/**
 	 * Updates the user interface.

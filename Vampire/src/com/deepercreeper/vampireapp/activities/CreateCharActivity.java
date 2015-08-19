@@ -25,7 +25,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -169,61 +168,10 @@ public class CreateCharActivity extends Activity implements CharCreationListener
 		
 		for (final ItemCreation item : mChar.getDescriptionItems())
 		{
-			final EditText description = (EditText) View.inflate(this, R.layout.view_description, null);
-			description.setHint(item.getItem().getDisplayName());
-			description.addTextChangedListener(new TextWatcher()
-			{
-				
-				@Override
-				public void afterTextChanged(final Editable aS)
-				{
-					item.setDescription(description.getText().toString());
-				}
-				
-				@Override
-				public void beforeTextChanged(final CharSequence aS, final int aStart, final int aCount, final int aAfter)
-				{
-					// Do nothing
-				}
-				
-				@Override
-				public void onTextChanged(final CharSequence aS, final int aStart, final int aBefore, final int aCount)
-				{
-					// Do nothing
-				}
-			});
-			itemsPanel.addView(description);
+			itemsPanel.addView(new DescriptionCreation(item, this).getContainer());
 		}
 		
-		for (final DescriptionCreation description : mChar.getDescriptions().getValuesList())
-		{
-			// TODO Add description controller that handles all descriptions on its own.
-			final EditText value = (EditText) View.inflate(this, R.layout.view_description_creation, null);
-			value.setHint(description.getDisplayName());
-			value.addTextChangedListener(new TextWatcher()
-			{
-				
-				@Override
-				public void afterTextChanged(final Editable aS)
-				{
-					description.setValue(value.getText().toString());
-				}
-				
-				@Override
-				public void beforeTextChanged(final CharSequence aS, final int aStart, final int aCount, final int aAfter)
-				{
-					// Do nothing
-				}
-				
-				@Override
-				public void onTextChanged(final CharSequence aS, final int aStart, final int aBefore, final int aCount)
-				{
-					// Do nothing
-				}
-			});
-			itemsPanel.addView(value);
-		}
-		
+		itemsPanel.addView(mChar.getDescriptions().getContainer());
 		itemsPanel.addView(mChar.getInsanities().getContainer());
 		
 		backButton.setOnClickListener(new OnClickListener()

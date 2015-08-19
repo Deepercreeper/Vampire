@@ -28,7 +28,7 @@ public class DescriptionControllerInstance implements Saveable
 	 */
 	public DescriptionControllerInstance(final DescriptionControllerCreation aController)
 	{
-		for (final DescriptionCreation value : aController.getValuesList())
+		for (final DescriptionCreation value : aController.getDescriptionsList())
 		{
 			mValues.put(value.getName(), new DescriptionInstance(value.getItem(), value.getValue()));
 		}
@@ -45,11 +45,11 @@ public class DescriptionControllerInstance implements Saveable
 	public DescriptionControllerInstance(final Element aElement, final DescriptionController aController)
 	{
 		final Map<String, String> descriptionsMap = new HashMap<String, String>();
-		for (Element description : DataUtil.getChildren(aElement, "description"))
+		for (final Element description : DataUtil.getChildren(aElement, "description"))
 		{
 			descriptionsMap.put(description.getAttribute("key"), CodingUtil.decode(description.getAttribute("value")));
 		}
-		for (final Description description : aController.getValuesList())
+		for (final Description description : aController.getDescriptionsList())
 		{
 			String value = descriptionsMap.get(description.getName());
 			if (value == null)
