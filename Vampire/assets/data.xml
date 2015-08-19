@@ -1988,9 +1988,14 @@
     <actions>
 
         <action
+            name="Initiative"
+            dices="Wits,Alertness"
+            type="Default" />
+        
+        <action
             name="Perception"
             dices="Perception,Alertness"
-            type="default" />
+            type="Default" />
     </actions>
 
     <special-items

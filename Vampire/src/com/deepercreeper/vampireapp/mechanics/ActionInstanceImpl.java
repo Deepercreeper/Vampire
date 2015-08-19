@@ -120,15 +120,29 @@ public class ActionInstanceImpl implements ActionInstance
 	@Override
 	public int compareTo(final ActionInstance aAnother)
 	{
-		if (getParent() == aAnother.getParent())
+		if (hasParent() && aAnother.hasParent())
 		{
-			return getAction().getMinLevel() - aAnother.getAction().getMinLevel();
-		}
-		if (getParent() != null)
-		{
+			if (getParent() == aAnother.getParent())
+			{
+				return getAction().getMinLevel() - aAnother.getAction().getMinLevel();
+			}
 			return getParent().compareTo(aAnother.getParent());
 		}
-		return getParent().compareTo(aAnother.getParent());
+		if (hasParent())
+		{
+			return 1;
+		}
+		if (aAnother.hasParent())
+		{
+			return -1;
+		}
+		return mAction.compareTo(aAnother.getAction());
+	}
+	
+	@Override
+	public boolean hasParent()
+	{
+		return mParent != null;
 	}
 	
 	@Override

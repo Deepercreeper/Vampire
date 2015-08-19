@@ -2,6 +2,7 @@ package com.deepercreeper.vampireapp.mechanics;
 
 import java.util.HashMap;
 import java.util.Map;
+import com.deepercreeper.vampireapp.items.implementations.Named;
 
 /**
  * Everything that is possible to be executed by a character, like abilities, healing or something<br>
@@ -16,7 +17,7 @@ public interface Action extends Comparable<Action>
 	 * 
 	 * @author vrl
 	 */
-	public static class ActionType implements Comparable<ActionType>
+	public static class ActionType extends Named
 	{
 		private static final Map<String, ActionType> ACTION_TYPES = new HashMap<String, ActionType>();
 		
@@ -35,20 +36,10 @@ public interface Action extends Comparable<Action>
 		 */
 		public static final ActionType WEAPON = new ActionType("Weapon");
 		
-		private final String mName;
-		
 		private ActionType(final String aName)
 		{
-			mName = aName;
+			super(aName);
 			ACTION_TYPES.put(getName(), this);
-		}
-		
-		/**
-		 * @return the action type name.
-		 */
-		public String getName()
-		{
-			return mName;
 		}
 		
 		/**
@@ -59,12 +50,6 @@ public interface Action extends Comparable<Action>
 		public static ActionType get(final String aName)
 		{
 			return ACTION_TYPES.get(aName);
-		}
-		
-		@Override
-		public int compareTo(ActionType aAnother)
-		{
-			return getName().compareTo(aAnother.getName());
 		}
 	}
 	

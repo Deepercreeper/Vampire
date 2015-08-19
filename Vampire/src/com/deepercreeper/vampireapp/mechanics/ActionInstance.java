@@ -34,4 +34,9 @@ public interface ActionInstance extends Viewable, Comparable<ActionInstance>
 	 * @return the parent item or {@code null}.
 	 */
 	public ItemInstance getParent();
+	
+	/**
+	 * @return whether this action has a parent item.
+	 */
+	public boolean hasParent();
 }

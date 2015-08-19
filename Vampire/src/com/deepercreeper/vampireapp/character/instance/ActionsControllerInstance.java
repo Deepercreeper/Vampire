@@ -43,7 +43,7 @@ public class ActionsControllerInstance implements Viewable
 	 * @param aContext
 	 *            The underlying context.
 	 */
-	public ActionsControllerInstance(final CharacterInstance aChar, Set<Action> aDefaultActions, final Context aContext)
+	public ActionsControllerInstance(final CharacterInstance aChar, final Set<Action> aDefaultActions, final Context aContext)
 	{
 		mContext = aContext;
 		mChar = aChar;
@@ -56,12 +56,12 @@ public class ActionsControllerInstance implements Viewable
 		{
 			mActions.addAll(controller.getActions());
 		}
-		for (Action defaultAction : aDefaultActions)
+		for (final Action defaultAction : aDefaultActions)
 		{
 			mActions.add(new ActionInstanceImpl(defaultAction, mContext, mChar, null));
 		}
 		
-		// TODO Add other actions
+		// TODO Add weapon actions
 		
 		sortActions();
 		updateUI();

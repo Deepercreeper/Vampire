@@ -356,5 +356,8 @@ Nationality=Nationalität
 Height=Größe
 Weight=Gewicht
 Gender=Geschlecht
-Description=Beschreibung]]>
+Description=Beschreibung
+Default=Standard
+Ability=Fähigkeit
+Initiative=Initiative]]>
 </language>

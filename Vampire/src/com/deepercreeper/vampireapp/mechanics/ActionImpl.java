@@ -69,7 +69,7 @@ public class ActionImpl implements Action
 		{
 			if (getMinLevel() == aAnother.getMinLevel())
 			{
-				return getName().compareTo(aAnother.getName());
+				return getDisplayName().compareTo(aAnother.getDisplayName());
 			}
 			return getMinLevel() - aAnother.getMinLevel();
 		}
