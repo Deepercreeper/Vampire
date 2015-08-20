@@ -340,6 +340,17 @@ public class ItemGroupCreationImpl extends RestrictionableDependableCreationImpl
 	}
 	
 	@Override
+	public int getStartValue()
+	{
+		int startValue = getItemGroup().getStartValue();
+		if (hasDependency(Type.START_VALUE))
+		{
+			startValue = getDependency(Type.START_VALUE).getValue(startValue);
+		}
+		return startValue;
+	}
+	
+	@Override
 	public int getTempPoints()
 	{
 		if ( !isValueGroup())

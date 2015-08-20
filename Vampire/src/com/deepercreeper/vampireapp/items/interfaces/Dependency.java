@@ -84,8 +84,6 @@ public interface Dependency
 		
 		/**
 		 * The start value for groups or items.
-		 * NOTE Groups' start value is only used when items are created.
-		 * TODO Remove the start value field and make a dynamic invoke.
 		 */
 		START_VALUE("startValue"),
 		

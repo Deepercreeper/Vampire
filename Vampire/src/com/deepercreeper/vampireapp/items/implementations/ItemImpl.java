@@ -108,14 +108,7 @@ public class ItemImpl extends NamedDependableImpl implements Item
 			mChildrenList = null;
 			mChildren = null;
 		}
-		if (aStartValue == -1)
-		{
-			mStartValue = getItemGroup().getStartValue();
-		}
-		else
-		{
-			mStartValue = aStartValue;
-		}
+		mStartValue = aStartValue;
 		if (aEPCost == -1)
 		{
 			mEPCost = getItemGroup().getEPCost();
@@ -310,6 +303,17 @@ public class ItemImpl extends NamedDependableImpl implements Item
 			return 0;
 		}
 		return mStartValue;
+	}
+	
+	@Override
+	public boolean hasStartValue()
+	{
+		if ( !isValueItem())
+		{
+			Log.w(TAG, "Tried to get the start value of a non value item.");
+			return false;
+		}
+		return mStartValue != -1;
 	}
 	
 	@Override

@@ -138,6 +138,11 @@ public interface Item extends Nameable, Dependable
 	public boolean hasParentItem();
 	
 	/**
+	 * @return whether this item has an item specific start value.
+	 */
+	public boolean hasStartValue();
+	
+	/**
 	 * @return whether this item allows adding, changing and removing child items.
 	 */
 	public boolean isMutableParent();

@@ -674,7 +674,11 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 	@Override
 	public int getStartValue()
 	{
-		int startValue = getItem().getStartValue();
+		int startValue = getItemGroup().getStartValue();
+		if (getItem().hasStartValue())
+		{
+			startValue = getItem().getStartValue();
+		}
 		if (hasDependency(Type.START_VALUE))
 		{
 			startValue = getDependency(Type.START_VALUE).getValue(startValue);
