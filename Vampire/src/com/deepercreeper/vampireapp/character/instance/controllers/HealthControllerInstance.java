@@ -1,9 +1,11 @@
-package com.deepercreeper.vampireapp.character.instance;
+package com.deepercreeper.vampireapp.character.instance.controllers;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.character.creation.HealthControllerCreation;
+import com.deepercreeper.vampireapp.character.creation.controllers.HealthControllerCreation;
+import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
+import com.deepercreeper.vampireapp.character.instance.Mode;
 import com.deepercreeper.vampireapp.host.change.HealthChange;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;

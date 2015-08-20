@@ -10,7 +10,7 @@ import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.Cond
  */
 public class ConditionInstanceImpl implements ConditionInstance
 {
-	private final InstanceConditionQuery	mQuery;
+	private final ConditionQueryInstance	mQuery;
 	
 	private final String					mItemName;
 	
@@ -34,7 +34,7 @@ public class ConditionInstanceImpl implements ConditionInstance
 	 * @param aIndex
 	 *            The index.
 	 */
-	public ConditionInstanceImpl(final InstanceConditionQuery aQuery, final String aItemName, final int aMinimum, final int aMaximum, final int aIndex)
+	public ConditionInstanceImpl(final ConditionQueryInstance aQuery, final String aItemName, final int aMinimum, final int aMaximum, final int aIndex)
 	{
 		mQuery = aQuery;
 		mItemName = aItemName;

@@ -1,10 +1,11 @@
-package com.deepercreeper.vampireapp.character.instance;
+package com.deepercreeper.vampireapp.character.instance.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.character.inventory.Artifact;
 import com.deepercreeper.vampireapp.character.inventory.Inventory;
 import com.deepercreeper.vampireapp.host.Message;

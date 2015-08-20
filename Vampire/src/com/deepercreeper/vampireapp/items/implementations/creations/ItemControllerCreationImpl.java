@@ -434,14 +434,6 @@ public class ItemControllerCreationImpl extends DependableInstanceImpl implement
 		ViewUtil.release(getContainer());
 	}
 	
-	/**
-	 * Removes all empty items if they are added to a mutable group.
-	 */
-	public void removeEmpty()
-	{
-		// TODO Implement and use instead of re-adding all items
-	}
-	
 	@Override
 	public void removeItem(final String aName)
 	{

@@ -2,6 +2,7 @@ package com.deepercreeper.vampireapp.util.view.dialogs;
 
 import java.util.List;
 import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.character.instance.controllers.InsanityInstance;
 import com.deepercreeper.vampireapp.items.interfaces.Nameable;
 import com.deepercreeper.vampireapp.mechanics.Duration;
 import com.deepercreeper.vampireapp.mechanics.TimeListener.Type;
@@ -33,7 +34,7 @@ public class CreateInsanityDialog extends DefaultDialog<InsanityCreationListener
 {
 	private final ArrayAdapter<Nameable> mDuration;
 	
-	private final List<String> mInsanities;
+	private final List<InsanityInstance> mInsanities;
 	
 	private EditText mName;
 	
@@ -43,7 +44,7 @@ public class CreateInsanityDialog extends DefaultDialog<InsanityCreationListener
 	
 	private boolean mForever = false;
 	
-	private CreateInsanityDialog(final String aTitle, final Context aContext, final List<String> aInsanities,
+	private CreateInsanityDialog(final String aTitle, final Context aContext, final List<InsanityInstance> aInsanities,
 			final InsanityCreationListener aListener)
 	{
 		super(aTitle, aContext, aListener, R.layout.dialog_create_insanity, LinearLayout.class);
@@ -117,7 +118,14 @@ public class CreateInsanityDialog extends DefaultDialog<InsanityCreationListener
 	{
 		boolean enabled = true;
 		enabled &= isNameOk(mName);
-		enabled &= !mInsanities.contains(mName.getText().toString().trim());
+		for (InsanityInstance insanity : mInsanities)
+		{
+			if (insanity.getName().equals(mName.getText().toString().trim()))
+			{
+				enabled = false;
+				break;
+			}
+		}
 		enabled &= mForever || isNumberOk(mValue, 1);
 		ViewUtil.setEnabled(mOK, enabled);
 	}
@@ -142,7 +150,7 @@ public class CreateInsanityDialog extends DefaultDialog<InsanityCreationListener
 	 * @param aListener
 	 *            The dialog listener.
 	 */
-	public static void showCreateInsanityDialog(final String aTitle, final Context aContext, final List<String> aInsanities,
+	public static void showCreateInsanityDialog(final String aTitle, final Context aContext, final List<InsanityInstance> aInsanities,
 			final InsanityCreationListener aListener)
 	{
 		if (isDialogOpen())

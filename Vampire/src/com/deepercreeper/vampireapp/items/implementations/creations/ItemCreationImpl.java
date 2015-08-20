@@ -1012,7 +1012,6 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 	{
 		if (isValueItem())
 		{
-			// TODO Find out what else can change the possible value
 			if (hasRestrictions() && !isValueOk(getValue(), CreationRestrictionType.ITEM_VALUE))
 			{
 				while (canIncrease() && getValue() < getMinValue(CreationRestrictionType.ITEM_VALUE))

@@ -1,7 +1,9 @@
 package com.deepercreeper.vampireapp.items.implementations.creations.restrictions;
 
+import com.deepercreeper.vampireapp.items.implementations.instances.restrictions.ConditionInstanceImpl;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.ConditionCreation;
+import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.ConditionInstance;
 
 /**
  * A creation condition implementation.
@@ -10,15 +12,17 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.Cond
  */
 public class ConditionCreationImpl implements ConditionCreation
 {
-	private final CreationConditionQuery	mQuery;
+	private final ConditionQueryCreation mQuery;
 	
-	private final String					mItemName;
+	private final String mItemName;
 	
-	private final int						mMinimum;
+	private final int mMinimum;
 	
-	private final int						mMaximum;
+	private final int mMaximum;
 	
-	private final int						mIndex;
+	private final int mIndex;
+	
+	private final boolean mPersistent;
 	
 	/**
 	 * Creates a new creation condition.
@@ -33,14 +37,24 @@ public class ConditionCreationImpl implements ConditionCreation
 	 *            The maximum value.
 	 * @param aIndex
 	 *            The index.
+	 * @param aPersistent
+	 *            Whether this condition will be ported into the character instance.
 	 */
-	public ConditionCreationImpl(final CreationConditionQuery aQuery, final String aItemName, final int aMinimum, final int aMaximum, final int aIndex)
+	public ConditionCreationImpl(final ConditionQueryCreation aQuery, final String aItemName, final int aMinimum, final int aMaximum,
+			final int aIndex, boolean aPersistent)
 	{
 		mQuery = aQuery;
 		mItemName = aItemName;
 		mMinimum = aMinimum;
 		mMaximum = aMaximum;
 		mIndex = aIndex;
+		mPersistent = aPersistent;
+	}
+	
+	@Override
+	public boolean isPersistent()
+	{
+		return mPersistent;
 	}
 	
 	@Override
@@ -100,6 +114,15 @@ public class ConditionCreationImpl implements ConditionCreation
 			return false;
 		}
 		return true;
+	}
+	
+	public ConditionInstance createInstance()
+	{
+		if ( !isPersistent())
+		{
+			return null;
+		}
+		return new ConditionInstanceImpl(mQuery.getInstanceQuery(), getItemName(), mMinimum, mMaximum, mIndex);
 	}
 	
 	@Override

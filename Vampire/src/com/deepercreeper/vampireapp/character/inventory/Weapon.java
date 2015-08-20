@@ -6,7 +6,7 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.character.instance.InventoryControllerInstance;
+import com.deepercreeper.vampireapp.character.instance.controllers.InventoryControllerInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.util.CodingUtil;
 import com.deepercreeper.vampireapp.util.DataUtil;

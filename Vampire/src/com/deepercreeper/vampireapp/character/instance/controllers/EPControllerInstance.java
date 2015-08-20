@@ -1,6 +1,7 @@
-package com.deepercreeper.vampireapp.character.instance;
+package com.deepercreeper.vampireapp.character.instance.controllers;
 
 import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.host.change.EPChange;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.util.ViewUtil;

@@ -1,8 +1,9 @@
-package com.deepercreeper.vampireapp.character.instance;
+package com.deepercreeper.vampireapp.character.instance.controllers;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.host.change.GenerationChange;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.util.ViewUtil;
@@ -142,14 +143,12 @@ public class GenerationControllerInstance implements Viewable, Saveable
 	 */
 	public void increase()
 	{
-		// TODO Maybe add a button to request generation increase
 		if (mGeneration > MIN_GENERATION)
 		{
 			mGeneration-- ;
 		}
 		mChangeListener.sendChange(new GenerationChange(mGeneration));
-		// TODO Maybe update the whole character because of blood pool changes
-		updateUI();
+		mChar.updateUI();
 	}
 	
 	/**

@@ -1,6 +1,7 @@
-package com.deepercreeper.vampireapp.character.creation;
+package com.deepercreeper.vampireapp.character.creation.controllers;
 
 import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
 import com.deepercreeper.vampireapp.items.implementations.creations.restrictions.RestrictionableCreationImpl;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation.CreationRestrictionType;
 import com.deepercreeper.vampireapp.util.ViewUtil;

@@ -43,16 +43,12 @@ public class Named implements Nameable
 	@Override
 	public boolean equals(final Object obj)
 	{
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
-		final Named other = (Named) obj;
-		if (getName() == null)
+		if (obj instanceof Nameable)
 		{
-			if (other.getName() != null) return false;
+			Nameable nameable = (Nameable) obj;
+			return getName().equals(nameable.getName());
 		}
-		else if ( !getName().equals(other.getName())) return false;
-		return true;
+		return false;
 	}
 	
 	@Override

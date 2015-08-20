@@ -1,22 +1,20 @@
-package com.deepercreeper.vampireapp.character.instance;
+package com.deepercreeper.vampireapp.character.instance.controllers;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.character.creation.InsanityControllerCreation;
+import com.deepercreeper.vampireapp.character.creation.controllers.InsanityControllerCreation;
+import com.deepercreeper.vampireapp.character.creation.controllers.InsanityCreation;
 import com.deepercreeper.vampireapp.host.Message;
 import com.deepercreeper.vampireapp.host.Message.ButtonAction;
 import com.deepercreeper.vampireapp.host.Message.MessageGroup;
 import com.deepercreeper.vampireapp.host.change.InsanityChange;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.mechanics.Duration;
-import com.deepercreeper.vampireapp.mechanics.Duration.DurationListener;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.CodingUtil;
 import com.deepercreeper.vampireapp.util.DataUtil;
@@ -31,7 +29,6 @@ import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 /**
  * A controller for all insanity instances.
@@ -40,38 +37,7 @@ import android.widget.TextView;
  */
 public class InsanityControllerInstance implements TimeListener, Saveable, Viewable
 {
-	private class InsanityDurationListener implements DurationListener
-	{
-		private final String mInsanity;
-		
-		public InsanityDurationListener(final String aInsanity)
-		{
-			mInsanity = aInsanity;
-		}
-		
-		@Override
-		public void onDue()
-		{
-			removeInsanity(mInsanity, true);
-			final int id = mHost ? R.string.player_lost_insanity : R.string.lost_insanity;
-			final String sender = mHost ? mMessageListener.getCharacter().getName() : "";
-			mMessageListener.showMessage(new Message(MessageGroup.SINGLE, false, sender, id, new String[] { mInsanity }, mContext, mMessageListener,
-					ButtonAction.NOTHING));
-		}
-		
-		@Override
-		public void timeUpdated()
-		{
-			// TODO Prevent this by adding insanity instances
-			final TextView durationLabel = (TextView) mExpander.getContainer().getChildAt(mInsanities.indexOf(mInsanity))
-					.findViewById(mHost ? R.id.h_insanity_duration_label : R.id.c_insanity_duration_label);
-			durationLabel.setText(getDurationOf(mInsanity).getName(mContext));
-		}
-	}
-	
-	private final List<String> mInsanities = new ArrayList<String>();
-	
-	private final Map<String, Duration> mInsanityDurations = new HashMap<String, Duration>();
+	private final List<InsanityInstance> mInsanities = new ArrayList<InsanityInstance>();
 	
 	private final LinearLayout mContainer;
 	
@@ -172,9 +138,9 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 			});
 		}
 		
-		for (final String insanity : aController.getInsanities())
+		for (final InsanityCreation insanity : aController.getInsanities())
 		{
-			addInsanity(insanity, Duration.FOREVER, true);
+			addInsanity(insanity.getName(), Duration.FOREVER, true);
 		}
 		
 		updateUI();
@@ -208,43 +174,27 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 	 */
 	public void addInsanity(final String aInsanity, final Duration aDuration, final boolean aSilent)
 	{
-		if (mInsanities.contains(aInsanity))
+		InsanityInstance insanity = new InsanityInstance(aInsanity, aDuration, mContext, this, mMessageListener, mHost);
+		if (mInsanities.contains(insanity))
 		{
 			return;
 		}
-		aDuration.addListener(new InsanityDurationListener(aInsanity));
-		mInsanities.add(aInsanity);
-		mInsanityDurations.put(aInsanity, aDuration);
-		final View insanity = View.inflate(mContext, mHost ? R.layout.host_insanity : R.layout.client_insanity, null);
-		((TextView) insanity.findViewById(mHost ? R.id.h_insanity_name_label : R.id.c_insanity_name_label)).setText(aInsanity);
-		((TextView) insanity.findViewById(mHost ? R.id.h_insanity_duration_label : R.id.c_insanity_duration_label))
-				.setText(getDurationOf(aInsanity).getName(mContext));
+		mInsanities.add(insanity);
 		if (mHost)
 		{
-			insanity.findViewById(R.id.h_remove_insanity_button).setOnClickListener(new OnClickListener()
-			{
-				@Override
-				public void onClick(final View aV)
-				{
-					removeInsanity(aInsanity, false);
-				}
-			});
-		}
-		if (mHost)
-		{
-			mExpander.getContainer().addView(insanity, mExpander.getContainer().getChildCount() - 1);
+			mExpander.getContainer().addView(insanity.getContainer(), mExpander.getContainer().getChildCount() - 1);
 		}
 		else
 		{
-			mExpander.getContainer().addView(insanity);
+			mExpander.getContainer().addView(insanity.getContainer());
 		}
 		mExpander.resize();
 		updateUI();
 		if ( !aSilent)
 		{
-			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.got_insanity, new String[] { aInsanity }, mContext,
-					null, ButtonAction.NOTHING));
-			mMessageListener.sendChange(new InsanityChange(aInsanity, aDuration));
+			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.got_insanity, new String[] { insanity.getName() },
+					mContext, null, ButtonAction.NOTHING));
+			mMessageListener.sendChange(new InsanityChange(insanity.getName(), insanity.getDuration()));
 		}
 	}
 	
@@ -252,12 +202,9 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 	public Element asElement(final Document aDoc)
 	{
 		final Element element = aDoc.createElement("insanities");
-		for (final String insanity : getInsanities())
+		for (final InsanityInstance insanity : getInsanities())
 		{
-			final Element insanityElement = aDoc.createElement("insanity");
-			insanityElement.setAttribute("name", CodingUtil.encode(insanity));
-			insanityElement.appendChild(getDurationOf(insanity).asElement(aDoc));
-			element.appendChild(insanityElement);
+			element.appendChild(insanity.asElement(aDoc));
 		}
 		return element;
 	}
@@ -269,19 +216,9 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 	}
 	
 	/**
-	 * @param aInsanity
-	 *            The insanity.
-	 * @return the duration left for the given insanity.
-	 */
-	public Duration getDurationOf(final String aInsanity)
-	{
-		return mInsanityDurations.get(aInsanity);
-	}
-	
-	/**
 	 * @return a list of all insanities.
 	 */
-	public List<String> getInsanities()
+	public List<InsanityInstance> getInsanities()
 	{
 		return mInsanities;
 	}
@@ -293,6 +230,25 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 	}
 	
 	/**
+	 * Removes the insanity with the given name.
+	 * 
+	 * @param aInsanity
+	 *            The insanity name.
+	 * @param aSilent
+	 *            Whether changes should be sent.
+	 */
+	public void removeInsanity(String aInsanity, boolean aSilent)
+	{
+		for (InsanityInstance insanity : getInsanities())
+		{
+			if (insanity.getName().equals(aInsanity))
+			{
+				removeInsanity(insanity, aSilent);
+			}
+		}
+	}
+	
+	/**
 	 * Removes the given insanity.
 	 * 
 	 * @param aInsanity
@@ -300,29 +256,29 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 	 * @param aSilent
 	 *            Whether a change should be sent or not.
 	 */
-	public void removeInsanity(final String aInsanity, final boolean aSilent)
+	public void removeInsanity(final InsanityInstance aInsanity, final boolean aSilent)
 	{
-		mExpander.getContainer().removeViewAt(mInsanities.indexOf(aInsanity));
+		aInsanity.release();
 		mInsanities.remove(aInsanity);
-		mInsanityDurations.remove(aInsanity);
+		
 		mExpander.resize();
 		updateUI();
 		if ( !aSilent)
 		{
-			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.lost_insanity, new String[] { aInsanity }, mContext,
-					null, ButtonAction.NOTHING));
-			mMessageListener.sendChange(new InsanityChange(aInsanity));
+			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.lost_insanity, new String[] { aInsanity.getName() },
+					mContext, null, ButtonAction.NOTHING));
+			mMessageListener.sendChange(new InsanityChange(aInsanity.getName()));
 		}
 	}
 	
 	@Override
 	public void time(final Type aType, final int aAmount)
 	{
-		final Set<Duration> durations = new HashSet<Duration>();
-		durations.addAll(mInsanityDurations.values());
-		for (final Duration duration : durations)
+		final Set<TimeListener> listeners = new HashSet<TimeListener>();
+		listeners.addAll(getInsanities());
+		for (final TimeListener listener : listeners)
 		{
-			duration.time(aType, aAmount);
+			listener.time(aType, aAmount);
 		}
 	}
 	

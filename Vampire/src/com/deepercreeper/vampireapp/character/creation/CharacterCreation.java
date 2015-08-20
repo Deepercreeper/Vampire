@@ -2,6 +2,9 @@ package com.deepercreeper.vampireapp.character.creation;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.deepercreeper.vampireapp.character.creation.controllers.GenerationControllerCreation;
+import com.deepercreeper.vampireapp.character.creation.controllers.HealthControllerCreation;
+import com.deepercreeper.vampireapp.character.creation.controllers.InsanityControllerCreation;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.implementations.creations.ItemControllerCreationImpl;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;

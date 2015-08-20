@@ -18,14 +18,14 @@ public interface ConditionInstance
 	 * 
 	 * @author vrl
 	 */
-	public abstract class InstanceConditionQuery
+	public abstract class ConditionQueryInstance
 	{
-		private static final Map<String, InstanceConditionQuery>	CONDITION_QUERIES			= new HashMap<String, InstanceConditionQuery>();
+		private static final Map<String, ConditionQueryInstance>	CONDITION_QUERIES			= new HashMap<String, ConditionQueryInstance>();
 		
 		/**
 		 * Complies if the value of the item with name {@link ConditionInstance#getItemName()} has a value that approves {@link ConditionInstance#isInRange(int)}.
 		 */
-		public static final InstanceConditionQuery					ITEM_VALUE					= new InstanceConditionQuery("ItemValue")
+		public static final ConditionQueryInstance					ITEM_VALUE					= new ConditionQueryInstance("ItemValue")
 																								{
 																									
 																									@Override
@@ -46,9 +46,9 @@ public interface ConditionInstance
 																								};
 		
 		/**
-		 * Complies if {@link InstanceConditionQuery#ITEM_VALUE} does not comply.
+		 * Complies if {@link ConditionQueryInstance#ITEM_VALUE} does not comply.
 		 */
-		public static final InstanceConditionQuery					NOT_ITEM_VALUE				= new InstanceConditionQuery("NotItemVale")
+		public static final ConditionQueryInstance					NOT_ITEM_VALUE				= new ConditionQueryInstance("NotItemVale")
 																								{
 																									@Override
 																									public boolean complied(
@@ -63,7 +63,7 @@ public interface ConditionInstance
 		/**
 		 * Complies if the given controller has an item with name {@link ConditionInstance#getItemName()}.
 		 */
-		public static final InstanceConditionQuery					HAS_ITEM					= new InstanceConditionQuery("HasItem")
+		public static final ConditionQueryInstance					HAS_ITEM					= new ConditionQueryInstance("HasItem")
 																								{
 																									
 																									@Override
@@ -77,9 +77,9 @@ public interface ConditionInstance
 																								};
 		
 		/**
-		 * Complies if {@link InstanceConditionQuery#HAS_ITEM} does not comply.
+		 * Complies if {@link ConditionQueryInstance#HAS_ITEM} does not comply.
 		 */
-		public static final InstanceConditionQuery					NOT_HAS_ITEM				= new InstanceConditionQuery("NotHasItem")
+		public static final ConditionQueryInstance					NOT_HAS_ITEM				= new ConditionQueryInstance("NotHasItem")
 																								{
 																									@Override
 																									public boolean complied(
@@ -95,7 +95,7 @@ public interface ConditionInstance
 		 * Complies if the item with name {@link ConditionInstance#getItemName()} has a child at index {@link ConditionInstance#getIndex()} and that child has a value that approves
 		 * {@link ConditionInstance#isInRange(int)}.
 		 */
-		public static final InstanceConditionQuery					ITEM_CHILD_VALUE_AT			= new InstanceConditionQuery("ItemChildValueAt")
+		public static final ConditionQueryInstance					ITEM_CHILD_VALUE_AT			= new ConditionQueryInstance("ItemChildValueAt")
 																								{
 																									@Override
 																									public boolean complied(
@@ -121,9 +121,9 @@ public interface ConditionInstance
 																								};
 		
 		/**
-		 * Complies if {@link InstanceConditionQuery#ITEM_CHILD_VALUE_AT} does not comply.
+		 * Complies if {@link ConditionQueryInstance#ITEM_CHILD_VALUE_AT} does not comply.
 		 */
-		public static final InstanceConditionQuery					NOT_ITEM_CHILD_VALUE_AT		= new InstanceConditionQuery("NotItemChildValueAt")
+		public static final ConditionQueryInstance					NOT_ITEM_CHILD_VALUE_AT		= new ConditionQueryInstance("NotItemChildValueAt")
 																								{
 																									@Override
 																									public boolean complied(
@@ -138,7 +138,7 @@ public interface ConditionInstance
 		/**
 		 * Complies if the item with name {@link ConditionInstance#getItemName()} has a child item with a value that approves {@link ConditionInstance#isInRange(int)}.
 		 */
-		public static final InstanceConditionQuery					ITEM_HAS_CHILD_VALUE		= new InstanceConditionQuery("ItemHasChildValue")
+		public static final ConditionQueryInstance					ITEM_HAS_CHILD_VALUE		= new ConditionQueryInstance("ItemHasChildValue")
 																								{
 																									
 																									@Override
@@ -167,9 +167,9 @@ public interface ConditionInstance
 																								};
 		
 		/**
-		 * Complies if {@link InstanceConditionQuery#ITEM_HAS_CHILD_VALUE} does not comply.
+		 * Complies if {@link ConditionQueryInstance#ITEM_HAS_CHILD_VALUE} does not comply.
 		 */
-		public static final InstanceConditionQuery					NOT_ITEM_HAS_CHILD_VALUE	= new InstanceConditionQuery("NotItemHasChildValue")
+		public static final ConditionQueryInstance					NOT_ITEM_HAS_CHILD_VALUE	= new ConditionQueryInstance("NotItemHasChildValue")
 																								{
 																									@Override
 																									public boolean complied(
@@ -184,7 +184,7 @@ public interface ConditionInstance
 		/**
 		 * Complies if the group with name {@link ConditionInstance#getItemName()} has a child item with a value that approves {@link ConditionInstance#isInRange(int)}.
 		 */
-		public static final InstanceConditionQuery					GROUP_HAS_CHILD_VALUE		= new InstanceConditionQuery("GroupHasChildValue")
+		public static final ConditionQueryInstance					GROUP_HAS_CHILD_VALUE		= new ConditionQueryInstance("GroupHasChildValue")
 																								{
 																									
 																									@Override
@@ -209,9 +209,9 @@ public interface ConditionInstance
 																								};
 		
 		/**
-		 * Complies if {@link InstanceConditionQuery#GROUP_HAS_CHILD_VALUE} does not comply.
+		 * Complies if {@link ConditionQueryInstance#GROUP_HAS_CHILD_VALUE} does not comply.
 		 */
-		public static final InstanceConditionQuery					NOT_GROUP_HAS_CHILD_VALUE	= new InstanceConditionQuery("NotGroupHasChildValue")
+		public static final ConditionQueryInstance					NOT_GROUP_HAS_CHILD_VALUE	= new ConditionQueryInstance("NotGroupHasChildValue")
 																								{
 																									@Override
 																									public boolean complied(
@@ -225,7 +225,7 @@ public interface ConditionInstance
 		
 		private final String										mName;
 		
-		private InstanceConditionQuery(final String aName)
+		private ConditionQueryInstance(final String aName)
 		{
 			mName = aName;
 			CONDITION_QUERIES.put(mName, this);
@@ -245,7 +245,7 @@ public interface ConditionInstance
 		 *            The query name.
 		 * @return the query with the given name.
 		 */
-		public static InstanceConditionQuery getQuery(final String aName)
+		public static ConditionQueryInstance getQuery(final String aName)
 		{
 			return CONDITION_QUERIES.get(aName);
 		}

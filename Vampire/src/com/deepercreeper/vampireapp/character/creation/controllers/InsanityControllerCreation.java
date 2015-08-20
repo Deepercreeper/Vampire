@@ -1,8 +1,9 @@
-package com.deepercreeper.vampireapp.character.creation;
+package com.deepercreeper.vampireapp.character.creation.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
 import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
 import com.deepercreeper.vampireapp.items.implementations.creations.restrictions.RestrictionableCreationImpl;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation.CreationRestrictionType;
 import com.deepercreeper.vampireapp.util.ViewUtil;
@@ -13,7 +14,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 /**
  * The insanity controller handles the list of insanities and updates all UI views after changes.
@@ -22,7 +22,7 @@ import android.widget.TextView;
  */
 public class InsanityControllerCreation extends RestrictionableCreationImpl
 {
-	private final List<String> mInsanities = new ArrayList<String>();
+	private final List<InsanityCreation> mInsanities = new ArrayList<InsanityCreation>();
 	
 	private final LinearLayout mContainer;
 	
@@ -81,11 +81,12 @@ public class InsanityControllerCreation extends RestrictionableCreationImpl
 	 */
 	public void addInsanity(final String aInsanity)
 	{
-		if ( !mInsanities.contains(aInsanity))
+		InsanityCreation insanity = new InsanityCreation(aInsanity, mContext, this);
+		if ( !mInsanities.contains(insanity))
 		{
-			mInsanities.add(aInsanity);
-			final int index = mInsanities.indexOf(aInsanity);
-			mContainer.addView(createInsanityPanel(index), index);
+			mInsanities.add(insanity);
+			final int index = mInsanities.indexOf(insanity);
+			mContainer.addView(insanity.getContainer(), index);
 			updateUI();
 		}
 	}
@@ -95,7 +96,10 @@ public class InsanityControllerCreation extends RestrictionableCreationImpl
 	 */
 	public void clear()
 	{
-		getContainer().removeAllViews();
+		for (InsanityCreation insanity : getInsanities())
+		{
+			insanity.release();
+		}
 		mInsanities.clear();
 	}
 	
@@ -108,7 +112,7 @@ public class InsanityControllerCreation extends RestrictionableCreationImpl
 	/**
 	 * @return a list of all insanities.
 	 */
-	public List<String> getInsanities()
+	public List<InsanityCreation> getInsanities()
 	{
 		return mInsanities;
 	}
@@ -133,42 +137,16 @@ public class InsanityControllerCreation extends RestrictionableCreationImpl
 	 * @param aInsanity
 	 *            The insanity to remove.
 	 */
-	public void remove(final String aInsanity)
+	public void remove(final InsanityCreation aInsanity)
 	{
-		if (mInsanities.contains(aInsanity))
-		{
-			remove(mInsanities.indexOf(aInsanity));
-		}
+		aInsanity.release();
+		mInsanities.remove(aInsanity);
+		updateUI();
 	}
 	
 	@Override
 	public void updateUI()
 	{
 		mChar.setInsanitiesOk(isOk());
-	}
-	
-	private LinearLayout createInsanityPanel(final int aIndex)
-	{
-		final String insanity = mInsanities.get(aIndex);
-		
-		final LinearLayout insanityPanel = (LinearLayout) View.inflate(mContext, R.layout.view_insanity, null);
-		insanityPanel.findViewById(R.id.view_remove_insanity_button).setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(final View aV)
-			{
-				remove(insanity);
-			}
-		});
-		((TextView) insanityPanel.findViewById(R.id.view_insanity_label)).setText(insanity);
-		
-		return insanityPanel;
-	}
-	
-	private void remove(final int aIndex)
-	{
-		mInsanities.remove(aIndex);
-		mContainer.removeViewAt(aIndex);
-		updateUI();
 	}
 }

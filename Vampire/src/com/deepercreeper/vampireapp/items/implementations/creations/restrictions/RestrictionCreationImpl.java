@@ -98,9 +98,16 @@ public class RestrictionCreationImpl implements RestrictionCreation
 		{
 			return null;
 		}
-		return new RestrictionInstanceImpl(getType().getInstanceType(), getItemName(), getMinimum(), getMaximum(), getItems(), getIndex(), getValue(),
-				Duration.FOREVER);
-		// TODO Maybe add the conditions too
+		RestrictionInstance restriction = new RestrictionInstanceImpl(getType().getInstanceType(), getItemName(), getMinimum(), getMaximum(),
+				getItems(), getIndex(), getValue(), Duration.FOREVER);
+		for (ConditionCreation condition : getConditions())
+		{
+			if (condition.isPersistent())
+			{
+				restriction.addCondition(condition.createInstance());
+			}
+		}
+		return restriction;
 	}
 	
 	@Override

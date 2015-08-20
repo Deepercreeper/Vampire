@@ -1,6 +1,6 @@
 package com.deepercreeper.vampireapp.character.inventory;
 
-import com.deepercreeper.vampireapp.character.instance.InventoryControllerInstance;
+import com.deepercreeper.vampireapp.character.instance.controllers.InventoryControllerInstance;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 import android.content.Context;

@@ -3,7 +3,7 @@ package com.deepercreeper.vampireapp.host.change;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
-import com.deepercreeper.vampireapp.character.instance.HealthControllerInstance;
+import com.deepercreeper.vampireapp.character.instance.controllers.HealthControllerInstance;
 import com.deepercreeper.vampireapp.util.DataUtil;
 
 /**

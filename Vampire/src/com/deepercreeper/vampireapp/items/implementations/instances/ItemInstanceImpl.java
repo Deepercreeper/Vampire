@@ -1148,7 +1148,6 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 	{
 		if (isValueItem())
 		{
-			// TODO Find out what else can change the possible value
 			if (hasRestrictions(InstanceRestrictionType.ITEM_VALUE) && !isValueOk(getValue(), InstanceRestrictionType.ITEM_VALUE))
 			{
 				while (canIncrease() && getValue() < getMinValue(InstanceRestrictionType.ITEM_VALUE))

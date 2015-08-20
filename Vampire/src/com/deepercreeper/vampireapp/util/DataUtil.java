@@ -43,7 +43,7 @@ import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.ConditionCreation;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.ConditionCreation.CreationConditionQuery;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.ConditionCreation.ConditionQueryCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation.CreationRestrictionType;
 import com.deepercreeper.vampireapp.lists.controllers.ClanController;
@@ -1129,12 +1129,13 @@ public class DataUtil
 		final Set<ConditionCreation> conditions = new HashSet<ConditionCreation>();
 		for (final Element child : getChildren(aRestrictionNode, CONDITION))
 		{
-			final CreationConditionQuery query = CreationConditionQuery.getQuery(child.getAttribute("query"));
+			final ConditionQueryCreation query = ConditionQueryCreation.getQuery(child.getAttribute("query"));
 			if (query == null)
 			{
 				Log.w(TAG, "Can't find condition query " + child.getAttribute("query") + ".");
 				continue;
 			}
+			final boolean persistent = Boolean.valueOf(child.getAttribute("persistent"));
 			String itemName = null;
 			int minimum = Integer.MIN_VALUE;
 			int maximum = Integer.MAX_VALUE;
@@ -1211,7 +1212,7 @@ public class DataUtil
 					continue;
 				}
 			}
-			conditions.add(new ConditionCreationImpl(query, itemName, minimum, maximum, index));
+			conditions.add(new ConditionCreationImpl(query, itemName, minimum, maximum, index, persistent));
 		}
 		return conditions;
 	}
