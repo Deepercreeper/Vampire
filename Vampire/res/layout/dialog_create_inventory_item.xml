@@ -26,7 +26,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
             android:text="@string/weight_unit"
             android:textSize="@dimen/normal_text_size" />
     </LinearLayout>
@@ -37,14 +36,13 @@
         android:layout_height="wrap_content"
         android:hint="@string/quantity"
         android:inputType="numberSigned" />
-    
+
     <Button
         android:id="@+id/dialog_ok_button"
         style="@style/BarButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/ok" 
         android:enabled="false"
-        />
-    
+        android:text="@string/ok" />
+
 </LinearLayout>

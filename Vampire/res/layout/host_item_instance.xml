@@ -14,14 +14,13 @@
             android:layout_height="@dimen/button_height"
             android:contentDescription="@string/content_description"
             android:src="@drawable/ic_remove" />
-        
+
         <TextView
             android:id="@+id/h_item_instance_name_label"
             android:layout_width="80dp"
             android:layout_height="match_parent"
             android:clickable="true"
             android:ellipsize="end"
-            android:gravity="center_vertical"
             android:singleLine="true" />
 
         <ImageButton
@@ -30,13 +29,12 @@
             android:layout_height="@dimen/button_height"
             android:contentDescription="@string/content_description"
             android:src="@drawable/ic_left" />
-        
+
         <TextView
             android:id="@+id/h_item_instance_value_text"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:ellipsize="end"
-            android:gravity="center_vertical"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:singleLine="true" />
@@ -55,7 +53,7 @@
             android:layout_height="@dimen/button_height"
             android:contentDescription="@string/content_description"
             android:src="@drawable/ic_right" />
-        
+
         <ImageButton
             android:id="@+id/h_add_item_instance_child_button"
             android:layout_width="@dimen/button_width"

@@ -39,7 +39,6 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center_vertical"
                 android:text="@string/nature_colon"
                 android:textSize="@dimen/normal_text_size" />
 
@@ -57,7 +56,6 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center_vertical"
                 android:text="@string/behavior_colon"
                 android:textSize="@dimen/normal_text_size" />
 
@@ -75,7 +73,6 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center_vertical"
                 android:text="@string/clan_colon"
                 android:textSize="@dimen/normal_text_size" />
 
