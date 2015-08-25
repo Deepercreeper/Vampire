@@ -65,7 +65,7 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 	
 	private final LinearLayout mContainer;
 	
-	private boolean mTimeEnabled;
+	private boolean mTimeEnabled = true;
 	
 	private int mTime = TimeListener.EVENING;
 	
@@ -148,7 +148,7 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 			change = new ModeChange(element);
 		}
 		
-		// TODO Add other changes
+		// MARK Changes
 		
 		if (change != null)
 		{
@@ -212,7 +212,7 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 			default :
 				break;
 		}
-		// TODO Implement other button actions
+		// MARK Message buttons
 		
 		if (release)
 		{

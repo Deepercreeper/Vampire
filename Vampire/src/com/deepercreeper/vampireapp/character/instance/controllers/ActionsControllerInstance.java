@@ -62,7 +62,7 @@ public class ActionsControllerInstance implements Viewable
 			mActions.add(new ActionInstanceImpl(defaultAction, mContext, mChar, null));
 		}
 		
-		// TODO Add weapon actions
+		// MARK Actions
 		
 		sortActions();
 		updateUI();

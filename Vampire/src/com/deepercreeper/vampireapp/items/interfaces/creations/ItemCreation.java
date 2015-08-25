@@ -41,6 +41,13 @@ public interface ItemCreation extends Comparable<ItemCreation>, RestrictionableC
 	public boolean canIncrease();
 	
 	/**
+	 * @param aItem
+	 *            The item to remove.
+	 * @return whether the given item can be removed from this item.
+	 */
+	public boolean canRemoveChild(final ItemCreation aItem);
+	
+	/**
 	 * Clears all children and properties of this item.
 	 */
 	public void clear();

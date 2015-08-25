@@ -293,7 +293,6 @@ public class CharacterCreation
 	 */
 	public CreationMode getMode()
 	{
-		// TODO Remove the creation mode from each item class. That update should be done via update groups.
 		return mMode;
 	}
 	

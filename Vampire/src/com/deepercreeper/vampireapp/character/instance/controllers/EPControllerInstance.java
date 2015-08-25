@@ -94,6 +94,7 @@ public class EPControllerInstance implements Viewable
 				}
 			});
 		}
+		updateUI();
 	}
 	
 	/**
@@ -153,6 +154,7 @@ public class EPControllerInstance implements Viewable
 				}
 			});
 		}
+		updateUI();
 	}
 	
 	/**

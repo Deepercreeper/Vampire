@@ -125,7 +125,7 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 			change = new ModeChange(element);
 		}
 		
-		// TODO Implement other changes
+		// MARK Changes
 		
 		if (change != null)
 		{
@@ -160,7 +160,7 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 			default :
 				break;
 		}
-		// TODO Implement other button actions
+		// MARK Message buttons
 		if (release)
 		{
 			mMessages.remove(aMessage);
@@ -306,7 +306,7 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 			default :
 				break;
 		}
-		// TODO Implement other Message types
+		// MARK Message types
 	}
 	
 	@Override

@@ -223,7 +223,7 @@ public class HostController implements HostListener
 		
 		for (final String host : mHostNames)
 		{
-			final LinearLayout hostCompound = (LinearLayout) View.inflate(mContext, R.layout.host_compound, null);
+			final LinearLayout hostCompound = (LinearLayout) View.inflate(mContext, R.layout.view_host_compound, null);
 			
 			final TextView hostName = (TextView) hostCompound.findViewById(R.id.compound_host_name_label);
 			final Button playHost = (Button) hostCompound.findViewById(R.id.compound_play_host_button);

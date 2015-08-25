@@ -166,17 +166,11 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 			{
 				if (hasParentItem())
 				{
-					if (mChar.getMode().canRemoveChild(ItemCreationImpl.this))
-					{
-						getParentItem().editChild(getItem());
-					}
+					getParentItem().editChild(getItem());
 				}
 				else
 				{
-					if (mChar.getMode().canRemoveItem(ItemCreationImpl.this))
-					{
-						getItemGroup().editItem(getItem());
-					}
+					getItemGroup().editItem(getItem());
 				}
 			}
 		});
@@ -187,17 +181,11 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 			{
 				if (hasParentItem())
 				{
-					if (mChar.getMode().canRemoveChild(ItemCreationImpl.this))
-					{
-						getParentItem().removeChild(getItem());
-					}
+					getParentItem().removeChild(getItem());
 				}
 				else
 				{
-					if (mChar.getMode().canRemoveItem(ItemCreationImpl.this))
-					{
-						getItemGroup().removeItem(getItem());
-					}
+					getItemGroup().removeItem(getItem());
 				}
 			}
 		});
@@ -307,13 +295,13 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 			return false;
 		}
 		boolean canDecreaseItemValue = mValueId > 0;
+		boolean canDecreaseChild = true;
+		final boolean canDecreaseItemTempPoints = mTempPoints > 0;
+		
 		if ( !mChar.getMode().isFreeMode())
 		{
 			canDecreaseItemValue &= mValueId > getMinValue(CreationRestrictionType.ITEM_VALUE) && mValueId > getStartValue();
 		}
-		final boolean canDecreaseItemTempPoints = mTempPoints > 0;
-		boolean canDecreaseChild = true;
-		
 		if (hasParentItem())
 		{
 			for (final RestrictionCreation restriction : getParentItem().getRestrictions(CreationRestrictionType.ITEM_CHILD_VALUE_AT))
@@ -342,8 +330,19 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 				}
 			}
 		}
-		
-		return mChar.getMode().canDecreaseItem(this, canDecreaseItemValue && canDecreaseChild, canDecreaseItemTempPoints && canDecreaseChild);
+		if (mChar.getMode().isFreeMode())
+		{
+			return canDecreaseItemValue && canDecreaseChild;
+		}
+		if (mChar.getMode().isValueMode())
+		{
+			return canDecreaseItemValue && canDecreaseChild && getItemGroup().canChangeBy(getDecreasedValue() - getValue());
+		}
+		if (mChar.getMode().isTempPointsMode())
+		{
+			return canDecreaseItemTempPoints && canDecreaseChild && getItem().getFreePointsCost() != 0;
+		}
+		return false;
 	}
 	
 	@Override
@@ -355,13 +354,13 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 			return false;
 		}
 		boolean canIncreaseItem = mValueId + mTempPoints < getMaxValue();
+		boolean canIncreaseChild = true;
+		
 		if ( !mChar.getMode().isFreeMode())
 		{
 			canIncreaseItem &= mValueId + mTempPoints < getMaxValue(CreationRestrictionType.ITEM_VALUE)
 					&& ( !mChar.isLowLevel() || mValueId + mTempPoints < getItem().getMaxLowLevelValue());
 		}
-		boolean canIncreaseChild = true;
-		
 		if (hasParentItem())
 		{
 			for (final RestrictionCreation restriction : getParentItem().getRestrictions(CreationRestrictionType.ITEM_CHILD_VALUE_AT))
@@ -390,8 +389,23 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 				}
 			}
 		}
-		
-		return mChar.getMode().canIncreaseItem(this, canIncreaseItem && canIncreaseChild);
+		if ( !canIncreaseItem || !canIncreaseChild)
+		{
+			return false;
+		}
+		if (mChar.getMode().isFreeMode())
+		{
+			return true;
+		}
+		if (mChar.getMode().isValueMode())
+		{
+			return getItemGroup().canChangeBy(getIncreasedValue() - getValue());
+		}
+		if (mChar.getMode().isTempPointsMode())
+		{
+			return hasEnoughPoints() && getItem().getFreePointsCost() != 0;
+		}
+		return false;
 	}
 	
 	@Override
@@ -442,7 +456,8 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 	@Override
 	public void editChild(final Item aItem)
 	{
-		if ( !isMutableParent())
+		final ItemCreation child = mChildren.get(aItem.getName());
+		if ( !canRemoveChild(child))
 		{
 			Log.w(TAG, "Tried to edit a child of a non mutable parent item.");
 			return;
@@ -451,7 +466,7 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 		{
 			return;
 		}
-		final int index = getChildrenList().indexOf(mChildren.get(aItem.getName()));
+		final int index = getChildrenList().indexOf(child);
 		final List<Item> children = new ArrayList<Item>();
 		for (final Item item : getItem().getChildrenList())
 		{
@@ -894,18 +909,47 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 	}
 	
 	@Override
-	public void removeChild(final Item aItem)
+	public boolean canRemoveChild(final ItemCreation aItem)
 	{
 		if ( !isMutableParent())
+		{
+			return false;
+		}
+		if (mChar.getMode().isFreeMode())
+		{
+			return true;
+		}
+		if ( !aItem.getItemGroup().canChangeBy( -aItem.getValue()))
+		{
+			return false;
+		}
+		for (final RestrictionCreation restriction : getRestrictions(CreationRestrictionType.ITEM_CHILDREN_COUNT))
+		{
+			if (restriction.isActive(aItem.getItemGroup().getItemController()) && getChildrenList().size() <= restriction.getMinimum())
+			{
+				return false;
+			}
+		}
+		for (final RestrictionCreation restriction : getRestrictions(CreationRestrictionType.ITEM_CHILD_VALUE_AT))
+		{
+			if (restriction.isActive(aItem.getItemGroup().getItemController()) && restriction.getIndex() == indexOfChild(aItem)
+					&& aItem.getStartValue() < restriction.getMinimum())
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	@Override
+	public void removeChild(final Item aItem)
+	{
+		final ItemCreation item = mChildren.get(aItem.getName());
+		if ( !canRemoveChild(item))
 		{
 			Log.w(TAG, "Tried to remove a child from a non parent or non mutable item.");
 			return;
 		}
-		if (getMinValue(CreationRestrictionType.ITEM_CHILDREN_COUNT) >= getChildrenList().size())
-		{
-			return;
-		}
-		final ItemCreation item = mChildren.get(aItem.getName());
 		item.clear();
 		getChildrenList().remove(item);
 		mChildren.remove(item.getName());
@@ -1042,13 +1086,26 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 			ViewUtil.setPxWidth(mRemoveButton, mButtonWidth);
 			if (hasParentItem())
 			{
-				ViewUtil.setEnabled(mRemoveButton, mChar.getMode().canRemoveChild(this));
+				ViewUtil.setEnabled(mRemoveButton, getParentItem().canRemoveChild(this));
 			}
 			else
 			{
-				ViewUtil.setEnabled(mRemoveButton, mChar.getMode().canRemoveItem(this));
+				ViewUtil.setEnabled(mRemoveButton, getItemGroup().canRemoveItem(this));
 			}
-			ViewUtil.setEnabled(mEditButton, mChar.getMode().canEditItem(this));
+			
+			boolean canEditItem = true;
+			
+			if ( !hasParentItem() && !getItemGroup().isMutable())
+			{
+				canEditItem = false;
+			}
+			if (hasParentItem() && !getParentItem().isMutableParent())
+			{
+				canEditItem = false;
+			}
+			canEditItem &= mChar.getMode().isValueMode();
+			
+			ViewUtil.setEnabled(mEditButton, canEditItem);
 		}
 		else
 		{
@@ -1058,7 +1115,24 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 		if (isParent() && isMutableParent())
 		{
 			ViewUtil.setPxWidth(mAddButton, mButtonWidth);
-			ViewUtil.setEnabled(mAddButton, mChar.getMode().canAddChild(this, true) && !getAddableItems().isEmpty());
+			boolean canAddChild = true;
+			if ( !mChar.getMode().isFreeMode())
+			{
+				for (final RestrictionCreation restriction : getRestrictions(CreationRestrictionType.ITEM_CHILDREN_COUNT))
+				{
+					if (restriction.isActive(getItemGroup().getItemController()) && getChildrenList().size() >= restriction.getMaximum())
+					{
+						canAddChild = false;
+					}
+				}
+				if (mChar.getMode().isTempPointsMode() || !mChar.getMode().isValueMode())
+				{
+					canAddChild = false;
+				}
+			}
+			canAddChild &= !getAddableItems().isEmpty();
+			
+			ViewUtil.setEnabled(mAddButton, canAddChild);
 		}
 		else
 		{

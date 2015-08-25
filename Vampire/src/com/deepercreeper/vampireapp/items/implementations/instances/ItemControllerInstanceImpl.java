@@ -317,7 +317,7 @@ public class ItemControllerInstanceImpl extends DependableInstanceImpl implement
 			for (final RestrictionInstance restriction : mItems.get(aName).getRestrictions())
 			{
 				restriction.clear();
-				// TODO What to do with inactive restrictions?
+				// MARK What to do with inactive restrictions?
 			}
 		}
 		mItems.remove(aName);

@@ -210,7 +210,9 @@ public class ItemGroupCreationImpl extends RestrictionableDependableCreationImpl
 	@Override
 	public void editItem(final Item aItem)
 	{
-		if ( !isMutable())
+		final ItemCreation item = mItems.get(aItem);
+		// TODO Check whether item is null
+		if ( !canRemoveItem(item))
 		{
 			Log.w(TAG, "Tried to edit an item of a non mutable group.");
 			return;
@@ -219,7 +221,7 @@ public class ItemGroupCreationImpl extends RestrictionableDependableCreationImpl
 		{
 			return;
 		}
-		final int index = getItemsList().indexOf(mItems.get(aItem));
+		final int index = getItemsList().indexOf(item);
 		final List<Item> items = getAddableItems();
 		if (items.isEmpty())
 		{
@@ -422,9 +424,41 @@ public class ItemGroupCreationImpl extends RestrictionableDependableCreationImpl
 		return getItemsList().indexOf(aItem);
 	}
 	
+	public boolean canRemoveItem(final ItemCreation aItem)
+	{
+		if ( !isMutable())
+		{
+			return false;
+		}
+		if ( !canChangeBy( -aItem.getValue()))
+		{
+			return false;
+		}
+		for (final RestrictionCreation restriction : getRestrictions(CreationRestrictionType.GROUP_CHILDREN_COUNT))
+		{
+			if (restriction.isActive(getItemController()) && getItemsList().size() <= restriction.getMinimum())
+			{
+				return false;
+			}
+		}
+		for (final RestrictionCreation restriction : getRestrictions(CreationRestrictionType.GROUP_ITEM_VALUE_AT))
+		{
+			if (restriction.isActive(getItemController()) && restriction.getIndex() == indexOfItem(aItem)
+					&& aItem.getStartValue() < restriction.getMinimum())
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	@Override
 	public boolean isMutable()
 	{
+		if ( !mChar.getMode().isValueMode())
+		{
+			return false;
+		}
 		if (mChar.getMode().isFreeMode())
 		{
 			return getItemGroup().isMutable() || getItemGroup().isFreeMutable();
@@ -447,7 +481,8 @@ public class ItemGroupCreationImpl extends RestrictionableDependableCreationImpl
 	@Override
 	public void removeItem(final Item aItem)
 	{
-		if ( !isMutable())
+		final ItemCreation item = mItems.get(aItem);
+		if ( !canRemoveItem(item))
 		{
 			Log.w(TAG, "Tried to change a non mutable group.");
 			return;
@@ -458,7 +493,6 @@ public class ItemGroupCreationImpl extends RestrictionableDependableCreationImpl
 		}
 		if (mItems.containsKey(aItem))
 		{
-			final ItemCreation item = mItems.get(aItem);
 			getItemController().removeItem(aItem.getName());
 			item.clear();
 			mItems.remove(aItem);
@@ -552,7 +586,7 @@ public class ItemGroupCreationImpl extends RestrictionableDependableCreationImpl
 			}
 		}
 		
-		if (mChar.getMode().canAddItem(this))
+		if (isMutable())
 		{
 			ViewUtil.wrapHeight(mAddButton);
 			ViewUtil.setEnabled(mAddButton, canAddItem());
@@ -589,7 +623,7 @@ public class ItemGroupCreationImpl extends RestrictionableDependableCreationImpl
 	
 	private boolean canAddItem()
 	{
-		if ( !mChar.getMode().canAddItem(this))
+		if ( !isMutable())
 		{
 			return false;
 		}

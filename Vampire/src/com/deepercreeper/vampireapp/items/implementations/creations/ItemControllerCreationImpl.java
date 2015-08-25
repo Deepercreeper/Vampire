@@ -414,7 +414,7 @@ public class ItemControllerCreationImpl extends DependableInstanceImpl implement
 		}
 		for (final ItemGroupCreation group : getGroupsList())
 		{
-			if ( !group.getItemsList().isEmpty() || mChar.getMode().canAddItem(group))
+			if ( !group.getItemsList().isEmpty() || group.isMutable())
 			{
 				return false;
 			}

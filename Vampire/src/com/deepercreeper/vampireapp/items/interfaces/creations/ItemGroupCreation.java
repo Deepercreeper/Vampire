@@ -58,6 +58,13 @@ public interface ItemGroupCreation extends Comparable<ItemGroupCreation>, Restri
 	
 	/**
 	 * @param aItem
+	 *            The item.
+	 * @return whether the given item can be removed.
+	 */
+	public boolean canRemoveItem(final ItemCreation aItem);
+	
+	/**
+	 * @param aItem
 	 *            The item type.
 	 * @return the child item with the given item type.
 	 */

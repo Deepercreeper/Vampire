@@ -156,6 +156,7 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 			}
 			ViewUtil.hideWidth(mDeleteButton);
 		}
+		updateUI();
 	}
 	
 	/**
@@ -230,6 +231,7 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 			}
 			ViewUtil.hideWidth(mDeleteButton);
 		}
+		updateUI();
 	}
 	
 	/**

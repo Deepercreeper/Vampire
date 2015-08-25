@@ -44,22 +44,25 @@
             <Button
                 android:id="@+id/cc_free_points_back_button"
                 style="@style/BarButton"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="@string/back" />
 
             <Button
                 android:id="@+id/cc_reset_temp_points_button"
                 style="@style/BarButton"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="@string/reset" />
 
             <Button
                 android:id="@+id/cc_free_points_next_button"
                 style="@style/BarButton"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="2"
                 android:text="@string/next" />
         </LinearLayout>
     </LinearLayout>
