@@ -38,7 +38,7 @@ public class ItemImpl extends NamedDependableImpl implements Item
 	
 	private final boolean mOrder;
 	
-	private final boolean mHasLowLevelMax;
+	private final int mMaxLowLevelValue;
 	
 	private final int mStartValue;
 	
@@ -69,7 +69,7 @@ public class ItemImpl extends NamedDependableImpl implements Item
 	 *            Whether this is a mutable parent item.
 	 * @param aOrder
 	 *            whether the child items of this item have a specific order.
-	 * @param aHasLowLevelMax
+	 * @param aMaxLowLevelValue
 	 *            Whether this item is depending on the maximum low level value.
 	 * @param aValues
 	 *            The values this item can get.
@@ -85,7 +85,7 @@ public class ItemImpl extends NamedDependableImpl implements Item
 	 *            The parent item or {@code null} if this is no child item.
 	 */
 	public ItemImpl(final String aName, final ItemGroup aGroup, final boolean aNeedsDescription, final boolean aParent, final boolean aMutableParent,
-			final boolean aOrder, boolean aHasLowLevelMax, final int[] aValues, final int aStartValue, final int aEPCost, final int aEPCostNew,
+			final boolean aOrder, final int aMaxLowLevelValue, final int[] aValues, final int aStartValue, final int aEPCost, final int aEPCostNew,
 			final int aEPCostMultiplicator, final Item aParentItem)
 	{
 		super(aName);
@@ -94,7 +94,7 @@ public class ItemImpl extends NamedDependableImpl implements Item
 		mParent = aParent;
 		mMutableParent = aMutableParent;
 		mOrder = aOrder;
-		mHasLowLevelMax = aHasLowLevelMax;
+		mMaxLowLevelValue = aMaxLowLevelValue;
 		mValues = aValues;
 		mValueItem = mValues != null;
 		mParentItem = aParentItem;
@@ -267,14 +267,9 @@ public class ItemImpl extends NamedDependableImpl implements Item
 		if ( !isValueItem())
 		{
 			Log.w(TAG, "Tried to get the maximum low level value of a non value item.");
-			return 0;
+			return -1;
 		}
-		// TODO This maybe should be done inside the item creation or instance
-		if (mHasLowLevelMax)
-		{
-			return Math.min(getItemGroup().getMaxLowLevelValue(), Integer.MAX_VALUE);
-		}
-		return Integer.MAX_VALUE;
+		return mMaxLowLevelValue;
 	}
 	
 	@Override
@@ -303,17 +298,6 @@ public class ItemImpl extends NamedDependableImpl implements Item
 			return 0;
 		}
 		return mStartValue;
-	}
-	
-	@Override
-	public boolean hasStartValue()
-	{
-		if ( !isValueItem())
-		{
-			Log.w(TAG, "Tried to get the start value of a non value item.");
-			return false;
-		}
-		return mStartValue != -1;
 	}
 	
 	@Override
@@ -362,6 +346,12 @@ public class ItemImpl extends NamedDependableImpl implements Item
 	}
 	
 	@Override
+	public boolean hasMaxLowLevelValue()
+	{
+		return mMaxLowLevelValue != -1;
+	}
+	
+	@Override
 	public boolean hasOrder()
 	{
 		return mOrder;
@@ -371,6 +361,17 @@ public class ItemImpl extends NamedDependableImpl implements Item
 	public boolean hasParentItem()
 	{
 		return mParentItem != null;
+	}
+	
+	@Override
+	public boolean hasStartValue()
+	{
+		if ( !isValueItem())
+		{
+			Log.w(TAG, "Tried to get the start value of a non value item.");
+			return false;
+		}
+		return mStartValue != -1;
 	}
 	
 	@Override

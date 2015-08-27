@@ -138,6 +138,11 @@ public interface ItemCreation extends Comparable<ItemCreation>, RestrictionableC
 	public ItemGroupCreation getItemGroup();
 	
 	/**
+	 * @return the maximum value reachable as a low level character.
+	 */
+	public int getMaxLowLevelValue();
+	
+	/**
 	 * @return the item name.
 	 */
 	public String getName();

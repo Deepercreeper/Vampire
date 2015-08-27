@@ -153,9 +153,9 @@ public class DataUtil
 	 *            The last value.
 	 * @return a values array that is filled with all integers from {@code aStart} to {@code aEnd}.
 	 */
-	public static int[] createDefaultValues(int aStart, int aEnd)
+	public static int[] createDefaultValues(final int aStart, final int aEnd)
 	{
-		int[] values = new int[aEnd - aStart + 1];
+		final int[] values = new int[aEnd - aStart + 1];
 		for (int i = aStart; i <= aEnd; i++ )
 		{
 			values[i - aStart] = i;
@@ -359,9 +359,9 @@ public class DataUtil
 	 *            The underlying context.
 	 * @return a set of all default actions.
 	 */
-	public static Set<Action> loadDefaultActions(Context aContext)
+	public static Set<Action> loadDefaultActions(final Context aContext)
 	{
-		Element element = getElement(getData(aContext), ACTIONS);
+		final Element element = getElement(getData(aContext), ACTIONS);
 		if (element != null)
 		{
 			return loadActions(element);
@@ -863,18 +863,18 @@ public class DataUtil
 	 *            The map.
 	 * @return a map that returns an integer array for each value.
 	 */
-	public static SparseArray<int[]> parseValuesMap(String aMap)
+	public static SparseArray<int[]> parseValuesMap(final String aMap)
 	{
 		if (aMap == null)
 		{
 			Log.w(TAG, "Map is null.");
 			return null;
 		}
-		SparseArray<int[]> map = new SparseArray<int[]>();
+		final SparseArray<int[]> map = new SparseArray<int[]>();
 		final String[] entries = aMap.split(";");
-		for (String entry : entries)
+		for (final String entry : entries)
 		{
-			String[] keyAndValue = entry.split("=");
+			final String[] keyAndValue = entry.split("=");
 			if (keyAndValue.length != 2)
 			{
 				Log.w(TAG, "Can't parse key and values: " + entry);
@@ -885,12 +885,12 @@ public class DataUtil
 			{
 				key = Integer.parseInt(keyAndValue[0]);
 			}
-			catch (NumberFormatException e)
+			catch (final NumberFormatException e)
 			{
 				Log.w(TAG, "Can't parse key: " + keyAndValue[0]);
 				return null;
 			}
-			String[] valueStrings = keyAndValue[1].split(",");
+			final String[] valueStrings = keyAndValue[1].split(",");
 			if (valueStrings.length == 0)
 			{
 				Log.w(TAG, "Can't parse values: " + keyAndValue[1]);
@@ -899,7 +899,7 @@ public class DataUtil
 			int[] values;
 			if (valueStrings.length == 1 && valueStrings[0].matches(RANGE_STRING))
 			{
-				String[] startAndEnd = valueStrings[0].split("\\.\\.\\.");
+				final String[] startAndEnd = valueStrings[0].split("\\.\\.\\.");
 				values = createDefaultValues(Integer.parseInt(startAndEnd[0]), Integer.parseInt(startAndEnd[1]));
 			}
 			else
@@ -911,7 +911,7 @@ public class DataUtil
 					{
 						values[i] = Integer.parseInt(valueStrings[i]);
 					}
-					catch (NumberFormatException e)
+					catch (final NumberFormatException e)
 					{
 						Log.w(TAG, "Can't parse value: " + valueStrings[i]);
 						return null;
@@ -1245,57 +1245,57 @@ public class DataUtil
 		return controllersList;
 	}
 	
-	private static boolean checkDependencies(List<ItemController> aControllers)
+	private static boolean checkDependencies(final List<ItemController> aControllers)
 	{
-		Map<Dependency, Dependable> dependencies = new HashMap<Dependency, Dependable>();
-		for (ItemController controller : aControllers)
+		final Map<Dependency, Dependable> dependencies = new HashMap<Dependency, Dependable>();
+		for (final ItemController controller : aControllers)
 		{
 			// Use when dependencies are able to have a controller or group destination.
 			// for (Dependency dependency : controller.getDependencies())
 			// {
 			// dependencies.put(dependency, controller);
 			// }
-			for (ItemGroup group : controller.getGroupsList())
+			for (final ItemGroup group : controller.getGroupsList())
 			{
 				// for (Dependency dependency : group.getDependencies())
 				// {
 				// dependencies.put(dependency, group);
 				// }
-				for (Item item : group.getItemsList())
+				for (final Item item : group.getItemsList())
 				{
-					for (Dependency dependency : item.getDependencies())
+					for (final Dependency dependency : item.getDependencies())
 					{
 						dependencies.put(dependency, item);
 					}
 				}
 			}
 		}
-		Set<Dependency> seen = new HashSet<Dependency>();
-		Set<Dependency> done = new HashSet<Dependency>();
-		for (Dependency dependency : dependencies.keySet())
+		final Set<Dependency> seen = new HashSet<Dependency>();
+		final Set<Dependency> done = new HashSet<Dependency>();
+		for (final Dependency dependency : dependencies.keySet())
 		{
 			if (done.contains(dependency))
 			{
 				continue;
 			}
 			seen.clear();
-			Set<Dependency> currents = new HashSet<Dependency>();
+			final Set<Dependency> currents = new HashSet<Dependency>();
 			currents.add(dependency);
 			boolean hasItemDependensies;
 			do
 			{
-				Set<Dependency> newCurrents = new HashSet<Dependency>();
-				for (Dependency current : currents)
+				final Set<Dependency> newCurrents = new HashSet<Dependency>();
+				for (final Dependency current : currents)
 				{
 					seen.add(current);
-					for (Dependable dependable : dependencies.values())
+					for (final Dependable dependable : dependencies.values())
 					{
 						if (dependable instanceof Item)
 						{
-							Item item = (Item) dependable;
+							final Item item = (Item) dependable;
 							if (item.getName().equals(current.getItem()))
 							{
-								for (Dependency newDependency : item.getDependencies())
+								for (final Dependency newDependency : item.getDependencies())
 								{
 									if (seen.contains(newDependency))
 									{
@@ -1311,7 +1311,7 @@ public class DataUtil
 				currents.clear();
 				currents.addAll(newCurrents);
 				hasItemDependensies = false;
-				for (Dependency current : currents)
+				for (final Dependency current : currents)
 				{
 					if (current.getDestinationType().equals(DestinationType.ITEM))
 					{
@@ -1523,17 +1523,25 @@ public class DataUtil
 			final boolean parent = Boolean.parseBoolean(child.getAttribute("parent"));
 			final boolean order = Boolean.parseBoolean(child.getAttribute("order"));
 			final boolean mutableParent = Boolean.parseBoolean(child.getAttribute("mutableParent"));
-			boolean hasLowLevelMax = true;
 			boolean valueItem = aParentGroup.isValueGroup();
 			int[] values = null;
+			int maxLowLevelValue = Integer.MAX_VALUE;
 			int startValue = -1;
 			int epCost = -1;
 			int epCostNew = -1;
 			int epCostMultiplicator = -1;
 			
-			if (child.hasAttribute("hasLowLevelMax"))
+			if (child.hasAttribute("maxLowLevelValue"))
 			{
-				hasLowLevelMax = Boolean.parseBoolean(child.getAttribute("hasLowLevelMax"));
+				try
+				{
+					maxLowLevelValue = Integer.parseInt(child.getAttribute("maxLowLevelValue"));
+				}
+				catch (final NumberFormatException e)
+				{
+					Log.w(TAG, "Can't parse " + child.getAttribute("maxLowLevelValue"));
+					continue;
+				}
 			}
 			if (child.hasAttribute("epCost"))
 			{
@@ -1600,7 +1608,7 @@ public class DataUtil
 			}
 			
 			final Item item;
-			item = new ItemImpl(name, aParentGroup, needsDescription, parent, mutableParent, order, hasLowLevelMax, values, startValue, epCost,
+			item = new ItemImpl(name, aParentGroup, needsDescription, parent, mutableParent, order, maxLowLevelValue, values, startValue, epCost,
 					epCostNew, epCostMultiplicator, aParentItem);
 			for (final Item childItem : loadItems(child, aParentGroup, item))
 			{

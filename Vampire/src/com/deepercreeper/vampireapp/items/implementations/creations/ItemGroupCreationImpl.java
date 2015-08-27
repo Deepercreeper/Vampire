@@ -210,8 +210,12 @@ public class ItemGroupCreationImpl extends RestrictionableDependableCreationImpl
 	@Override
 	public void editItem(final Item aItem)
 	{
+		if ( !hasItem(aItem))
+		{
+			Log.w(TAG, "Tried to edit a non existing item.");
+			return;
+		}
 		final ItemCreation item = mItems.get(aItem);
-		// TODO Check whether item is null
 		if ( !canRemoveItem(item))
 		{
 			Log.w(TAG, "Tried to edit an item of a non mutable group.");
@@ -424,6 +428,7 @@ public class ItemGroupCreationImpl extends RestrictionableDependableCreationImpl
 		return getItemsList().indexOf(aItem);
 	}
 	
+	@Override
 	public boolean canRemoveItem(final ItemCreation aItem)
 	{
 		if ( !isMutable())

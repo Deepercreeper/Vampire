@@ -146,6 +146,11 @@ public interface ItemInstance extends RestrictionableInstance, Comparable<ItemIn
 	public ItemGroupInstance getItemGroup();
 	
 	/**
+	 * @return the maximum value reachable as a low level character.
+	 */
+	public int getMaxLowLevelValue();
+	
+	/**
 	 * @return the current maximum item value.
 	 */
 	@Override

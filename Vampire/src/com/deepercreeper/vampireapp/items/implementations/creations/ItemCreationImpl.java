@@ -359,7 +359,7 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 		if ( !mChar.getMode().isFreeMode())
 		{
 			canIncreaseItem &= mValueId + mTempPoints < getMaxValue(CreationRestrictionType.ITEM_VALUE)
-					&& ( !mChar.isLowLevel() || mValueId + mTempPoints < getItem().getMaxLowLevelValue());
+					&& ( !mChar.isLowLevel() || mValueId + mTempPoints < getMaxLowLevelValue());
 		}
 		if (hasParentItem())
 		{
@@ -406,6 +406,39 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 			return hasEnoughPoints() && getItem().getFreePointsCost() != 0;
 		}
 		return false;
+	}
+	
+	@Override
+	public boolean canRemoveChild(final ItemCreation aItem)
+	{
+		if ( !isMutableParent())
+		{
+			return false;
+		}
+		if (mChar.getMode().isFreeMode())
+		{
+			return true;
+		}
+		if ( !aItem.getItemGroup().canChangeBy( -aItem.getValue()))
+		{
+			return false;
+		}
+		for (final RestrictionCreation restriction : getRestrictions(CreationRestrictionType.ITEM_CHILDREN_COUNT))
+		{
+			if (restriction.isActive(aItem.getItemGroup().getItemController()) && getChildrenList().size() <= restriction.getMinimum())
+			{
+				return false;
+			}
+		}
+		for (final RestrictionCreation restriction : getRestrictions(CreationRestrictionType.ITEM_CHILD_VALUE_AT))
+		{
+			if (restriction.isActive(aItem.getItemGroup().getItemController()) && restriction.getIndex() == indexOfChild(aItem)
+					&& aItem.getStartValue() < restriction.getMinimum())
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	@Override
@@ -660,6 +693,17 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 	}
 	
 	@Override
+	public int getMaxLowLevelValue()
+	{
+		int maxLowLevelValue = getItemGroup().getItemGroup().getMaxLowLevelValue();
+		if (getItem().hasMaxLowLevelValue())
+		{
+			maxLowLevelValue = getItem().getMaxLowLevelValue();
+		}
+		return maxLowLevelValue;
+	}
+	
+	@Override
 	public int getMaxValue()
 	{
 		int maxValue = getValues()[getItem().getMaxValue()];
@@ -906,39 +950,6 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 	public void release()
 	{
 		ViewUtil.release(getContainer());
-	}
-	
-	@Override
-	public boolean canRemoveChild(final ItemCreation aItem)
-	{
-		if ( !isMutableParent())
-		{
-			return false;
-		}
-		if (mChar.getMode().isFreeMode())
-		{
-			return true;
-		}
-		if ( !aItem.getItemGroup().canChangeBy( -aItem.getValue()))
-		{
-			return false;
-		}
-		for (final RestrictionCreation restriction : getRestrictions(CreationRestrictionType.ITEM_CHILDREN_COUNT))
-		{
-			if (restriction.isActive(aItem.getItemGroup().getItemController()) && getChildrenList().size() <= restriction.getMinimum())
-			{
-				return false;
-			}
-		}
-		for (final RestrictionCreation restriction : getRestrictions(CreationRestrictionType.ITEM_CHILD_VALUE_AT))
-		{
-			if (restriction.isActive(aItem.getItemGroup().getItemController()) && restriction.getIndex() == indexOfChild(aItem)
-					&& aItem.getStartValue() < restriction.getMinimum())
-			{
-				return false;
-			}
-		}
-		return true;
 	}
 	
 	@Override

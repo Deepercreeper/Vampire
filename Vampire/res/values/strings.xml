@@ -77,6 +77,7 @@
     <string name="generation_colon">Generation:</string>
     <string name="got_insanity">Sie besitzen jetzt folgende Geistesstörung: {0}</string>
     <string name="got_item">Sie haben folgenden Gegenstand erhalten: {x}</string>
+    <string name="got_step">Sie haben eine Lebensstufe erhalten.</string>
     <string name="health_colon">Leben:</string>
     <string name="host_closed">Der Host hat sein Spiel beendet.</string>
     <string name="host_decreased">{0} wurde auf {1} verringert.</string>

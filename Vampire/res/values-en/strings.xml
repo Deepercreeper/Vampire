@@ -77,6 +77,7 @@
     <string name="generation_colon">Generation:</string>
 	<string name="got_insanity">You got the following insanity: {0}</string>
     <string name="got_item">You got the following item: {x}</string>
+    <string name="got_step">You got a health step.</string>
     <string name="health_colon">Health:</string>
     <string name="host_closed">The host has stopped his game.</string>
     <string name="host_decreased">{0} has been decreased to {1}.</string>

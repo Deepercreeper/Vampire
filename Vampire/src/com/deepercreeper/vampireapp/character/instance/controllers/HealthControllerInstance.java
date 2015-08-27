@@ -6,6 +6,9 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.creation.controllers.HealthControllerCreation;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.character.instance.Mode;
+import com.deepercreeper.vampireapp.host.Message;
+import com.deepercreeper.vampireapp.host.Message.ButtonAction;
+import com.deepercreeper.vampireapp.host.Message.MessageGroup;
 import com.deepercreeper.vampireapp.host.change.HealthChange;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
@@ -34,17 +37,21 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 {
 	private static final int VALUE_MULTIPLICATOR = 20;
 	
+	private final Context mContext;
+	
 	private final LinearLayout mContainer;
 	
 	private final ItemInstance mCost;
 	
-	private final MessageListener mChangeListener;
+	private final MessageListener mMessageListener;
 	
 	private final boolean mHost;
 	
 	private final ValueAnimator mAnimator;
 	
 	private final CharacterInstance mChar;
+	
+	private final ImageButton mAddStepButton;
 	
 	private final ImageButton mHealButton;
 	
@@ -69,29 +76,31 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	 *            The XML data.
 	 * @param aContext
 	 *            the underlying context.
-	 * @param aChangeListener
+	 * @param aMessageListener
 	 *            The listener that is called, when changes happen.
 	 * @param aChar
 	 *            The parent character.
 	 * @param aHost
 	 *            Whether this controller is displayed at the host.
 	 */
-	public HealthControllerInstance(final Element aElement, final Context aContext, final MessageListener aChangeListener,
+	public HealthControllerInstance(final Element aElement, final Context aContext, final MessageListener aMessageListener,
 			final CharacterInstance aChar, final boolean aHost)
 	{
 		mHost = aHost;
 		mChar = aChar;
+		mContext = aContext;
 		final int id = mHost ? R.layout.host_health : R.layout.client_health;
 		mContainer = (LinearLayout) View.inflate(aContext, id, null);
 		mSteps = DataUtil.parseValues(aElement.getAttribute("steps"));
 		mHeavyWounds = Integer.parseInt(aElement.getAttribute("heavy"));
 		mValue = Integer.parseInt(aElement.getAttribute("value"));
 		mCost = mChar.findItemInstance(aElement.getAttribute("cost"));
-		mChangeListener = aChangeListener;
+		mMessageListener = aMessageListener;
 		mAnimator = new ValueAnimator();
 		mAnimator.addUpdateListener(this);
 		
 		mHealButton = (ImageButton) getContainer().findViewById(mHost ? R.id.h_heal_button : R.id.c_heal_button);
+		mAddStepButton = mHost ? (ImageButton) getContainer().findViewById(R.id.h_add_step_button) : null;
 		mHurtButton = mHost ? (ImageButton) getContainer().findViewById(R.id.h_hurt_button) : null;
 		mHeavyHurt = mHost ? (ImageButton) getContainer().findViewById(R.id.h_heavy_hurt_button) : null;
 		mValueBar = (ProgressBar) getContainer().findViewById(mHost ? R.id.h_health_bar : R.id.c_health_bar);
@@ -110,7 +119,6 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		{
 			mHeavyHurt.setOnClickListener(new OnClickListener()
 			{
-				
 				@Override
 				public void onClick(final View aV)
 				{
@@ -123,6 +131,14 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 				public void onClick(final View aV)
 				{
 					hurt(1, false);
+				}
+			});
+			mAddStepButton.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					addStep();
 				}
 			});
 		}
@@ -135,27 +151,29 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	 *            The controller creation.
 	 * @param aContext
 	 *            The underlying context.
-	 * @param aChangeListener
+	 * @param aMessageListener
 	 *            The listener that is called, when changes happen.
 	 * @param aChar
 	 *            The parent character.
 	 * @param aHost
 	 *            Whether this controller is displayed at the host.
 	 */
-	public HealthControllerInstance(final HealthControllerCreation aHealth, final Context aContext, final MessageListener aChangeListener,
+	public HealthControllerInstance(final HealthControllerCreation aHealth, final Context aContext, final MessageListener aMessageListener,
 			final CharacterInstance aChar, final boolean aHost)
 	{
 		mHost = aHost;
 		mChar = aChar;
+		mContext = aContext;
 		final int id = mHost ? R.layout.host_health : R.layout.client_health;
 		mContainer = (LinearLayout) View.inflate(aContext, id, null);
 		mSteps = aHealth.getSteps();
 		mCost = mChar.findItemInstance(aHealth.getCost());
-		mChangeListener = aChangeListener;
+		mMessageListener = aMessageListener;
 		mAnimator = new ValueAnimator();
 		mAnimator.addUpdateListener(this);
 		
 		mHealButton = (ImageButton) getContainer().findViewById(mHost ? R.id.h_heal_button : R.id.c_heal_button);
+		mAddStepButton = mHost ? (ImageButton) getContainer().findViewById(R.id.h_add_step_button) : null;
 		mHurtButton = mHost ? (ImageButton) getContainer().findViewById(R.id.h_hurt_button) : null;
 		mHeavyHurt = mHost ? (ImageButton) getContainer().findViewById(R.id.h_heavy_hurt_button) : null;
 		mValueBar = (ProgressBar) getContainer().findViewById(mHost ? R.id.h_health_bar : R.id.c_health_bar);
@@ -174,7 +192,6 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		{
 			mHeavyHurt.setOnClickListener(new OnClickListener()
 			{
-				
 				@Override
 				public void onClick(final View aV)
 				{
@@ -187,6 +204,14 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 				public void onClick(final View aV)
 				{
 					hurt(1, false);
+				}
+			});
+			mAddStepButton.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View aV)
+				{
+					addStep();
 				}
 			});
 		}
@@ -204,7 +229,10 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 			steps[i + 1] = mSteps[i];
 		}
 		mSteps = steps;
-		mChangeListener.sendChange(new HealthChange(mSteps));
+		mMessageListener.sendChange(new HealthChange(mSteps));
+		mMessageListener
+				.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.got_step, new String[0], mContext, null, ButtonAction.NOTHING));
+		updateUI();
 	}
 	
 	@Override
@@ -295,13 +323,16 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 					heavyWoundsChanged = true;
 				}
 				mValue-- ;
-				mCost.decrease();
+				if ( !mHost)
+				{
+					mCost.decrease();
+				}
 			}
 		}
-		mChangeListener.sendChange(new HealthChange(false, mValue));
+		mMessageListener.sendChange(new HealthChange(false, mValue));
 		if (heavyWoundsChanged)
 		{
-			mChangeListener.sendChange(new HealthChange(true, mHeavyWounds));
+			mMessageListener.sendChange(new HealthChange(true, mHeavyWounds));
 		}
 		updateUI();
 	}
@@ -321,6 +352,10 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		{
 			mValue = mSteps.length - 1;
 		}
+		if (mValue == getStepsCount() - 1)
+		{
+			mChar.getMode().setMode(Mode.KO, true);
+		}
 		if (aHeavy)
 		{
 			mHeavyWounds += aValue;
@@ -328,9 +363,9 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 			{
 				mHeavyWounds = mValue;
 			}
-			mChangeListener.sendChange(new HealthChange(true, mHeavyWounds));
+			mMessageListener.sendChange(new HealthChange(true, mHeavyWounds));
 		}
-		mChangeListener.sendChange(new HealthChange(false, mValue));
+		mMessageListener.sendChange(new HealthChange(false, mValue));
 		updateUI();
 	}
 	
@@ -380,6 +415,10 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	public void updateSteps(final int[] aSteps)
 	{
 		mSteps = aSteps;
+		if (mValue == getStepsCount() - 1)
+		{
+			mChar.getMode().setMode(Mode.KO, true);
+		}
 		updateUI();
 	}
 	
@@ -397,7 +436,6 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		if (mValue == getStepsCount() - 1)
 		{
 			mStepLabel.setText("K.O.");
-			mChar.getMode().setMode(Mode.KO, true);
 		}
 		else
 		{
@@ -417,6 +455,10 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 	public void updateValue(final int aValue)
 	{
 		mValue = aValue;
+		if (mValue == getStepsCount() - 1)
+		{
+			mChar.getMode().setMode(Mode.KO, true);
+		}
 		updateUI();
 	}
 }

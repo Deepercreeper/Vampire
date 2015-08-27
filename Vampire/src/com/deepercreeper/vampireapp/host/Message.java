@@ -334,7 +334,10 @@ public class Message implements Saveable, Viewable
 		element.setAttribute("type", mType.name());
 		element.setAttribute("group", mGroup.name());
 		element.setAttribute("message", "" + mMessageId);
-		element.setAttribute("arguments", DataUtil.parseArray(mArguments));
+		if (mArguments.length > 0)
+		{
+			element.setAttribute("arguments", DataUtil.parseArray(mArguments));
+		}
 		element.setAttribute("sender", mSender);
 		element.setAttribute("mode-depending", "" + mModeDepending);
 		element.setAttribute("yes-action", mYesAction.name());
@@ -509,7 +512,11 @@ public class Message implements Saveable, Viewable
 		final MessageType type = MessageType.valueOf(messageElement.getAttribute("type"));
 		final MessageGroup group = MessageGroup.valueOf(messageElement.getAttribute("group"));
 		final int messageId = Integer.parseInt(messageElement.getAttribute("message"));
-		final String[] arguments = DataUtil.parseArray(messageElement.getAttribute("arguments"));
+		String[] arguments = new String[0];
+		if (messageElement.hasAttribute("arguments"))
+		{
+			arguments = DataUtil.parseArray(messageElement.getAttribute("arguments"));
+		}
 		final String sender = messageElement.getAttribute("sender");
 		final ButtonAction yesAction = ButtonAction.valueOf(messageElement.getAttribute("yes-action"));
 		final ButtonAction noAction = ButtonAction.valueOf(messageElement.getAttribute("no-action"));

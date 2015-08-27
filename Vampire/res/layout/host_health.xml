@@ -47,5 +47,12 @@
         android:layout_height="@dimen/button_height"
         android:contentDescription="@string/content_description"
         android:src="@drawable/ic_increase" />
+    
+    <ImageButton
+        android:id="@+id/h_add_step_button"
+        android:layout_width="@dimen/button_width"
+        android:layout_height="@dimen/button_height"
+        android:contentDescription="@string/content_description"
+        android:src="@drawable/ic_penta" />
 
 </LinearLayout>

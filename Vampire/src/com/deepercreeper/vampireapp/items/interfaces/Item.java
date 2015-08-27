@@ -128,6 +128,11 @@ public interface Item extends Nameable, Dependable
 	public boolean hasChild(String aName);
 	
 	/**
+	 * @return whether this item has a maximum low level value.
+	 */
+	public boolean hasMaxLowLevelValue();
+	
+	/**
 	 * @return whether child items of this item have a mutable order.
 	 */
 	public boolean hasOrder();

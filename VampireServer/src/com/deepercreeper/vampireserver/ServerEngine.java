@@ -9,21 +9,25 @@ import com.sun.net.httpserver.HttpServer;
 
 public class ServerEngine implements HttpHandler
 {
-	private static final String IP = "134.255.218.105";
+	private static final String IP = "46.30.212.108";
 	
-	private static final int PORT = 3114;
+	private static final int PORT = 8080;
 	
 	private HttpServer mServer;
 	
-	public ServerEngine()
+	private final ServerApplet mApplet;
+	
+	public ServerEngine(final ServerApplet aApplet)
 	{
+		mApplet = aApplet;
 		try
 		{
 			mServer = HttpServer.create(new InetSocketAddress(PORT), 0);
 		}
 		catch (final IOException e)
 		{
-			e.printStackTrace();
+			mApplet.println("Something went wrong!");
+			mApplet.println(e.getMessage());
 		}
 		if (mServer != null)
 		{
@@ -35,6 +39,7 @@ public class ServerEngine implements HttpHandler
 	
 	public void stop()
 	{
+		mApplet.println("Stopping");
 		mServer.stop(0);
 	}
 	

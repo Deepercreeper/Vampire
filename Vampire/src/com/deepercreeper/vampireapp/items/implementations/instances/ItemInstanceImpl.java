@@ -763,7 +763,7 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 		}
 		if (getCharacter().isLowLevel())
 		{
-			return mValueId < Math.min(getItem().getMaxLowLevelValue(), getMaxValue(InstanceRestrictionType.ITEM_VALUE));
+			return mValueId < Math.min(getMaxLowLevelValue(), getMaxValue(InstanceRestrictionType.ITEM_VALUE));
 		}
 		return mValueId < getMaxValue(InstanceRestrictionType.ITEM_VALUE);
 	}
@@ -940,6 +940,17 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 	public ItemGroupInstance getItemGroup()
 	{
 		return mItemGroup;
+	}
+	
+	@Override
+	public int getMaxLowLevelValue()
+	{
+		int maxLowLevelValue = getItemGroup().getItemGroup().getMaxLowLevelValue();
+		if (getItem().hasMaxLowLevelValue())
+		{
+			maxLowLevelValue = getItem().getMaxLowLevelValue();
+		}
+		return maxLowLevelValue;
 	}
 	
 	@Override
