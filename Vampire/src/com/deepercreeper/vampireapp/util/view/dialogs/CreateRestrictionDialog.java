@@ -1,6 +1,7 @@
 package com.deepercreeper.vampireapp.util.view.dialogs;
 
 import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.items.implementations.instances.restrictions.RestrictionInstanceImpl;
 import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.Nameable;
@@ -44,6 +45,10 @@ public class CreateRestrictionDialog extends DefaultDialog<RestrictionCreationLi
 	
 	private final ArrayAdapter<Item> mItemAdapter;
 	
+	private final MessageListener mMessageListener;
+	
+	private final Context mContext;
+	
 	private Spinner mItemSpinner;
 	
 	private RestrictionInstanceType mType = RestrictionInstanceType.ITEM_VALUE;
@@ -62,10 +67,13 @@ public class CreateRestrictionDialog extends DefaultDialog<RestrictionCreationLi
 	
 	private boolean mForever = false;
 	
-	private CreateRestrictionDialog(final String aTitle, final Context aContext, final RestrictionCreationListener aListener, final ItemFinder aItems)
+	private CreateRestrictionDialog(final String aTitle, final Context aContext, MessageListener aMessageListener,
+			final RestrictionCreationListener aListener, final ItemFinder aItems)
 	{
 		super(aTitle, aContext, aListener, R.layout.dialog_create_restriction, LinearLayout.class);
 		
+		mMessageListener = aMessageListener;
+		mContext = aContext;
 		mDurationAdapter = new ArrayAdapter<Nameable>(getContext(), android.R.layout.simple_spinner_dropdown_item,
 				TimeListener.Type.getTypesList(getContext()));
 		mTypeAdapter = new ArrayAdapter<Nameable>(getContext(), android.R.layout.simple_spinner_dropdown_item,
@@ -182,7 +190,8 @@ public class CreateRestrictionDialog extends DefaultDialog<RestrictionCreationLi
 				{
 					value = Integer.parseInt(mValue.getText().toString());
 				}
-				final RestrictionInstance restriction = new RestrictionInstanceImpl(mType, item, minimum, maximum, index, value, duration);
+				final RestrictionInstance restriction = new RestrictionInstanceImpl(mType, item, minimum, maximum, index, value, duration, mContext,
+						mMessageListener, true);
 				getListener().restrictionCreated(restriction);
 				dismiss();
 			}
@@ -233,18 +242,20 @@ public class CreateRestrictionDialog extends DefaultDialog<RestrictionCreationLi
 	 *            The dialog title.
 	 * @param aContext
 	 *            The underlying context.
+	 * @param aMessageListener
+	 *            the message listener.
 	 * @param aListener
 	 *            The dialog listener.
 	 * @param aItems
 	 *            An item finder.
 	 */
-	public static void showCreateRestrictionDialog(final String aTitle, final Context aContext, final RestrictionCreationListener aListener,
-			final ItemFinder aItems)
+	public static void showCreateRestrictionDialog(final String aTitle, final Context aContext, MessageListener aMessageListener,
+			final RestrictionCreationListener aListener, final ItemFinder aItems)
 	{
 		if (isDialogOpen())
 		{
 			return;
 		}
-		new CreateRestrictionDialog(aTitle, aContext, aListener, aItems).show(((Activity) aContext).getFragmentManager(), aTitle);
+		new CreateRestrictionDialog(aTitle, aContext, aMessageListener, aListener, aItems).show(((Activity) aContext).getFragmentManager(), aTitle);
 	}
 }

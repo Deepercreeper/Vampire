@@ -129,7 +129,7 @@ public abstract class RestrictionableInstanceImpl implements RestrictionableInst
 	public final void removeRestriction(final RestrictionInstance aRestriction)
 	{
 		getRestrictions().remove(aRestriction);
-		getCharacter().removeRestriction(aRestriction);
+		getCharacter().getRestrictions().removeRestriction(aRestriction);
 		updateUI();
 	}
 }

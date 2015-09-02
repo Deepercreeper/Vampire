@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <ImageButton
+        android:id="@+id/h_remove_restriction_button"
+        android:layout_width="@dimen/button_width"
+        android:layout_height="@dimen/button_height"
+        android:contentDescription="@string/content_description"
+        android:src="@drawable/ic_remove" />
+
+    <TextView
+        android:id="@+id/h_restriction_name_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/host_text_size" />
+
+    <TextView
+        android:id="@+id/h_restriction_duration_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end|center_vertical"
+        android:textSize="@dimen/host_text_size" />
+    
+</LinearLayout>

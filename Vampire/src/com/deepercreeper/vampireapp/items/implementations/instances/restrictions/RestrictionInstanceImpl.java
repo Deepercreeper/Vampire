@@ -4,12 +4,22 @@ import java.util.HashSet;
 import java.util.Set;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.host.change.MessageListener;
+import com.deepercreeper.vampireapp.host.change.RestrictionChange;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.ConditionInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionableInstance;
 import com.deepercreeper.vampireapp.mechanics.Duration;
 import com.deepercreeper.vampireapp.util.DataUtil;
+import com.deepercreeper.vampireapp.util.ViewUtil;
+import android.content.Context;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 /**
  * Some clans have restrictions, that define whether values or attributes have to have a specific value.<br>
@@ -21,9 +31,15 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 {
 	private final String mItemName;
 	
+	private final LinearLayout mContainer;
+	
+	private final Context mContext;
+	
 	private final Set<ConditionInstance> mConditions = new HashSet<ConditionInstance>();
 	
 	private final RestrictionInstanceType mType;
+	
+	private final MessageListener mMessageListener;
 	
 	private final Duration mDuration;
 	
@@ -35,6 +51,10 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 	
 	private final int mIndex;
 	
+	private final boolean mHost;
+	
+	private final TextView mDurationLabel;
+	
 	private RestrictionableInstance mParent;
 	
 	/**
@@ -42,8 +62,14 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 	 * 
 	 * @param aElement
 	 *            The XML data.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aMessageListener
+	 *            The message listener.
+	 * @param aHost
+	 *            Whether this is a host sided restriction.
 	 */
-	public RestrictionInstanceImpl(final Element aElement)
+	public RestrictionInstanceImpl(final Element aElement, Context aContext, MessageListener aMessageListener, boolean aHost)
 	{
 		mType = RestrictionInstanceType.get(aElement.getAttribute("type"));
 		if (aElement.hasAttribute("itemName"))
@@ -60,6 +86,31 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 		mValue = Integer.parseInt(aElement.getAttribute("value"));
 		mDuration = Duration.create(DataUtil.getElement(aElement, "duration"));
 		mDuration.addListener(this);
+		mMessageListener = aMessageListener;
+		mContext = aContext;
+		mHost = aHost;
+		
+		int id = mHost ? R.layout.host_restriction : R.layout.client_restriction;
+		mContainer = (LinearLayout) View.inflate(mContext, id, null);
+		
+		int nameId = mHost ? R.id.h_restriction_name_label : R.id.c_restriction_name_label;
+		int durationId = mHost ? R.id.h_restriction_duration_label : R.id.c_restriction_duration_label;
+		((TextView) getContainer().findViewById(nameId)).setText(getDescription());
+		mDurationLabel = (TextView) getContainer().findViewById(durationId);
+		
+		if (mHost)
+		{
+			((Button) getContainer().findViewById(R.id.h_remove_restriction_button)).setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(View aV)
+				{
+					clear();
+				}
+			});
+		}
+		
+		updateUI();
 	}
 	
 	/**
@@ -79,9 +130,15 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 	 *            The value.
 	 * @param aDuration
 	 *            The restriction duration.
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aMessageListener
+	 *            The message listener.
+	 * @param aHost
+	 *            Whether this is a host sided restriction.
 	 */
 	public RestrictionInstanceImpl(final RestrictionInstanceType aType, final String aItemName, final int aMinimum, final int aMaximum,
-			final int aIndex, final int aValue, final Duration aDuration)
+			final int aIndex, final int aValue, final Duration aDuration, Context aContext, MessageListener aMessageListener, boolean aHost)
 	{
 		mType = aType;
 		mItemName = aItemName;
@@ -91,12 +148,49 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 		mValue = aValue;
 		mDuration = aDuration;
 		mDuration.addListener(this);
+		mMessageListener = aMessageListener;
+		mContext = aContext;
+		mHost = aHost;
+		
+		int id = mHost ? R.layout.host_restriction : R.layout.client_restriction;
+		mContainer = (LinearLayout) View.inflate(mContext, id, null);
+		
+		int nameId = mHost ? R.id.h_restriction_name_label : R.id.c_restriction_name_label;
+		int durationId = mHost ? R.id.h_restriction_duration_label : R.id.c_restriction_duration_label;
+		((TextView) getContainer().findViewById(nameId)).setText(getDescription());
+		mDurationLabel = (TextView) getContainer().findViewById(durationId);
+		
+		if (mHost)
+		{
+			((Button) getContainer().findViewById(R.id.h_remove_restriction_button)).setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(View aV)
+				{
+					clear();
+				}
+			});
+		}
+		
+		updateUI();
 	}
 	
 	@Override
 	public void addCondition(final ConditionInstance aCondition)
 	{
 		mConditions.add(aCondition);
+	}
+	
+	@Override
+	public LinearLayout getContainer()
+	{
+		return mContainer;
+	}
+	
+	@Override
+	public void release()
+	{
+		ViewUtil.release(getContainer());
 	}
 	
 	@Override
@@ -116,6 +210,30 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 		return element;
 	}
 	
+	private String getDescription()
+	{
+		StringBuilder description = new StringBuilder();
+		description.append(mType.getName(mContext));
+		if (mType.hasItemName())
+		{
+			description.append(", ").append(mContext.getString(R.string.item_name)).append(": ").append(mItemName);
+		}
+		if (mType.hasIndex())
+		{
+			description.append(", ").append(mContext.getString(R.string.index)).append(": ").append(mIndex);
+		}
+		if (mType.hasRange())
+		{
+			description.append(", ").append(mContext.getString(R.string.minimum)).append(": ").append(mMinimum);
+			description.append(", ").append(mContext.getString(R.string.maximum)).append(": ").append(mMaximum);
+		}
+		if (mType.hasValue())
+		{
+			description.append(", ").append(mContext.getString(R.string.value)).append(": ").append(mValue);
+		}
+		return description.toString();
+	}
+	
 	/**
 	 * Removes this restriction from each restricted parent.
 	 */
@@ -127,74 +245,41 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 			mParent.removeRestriction(this);
 			mParent = null;
 		}
+		if (mHost)
+		{
+			mMessageListener.sendChange(new RestrictionChange(this, false));
+		}
 	}
 	
 	@Override
-	public boolean equals(final Object obj)
+	public boolean equals(final Object aObj)
 	{
-		if (this == obj)
+		if (aObj instanceof RestrictionInstance)
 		{
+			RestrictionInstance restriction = (RestrictionInstance) aObj;
+			if ( !getType().equals(restriction.getType()))
+			{
+				return false;
+			}
+			if (getType().hasItemName() && !getItemName().equals(restriction.getItemName()))
+			{
+				return false;
+			}
+			if (getType().hasIndex() && getIndex() != restriction.getIndex())
+			{
+				return false;
+			}
+			if (getType().hasValue() && getValue() != restriction.getValue())
+			{
+				return false;
+			}
+			if (getType().hasRange() && (getMinimum() != restriction.getMinimum() || getMaximum() != restriction.getMaximum()))
+			{
+				return false;
+			}
 			return true;
 		}
-		if (obj == null)
-		{
-			return false;
-		}
-		if ( !(obj instanceof RestrictionInstanceImpl))
-		{
-			return false;
-		}
-		final RestrictionInstanceImpl other = (RestrictionInstanceImpl) obj;
-		if (mConditions == null)
-		{
-			if (other.mConditions != null)
-			{
-				return false;
-			}
-		}
-		else if ( !mConditions.equals(other.mConditions))
-		{
-			return false;
-		}
-		if (mIndex != other.mIndex)
-		{
-			return false;
-		}
-		if (mItemName == null)
-		{
-			if (other.mItemName != null)
-			{
-				return false;
-			}
-		}
-		else if ( !mItemName.equals(other.mItemName))
-		{
-			return false;
-		}
-		if (mMaximum != other.mMaximum)
-		{
-			return false;
-		}
-		if (mMinimum != other.mMinimum)
-		{
-			return false;
-		}
-		if (mValue != other.mValue)
-		{
-			return false;
-		}
-		if (mType == null)
-		{
-			if (other.mType != null)
-			{
-				return false;
-			}
-		}
-		else if ( !mType.equals(other.mType))
-		{
-			return false;
-		}
-		return true;
+		return false;
 	}
 	
 	@Override
@@ -297,13 +382,6 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 		clear();
 	}
 	
-	/**
-	 * Adds a restricted parent to this restriction. That makes sure,<br>
-	 * that the removal of restrictions is done for each restricted value of this restriction.
-	 * 
-	 * @param aParent
-	 *            The parent.
-	 */
 	@Override
 	public void setParent(final RestrictionableInstance aParent)
 	{
@@ -319,7 +397,7 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 	@Override
 	public void timeUpdated()
 	{
-		// TODO Implement when restrictions have views
+		updateUI();
 	}
 	
 	@Override
@@ -353,6 +431,6 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 	@Override
 	public void updateUI()
 	{
-		getParent().updateUI();
+		mDurationLabel.setText(mDuration.getName(mContext));
 	}
 }

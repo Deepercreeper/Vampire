@@ -3,6 +3,7 @@ package com.deepercreeper.vampireapp.items.implementations.creations.restriction
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.items.implementations.instances.restrictions.RestrictionInstanceImpl;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.ConditionCreation;
@@ -10,6 +11,7 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.Rest
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionableCreation;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionInstance;
 import com.deepercreeper.vampireapp.mechanics.Duration;
+import android.content.Context;
 
 /**
  * Some clans have restrictions, that define whether values or attributes have to have a specific value.<br>
@@ -92,14 +94,14 @@ public class RestrictionCreationImpl implements RestrictionCreation
 	}
 	
 	@Override
-	public RestrictionInstance createInstance()
+	public RestrictionInstance createInstance(Context aContext, MessageListener aMessageListener)
 	{
 		if ( !isPersistent())
 		{
 			return null;
 		}
 		final RestrictionInstance restriction = new RestrictionInstanceImpl(getType().getInstanceType(), getItemName(), getMinimum(), getMaximum(),
-				getIndex(), getValue(), Duration.FOREVER);
+				getIndex(), getValue(), Duration.FOREVER, aContext, aMessageListener, false);
 		for (final ConditionCreation condition : getConditions())
 		{
 			if (condition.isPersistent())

@@ -14,6 +14,7 @@ import com.deepercreeper.vampireapp.mechanics.Duration;
 import com.deepercreeper.vampireapp.mechanics.Duration.DurationListener;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
+import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 import android.content.Context;
 
 /**
@@ -21,7 +22,7 @@ import android.content.Context;
  * 
  * @author vrl
  */
-public interface RestrictionInstance extends Saveable, TimeListener, DurationListener
+public interface RestrictionInstance extends Saveable, TimeListener, DurationListener, Viewable
 {
 	/**
 	 * Each restriction has a type that defines, what is restricted.
@@ -93,18 +94,14 @@ public interface RestrictionInstance extends Saveable, TimeListener, DurationLis
 		}
 		
 		@Override
-		public boolean equals(final Object obj)
+		public boolean equals(final Object aObj)
 		{
-			if (this == obj) return true;
-			if (obj == null) return false;
-			if (getClass() != obj.getClass()) return false;
-			final RestrictionInstanceType other = (RestrictionInstanceType) obj;
-			if (mName == null)
+			if (aObj instanceof RestrictionInstanceType)
 			{
-				if (other.mName != null) return false;
+				RestrictionInstanceType type = (RestrictionInstanceType) aObj;
+				return getName().equals(type.getName());
 			}
-			else if ( !mName.equals(other.mName)) return false;
-			return true;
+			return false;
 		}
 		
 		/**
@@ -304,5 +301,6 @@ public interface RestrictionInstance extends Saveable, TimeListener, DurationLis
 	/**
 	 * Updates this restrictions user interface.
 	 */
+	@Override
 	public void updateUI();
 }

@@ -4,9 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionInstance.RestrictionInstanceType;
+import android.content.Context;
 
 /**
  * A restriction that is created and used inside the character creation.<br>
@@ -185,9 +187,13 @@ public interface RestrictionCreation
 	public void clear();
 	
 	/**
+	 * @param aContext
+	 *            The underlying context.
+	 * @param aMessageListener
+	 *            The message listener.
 	 * @return the instance restriction for this creation restriction.
 	 */
-	public RestrictionInstance createInstance();
+	public RestrictionInstance createInstance(Context aContext, MessageListener aMessageListener);
 	
 	/**
 	 * @return a set of all conditions this restriction has.

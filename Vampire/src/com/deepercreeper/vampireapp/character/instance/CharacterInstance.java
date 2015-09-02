@@ -138,9 +138,9 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		mActions = mHost ? null : new ActionsControllerInstance(this, mItems.getActions(), mContext);
 		
 		mRestrictions = new RestrictionControllerInstance(this, getContext(), mResizeListener, mMessageListener, mHost);
-		for (final RestrictionInstance restriction : aCreator.getRestrictions())
+		for (final RestrictionInstance restriction : aCreator.getRestrictions(mMessageListener))
 		{
-			mRestrictions.addRestriction(restriction);
+			mRestrictions.addRestriction(restriction, true);
 		}
 		mTimeListeners.add(mRestrictions);
 	}
@@ -511,17 +511,6 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	public boolean isLowLevel()
 	{
 		return mGeneration.isLowLevel();
-	}
-	
-	/**
-	 * removes the given character restriction.
-	 * 
-	 * @param aRestriction
-	 *            The restriction to remove.
-	 */
-	public void removeRestriction(final RestrictionInstance aRestriction)
-	{
-		mRestrictions.removeRestriction(aRestriction);
 	}
 	
 	@Override

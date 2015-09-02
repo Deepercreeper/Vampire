@@ -27,6 +27,7 @@ import com.deepercreeper.vampireapp.host.change.ItemGroupChange;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.host.change.ModeChange;
 import com.deepercreeper.vampireapp.host.change.MoneyChange;
+import com.deepercreeper.vampireapp.host.change.RestrictionChange;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
@@ -123,6 +124,10 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 		else if (aType.equals(ModeChange.TAG_NAME))
 		{
 			change = new ModeChange(element);
+		}
+		else if (aType.equals(RestrictionChange.TAG_NAME))
+		{
+			change = new RestrictionChange(element, this, this, false);
 		}
 		
 		// MARK Changes

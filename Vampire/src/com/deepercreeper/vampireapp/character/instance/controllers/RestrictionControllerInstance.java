@@ -7,6 +7,7 @@ import org.w3c.dom.Element;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
+import com.deepercreeper.vampireapp.host.change.RestrictionChange;
 import com.deepercreeper.vampireapp.items.implementations.instances.restrictions.RestrictionInstanceImpl;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionInstance;
@@ -133,16 +134,55 @@ public class RestrictionControllerInstance implements Viewable, Saveable, TimeLi
 		
 		for (final Element restriction : DataUtil.getChildren(aElement, "restriction"))
 		{
-			addRestriction(new RestrictionInstanceImpl(restriction));
+			addRestriction(new RestrictionInstanceImpl(restriction, mContext, mMessageListener, mHost), true);
 		}
 	}
 	
 	/**
-	 * @return a list of all restrictions.
+	 * Adds a new restriction.
 	 */
-	public List<RestrictionInstance> getRestrictions()
+	public void addRestriction()
 	{
-		return mRestrictions;
+		final RestrictionCreationListener listener = new RestrictionCreationListener()
+		{
+			@Override
+			public void restrictionCreated(final RestrictionInstance aRestriction)
+			{
+				addRestriction(aRestriction, false);
+			}
+		};
+		CreateRestrictionDialog.showCreateRestrictionDialog(mContext.getString(R.string.create_restriction), mContext, mMessageListener, listener,
+				mChar);
+	}
+	
+	/**
+	 * Adds the given restriction to the character.
+	 * 
+	 * @param aRestriction
+	 *            The new restriction.
+	 * @param aSilent
+	 *            whether a change should be sent.
+	 */
+	public void addRestriction(final RestrictionInstance aRestriction, boolean aSilent)
+	{
+		if (aRestriction.getType() == RestrictionInstanceType.ITEM_CHILD_EP_COST_MULTI
+				|| aRestriction.getType() == RestrictionInstanceType.ITEM_CHILD_EP_COST_NEW
+				|| aRestriction.getType() == RestrictionInstanceType.ITEM_EP_COST
+				|| aRestriction.getType() == RestrictionInstanceType.ITEM_EP_COST_MULTI
+				|| aRestriction.getType() == RestrictionInstanceType.ITEM_EP_COST_NEW || aRestriction.getType() == RestrictionInstanceType.ITEM_VALUE)
+		{
+			final ItemInstance item = mChar.findItemInstance(aRestriction.getItemName());
+			if (item != null)
+			{
+				item.addRestriction(aRestriction);
+				mRestrictions.add(aRestriction);
+				mExpander.getContainer().addView(aRestriction.getContainer(), mExpander.getContainer().getChildCount() - 1);
+				if ( !aSilent)
+				{
+					mMessageListener.sendChange(new RestrictionChange(aRestriction, true));
+				}
+			}
+		}
 	}
 	
 	@Override
@@ -156,20 +196,24 @@ public class RestrictionControllerInstance implements Viewable, Saveable, TimeLi
 		return element;
 	}
 	
-	/**
-	 * Adds a new restriction.
-	 */
-	public void addRestriction()
+	@Override
+	public LinearLayout getContainer()
 	{
-		final RestrictionCreationListener listener = new RestrictionCreationListener()
-		{
-			@Override
-			public void restrictionCreated(final RestrictionInstance aRestriction)
-			{
-				addRestriction(aRestriction);
-			}
-		};
-		CreateRestrictionDialog.showCreateRestrictionDialog(mContext.getString(R.string.create_restriction), mContext, listener, mChar);
+		return mContainer;
+	}
+	
+	/**
+	 * @return a list of all restrictions.
+	 */
+	public List<RestrictionInstance> getRestrictions()
+	{
+		return mRestrictions;
+	}
+	
+	@Override
+	public void release()
+	{
+		ViewUtil.release(getContainer());
 	}
 	
 	/**
@@ -181,29 +225,24 @@ public class RestrictionControllerInstance implements Viewable, Saveable, TimeLi
 	public void removeRestriction(final RestrictionInstance aRestriction)
 	{
 		mRestrictions.remove(aRestriction);
+		aRestriction.release();
 	}
 	
 	/**
-	 * Adds the given restriction to the character.
-	 * 
 	 * @param aRestriction
-	 *            The new restriction.
+	 *            The restriction to match.
+	 * @return The restriction instance that equals the given restriction.
 	 */
-	public void addRestriction(final RestrictionInstance aRestriction)
+	public RestrictionInstance getRestriction(RestrictionInstance aRestriction)
 	{
-		if (aRestriction.getType() == RestrictionInstanceType.ITEM_CHILD_EP_COST_MULTI
-				|| aRestriction.getType() == RestrictionInstanceType.ITEM_CHILD_EP_COST_NEW
-				|| aRestriction.getType() == RestrictionInstanceType.ITEM_EP_COST
-				|| aRestriction.getType() == RestrictionInstanceType.ITEM_EP_COST_MULTI
-				|| aRestriction.getType() == RestrictionInstanceType.ITEM_EP_COST_NEW || aRestriction.getType() == RestrictionInstanceType.ITEM_VALUE)
+		for (RestrictionInstance restriction : getRestrictions())
 		{
-			final ItemInstance item = mChar.findItemInstance(aRestriction.getItemName());
-			if (item != null)
+			if (restriction.equals(aRestriction))
 			{
-				item.addRestriction(aRestriction);
-				mRestrictions.add(aRestriction);
+				return restriction;
 			}
 		}
+		return null;
 	}
 	
 	@Override
@@ -216,20 +255,11 @@ public class RestrictionControllerInstance implements Viewable, Saveable, TimeLi
 	}
 	
 	@Override
-	public View getContainer()
-	{
-		return mContainer;
-	}
-	
-	@Override
-	public void release()
-	{
-		ViewUtil.release(getContainer());
-	}
-	
-	@Override
 	public void updateUI()
 	{
-		// TODO Implement
+		for (RestrictionInstance restriction : getRestrictions())
+		{
+			restriction.updateUI();
+		}
 	}
 }

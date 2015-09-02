@@ -5,6 +5,7 @@ import java.util.List;
 import com.deepercreeper.vampireapp.character.creation.controllers.GenerationControllerCreation;
 import com.deepercreeper.vampireapp.character.creation.controllers.HealthControllerCreation;
 import com.deepercreeper.vampireapp.character.creation.controllers.InsanityControllerCreation;
+import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.implementations.creations.ItemControllerCreationImpl;
 import com.deepercreeper.vampireapp.items.interfaces.ItemController;
@@ -313,16 +314,18 @@ public class CharacterCreation
 	}
 	
 	/**
+	 * @param aMessageListener
+	 *            The message listener.
 	 * @return all persistent non creation restrictions.
 	 */
-	public List<RestrictionInstance> getRestrictions()
+	public List<RestrictionInstance> getRestrictions(MessageListener aMessageListener)
 	{
 		final List<RestrictionInstance> restrictions = new ArrayList<RestrictionInstance>();
 		for (final RestrictionCreation restriction : mClan.getRestrictions())
 		{
 			if (restriction.isPersistent() && !restriction.isCreationRestriction())
 			{
-				restrictions.add(restriction.createInstance());
+				restrictions.add(restriction.createInstance(mContext, aMessageListener));
 			}
 		}
 		return restrictions;
