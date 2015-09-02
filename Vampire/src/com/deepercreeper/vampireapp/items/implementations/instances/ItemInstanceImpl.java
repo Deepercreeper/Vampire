@@ -25,7 +25,7 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemGroupInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionInstance;
-import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionInstance.InstanceRestrictionType;
+import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionInstance.RestrictionInstanceType;
 import com.deepercreeper.vampireapp.mechanics.Action;
 import com.deepercreeper.vampireapp.mechanics.ActionInstance;
 import com.deepercreeper.vampireapp.mechanics.ActionInstanceImpl;
@@ -732,7 +732,7 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 			Log.w(TAG, "Tried to ask whether a non value item can be decreased.");
 			return false;
 		}
-		return mHost && mValueId > Math.max(0, getMinValue(InstanceRestrictionType.ITEM_VALUE));
+		return mHost && mValueId > Math.max(0, getMinValue(RestrictionInstanceType.ITEM_VALUE));
 	}
 	
 	@Override
@@ -751,7 +751,7 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 		}
 		if (mHost)
 		{
-			return mValueId < Math.min(getValues().length - 1, getMaxValue(InstanceRestrictionType.ITEM_VALUE));
+			return mValueId < Math.min(getValues().length - 1, getMaxValue(RestrictionInstanceType.ITEM_VALUE));
 		}
 		if ( !hasEnoughEP())
 		{
@@ -763,9 +763,9 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 		}
 		if (getCharacter().isLowLevel())
 		{
-			return mValueId < Math.min(getMaxLowLevelValue(), getMaxValue(InstanceRestrictionType.ITEM_VALUE));
+			return mValueId < Math.min(getMaxLowLevelValue(), getMaxValue(RestrictionInstanceType.ITEM_VALUE));
 		}
-		return mValueId < getMaxValue(InstanceRestrictionType.ITEM_VALUE);
+		return mValueId < getMaxValue(RestrictionInstanceType.ITEM_VALUE);
 	}
 	
 	@Override
@@ -887,9 +887,9 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 	@Override
 	public int getEPCost()
 	{
-		if (hasRestrictions(InstanceRestrictionType.ITEM_EP_COST))
+		if (hasRestrictions(RestrictionInstanceType.ITEM_EP_COST))
 		{
-			for (final RestrictionInstance restriction : getRestrictions(InstanceRestrictionType.ITEM_EP_COST))
+			for (final RestrictionInstance restriction : getRestrictions(RestrictionInstanceType.ITEM_EP_COST))
 			{
 				return restriction.getValue();
 			}
@@ -900,9 +900,16 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 	@Override
 	public int getEPCostMulti()
 	{
-		if (hasRestrictions(InstanceRestrictionType.ITEM_EP_COST_MULTI))
+		if (hasRestrictions(RestrictionInstanceType.ITEM_EP_COST_MULTI))
 		{
-			for (final RestrictionInstance restriction : getRestrictions(InstanceRestrictionType.ITEM_EP_COST_MULTI))
+			for (final RestrictionInstance restriction : getRestrictions(RestrictionInstanceType.ITEM_EP_COST_MULTI))
+			{
+				return restriction.getValue();
+			}
+		}
+		if (hasParentItem() && getParentItem().hasRestrictions(RestrictionInstanceType.ITEM_CHILD_EP_COST_MULTI))
+		{
+			for (final RestrictionInstance restriction : getParentItem().getRestrictions(RestrictionInstanceType.ITEM_CHILD_EP_COST_MULTI))
 			{
 				return restriction.getValue();
 			}
@@ -913,16 +920,16 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 	@Override
 	public int getEPCostNew()
 	{
-		if (hasRestrictions(InstanceRestrictionType.ITEM_EP_COST_NEW))
+		if (hasRestrictions(RestrictionInstanceType.ITEM_EP_COST_NEW))
 		{
-			for (final RestrictionInstance restriction : getRestrictions(InstanceRestrictionType.ITEM_EP_COST_NEW))
+			for (final RestrictionInstance restriction : getRestrictions(RestrictionInstanceType.ITEM_EP_COST_NEW))
 			{
 				return restriction.getValue();
 			}
 		}
-		if (hasParentItem() && getParentItem().hasRestrictions(InstanceRestrictionType.ITEM_CHILD_EP_COST_NEW))
+		if (hasParentItem() && getParentItem().hasRestrictions(RestrictionInstanceType.ITEM_CHILD_EP_COST_NEW))
 		{
-			for (final RestrictionInstance restriction : getParentItem().getRestrictions(InstanceRestrictionType.ITEM_CHILD_EP_COST_NEW))
+			for (final RestrictionInstance restriction : getParentItem().getRestrictions(RestrictionInstanceType.ITEM_CHILD_EP_COST_NEW))
 			{
 				return restriction.getValue();
 			}
@@ -1159,13 +1166,13 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 	{
 		if (isValueItem())
 		{
-			if (hasRestrictions(InstanceRestrictionType.ITEM_VALUE) && !isValueOk(getValue(), InstanceRestrictionType.ITEM_VALUE))
+			if (hasRestrictions(RestrictionInstanceType.ITEM_VALUE) && !isValueOk(getValue(), RestrictionInstanceType.ITEM_VALUE))
 			{
-				while (canIncrease() && getValue() < getMinValue(InstanceRestrictionType.ITEM_VALUE))
+				while (canIncrease() && getValue() < getMinValue(RestrictionInstanceType.ITEM_VALUE))
 				{
 					increase(false, false);
 				}
-				while (canDecrease() && getValue() > getMaxValue(InstanceRestrictionType.ITEM_VALUE))
+				while (canDecrease() && getValue() > getMaxValue(RestrictionInstanceType.ITEM_VALUE))
 				{
 					decrease();
 				}

@@ -421,6 +421,7 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 		playerContainer.addView(mChar.getMoney().getContainer(), i++ );
 		playerContainer.addView(mChar.getInventory().getContainer(), i++ );
 		playerContainer.addView(mChar.getInsanities().getContainer(), i++ );
+		playerContainer.addView(mChar.getRestrictions().getContainer(), i++ );
 		
 		mControllerExpander.init();
 		

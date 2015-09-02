@@ -2,7 +2,7 @@ package com.deepercreeper.vampireapp.items.interfaces.instances.restrictions;
 
 import java.util.Set;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
-import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionInstance.InstanceRestrictionType;
+import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionInstance.RestrictionInstanceType;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 
 /**
@@ -30,28 +30,28 @@ public interface RestrictionableInstance extends Viewable
 	 *            The restriction types.
 	 * @return the maximum value calculated out of all restrictions with one of the given restriction types of this field.
 	 */
-	public int getMaxValue(InstanceRestrictionType... aTypes);
+	public int getMaxValue(RestrictionInstanceType... aTypes);
 	
 	/**
 	 * @param aTypes
 	 *            The restriction types.
 	 * @return the minimum value calculated out of all restrictions with one of the given restriction types of this field.
 	 */
-	public int getMinValue(InstanceRestrictionType... aTypes);
+	public int getMinValue(RestrictionInstanceType... aTypes);
 	
 	/**
 	 * @param aTypes
 	 *            The restriction types.
 	 * @return a set of restrictions that have one of the given types.
 	 */
-	public Set<RestrictionInstance> getRestrictions(InstanceRestrictionType... aTypes);
+	public Set<RestrictionInstance> getRestrictions(RestrictionInstanceType... aTypes);
 	
 	/**
 	 * @param aTypes
 	 *            The restriction types.
 	 * @return whether restrictions with one of the given types are currently added to this field.
 	 */
-	public boolean hasRestrictions(InstanceRestrictionType... aTypes);
+	public boolean hasRestrictions(RestrictionInstanceType... aTypes);
 	
 	/**
 	 * @param aValue
@@ -60,7 +60,7 @@ public interface RestrictionableInstance extends Viewable
 	 *            The restriction types.
 	 * @return whether the given value can be approved by all restriction with one of the given restriction types.
 	 */
-	public boolean isValueOk(int aValue, InstanceRestrictionType... aTypes);
+	public boolean isValueOk(int aValue, RestrictionInstanceType... aTypes);
 	
 	/**
 	 * Removes the given restriction from the current restriction set and updates all values.

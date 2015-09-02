@@ -106,21 +106,21 @@ public abstract class DefaultDialog <L, C extends View> extends DialogFragment
 		return mListener;
 	}
 	
-	protected boolean isNameOk(EditText aText)
+	protected boolean isNameOk(final EditText aText)
 	{
 		return !aText.getText().toString().trim().isEmpty();
 	}
 	
-	protected boolean isNumberOk(EditText aText, int aMin)
+	protected boolean isNumberOk(final EditText aText, final int aMin)
 	{
-		int value = -1;
 		try
 		{
-			value = Integer.parseInt(aText.getText().toString());
+			return Integer.parseInt(aText.getText().toString()) >= aMin;
 		}
-		catch (NumberFormatException e)
-		{}
-		return value >= aMin;
+		catch (final NumberFormatException e)
+		{
+			return false;
+		}
 	}
 	
 	/**

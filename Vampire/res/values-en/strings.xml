@@ -12,6 +12,7 @@
     <string name="add_insanity">Add insanity</string>
     <string name="add_insanity_message">Enter the name of a insanity:</string>
     <string name="add_item">Add Item</string>
+    <string name="add_restriction">Add restriction</string>
     <string name="added_item">The following item was added: {0}</string>
     <string name="additional_damage">Additional damage</string>
     <string name="additional_info">Additional information</string>
@@ -53,6 +54,7 @@
     <string name="create_host_button">Create new host</string>
     <string name="create_insanity">Create new insanity</string>
     <string name="create_item">Create new item</string>
+    <string name="create_restriction">Create new restriction</string>
     <string name="create_weapon">Create new weapon</string>
     <string name="damage">Damage</string>
     <string name="day">Day</string>
@@ -85,10 +87,17 @@
     <string name="host_name">Host name</string>
     <string name="hosts">Hosts</string>
     <string name="hour">Hour</string>
+    <string name="index">Index</string>
     <string name="insanities">Insanities</string>
     <string name="insanity_name">Name of insanity</string>
     <string name="inventory">Inventory</string>
+    <string name="item_child_ep_cost_multi">Item child EP cost multiplicator</string>
+    <string name="item_child_ep_cost_new">New item child EP cost</string>
+    <string name="item_ep_cost">Item EP cost</string>
+    <string name="item_ep_cost_multi">Item EP cost multiplicator</string>
+    <string name="item_ep_cost_new">New item EP cost</string>
     <string name="item_name">Item name</string>
+    <string name="item_value">Item value</string>
     <string name="item_weight">Item weight</string>
     <string name="items">Items</string>
     <string name="kick">Kick</string>
@@ -100,6 +109,8 @@
     <string name="magazine">Magazine</string>
     <string name="max">Max</string>
     <string name="max_weight">Maximum weight</string>
+	<string name="maximum">Maximum</string>
+    <string name="minimum">Minimum</string>
     <string name="mode_colon">Mode:</string>
     <string name="money">Money</string>
     <string name="money_sent">You got {0}.</string>
@@ -122,6 +133,7 @@
     <string name="reload_time">Reload time</string>
     <string name="removed_item">The following item was removed: {0}</string>
     <string name="reset">Reset</string>
+    <string name="restrictions">Restrictions</string>
     <string name="round">Round</string>
     <string name="service_name">Item provider</string>
     <string name="sleeping">Sleeping</string>
@@ -130,6 +142,7 @@
     <string name="took_item">The following item was taken: {x}</string>
     <string name="unban">Unban</string>
     <string name="use">Use</string>
+    <string name="value">Value</string>
     <string name="weight">Weight</string>
     <string name="weight_unit">kg</string>
     <string name="yes">Yes</string>

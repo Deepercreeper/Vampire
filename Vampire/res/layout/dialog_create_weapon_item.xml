@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="@string/item_weight"
-            android:inputType="numberSigned" />
+            android:inputType="number" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/damage"
-        android:inputType="numberSigned" />
+        android:inputType="number" />
 
     <CheckBox
         android:id="@+id/dialog_weapon_additional_damage_box"
@@ -54,7 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/difficulty"
-        android:inputType="numberSigned" />
+        android:inputType="number" />
 
     <EditText
         android:id="@+id/dialog_weapon_stash_text"
@@ -80,7 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="@string/distance"
-            android:inputType="numberSigned" />
+            android:inputType="number" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -94,14 +94,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/reload_time"
-        android:inputType="numberSigned" />
+        android:inputType="number" />
 
     <EditText
         android:id="@+id/dialog_weapon_magazine_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/magazine"
-        android:inputType="numberSigned" />
+        android:inputType="number" />
 
     <EditText
         android:id="@+id/dialog_weapon_ammo_text"
@@ -115,7 +115,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/quantity"
-        android:inputType="numberSigned" />
+        android:inputType="number" />
 
     <Button
         android:id="@+id/dialog_weapon_ok_button"

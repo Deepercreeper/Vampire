@@ -1923,13 +1923,13 @@
             <restriction
                 index="0"
                 itemName="Thaumaturgy"
-                type="ItemChildEpCostMultiAt"
+                type="ItemChildEpCostMulti"
                 value="4" />
 
             <restriction
                 index="1"
                 itemName="Thaumaturgy"
-                type="ItemChildEpCostMultiAt"
+                type="ItemChildEpCostMulti"
                 value="5" />
 
             <restriction
@@ -1961,12 +1961,12 @@
                 index="1"
                 itemName="Thaumaturgy"
                 range="=0"
-                type="ItemChildValueAt" >
+                type="ItemChildValue" >
 
                 <condition
                     index="0"
                     itemName="Thaumaturgy"
-                    query="ItemChildValueAt"
+                    query="ItemChildValue"
                     range="&lt;2" />
             </restriction>
 
@@ -1974,12 +1974,12 @@
                 index="0"
                 itemName="Thaumaturgy"
                 range=">1"
-                type="ItemChildValueAt" >
+                type="ItemChildValue" >
 
                 <condition
                     index="1"
                     itemName="Thaumaturgy"
-                    query="ItemChildValueAt"
+                    query="ItemChildValue"
                     range=">0" />
             </restriction>
         </clan>

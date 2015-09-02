@@ -40,7 +40,7 @@ public class CreateInsanityDialog extends DefaultDialog<InsanityCreationListener
 	
 	private EditText mValue;
 	
-	private Button mOK;
+	private Button mOk;
 	
 	private boolean mForever = false;
 	
@@ -56,7 +56,7 @@ public class CreateInsanityDialog extends DefaultDialog<InsanityCreationListener
 	@Override
 	protected Dialog createDialog(final Builder aBuilder)
 	{
-		mOK = (Button) getContainer().findViewById(R.id.dialog_insanity_ok_button);
+		mOk = (Button) getContainer().findViewById(R.id.dialog_insanity_ok_button);
 		mName = (EditText) getContainer().findViewById(R.id.dialog_insanity_name_text);
 		mValue = (EditText) getContainer().findViewById(R.id.dialog_insanity_value_text);
 		final Spinner durationSpinner = (Spinner) getContainer().findViewById(R.id.dialog_insanity_duration_spinner);
@@ -71,7 +71,7 @@ public class CreateInsanityDialog extends DefaultDialog<InsanityCreationListener
 				mForever = aIsChecked;
 				ViewUtil.setEnabled(durationSpinner, !mForever);
 				ViewUtil.setEnabled(mValue, !mForever);
-				updateOKButton();
+				updateOkButton();
 			}
 		});
 		final TextWatcher listener = new TextWatcher()
@@ -79,7 +79,7 @@ public class CreateInsanityDialog extends DefaultDialog<InsanityCreationListener
 			@Override
 			public void afterTextChanged(final Editable aS)
 			{
-				updateOKButton();
+				updateOkButton();
 			}
 			
 			@Override
@@ -92,7 +92,7 @@ public class CreateInsanityDialog extends DefaultDialog<InsanityCreationListener
 		};
 		mName.addTextChangedListener(listener);
 		mValue.addTextChangedListener(listener);
-		mOK.setOnClickListener(new OnClickListener()
+		mOk.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(final View aV)
@@ -109,12 +109,12 @@ public class CreateInsanityDialog extends DefaultDialog<InsanityCreationListener
 			}
 		});
 		
-		updateOKButton();
+		updateOkButton();
 		
 		return aBuilder.create();
 	}
 	
-	private void updateOKButton()
+	private void updateOkButton()
 	{
 		boolean enabled = true;
 		enabled &= isNameOk(mName);
@@ -127,7 +127,7 @@ public class CreateInsanityDialog extends DefaultDialog<InsanityCreationListener
 			}
 		}
 		enabled &= mForever || isNumberOk(mValue, 1);
-		ViewUtil.setEnabled(mOK, enabled);
+		ViewUtil.setEnabled(mOk, enabled);
 	}
 	
 	/**

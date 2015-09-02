@@ -19,7 +19,7 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCre
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemGroupCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation.CreationRestrictionType;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation.RestrictionCreationType;
 import com.deepercreeper.vampireapp.util.ComparatorUtil;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
@@ -286,7 +286,7 @@ public class ItemControllerCreationImpl extends DependableInstanceImpl implement
 	}
 	
 	@Override
-	public int getMaxValue(final CreationRestrictionType... aTypes)
+	public int getMaxValue(final RestrictionCreationType... aTypes)
 	{
 		return Integer.MAX_VALUE;
 	}
@@ -303,7 +303,7 @@ public class ItemControllerCreationImpl extends DependableInstanceImpl implement
 	}
 	
 	@Override
-	public int getMinValue(final CreationRestrictionType... aTypes)
+	public int getMinValue(final RestrictionCreationType... aTypes)
 	{
 		return Integer.MIN_VALUE;
 	}
@@ -315,7 +315,7 @@ public class ItemControllerCreationImpl extends DependableInstanceImpl implement
 	}
 	
 	@Override
-	public Set<RestrictionCreation> getRestrictions(final CreationRestrictionType... aTypes)
+	public Set<RestrictionCreation> getRestrictions(final RestrictionCreationType... aTypes)
 	{
 		final Set<RestrictionCreation> restrictions = new HashSet<RestrictionCreation>();
 		for (final ItemCreation item : mItems.values())
@@ -386,7 +386,7 @@ public class ItemControllerCreationImpl extends DependableInstanceImpl implement
 	}
 	
 	@Override
-	public boolean hasRestrictions(final CreationRestrictionType... aTypes)
+	public boolean hasRestrictions(final RestrictionCreationType... aTypes)
 	{
 		for (final ItemCreation item : mItems.values())
 		{
@@ -423,7 +423,7 @@ public class ItemControllerCreationImpl extends DependableInstanceImpl implement
 	}
 	
 	@Override
-	public boolean isValueOk(final int aValue, final CreationRestrictionType... aTypes)
+	public boolean isValueOk(final int aValue, final RestrictionCreationType... aTypes)
 	{
 		return true;
 	}

@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:hint="@string/amount"
-        android:inputType="numberSigned" />
+        android:inputType="number" />
 
     <Button
         android:id="@+id/view_max_currency_value_button"

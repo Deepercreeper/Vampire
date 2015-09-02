@@ -1,7 +1,7 @@
 package com.deepercreeper.vampireapp.items.interfaces.creations.restrictions;
 
 import java.util.Set;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation.CreationRestrictionType;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation.RestrictionCreationType;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 
 /**
@@ -24,28 +24,28 @@ public interface RestrictionableCreation extends Viewable
 	 *            Types of restrictions that restrict the value.
 	 * @return the maximum value calculated out of all restrictions of this field.
 	 */
-	public int getMaxValue(CreationRestrictionType... aTypes);
+	public int getMaxValue(RestrictionCreationType... aTypes);
 	
 	/**
 	 * @param aTypes
 	 *            Types of restrictions that restrict the value.
 	 * @return the minimum value calculated out of all restrictions of this field.
 	 */
-	public int getMinValue(CreationRestrictionType... aTypes);
+	public int getMinValue(RestrictionCreationType... aTypes);
 	
 	/**
 	 * @param aTypes
 	 *            The restriction types.
 	 * @return a set of all restrictions that have one of the given types.
 	 */
-	public Set<RestrictionCreation> getRestrictions(CreationRestrictionType... aTypes);
+	public Set<RestrictionCreation> getRestrictions(RestrictionCreationType... aTypes);
 	
 	/**
 	 * @param aTypes
 	 *            The types of restrictions that are tested.
 	 * @return whether restrictions are currently added to this field.
 	 */
-	public boolean hasRestrictions(final CreationRestrictionType... aTypes);
+	public boolean hasRestrictions(final RestrictionCreationType... aTypes);
 	
 	/**
 	 * @param aValue
@@ -54,7 +54,7 @@ public interface RestrictionableCreation extends Viewable
 	 *            Types of the restrictions that are used to restrict the value.
 	 * @return whether the given value doesn't collide with any of the restrictions.
 	 */
-	public boolean isValueOk(int aValue, CreationRestrictionType... aTypes);
+	public boolean isValueOk(int aValue, RestrictionCreationType... aTypes);
 	
 	/**
 	 * Removes the given restriction from the current restriction set and updates all values.

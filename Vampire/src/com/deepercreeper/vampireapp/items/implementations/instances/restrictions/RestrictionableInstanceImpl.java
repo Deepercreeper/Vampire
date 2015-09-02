@@ -5,7 +5,7 @@ import java.util.Set;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionInstance;
-import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionInstance.InstanceRestrictionType;
+import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionInstance.RestrictionInstanceType;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionableInstance;
 
 /**
@@ -61,7 +61,7 @@ public abstract class RestrictionableInstanceImpl implements RestrictionableInst
 	}
 	
 	@Override
-	public final int getMaxValue(final InstanceRestrictionType... aTypes)
+	public final int getMaxValue(final RestrictionInstanceType... aTypes)
 	{
 		int maxValue = Integer.MAX_VALUE;
 		for (final RestrictionInstance restriction : getRestrictions(aTypes))
@@ -76,7 +76,7 @@ public abstract class RestrictionableInstanceImpl implements RestrictionableInst
 	}
 	
 	@Override
-	public final int getMinValue(final InstanceRestrictionType... aTypes)
+	public final int getMinValue(final RestrictionInstanceType... aTypes)
 	{
 		int minValue = Integer.MIN_VALUE;
 		for (final RestrictionInstance restriction : getRestrictions(aTypes))
@@ -91,11 +91,11 @@ public abstract class RestrictionableInstanceImpl implements RestrictionableInst
 	}
 	
 	@Override
-	public final Set<RestrictionInstance> getRestrictions(final InstanceRestrictionType... aTypes)
+	public final Set<RestrictionInstance> getRestrictions(final RestrictionInstanceType... aTypes)
 	{
 		final Set<RestrictionInstance> restrictions = new HashSet<RestrictionInstance>();
-		final Set<InstanceRestrictionType> types = new HashSet<InstanceRestrictionType>();
-		for (final InstanceRestrictionType type : aTypes)
+		final Set<RestrictionInstanceType> types = new HashSet<RestrictionInstanceType>();
+		for (final RestrictionInstanceType type : aTypes)
 		{
 			types.add(type);
 		}
@@ -114,13 +114,13 @@ public abstract class RestrictionableInstanceImpl implements RestrictionableInst
 	}
 	
 	@Override
-	public final boolean hasRestrictions(final InstanceRestrictionType... aTypes)
+	public final boolean hasRestrictions(final RestrictionInstanceType... aTypes)
 	{
 		return !getRestrictions(aTypes).isEmpty();
 	}
 	
 	@Override
-	public final boolean isValueOk(final int aValue, final InstanceRestrictionType... aTypes)
+	public final boolean isValueOk(final int aValue, final RestrictionInstanceType... aTypes)
 	{
 		return getMinValue(aTypes) <= aValue && aValue <= getMaxValue(aTypes);
 	}

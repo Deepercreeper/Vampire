@@ -45,7 +45,7 @@ import com.deepercreeper.vampireapp.items.interfaces.ItemGroup;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.ConditionCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.ConditionCreation.ConditionQueryCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation.CreationRestrictionType;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation.RestrictionCreationType;
 import com.deepercreeper.vampireapp.lists.controllers.ClanController;
 import com.deepercreeper.vampireapp.lists.items.Clan;
 import com.deepercreeper.vampireapp.mechanics.Action;
@@ -1637,7 +1637,7 @@ public class DataUtil
 		final Set<RestrictionCreation> restrictions = new HashSet<RestrictionCreation>();
 		for (final Element child : getChildren(aClanNode, RESTRICTION))
 		{
-			final CreationRestrictionType type = CreationRestrictionType.get(child.getAttribute("type"));
+			final RestrictionCreationType type = RestrictionCreationType.get(child.getAttribute("type"));
 			
 			if (type == null)
 			{

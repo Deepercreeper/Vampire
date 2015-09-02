@@ -11,7 +11,7 @@ import com.deepercreeper.vampireapp.items.interfaces.ItemController;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation.CreationRestrictionType;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation.RestrictionCreationType;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionInstance;
 import com.deepercreeper.vampireapp.lists.controllers.DescriptionControllerCreation;
 import com.deepercreeper.vampireapp.lists.items.Clan;
@@ -494,13 +494,13 @@ public class CharacterCreation
 		}
 		for (final RestrictionCreation restriction : mClan.getRestrictions())
 		{
-			final CreationRestrictionType type = restriction.getType();
-			if (type.equals(CreationRestrictionType.ITEM_VALUE) || type.equals(CreationRestrictionType.ITEM_CHILDREN_COUNT)
-					|| type.equals(CreationRestrictionType.ITEM_CHILD_VALUE_AT) || type.equals(CreationRestrictionType.GROUP_CHILDREN)
-					|| type.equals(CreationRestrictionType.GROUP_CHILDREN_COUNT) || type.equals(CreationRestrictionType.GROUP_ITEM_VALUE_AT))
+			final RestrictionCreationType type = restriction.getType();
+			if (type.equals(RestrictionCreationType.ITEM_VALUE) || type.equals(RestrictionCreationType.ITEM_CHILDREN_COUNT)
+					|| type.equals(RestrictionCreationType.ITEM_CHILD_VALUE) || type.equals(RestrictionCreationType.GROUP_CHILDREN)
+					|| type.equals(RestrictionCreationType.GROUP_CHILDREN_COUNT) || type.equals(RestrictionCreationType.GROUP_ITEM_VALUE))
 			{
-				final boolean item = type.equals(CreationRestrictionType.ITEM_VALUE) || type.equals(CreationRestrictionType.ITEM_CHILDREN_COUNT)
-						|| type.equals(CreationRestrictionType.ITEM_CHILD_VALUE_AT);
+				final boolean item = type.equals(RestrictionCreationType.ITEM_VALUE) || type.equals(RestrictionCreationType.ITEM_CHILDREN_COUNT)
+						|| type.equals(RestrictionCreationType.ITEM_CHILD_VALUE);
 				final String itemName = restriction.getItemName();
 				boolean foundItem = false;
 				for (final ItemControllerCreation controller : mControllers)
@@ -516,11 +516,11 @@ public class CharacterCreation
 					Log.w("CharCreator", "Couldn't find the item of a restriction.");
 				}
 			}
-			else if (type.equals(CreationRestrictionType.INSANITY))
+			else if (type.equals(RestrictionCreationType.INSANITY))
 			{
 				mInsanities.addRestriction(restriction);
 			}
-			else if (type.equals(CreationRestrictionType.GENERATION))
+			else if (type.equals(RestrictionCreationType.GENERATION))
 			{
 				mGeneration.addRestriction(restriction);
 			}

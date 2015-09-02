@@ -15,7 +15,7 @@ import com.deepercreeper.vampireapp.items.interfaces.Item;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemGroupCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation.CreationRestrictionType;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation.RestrictionCreationType;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog;
@@ -241,7 +241,7 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 			return;
 		}
 		final List<Item> items = getAddableItems();
-		if (items.isEmpty() || getMaxValue(CreationRestrictionType.ITEM_CHILDREN_COUNT) <= getChildrenList().size())
+		if (items.isEmpty() || getMaxValue(RestrictionCreationType.ITEM_CHILDREN_COUNT) <= getChildrenList().size())
 		{
 			return;
 		}
@@ -273,7 +273,7 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 			Log.w(TAG, "Tried to add a already existing child.");
 			return;
 		}
-		if (getMaxValue(CreationRestrictionType.ITEM_CHILDREN_COUNT) <= getChildrenList().size())
+		if (getMaxValue(RestrictionCreationType.ITEM_CHILDREN_COUNT) <= getChildrenList().size())
 		{
 			return;
 		}
@@ -300,11 +300,11 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 		
 		if ( !mChar.getMode().isFreeMode())
 		{
-			canDecreaseItemValue &= mValueId > getMinValue(CreationRestrictionType.ITEM_VALUE) && mValueId > getStartValue();
+			canDecreaseItemValue &= mValueId > getMinValue(RestrictionCreationType.ITEM_VALUE) && mValueId > getStartValue();
 		}
 		if (hasParentItem())
 		{
-			for (final RestrictionCreation restriction : getParentItem().getRestrictions(CreationRestrictionType.ITEM_CHILD_VALUE_AT))
+			for (final RestrictionCreation restriction : getParentItem().getRestrictions(RestrictionCreationType.ITEM_CHILD_VALUE))
 			{
 				if (getParentItem().indexOfChild(this) == restriction.getIndex())
 				{
@@ -318,7 +318,7 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 		}
 		else
 		{
-			for (final RestrictionCreation restriction : getItemGroup().getRestrictions(CreationRestrictionType.GROUP_ITEM_VALUE_AT))
+			for (final RestrictionCreation restriction : getItemGroup().getRestrictions(RestrictionCreationType.GROUP_ITEM_VALUE))
 			{
 				if (getItemGroup().indexOfItem(this) == restriction.getIndex())
 				{
@@ -358,12 +358,12 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 		
 		if ( !mChar.getMode().isFreeMode())
 		{
-			canIncreaseItem &= mValueId + mTempPoints < getMaxValue(CreationRestrictionType.ITEM_VALUE)
+			canIncreaseItem &= mValueId + mTempPoints < getMaxValue(RestrictionCreationType.ITEM_VALUE)
 					&& ( !mChar.isLowLevel() || mValueId + mTempPoints < getMaxLowLevelValue());
 		}
 		if (hasParentItem())
 		{
-			for (final RestrictionCreation restriction : getParentItem().getRestrictions(CreationRestrictionType.ITEM_CHILD_VALUE_AT))
+			for (final RestrictionCreation restriction : getParentItem().getRestrictions(RestrictionCreationType.ITEM_CHILD_VALUE))
 			{
 				if (getParentItem().indexOfChild(this) == restriction.getIndex())
 				{
@@ -377,7 +377,7 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 		}
 		else
 		{
-			for (final RestrictionCreation restriction : getItemGroup().getRestrictions(CreationRestrictionType.GROUP_ITEM_VALUE_AT))
+			for (final RestrictionCreation restriction : getItemGroup().getRestrictions(RestrictionCreationType.GROUP_ITEM_VALUE))
 			{
 				if (getItemGroup().indexOfItem(this) == restriction.getIndex())
 				{
@@ -423,14 +423,14 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 		{
 			return false;
 		}
-		for (final RestrictionCreation restriction : getRestrictions(CreationRestrictionType.ITEM_CHILDREN_COUNT))
+		for (final RestrictionCreation restriction : getRestrictions(RestrictionCreationType.ITEM_CHILDREN_COUNT))
 		{
 			if (restriction.isActive(aItem.getItemGroup().getItemController()) && getChildrenList().size() <= restriction.getMinimum())
 			{
 				return false;
 			}
 		}
-		for (final RestrictionCreation restriction : getRestrictions(CreationRestrictionType.ITEM_CHILD_VALUE_AT))
+		for (final RestrictionCreation restriction : getRestrictions(RestrictionCreationType.ITEM_CHILD_VALUE))
 		{
 			if (restriction.isActive(aItem.getItemGroup().getItemController()) && restriction.getIndex() == indexOfChild(aItem)
 					&& aItem.getStartValue() < restriction.getMinimum())
@@ -1067,13 +1067,13 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 	{
 		if (isValueItem())
 		{
-			if (hasRestrictions() && !isValueOk(getValue(), CreationRestrictionType.ITEM_VALUE))
+			if (hasRestrictions() && !isValueOk(getValue(), RestrictionCreationType.ITEM_VALUE))
 			{
-				while (canIncrease() && getValue() < getMinValue(CreationRestrictionType.ITEM_VALUE))
+				while (canIncrease() && getValue() < getMinValue(RestrictionCreationType.ITEM_VALUE))
 				{
 					increase();
 				}
-				while (canDecrease() && getValue() > getMaxValue(CreationRestrictionType.ITEM_VALUE))
+				while (canDecrease() && getValue() > getMaxValue(RestrictionCreationType.ITEM_VALUE))
 				{
 					decrease();
 				}
@@ -1129,7 +1129,7 @@ public class ItemCreationImpl extends RestrictionableDependableCreationImpl impl
 			boolean canAddChild = true;
 			if ( !mChar.getMode().isFreeMode())
 			{
-				for (final RestrictionCreation restriction : getRestrictions(CreationRestrictionType.ITEM_CHILDREN_COUNT))
+				for (final RestrictionCreation restriction : getRestrictions(RestrictionCreationType.ITEM_CHILDREN_COUNT))
 				{
 					if (restriction.isActive(getItemGroup().getItemController()) && getChildrenList().size() >= restriction.getMaximum())
 					{

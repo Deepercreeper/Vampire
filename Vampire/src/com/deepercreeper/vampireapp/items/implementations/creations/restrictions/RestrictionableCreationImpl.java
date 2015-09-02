@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation.CreationRestrictionType;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation.RestrictionCreationType;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionableCreation;
 
 /**
@@ -46,7 +46,7 @@ public abstract class RestrictionableCreationImpl implements RestrictionableCrea
 	}
 	
 	@Override
-	public final int getMaxValue(final CreationRestrictionType... aTypes)
+	public final int getMaxValue(final RestrictionCreationType... aTypes)
 	{
 		int maxValue = Integer.MAX_VALUE;
 		for (final RestrictionCreation restriction : getRestrictions(aTypes))
@@ -61,7 +61,7 @@ public abstract class RestrictionableCreationImpl implements RestrictionableCrea
 	}
 	
 	@Override
-	public final int getMinValue(final CreationRestrictionType... aTypes)
+	public final int getMinValue(final RestrictionCreationType... aTypes)
 	{
 		int minValue = Integer.MIN_VALUE;
 		for (final RestrictionCreation restriction : getRestrictions(aTypes))
@@ -76,11 +76,11 @@ public abstract class RestrictionableCreationImpl implements RestrictionableCrea
 	}
 	
 	@Override
-	public final Set<RestrictionCreation> getRestrictions(final CreationRestrictionType... aTypes)
+	public final Set<RestrictionCreation> getRestrictions(final RestrictionCreationType... aTypes)
 	{
 		final Set<RestrictionCreation> restrictions = new HashSet<RestrictionCreation>();
-		final Set<CreationRestrictionType> types = new HashSet<CreationRestrictionType>();
-		for (final CreationRestrictionType type : aTypes)
+		final Set<RestrictionCreationType> types = new HashSet<RestrictionCreationType>();
+		for (final RestrictionCreationType type : aTypes)
 		{
 			types.add(type);
 		}
@@ -99,13 +99,13 @@ public abstract class RestrictionableCreationImpl implements RestrictionableCrea
 	}
 	
 	@Override
-	public final boolean hasRestrictions(final CreationRestrictionType... aTypes)
+	public final boolean hasRestrictions(final RestrictionCreationType... aTypes)
 	{
 		return !getRestrictions(aTypes).isEmpty();
 	}
 	
 	@Override
-	public final boolean isValueOk(final int aValue, final CreationRestrictionType... aTypes)
+	public final boolean isValueOk(final int aValue, final RestrictionCreationType... aTypes)
 	{
 		return getMinValue(aTypes) <= aValue && aValue <= getMaxValue(aTypes);
 	}

@@ -3,7 +3,7 @@ package com.deepercreeper.vampireapp.character.creation.controllers;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
 import com.deepercreeper.vampireapp.items.implementations.creations.restrictions.RestrictionableCreationImpl;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation.CreationRestrictionType;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation.RestrictionCreationType;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import android.content.Context;
 import android.view.View;
@@ -104,10 +104,10 @@ public class GenerationControllerCreation extends RestrictionableCreationImpl
 			mPicker.setMinValue(CharacterCreation.MIN_GENERATION);
 			mPicker.setMaxValue(CharacterCreation.MAX_GENERATION);
 		}
-		if (hasRestrictions(CreationRestrictionType.GENERATION))
+		if (hasRestrictions(RestrictionCreationType.GENERATION))
 		{
-			mPicker.setMinValue(getMinValue(CreationRestrictionType.GENERATION));
-			mPicker.setMaxValue(getMaxValue(CreationRestrictionType.GENERATION));
+			mPicker.setMinValue(getMinValue(RestrictionCreationType.GENERATION));
+			mPicker.setMaxValue(getMaxValue(RestrictionCreationType.GENERATION));
 		}
 	}
 }

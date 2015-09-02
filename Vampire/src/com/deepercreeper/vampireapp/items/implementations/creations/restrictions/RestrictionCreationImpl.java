@@ -23,7 +23,7 @@ public class RestrictionCreationImpl implements RestrictionCreation
 	
 	private final List<String> mItems;
 	
-	private final CreationRestrictionType mType;
+	private final RestrictionCreationType mType;
 	
 	private final int mMinimum;
 	
@@ -59,7 +59,7 @@ public class RestrictionCreationImpl implements RestrictionCreation
 	 * @param aCreationRestriction
 	 *            Whether this is a creation only restriction.
 	 */
-	public RestrictionCreationImpl(final CreationRestrictionType aType, final String aItemName, final int aMinimum, final int aMaximum,
+	public RestrictionCreationImpl(final RestrictionCreationType aType, final String aItemName, final int aMinimum, final int aMaximum,
 			final List<String> aItems, final int aIndex, final int aValue, final boolean aCreationRestriction)
 	{
 		mType = aType;
@@ -98,9 +98,9 @@ public class RestrictionCreationImpl implements RestrictionCreation
 		{
 			return null;
 		}
-		RestrictionInstance restriction = new RestrictionInstanceImpl(getType().getInstanceType(), getItemName(), getMinimum(), getMaximum(),
-				getItems(), getIndex(), getValue(), Duration.FOREVER);
-		for (ConditionCreation condition : getConditions())
+		final RestrictionInstance restriction = new RestrictionInstanceImpl(getType().getInstanceType(), getItemName(), getMinimum(), getMaximum(),
+				getIndex(), getValue(), Duration.FOREVER);
+		for (final ConditionCreation condition : getConditions())
 		{
 			if (condition.isPersistent())
 			{
@@ -228,7 +228,7 @@ public class RestrictionCreationImpl implements RestrictionCreation
 	}
 	
 	@Override
-	public CreationRestrictionType getType()
+	public RestrictionCreationType getType()
 	{
 		return mType;
 	}

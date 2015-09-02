@@ -19,7 +19,7 @@ import com.deepercreeper.vampireapp.items.interfaces.creations.ItemControllerCre
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.ItemGroupCreation;
 import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation.CreationRestrictionType;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation.RestrictionCreationType;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.dialogs.SelectItemDialog;
@@ -128,7 +128,7 @@ public class ItemGroupCreationImpl extends RestrictionableDependableCreationImpl
 			return;
 		}
 		final List<Item> items = getAddableItems();
-		if (items.isEmpty() || getMaxValue(CreationRestrictionType.GROUP_CHILDREN_COUNT) <= getItemsList().size())
+		if (items.isEmpty() || getMaxValue(RestrictionCreationType.GROUP_CHILDREN_COUNT) <= getItemsList().size())
 		{
 			return;
 		}
@@ -160,7 +160,7 @@ public class ItemGroupCreationImpl extends RestrictionableDependableCreationImpl
 			Log.w(TAG, "Tried to add an already existing item.");
 			return;
 		}
-		if (getMaxValue(CreationRestrictionType.GROUP_CHILDREN_COUNT) <= getItemsList().size())
+		if (getMaxValue(RestrictionCreationType.GROUP_CHILDREN_COUNT) <= getItemsList().size())
 		{
 			return;
 		}
@@ -439,14 +439,14 @@ public class ItemGroupCreationImpl extends RestrictionableDependableCreationImpl
 		{
 			return false;
 		}
-		for (final RestrictionCreation restriction : getRestrictions(CreationRestrictionType.GROUP_CHILDREN_COUNT))
+		for (final RestrictionCreation restriction : getRestrictions(RestrictionCreationType.GROUP_CHILDREN_COUNT))
 		{
 			if (restriction.isActive(getItemController()) && getItemsList().size() <= restriction.getMinimum())
 			{
 				return false;
 			}
 		}
-		for (final RestrictionCreation restriction : getRestrictions(CreationRestrictionType.GROUP_ITEM_VALUE_AT))
+		for (final RestrictionCreation restriction : getRestrictions(RestrictionCreationType.GROUP_ITEM_VALUE))
 		{
 			if (restriction.isActive(getItemController()) && restriction.getIndex() == indexOfItem(aItem)
 					&& aItem.getStartValue() < restriction.getMinimum())
@@ -492,7 +492,7 @@ public class ItemGroupCreationImpl extends RestrictionableDependableCreationImpl
 			Log.w(TAG, "Tried to change a non mutable group.");
 			return;
 		}
-		if (getMinValue(CreationRestrictionType.GROUP_CHILDREN_COUNT) >= getItemsList().size())
+		if (getMinValue(RestrictionCreationType.GROUP_CHILDREN_COUNT) >= getItemsList().size())
 		{
 			return;
 		}
@@ -565,7 +565,7 @@ public class ItemGroupCreationImpl extends RestrictionableDependableCreationImpl
 	@Override
 	public void updateUI()
 	{
-		if (hasRestrictions(CreationRestrictionType.GROUP_CHILDREN))
+		if (hasRestrictions(RestrictionCreationType.GROUP_CHILDREN))
 		{
 			final Set<ItemCreation> prohibitedItems = new HashSet<ItemCreation>();
 			for (final ItemCreation item : getItemsList())
@@ -636,7 +636,7 @@ public class ItemGroupCreationImpl extends RestrictionableDependableCreationImpl
 		{
 			return false;
 		}
-		if (getItemsList().size() >= getMaxValue(CreationRestrictionType.GROUP_CHILDREN_COUNT))
+		if (getItemsList().size() >= getMaxValue(RestrictionCreationType.GROUP_CHILDREN_COUNT))
 		{
 			return false;
 		}
@@ -662,7 +662,7 @@ public class ItemGroupCreationImpl extends RestrictionableDependableCreationImpl
 	
 	private boolean isItemOk(final Item aItem)
 	{
-		for (final RestrictionCreation restriction : getRestrictions(CreationRestrictionType.GROUP_CHILDREN))
+		for (final RestrictionCreation restriction : getRestrictions(RestrictionCreationType.GROUP_CHILDREN))
 		{
 			if ( !restriction.getItems().contains(aItem.getName()))
 			{

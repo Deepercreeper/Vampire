@@ -1,7 +1,6 @@
 package com.deepercreeper.vampireapp.items.implementations.instances.restrictions;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -22,11 +21,9 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 {
 	private final String mItemName;
 	
-	private final List<String> mItems;
-	
 	private final Set<ConditionInstance> mConditions = new HashSet<ConditionInstance>();
 	
-	private final InstanceRestrictionType mType;
+	private final RestrictionInstanceType mType;
 	
 	private final Duration mDuration;
 	
@@ -48,7 +45,7 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 	 */
 	public RestrictionInstanceImpl(final Element aElement)
 	{
-		mType = InstanceRestrictionType.get(aElement.getAttribute("type"));
+		mType = RestrictionInstanceType.get(aElement.getAttribute("type"));
 		if (aElement.hasAttribute("itemName"))
 		{
 			mItemName = aElement.getAttribute("itemName");
@@ -56,14 +53,6 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 		else
 		{
 			mItemName = null;
-		}
-		if (aElement.hasAttribute("items"))
-		{
-			mItems = DataUtil.parseList(aElement.getAttribute("items"));
-		}
-		else
-		{
-			mItems = null;
 		}
 		mMinimum = Integer.parseInt(aElement.getAttribute("minimum"));
 		mMaximum = Integer.parseInt(aElement.getAttribute("maximum"));
@@ -84,8 +73,6 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 	 *            The minimum value.
 	 * @param aMaximum
 	 *            The maximum value.
-	 * @param aItems
-	 *            A list of item names.
 	 * @param aIndex
 	 *            The index.
 	 * @param aValue
@@ -93,12 +80,11 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 	 * @param aDuration
 	 *            The restriction duration.
 	 */
-	public RestrictionInstanceImpl(final InstanceRestrictionType aType, final String aItemName, final int aMinimum, final int aMaximum,
-			final List<String> aItems, final int aIndex, final int aValue, final Duration aDuration)
+	public RestrictionInstanceImpl(final RestrictionInstanceType aType, final String aItemName, final int aMinimum, final int aMaximum,
+			final int aIndex, final int aValue, final Duration aDuration)
 	{
 		mType = aType;
 		mItemName = aItemName;
-		mItems = aItems;
 		mMinimum = aMinimum;
 		mMaximum = aMaximum;
 		mIndex = aIndex;
@@ -121,10 +107,6 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 		if (getItemName() != null)
 		{
 			element.setAttribute("itemName", getItemName());
-		}
-		if (getItems() != null)
-		{
-			element.setAttribute("items", DataUtil.parseList(getItems()));
 		}
 		element.setAttribute("minimum", "" + getMinimum());
 		element.setAttribute("maximum", "" + getMaximum());
@@ -189,17 +171,6 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 		{
 			return false;
 		}
-		if (mItems == null)
-		{
-			if (other.mItems != null)
-			{
-				return false;
-			}
-		}
-		else if ( !mItems.equals(other.mItems))
-		{
-			return false;
-		}
 		if (mMaximum != other.mMaximum)
 		{
 			return false;
@@ -251,12 +222,6 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 	}
 	
 	@Override
-	public List<String> getItems()
-	{
-		return mItems;
-	}
-	
-	@Override
 	public int getMaximum()
 	{
 		return mMaximum;
@@ -275,7 +240,7 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 	}
 	
 	@Override
-	public InstanceRestrictionType getType()
+	public RestrictionInstanceType getType()
 	{
 		return mType;
 	}
@@ -300,7 +265,6 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 		result = prime * result + ((mConditions == null) ? 0 : mConditions.hashCode());
 		result = prime * result + mIndex;
 		result = prime * result + ((mItemName == null) ? 0 : mItemName.hashCode());
-		result = prime * result + ((mItems == null) ? 0 : mItems.hashCode());
 		result = prime * result + mMaximum;
 		result = prime * result + mMinimum;
 		result = prime * result + mValue;
@@ -375,18 +339,6 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 				first = false;
 			}
 			string.append("ItemName = " + getItemName());
-		}
-		if (getItems() != null)
-		{
-			if ( !first)
-			{
-				string.append(", ");
-			}
-			else
-			{
-				first = false;
-			}
-			string.append("Items = " + getItems());
 		}
 		if ( !first)
 		{

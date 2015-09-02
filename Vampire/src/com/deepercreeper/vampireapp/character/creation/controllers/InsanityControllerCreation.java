@@ -5,7 +5,7 @@ import java.util.List;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.creation.CharacterCreation;
 import com.deepercreeper.vampireapp.items.implementations.creations.restrictions.RestrictionableCreationImpl;
-import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation.CreationRestrictionType;
+import com.deepercreeper.vampireapp.items.interfaces.creations.restrictions.RestrictionCreation.RestrictionCreationType;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.dialogs.CreateStringDialog;
 import com.deepercreeper.vampireapp.util.view.listeners.StringCreationListener;
@@ -122,7 +122,7 @@ public class InsanityControllerCreation extends RestrictionableCreationImpl
 	 */
 	public boolean isOk()
 	{
-		return isValueOk(mInsanities.size(), CreationRestrictionType.INSANITY);
+		return isValueOk(mInsanities.size(), RestrictionCreationType.INSANITY);
 	}
 	
 	@Override

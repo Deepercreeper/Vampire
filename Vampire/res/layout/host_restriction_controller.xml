@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/h_restrictions_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableEnd="@android:drawable/arrow_down_float"
+        android:drawableRight="@android:drawable/arrow_down_float"
+        android:text="@string/restrictions" />
+
+    <LinearLayout
+        android:id="@+id/h_restrictions_panel"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/h_add_restriction_button"
+            style="@style/BarButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/add_restriction" />
+    </LinearLayout>
+
+</LinearLayout>

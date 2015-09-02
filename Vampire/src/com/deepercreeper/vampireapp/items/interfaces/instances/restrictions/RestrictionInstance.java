@@ -1,14 +1,20 @@
 package com.deepercreeper.vampireapp.items.interfaces.instances.restrictions;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.items.implementations.Named;
+import com.deepercreeper.vampireapp.items.interfaces.Nameable;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
 import com.deepercreeper.vampireapp.mechanics.Duration;
 import com.deepercreeper.vampireapp.mechanics.Duration.DurationListener;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
+import android.content.Context;
 
 /**
  * A character can have several restrictions. They can restrict items, groups or something else.
@@ -22,45 +28,67 @@ public interface RestrictionInstance extends Saveable, TimeListener, DurationLis
 	 * 
 	 * @author vrl
 	 */
-	public static class InstanceRestrictionType
+	public static class RestrictionInstanceType
 	{
-		private static final Map<String, InstanceRestrictionType> RESTRICTION_TYPES = new HashMap<String, InstanceRestrictionType>();
+		private static final Map<String, RestrictionInstanceType> RESTRICTION_TYPES = new HashMap<String, RestrictionInstanceType>();
 		
 		/**
 		 * The value of a specific item is restricted.
 		 */
-		public static final InstanceRestrictionType ITEM_VALUE = new InstanceRestrictionType("ItemValue");
-		
+		public static final RestrictionInstanceType ITEM_VALUE = new RestrictionInstanceType("ItemValue", R.string.item_value, true, true, false,
+				false);
+				
 		/**
 		 * The normal experience cost for a item is restricted.
 		 */
-		public static final InstanceRestrictionType ITEM_EP_COST = new InstanceRestrictionType("ItemEpCost");
-		
+		public static final RestrictionInstanceType ITEM_EP_COST = new RestrictionInstanceType("ItemEpCost", R.string.item_ep_cost, true, false,
+				false, true);
+				
 		/**
 		 * The additional experience depending on the current value of the item is restricted.
 		 */
-		public static final InstanceRestrictionType ITEM_EP_COST_MULTI = new InstanceRestrictionType("ItemEpCostMulti");
-		
+		public static final RestrictionInstanceType ITEM_EP_COST_MULTI = new RestrictionInstanceType("ItemEpCostMulti", R.string.item_ep_cost_multi,
+				true, false, false, true);
+				
 		/**
 		 * The experience cost for the first point of an item is restricted.
 		 */
-		public static final InstanceRestrictionType ITEM_EP_COST_NEW = new InstanceRestrictionType("ItemEpCostNew");
-		
+		public static final RestrictionInstanceType ITEM_EP_COST_NEW = new RestrictionInstanceType("ItemEpCostNew", R.string.item_ep_cost_new, true,
+				false, false, true);
+				
 		/**
 		 * The value depending experience cost of the child at the given position is restricted.
 		 */
-		public static final InstanceRestrictionType ITEM_CHILD_EP_COST_MULTI_AT = new InstanceRestrictionType("ItemChildEpCostMultiAt");
-		
+		public static final RestrictionInstanceType ITEM_CHILD_EP_COST_MULTI = new RestrictionInstanceType("ItemChildEpCostMulti",
+				R.string.item_child_ep_cost_multi, true, false, true, true);
+				
 		/**
 		 * The experience cost for the first point of the child item at the given position is restricted.
 		 */
-		public static final InstanceRestrictionType ITEM_CHILD_EP_COST_NEW = new InstanceRestrictionType("ItemChildEpCostNew");
-		
+		public static final RestrictionInstanceType ITEM_CHILD_EP_COST_NEW = new RestrictionInstanceType("ItemChildEpCostNew",
+				R.string.item_child_ep_cost_new, true, false, true, true);
+				
 		private final String mName;
 		
-		private InstanceRestrictionType(final String aName)
+		private final int mId;
+		
+		private final boolean mHasItemName;
+		
+		private final boolean mHasRange;
+		
+		private final boolean mHasIndex;
+		
+		private final boolean mHasValue;
+		
+		private RestrictionInstanceType(final String aName, final int aId, final boolean aHasItemName, final boolean aHasRange,
+				final boolean aHasIndex, final boolean aHasValue)
 		{
 			mName = aName;
+			mId = aId;
+			mHasItemName = aHasItemName;
+			mHasRange = aHasRange;
+			mHasIndex = aHasIndex;
+			mHasValue = aHasValue;
 			RESTRICTION_TYPES.put(getName(), this);
 		}
 		
@@ -70,13 +98,45 @@ public interface RestrictionInstance extends Saveable, TimeListener, DurationLis
 			if (this == obj) return true;
 			if (obj == null) return false;
 			if (getClass() != obj.getClass()) return false;
-			final InstanceRestrictionType other = (InstanceRestrictionType) obj;
+			final RestrictionInstanceType other = (RestrictionInstanceType) obj;
 			if (mName == null)
 			{
 				if (other.mName != null) return false;
 			}
 			else if ( !mName.equals(other.mName)) return false;
 			return true;
+		}
+		
+		/**
+		 * @return whether this restriction needs a index value.
+		 */
+		public boolean hasIndex()
+		{
+			return mHasIndex;
+		}
+		
+		/**
+		 * @return whether this restriction needs a item name value.
+		 */
+		public boolean hasItemName()
+		{
+			return mHasItemName;
+		}
+		
+		/**
+		 * @return whether this restriction needs a range value.
+		 */
+		public boolean hasRange()
+		{
+			return mHasRange;
+		}
+		
+		/**
+		 * @return whether this restriction needs a value value.
+		 */
+		public boolean hasValue()
+		{
+			return mHasValue;
 		}
 		
 		/**
@@ -97,13 +157,60 @@ public interface RestrictionInstance extends Saveable, TimeListener, DurationLis
 		}
 		
 		/**
+		 * @param aType
+		 *            The type nameable.
+		 * @return the type of the given nameable.
+		 */
+		public static RestrictionInstanceType getTypeOf(final Nameable aType)
+		{
+			return get(aType.getName());
+		}
+		
+		/**
 		 * @param aName
 		 *            The restriction type name.
 		 * @return the restriction type with the given name.
 		 */
-		public static InstanceRestrictionType get(final String aName)
+		public static RestrictionInstanceType get(final String aName)
 		{
 			return RESTRICTION_TYPES.get(aName);
+		}
+		
+		/**
+		 * @param aContext
+		 *            The underlying context.
+		 * @return the duration type name.
+		 */
+		public String getName(final Context aContext)
+		{
+			if (mId == -1)
+			{
+				return getName();
+			}
+			return aContext.getString(mId);
+		}
+		
+		/**
+		 * @param aContext
+		 *            The underlying context.
+		 * @return a list of nameables for each restriction instance type.
+		 */
+		public static List<Nameable> getTypesList(final Context aContext)
+		{
+			final List<Nameable> list = new ArrayList<Nameable>();
+			for (final RestrictionInstanceType type : RESTRICTION_TYPES.values())
+			{
+				list.add(new Named(type.getName())
+				{
+					@Override
+					public String getDisplayName()
+					{
+						return type.getName(aContext);
+					}
+				});
+			}
+			Collections.sort(list);
+			return list;
 		}
 	}
 	
@@ -141,11 +248,6 @@ public interface RestrictionInstance extends Saveable, TimeListener, DurationLis
 	public String getItemName();
 	
 	/**
-	 * @return the list of items defined inside the restriction type.
-	 */
-	public List<String> getItems();
-	
-	/**
 	 * @return the maximum value defined inside the restriction type.
 	 */
 	public int getMaximum();
@@ -163,7 +265,7 @@ public interface RestrictionInstance extends Saveable, TimeListener, DurationLis
 	/**
 	 * @return the restriction type of this restriction.
 	 */
-	public InstanceRestrictionType getType();
+	public RestrictionInstanceType getType();
 	
 	/**
 	 * @return the value defined inside the restriction type.

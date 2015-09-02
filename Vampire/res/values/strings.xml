@@ -12,6 +12,7 @@
     <string name="add_insanity">Geistesstörung hinzufügen</string>
     <string name="add_insanity_message">Geben Sie den Namen einer Geistesstörung ein:</string>
     <string name="add_item">Item hinzufügen</string>
+    <string name="add_restriction">Restriktion hinzufügen</string>
     <string name="added_item">Folgendes Item wurde hinzugefügt: {0}</string>
     <string name="additional_damage">Zusätzlicher Schaden</string>
     <string name="additional_info">Zusatzinformationen</string>
@@ -53,6 +54,7 @@
     <string name="create_host_button">Neuen Host erstellen</string>
     <string name="create_insanity">Neue Geistesstörung erstellen</string>
     <string name="create_item">Neues Item erstellen</string>
+    <string name="create_restriction">Neue Restriktion erstellen</string>
     <string name="create_weapon">Neue Waffe erstellen</string>
     <string name="damage">Schaden</string>
     <string name="day">Tag</string>
@@ -85,7 +87,14 @@
     <string name="host_name">Host Name</string>
     <string name="hosts">Hosts</string>
     <string name="hour">Stunde</string>
+    <string name="index">Index</string>
+    <string name="item_child_ep_cost_multi">Item Child EP Kosten Multiplikator</string>
+    <string name="item_child_ep_cost_new">Neue Item Child EP Kosten</string>
+    <string name="item_ep_cost">Item EP Kosten</string>
+    <string name="item_ep_cost_multi">Item EP Kosten Multiplikator</string>
+    <string name="item_ep_cost_new">Neue Item EP Kosten</string>
     <string name="item_name">Item Name</string>
+    <string name="item_value">Item Wert</string>
     <string name="item_weight">Item Gewicht</string>
     <string name="insanities">Geistesstörungen</string>
     <string name="insanity_name">Name der Geistesstörung</string>
@@ -100,6 +109,8 @@
     <string name="magazine">Magazin</string>
     <string name="max">Max</string>
     <string name="max_weight">Maximales Gewicht</string>
+    <string name="maximum">Maximum</string>
+    <string name="minimum">Minimum</string>
     <string name="mode_colon">Zustand:</string>
     <string name="money">Geld</string>
     <string name="money_sent">Sie haben {0} erhalten.</string>
@@ -122,6 +133,7 @@
     <string name="reload_time">Nachladezeit</string>
     <string name="removed_item">Folgendes Item wurde entfernt: {0}</string>
     <string name="reset">Zurücksetzen</string>
+    <string name="restrictions">Restriktionen</string>
     <string name="round">Runde</string>
     <string name="service_name">Item Provider</string>
     <string name="sleeping">Schlafend</string>
@@ -130,6 +142,7 @@
     <string name="took_item">Folgendes Item wurde genommen: {x}</string>
     <string name="unban">Entbannen</string>
     <string name="use">Nutzen</string>
+    <string name="value">Wert</string>
     <string name="weight">Gewicht</string>
     <string name="weight_unit">kg</string>
     <string name="yes">Ja</string>
