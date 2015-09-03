@@ -17,9 +17,10 @@ import com.deepercreeper.vampireapp.util.ViewUtil;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Some clans have restrictions, that define whether values or attributes have to have a specific value.<br>
@@ -69,7 +70,7 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 	 * @param aHost
 	 *            Whether this is a host sided restriction.
 	 */
-	public RestrictionInstanceImpl(final Element aElement, Context aContext, MessageListener aMessageListener, boolean aHost)
+	public RestrictionInstanceImpl(final Element aElement, final Context aContext, final MessageListener aMessageListener, final boolean aHost)
 	{
 		mType = RestrictionInstanceType.get(aElement.getAttribute("type"));
 		if (aElement.hasAttribute("itemName"))
@@ -90,20 +91,29 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 		mContext = aContext;
 		mHost = aHost;
 		
-		int id = mHost ? R.layout.host_restriction : R.layout.client_restriction;
+		final int id = mHost ? R.layout.host_restriction : R.layout.client_restriction;
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
 		
-		int nameId = mHost ? R.id.h_restriction_name_label : R.id.c_restriction_name_label;
-		int durationId = mHost ? R.id.h_restriction_duration_label : R.id.c_restriction_duration_label;
-		((TextView) getContainer().findViewById(nameId)).setText(getDescription());
+		final int nameId = mHost ? R.id.h_restriction_name_label : R.id.c_restriction_name_label;
+		final int durationId = mHost ? R.id.h_restriction_duration_label : R.id.c_restriction_duration_label;
+		final TextView nameLabel = (TextView) getContainer().findViewById(nameId);
+		nameLabel.setText(getDescription());
+		nameLabel.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				mMessageListener.makeText(getDescription(), Toast.LENGTH_SHORT);
+			}
+		});
 		mDurationLabel = (TextView) getContainer().findViewById(durationId);
 		
 		if (mHost)
 		{
-			((Button) getContainer().findViewById(R.id.h_remove_restriction_button)).setOnClickListener(new OnClickListener()
+			((ImageButton) getContainer().findViewById(R.id.h_remove_restriction_button)).setOnClickListener(new OnClickListener()
 			{
 				@Override
-				public void onClick(View aV)
+				public void onClick(final View aV)
 				{
 					clear();
 				}
@@ -138,7 +148,8 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 	 *            Whether this is a host sided restriction.
 	 */
 	public RestrictionInstanceImpl(final RestrictionInstanceType aType, final String aItemName, final int aMinimum, final int aMaximum,
-			final int aIndex, final int aValue, final Duration aDuration, Context aContext, MessageListener aMessageListener, boolean aHost)
+			final int aIndex, final int aValue, final Duration aDuration, final Context aContext, final MessageListener aMessageListener,
+			final boolean aHost)
 	{
 		mType = aType;
 		mItemName = aItemName;
@@ -152,20 +163,29 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 		mContext = aContext;
 		mHost = aHost;
 		
-		int id = mHost ? R.layout.host_restriction : R.layout.client_restriction;
+		final int id = mHost ? R.layout.host_restriction : R.layout.client_restriction;
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
 		
-		int nameId = mHost ? R.id.h_restriction_name_label : R.id.c_restriction_name_label;
-		int durationId = mHost ? R.id.h_restriction_duration_label : R.id.c_restriction_duration_label;
-		((TextView) getContainer().findViewById(nameId)).setText(getDescription());
+		final int nameId = mHost ? R.id.h_restriction_name_label : R.id.c_restriction_name_label;
+		final int durationId = mHost ? R.id.h_restriction_duration_label : R.id.c_restriction_duration_label;
+		final TextView nameLabel = (TextView) getContainer().findViewById(nameId);
+		nameLabel.setText(getDescription());
+		nameLabel.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				mMessageListener.makeText(getDescription(), Toast.LENGTH_SHORT);
+			}
+		});
 		mDurationLabel = (TextView) getContainer().findViewById(durationId);
 		
 		if (mHost)
 		{
-			((Button) getContainer().findViewById(R.id.h_remove_restriction_button)).setOnClickListener(new OnClickListener()
+			((ImageButton) getContainer().findViewById(R.id.h_remove_restriction_button)).setOnClickListener(new OnClickListener()
 			{
 				@Override
-				public void onClick(View aV)
+				public void onClick(final View aV)
 				{
 					clear();
 				}
@@ -212,7 +232,7 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 	
 	private String getDescription()
 	{
-		StringBuilder description = new StringBuilder();
+		final StringBuilder description = new StringBuilder();
 		description.append(mType.getName(mContext));
 		if (mType.hasItemName())
 		{
@@ -256,7 +276,7 @@ public class RestrictionInstanceImpl implements RestrictionInstance
 	{
 		if (aObj instanceof RestrictionInstance)
 		{
-			RestrictionInstance restriction = (RestrictionInstance) aObj;
+			final RestrictionInstance restriction = (RestrictionInstance) aObj;
 			if ( !getType().equals(restriction.getType()))
 			{
 				return false;

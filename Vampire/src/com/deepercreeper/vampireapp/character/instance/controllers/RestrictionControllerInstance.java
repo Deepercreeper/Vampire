@@ -163,7 +163,7 @@ public class RestrictionControllerInstance implements Viewable, Saveable, TimeLi
 	 * @param aSilent
 	 *            whether a change should be sent.
 	 */
-	public void addRestriction(final RestrictionInstance aRestriction, boolean aSilent)
+	public void addRestriction(final RestrictionInstance aRestriction, final boolean aSilent)
 	{
 		if (aRestriction.getType() == RestrictionInstanceType.ITEM_CHILD_EP_COST_MULTI
 				|| aRestriction.getType() == RestrictionInstanceType.ITEM_CHILD_EP_COST_NEW
@@ -177,6 +177,7 @@ public class RestrictionControllerInstance implements Viewable, Saveable, TimeLi
 				item.addRestriction(aRestriction);
 				mRestrictions.add(aRestriction);
 				mExpander.getContainer().addView(aRestriction.getContainer(), mExpander.getContainer().getChildCount() - 1);
+				mExpander.resize();
 				if ( !aSilent)
 				{
 					mMessageListener.sendChange(new RestrictionChange(aRestriction, true));
@@ -226,6 +227,7 @@ public class RestrictionControllerInstance implements Viewable, Saveable, TimeLi
 	{
 		mRestrictions.remove(aRestriction);
 		aRestriction.release();
+		mExpander.resize();
 	}
 	
 	/**
@@ -233,9 +235,9 @@ public class RestrictionControllerInstance implements Viewable, Saveable, TimeLi
 	 *            The restriction to match.
 	 * @return The restriction instance that equals the given restriction.
 	 */
-	public RestrictionInstance getRestriction(RestrictionInstance aRestriction)
+	public RestrictionInstance getRestriction(final RestrictionInstance aRestriction)
 	{
-		for (RestrictionInstance restriction : getRestrictions())
+		for (final RestrictionInstance restriction : getRestrictions())
 		{
 			if (restriction.equals(aRestriction))
 			{
@@ -257,7 +259,7 @@ public class RestrictionControllerInstance implements Viewable, Saveable, TimeLi
 	@Override
 	public void updateUI()
 	{
-		for (RestrictionInstance restriction : getRestrictions())
+		for (final RestrictionInstance restriction : getRestrictions())
 		{
 			restriction.updateUI();
 		}
