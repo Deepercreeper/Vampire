@@ -17,14 +17,15 @@
         android:layout_weight="1"
         android:ellipsize="end"
         android:singleLine="true"
-        android:gravity="center_vertical"
+        android:layout_gravity="center_vertical"
         android:textSize="@dimen/host_text_size" />
 
     <TextView
         android:id="@+id/h_restriction_duration_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="end|center_vertical"
+        android:gravity="end"
+        android:layout_gravity="center_vertical"
         android:textSize="@dimen/host_text_size" />
     
 </LinearLayout>
