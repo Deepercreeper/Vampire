@@ -21,11 +21,12 @@ import android.widget.TextView;
  * 
  * @author Vincent
  */
-public class ItemChooserDialog extends DefaultDialog<ItemChooseListener, LinearLayout>
+@Deprecated
+public class ChooseItemDialog extends DefaultDialog<ItemChooseListener, LinearLayout>
 {
 	private final ItemProvider mItems;
 	
-	private ItemChooserDialog(final ItemProvider aItems, final String aTitle, final Context aContext, final ItemChooseListener aListener)
+	private ChooseItemDialog(final ItemProvider aItems, final String aTitle, final Context aContext, final ItemChooseListener aListener)
 	{
 		super(aTitle, aContext, aListener, R.layout.dialog_item_chooser, LinearLayout.class);
 		mItems = aItems;
@@ -69,7 +70,7 @@ public class ItemChooserDialog extends DefaultDialog<ItemChooseListener, LinearL
 	 */
 	public static boolean isDialogOpen()
 	{
-		return isDialogOpen(ItemChooserDialog.class);
+		return isDialogOpen(ChooseItemDialog.class);
 	}
 	
 	/**
@@ -84,13 +85,13 @@ public class ItemChooserDialog extends DefaultDialog<ItemChooseListener, LinearL
 	 * @param aListener
 	 *            The item listener.
 	 */
-	public static void showItemChooserDialog(final ItemProvider aItems, final String aTitle, final Context aContext,
+	public static void showChooseItemDialog(final ItemProvider aItems, final String aTitle, final Context aContext,
 			final ItemChooseListener aListener)
 	{
 		if (isDialogOpen())
 		{
 			return;
 		}
-		new ItemChooserDialog(aItems, aTitle, aContext, aListener).show(((Activity) aContext).getFragmentManager(), aTitle);
+		new ChooseItemDialog(aItems, aTitle, aContext, aListener).show(((Activity) aContext).getFragmentManager(), aTitle);
 	}
 }

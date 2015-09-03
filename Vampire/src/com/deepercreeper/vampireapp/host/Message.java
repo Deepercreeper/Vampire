@@ -60,6 +60,11 @@ public class Message implements Saveable, Viewable
 		ACCEPT_INCREASE,
 		
 		/**
+		 * Using an action was accepted
+		 */
+		ACCEPT_ACTION,
+		
+		/**
 		 * Taking money from a depot was denied
 		 */
 		DENY_TAKE,
@@ -78,6 +83,11 @@ public class Message implements Saveable, Viewable
 		 * Increase of item was denied
 		 */
 		DENY_INCREASE,
+		
+		/**
+		 * Using an action was denied
+		 */
+		DENY_ACTION,
 		
 		/**
 		 * A host given item was taken
@@ -115,7 +125,12 @@ public class Message implements Saveable, Viewable
 		/**
 		 * All item messages
 		 */
-		ITEM
+		ITEM,
+		
+		/**
+		 * All action messages
+		 */
+		ACTION
 	}
 	
 	/**

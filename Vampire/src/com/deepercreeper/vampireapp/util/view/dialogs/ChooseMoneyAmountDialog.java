@@ -5,7 +5,7 @@ import java.util.Map;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.Currency;
 import com.deepercreeper.vampireapp.util.ViewUtil;
-import com.deepercreeper.vampireapp.util.view.listeners.MoneyAmountListener;
+import com.deepercreeper.vampireapp.util.view.listeners.MoneyAmountChooseListener;
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
@@ -25,7 +25,7 @@ import android.widget.TextView;
  * 
  * @author Vincent
  */
-public class MoneyAmountDialog extends DefaultDialog<MoneyAmountListener, LinearLayout>
+public class ChooseMoneyAmountDialog extends DefaultDialog<MoneyAmountChooseListener, LinearLayout>
 {
 	/**
 	 * The default maximum money amount.
@@ -40,10 +40,10 @@ public class MoneyAmountDialog extends DefaultDialog<MoneyAmountListener, Linear
 	
 	private final Map<String, EditText> mAmounts = new HashMap<String, EditText>();
 	
-	private Button mOK;
+	private Button mOk;
 	
-	private MoneyAmountDialog(final Currency aCurrency, final Map<String, Integer> aMaxValues, final String aTitle, final Context aContext,
-			final MoneyAmountListener aAction)
+	private ChooseMoneyAmountDialog(final Currency aCurrency, final Map<String, Integer> aMaxValues, final String aTitle, final Context aContext,
+			final MoneyAmountChooseListener aAction)
 	{
 		super(aTitle, aContext, aAction, R.layout.dialog_money_choose, LinearLayout.class);
 		mCurrency = aCurrency;
@@ -77,7 +77,6 @@ public class MoneyAmountDialog extends DefaultDialog<MoneyAmountListener, Linear
 			});
 			amount.setOnFocusChangeListener(new OnFocusChangeListener()
 			{
-				
 				@Override
 				public void onFocusChange(final View aV, final boolean aHasFocus)
 				{
@@ -102,8 +101,8 @@ public class MoneyAmountDialog extends DefaultDialog<MoneyAmountListener, Linear
 			((TextView) currencyView.findViewById(R.id.view_currency_label)).setText(currency + " (0 - " + mMaxValues.get(currency) + "):");
 			getContainer().addView(currencyView, getContainer().getChildCount() - 1);
 		}
-		mOK = (Button) getContainer().findViewById(R.id.dialog_ok_button);
-		mOK.setOnClickListener(new OnClickListener()
+		mOk = (Button) getContainer().findViewById(R.id.dialog_ok_button);
+		mOk.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(final View aV)
@@ -135,7 +134,7 @@ public class MoneyAmountDialog extends DefaultDialog<MoneyAmountListener, Linear
 			}
 			mValues.put(currency, value);
 		}
-		ViewUtil.setEnabled(mOK, enabled);
+		ViewUtil.setEnabled(mOk, enabled);
 	}
 	
 	/**
@@ -143,7 +142,7 @@ public class MoneyAmountDialog extends DefaultDialog<MoneyAmountListener, Linear
 	 */
 	public static boolean isDialogOpen()
 	{
-		return isDialogOpen(MoneyAmountDialog.class);
+		return isDialogOpen(ChooseMoneyAmountDialog.class);
 	}
 	
 	/**
@@ -161,12 +160,12 @@ public class MoneyAmountDialog extends DefaultDialog<MoneyAmountListener, Linear
 	 *            The positive action.
 	 */
 	public static void showMoneyAmountDialog(final Currency aCurrency, final Map<String, Integer> aMaxValues, final String aTitle,
-			final Context aContext, final MoneyAmountListener aAction)
+			final Context aContext, final MoneyAmountChooseListener aAction)
 	{
 		if (isDialogOpen())
 		{
 			return;
 		}
-		new MoneyAmountDialog(aCurrency, aMaxValues, aTitle, aContext, aAction).show(((Activity) aContext).getFragmentManager(), aTitle);
+		new ChooseMoneyAmountDialog(aCurrency, aMaxValues, aTitle, aContext, aAction).show(((Activity) aContext).getFragmentManager(), aTitle);
 	}
 }

@@ -75,6 +75,11 @@ public interface Action extends Comparable<Action>
 	public String getDisplayName();
 	
 	/**
+	 * @return the number of instant success dices that are added to this actions dice amount.
+	 */
+	public int getInstantSuccess();
+	
+	/**
 	 * @return the minimum number of dices that can be used to count hits for this action.
 	 */
 	public int getMinDices();

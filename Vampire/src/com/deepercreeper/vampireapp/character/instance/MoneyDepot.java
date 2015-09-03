@@ -19,8 +19,8 @@ import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
-import com.deepercreeper.vampireapp.util.view.dialogs.MoneyAmountDialog;
-import com.deepercreeper.vampireapp.util.view.listeners.MoneyAmountListener;
+import com.deepercreeper.vampireapp.util.view.dialogs.ChooseMoneyAmountDialog;
+import com.deepercreeper.vampireapp.util.view.listeners.MoneyAmountChooseListener;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -273,7 +273,7 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 	public void depot()
 	{
 		final MoneyDepot defaultDepot = mController.getDefaultDepot();
-		final MoneyAmountListener listener = new MoneyAmountListener()
+		final MoneyAmountChooseListener listener = new MoneyAmountChooseListener()
 		{
 			@Override
 			public void amountSelected(final Map<String, Integer> aMap)
@@ -312,7 +312,7 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 		{
 			maxValues = defaultDepot.getValues();
 		}
-		MoneyAmountDialog.showMoneyAmountDialog(mCurrency, maxValues, mContext.getString(R.string.choose_money_amount), mContext, listener);
+		ChooseMoneyAmountDialog.showMoneyAmountDialog(mCurrency, maxValues, mContext.getString(R.string.choose_money_amount), mContext, listener);
 	}
 	
 	@Override
@@ -408,7 +408,7 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 	 */
 	public void take()
 	{
-		final MoneyAmountListener listener = new MoneyAmountListener()
+		final MoneyAmountChooseListener listener = new MoneyAmountChooseListener()
 		{
 			@Override
 			public void amountSelected(final Map<String, Integer> aMap)
@@ -438,7 +438,7 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 				}
 			}
 		};
-		MoneyAmountDialog.showMoneyAmountDialog(mCurrency, getValues(), mContext.getString(R.string.choose_money_amount), mContext, listener);
+		ChooseMoneyAmountDialog.showMoneyAmountDialog(mCurrency, getValues(), mContext.getString(R.string.choose_money_amount), mContext, listener);
 	}
 	
 	/**

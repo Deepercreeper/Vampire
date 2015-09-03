@@ -1039,6 +1039,7 @@ public class DataUtil
 			}
 			int minLevel = 0;
 			int minDices = 0;
+			int instantSuccess = 0;
 			String[] dices = new String[0];
 			String[] costDices = new String[0];
 			String[] cost = new String[0];
@@ -1052,6 +1053,17 @@ public class DataUtil
 				catch (final NumberFormatException e)
 				{
 					Log.w(TAG, "Can't parse minimum dices of " + name + ".");
+				}
+			}
+			if (child.hasAttribute("instantSuccess"))
+			{
+				try
+				{
+					instantSuccess = Integer.parseInt(child.getAttribute("instantSuccess"));
+				}
+				catch (final NumberFormatException e)
+				{
+					Log.w(TAG, "Can't parse instant success of " + name + ".");
 				}
 			}
 			if (child.hasAttribute("dices"))
@@ -1089,7 +1101,7 @@ public class DataUtil
 					Log.w(TAG, "Can't parse minimum level of " + name + ".");
 				}
 			}
-			actions.add(new ActionImpl(name, type, minLevel, minDices, dices, costDices, cost));
+			actions.add(new ActionImpl(name, type, minLevel, minDices, instantSuccess, dices, costDices, cost));
 		}
 		return actions;
 	}

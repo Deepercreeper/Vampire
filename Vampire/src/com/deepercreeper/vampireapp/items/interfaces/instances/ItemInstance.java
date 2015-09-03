@@ -64,6 +64,11 @@ public interface ItemInstance extends RestrictionableInstance, Comparable<ItemIn
 	public boolean canDecrease();
 	
 	/**
+	 * @return how often the user could decrease this item.
+	 */
+	public int getMaxDecreasure();
+	
+	/**
 	 * @return whether the character has enough experience to increase this item.
 	 */
 	public boolean canEPIncrease();
@@ -75,8 +80,11 @@ public interface ItemInstance extends RestrictionableInstance, Comparable<ItemIn
 	
 	/**
 	 * Decreases this item if possible.
+	 * 
+	 * @param aSilent
+	 *            Whether a change should be sent.
 	 */
-	public void decrease();
+	public void decrease(boolean aSilent);
 	
 	/**
 	 * @return the absolute value of this item.

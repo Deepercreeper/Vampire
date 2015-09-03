@@ -17,6 +17,8 @@ public class ActionImpl implements Action
 	
 	private final int mMinDices;
 	
+	private final int mInstantSuccess;
+	
 	private final String[] mDiceNames;
 	
 	private final String[] mCostDiceNames;
@@ -36,6 +38,8 @@ public class ActionImpl implements Action
 	 *            The minimum item level of this action.
 	 * @param aMinDices
 	 *            The minimum number of dices that are used to do this action.
+	 * @param aInstantSuccess
+	 *            The number of instant success dices, added to the success amount for each action use.
 	 * @param aDiceNames
 	 *            A list of names for the items whose value are added to the minimum dice number.
 	 * @param aCostDiceNames
@@ -44,13 +48,14 @@ public class ActionImpl implements Action
 	 *            A list of item names and a value for each. It defines, how many item points<br>
 	 *            need to be spent for using this action.
 	 */
-	public ActionImpl(final String aName, final ActionType aType, final int aMinLevel, final int aMinDices, final String[] aDiceNames,
-			final String[] aCostDiceNames, final String[] aCostNames)
+	public ActionImpl(final String aName, final ActionType aType, final int aMinLevel, final int aMinDices, int aInstantSuccess,
+			final String[] aDiceNames, final String[] aCostDiceNames, final String[] aCostNames)
 	{
 		mName = aName;
 		mType = aType;
 		mMinLevel = aMinLevel;
 		mMinDices = aMinDices;
+		mInstantSuccess = aInstantSuccess;
 		mDiceNames = aDiceNames;
 		mCostDiceNames = aCostDiceNames;
 		
@@ -80,6 +85,12 @@ public class ActionImpl implements Action
 	public String[] getCostDiceNames()
 	{
 		return mCostDiceNames;
+	}
+	
+	@Override
+	public int getInstantSuccess()
+	{
+		return mInstantSuccess;
 	}
 	
 	@Override

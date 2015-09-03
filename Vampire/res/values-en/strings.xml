@@ -40,6 +40,7 @@
     <string name="characters">Characters</string>
     <string name="choose_host">Choose host</string>
     <string name="choose_item_type">Choose item type</string>
+    <string name="choose_dices_amount">Choose the amount of each dice</string>
     <string name="choose_money_amount">Choose the money amount</string>
     <string name="clan_colon">Clan:</string>
     <string name="concept">Concept</string>
@@ -63,6 +64,7 @@
     <string name="delete_host">Delete</string>
     <string name="deny_increase">You must not increase {0}.</string>
     <string name="deny_take_depot">You have no access to {0}.</string>
+    <string name="deny_use">You have no access to use {0}.</string>
     <string name="description">Description</string>
     <string name="difficulty">Difficulty</string>
     <string name="distance">Distance</string>
@@ -142,6 +144,9 @@
     <string name="took_item">The following item was taken: {x}</string>
     <string name="unban">Unban</string>
     <string name="use">Use</string>
+    <string name="use_action">Trying to use {0} with {1} dices and {2} instant success.</string>
+    <string name="uses_action">Wants to use {0} with {1} dices and {2} instant success.</string>
+    <string name="used_action">You used {0} with {1} dices and {2} instant success: {3} success.</string>
     <string name="value">Value</string>
     <string name="weight">Weight</string>
     <string name="weight_unit">kg</string>

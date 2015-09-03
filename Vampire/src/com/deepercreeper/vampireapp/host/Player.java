@@ -201,6 +201,12 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 				sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.accept_depot, aMessage.getArguments(), mContext, null,
 						ButtonAction.NOTHING));
 				break;
+			case ACCEPT_ACTION :
+				// TODO Implement
+				break;
+			case DENY_ACTION :
+				// TODO Implement
+				break;
 			case DENY_DEPOT :
 				sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.deny_take_depot, new String[] { aMessage.getArgument(1) }, mContext,
 						null, ButtonAction.NOTHING, aMessage.getSaveables()));

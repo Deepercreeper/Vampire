@@ -325,7 +325,7 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 				mValue-- ;
 				if ( !mHost)
 				{
-					mCost.decrease();
+					mCost.decrease(true);
 				}
 			}
 		}

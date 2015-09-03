@@ -7,7 +7,7 @@ import java.util.Map;
  * 
  * @author Vincent
  */
-public interface MoneyAmountListener
+public interface MoneyAmountChooseListener
 {
 	/**
 	 * Invoked, when the money amount was chosen.

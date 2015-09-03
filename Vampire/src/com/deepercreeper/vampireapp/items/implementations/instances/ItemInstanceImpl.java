@@ -172,7 +172,7 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 		
 		for (final Action action : getItem().getActions())
 		{
-			mActions.add(new ActionInstanceImpl(action, getContext(), getCharacter(), this));
+			mActions.add(new ActionInstanceImpl(action, getContext(), getCharacter(), mMessageListener, this));
 		}
 		for (final Dependency dependency : getItem().getDependencies())
 		{
@@ -220,7 +220,7 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 					@Override
 					public void onClick(final View aV)
 					{
-						decrease();
+						decrease(false);
 					}
 				});
 			}
@@ -340,7 +340,7 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 		
 		for (final Action action : getItem().getActions())
 		{
-			mActions.add(new ActionInstanceImpl(action, getContext(), getCharacter(), this));
+			mActions.add(new ActionInstanceImpl(action, getContext(), getCharacter(), mMessageListener, this));
 		}
 		for (final Dependency dependency : getItem().getDependencies())
 		{
@@ -388,7 +388,7 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 					@Override
 					public void onClick(final View aV)
 					{
-						decrease();
+						decrease(false);
 					}
 				});
 			}
@@ -483,7 +483,7 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 		
 		for (final Action action : getItem().getActions())
 		{
-			mActions.add(new ActionInstanceImpl(action, getContext(), getCharacter(), this));
+			mActions.add(new ActionInstanceImpl(action, getContext(), getCharacter(), mMessageListener, this));
 		}
 		for (final Dependency dependency : getItem().getDependencies())
 		{
@@ -531,7 +531,7 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 					@Override
 					public void onClick(final View aV)
 					{
-						decrease();
+						decrease(false);
 					}
 				});
 			}
@@ -779,15 +779,11 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 	}
 	
 	@Override
-	public void decrease()
+	public void decrease(boolean aSilent)
 	{
 		if ( !isValueItem())
 		{
 			Log.w(TAG, "Tried to decrease a non value item.");
-			return;
-		}
-		if ( !mHost)
-		{
 			return;
 		}
 		if (mValueId > 0)
@@ -796,9 +792,15 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 		}
 		updateCharacter();
 		updateValueListeners();
-		mMessageListener.sendChange(new ItemChange(getName(), mValueId));
-		mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.host_decreased, new String[] { getName(), "" + getValue() },
-				new boolean[] { true, false }, mContext, null, ButtonAction.NOTHING));
+		if ( !aSilent)
+		{
+			mMessageListener.sendChange(new ItemChange(getName(), mValueId));
+			if (mHost)
+			{
+				mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.host_decreased,
+						new String[] { getName(), "" + getValue() }, new boolean[] { true, false }, mContext, null, ButtonAction.NOTHING));
+			}
+		}
 	}
 	
 	@Override
@@ -811,6 +813,18 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 	public Set<ActionInstance> getActions()
 	{
 		return mActions;
+	}
+	
+	@Override
+	public int getMaxDecreasure()
+	{
+		int valueId = mValueId;
+		int minValue = getMinValue(RestrictionInstanceType.ITEM_VALUE);
+		while (valueId > 0 && getValues()[valueId] > minValue)
+		{
+			valueId-- ;
+		}
+		return mValueId - valueId;
 	}
 	
 	@Override
@@ -1174,12 +1188,12 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 				}
 				while (canDecrease() && getValue() > getMaxValue(RestrictionInstanceType.ITEM_VALUE))
 				{
-					decrease();
+					decrease(true);
 				}
 			}
 			while (canDecrease() && getValue() > getMaxValue())
 			{
-				decrease();
+				decrease(true);
 			}
 		}
 		

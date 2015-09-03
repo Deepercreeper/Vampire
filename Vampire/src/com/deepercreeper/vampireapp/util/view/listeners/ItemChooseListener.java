@@ -7,6 +7,7 @@ import com.deepercreeper.vampireapp.items.interfaces.Item;
  * 
  * @author Vincent
  */
+@Deprecated
 public interface ItemChooseListener
 {
 	/**

@@ -11,11 +11,29 @@ import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 public interface ActionInstance extends Viewable, Comparable<ActionInstance>
 {
 	/**
-	 * @param aLevel
-	 *            The action item value.
 	 * @return whether this action can be used at the current item level and item costs.
 	 */
-	public boolean canUse(final int aLevel);
+	public boolean canUse();
+	
+	/**
+	 * Determines, how many dices can be used to use this action and invokes then {@linkplain ActionInstance#use(int, boolean)}.
+	 */
+	public void use();
+	
+	/**
+	 * Uses this action and then sends a message to the host.
+	 * 
+	 * @param aDices
+	 *            The amount of dices to use for this action.
+	 * @param aAsk
+	 *            Whether this use is only asking the host or really an action.
+	 */
+	public void use(int aDices, boolean aAsk);
+	
+	/**
+	 * @return whether the user has the possibility of spending a number of values for an additional dice.
+	 */
+	public boolean hasCostDices();
 	
 	/**
 	 * @return the action type.

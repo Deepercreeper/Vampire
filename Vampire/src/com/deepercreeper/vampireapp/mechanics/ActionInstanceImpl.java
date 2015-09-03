@@ -6,9 +6,16 @@ import java.util.List;
 import java.util.Map;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
+import com.deepercreeper.vampireapp.host.Message;
+import com.deepercreeper.vampireapp.host.Message.ButtonAction;
+import com.deepercreeper.vampireapp.host.Message.MessageGroup;
+import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
+import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
+import com.deepercreeper.vampireapp.util.view.dialogs.ChooseDicesDialog;
+import com.deepercreeper.vampireapp.util.view.listeners.DicesChooseListener;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,6 +34,8 @@ public class ActionInstanceImpl implements ActionInstance
 	private static final String TAG = "ActionInstanceImpl";
 	
 	private final Action mAction;
+	
+	private final MessageListener mMessageListener;
 	
 	private final ItemInstance mParent;
 	
@@ -53,15 +62,19 @@ public class ActionInstanceImpl implements ActionInstance
 	 *            The underlying context.
 	 * @param aChar
 	 *            The parent character.
+	 * @param aMessageListener
+	 *            The message listener.
 	 * @param aParent
 	 *            The parent item. May be {@code null}.
 	 */
-	public ActionInstanceImpl(final Action aAction, final Context aContext, final CharacterInstance aChar, final ItemInstance aParent)
+	public ActionInstanceImpl(final Action aAction, final Context aContext, final CharacterInstance aChar, MessageListener aMessageListener,
+			final ItemInstance aParent)
 	{
 		mAction = aAction;
 		mParent = aParent;
 		mContext = aContext;
 		mChar = aChar;
+		mMessageListener = aMessageListener;
 		mContainer = (LinearLayout) View.inflate(mContext, R.layout.view_action, null);
 		
 		initDices();
@@ -69,6 +82,14 @@ public class ActionInstanceImpl implements ActionInstance
 		mUse = (Button) getContainer().findViewById(R.id.view_use_action_button);
 		final TextView name = (TextView) getContainer().findViewById(R.id.view_action_name_label);
 		
+		mUse.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View aV)
+			{
+				use();
+			}
+		});
 		name.setText(getAction().getDisplayName());
 		name.setOnClickListener(new OnClickListener()
 		{
@@ -101,9 +122,14 @@ public class ActionInstanceImpl implements ActionInstance
 	}
 	
 	@Override
-	public boolean canUse(final int aLevel)
+	public boolean canUse()
 	{
-		if (aLevel >= 0 && aLevel < mAction.getMinLevel() || !mChar.getMode().getMode().canUseAction())
+		int level = -1;
+		if (mParent != null)
+		{
+			level = mParent.getValue();
+		}
+		if (level >= 0 && level < mAction.getMinLevel() || !mChar.getMode().getMode().canUseAction())
 		{
 			return false;
 		}
@@ -169,6 +195,63 @@ public class ActionInstanceImpl implements ActionInstance
 	}
 	
 	@Override
+	public void use()
+	{
+		if ( !canUse())
+		{
+			Log.w(TAG, "Tried to use a non usable action.");
+			return;
+		}
+		final int defaultDices = getDefaultDices();
+		if (hasCostDices())
+		{
+			DicesChooseListener listener = new DicesChooseListener()
+			{
+				@Override
+				public void choseDices(Map<ItemInstance, Integer> aValues)
+				{
+					int dices = defaultDices;
+					for (ItemInstance item : aValues.keySet())
+					{
+						dices += aValues.get(item);
+					}
+					use(dices, true);
+				}
+			};
+			ChooseDicesDialog.showChooseDicesDialog(mCostDices, mContext.getString(R.string.choose_dices_amount), mContext, listener);
+		}
+		else
+		{
+			use(defaultDices, true);
+		}
+	}
+	
+	@Override
+	public void use(int aDices, boolean aAsk)
+	{
+		if (aAsk)
+		{
+			mMessageListener.makeText(
+					DataUtil.buildMessage(R.string.use_action,
+							new String[] { getAction().getDisplayName(), "" + aDices, "" + getAction().getInstantSuccess() }, mContext),
+					Toast.LENGTH_LONG);
+			mMessageListener.sendMessage(new Message(MessageGroup.ACTION, false, mChar.getName(), R.string.uses_action,
+					new String[] { getAction().getName(), "" + aDices, "" + getAction().getInstantSuccess() }, new boolean[] { true, false, false },
+					mContext, mMessageListener, ButtonAction.ACCEPT_ACTION, ButtonAction.DENY_ACTION, getAction().getName(), "" + aDices));
+		}
+		else
+		{
+			// TODO Implement
+		}
+	}
+	
+	@Override
+	public boolean hasCostDices()
+	{
+		return !mCostDices.isEmpty();
+	}
+	
+	@Override
 	public ItemInstance getParent()
 	{
 		return mParent;
@@ -183,14 +266,7 @@ public class ActionInstanceImpl implements ActionInstance
 	@Override
 	public void updateUI()
 	{
-		if (mParent != null)
-		{
-			ViewUtil.setEnabled(mUse, canUse(mParent.getValue()));
-		}
-		else
-		{
-			ViewUtil.setEnabled(mUse, canUse( -1));
-		}
+		ViewUtil.setEnabled(mUse, canUse());
 	}
 	
 	private void initDices()
