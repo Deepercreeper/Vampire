@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
+import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
 import com.deepercreeper.vampireapp.mechanics.Action;
 import com.deepercreeper.vampireapp.mechanics.ActionInstance;
@@ -26,6 +27,8 @@ public class ActionsControllerInstance implements Viewable
 {
 	private final LinearLayout mContainer;
 	
+	private final MessageListener mMessageListener;
+	
 	private final Context mContext;
 	
 	private final CharacterInstance mChar;
@@ -43,11 +46,15 @@ public class ActionsControllerInstance implements Viewable
 	 *            A set of all default actions.
 	 * @param aContext
 	 *            The underlying context.
+	 * @param aMessageListener
+	 *            The message listener.
 	 */
-	public ActionsControllerInstance(final CharacterInstance aChar, final Set<Action> aDefaultActions, final Context aContext)
+	public ActionsControllerInstance(final CharacterInstance aChar, final Set<Action> aDefaultActions, final Context aContext,
+			final MessageListener aMessageListener)
 	{
 		mContext = aContext;
 		mChar = aChar;
+		mMessageListener = aMessageListener;
 		mContainer = (LinearLayout) View.inflate(mContext, R.layout.client_actions, null);
 		mExpander = Expander.handle(R.id.c_actions_button, R.id.c_actions_panel, getContainer());
 		
@@ -59,7 +66,7 @@ public class ActionsControllerInstance implements Viewable
 		}
 		for (final Action defaultAction : aDefaultActions)
 		{
-			mActions.add(new ActionInstanceImpl(defaultAction, mContext, mChar, null));
+			mActions.add(new ActionInstanceImpl(defaultAction, mContext, mChar, mMessageListener, null));
 		}
 		
 		// MARK Actions
@@ -79,6 +86,23 @@ public class ActionsControllerInstance implements Viewable
 		mActions.addAll(aActions);
 		sortActions();
 		updateUI();
+	}
+	
+	/**
+	 * @param aName
+	 *            The action name.
+	 * @return the action instance whose action name is equals to the given name.
+	 */
+	public ActionInstance getAction(final String aName)
+	{
+		for (final ActionInstance action : mActions)
+		{
+			if (action.getAction().getName().equals(aName))
+			{
+				return action;
+			}
+		}
+		return null;
 	}
 	
 	@Override

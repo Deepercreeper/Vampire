@@ -111,6 +111,19 @@ public abstract class DefaultDialog <L, C extends View> extends DialogFragment
 		return !aText.getText().toString().trim().isEmpty();
 	}
 	
+	protected boolean isNumberOk(final EditText aText, final int aMin, final int aMax)
+	{
+		try
+		{
+			final int value = Integer.parseInt(aText.getText().toString());
+			return value >= aMin && value <= aMax;
+		}
+		catch (final NumberFormatException e)
+		{
+			return false;
+		}
+	}
+	
 	protected boolean isNumberOk(final EditText aText, final int aMin)
 	{
 		try

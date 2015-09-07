@@ -5,6 +5,7 @@
     <string name="accept_depot">You did depot {0} at {1}.</string>
     <string name="accept_increase">{0} was increased to {1}.</string>
     <string name="accept_take">You took {0} of {1}.</string>
+    <string name="accept_use">You are allowed to use {0} with {1} dices, {2} instant success and additional dices {x}</string>
 	<string name="actions">Actions</string>
     <string name="add">Add</string>
     <string name="add_depot">Add depot</string>
@@ -38,6 +39,7 @@
     <string name="cancel">Cancel</string>
     <string name="char_name">Character name</string>
     <string name="characters">Characters</string>
+	<string name="choose_difficulty">Choose difficulty for action {0}</string>
     <string name="choose_host">Choose host</string>
     <string name="choose_item_type">Choose item type</string>
     <string name="choose_dices_amount">Choose the amount of each dice</string>
@@ -144,9 +146,10 @@
     <string name="took_item">The following item was taken: {x}</string>
     <string name="unban">Unban</string>
     <string name="use">Use</string>
-    <string name="use_action">Trying to use {0} with {1} dices and {2} instant success.</string>
-    <string name="uses_action">Wants to use {0} with {1} dices and {2} instant success.</string>
-    <string name="used_action">You used {0} with {1} dices and {2} instant success: {3} success.</string>
+    <string name="use_action">Trying to use {0} with {1} dices, {2} instant success and additional dices {x}</string>
+    <string name="uses_action">Wants to use {0} with {1} dices, {2} instant success and additional dices {x}</string>
+    <string name="used_action">Used {0}. Dices:{1}, Success: {2}, Special success: {3}</string>
+    <string name="using_action">You used {0}. Dices:{1}, Success: {2}, Special success: {3}</string>
     <string name="value">Value</string>
     <string name="weight">Weight</string>
     <string name="weight_unit">kg</string>

@@ -5,6 +5,7 @@
     <string name="accept_depot">Ihr habt {0} in {1} gelagert.</string>
     <string name="accept_increase">{0} wurde auf {1} erhöht.</string>
     <string name="accept_take">Ihr habt {0} von {1} genommen.</string>
+    <string name="accept_use">Ihr dürft Aktion {0} mit {1} Würfeln, {2} zusätzlichen Erfolgen und zusätzlichen Würfeln {x} versuchen.</string>
     <string name="actions">Aktionen</string>
     <string name="add">Hinzufügen</string>
     <string name="add_depot">Depot hinzufügen</string>
@@ -38,6 +39,7 @@
     <string name="cancel">Abbrechen</string>
     <string name="char_name">Charakter Name</string>
     <string name="characters">Charaktere</string>
+    <string name="choose_difficulty">Wähle Schwierigkeit für die Aktion {0}</string>
     <string name="choose_host">Host auswählen</string>
 	<string name="choose_item_type">Item Typ auswählen</string>
     <string name="choose_dices_amount">Würfelmenge wählen</string>
@@ -64,6 +66,7 @@
     <string name="delete_host">Löschen</string>
     <string name="deny_increase">Ihr dürft {0} nicht erhöhen.</string>
     <string name="deny_take_depot">Ihr habt keinen Zugriff auf {0}.</string>
+    <string name="deny_use">Ihr dürft {0} nicht nutzen.</string>
     <string name="description">Beschreibung</string>
     <string name="difficulty">Schwierigkeit</string>
     <string name="distance">Reichweite</string>
@@ -143,6 +146,10 @@
     <string name="took_item">Folgendes Item wurde genommen: {x}</string>
     <string name="unban">Entbannen</string>
     <string name="use">Nutzen</string>
+    <string name="use_action">Versuche Aktion {0} mit {1} Würfeln, {2} zusätzlichen Erfolgen und zusätzlichen Würfeln {x}.</string>
+    <string name="uses_action">Will Aktion {0} mit {1} Würfeln, {2} zusätzlichen Erfolgen und zusätzlichen Würfeln {x} versuchen.</string>
+    <string name="used_action">Hat Aktion {0} genutzt. Würfe:{1}, Erfolge: {2}, Besondere Erfolge: {3}</string>
+    <string name="using_action">Sie haben {0} genutzt. Würfe:{1}, Erfolge: {2}, Besondere Erfolge: {3}</string>
     <string name="value">Wert</string>
     <string name="weight">Gewicht</string>
     <string name="weight_unit">kg</string>

@@ -135,7 +135,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		mHealth = new HealthControllerInstance(aCreator.getHealth(), getContext(), mMessageListener, this, mHost);
 		mTimeListeners.add(mHealth);
 		
-		mActions = mHost ? null : new ActionsControllerInstance(this, mItems.getActions(), mContext);
+		mActions = mHost ? null : new ActionsControllerInstance(this, mItems.getActions(), mContext, mMessageListener);
 		
 		mRestrictions = new RestrictionControllerInstance(this, getContext(), mResizeListener, mMessageListener, mHost);
 		for (final RestrictionInstance restriction : aCreator.getRestrictions(mMessageListener))
@@ -227,7 +227,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 				mResizeListener, mMessageListener, mHost);
 				
 		// Actions
-		mActions = mHost ? null : new ActionsControllerInstance(this, mItems.getActions(), mContext);
+		mActions = mHost ? null : new ActionsControllerInstance(this, mItems.getActions(), mContext, mMessageListener);
 		
 		// Restrictions
 		mRestrictions = new RestrictionControllerInstance(DataUtil.getElement(root, "restrictions"), this, getContext(), mResizeListener,

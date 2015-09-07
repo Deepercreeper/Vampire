@@ -28,6 +28,196 @@ import android.widget.Toast;
 public class Message implements Saveable, Viewable
 {
 	/**
+	 * A builder for messages.
+	 * 
+	 * @author Vincent
+	 */
+	public static class Builder
+	{
+		private MessageType mType = MessageType.INFO;
+		
+		private MessageGroup mGroup = MessageGroup.SINGLE;
+		
+		private boolean mModeDepending = false;
+		
+		private String mSender = "";
+		
+		private String[] mArguments = new String[0];
+		
+		private boolean[] mTranslated = new boolean[0];
+		
+		private final int mMessageId;
+		
+		private final Context mContext;
+		
+		private ButtonAction mYesAction = ButtonAction.NOTHING;
+		
+		private ButtonAction mNoAction = ButtonAction.NOTHING;
+		
+		private String[] mSaveables = new String[0];
+		
+		private MessageListener mMessageListener = null;
+		
+		/**
+		 * Creates a new message builder.
+		 * 
+		 * @param aMessageId
+		 *            The message id.
+		 * @param aContext
+		 *            The underlying context.
+		 */
+		public Builder(final int aMessageId, final Context aContext)
+		{
+			mMessageId = aMessageId;
+			mContext = aContext;
+		}
+		
+		/**
+		 * @return a message that has the set attributes.
+		 */
+		public Message create()
+		{
+			return new Message(mType, mGroup, mModeDepending, mSender, mMessageId, mArguments, mTranslated, mContext, mMessageListener, mYesAction,
+					mNoAction, mSaveables);
+		}
+		
+		/**
+		 * Sets the message group of the message. The default value is {@link MessageGroup#SINGLE}.
+		 * 
+		 * @param aGroup
+		 *            The message group.
+		 * @return this.
+		 */
+		public Builder setGroup(final MessageGroup aGroup)
+		{
+			mGroup = aGroup;
+			return this;
+		}
+		
+		/**
+		 * Sets whether the message is mode depending. The default value is {@code false}.
+		 * 
+		 * @param aModeDepending
+		 *            Whether the message is mode depending.
+		 * @return this.
+		 */
+		public Builder setModeDepending(final boolean aModeDepending)
+		{
+			mModeDepending = aModeDepending;
+			return this;
+		}
+		
+		/**
+		 * Sets the message listener of the message. The default value is {@code null}.
+		 * 
+		 * @param aMessageListener
+		 *            The message listener.
+		 * @return this.
+		 */
+		public Builder setMessageListener(final MessageListener aMessageListener)
+		{
+			mMessageListener = aMessageListener;
+			return this;
+		}
+		
+		/**
+		 * Sets the yes-action of the message. The default value is {@link ButtonAction#NOTHING}.
+		 * 
+		 * @param aYesAction
+		 *            The yes-action.
+		 * @return this.
+		 */
+		public Builder setYesAction(final ButtonAction aYesAction)
+		{
+			mYesAction = aYesAction;
+			return this;
+		}
+		
+		/**
+		 * Sets the no-action of the message. The default value is {@link ButtonAction#NOTHING}.
+		 * 
+		 * @param aNoAction
+		 *            The no-action.
+		 * @return this.
+		 */
+		public Builder setNoAction(final ButtonAction aNoAction)
+		{
+			mNoAction = aNoAction;
+			return this;
+		}
+		
+		/**
+		 * Sets the sender of the message. The default value is an empty String.
+		 * 
+		 * @param aSender
+		 *            The sender.
+		 * @return this.
+		 */
+		public Builder setSender(final String aSender)
+		{
+			mSender = aSender;
+			return this;
+		}
+		
+		/**
+		 * Sets the arguments of the message. The default value is an empty String array.<br>
+		 * If the translated arguments array has not the same length it is set to an boolean array filled with {@code false}.
+		 * 
+		 * @param aArguments
+		 *            The arguments.
+		 * @return this.
+		 */
+		public Builder setArguments(final String... aArguments)
+		{
+			mArguments = aArguments;
+			if (mTranslated.length != mArguments.length)
+			{
+				mTranslated = new boolean[mArguments.length];
+			}
+			return this;
+		}
+		
+		/**
+		 * Sets the translated flags of the message. The default value is an empty boolean array.
+		 * 
+		 * @param aTranslated
+		 *            The translated flags.
+		 * @return this.
+		 */
+		public Builder setTranslated(final boolean... aTranslated)
+		{
+			mTranslated = aTranslated;
+			return this;
+		}
+		
+		/**
+		 * Sets the saveables of the message. The default value is an empty String array.
+		 * 
+		 * @param aSaveables
+		 *            The saveables.
+		 * @return this.
+		 */
+		public Builder setSaveables(final String... aSaveables)
+		{
+			mSaveables = aSaveables;
+			return this;
+		}
+		
+		/**
+		 * Sets the type of the message. The default value is {@link MessageType#INFO}.
+		 * 
+		 * @param aType
+		 *            The message type.
+		 * @return this.
+		 */
+		public Builder setType(final MessageType aType)
+		{
+			mType = aType;
+			return this;
+		}
+	}
+	
+	/**
 	 * Each button has to have an action, that will be processed, when the button is clicked.
 	 * 
 	 * @author vrl
@@ -143,12 +333,27 @@ public class Message implements Saveable, Viewable
 		/**
 		 * One of them is informed about something.
 		 */
-		INFO,
+		INFO(R.layout.message_info),
 		
 		/**
 		 * Asks the host or the player to approve something.
 		 */
-		YES_NO
+		YES_NO(R.layout.message_yes_no);
+		
+		private final int mViewId;
+		
+		private MessageType(final int aViewId)
+		{
+			mViewId = aViewId;
+		}
+		
+		/**
+		 * @return the view id of this message type.
+		 */
+		public int getViewId()
+		{
+			return mViewId;
+		}
 	}
 	
 	private static final String TAG_NAME = "message";
@@ -181,135 +386,8 @@ public class Message implements Saveable, Viewable
 	
 	private final ButtonAction mNoAction;
 	
-	/**
-	 * Creates a yes/no message.
-	 * 
-	 * @param aGroup
-	 *            The message group.
-	 * @param aModeDepending
-	 *            Whether this message is mode depending.
-	 * @param aSender
-	 *            The message sender.
-	 * @param aMessageId
-	 *            The message text.
-	 * @param aArguments
-	 *            The message arguments.
-	 * @param aTranslated
-	 *            The arguments, that should be translated.
-	 * @param aContext
-	 *            The underlying context.
-	 * @param aListener
-	 *            The message listener.
-	 * @param aYesAction
-	 *            The yes action.
-	 * @param aNoAction
-	 *            The no action.
-	 * @param aSaveables
-	 *            Saveable objects.
-	 */
-	public Message(final MessageGroup aGroup, final boolean aModeDepending, final String aSender, final int aMessageId, final String[] aArguments,
-			final boolean[] aTranslated, final Context aContext, final MessageListener aListener, final ButtonAction aYesAction,
-			final ButtonAction aNoAction, final String... aSaveables)
-	{
-		this(MessageType.YES_NO, aGroup, aModeDepending, aSender, aMessageId, aArguments, aTranslated, aContext, aListener, R.layout.message_yes_no,
-				aYesAction, aNoAction, aSaveables);
-	}
-	
-	/**
-	 * Creates a info message.
-	 * 
-	 * @param aGroup
-	 *            The message group.
-	 * @param aModeDepending
-	 *            Whether this message is mode depending.
-	 * @param aSender
-	 *            The message sender.
-	 * @param aMessageId
-	 *            The message text.
-	 * @param aArguments
-	 *            The message arguments.
-	 * @param aTranslated
-	 *            The arguments, that should be translated.
-	 * @param aContext
-	 *            The underlying context.
-	 * @param aListener
-	 *            The message listener.
-	 * @param aOkAction
-	 *            When the message is approved, this action happens.
-	 * @param aSaveables
-	 *            Saveable objects.
-	 */
-	public Message(final MessageGroup aGroup, final boolean aModeDepending, final String aSender, final int aMessageId, final String[] aArguments,
-			final boolean[] aTranslated, final Context aContext, final MessageListener aListener, final ButtonAction aOkAction,
-			final String... aSaveables)
-	{
-		this(MessageType.INFO, aGroup, aModeDepending, aSender, aMessageId, aArguments, aTranslated, aContext, aListener, R.layout.message_info,
-				aOkAction, ButtonAction.NOTHING, aSaveables);
-	}
-	
-	/**
-	 * Creates a yes/no message.
-	 * 
-	 * @param aGroup
-	 *            The message group.
-	 * @param aModeDepending
-	 *            Whether this message is mode depending.
-	 * @param aSender
-	 *            The message sender.
-	 * @param aMessageId
-	 *            The message text.
-	 * @param aArguments
-	 *            The message arguments.
-	 * @param aContext
-	 *            The underlying context.
-	 * @param aListener
-	 *            The message listener.
-	 * @param aYesAction
-	 *            The yes action.
-	 * @param aNoAction
-	 *            The no action.
-	 * @param aSaveables
-	 *            Saveable objects.
-	 */
-	public Message(final MessageGroup aGroup, final boolean aModeDepending, final String aSender, final int aMessageId, final String[] aArguments,
-			final Context aContext, final MessageListener aListener, final ButtonAction aYesAction, final ButtonAction aNoAction,
-			final String... aSaveables)
-	{
-		this(MessageType.YES_NO, aGroup, aModeDepending, aSender, aMessageId, aArguments, new boolean[aArguments.length], aContext, aListener,
-				R.layout.message_yes_no, aYesAction, aNoAction, aSaveables);
-	}
-	
-	/**
-	 * Creates a info message.
-	 * 
-	 * @param aGroup
-	 *            The message group.
-	 * @param aModeDepending
-	 *            Whether this message is mode depending.
-	 * @param aSender
-	 *            The message sender.
-	 * @param aMessageId
-	 *            The message text.
-	 * @param aArguments
-	 *            The message arguments.
-	 * @param aContext
-	 *            The underlying context.
-	 * @param aListener
-	 *            The message listener.
-	 * @param aOkAction
-	 *            When the message is approved, this action happens.
-	 * @param aSaveables
-	 *            Saveable objects.
-	 */
-	public Message(final MessageGroup aGroup, final boolean aModeDepending, final String aSender, final int aMessageId, final String[] aArguments,
-			final Context aContext, final MessageListener aListener, final ButtonAction aOkAction, final String... aSaveables)
-	{
-		this(MessageType.INFO, aGroup, aModeDepending, aSender, aMessageId, aArguments, new boolean[aArguments.length], aContext, aListener,
-				R.layout.message_info, aOkAction, ButtonAction.NOTHING, aSaveables);
-	}
-	
 	private Message(final MessageType aType, final MessageGroup aGroup, final boolean aModeDepending, final String aSender, final int aMessageId,
-			final String[] aArguments, final boolean[] aTranslated, final Context aContext, final MessageListener aListener, final int aViewId,
+			final String[] aArguments, final boolean[] aTranslated, final Context aContext, final MessageListener aListener,
 			final ButtonAction aYesAction, final ButtonAction aNoAction, final String... aSaveables)
 	{
 		mType = aType;
@@ -324,7 +402,7 @@ public class Message implements Saveable, Viewable
 		mYesAction = aYesAction;
 		mNoAction = aNoAction;
 		mSaveables = aSaveables;
-		mContainer = (LinearLayout) View.inflate(mContext, aViewId, null);
+		mContainer = (LinearLayout) View.inflate(mContext, mType.getViewId(), null);
 		
 		switch (mType)
 		{
@@ -524,29 +602,22 @@ public class Message implements Saveable, Viewable
 	public static Message deserialize(final String aXML, final Context aContext, final MessageListener aListener)
 	{
 		final Element messageElement = DataUtil.getElement(DataUtil.loadDocument(aXML), TAG_NAME);
-		final MessageType type = MessageType.valueOf(messageElement.getAttribute("type"));
-		final MessageGroup group = MessageGroup.valueOf(messageElement.getAttribute("group"));
-		final int messageId = Integer.parseInt(messageElement.getAttribute("message"));
-		String[] arguments = new String[0];
+		final Builder builder = new Builder(Integer.parseInt(messageElement.getAttribute("message")), aContext);
+		builder.setType(MessageType.valueOf(messageElement.getAttribute("type")));
+		builder.setGroup(MessageGroup.valueOf(messageElement.getAttribute("group")));
 		if (messageElement.hasAttribute("arguments"))
 		{
-			arguments = DataUtil.parseArray(messageElement.getAttribute("arguments"));
+			builder.setArguments(DataUtil.parseArray(messageElement.getAttribute("arguments")));
 		}
-		final String sender = messageElement.getAttribute("sender");
-		final ButtonAction yesAction = ButtonAction.valueOf(messageElement.getAttribute("yes-action"));
-		final ButtonAction noAction = ButtonAction.valueOf(messageElement.getAttribute("no-action"));
-		final boolean modeDepending = Boolean.valueOf(messageElement.getAttribute("mode-depending"));
-		final String[] saveables = DataUtil.parseArray(messageElement.getAttribute("saveables"));
-		final boolean[] translated = DataUtil.parseFlags(messageElement.getAttribute("translated"));
-		switch (type)
+		if (messageElement.hasAttribute("translated"))
 		{
-			case INFO :
-				return new Message(group, modeDepending, sender, messageId, arguments, translated, aContext, aListener, yesAction, saveables);
-			case YES_NO :
-				return new Message(group, modeDepending, sender, messageId, arguments, translated, aContext, aListener, yesAction, noAction,
-						saveables);
-			default :
-				return null;
+			builder.setTranslated(DataUtil.parseFlags(messageElement.getAttribute("translated")));
 		}
+		builder.setSender(messageElement.getAttribute("sender"));
+		builder.setYesAction(ButtonAction.valueOf(messageElement.getAttribute("yes-action")));
+		builder.setNoAction(ButtonAction.valueOf(messageElement.getAttribute("no-action")));
+		builder.setModeDepending(Boolean.valueOf(messageElement.getAttribute("mode-depending")));
+		builder.setSaveables(DataUtil.parseArray(messageElement.getAttribute("saveables")));
+		return builder.create();
 	}
 }

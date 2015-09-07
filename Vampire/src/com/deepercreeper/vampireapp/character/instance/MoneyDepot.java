@@ -8,9 +8,10 @@ import org.w3c.dom.Element;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.Currency;
 import com.deepercreeper.vampireapp.character.instance.controllers.MoneyControllerInstance;
-import com.deepercreeper.vampireapp.host.Message;
+import com.deepercreeper.vampireapp.host.Message.Builder;
 import com.deepercreeper.vampireapp.host.Message.ButtonAction;
 import com.deepercreeper.vampireapp.host.Message.MessageGroup;
+import com.deepercreeper.vampireapp.host.Message.MessageType;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.host.change.MoneyChange;
 import com.deepercreeper.vampireapp.items.implementations.Named;
@@ -278,12 +279,11 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 			@Override
 			public void amountSelected(final Map<String, Integer> aMap)
 			{
-				final String[] args;
 				if (mDefault)
 				{
-					args = new String[] { serializeValues(", ", " ", aMap, true, mCurrency) };
-					getMessageListener().sendMessage(
-							new Message(MessageGroup.SINGLE, false, "", R.string.money_sent, args, mContext, null, ButtonAction.NOTHING));
+					final Builder builder = new Builder(R.string.money_sent, mContext);
+					builder.setArguments(serializeValues(", ", " ", aMap, true, mCurrency));
+					getMessageListener().sendMessage(builder.create());
 					add(aMap);
 				}
 				else
@@ -295,10 +295,13 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 					}
 					else
 					{
-						args = new String[] { serializeValues(", ", " ", aMap, true, mCurrency), getName() };
-						getMessageListener().sendMessage(new Message(MessageGroup.MONEY, false, mController.getCharacter().getName(),
-								R.string.ask_depot_money, args, mContext, null, ButtonAction.ACCEPT_DEPOT, ButtonAction.DENY_DEPOT,
-								serializeValues(",", " ", aMap, false, mCurrency), getName()));
+						final Builder builder = new Builder(R.string.ask_depot_money, mContext);
+						builder.setGroup(MessageGroup.MONEY).setSender(mController.getCharacter().getName());
+						builder.setArguments(serializeValues(", ", " ", aMap, true, mCurrency), getName());
+						builder.setType(MessageType.YES_NO).setYesAction(ButtonAction.ACCEPT_DEPOT);
+						builder.setNoAction(ButtonAction.DENY_DEPOT);
+						builder.setSaveables(serializeValues(",", " ", aMap, false, mCurrency), getName());
+						getMessageListener().sendMessage(builder.create());
 					}
 				}
 			}
@@ -413,13 +416,13 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 			@Override
 			public void amountSelected(final Map<String, Integer> aMap)
 			{
-				final String[] args;
 				if (mDefault)
 				{
-					args = new String[] { serializeValues(", ", " ", aMap, true, mCurrency) };
 					remove(aMap);
-					getMessageListener().sendMessage(new Message(MessageGroup.SINGLE, false, mController.getCharacter().getName(),
-							R.string.money_sent, args, mContext, null, ButtonAction.NOTHING));
+					final Builder builder = new Builder(R.string.money_sent, mContext);
+					builder.setSender(mController.getCharacter().getName());
+					builder.setArguments(serializeValues(", ", " ", aMap, true, mCurrency));
+					getMessageListener().sendMessage(builder.create());
 				}
 				else
 				{
@@ -430,10 +433,12 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 					}
 					else
 					{
-						args = new String[] { serializeValues(", ", " ", aMap, true, mCurrency), getName() };
-						getMessageListener().sendMessage(new Message(MessageGroup.MONEY, false, mController.getCharacter().getName(),
-								R.string.ask_take_money, args, mContext, null, ButtonAction.ACCEPT_TAKE, ButtonAction.DENY_TAKE,
-								serializeValues(",", " ", aMap, false, mCurrency), getName()));
+						final Builder builder = new Builder(R.string.ask_take_money, mContext);
+						builder.setGroup(MessageGroup.MONEY).setSender(mController.getCharacter().getName());
+						builder.setArguments(serializeValues(", ", " ", aMap, true, mCurrency), getName());
+						builder.setType(MessageType.YES_NO).setYesAction(ButtonAction.ACCEPT_TAKE);
+						builder.setNoAction(ButtonAction.DENY_TAKE).setSaveables(serializeValues(",", " ", aMap, false, mCurrency), getName());
+						getMessageListener().sendMessage(builder.create());
 					}
 				}
 			}

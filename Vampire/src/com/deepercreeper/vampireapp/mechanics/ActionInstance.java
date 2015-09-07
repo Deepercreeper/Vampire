@@ -1,5 +1,6 @@
 package com.deepercreeper.vampireapp.mechanics;
 
+import java.util.Map;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 
@@ -16,19 +17,27 @@ public interface ActionInstance extends Viewable, Comparable<ActionInstance>
 	public boolean canUse();
 	
 	/**
-	 * Determines, how many dices can be used to use this action and invokes then {@linkplain ActionInstance#use(int, boolean)}.
+	 * Determines, how many dices can be used to use this action and invokes then {@linkplain ActionInstance#use(int, Map)}.
 	 */
 	public void use();
 	
 	/**
-	 * Uses this action and then sends a message to the host.
+	 * Asks the host whether to use this action.
 	 * 
+	 * @param aDefaultDices
+	 *            The number of default dices.
 	 * @param aDices
-	 *            The amount of dices to use for this action.
-	 * @param aAsk
-	 *            Whether this use is only asking the host or really an action.
+	 *            The amount of cost dices for this action.
 	 */
-	public void use(int aDices, boolean aAsk);
+	public void use(int aDefaultDices, Map<ItemInstance, Integer> aDices);
+	
+	/**
+	 * Uses this action.
+	 * 
+	 * @param aArguments
+	 *            The argument list.
+	 */
+	public void use(String[] aArguments);
 	
 	/**
 	 * @return whether the user has the possibility of spending a number of values for an additional dice.

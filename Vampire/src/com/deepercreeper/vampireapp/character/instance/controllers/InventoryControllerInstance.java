@@ -8,9 +8,9 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.character.inventory.Artifact;
 import com.deepercreeper.vampireapp.character.inventory.Inventory;
-import com.deepercreeper.vampireapp.host.Message;
+import com.deepercreeper.vampireapp.host.Message.Builder;
 import com.deepercreeper.vampireapp.host.Message.ButtonAction;
-import com.deepercreeper.vampireapp.host.Message.MessageGroup;
+import com.deepercreeper.vampireapp.host.Message.MessageType;
 import com.deepercreeper.vampireapp.host.change.InventoryChange;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.items.implementations.Named;
@@ -396,13 +396,16 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 			mMessageListener.sendChange(new InventoryChange(aItem, false));
 			if (mHost)
 			{
-				mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.took_item, aItem.getInfoArray(false),
-						aItem.getInfoTranslatedArray(false), mContext, null, ButtonAction.NOTHING));
+				final Builder builder = new Builder(R.string.took_item, mContext);
+				builder.setArguments(aItem.getInfoArray(false)).setTranslated(aItem.getInfoTranslatedArray(false));
+				mMessageListener.sendMessage(builder.create());
 			}
 			else
 			{
-				mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, mMessageListener.getCharacter().getName(), R.string.left_item,
-						aItem.getInfoArray(false), aItem.getInfoTranslatedArray(false), mContext, null, ButtonAction.NOTHING));
+				final Builder builder = new Builder(R.string.left_item, mContext);
+				builder.setSender(mMessageListener.getCharacter().getName()).setArguments(aItem.getInfoArray(false));
+				builder.setTranslated(aItem.getInfoTranslatedArray(false));
+				mMessageListener.sendMessage(builder.create());
 			}
 		}
 	}
@@ -463,9 +466,12 @@ public class InventoryControllerInstance implements Saveable, ItemValueListener,
 			@Override
 			public void itemCreated(final Artifact aItem)
 			{
-				mMessageListener.sendMessage(
-						new Message(MessageGroup.SINGLE, true, "", R.string.got_item, aItem.getInfoArray(true), aItem.getInfoTranslatedArray(true),
-								mContext, null, ButtonAction.TAKE_ITEM, ButtonAction.IGNORE_ITEM, DataUtil.serialize(aItem)));
+				final Builder builder = new Builder(R.string.got_item, mContext);
+				builder.setModeDepending(true).setArguments(aItem.getInfoArray(true));
+				builder.setTranslated(aItem.getInfoTranslatedArray(true));
+				builder.setType(MessageType.YES_NO).setYesAction(ButtonAction.TAKE_ITEM);
+				builder.setNoAction(ButtonAction.IGNORE_ITEM).setSaveables(DataUtil.serialize(aItem));
+				mMessageListener.sendMessage(builder.create());
 			}
 		};
 		if (aItemType.equals(ITEM))

@@ -170,6 +170,11 @@ public interface ItemInstance extends RestrictionableInstance, Comparable<ItemIn
 	public String getName();
 	
 	/**
+	 * @return the item display name.
+	 */
+	public String getDisplayName();
+	
+	/**
 	 * @return the parent item if existing.
 	 */
 	public ItemInstance getParentItem();

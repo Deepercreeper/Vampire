@@ -13,8 +13,8 @@ import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
 import com.deepercreeper.vampireapp.connection.ConnectionController;
 import com.deepercreeper.vampireapp.connection.ConnectionListener;
 import com.deepercreeper.vampireapp.host.Message;
+import com.deepercreeper.vampireapp.host.Message.Builder;
 import com.deepercreeper.vampireapp.host.Message.ButtonAction;
-import com.deepercreeper.vampireapp.host.Message.MessageGroup;
 import com.deepercreeper.vampireapp.host.Player;
 import com.deepercreeper.vampireapp.host.change.CharacterChange;
 import com.deepercreeper.vampireapp.host.change.EPChange;
@@ -159,8 +159,12 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 				}
 				break;
 			case IGNORE_ITEM :
-				sendMessage(new Message(MessageGroup.SINGLE, false, mChar.getName(), R.string.left_item, aMessage.getArguments(),
-						aMessage.getTranslatedArguments(), this, null, ButtonAction.NOTHING));
+				final Builder builder = new Builder(R.string.left_item, this);
+				builder.setSender(mChar.getName()).setArguments(aMessage.getArguments()).setTranslated(aMessage.getTranslatedArguments());
+				sendMessage(builder.create());
+				break;
+			case ACCEPT_ACTION :
+				mChar.getActions().getAction(aMessage.getSaveable(0)).use(aMessage.getArguments());
 				break;
 			default :
 				break;

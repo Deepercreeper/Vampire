@@ -9,9 +9,7 @@ import org.w3c.dom.Element;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.creation.controllers.InsanityControllerCreation;
 import com.deepercreeper.vampireapp.character.creation.controllers.InsanityCreation;
-import com.deepercreeper.vampireapp.host.Message;
-import com.deepercreeper.vampireapp.host.Message.ButtonAction;
-import com.deepercreeper.vampireapp.host.Message.MessageGroup;
+import com.deepercreeper.vampireapp.host.Message.Builder;
 import com.deepercreeper.vampireapp.host.change.InsanityChange;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.mechanics.Duration;
@@ -174,7 +172,7 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 	 */
 	public void addInsanity(final String aInsanity, final Duration aDuration, final boolean aSilent)
 	{
-		InsanityInstance insanity = new InsanityInstance(aInsanity, aDuration, mContext, this, mMessageListener, mHost);
+		final InsanityInstance insanity = new InsanityInstance(aInsanity, aDuration, mContext, this, mMessageListener, mHost);
 		if (mInsanities.contains(insanity))
 		{
 			return;
@@ -192,8 +190,9 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 		updateUI();
 		if ( !aSilent)
 		{
-			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.got_insanity, new String[] { insanity.getName() },
-					mContext, null, ButtonAction.NOTHING));
+			final Builder builder = new Builder(R.string.got_insanity, mContext);
+			builder.setArguments(insanity.getName());
+			mMessageListener.sendMessage(builder.create());
 			mMessageListener.sendChange(new InsanityChange(insanity.getName(), insanity.getDuration()));
 		}
 	}
@@ -237,9 +236,9 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 	 * @param aSilent
 	 *            Whether changes should be sent.
 	 */
-	public void removeInsanity(String aInsanity, boolean aSilent)
+	public void removeInsanity(final String aInsanity, final boolean aSilent)
 	{
-		for (InsanityInstance insanity : getInsanities())
+		for (final InsanityInstance insanity : getInsanities())
 		{
 			if (insanity.getName().equals(aInsanity))
 			{
@@ -265,8 +264,9 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 		updateUI();
 		if ( !aSilent)
 		{
-			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.lost_insanity, new String[] { aInsanity.getName() },
-					mContext, null, ButtonAction.NOTHING));
+			final Builder builder = new Builder(R.string.lost_insanity, mContext);
+			builder.setArguments(aInsanity.getName());
+			mMessageListener.sendMessage(builder.create());
 			mMessageListener.sendChange(new InsanityChange(aInsanity.getName()));
 		}
 	}

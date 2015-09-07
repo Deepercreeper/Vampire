@@ -6,9 +6,7 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.creation.controllers.HealthControllerCreation;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.character.instance.Mode;
-import com.deepercreeper.vampireapp.host.Message;
-import com.deepercreeper.vampireapp.host.Message.ButtonAction;
-import com.deepercreeper.vampireapp.host.Message.MessageGroup;
+import com.deepercreeper.vampireapp.host.Message.Builder;
 import com.deepercreeper.vampireapp.host.change.HealthChange;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
@@ -230,8 +228,9 @@ public class HealthControllerInstance implements TimeListener, Saveable, Viewabl
 		}
 		mSteps = steps;
 		mMessageListener.sendChange(new HealthChange(mSteps));
-		mMessageListener
-				.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.got_step, new String[0], mContext, null, ButtonAction.NOTHING));
+		
+		final Builder builder = new Builder(R.string.got_step, mContext);
+		mMessageListener.sendMessage(builder.create());
 		updateUI();
 	}
 	

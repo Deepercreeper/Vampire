@@ -67,7 +67,7 @@ public class ActionInstanceImpl implements ActionInstance
 	 * @param aParent
 	 *            The parent item. May be {@code null}.
 	 */
-	public ActionInstanceImpl(final Action aAction, final Context aContext, final CharacterInstance aChar, MessageListener aMessageListener,
+	public ActionInstanceImpl(final Action aAction, final Context aContext, final CharacterInstance aChar, final MessageListener aMessageListener,
 			final ItemInstance aParent)
 	{
 		mAction = aAction;
@@ -85,7 +85,7 @@ public class ActionInstanceImpl implements ActionInstance
 		mUse.setOnClickListener(new OnClickListener()
 		{
 			@Override
-			public void onClick(View aV)
+			public void onClick(final View aV)
 			{
 				use();
 			}
@@ -205,44 +205,126 @@ public class ActionInstanceImpl implements ActionInstance
 		final int defaultDices = getDefaultDices();
 		if (hasCostDices())
 		{
-			DicesChooseListener listener = new DicesChooseListener()
+			final DicesChooseListener listener = new DicesChooseListener()
 			{
 				@Override
-				public void choseDices(Map<ItemInstance, Integer> aValues)
+				public void choseDices(final Map<ItemInstance, Integer> aValues)
 				{
-					int dices = defaultDices;
-					for (ItemInstance item : aValues.keySet())
-					{
-						dices += aValues.get(item);
-					}
-					use(dices, true);
+					use(defaultDices, aValues);
 				}
 			};
 			ChooseDicesDialog.showChooseDicesDialog(mCostDices, mContext.getString(R.string.choose_dices_amount), mContext, listener);
 		}
 		else
 		{
-			use(defaultDices, true);
+			use(defaultDices, new HashMap<ItemInstance, Integer>());
 		}
 	}
 	
 	@Override
-	public void use(int aDices, boolean aAsk)
+	public void use(final int aDefaultDices, final Map<ItemInstance, Integer> aDices)
 	{
-		if (aAsk)
+		final String[] arguments = new String[3 + 2 * aDices.size()];
+		final boolean[] trans = new boolean[3 + 2 * aDices.size()];
+		final String[] args = new String[3 + 2 * aDices.size()];
+		int counter = 0;
+		
+		arguments[counter] = getAction().getName();
+		args[counter] = getAction().getDisplayName();
+		trans[counter++ ] = true;
+		
+		arguments[counter] = "" + aDefaultDices;
+		args[counter] = "" + aDefaultDices;
+		trans[counter++ ] = false;
+		
+		arguments[counter] = "" + getAction().getInstantSuccess();
+		args[counter] = "" + getAction().getInstantSuccess();
+		trans[counter++ ] = false;
+		
+		for (final ItemInstance item : aDices.keySet())
 		{
-			mMessageListener.makeText(
-					DataUtil.buildMessage(R.string.use_action,
-							new String[] { getAction().getDisplayName(), "" + aDices, "" + getAction().getInstantSuccess() }, mContext),
-					Toast.LENGTH_LONG);
-			mMessageListener.sendMessage(new Message(MessageGroup.ACTION, false, mChar.getName(), R.string.uses_action,
-					new String[] { getAction().getName(), "" + aDices, "" + getAction().getInstantSuccess() }, new boolean[] { true, false, false },
-					mContext, mMessageListener, ButtonAction.ACCEPT_ACTION, ButtonAction.DENY_ACTION, getAction().getName(), "" + aDices));
+			arguments[counter] = item.getName();
+			args[counter] = item.getDisplayName();
+			trans[counter++ ] = true;
+			
+			arguments[counter] = " = " + aDices.get(item);
+			args[counter] = " = " + aDices.get(item);
+			trans[counter++ ] = false;
 		}
-		else
+		
+		mMessageListener.makeText(DataUtil.buildMessage(R.string.use_action, args, mContext), Toast.LENGTH_LONG);
+		mMessageListener.sendMessage(new Message(MessageGroup.ACTION, false, mChar.getName(), R.string.uses_action, arguments, trans, mContext,
+				mMessageListener, ButtonAction.ACCEPT_ACTION, ButtonAction.DENY_ACTION, arguments));
+	}
+	
+	@Override
+	public void use(final String[] aArguments)
+	{
+		final int defaultDices = Integer.parseInt(aArguments[1]);
+		final int instantSuccess = Integer.parseInt(aArguments[2]);
+		int additionalDices = 0;
+		final int difficulty = Integer.parseInt(aArguments[aArguments.length - 1]);
+		
+		for (int i = 3; i < aArguments.length - 1; i += 2)
 		{
-			// TODO Implement
+			final ItemInstance item = getCostDiceItem(aArguments[i]);
+			int value = Integer.parseInt(aArguments[i + 1].substring(" = ".length()));
+			additionalDices += value;
+			while (value > 0)
+			{
+				item.decrease(false);
+				value-- ;
+			}
 		}
+		
+		for (final ItemInstance cost : mCosts.keySet())
+		{
+			int amount = mCosts.get(cost);
+			while (amount > 0)
+			{
+				cost.decrease(false);
+				amount-- ;
+			}
+		}
+		
+		int success = instantSuccess;
+		int specialSuccess = 0;
+		final StringBuilder results = new StringBuilder();
+		for (int i = 0; i < defaultDices + additionalDices; i++ )
+		{
+			final int result = (int) (Math.random() * 9 + 1);
+			if (result >= difficulty)
+			{
+				if (result == 10)
+				{
+					specialSuccess++ ;
+				}
+				else
+				{
+					success++ ;
+				}
+			}
+			
+			results.append(" " + result);
+		}
+		
+		final String[] args = new String[] { getAction().getDisplayName(), results.toString(), "" + success, "" + specialSuccess };
+		mMessageListener.makeText(DataUtil.buildMessage(R.string.using_action, args, mContext), Toast.LENGTH_LONG);
+		args[0] = getAction().getName();
+		mMessageListener.sendMessage(new Message(MessageGroup.ACTION, false, mChar.getName(), R.string.used_action, args,
+				new boolean[] { true, false, false, false }, mContext, null, ButtonAction.NOTHING));
+	}
+	
+	private ItemInstance getCostDiceItem(final String aName)
+	{
+		for (final ItemInstance item : mCostDices)
+		{
+			if (item.getName().equals(aName))
+			{
+				return item;
+			}
+		}
+		return null;
 	}
 	
 	@Override

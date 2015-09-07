@@ -38,23 +38,23 @@ public class ChooseDicesDialog extends DefaultDialog<DicesChooseListener, Linear
 	
 	private Button mOk;
 	
-	private ChooseDicesDialog(String aTitle, List<ItemInstance> aDiceItems, Context aContext, DicesChooseListener aListener)
+	private ChooseDicesDialog(final String aTitle, final List<ItemInstance> aDiceItems, final Context aContext, final DicesChooseListener aListener)
 	{
 		super(aTitle, aContext, aListener, R.layout.dialog_dices_choose, LinearLayout.class);
 		
 		mDiceItems = aDiceItems;
-		for (ItemInstance diceItem : mDiceItems)
+		for (final ItemInstance diceItem : mDiceItems)
 		{
 			mMaxValues.put(diceItem, diceItem.getMaxDecreasure());
 		}
 	}
 	
 	@Override
-	protected Dialog createDialog(Builder aBuilder)
+	protected Dialog createDialog(final Builder aBuilder)
 	{
 		for (final ItemInstance diceItem : mDiceItems)
 		{
-			LinearLayout itemView = (LinearLayout) View.inflate(getContext(), R.layout.view_dice_chooser, null);
+			final LinearLayout itemView = (LinearLayout) View.inflate(getContext(), R.layout.view_dice_chooser, null);
 			final EditText amount = (EditText) itemView.findViewById(R.id.view_dice_value_text);
 			final Button max = (Button) itemView.findViewById(R.id.view_max_dice_value_button);
 			
@@ -101,7 +101,7 @@ public class ChooseDicesDialog extends DefaultDialog<DicesChooseListener, Linear
 					mValues.put(diceItem, maxValue);
 				}
 			});
-			((TextView) itemView.findViewById(R.id.view_dice_label)).setText(diceItem + " (0 - " + mMaxValues.get(diceItem) + "):");
+			((TextView) itemView.findViewById(R.id.view_dice_label)).setText(diceItem.getDisplayName() + " (0 - " + mMaxValues.get(diceItem) + "):");
 			getContainer().addView(itemView, getContainer().getChildCount() - 1);
 		}
 		mOk = (Button) getContainer().findViewById(R.id.dialog_dices_ok_button);
@@ -160,7 +160,7 @@ public class ChooseDicesDialog extends DefaultDialog<DicesChooseListener, Linear
 	 * @param aListener
 	 *            The listener.
 	 */
-	public static void showChooseDicesDialog(List<ItemInstance> aDiceItems, final String aTitle, final Context aContext,
+	public static void showChooseDicesDialog(final List<ItemInstance> aDiceItems, final String aTitle, final Context aContext,
 			final DicesChooseListener aListener)
 	{
 		if (isDialogOpen())

@@ -9,9 +9,10 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.Currency;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.character.instance.MoneyDepot;
-import com.deepercreeper.vampireapp.host.Message;
+import com.deepercreeper.vampireapp.host.Message.Builder;
 import com.deepercreeper.vampireapp.host.Message.ButtonAction;
 import com.deepercreeper.vampireapp.host.Message.MessageGroup;
+import com.deepercreeper.vampireapp.host.Message.MessageType;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.host.change.MoneyChange;
 import com.deepercreeper.vampireapp.util.CodingUtil;
@@ -324,8 +325,12 @@ public class MoneyControllerInstance implements Saveable, Viewable
 		}
 		if ( !depot.isEmpty())
 		{
-			getMessageListener().sendMessage(new Message(MessageGroup.MONEY, false, getCharacter().getName(), R.string.ask_delete_depot,
-					new String[] { depot.getName() }, mContext, null, ButtonAction.ACCEPT_DELETE, ButtonAction.DENY_DELETE, depot.getName()));
+			final Builder builder = new Builder(R.string.ask_delete_depot, mContext);
+			builder.setGroup(MessageGroup.MONEY).setSender(getCharacter().getName());
+			builder.setArguments(depot.getName()).setType(MessageType.YES_NO);
+			builder.setYesAction(ButtonAction.ACCEPT_DELETE).setNoAction(ButtonAction.DENY_DELETE);
+			builder.setSaveables(depot.getName());
+			getMessageListener().sendMessage(builder.create());
 		}
 		else
 		{

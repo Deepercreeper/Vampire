@@ -3,9 +3,7 @@ package com.deepercreeper.vampireapp.character.instance.controllers;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import com.deepercreeper.vampireapp.R;
-import com.deepercreeper.vampireapp.host.Message;
-import com.deepercreeper.vampireapp.host.Message.ButtonAction;
-import com.deepercreeper.vampireapp.host.Message.MessageGroup;
+import com.deepercreeper.vampireapp.host.Message.Builder;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.items.implementations.Named;
 import com.deepercreeper.vampireapp.mechanics.Duration;
@@ -56,8 +54,8 @@ public class InsanityInstance extends Named implements Viewable, Saveable, TimeL
 	 * @param aHost
 	 *            Whether this is a host sided insantiy.
 	 */
-	public InsanityInstance(String aName, Duration aDuration, Context aContext, InsanityControllerInstance aController,
-			MessageListener aMessageListener, boolean aHost)
+	public InsanityInstance(final String aName, final Duration aDuration, final Context aContext, final InsanityControllerInstance aController,
+			final MessageListener aMessageListener, final boolean aHost)
 	{
 		super(aName);
 		mController = aController;
@@ -83,9 +81,9 @@ public class InsanityInstance extends Named implements Viewable, Saveable, TimeL
 	}
 	
 	@Override
-	public Element asElement(Document aDoc)
+	public Element asElement(final Document aDoc)
 	{
-		Element element = aDoc.createElement("insanity");
+		final Element element = aDoc.createElement("insanity");
 		element.setAttribute("name", CodingUtil.encode(getName()));
 		element.appendChild(mDuration.asElement(aDoc));
 		return element;
@@ -100,7 +98,7 @@ public class InsanityInstance extends Named implements Viewable, Saveable, TimeL
 	}
 	
 	@Override
-	public void time(Type aType, int aAmount)
+	public void time(final Type aType, final int aAmount)
 	{
 		mDuration.time(aType, aAmount);
 	}
@@ -111,8 +109,10 @@ public class InsanityInstance extends Named implements Viewable, Saveable, TimeL
 		mController.removeInsanity(this, true);
 		final int id = mHost ? R.string.player_lost_insanity : R.string.lost_insanity;
 		final String sender = mHost ? mMessageListener.getCharacter().getName() : "";
-		mMessageListener.showMessage(
-				new Message(MessageGroup.SINGLE, false, sender, id, new String[] { getName() }, mContext, mMessageListener, ButtonAction.NOTHING));
+		final Builder builder = new Builder(id, mContext);
+		builder.setArguments(getName()).setMessageListener(mMessageListener);
+		builder.setSender(sender);
+		mMessageListener.showMessage(builder.create());
 	}
 	
 	@Override

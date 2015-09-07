@@ -1,5 +1,6 @@
 package com.deepercreeper.vampireapp.host;
 
+import java.util.Arrays;
 import java.util.Map;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -28,10 +29,13 @@ import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemControllerInstance;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.DataUtil;
+import com.deepercreeper.vampireapp.util.LanguageUtil;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
 import com.deepercreeper.vampireapp.util.view.Expander;
+import com.deepercreeper.vampireapp.util.view.dialogs.ChooseDifficultyDialog;
+import com.deepercreeper.vampireapp.util.view.listeners.DifficultyChooseListener;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -202,10 +206,11 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 						ButtonAction.NOTHING));
 				break;
 			case ACCEPT_ACTION :
-				// TODO Implement
+				chooseDifficulty(aMessage.getArguments());
 				break;
 			case DENY_ACTION :
-				// TODO Implement
+				sendMessage(new Message(MessageGroup.ACTION, true, "", R.string.deny_use, new String[] { aMessage.getArgument(0) },
+						new boolean[] { true }, mContext, null, ButtonAction.NOTHING));
 				break;
 			case DENY_DEPOT :
 				sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.deny_take_depot, new String[] { aMessage.getArgument(1) }, mContext,
@@ -230,6 +235,31 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 			mHost.releaseMessage(aMessage);
 		}
 		return release;
+	}
+	
+	private void chooseDifficulty(final String[] aArguments)
+	{
+		final DifficultyChooseListener listener = new DifficultyChooseListener()
+		{
+			@Override
+			public void difficultyChosen(final int aDifficulty)
+			{
+				final String[] args = Arrays.copyOf(aArguments, aArguments.length + 1);
+				args[args.length - 1] = "" + aDifficulty;
+				sendMessage(new Message(MessageGroup.ACTION, true, "", R.string.accept_use, aArguments, new boolean[] { true, false, false },
+						mContext, null, ButtonAction.ACCEPT_ACTION, args));
+			}
+			
+			@Override
+			public void cancel()
+			{
+				sendMessage(new Message(MessageGroup.ACTION, true, "", R.string.deny_use, new String[] { aArguments[0] }, new boolean[] { true },
+						mContext, null, ButtonAction.NOTHING));
+			}
+		};
+		ChooseDifficultyDialog.showChooseDifficultyDialog(
+				DataUtil.buildMessage(R.string.choose_difficulty, new String[] { LanguageUtil.instance().getValue(aArguments[0]) }, mContext),
+				mContext, listener);
 	}
 	
 	@Override

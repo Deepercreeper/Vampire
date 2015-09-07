@@ -779,7 +779,7 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 	}
 	
 	@Override
-	public void decrease(boolean aSilent)
+	public void decrease(final boolean aSilent)
 	{
 		if ( !isValueItem())
 		{
@@ -819,7 +819,7 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 	public int getMaxDecreasure()
 	{
 		int valueId = mValueId;
-		int minValue = getMinValue(RestrictionInstanceType.ITEM_VALUE);
+		final int minValue = getMinValue(RestrictionInstanceType.ITEM_VALUE);
 		while (valueId > 0 && getValues()[valueId] > minValue)
 		{
 			valueId-- ;
@@ -861,6 +861,12 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 	public LinearLayout getContainer()
 	{
 		return mContainer;
+	}
+	
+	@Override
+	public String getDisplayName()
+	{
+		return getItem().getDisplayName();
 	}
 	
 	@Override

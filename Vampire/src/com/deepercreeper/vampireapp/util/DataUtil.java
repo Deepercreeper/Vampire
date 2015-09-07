@@ -112,6 +112,22 @@ public class DataUtil
 	}
 	
 	/**
+	 * @param aMessageId
+	 *            The message id.
+	 * @param aArgs
+	 *            The arguments.
+	 * @param aAllArgs
+	 *            Whether the <code>{x}</code> should be replaced with all arguments instead of the ones, not found.
+	 * @param aContext
+	 *            The underlying context.
+	 * @return the given string with <code>{0}, {1}, ...</code> replaced with the given arguments.
+	 */
+	public static String buildMessage(final int aMessageId, final String[] aArgs, final Context aContext, final boolean aAllArgs)
+	{
+		return buildMessage(aContext.getString(aMessageId), aArgs, aAllArgs);
+	}
+	
+	/**
 	 * @param aMessage
 	 *            The message.
 	 * @param aArgs
@@ -120,24 +136,49 @@ public class DataUtil
 	 */
 	public static String buildMessage(final String aMessage, final String[] aArgs)
 	{
+		return buildMessage(aMessage, aArgs, true);
+	}
+	
+	/**
+	 * @param aMessage
+	 *            The message.
+	 * @param aArgs
+	 *            The arguments.
+	 * @param aAllArgs
+	 *            Whether the <code>{x}</code> should be replaced with all arguments instead of the ones, not found.
+	 * @return the given string with <code>{0}, {1}, ...</code> replaced with the given arguments.
+	 */
+	public static String buildMessage(final String aMessage, final String[] aArgs, final boolean aAllArgs)
+	{
 		if (aMessage == null || aArgs == null)
 		{
 			Log.w(TAG, "Message or arguments is null.");
 			return null;
 		}
 		String result = aMessage;
+		final StringBuilder rest = new StringBuilder();
 		for (int i = 0; i < aArgs.length; i++ )
 		{
-			result = result.replace("{" + i + "}", aArgs[i]);
+			if ( !result.contains("{" + i + "}"))
+			{
+				rest.append(aArgs[i]);
+			}
+			else
+			{
+				result = result.replace("{" + i + "}", aArgs[i]);
+			}
 		}
 		if (result.contains("{x}"))
 		{
-			final StringBuilder args = new StringBuilder();
-			for (final String arg : aArgs)
+			if (aAllArgs)
 			{
-				args.append(arg);
+				rest.delete(0, rest.length());
+				for (final String arg : aArgs)
+				{
+					rest.append(arg);
+				}
 			}
-			result = result.replace("{x}", args.toString());
+			result = result.replace("{x}", rest.toString());
 		}
 		if (result.matches(X_MATCHER) || result.matches(NUMBER_MATCHER))
 		{
