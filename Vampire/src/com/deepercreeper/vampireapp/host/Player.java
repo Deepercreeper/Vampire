@@ -11,6 +11,7 @@ import com.deepercreeper.vampireapp.character.instance.controllers.MoneyControll
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
 import com.deepercreeper.vampireapp.connection.ConnectionListener;
+import com.deepercreeper.vampireapp.host.Message.Builder;
 import com.deepercreeper.vampireapp.host.Message.ButtonAction;
 import com.deepercreeper.vampireapp.host.Message.MessageGroup;
 import com.deepercreeper.vampireapp.host.change.CharacterChange;
@@ -169,6 +170,7 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 	public boolean applyMessage(final Message aMessage, final ButtonAction aAction)
 	{
 		final boolean release = true;
+		Builder builder;
 		final MoneyControllerInstance money = mChar.getMoney();
 		switch (aAction)
 		{
@@ -178,52 +180,62 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 				final String deletedDepot = aMessage.getSaveable(0);
 				money.getDepot(deletedDepot).takeAll();
 				money.removeDepot(deletedDepot, false);
-				sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.accept_delete, aMessage.getArguments(), mContext, null,
-						ButtonAction.NOTHING));
+				builder = new Builder(R.string.accept_delete, mContext);
+				builder.setArguments(aMessage.getArguments());
+				sendMessage(builder.create());
 				break;
 			case DENY_DELETE :
-				sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.deny_take_depot, new String[] { aMessage.getArgument(0) }, mContext,
-						null, ButtonAction.NOTHING, aMessage.getSaveables()));
+				builder = new Builder(R.string.deny_take_depot, mContext);
+				builder.setArguments(aMessage.getArgument(0)).setSaveables(aMessage.getSaveables());
+				sendMessage(builder.create());
 				break;
 			case ACCEPT_TAKE :
 				final Map<String, Integer> takeValues = MoneyDepot.deserializeValues(",", " ", aMessage.getSaveable(0), money.getCurrency());
 				final String takeDepotName = aMessage.getSaveable(1);
 				money.getDepot(takeDepotName).remove(takeValues);
 				money.getDefaultDepot().add(takeValues);
-				sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.accept_take, aMessage.getArguments(), mContext, null,
-						ButtonAction.NOTHING));
+				builder = new Builder(R.string.accept_take, mContext);
+				builder.setArguments(aMessage.getArguments());
+				sendMessage(builder.create());
 				break;
 			case DENY_TAKE :
-				sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.deny_take_depot, new String[] { aMessage.getArgument(1) }, mContext,
-						null, ButtonAction.NOTHING, aMessage.getSaveables()));
+				builder = new Builder(R.string.deny_take_depot, mContext);
+				builder.setArguments(aMessage.getArgument(1)).setSaveables(aMessage.getSaveables());
+				sendMessage(builder.create());
 				break;
 			case ACCEPT_DEPOT :
 				final Map<String, Integer> depotValues = MoneyDepot.deserializeValues(",", " ", aMessage.getSaveable(0), money.getCurrency());
 				final String depotDepotName = aMessage.getSaveable(1);
 				money.getDefaultDepot().remove(depotValues);
 				money.getDepot(depotDepotName).add(depotValues);
-				sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.accept_depot, aMessage.getArguments(), mContext, null,
-						ButtonAction.NOTHING));
+				builder = new Builder(R.string.accept_depot, mContext);
+				builder.setArguments(aMessage.getArguments());
+				sendMessage(builder.create());
 				break;
 			case ACCEPT_ACTION :
 				chooseDifficulty(aMessage.getArguments());
 				break;
 			case DENY_ACTION :
-				sendMessage(new Message(MessageGroup.ACTION, true, "", R.string.deny_use, new String[] { aMessage.getArgument(0) },
-						new boolean[] { true }, mContext, null, ButtonAction.NOTHING));
+				builder = new Builder(R.string.deny_use, mContext);
+				builder.setArguments(aMessage.getArgument(0)).setModeDepending(true).setGroup(MessageGroup.ACTION);
+				builder.setTranslated(true);
+				sendMessage(builder.create());
 				break;
 			case DENY_DEPOT :
-				sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.deny_take_depot, new String[] { aMessage.getArgument(1) }, mContext,
-						null, ButtonAction.NOTHING, aMessage.getSaveables()));
+				builder = new Builder(R.string.deny_take_depot, mContext);
+				builder.setArguments(aMessage.getArgument(1)).setSaveables(aMessage.getSaveables());
+				sendMessage(builder.create());
 				break;
 			case ACCEPT_INCREASE :
 				mChar.findItemInstance(aMessage.getSaveable(0)).increase(false, true);
-				sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.accept_increase, aMessage.getArguments(),
-						new boolean[] { true, false }, mContext, null, ButtonAction.NOTHING));
+				builder = new Builder(R.string.accept_increase, mContext);
+				builder.setArguments(aMessage.getArguments()).setTranslated(true, false);
+				sendMessage(builder.create());
 				break;
 			case DENY_INCREASE :
-				sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.deny_increase, new String[] { aMessage.getArgument(0) },
-						new boolean[] { true }, mContext, null, ButtonAction.NOTHING));
+				builder = new Builder(R.string.deny_increase, mContext);
+				builder.setArguments(aMessage.getArgument(0)).setTranslated(true);
+				sendMessage(builder.create());
 				break;
 			default :
 				break;
@@ -246,15 +258,18 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 			{
 				final String[] args = Arrays.copyOf(aArguments, aArguments.length + 1);
 				args[args.length - 1] = "" + aDifficulty;
-				sendMessage(new Message(MessageGroup.ACTION, true, "", R.string.accept_use, aArguments, new boolean[] { true, false, false },
-						mContext, null, ButtonAction.ACCEPT_ACTION, args));
+				Builder builder = new Builder(R.string.accept_use, mContext);
+				builder.setGroup(MessageGroup.ACTION).setModeDepending(true).setArguments(aArguments).setTranslated(true, false, false);
+				builder.setYesAction(ButtonAction.ACCEPT_ACTION).setSaveables(args);
+				sendMessage(builder.create());
 			}
 			
 			@Override
 			public void cancel()
 			{
-				sendMessage(new Message(MessageGroup.ACTION, true, "", R.string.deny_use, new String[] { aArguments[0] }, new boolean[] { true },
-						mContext, null, ButtonAction.NOTHING));
+				Builder builder = new Builder(R.string.deny_use, mContext);
+				builder.setGroup(MessageGroup.ACTION).setModeDepending(true).setArguments(aArguments[0]).setTranslated(true);
+				sendMessage(builder.create());
 			}
 		};
 		ChooseDifficultyDialog.showChooseDifficultyDialog(

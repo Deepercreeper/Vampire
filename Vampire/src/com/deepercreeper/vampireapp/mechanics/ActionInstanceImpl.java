@@ -6,9 +6,10 @@ import java.util.List;
 import java.util.Map;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
-import com.deepercreeper.vampireapp.host.Message;
+import com.deepercreeper.vampireapp.host.Message.Builder;
 import com.deepercreeper.vampireapp.host.Message.ButtonAction;
 import com.deepercreeper.vampireapp.host.Message.MessageGroup;
+import com.deepercreeper.vampireapp.host.Message.MessageType;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.util.DataUtil;
@@ -253,8 +254,10 @@ public class ActionInstanceImpl implements ActionInstance
 		}
 		
 		mMessageListener.makeText(DataUtil.buildMessage(R.string.use_action, args, mContext), Toast.LENGTH_LONG);
-		mMessageListener.sendMessage(new Message(MessageGroup.ACTION, false, mChar.getName(), R.string.uses_action, arguments, trans, mContext,
-				mMessageListener, ButtonAction.ACCEPT_ACTION, ButtonAction.DENY_ACTION, arguments));
+		Builder builder = new Builder(R.string.uses_action, mContext);
+		builder.setGroup(MessageGroup.ACTION).setSender(mChar.getName()).setArguments(arguments).setTranslated(trans);
+		builder.setType(MessageType.YES_NO).setYesAction(ButtonAction.ACCEPT_ACTION).setNoAction(ButtonAction.DENY_ACTION);
+		mMessageListener.sendMessage(builder.setSaveables(arguments).create());
 	}
 	
 	@Override
@@ -311,8 +314,9 @@ public class ActionInstanceImpl implements ActionInstance
 		final String[] args = new String[] { getAction().getDisplayName(), results.toString(), "" + success, "" + specialSuccess };
 		mMessageListener.makeText(DataUtil.buildMessage(R.string.using_action, args, mContext), Toast.LENGTH_LONG);
 		args[0] = getAction().getName();
-		mMessageListener.sendMessage(new Message(MessageGroup.ACTION, false, mChar.getName(), R.string.used_action, args,
-				new boolean[] { true, false, false, false }, mContext, null, ButtonAction.NOTHING));
+		Builder builder = new Builder(R.string.used_action, mContext);
+		builder.setGroup(MessageGroup.ACTION).setSender(mChar.getName()).setArguments(args).setTranslated(true, false, false, false);
+		mMessageListener.sendMessage(builder.create());
 	}
 	
 	private ItemInstance getCostDiceItem(final String aName)

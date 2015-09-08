@@ -11,9 +11,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
-import com.deepercreeper.vampireapp.host.Message;
+import com.deepercreeper.vampireapp.host.Message.Builder;
 import com.deepercreeper.vampireapp.host.Message.ButtonAction;
 import com.deepercreeper.vampireapp.host.Message.MessageGroup;
+import com.deepercreeper.vampireapp.host.Message.MessageType;
 import com.deepercreeper.vampireapp.host.change.ItemChange;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.items.implementations.instances.dependencies.DependencyInstanceImpl;
@@ -666,8 +667,9 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 		
 		if ( !aSilent)
 		{
-			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.added_item, new String[] { aItem.getName() },
-					new boolean[] { true }, getContext(), null, ButtonAction.NOTHING));
+			Builder builder = new Builder(R.string.added_item, getContext());
+			builder.setArguments(aItem.getName()).setTranslated(true);
+			mMessageListener.sendMessage(builder.create());
 			mMessageListener.sendChange(new ItemChange(getName(), aItem.getName(), true));
 		}
 	}
@@ -797,8 +799,9 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 			mMessageListener.sendChange(new ItemChange(getName(), mValueId));
 			if (mHost)
 			{
-				mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.host_decreased,
-						new String[] { getName(), "" + getValue() }, new boolean[] { true, false }, mContext, null, ButtonAction.NOTHING));
+				Builder builder = new Builder(R.string.host_decreased, getContext());
+				builder.setArguments(getName(), "" + getValue()).setTranslated(true, false);
+				mMessageListener.sendMessage(builder.create());
 			}
 		}
 	}
@@ -1100,14 +1103,17 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 		}
 		if (mHost)
 		{
-			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.host_increased,
-					new String[] { getName(), "" + getValue() }, new boolean[] { true, false }, mContext, null, ButtonAction.NOTHING));
+			Builder builder = new Builder(R.string.host_increased, getContext());
+			builder.setArguments(getName(), "" + getValue()).setTranslated(true, false);
+			mMessageListener.sendMessage(builder.create());
 		}
 		else
 		{
-			mMessageListener.sendMessage(new Message(MessageGroup.ITEM, false, getCharacter().getName(), R.string.ask_increase,
-					new String[] { getName(), "" + getValues()[mValueId + 1] }, new boolean[] { true, false }, mContext, null,
-					ButtonAction.ACCEPT_INCREASE, ButtonAction.DENY_INCREASE, getName()));
+			Builder builder = new Builder(R.string.ask_increase, getContext());
+			builder.setGroup(MessageGroup.ITEM).setSender(getCharacter().getName()).setArguments(getName(), "" + getValues()[mValueId + 1]);
+			builder.setTranslated(true, false).setType(MessageType.YES_NO).setYesAction(ButtonAction.ACCEPT_INCREASE);
+			builder.setNoAction(ButtonAction.DENY_INCREASE).setSaveables(getName());
+			mMessageListener.sendMessage(builder.create());
 		}
 	}
 	
@@ -1163,8 +1169,9 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 		
 		if ( !aSilent)
 		{
-			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.removed_item, new String[] { aItem.getName() },
-					new boolean[] { true }, getContext(), null, ButtonAction.NOTHING));
+			Builder builder = new Builder(R.string.removed_item, getContext());
+			builder.setArguments(aItem.getName()).setTranslated(true);
+			mMessageListener.sendMessage(builder.create());
 			mMessageListener.sendChange(new ItemChange(getName(), aItem.getName(), false));
 		}
 	}

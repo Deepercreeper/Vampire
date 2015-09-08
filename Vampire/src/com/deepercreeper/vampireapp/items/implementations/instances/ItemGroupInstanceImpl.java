@@ -9,9 +9,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
-import com.deepercreeper.vampireapp.host.Message;
-import com.deepercreeper.vampireapp.host.Message.ButtonAction;
-import com.deepercreeper.vampireapp.host.Message.MessageGroup;
+import com.deepercreeper.vampireapp.host.Message.Builder;
 import com.deepercreeper.vampireapp.host.change.ItemGroupChange;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.items.implementations.instances.dependencies.DependableInstanceImpl;
@@ -289,8 +287,9 @@ public class ItemGroupInstanceImpl extends DependableInstanceImpl implements Ite
 		}
 		if ( !aSilent)
 		{
-			mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.added_item, new String[] { aItem.getName() },
-					new boolean[] { true }, getContext(), null, ButtonAction.NOTHING));
+			Builder builder = new Builder(R.string.added_item, getContext());
+			builder.setArguments(aItem.getName()).setTranslated(true);
+			mMessageListener.sendMessage(builder.create());
 			mMessageListener.sendChange(new ItemGroupChange(aItem.getName(), getName(), true));
 		}
 	}
@@ -511,8 +510,9 @@ public class ItemGroupInstanceImpl extends DependableInstanceImpl implements Ite
 			
 			if ( !aSilent)
 			{
-				mMessageListener.sendMessage(new Message(MessageGroup.SINGLE, false, "", R.string.removed_item, new String[] { aItem.getName() },
-						new boolean[] { true }, getContext(), null, ButtonAction.NOTHING));
+				Builder builder = new Builder(R.string.removed_item, getContext());
+				builder.setArguments(aItem.getName()).setTranslated(true);
+				mMessageListener.sendMessage(builder.create());
 				mMessageListener.sendChange(new ItemGroupChange(aItem.getName(), getName(), false));
 			}
 		}
