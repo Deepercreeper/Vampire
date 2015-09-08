@@ -238,8 +238,8 @@ public class ActionInstanceImpl implements ActionInstance
 		args[counter] = "" + aDefaultDices;
 		trans[counter++ ] = false;
 		
-		arguments[counter] = "" + getAction().getInstantSuccess();
-		args[counter] = "" + getAction().getInstantSuccess();
+		arguments[counter] = getAction().getInstantSuccess() == 0 ? "" : "" + getAction().getInstantSuccess();
+		args[counter] = getAction().getInstantSuccess() == 0 ? "" : "" + getAction().getInstantSuccess();
 		trans[counter++ ] = false;
 		
 		for (final ItemInstance item : aDices.keySet())
@@ -254,6 +254,7 @@ public class ActionInstanceImpl implements ActionInstance
 		}
 		
 		mMessageListener.makeText(DataUtil.buildMessage(R.string.use_action, args, mContext), Toast.LENGTH_LONG);
+		// TODO REALLY TEST THIS
 		Builder builder = new Builder(R.string.uses_action, mContext);
 		builder.setGroup(MessageGroup.ACTION).setSender(mChar.getName()).setArguments(arguments).setTranslated(trans);
 		builder.setType(MessageType.YES_NO).setYesAction(ButtonAction.ACCEPT_ACTION).setNoAction(ButtonAction.DENY_ACTION);

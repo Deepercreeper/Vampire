@@ -146,7 +146,7 @@
     <string name="took_item">Folgendes Item wurde genommen: {x}</string>
     <string name="unban">Entbannen</string>
     <string name="use">Nutzen</string>
-    <string name="use_action">Versuche Aktion {0} mit {1} Würfeln, {2} zusätzlichen Erfolgen und zusätzlichen Würfeln {x}.</string>
+    <string name="use_action">Versuche Aktion {0} mit {1} Würfeln{2?, {2} zusätzlichen Erfolgen:}{x? und zusätzlichen Würfeln {x}:}.</string>
     <string name="uses_action">Will Aktion {0} mit {1} Würfeln, {2} zusätzlichen Erfolgen und zusätzlichen Würfeln {x} versuchen.</string>
     <string name="used_action">Hat Aktion {0} genutzt. Würfe:{1}, Erfolge: {2}, Besondere Erfolge: {3}</string>
     <string name="using_action">Sie haben {0} genutzt. Würfe:{1}, Erfolge: {2}, Besondere Erfolge: {3}</string>

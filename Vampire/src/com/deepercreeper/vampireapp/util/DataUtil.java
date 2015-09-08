@@ -93,6 +93,12 @@ public class DataUtil
 	
 	private static final String NUMBER_MATCHER = ".*\\{[0-9]+\\}.*";
 	
+	private static final String CONDITION_MATCHER = ".*\\{([0-9]+|x)\\?.*\\}.*";
+	
+	private static final String CONDITION_MATCHER_START = ".*\\{";
+	
+	private static final String CONDITION_MATCHER_END = "\\?.*:.*\\}.*";
+	
 	private static final String RANGE_STRING = "-?[0-9]+\\.\\.\\.-?[0-9]+";
 	
 	private static Document sData;
@@ -183,6 +189,30 @@ public class DataUtil
 		if (result.matches(X_MATCHER) || result.matches(NUMBER_MATCHER))
 		{
 			Log.w(TAG, "Some unfilled wildcards were found inside the message: " + result);
+		}
+		if (result.matches(CONDITION_MATCHER))
+		{
+			for (int i = 0; i < aArgs.length; i++ )
+			{
+				while (result.matches(CONDITION_MATCHER_START + i + CONDITION_MATCHER_END))
+				{
+					int conditionStart = result.indexOf("{" + i + "?");
+					String first = result.substring(conditionStart + 3 + (int) Math.log10(i), result.indexOf(":", conditionStart));
+					int conditionEnd = result.indexOf("}", conditionStart);
+					String second = result.substring(result.indexOf(":", conditionStart) + 1, conditionEnd);
+					String insertion = aArgs[i] == null || aArgs[i].isEmpty() ? second : first;
+					result = result.substring(0, conditionStart) + insertion + result.substring(conditionEnd + 1);
+				}
+			}
+			while (result.matches(CONDITION_MATCHER_START + "x" + CONDITION_MATCHER_END))
+			{
+				int conditionStart = result.indexOf("{x?");
+				String first = result.substring(conditionStart + 3, result.indexOf(":", conditionStart));
+				int conditionEnd = result.indexOf("}", conditionStart);
+				String second = result.substring(result.indexOf(":", conditionStart) + 1, conditionEnd);
+				String insertion = rest.toString().isEmpty() ? second : first;
+				result = result.substring(0, conditionStart) + insertion + result.substring(conditionEnd + 1);
+			}
 		}
 		return result;
 	}

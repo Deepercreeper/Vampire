@@ -146,7 +146,7 @@
     <string name="took_item">The following item was taken: {x}</string>
     <string name="unban">Unban</string>
     <string name="use">Use</string>
-    <string name="use_action">Trying to use {0} with {1} dices, {2} instant success and additional dices {x}</string>
+    <string name="use_action">Trying to use {0} with {1} dices{2?, {2} instant success:}{x? and additional dices {x}:}.</string>
     <string name="uses_action">Wants to use {0} with {1} dices, {2} instant success and additional dices {x}</string>
     <string name="used_action">Used {0}. Dices:{1}, Success: {2}, Special success: {3}</string>
     <string name="using_action">You used {0}. Dices:{1}, Success: {2}, Special success: {3}</string>
