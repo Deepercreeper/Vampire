@@ -451,6 +451,10 @@ public class MoneyDepot extends Named implements Saveable, Viewable
 	 */
 	public void takeAll()
 	{
+		if (isEmpty())
+		{
+			return;
+		}
 		mController.getDefaultDepot().add(getValues());
 		remove(getValues());
 		getMessageListener().sendChange(new MoneyChange(getName(), getValues()));

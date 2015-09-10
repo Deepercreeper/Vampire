@@ -66,7 +66,7 @@ public class ChooseDifficultyDialog extends DefaultDialog<DifficultyChooseListen
 			}
 		});
 		mAmount.setText("6");
-		((TextView) getContainer().findViewById(R.id.dialog_difficulty_label)).setText(getContext().getString(R.string.difficulty) + " (1 - 10):");
+		((TextView) getContainer().findViewById(R.id.dialog_difficulty_label)).setText(getContext().getString(R.string.difficulty) + " (2 - 10):");
 		mOk = (Button) getContainer().findViewById(R.id.dialog_difficulty_ok_button);
 		mOk.setOnClickListener(new OnClickListener()
 		{
@@ -91,7 +91,7 @@ public class ChooseDifficultyDialog extends DefaultDialog<DifficultyChooseListen
 	private void updateOkButton()
 	{
 		boolean enabled = true;
-		enabled &= isNumberOk(mAmount, 1, 10);
+		enabled &= isNumberOk(mAmount, 2, 10);
 		ViewUtil.setEnabled(mOk, enabled);
 	}
 	

@@ -11,7 +11,6 @@ import com.deepercreeper.vampireapp.host.change.RestrictionChange;
 import com.deepercreeper.vampireapp.items.implementations.instances.restrictions.RestrictionInstanceImpl;
 import com.deepercreeper.vampireapp.items.interfaces.instances.ItemInstance;
 import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionInstance;
-import com.deepercreeper.vampireapp.items.interfaces.instances.restrictions.RestrictionInstance.RestrictionInstanceType;
 import com.deepercreeper.vampireapp.mechanics.TimeListener;
 import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.ViewUtil;
@@ -165,23 +164,16 @@ public class RestrictionControllerInstance implements Viewable, Saveable, TimeLi
 	 */
 	public void addRestriction(final RestrictionInstance aRestriction, final boolean aSilent)
 	{
-		if (aRestriction.getType() == RestrictionInstanceType.ITEM_CHILD_EP_COST_MULTI
-				|| aRestriction.getType() == RestrictionInstanceType.ITEM_CHILD_EP_COST_NEW
-				|| aRestriction.getType() == RestrictionInstanceType.ITEM_EP_COST
-				|| aRestriction.getType() == RestrictionInstanceType.ITEM_EP_COST_MULTI
-				|| aRestriction.getType() == RestrictionInstanceType.ITEM_EP_COST_NEW || aRestriction.getType() == RestrictionInstanceType.ITEM_VALUE)
+		final ItemInstance item = mChar.findItemInstance(aRestriction.getItemName());
+		if (item != null)
 		{
-			final ItemInstance item = mChar.findItemInstance(aRestriction.getItemName());
-			if (item != null)
+			item.addRestriction(aRestriction);
+			mRestrictions.add(aRestriction);
+			mExpander.getContainer().addView(aRestriction.getContainer(), mExpander.getContainer().getChildCount() - 1);
+			mExpander.resize();
+			if ( !aSilent)
 			{
-				item.addRestriction(aRestriction);
-				mRestrictions.add(aRestriction);
-				mExpander.getContainer().addView(aRestriction.getContainer(), mExpander.getContainer().getChildCount() - 1);
-				mExpander.resize();
-				if ( !aSilent)
-				{
-					mMessageListener.sendChange(new RestrictionChange(aRestriction, true));
-				}
+				mMessageListener.sendChange(new RestrictionChange(aRestriction, true));
 			}
 		}
 	}

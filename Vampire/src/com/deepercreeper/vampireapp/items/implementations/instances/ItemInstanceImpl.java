@@ -654,6 +654,7 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 			return;
 		}
 		
+		item.initActions();
 		getChildrenList().add(item);
 		mChildren.put(item.getName(), item);
 		mChildrenContainer.addView(item.getContainer());
@@ -667,7 +668,7 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 		
 		if ( !aSilent)
 		{
-			Builder builder = new Builder(R.string.added_item, getContext());
+			final Builder builder = new Builder(R.string.added_item, getContext());
 			builder.setArguments(aItem.getName()).setTranslated(true);
 			mMessageListener.sendMessage(builder.create());
 			mMessageListener.sendChange(new ItemChange(getName(), aItem.getName(), true));
@@ -734,7 +735,7 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 			Log.w(TAG, "Tried to ask whether a non value item can be decreased.");
 			return false;
 		}
-		return mHost && mValueId > Math.max(0, getMinValue(RestrictionInstanceType.ITEM_VALUE));
+		return mValueId > Math.max(0, getMinValue(RestrictionInstanceType.ITEM_VALUE));
 	}
 	
 	@Override
@@ -799,7 +800,7 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 			mMessageListener.sendChange(new ItemChange(getName(), mValueId));
 			if (mHost)
 			{
-				Builder builder = new Builder(R.string.host_decreased, getContext());
+				final Builder builder = new Builder(R.string.host_decreased, getContext());
 				builder.setArguments(getName(), "" + getValue()).setTranslated(true, false);
 				mMessageListener.sendMessage(builder.create());
 			}
@@ -816,6 +817,15 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 	public Set<ActionInstance> getActions()
 	{
 		return mActions;
+	}
+	
+	@Override
+	public void initActions()
+	{
+		for (final ActionInstance action : getActions())
+		{
+			action.initDices();
+		}
 	}
 	
 	@Override
@@ -1103,13 +1113,13 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 		}
 		if (mHost)
 		{
-			Builder builder = new Builder(R.string.host_increased, getContext());
+			final Builder builder = new Builder(R.string.host_increased, getContext());
 			builder.setArguments(getName(), "" + getValue()).setTranslated(true, false);
 			mMessageListener.sendMessage(builder.create());
 		}
 		else
 		{
-			Builder builder = new Builder(R.string.ask_increase, getContext());
+			final Builder builder = new Builder(R.string.ask_increase, getContext());
 			builder.setGroup(MessageGroup.ITEM).setSender(getCharacter().getName()).setArguments(getName(), "" + getValues()[mValueId + 1]);
 			builder.setTranslated(true, false).setType(MessageType.YES_NO).setYesAction(ButtonAction.ACCEPT_INCREASE);
 			builder.setNoAction(ButtonAction.DENY_INCREASE).setSaveables(getName());
@@ -1169,7 +1179,7 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 		
 		if ( !aSilent)
 		{
-			Builder builder = new Builder(R.string.removed_item, getContext());
+			final Builder builder = new Builder(R.string.removed_item, getContext());
 			builder.setArguments(aItem.getName()).setTranslated(true);
 			mMessageListener.sendMessage(builder.create());
 			mMessageListener.sendChange(new ItemChange(getName(), aItem.getName(), false));

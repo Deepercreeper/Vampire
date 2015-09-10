@@ -27,6 +27,11 @@ public interface ItemControllerInstance extends Saveable, Viewable, DependableIn
 	public void addItem(ItemInstance aItem);
 	
 	/**
+	 * Initializes all actions.
+	 */
+	public void initActions();
+	
+	/**
 	 * Closes the whole controller.
 	 */
 	public void close();
@@ -135,5 +140,6 @@ public interface ItemControllerInstance extends Saveable, Viewable, DependableIn
 	/**
 	 * Updates the user interface.
 	 */
+	@Override
 	public void updateUI();
 }

@@ -93,11 +93,11 @@ public class DataUtil
 	
 	private static final String NUMBER_MATCHER = ".*\\{[0-9]+\\}.*";
 	
-	private static final String CONDITION_MATCHER = ".*\\{([0-9]+|x)\\?.*\\}.*";
+	private static final String CONDITION_MATCHER = ".*\\{([0-9]+|x)\\?.*\\|.*\\}.*";
 	
 	private static final String CONDITION_MATCHER_START = ".*\\{";
 	
-	private static final String CONDITION_MATCHER_END = "\\?.*:.*\\}.*";
+	private static final String CONDITION_MATCHER_END = "\\?.*\\|.*\\}.*";
 	
 	private static final String RANGE_STRING = "-?[0-9]+\\.\\.\\.-?[0-9]+";
 	
@@ -196,21 +196,21 @@ public class DataUtil
 			{
 				while (result.matches(CONDITION_MATCHER_START + i + CONDITION_MATCHER_END))
 				{
-					int conditionStart = result.indexOf("{" + i + "?");
-					String first = result.substring(conditionStart + 3 + (int) Math.log10(i), result.indexOf(":", conditionStart));
-					int conditionEnd = result.indexOf("}", conditionStart);
-					String second = result.substring(result.indexOf(":", conditionStart) + 1, conditionEnd);
-					String insertion = aArgs[i] == null || aArgs[i].isEmpty() ? second : first;
+					final int conditionStart = result.indexOf("{" + i + "?");
+					final String first = result.substring(conditionStart + 3 + (int) Math.log10(i), result.indexOf("|", conditionStart));
+					final int conditionEnd = result.indexOf("}", conditionStart);
+					final String second = result.substring(result.indexOf("|", conditionStart) + 1, conditionEnd);
+					final String insertion = aArgs[i] == null || aArgs[i].isEmpty() ? second : first;
 					result = result.substring(0, conditionStart) + insertion + result.substring(conditionEnd + 1);
 				}
 			}
 			while (result.matches(CONDITION_MATCHER_START + "x" + CONDITION_MATCHER_END))
 			{
-				int conditionStart = result.indexOf("{x?");
-				String first = result.substring(conditionStart + 3, result.indexOf(":", conditionStart));
-				int conditionEnd = result.indexOf("}", conditionStart);
-				String second = result.substring(result.indexOf(":", conditionStart) + 1, conditionEnd);
-				String insertion = rest.toString().isEmpty() ? second : first;
+				final int conditionStart = result.indexOf("{x?");
+				final String first = result.substring(conditionStart + 3, result.indexOf("|", conditionStart));
+				final int conditionEnd = result.indexOf("}", conditionStart);
+				final String second = result.substring(result.indexOf("|", conditionStart) + 1, conditionEnd);
+				final String insertion = rest.toString().isEmpty() ? second : first;
 				result = result.substring(0, conditionStart) + insertion + result.substring(conditionEnd + 1);
 			}
 		}
@@ -622,7 +622,7 @@ public class DataUtil
 			Log.w(TAG, "Array is null.");
 			return null;
 		}
-		final String[] result = aList.split(",");
+		final String[] result = aList.split(",", -1);
 		for (int i = 0; i < result.length; i++ )
 		{
 			result[i] = CodingUtil.decode(result[i]);

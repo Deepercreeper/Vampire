@@ -95,7 +95,7 @@ public interface ConditionInstance
 		 * Complies if the item with name {@link ConditionInstance#getItemName()} has a child at index {@link ConditionInstance#getIndex()} and that child has a value that approves
 		 * {@link ConditionInstance#isInRange(int)}.
 		 */
-		public static final ConditionQueryInstance					ITEM_CHILD_VALUE_AT			= new ConditionQueryInstance("ItemChildValueAt")
+		public static final ConditionQueryInstance					ITEM_CHILD_VALUE			= new ConditionQueryInstance("ItemChildValueAt")
 																								{
 																									@Override
 																									public boolean complied(
@@ -121,16 +121,16 @@ public interface ConditionInstance
 																								};
 		
 		/**
-		 * Complies if {@link ConditionQueryInstance#ITEM_CHILD_VALUE_AT} does not comply.
+		 * Complies if {@link ConditionQueryInstance#ITEM_CHILD_VALUE} does not comply.
 		 */
-		public static final ConditionQueryInstance					NOT_ITEM_CHILD_VALUE_AT		= new ConditionQueryInstance("NotItemChildValueAt")
+		public static final ConditionQueryInstance					NOT_ITEM_CHILD_VALUE_		= new ConditionQueryInstance("NotItemChildValueAt")
 																								{
 																									@Override
 																									public boolean complied(
 																											final ItemControllerInstance aController,
 																											final ConditionInstance aCondition)
 																									{
-																										return !ITEM_CHILD_VALUE_AT.complied(
+																										return !ITEM_CHILD_VALUE.complied(
 																												aController, aCondition);
 																									}
 																								};

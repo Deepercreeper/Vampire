@@ -164,7 +164,7 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 				sendMessage(builder.create());
 				break;
 			case ACCEPT_ACTION :
-				mChar.getActions().getAction(aMessage.getSaveable(0)).use(aMessage.getArguments());
+				mChar.getActions().getAction(aMessage.getSaveable(0)).use(aMessage.getSaveables());
 				break;
 			default :
 				break;

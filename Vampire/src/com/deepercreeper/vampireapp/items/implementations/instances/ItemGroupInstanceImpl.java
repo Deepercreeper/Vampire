@@ -275,6 +275,7 @@ public class ItemGroupInstanceImpl extends DependableInstanceImpl implements Ite
 			return;
 		}
 		
+		item.initActions();
 		getItemsList().add(item);
 		mItems.put(aItem, item);
 		mItemsContainer.addView(item.getContainer());
@@ -287,7 +288,7 @@ public class ItemGroupInstanceImpl extends DependableInstanceImpl implements Ite
 		}
 		if ( !aSilent)
 		{
-			Builder builder = new Builder(R.string.added_item, getContext());
+			final Builder builder = new Builder(R.string.added_item, getContext());
 			builder.setArguments(aItem.getName()).setTranslated(true);
 			mMessageListener.sendMessage(builder.create());
 			mMessageListener.sendChange(new ItemGroupChange(aItem.getName(), getName(), true));
@@ -510,7 +511,7 @@ public class ItemGroupInstanceImpl extends DependableInstanceImpl implements Ite
 			
 			if ( !aSilent)
 			{
-				Builder builder = new Builder(R.string.removed_item, getContext());
+				final Builder builder = new Builder(R.string.removed_item, getContext());
 				builder.setArguments(aItem.getName()).setTranslated(true);
 				mMessageListener.sendMessage(builder.create());
 				mMessageListener.sendChange(new ItemGroupChange(aItem.getName(), getName(), false));

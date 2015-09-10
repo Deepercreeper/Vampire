@@ -78,8 +78,6 @@ public class ActionInstanceImpl implements ActionInstance
 		mMessageListener = aMessageListener;
 		mContainer = (LinearLayout) View.inflate(mContext, R.layout.view_action, null);
 		
-		initDices();
-		
 		mUse = (Button) getContainer().findViewById(R.id.view_use_action_button);
 		final TextView name = (TextView) getContainer().findViewById(R.id.view_action_name_label);
 		
@@ -238,8 +236,8 @@ public class ActionInstanceImpl implements ActionInstance
 		args[counter] = "" + aDefaultDices;
 		trans[counter++ ] = false;
 		
-		arguments[counter] = getAction().getInstantSuccess() == 0 ? "" : "" + getAction().getInstantSuccess();
-		args[counter] = getAction().getInstantSuccess() == 0 ? "" : "" + getAction().getInstantSuccess();
+		arguments[counter] = emptyInt(getAction().getInstantSuccess());
+		args[counter] = emptyInt(getAction().getInstantSuccess());
 		trans[counter++ ] = false;
 		
 		for (final ItemInstance item : aDices.keySet())
@@ -253,10 +251,9 @@ public class ActionInstanceImpl implements ActionInstance
 			trans[counter++ ] = false;
 		}
 		
-		mMessageListener.makeText(DataUtil.buildMessage(R.string.use_action, args, mContext), Toast.LENGTH_LONG);
-		// TODO REALLY TEST THIS
-		Builder builder = new Builder(R.string.uses_action, mContext);
-		builder.setGroup(MessageGroup.ACTION).setSender(mChar.getName()).setArguments(arguments).setTranslated(trans);
+		mMessageListener.makeText(DataUtil.buildMessage(R.string.use_action, args, mContext, false), Toast.LENGTH_LONG);
+		final Builder builder = new Builder(R.string.uses_action, mContext);
+		builder.setGroup(MessageGroup.ACTION).setSender(mChar.getName()).setArguments(arguments).setTranslated(trans).setAllArguments(false);
 		builder.setType(MessageType.YES_NO).setYesAction(ButtonAction.ACCEPT_ACTION).setNoAction(ButtonAction.DENY_ACTION);
 		mMessageListener.sendMessage(builder.setSaveables(arguments).create());
 	}
@@ -265,11 +262,11 @@ public class ActionInstanceImpl implements ActionInstance
 	public void use(final String[] aArguments)
 	{
 		final int defaultDices = Integer.parseInt(aArguments[1]);
-		final int instantSuccess = Integer.parseInt(aArguments[2]);
+		final int instantSuccess = aArguments[2].isEmpty() ? 0 : Integer.parseInt(aArguments[2]);
 		int additionalDices = 0;
-		final int difficulty = Integer.parseInt(aArguments[aArguments.length - 1]);
+		final int difficulty = Integer.parseInt(aArguments[3]);
 		
-		for (int i = 3; i < aArguments.length - 1; i += 2)
+		for (int i = 4; i < aArguments.length; i += 2)
 		{
 			final ItemInstance item = getCostDiceItem(aArguments[i]);
 			int value = Integer.parseInt(aArguments[i + 1].substring(" = ".length()));
@@ -293,11 +290,16 @@ public class ActionInstanceImpl implements ActionInstance
 		
 		int success = instantSuccess;
 		int specialSuccess = 0;
+		int mistakes = 0;
 		final StringBuilder results = new StringBuilder();
 		for (int i = 0; i < defaultDices + additionalDices; i++ )
 		{
-			final int result = (int) (Math.random() * 9 + 1);
-			if (result >= difficulty)
+			final int result = (int) (Math.random() * 10 + 1);
+			if (result == 1)
+			{
+				mistakes++ ;
+			}
+			else if (result >= difficulty)
 			{
 				if (result == 10)
 				{
@@ -308,16 +310,39 @@ public class ActionInstanceImpl implements ActionInstance
 					success++ ;
 				}
 			}
-			
 			results.append(" " + result);
 		}
+		while (mistakes > 0 && success + specialSuccess > 0)
+		{
+			mistakes-- ;
+			if (specialSuccess > 0)
+			{
+				specialSuccess-- ;
+			}
+			else
+			{
+				success-- ;
+			}
+		}
 		
-		final String[] args = new String[] { getAction().getDisplayName(), results.toString(), "" + success, "" + specialSuccess };
-		mMessageListener.makeText(DataUtil.buildMessage(R.string.using_action, args, mContext), Toast.LENGTH_LONG);
+		final boolean noDices = results.length() == 0;
+		final String[] args = new String[] { getAction().getDisplayName(), results.toString(), emptyInt(success), emptyInt(specialSuccess),
+				emptyInt(mistakes) };
+		mMessageListener.makeText(DataUtil.buildMessage(noDices ? R.string.using_action_none : R.string.using_action, args, mContext),
+				Toast.LENGTH_LONG);
 		args[0] = getAction().getName();
-		Builder builder = new Builder(R.string.used_action, mContext);
-		builder.setGroup(MessageGroup.ACTION).setSender(mChar.getName()).setArguments(args).setTranslated(true, false, false, false);
+		final Builder builder = new Builder(noDices ? R.string.used_action_none : R.string.used_action, mContext);
+		builder.setGroup(MessageGroup.ACTION).setSender(mChar.getName()).setArguments(args).setTranslated(true, false, false, false, false);
 		mMessageListener.sendMessage(builder.create());
+	}
+	
+	private String emptyInt(final int aValue)
+	{
+		if (aValue == 0)
+		{
+			return "";
+		}
+		return "" + aValue;
 	}
 	
 	private ItemInstance getCostDiceItem(final String aName)
@@ -356,7 +381,8 @@ public class ActionInstanceImpl implements ActionInstance
 		ViewUtil.setEnabled(mUse, canUse());
 	}
 	
-	private void initDices()
+	@Override
+	public void initDices()
 	{
 		for (final String dice : mAction.getDiceNames())
 		{

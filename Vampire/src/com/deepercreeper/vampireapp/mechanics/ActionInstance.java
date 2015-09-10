@@ -32,6 +32,11 @@ public interface ActionInstance extends Viewable, Comparable<ActionInstance>
 	public void use(int aDefaultDices, Map<ItemInstance, Integer> aDices);
 	
 	/**
+	 * Initializes all actions.
+	 */
+	public void initDices();
+	
+	/**
 	 * Uses this action.
 	 * 
 	 * @param aArguments

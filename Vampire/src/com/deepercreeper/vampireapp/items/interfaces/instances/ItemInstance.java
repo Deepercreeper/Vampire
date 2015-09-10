@@ -46,6 +46,11 @@ public interface ItemInstance extends RestrictionableInstance, Comparable<ItemIn
 	public void addChild(Item aItem, boolean aSilent);
 	
 	/**
+	 * Initializes all item actions.
+	 */
+	public void initActions();
+	
+	/**
 	 * Adds the given value listener to this item.
 	 * 
 	 * @param aListener

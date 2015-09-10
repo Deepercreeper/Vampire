@@ -5,7 +5,7 @@
     <string name="accept_depot">You did depot {0} at {1}.</string>
     <string name="accept_increase">{0} was increased to {1}.</string>
     <string name="accept_take">You took {0} of {1}.</string>
-    <string name="accept_use">You are allowed to use {0} with {1} dices, {2} instant success and additional dices {x}</string>
+    <string name="accept_use">You are allowed to use {0} with {1} dices{2?, {2} instant success|}{x? and additional dice(s) {x}|}. Difficulty {3}.</string>
 	<string name="actions">Actions</string>
     <string name="add">Add</string>
     <string name="add_depot">Add depot</string>
@@ -146,10 +146,12 @@
     <string name="took_item">The following item was taken: {x}</string>
     <string name="unban">Unban</string>
     <string name="use">Use</string>
-    <string name="use_action">Trying to use {0} with {1} dices{2?, {2} instant success:}{x? and additional dices {x}:}.</string>
-    <string name="uses_action">Wants to use {0} with {1} dices, {2} instant success and additional dices {x}</string>
-    <string name="used_action">Used {0}. Dices:{1}, Success: {2}, Special success: {3}</string>
-    <string name="using_action">You used {0}. Dices:{1}, Success: {2}, Special success: {3}</string>
+    <string name="use_action">Trying to use {0} with {1} dice(s){2?, {2} instant success|}{x? and additional dice(s) {x}|}.</string>
+    <string name="uses_action">Wants to use {0} with {1} dice(s){2?, {2} instant success|}{x? and additional dice(s) {x}|}.</string>
+    <string name="used_action">Used {0}. Dices:{1}{2?, Success: {2}|}{3?, Special success: {3}|}{4?, Mistakes: {4}|}</string>
+    <string name="used_action_none">Used {0}. Dices: None{1}{2?, Success: {2}|}{3?, Special success: {3}|}{4?, Mistakes: {4}|}</string>
+    <string name="using_action">You used {0}. Dices:{1}{2?, Success: {2}|}{3?, Special success: {3}|}{4?, Mistakes: {4}|}</string>
+    <string name="using_action_none">You used {0}. Dices: None{1}{2?, Success: {2}|}{3?, Special success: {3}|}{4?, Mistakes: {4}|}</string>
     <string name="value">Value</string>
     <string name="weight">Weight</string>
     <string name="weight_unit">kg</string>

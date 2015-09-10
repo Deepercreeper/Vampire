@@ -130,6 +130,10 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		{
 			mControllers.add(new ItemControllerInstanceImpl(controller, getContext(), this, aControllerResizeListener, mMessageListener, mHost));
 		}
+		for (final ItemControllerInstance controller : getControllers())
+		{
+			controller.initActions();
+		}
 		
 		mInventory = new InventoryControllerInstance(mItems.getInventory(), this, getContext(), mResizeListener, mMessageListener, mHost);
 		mHealth = new HealthControllerInstance(aCreator.getHealth(), getContext(), mMessageListener, this, mHost);
@@ -212,6 +216,10 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		for (final Element controller : DataUtil.getChildren(DataUtil.getElement(root, "controllers"), "controller"))
 		{
 			mControllers.add(new ItemControllerInstanceImpl(controller, mItems, mContext, this, aControllerResizeListener, mMessageListener, mHost));
+		}
+		for (final ItemControllerInstance controller : getControllers())
+		{
+			controller.initActions();
 		}
 		
 		// Health

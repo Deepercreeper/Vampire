@@ -66,7 +66,9 @@ public class ActionsControllerInstance implements Viewable
 		}
 		for (final Action defaultAction : aDefaultActions)
 		{
-			mActions.add(new ActionInstanceImpl(defaultAction, mContext, mChar, mMessageListener, null));
+			final ActionInstance action = new ActionInstanceImpl(defaultAction, mContext, mChar, mMessageListener, null);
+			action.initDices();
+			mActions.add(action);
 		}
 		
 		// MARK Actions

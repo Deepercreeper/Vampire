@@ -1,6 +1,5 @@
 package com.deepercreeper.vampireapp.host;
 
-import java.util.Arrays;
 import java.util.Map;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -256,18 +255,34 @@ public class Player implements Viewable, TimeListener, MessageListener, ResizeLi
 			@Override
 			public void difficultyChosen(final int aDifficulty)
 			{
-				final String[] args = Arrays.copyOf(aArguments, aArguments.length + 1);
-				args[args.length - 1] = "" + aDifficulty;
-				Builder builder = new Builder(R.string.accept_use, mContext);
-				builder.setGroup(MessageGroup.ACTION).setModeDepending(true).setArguments(aArguments).setTranslated(true, false, false);
-				builder.setYesAction(ButtonAction.ACCEPT_ACTION).setSaveables(args);
+				final String[] args = new String[aArguments.length + 1];
+				for (int i = 0; i < args.length; i++ )
+				{
+					if (i < 3)
+					{
+						args[i] = aArguments[i];
+					}
+					else if (i == 3)
+					{
+						args[i] = "" + aDifficulty;
+					}
+					else
+					{
+						args[i] = aArguments[i - 1];
+					}
+				}
+				final boolean[] trans = new boolean[args.length];
+				trans[0] = true;
+				final Builder builder = new Builder(R.string.accept_use, mContext);
+				builder.setGroup(MessageGroup.ACTION).setModeDepending(true).setArguments(args).setTranslated(trans);
+				builder.setYesAction(ButtonAction.ACCEPT_ACTION).setSaveables(args).setAllArguments(false);
 				sendMessage(builder.create());
 			}
 			
 			@Override
 			public void cancel()
 			{
-				Builder builder = new Builder(R.string.deny_use, mContext);
+				final Builder builder = new Builder(R.string.deny_use, mContext);
 				builder.setGroup(MessageGroup.ACTION).setModeDepending(true).setArguments(aArguments[0]).setTranslated(true);
 				sendMessage(builder.create());
 			}

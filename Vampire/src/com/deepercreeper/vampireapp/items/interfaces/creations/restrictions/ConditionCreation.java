@@ -83,8 +83,8 @@ public interface ConditionCreation
 		 * Complies if the item with name {@link ConditionCreation#getItemName()} has a child at index {@link ConditionCreation#getIndex()} and that child has a value that approves
 		 * {@link ConditionCreation#isInRange(int)}.
 		 */
-		public static final ConditionQueryCreation ITEM_CHILD_VALUE_AT = new ConditionQueryCreation("ItemChildValueAt",
-				ConditionQueryInstance.ITEM_CHILD_VALUE_AT)
+		public static final ConditionQueryCreation ITEM_CHILD_VALUE = new ConditionQueryCreation("ItemChildValue",
+				ConditionQueryInstance.ITEM_CHILD_VALUE)
 		{
 			@Override
 			public boolean complied(final ItemControllerCreation aController, final ConditionCreation aCondition)
@@ -104,15 +104,15 @@ public interface ConditionCreation
 		};
 		
 		/**
-		 * Complies if {@link ConditionQueryCreation#ITEM_CHILD_VALUE_AT} does not comply.
+		 * Complies if {@link ConditionQueryCreation#ITEM_CHILD_VALUE} does not comply.
 		 */
-		public static final ConditionQueryCreation NOT_ITEM_CHILD_VALUE_AT = new ConditionQueryCreation("NotItemChildValueAt",
-				ConditionQueryInstance.NOT_ITEM_CHILD_VALUE_AT)
+		public static final ConditionQueryCreation NOT_ITEM_CHILD_VALUE_ = new ConditionQueryCreation("NotItemChildValue",
+				ConditionQueryInstance.NOT_ITEM_CHILD_VALUE_)
 		{
 			@Override
 			public boolean complied(final ItemControllerCreation aController, final ConditionCreation aCondition)
 			{
-				return !ITEM_CHILD_VALUE_AT.complied(aController, aCondition);
+				return !ITEM_CHILD_VALUE.complied(aController, aCondition);
 			}
 		};
 		
@@ -194,7 +194,7 @@ public interface ConditionCreation
 		
 		private final ConditionQueryInstance mInstanceQuery;
 		
-		private ConditionQueryCreation(final String aName, ConditionQueryInstance aInstanceQuery)
+		private ConditionQueryCreation(final String aName, final ConditionQueryInstance aInstanceQuery)
 		{
 			mName = aName;
 			mInstanceQuery = aInstanceQuery;

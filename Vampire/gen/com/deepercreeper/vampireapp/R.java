@@ -512,12 +512,14 @@ public final class R {
         public static final int use=0x7f060090;
         public static final int use_action=0x7f060091;
         public static final int used_action=0x7f060093;
+        public static final int used_action_none=0x7f060094;
         public static final int uses_action=0x7f060092;
-        public static final int using_action=0x7f060094;
-        public static final int value=0x7f060095;
-        public static final int weight=0x7f060096;
-        public static final int weight_unit=0x7f060097;
-        public static final int yes=0x7f060098;
+        public static final int using_action=0x7f060095;
+        public static final int using_action_none=0x7f060096;
+        public static final int value=0x7f060097;
+        public static final int weight=0x7f060098;
+        public static final int weight_unit=0x7f060099;
+        public static final int yes=0x7f06009a;
     }
     public static final class style {
         /**  Maybe add an own style for all used views some day 

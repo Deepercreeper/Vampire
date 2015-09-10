@@ -9,6 +9,7 @@ import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.host.change.MessageListener;
 import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.LanguageUtil;
+import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.interfaces.Saveable;
 import com.deepercreeper.vampireapp.util.interfaces.Viewable;
@@ -34,21 +35,25 @@ public class Message implements Saveable, Viewable
 	 */
 	public static class Builder
 	{
+		private static final String TAG = "Builder";
+		
+		private final int mMessageId;
+		
+		private final Context mContext;
+		
 		private MessageType mType = MessageType.INFO;
 		
 		private MessageGroup mGroup = MessageGroup.SINGLE;
 		
 		private boolean mModeDepending = false;
 		
+		private boolean mAllArguments = true;
+		
 		private String mSender = "";
 		
 		private String[] mArguments = new String[0];
 		
 		private boolean[] mTranslated = new boolean[0];
-		
-		private final int mMessageId;
-		
-		private final Context mContext;
 		
 		private ButtonAction mYesAction = ButtonAction.NOTHING;
 		
@@ -77,8 +82,8 @@ public class Message implements Saveable, Viewable
 		 */
 		public Message create()
 		{
-			return new Message(mType, mGroup, mModeDepending, mSender, mMessageId, mArguments, mTranslated, mContext, mMessageListener, mYesAction,
-					mNoAction, mSaveables);
+			return new Message(mType, mGroup, mModeDepending, mSender, mMessageId, mArguments, mTranslated, mAllArguments, mContext, mMessageListener,
+					mYesAction, mNoAction, mSaveables);
 		}
 		
 		/**
@@ -91,6 +96,19 @@ public class Message implements Saveable, Viewable
 		public Builder setGroup(final MessageGroup aGroup)
 		{
 			mGroup = aGroup;
+			return this;
+		}
+		
+		/**
+		 * Sets whether all arguments should be added to the <code>{x}</code> item. The default value is {@code true}.
+		 * 
+		 * @param aAllArguments
+		 *            The flag.
+		 * @return this.
+		 */
+		public Builder setAllArguments(final boolean aAllArguments)
+		{
+			mAllArguments = aAllArguments;
 			return this;
 		}
 		
@@ -187,6 +205,10 @@ public class Message implements Saveable, Viewable
 		public Builder setTranslated(final boolean... aTranslated)
 		{
 			mTranslated = aTranslated;
+			if (mTranslated.length != mArguments.length)
+			{
+				Log.w(TAG, "Tried to set the translated array to another length.");
+			}
 			return this;
 		}
 		
@@ -374,6 +396,8 @@ public class Message implements Saveable, Viewable
 	
 	private final boolean[] mTranslatedArguments;
 	
+	private final boolean mAllArguments;
+	
 	private final String[] mSaveables;
 	
 	private final MessageListener mListener;
@@ -387,8 +411,8 @@ public class Message implements Saveable, Viewable
 	private final ButtonAction mNoAction;
 	
 	private Message(final MessageType aType, final MessageGroup aGroup, final boolean aModeDepending, final String aSender, final int aMessageId,
-			final String[] aArguments, final boolean[] aTranslated, final Context aContext, final MessageListener aListener,
-			final ButtonAction aYesAction, final ButtonAction aNoAction, final String... aSaveables)
+			final String[] aArguments, final boolean[] aTranslated, final boolean aAllArguments, final Context aContext,
+			final MessageListener aListener, final ButtonAction aYesAction, final ButtonAction aNoAction, final String... aSaveables)
 	{
 		mType = aType;
 		mGroup = aGroup;
@@ -397,6 +421,7 @@ public class Message implements Saveable, Viewable
 		mModeDepending = aModeDepending;
 		mArguments = aArguments;
 		mTranslatedArguments = aTranslated;
+		mAllArguments = aAllArguments;
 		mListener = aListener;
 		mContext = aContext;
 		mYesAction = aYesAction;
@@ -431,6 +456,7 @@ public class Message implements Saveable, Viewable
 		{
 			element.setAttribute("arguments", DataUtil.parseArray(mArguments));
 		}
+		element.setAttribute("allArguments", "" + mAllArguments);
 		element.setAttribute("sender", mSender);
 		element.setAttribute("mode-depending", "" + mModeDepending);
 		element.setAttribute("yes-action", mYesAction.name());
@@ -554,9 +580,11 @@ public class Message implements Saveable, Viewable
 	{
 		if (mSender.isEmpty())
 		{
-			return DataUtil.buildMessage(mMessageId, LanguageUtil.instance().translateArray(mArguments, mTranslatedArguments), mContext);
+			return DataUtil.buildMessage(mMessageId, LanguageUtil.instance().translateArray(mArguments, mTranslatedArguments), mContext,
+					mAllArguments);
 		}
-		return mSender + ": " + DataUtil.buildMessage(mMessageId, LanguageUtil.instance().translateArray(mArguments, mTranslatedArguments), mContext);
+		return mSender + ": " + DataUtil.buildMessage(mMessageId, LanguageUtil.instance().translateArray(mArguments, mTranslatedArguments), mContext,
+				mAllArguments);
 	}
 	
 	private void initButton(final int aButtonId, final ButtonAction aAction)
@@ -613,11 +641,13 @@ public class Message implements Saveable, Viewable
 		{
 			builder.setTranslated(DataUtil.parseFlags(messageElement.getAttribute("translated")));
 		}
+		builder.setAllArguments(Boolean.parseBoolean(messageElement.getAttribute("allArguments")));
 		builder.setSender(messageElement.getAttribute("sender"));
 		builder.setYesAction(ButtonAction.valueOf(messageElement.getAttribute("yes-action")));
 		builder.setNoAction(ButtonAction.valueOf(messageElement.getAttribute("no-action")));
 		builder.setModeDepending(Boolean.valueOf(messageElement.getAttribute("mode-depending")));
 		builder.setSaveables(DataUtil.parseArray(messageElement.getAttribute("saveables")));
+		builder.setMessageListener(aListener);
 		return builder.create();
 	}
 }

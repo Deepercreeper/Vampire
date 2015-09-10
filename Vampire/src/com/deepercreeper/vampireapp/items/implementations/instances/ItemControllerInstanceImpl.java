@@ -181,6 +181,14 @@ public class ItemControllerInstanceImpl extends DependableInstanceImpl implement
 		mExpander.close();
 	}
 	
+	public void initActions()
+	{
+		for (final ItemInstance item : mItems.values())
+		{
+			item.initActions();
+		}
+	}
+	
 	@Override
 	public Set<ActionInstance> getActions()
 	{
