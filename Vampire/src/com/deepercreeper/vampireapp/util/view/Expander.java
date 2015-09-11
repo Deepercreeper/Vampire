@@ -1,12 +1,13 @@
 package com.deepercreeper.vampireapp.util.view;
 
+import com.deepercreeper.vampireapp.R;
+import com.deepercreeper.vampireapp.util.Log;
+import com.deepercreeper.vampireapp.util.ViewUtil;
+import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import com.deepercreeper.vampireapp.util.Log;
-import com.deepercreeper.vampireapp.util.ViewUtil;
-import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
 
 /**
  * An expander handles the expandable container view.
@@ -15,23 +16,23 @@ import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
  */
 public class Expander implements ResizeListener
 {
-	private static final String		TAG				= "Expander";
+	private static final String TAG = "Expander";
 	
-	private final ResizeListener	mResizeParent;
+	private final ResizeListener mResizeParent;
 	
-	private final View				mParent;
+	private final View mParent;
 	
-	private final int				mButtonId;
+	private final int mButtonId;
 	
-	private final int				mContainerId;
+	private final int mContainerId;
 	
-	private Button					mButton;
+	private Button mButton;
 	
-	private LinearLayout			mContainer;
+	private LinearLayout mContainer;
 	
-	private boolean					mInitialized	= false;
+	private boolean mInitialized = false;
 	
-	private boolean					mOpen;
+	private boolean mOpen;
 	
 	private Expander(final int aButtonId, final int aContainerId, final View aContainer)
 	{
@@ -57,7 +58,7 @@ public class Expander implements ResizeListener
 			return;
 		}
 		mOpen = false;
-		mButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
+		mButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_down, 0);
 		resize();
 	}
 	
@@ -161,11 +162,11 @@ public class Expander implements ResizeListener
 		mOpen = !mOpen;
 		if (mOpen)
 		{
-			mButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
+			mButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_up, 0);
 		}
 		else
 		{
-			mButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
+			mButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_down, 0);
 		}
 		resize();
 	}
