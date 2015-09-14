@@ -12,4 +12,4 @@ dependables
 melee
 bluetooth
 vampire
-checkboxes
+checkboxesdrawable

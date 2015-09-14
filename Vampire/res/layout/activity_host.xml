@@ -7,7 +7,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/activity_margin" >
+        android:paddingBottom="@dimen/activity_margin"
+        android:paddingTop="@dimen/activity_margin" >
 
         <LinearLayout
             android:id="@+id/ha_players_list"
@@ -15,81 +16,88 @@
             android:layout_height="wrap_content"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:orientation="vertical"
-            android:padding="5dp" >
+            android:orientation="vertical" >
 
             <requestFocus />
         </LinearLayout>
 
         <LinearLayout
-            style="@style/List"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <Button
-                android:id="@+id/ha_day_button"
-                style="@style/BarButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/day" />
-
-            <Button
-                android:id="@+id/ha_hour_button"
-                style="@style/BarButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/hour" />
-
-            <Button
-                android:id="@+id/ha_round_button"
-                style="@style/BarButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/round" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <Button
-                android:id="@+id/ha_apply_time_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/apply" />
-
-            <EditText
-                android:id="@+id/ha_time_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/hour"
-                android:inputType="number"
-                android:maxLength="2"
-                android:singleLine="true" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ha_players_time_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
-
-        <LinearLayout
-            android:id="@+id/ha_message_list"
-            style="@style/List"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/activity_margin" />
+            android:paddingLeft="@dimen/activity_margin"
+            android:paddingRight="@dimen/activity_margin" >
 
-        <Button
-            android:id="@+id/ha_exit_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/exit" />
+            <LinearLayout
+                style="@style/List"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <Button
+                    android:id="@+id/ha_day_button"
+                    style="@style/BarButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/day" />
+
+                <Button
+                    android:id="@+id/ha_hour_button"
+                    style="@style/BarButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/hour" />
+
+                <Button
+                    android:id="@+id/ha_round_button"
+                    style="@style/BarButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/round" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <Button
+                    android:id="@+id/ha_apply_time_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/apply" />
+
+                <EditText
+                    android:id="@+id/ha_time_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hour"
+                    android:inputType="number"
+                    android:maxLength="2"
+                    android:singleLine="true" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ha_players_time_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:id="@+id/ha_message_list"
+                style="@style/List"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/activity_margin" />
+
+            <Button
+                android:id="@+id/ha_exit_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/exit" />
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>

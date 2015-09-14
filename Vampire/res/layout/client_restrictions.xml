@@ -6,10 +6,9 @@
 
     <Button
         android:id="@+id/c_restrictions_button"
+        style="@style/ExpanderButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableEnd="@android:drawable/arrow_down_float"
-        android:drawableRight="@android:drawable/arrow_down_float"
         android:text="@string/restrictions" />
 
     <LinearLayout

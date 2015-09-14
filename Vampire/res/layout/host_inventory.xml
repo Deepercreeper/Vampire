@@ -6,17 +6,16 @@
 
     <Button
         android:id="@+id/h_inventory_button"
+        style="@style/ExpanderButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableEnd="@android:drawable/arrow_down_float"
-        android:drawableRight="@android:drawable/arrow_down_float"
         android:text="@string/inventory" />
 
     <LinearLayout
         android:id="@+id/h_inventory_panel"
+        style="@style/List"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        style="@style/List"
         android:orientation="vertical" >
 
         <LinearLayout
@@ -41,15 +40,17 @@
             android:id="@+id/h_inventory_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            style="@style/List"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/activity_margin"
+            android:paddingRight="@dimen/activity_margin" />
 
         <Button
             android:id="@+id/h_add_item_button"
             style="@style/BarButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/add_item"
-            />
+            android:text="@string/add_item" />
     </LinearLayout>
 
 </LinearLayout>

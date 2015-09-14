@@ -6,17 +6,26 @@
 
     <Button
         android:id="@+id/h_restrictions_button"
+        style="@style/ExpanderButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableEnd="@android:drawable/arrow_down_float"
-        android:drawableRight="@android:drawable/arrow_down_float"
         android:text="@string/restrictions" />
 
     <LinearLayout
         android:id="@+id/h_restrictions_panel"
+        style="@style/List"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/h_restrictions_list"
+            style="@style/List"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/activity_margin"
+            android:paddingRight="@dimen/activity_margin" />
 
         <Button
             android:id="@+id/h_add_restriction_button"

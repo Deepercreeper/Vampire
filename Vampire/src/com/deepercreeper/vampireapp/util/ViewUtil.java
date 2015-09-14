@@ -1,8 +1,11 @@
 package com.deepercreeper.vampireapp.util;
 
 import com.deepercreeper.vampireapp.util.view.Expander;
-import com.deepercreeper.vampireapp.util.view.ResizeHeightAnimation;
+import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,7 +100,7 @@ public class ViewUtil
 	 * @param aView
 	 *            The view to match in height.
 	 */
-	public static void matchHeight(View aView)
+	public static void matchHeight(final View aView)
 	{
 		aView.getLayoutParams().height = LayoutParams.MATCH_PARENT;
 	}
@@ -108,7 +111,7 @@ public class ViewUtil
 	 * @param aView
 	 *            The view to match in width.
 	 */
-	public static void matchWidth(View aView)
+	public static void matchWidth(final View aView)
 	{
 		aView.getLayoutParams().width = LayoutParams.MATCH_PARENT;
 	}
@@ -145,7 +148,15 @@ public class ViewUtil
 		{
 			height = calcHeight(aExpander.getContainer());
 		}
-		aExpander.getContainer().startAnimation(new ResizeHeightAnimation(aExpander.getContainer(), height));
+		
+		final ValueAnimator animator = aExpander.getAnimator();
+		if (animator.isRunning())
+		{
+			animator.cancel();
+		}
+		animator.setIntValues(aExpander.getContainer().getHeight(), height);
+		animator.start();
+		
 		Expander expander = aExpander.getParent();
 		while (expander != null)
 		{
@@ -177,6 +188,29 @@ public class ViewUtil
 		}
 		aView.setEnabled(aEnabled);
 		aView.setAlpha(aEnabled ? 1f : 0.4f);
+	}
+	
+	/**
+	 * @param aDrawable
+	 *            The drawable.
+	 * @param aAngle
+	 *            The angle.
+	 * @return a drawable that is rotated by the given angle.
+	 */
+	public static Drawable rotateDrawable(final Drawable aDrawable, final float aAngle)
+	{
+		final Drawable[] drawable = { aDrawable };
+		return new LayerDrawable(drawable)
+		{
+			@Override
+			public void draw(final Canvas canvas)
+			{
+				canvas.save();
+				canvas.rotate(aAngle, aDrawable.getBounds().width() / 2, aDrawable.getBounds().height() / 2);
+				super.draw(canvas);
+				canvas.restore();
+			}
+		};
 	}
 	
 	/**
@@ -237,7 +271,7 @@ public class ViewUtil
 	 * @param aView
 	 *            The view to wrap in height.
 	 */
-	public static void wrapHeight(View aView)
+	public static void wrapHeight(final View aView)
 	{
 		aView.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
 	}
@@ -248,7 +282,7 @@ public class ViewUtil
 	 * @param aView
 	 *            The view to wrap in width.
 	 */
-	public static void wrapWidth(View aView)
+	public static void wrapWidth(final View aView)
 	{
 		aView.getLayoutParams().width = LayoutParams.WRAP_CONTENT;
 	}

@@ -42,6 +42,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -148,6 +149,7 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 		{
 			mValueId = Integer.parseInt(aElement.getAttribute("value"));
 			mAnimator = new ValueAnimator();
+			mAnimator.setInterpolator(new AccelerateInterpolator());
 			mAnimator.addUpdateListener(this);
 		}
 		else
@@ -332,6 +334,7 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 		{
 			mValueId = getStartValue();
 			mAnimator = new ValueAnimator();
+			mAnimator.setInterpolator(new AccelerateInterpolator());
 			mAnimator.addUpdateListener(this);
 		}
 		else
@@ -475,6 +478,7 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 		{
 			mValueId = aItem.getValueId();
 			mAnimator = new ValueAnimator();
+			mAnimator.setInterpolator(new AccelerateInterpolator());
 			mAnimator.addUpdateListener(this);
 		}
 		else

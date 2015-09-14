@@ -34,6 +34,8 @@ public class RestrictionControllerInstance implements Viewable, Saveable, TimeLi
 {
 	private final LinearLayout mContainer;
 	
+	private final LinearLayout mRestrictionList;
+	
 	private final Context mContext;
 	
 	private final Expander mExpander;
@@ -67,10 +69,11 @@ public class RestrictionControllerInstance implements Viewable, Saveable, TimeLi
 		mChar = aChar;
 		mContext = aContext;
 		mMessageListener = aMessageListener;
-		final int id = mHost ? R.layout.host_restriction_controller : R.layout.client_restriction_controller;
+		final int id = mHost ? R.layout.host_restrictions : R.layout.client_restrictions;
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
 		final int buttonId = mHost ? R.id.h_restrictions_button : R.id.c_restrictions_button;
 		final int containerId = mHost ? R.id.h_restrictions_panel : R.id.c_restrictions_panel;
+		mRestrictionList = (LinearLayout) getContainer().findViewById(mHost ? R.id.h_restrictions_list : containerId);
 		mExpander = Expander.handle(buttonId, containerId, getContainer(), aResizeListener);
 		
 		mExpander.init();
@@ -111,10 +114,11 @@ public class RestrictionControllerInstance implements Viewable, Saveable, TimeLi
 		mChar = aChar;
 		mContext = aContext;
 		mMessageListener = aMessageListener;
-		final int id = mHost ? R.layout.host_restriction_controller : R.layout.client_restriction_controller;
+		final int id = mHost ? R.layout.host_restrictions : R.layout.client_restrictions;
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
 		final int buttonId = mHost ? R.id.h_restrictions_button : R.id.c_restrictions_button;
 		final int containerId = mHost ? R.id.h_restrictions_panel : R.id.c_restrictions_panel;
+		mRestrictionList = (LinearLayout) getContainer().findViewById(mHost ? R.id.h_restrictions_list : containerId);
 		mExpander = Expander.handle(buttonId, containerId, getContainer(), aResizeListener);
 		
 		mExpander.init();
@@ -169,7 +173,7 @@ public class RestrictionControllerInstance implements Viewable, Saveable, TimeLi
 		{
 			item.addRestriction(aRestriction);
 			mRestrictions.add(aRestriction);
-			mExpander.getContainer().addView(aRestriction.getContainer(), mExpander.getContainer().getChildCount() - 1);
+			mRestrictionList.addView(aRestriction.getContainer());
 			mExpander.resize();
 			if ( !aSilent)
 			{

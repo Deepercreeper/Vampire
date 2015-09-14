@@ -577,16 +577,9 @@ public class ItemGroupCreationImpl extends RestrictionableDependableCreationImpl
 			}
 			for (final ItemCreation item : prohibitedItems)
 			{
-				removeItemSilent(item);
-			}
-			if ( !isMutable())
-			{
-				for (final Item item : getItemGroup().getItemsList())
+				if (hasItem(item))
 				{
-					if ( !hasItem(item) && isItemOk(item))
-					{
-						addItemSilent(new ItemCreationImpl(item, getContext(), this, mChar, null));
-					}
+					removeItemSilent(item);
 				}
 			}
 		}
@@ -684,7 +677,6 @@ public class ItemGroupCreationImpl extends RestrictionableDependableCreationImpl
 		mItems.remove(aItem.getItem());
 		getItemsList().remove(aItem);
 		getItemController().resize();
-		updateControllerUI();
 	}
 	
 	private void sortItems()

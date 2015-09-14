@@ -39,6 +39,8 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 	
 	private final LinearLayout mContainer;
 	
+	private final LinearLayout mInsanityList;
+	
 	private final MessageListener mMessageListener;
 	
 	private final boolean mHost;
@@ -71,6 +73,7 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
 		final int buttonId = mHost ? R.id.h_insanities_button : R.id.c_insanities_button;
 		final int containerId = mHost ? R.id.h_insanities_panel : R.id.c_insanities_panel;
+		mInsanityList = (LinearLayout) getContainer().findViewById(mHost ? R.id.h_insanities_list : containerId);
 		mExpander = Expander.handle(buttonId, containerId, getContainer(), aResizeListener);
 		
 		mExpander.init();
@@ -120,6 +123,7 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
 		final int buttonId = mHost ? R.id.h_insanities_button : R.id.c_insanities_button;
 		final int containerId = mHost ? R.id.h_insanities_panel : R.id.c_insanities_panel;
+		mInsanityList = (LinearLayout) getContainer().findViewById(mHost ? R.id.h_insanities_list : containerId);
 		mExpander = Expander.handle(buttonId, containerId, getContainer(), aResizeListener);
 		
 		mExpander.init();
@@ -178,14 +182,7 @@ public class InsanityControllerInstance implements TimeListener, Saveable, Viewa
 			return;
 		}
 		mInsanities.add(insanity);
-		if (mHost)
-		{
-			mExpander.getContainer().addView(insanity.getContainer(), mExpander.getContainer().getChildCount() - 1);
-		}
-		else
-		{
-			mExpander.getContainer().addView(insanity.getContainer());
-		}
+		mInsanityList.addView(insanity.getContainer());
 		mExpander.resize();
 		updateUI();
 		if ( !aSilent)

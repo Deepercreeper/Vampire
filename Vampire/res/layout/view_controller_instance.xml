@@ -6,6 +6,7 @@
 
     <Button
         android:id="@+id/view_controller_instance_button"
+        style="@style/ExpanderButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -13,6 +14,8 @@
         android:id="@+id/view_controller_instance_panel"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical" />
-    
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/activity_margin"
+        android:paddingRight="@dimen/activity_margin" />
+
 </LinearLayout>

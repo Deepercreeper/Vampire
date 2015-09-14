@@ -13,13 +13,13 @@ import android.view.animation.Transformation;
  */
 public class ResizeHeightAnimation extends Animation
 {
-	private static final int	DURATION	= 300;
+	private static final int DURATION = 300;
 	
-	private final View			mView;
+	private final View mView;
 	
-	private final float			mDestinationHeight;
+	private final float mDestinationHeight;
 	
-	private final float			mStartHeight;
+	private final float mStartHeight;
 	
 	/**
 	 * Creates a new animation for the given view.
@@ -50,7 +50,12 @@ public class ResizeHeightAnimation extends Animation
 	{
 		final LayoutParams p = mView.getLayoutParams();
 		p.height = (int) (mStartHeight + (mDestinationHeight - mStartHeight) * aInterpolatedTime);
+		float alpha = aInterpolatedTime;
+		if (mDestinationHeight == 0)
+		{
+			alpha = 1 - alpha;
+		}
+		mView.setAlpha(alpha);
 		mView.requestLayout();
 	}
-	
 }

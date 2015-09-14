@@ -6,16 +6,18 @@
 
     <Button
         android:id="@+id/c_insanities_button"
+        style="@style/ExpanderButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableEnd="@android:drawable/arrow_down_float"
-        android:drawableRight="@android:drawable/arrow_down_float"
         android:text="@string/insanities" />
 
     <LinearLayout
         android:id="@+id/c_insanities_panel"
+        style="@style/List"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical" />
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/activity_margin"
+        android:paddingRight="@dimen/activity_margin" />
 
 </LinearLayout>

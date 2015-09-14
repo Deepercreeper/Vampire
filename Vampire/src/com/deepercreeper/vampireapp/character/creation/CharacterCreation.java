@@ -318,7 +318,7 @@ public class CharacterCreation
 	 *            The message listener.
 	 * @return all persistent non creation restrictions.
 	 */
-	public List<RestrictionInstance> getRestrictions(MessageListener aMessageListener)
+	public List<RestrictionInstance> getRestrictions(final MessageListener aMessageListener)
 	{
 		final List<RestrictionInstance> restrictions = new ArrayList<RestrictionInstance>();
 		for (final RestrictionCreation restriction : mClan.getRestrictions())
@@ -363,6 +363,7 @@ public class CharacterCreation
 		mHealth.release();
 		mGeneration.release();
 		mInsanities.release();
+		mDescriptions.release();
 	}
 	
 	/**

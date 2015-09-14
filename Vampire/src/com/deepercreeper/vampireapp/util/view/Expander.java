@@ -4,8 +4,13 @@ import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
+import android.animation.ValueAnimator;
+import android.animation.ValueAnimator.AnimatorUpdateListener;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
@@ -14,9 +19,11 @@ import android.widget.LinearLayout;
  * 
  * @author Vincent
  */
-public class Expander implements ResizeListener
+public class Expander implements ResizeListener, AnimatorUpdateListener
 {
 	private static final String TAG = "Expander";
+	
+	private final ValueAnimator mAnimator = new ValueAnimator();
 	
 	private final ResizeListener mResizeParent;
 	
@@ -34,6 +41,8 @@ public class Expander implements ResizeListener
 	
 	private boolean mOpen;
 	
+	private boolean mLastOpen;
+	
 	private Expander(final int aButtonId, final int aContainerId, final View aContainer)
 	{
 		this(aButtonId, aContainerId, aContainer, null);
@@ -45,6 +54,9 @@ public class Expander implements ResizeListener
 		mContainerId = aContainerId;
 		mResizeParent = aResizeParent;
 		mParent = aParent;
+		mAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+		mAnimator.setDuration(300);
+		mAnimator.addUpdateListener(this);
 	}
 	
 	/**
@@ -58,7 +70,6 @@ public class Expander implements ResizeListener
 			return;
 		}
 		mOpen = false;
-		mButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_down, 0);
 		resize();
 	}
 	
@@ -108,6 +119,7 @@ public class Expander implements ResizeListener
 		mButton = (Button) mParent.findViewById(mButtonId);
 		mContainer = (LinearLayout) mParent.findViewById(mContainerId);
 		
+		mButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_down, 0);
 		mButton.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -139,6 +151,32 @@ public class Expander implements ResizeListener
 	}
 	
 	@Override
+	public void onAnimationUpdate(final ValueAnimator aAnimation)
+	{
+		final LayoutParams params = getContainer().getLayoutParams();
+		float alpha = aAnimation.getAnimatedFraction();
+		if (alpha == 1.0f)
+		{
+			mLastOpen = isOpen();
+		}
+		if ( !isOpen())
+		{
+			alpha = 1 - alpha;
+		}
+		params.height = (Integer) aAnimation.getAnimatedValue();
+		
+		if (mLastOpen != mOpen)
+		{
+			final Drawable drawable = ViewUtil.rotateDrawable(getContainer().getResources().getDrawable(R.drawable.ic_down), alpha * 180);
+			getButton().setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
+			getContainer().setAlpha(alpha);
+		}
+		
+		getContainer().requestLayout();
+		
+	}
+	
+	@Override
 	public void resize()
 	{
 		if ( !mInitialized)
@@ -147,6 +185,14 @@ public class Expander implements ResizeListener
 			return;
 		}
 		ViewUtil.resizeRecursive(this);
+	}
+	
+	/**
+	 * @return the expander animator.
+	 */
+	public ValueAnimator getAnimator()
+	{
+		return mAnimator;
 	}
 	
 	/**
@@ -160,14 +206,6 @@ public class Expander implements ResizeListener
 			return;
 		}
 		mOpen = !mOpen;
-		if (mOpen)
-		{
-			mButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_up, 0);
-		}
-		else
-		{
-			mButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_down, 0);
-		}
 		resize();
 	}
 	

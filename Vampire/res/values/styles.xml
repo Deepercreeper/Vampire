@@ -12,6 +12,16 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
-    <style name="SmallButton" parent="@android:style/Widget.Holo.ImageButton"></style>
+    <style name="SmallButton" parent="@android:style/Widget.Holo.ImageButton" />
+
+    <style name="ExpanderButton" parent="@android:style/Widget.Button">
+        <item name="android:background">@drawable/button_style</item>
+        <item name="android:minHeight">48dip</item>
+        <item name="android:minWidth">88dip</item>
+        <!-- <item name="android:stateListAnimator">@anim/button_state_list_anim_material</item> -->
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+    </style>
 
 </resources>
