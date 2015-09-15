@@ -3,16 +3,9 @@ package com.deepercreeper.vampireapp.activities;
 import java.util.Locale;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.character.CharController;
-import com.deepercreeper.vampireapp.character.instance.CharacterCompound;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
-import com.deepercreeper.vampireapp.connection.ConnectedDevice;
-import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
-import com.deepercreeper.vampireapp.connection.ConnectionListener;
-import com.deepercreeper.vampireapp.connection.service.Connector;
-import com.deepercreeper.vampireapp.connection.service.ConnectorImpl.ConnectionType;
 import com.deepercreeper.vampireapp.host.Host;
 import com.deepercreeper.vampireapp.host.HostController;
-import com.deepercreeper.vampireapp.host.Player;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
 import com.deepercreeper.vampireapp.items.ItemProvider;
 import com.deepercreeper.vampireapp.util.ConnectionUtil;
@@ -22,7 +15,6 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -33,7 +25,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 /**
  * The main activity is the start class for the vampire application.<br>
@@ -41,7 +32,7 @@ import android.widget.Toast;
  * 
  * @author vrl
  */
-public class MainActivity extends Activity implements ItemConsumer, ConnectionListener
+public class MainActivity extends Activity implements ItemConsumer
 {
 	private class PlaceholderFragment extends Fragment
 	{
@@ -110,12 +101,6 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 	
 	private static final String ARG_SECTION_NUMBER = "section_number";
 	
-	private Handler mHandler;
-	
-	private Connector mConnector = null;
-	
-	private Menu mOptionsMenu;
-	
 	private CharController mChars;
 	
 	private HostController mHosts;
@@ -127,54 +112,11 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 	private ViewPager mViewPager;
 	
 	@Override
-	public void banned(final Player aPlayer)
-	{}
-	
-	@Override
-	public void connectedTo(final ConnectedDevice aDevice)
-	{
-		// TODO Use when non game communication is needed
-	}
-	
-	@Override
-	public void connectionEnabled(final boolean aEnabled)
-	{
-		if (mChars != null)
-		{
-			for (final CharacterCompound charCompound : mChars.getCharacterCompoundsList())
-			{
-				charCompound.setPlayingEnabled(aEnabled);
-			}
-			mHosts.setHostsEnabled(aEnabled);
-		}
-	}
-	
-	@Override
 	public void consumeItems(final ItemProvider aItems)
 	{
 		mItems = aItems;
 		
-		if (mConnector != null)
-		{
-			init();
-		}
-	}
-	
-	@Override
-	public void setConnector(Connector aConnector)
-	{
-		mConnector = aConnector;
-		
-		if (mItems != null)
-		{
-			init();
-		}
-	}
-	
-	@Override
-	public void disconnectedFrom(final ConnectedDevice aDevice)
-	{
-		// TODO Use when non game communication is needed
+		init();
 	}
 	
 	/**
@@ -182,20 +124,7 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 	 */
 	public void exit()
 	{
-		mConnector.unbind();
 		finish();
-	}
-	
-	@Override
-	public void makeText(final int aResId, final int aDuration)
-	{
-		Toast.makeText(MainActivity.this, aResId, aDuration).show();
-	}
-	
-	@Override
-	public void makeText(final String aText, final int aDuration)
-	{
-		Toast.makeText(MainActivity.this, aText, aDuration).show();
 	}
 	
 	@Override
@@ -220,28 +149,9 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 			case R.id.delete_chars :
 				mChars.deleteChars();
 				return true;
-			case R.id.bluetooth :
-				setConnectionType(ConnectionType.BLUETOOTH);
-				return true;
-			case R.id.network :
-				setConnectionType(ConnectionType.NETWORK);
-				return true;
 		}
 		
 		return super.onOptionsItemSelected(aItem);
-	}
-	
-	@Override
-	public boolean onPrepareOptionsMenu(final Menu aMenu)
-	{
-		mOptionsMenu = aMenu;
-		return super.onPrepareOptionsMenu(aMenu);
-	}
-	
-	@Override
-	public void receiveMessage(final ConnectedDevice aDevice, final MessageType aType, final String[] aArgs)
-	{
-		// TODO Use when non game communication is needed
 	}
 	
 	@Override
@@ -299,10 +209,7 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 	{
 		super.onCreate(aSavedInstanceState);
 		
-		mHandler = new Handler();
-		
 		ConnectionUtil.loadItems(this, this);
-		ConnectionUtil.loadConnector(this, this);
 	}
 	
 	private void createChar(final boolean aFree)
@@ -315,14 +222,6 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 	
 	private void init()
 	{
-		mConnector.bind(this, this, mHandler);
-		
-		if ( !mConnector.hasBluetooth())
-		{
-			mOptionsMenu.findItem(R.id.bluetooth).setEnabled(false).setChecked(false);
-			mOptionsMenu.findItem(R.id.network).setChecked(true);
-		}
-		
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
 		
 		mChars = new CharController(this);
@@ -385,12 +284,5 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 		args.putInt(ARG_SECTION_NUMBER, sectionNumber);
 		fragment.setArguments(args);
 		return fragment;
-	}
-	
-	private void setConnectionType(final ConnectionType aConnectionType)
-	{
-		mConnector.setConnectionType(aConnectionType);
-		mOptionsMenu.findItem(R.id.bluetooth).setChecked(mConnector.getConnectionType() == ConnectionType.BLUETOOTH);
-		mOptionsMenu.findItem(R.id.network).setChecked(mConnector.getConnectionType() == ConnectionType.BLUETOOTH);
 	}
 }

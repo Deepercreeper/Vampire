@@ -567,7 +567,7 @@ public class Message implements Saveable, Viewable
 		{
 			for (final Button button : mButtons)
 			{
-				ViewUtil.setEnabled(button, aChar.getMode().getMode().canUseAction());
+				ViewUtil.setEnabled(button, aChar.getMode().getMode().canUseAction() && aChar.isOnline());
 			}
 		}
 	}

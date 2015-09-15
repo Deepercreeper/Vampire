@@ -59,8 +59,6 @@ public class CharController implements CharacterListener
 		saveChar(aCharacter);
 		
 		final CharacterCompound charCompound = new CharacterCompound(aCharacter, this, mContext);
-		// TODO Make sure and remove
-		// charCompound.setPlayingEnabled(mConnection.isEnabled());
 		mCharacterCompoundsList.add(charCompound);
 		mCharacterCompounds.put(charCompound.getName(), charCompound);
 		sortChars();
@@ -158,8 +156,6 @@ public class CharController implements CharacterListener
 			for (final String character : data.split("\n"))
 			{
 				final CharacterCompound charCompound = new CharacterCompound(character, this, mContext);
-				// TODO Make sure and remove
-				// charCompound.setPlayingEnabled(mConnection.isEnabled());
 				mCharacterCompoundsList.add(charCompound);
 				mCharacterCompounds.put(charCompound.getName(), charCompound);
 			}

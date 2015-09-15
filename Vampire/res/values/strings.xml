@@ -7,6 +7,7 @@
     <string name="accept_take">Ihr habt {0} von {1} genommen.</string>
     <string name="accept_use">Ihr dürft Aktion {0} mit {1} Würfel(n){2?, {2} zusätzlichen Erfolg(en)|}{x? und zusätzlichen Würfel(n) {x}|} versuchen. Schwierigkeit {3}.</string>
     <string name="actions">Aktionen</string>
+    <string name="activate_bluetooth">Activate bluetooth.</string>
     <string name="add">Hinzufügen</string>
     <string name="add_depot">Depot hinzufügen</string>
     <string name="add_health_step">Lebensstufe hinzufügen</string>
@@ -48,7 +49,9 @@
     <string name="clan_colon">Clan:</string>
     <string name="concept">Konzept</string>
     <string name="concept_colon">Konzept:</string>
+    <string name="connect">Verbinden</string>
     <string name="connection">Verbindung</string>
+    <string name="connection_service">Connection service</string>
     <string name="content_description">Placeholder</string>
 	<string name="create_armor">Neue Rüstung erstellen</string>
     <string name="create_char">Charaktererstellung</string>
@@ -70,6 +73,7 @@
     <string name="deny_use">Ihr dürft {0} nicht nutzen.</string>
     <string name="description">Beschreibung</string>
     <string name="difficulty">Schwierigkeit</string>
+    <string name="disconnect">Trennen</string>
     <string name="distance">Reichweite</string>
     <string name="distance_weapon">Distanzwaffe</string>
     <string name="distance_unit">m</string>
@@ -99,6 +103,7 @@
     <string name="item_ep_cost_multi">Item EP Kosten Multiplikator</string>
     <string name="item_ep_cost_new">Neue Item EP Kosten</string>
     <string name="item_name">Item Name</string>
+    <string name="item_provider">Item provider</string>
     <string name="item_value">Item Wert</string>
     <string name="item_weight">Item Gewicht</string>
     <string name="insanities">Geistesstörungen</string>
@@ -142,7 +147,6 @@
     <string name="reset">Zurücksetzen</string>
     <string name="restrictions">Restriktionen</string>
     <string name="round">Runde</string>
-    <string name="service_name">Item Provider</string>
     <string name="sleeping">Schlafend</string>
     <string name="stash">Versteck</string>
     <string name="to_much_weight">Der Gegenstand wiegt zu viel.</string>
@@ -158,6 +162,7 @@
     <string name="value">Wert</string>
     <string name="weight">Gewicht</string>
     <string name="weight_unit">kg</string>
+    <string name="wifi">WLAN</string>
     <string name="yes">Ja</string>
 
 </resources>

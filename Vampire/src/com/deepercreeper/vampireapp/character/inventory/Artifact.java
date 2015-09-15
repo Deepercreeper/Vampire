@@ -303,7 +303,8 @@ public class Artifact implements InventoryItem
 		mItemName.setText(getName() + getQuantitySuffix());
 		if (getController() != null)
 		{
-			ViewUtil.setEnabled(mRemoveButton, getController().isHost() || getController().getCharacter().getMode().getMode().canUseAction());
+			ViewUtil.setEnabled(mRemoveButton, getController().isHost()
+					|| getController().getCharacter().isOnline() && getController().getCharacter().getMode().getMode().canUseAction());
 		}
 	}
 	

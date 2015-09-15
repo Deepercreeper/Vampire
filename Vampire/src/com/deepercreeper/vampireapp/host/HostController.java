@@ -11,7 +11,6 @@ import com.deepercreeper.vampireapp.activities.CreateHostActivity;
 import com.deepercreeper.vampireapp.activities.HostActivity;
 import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.Log;
-import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.HostContextMenu;
 import com.deepercreeper.vampireapp.util.view.HostContextMenu.HostListener;
 import android.app.Activity;
@@ -174,29 +173,6 @@ public class HostController implements HostListener
 	}
 	
 	/**
-	 * Sets whether hosts can be played.
-	 * 
-	 * @param aEnabled
-	 *            Whether any connection is able to make hosts be played.
-	 */
-	public void setHostsEnabled(final boolean aEnabled)
-	{
-		if (mHostsList == null)
-		{
-			return;
-		}
-		for (int i = 0; i < mHostsList.getChildCount(); i++ )
-		{
-			final View view = mHostsList.getChildAt(i);
-			if (view instanceof LinearLayout)
-			{
-				final Button button = (Button) view.findViewById(R.id.compound_play_host_button);
-				ViewUtil.setEnabled(button, aEnabled);
-			}
-		}
-	}
-	
-	/**
 	 * Sets the hosts list view.
 	 * 
 	 * @param aHostsList
@@ -232,8 +208,6 @@ public class HostController implements HostListener
 					return true;
 				}
 			});
-			// TODO Make sure and remove
-			// playHost.setEnabled(mConnection.isEnabled());
 			playHost.setOnClickListener(new OnClickListener()
 			{
 				@Override

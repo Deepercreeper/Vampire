@@ -89,6 +89,8 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	
 	private final ModeControllerInstance mMode;
 	
+	private boolean mOnline = false;
+	
 	/**
 	 * Creates a new character out of the given character creation.
 	 * 
@@ -115,7 +117,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		mDescriptions = new DescriptionControllerInstance(aCreator.getDescriptions());
 		mInsanities = new InsanityControllerInstance(aCreator.getInsanities(), getContext(), mHost, mMessageListener, mResizeListener);
 		mEP = new EPControllerInstance(getContext(), mMessageListener, mHost, this);
-		mMoney = new MoneyControllerInstance(mItems.getCurrency(), getContext(), mHost, mMessageListener, mResizeListener);
+		mMoney = new MoneyControllerInstance(mItems.getCurrency(), getContext(), mHost, this, mMessageListener, mResizeListener);
 		mTimeListeners.add(mInsanities);
 		
 		mName = aCreator.getName();
@@ -227,7 +229,7 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		mTimeListeners.add(mHealth);
 		
 		// Money
-		mMoney = new MoneyControllerInstance(mItems.getCurrency(), DataUtil.getElement(root, "money"), getContext(), mHost, mMessageListener,
+		mMoney = new MoneyControllerInstance(mItems.getCurrency(), DataUtil.getElement(root, "money"), getContext(), mHost, this, mMessageListener,
 				mResizeListener);
 				
 		// Inventory
@@ -292,6 +294,18 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		// Restrictions
 		root.appendChild(mRestrictions.asElement(aDoc));
 		return root;
+	}
+	
+	/**
+	 * Sets whether this character is online or just for viewing.
+	 * 
+	 * @param aOnline
+	 *            The online state.
+	 */
+	public void setOnline(final boolean aOnline)
+	{
+		mOnline = aOnline;
+		updateUI();
 	}
 	
 	@Override
@@ -531,6 +545,14 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 	}
 	
 	/**
+	 * @return whether this character is online.
+	 */
+	public boolean isOnline()
+	{
+		return mOnline;
+	}
+	
+	/**
 	 * Updates all item controllers.
 	 */
 	public void updateUI()
@@ -546,6 +568,10 @@ public class CharacterInstance implements ItemFinder, TimeListener, Saveable
 		if (mMoney != null)
 		{
 			mMoney.updateUI();
+		}
+		if (mMode != null)
+		{
+			mMode.updateUI();
 		}
 		if (mMessageListener != null)
 		{

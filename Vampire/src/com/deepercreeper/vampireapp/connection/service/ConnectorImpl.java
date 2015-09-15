@@ -19,6 +19,7 @@ import com.deepercreeper.vampireapp.util.view.listeners.ItemSelectionListener;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.IntentFilter;
 import android.os.Handler;
@@ -64,7 +65,13 @@ public class ConnectorImpl implements Connector
 	
 	private final List<ConnectedDevice> mDevices = new ArrayList<ConnectedDevice>();
 	
-	private ConnectionType mConnectionType = ConnectionType.BLUETOOTH;
+	private BluetoothServerSocket mInsecureSocket = null;
+	
+	private BluetoothServerSocket mSecureSocket = null;
+	
+	private boolean mCheckingForDevies = false;
+	
+	private ConnectionType mConnectionType;
 	
 	private Activity mContext = null;
 	
@@ -73,7 +80,7 @@ public class ConnectorImpl implements Connector
 	private ConnectionListener mListener = null;
 	
 	@Override
-	public void bind(Activity aContext, ConnectionListener aListener, Handler aHandler)
+	public void bind(final Activity aContext, final ConnectionListener aListener, final Handler aHandler)
 	{
 		mContext = aContext;
 		mListener = aListener;
@@ -91,23 +98,77 @@ public class ConnectorImpl implements Connector
 				@Override
 				public void action(final BluetoothDevice aDevice)
 				{
-					bluetoothStateChanged();
+					checkActiveState();
 				}
 			};
 			mBluetoothReceiver.setBluetoothListener(BluetoothAdapter.STATE_ON, listener);
 			mBluetoothReceiver.setBluetoothListener(BluetoothAdapter.STATE_OFF, listener);
+			
+			setConnectionType(ConnectionType.BLUETOOTH);
+		}
+		if (hasNetwork())
+		{
+			if (getConnectionType() == null)
+			{
+				setConnectionType(ConnectionType.NETWORK);
+			}
+		}
+		if (hasWifi())
+		{
+			if (getConnectionType() == null)
+			{
+				setConnectionType(ConnectionType.WIFI);
+			}
 		}
 	}
 	
 	@Override
-	public void checkConnectionState()
+	public void checkActiveState()
 	{
-		// TODO Implement
+		if (getConnectionType() == ConnectionType.BLUETOOTH)
+		{
+			mHandler.post(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					mListener.connectionEnabled(mBluetoothAdapter.isEnabled());
+				}
+			});
+		}
+		else if (getConnectionType() == ConnectionType.NETWORK)
+		{
+			// TODO Implement
+		}
+		else if (getConnectionType() == ConnectionType.WIFI)
+		{
+			// TODO Implement
+		}
+	}
+	
+	@Override
+	public boolean isActive()
+	{
+		switch (getConnectionType())
+		{
+			case BLUETOOTH :
+				return mBluetoothAdapter.isEnabled();
+			case NETWORK :
+				return false;
+			case WIFI :
+				return false;
+		}
+		return false;
 	}
 	
 	@Override
 	public void connect()
 	{
+		if ( !isActive())
+		{
+			makeText(R.string.activate_bluetooth, Toast.LENGTH_SHORT);
+			return;
+		}
 		final ItemSelectionListener<Device> listener = new ItemSelectionListener<Device>()
 		{
 			@Override
@@ -128,7 +189,7 @@ public class ConnectorImpl implements Connector
 				
 		for (final BluetoothDevice device : mBluetoothAdapter.getBondedDevices())
 		{
-			dialog.addOption(createDevice(device, dialog));
+			dialog.addOption(createDevice(device, dialog), false);
 		}
 		mBluetoothReceiver.setDeviceListener(BluetoothDevice.ACTION_FOUND, new BluetoothListener()
 		{
@@ -144,7 +205,7 @@ public class ConnectorImpl implements Connector
 						{
 							Log.i(TAG, "Added no name device.");
 						}
-						dialog.addOption(createDevice(aDevice, dialog));
+						dialog.addOption(createDevice(aDevice, dialog), false);
 					}
 				});
 			}
@@ -175,15 +236,23 @@ public class ConnectorImpl implements Connector
 	}
 	
 	@Override
-	public void disconnect(ConnectedDevice aDevice)
+	public void disconnect(final ConnectedDevice aDevice)
 	{
-		// TODO Implement
+		aDevice.exit();
 	}
 	
 	@Override
-	public void disconnectedFrom(ConnectedDevice aDevice)
+	public void disconnectedFrom(final ConnectedDevice aDevice)
 	{
-		// TODO Implement
+		mDevices.remove(aDevice);
+		mHandler.post(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				mListener.disconnectedFrom(aDevice);
+			}
+		});
 	}
 	
 	@Override
@@ -209,6 +278,20 @@ public class ConnectorImpl implements Connector
 	public boolean hasBluetooth()
 	{
 		return mBluetoothAdapter != null;
+	}
+	
+	@Override
+	public boolean hasNetwork()
+	{
+		// TODO Implement
+		return false;
+	}
+	
+	@Override
+	public boolean hasWifi()
+	{
+		// TODO Implement
+		return false;
 	}
 	
 	@Override
@@ -246,26 +329,141 @@ public class ConnectorImpl implements Connector
 	@Override
 	public void receiveMessage(final ConnectedDevice aDevice, final MessageType aType, final String[] aArgs)
 	{
-		// TODO Implement
+		mHandler.post(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				mListener.receiveMessage(aDevice, aType, aArgs);
+			}
+		});
 	}
 	
 	@Override
-	public void sendToAll(MessageType aType, String... aArgs)
+	public void sendToAll(final MessageType aType, final String... aArgs)
 	{
-		// TODO Implement
+		for (final ConnectedDevice device : mDevices)
+		{
+			device.send(aType, aArgs);
+		}
 	}
 	
 	@Override
-	public void setConnectionType(ConnectionType aConnectionType)
+	public void setConnectionType(final ConnectionType aConnectionType)
 	{
-		mConnectionType = aConnectionType;
-		// TODO This will have to make many changes
+		boolean typeOk = true;
+		if (aConnectionType == ConnectionType.BLUETOOTH)
+		{
+			if ( !hasBluetooth())
+			{
+				typeOk = false;
+			}
+		}
+		else if (aConnectionType == ConnectionType.NETWORK)
+		{
+			if ( !hasNetwork())
+			{
+				typeOk = false;
+			}
+		}
+		else if (aConnectionType == ConnectionType.BLUETOOTH)
+		{
+			if ( !hasWifi())
+			{
+				typeOk = false;
+			}
+		}
+		if (typeOk)
+		{
+			mConnectionType = aConnectionType;
+		}
+		else
+		{
+			Log.w(TAG, "Could not change connection type.");
+		}
 	}
 	
 	@Override
 	public void startServer()
 	{
-		// TODO Implement
+		mCheckingForDevies = true;
+		try
+		{
+			mInsecureSocket = mBluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord(mBluetoothAdapter.getName(), DEFAULT_UUID);
+		}
+		catch (final IOException e)
+		{}
+		try
+		{
+			mSecureSocket = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(mBluetoothAdapter.getName(), DEFAULT_UUID);
+		}
+		catch (final IOException e)
+		{}
+		new Thread()
+		{
+			@Override
+			public void run()
+			{
+				listenForDevices(true);
+			}
+		}.start();
+		new Thread()
+		{
+			@Override
+			public void run()
+			{
+				listenForDevices(false);
+			}
+		}.start();
+	}
+	
+	private void listenForDevices(final boolean aSecure)
+	{
+		final BluetoothServerSocket server = aSecure ? mSecureSocket : mInsecureSocket;
+		while (mCheckingForDevies && server != null)
+		{
+			BluetoothSocket socket = null;
+			try
+			{
+				socket = server.accept(1000);
+			}
+			catch (final IOException e)
+			{}
+			if (socket != null)
+			{
+				boolean connected = false;
+				try
+				{
+					connectedTo(new ConnectedDevice(socket, this, false));
+					connected = true;
+				}
+				catch (final IOException e)
+				{}
+				if ( !connected)
+				{
+					Log.i(TAG, "Connection listening failed.");
+				}
+			}
+		}
+		if (server != null)
+		{
+			try
+			{
+				server.close();
+			}
+			catch (final IOException e)
+			{
+				Log.e(TAG, "Could not close insecure socket.");
+			}
+		}
+		if (aSecure)
+		{
+			mSecureSocket = null;
+		}
+		else
+		{
+			mInsecureSocket = null;
+		}
 	}
 	
 	@Override
@@ -278,7 +476,7 @@ public class ConnectorImpl implements Connector
 		mHandler = null;
 	}
 	
-	private void askForServer(Device aDevice, SelectItemDialog<Device> aDialog)
+	private void askForServer(final Device aDevice, final SelectItemDialog<Device> aDialog)
 	{
 		final BluetoothDevice device = aDevice.getDevice();
 		BluetoothSocket socket = null;
@@ -326,18 +524,6 @@ public class ConnectorImpl implements Connector
 		}
 	}
 	
-	private void bluetoothStateChanged()
-	{
-		mHandler.post(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				mListener.connectionEnabled(mBluetoothAdapter.isEnabled());
-			}
-		});
-	}
-	
 	private void connectTo(final Device aDevice)
 	{
 		final BluetoothDevice device = aDevice.getDevice();
@@ -383,7 +569,7 @@ public class ConnectorImpl implements Connector
 		}
 	}
 	
-	private Device createDevice(BluetoothDevice aDevice, final SelectItemDialog<Device> aDialog)
+	private Device createDevice(final BluetoothDevice aDevice, final SelectItemDialog<Device> aDialog)
 	{
 		final Device device = new Device(aDevice, mContext);
 		new Thread()

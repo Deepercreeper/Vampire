@@ -764,6 +764,10 @@ public class ItemInstanceImpl extends RestrictionableDependableInstanceImpl impl
 		{
 			return false;
 		}
+		if ( !getCharacter().isOnline())
+		{
+			return false;
+		}
 		if ( !getCharacter().getMode().getMode().canIncreaseItems())
 		{
 			return false;

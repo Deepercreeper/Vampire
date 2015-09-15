@@ -7,8 +7,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingTop="@dimen/activity_margin" 
-        android:paddingBottom="@dimen/activity_margin">
+        android:paddingBottom="@dimen/activity_margin"
+        android:paddingTop="@dimen/activity_margin" >
 
         <LinearLayout
             android:id="@+id/ca_controllers_list"
@@ -24,11 +24,27 @@
             android:orientation="vertical"
             android:padding="@dimen/activity_margin" />
 
-        <Button
-            android:id="@+id/ca_exit_button"
+        <LinearLayout
+            style="@style/List"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/exit" />
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/ca_exit_button"
+                style="@style/BarButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/exit" />
+
+            <Button
+                android:id="@+id/ca_connect_button"
+                style="@style/BarButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/connect" />
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>

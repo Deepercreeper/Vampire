@@ -12,6 +12,7 @@ import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
 import com.deepercreeper.vampireapp.connection.ConnectionListener;
 import com.deepercreeper.vampireapp.connection.service.Connector;
+import com.deepercreeper.vampireapp.connection.service.ConnectorImpl.ConnectionType;
 import com.deepercreeper.vampireapp.host.Message;
 import com.deepercreeper.vampireapp.host.Message.Builder;
 import com.deepercreeper.vampireapp.host.Message.ButtonAction;
@@ -36,6 +37,7 @@ import com.deepercreeper.vampireapp.util.ConnectionUtil;
 import com.deepercreeper.vampireapp.util.ContactsUtil;
 import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.LanguageUtil;
+import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
 import android.app.Activity;
 import android.content.Intent;
@@ -43,6 +45,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -70,6 +73,8 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 	public static final int PLAY_CLIENT_REQUEST = 2;
 	
 	private final List<Message> mMessages = new ArrayList<Message>();
+	
+	private Button mConnectButton;
 	
 	private Handler mHandler;
 	
@@ -178,8 +183,8 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 	@Override
 	public void banned(final Player aPlayer)
 	{
+		setOnline(false);
 		makeText(R.string.banned, Toast.LENGTH_SHORT);
-		exit(true);
 	}
 	
 	@Override
@@ -191,14 +196,15 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 	@Override
 	public void connectionEnabled(final boolean aEnabled)
 	{
-		if ( !aEnabled)
+		if ( !aEnabled && mChar.isOnline())
 		{
 			if (mConnector.hasHost())
 			{
 				mConnector.sendToAll(MessageType.LEFT_GAME);
 			}
-			exit(true);
+			setOnline(false);
 		}
+		updateUI();
 	}
 	
 	@Override
@@ -262,8 +268,41 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 	@Override
 	public boolean onCreateOptionsMenu(final Menu aMenu)
 	{
-		getMenuInflater().inflate(R.menu.play, aMenu);
+		getMenuInflater().inflate(R.menu.client, aMenu);
 		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(final MenuItem aItem)
+	{
+		final int id = aItem.getItemId();
+		switch (id)
+		{
+			case R.id.bluetooth :
+				mConnector.setConnectionType(ConnectionType.BLUETOOTH);
+				return true;
+			case R.id.network :
+				mConnector.setConnectionType(ConnectionType.NETWORK);
+				return true;
+			case R.id.wifi :
+				mConnector.setConnectionType(ConnectionType.WIFI);
+				return true;
+		}
+		
+		return super.onOptionsItemSelected(aItem);
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(final Menu aMenu)
+	{
+		if (mConnector != null)
+		{
+			aMenu.findItem(R.id.bluetooth).setEnabled(mConnector.hasBluetooth())
+					.setChecked(mConnector.getConnectionType() == ConnectionType.BLUETOOTH);
+			aMenu.findItem(R.id.network).setEnabled(mConnector.hasNetwork()).setChecked(mConnector.getConnectionType() == ConnectionType.NETWORK);
+			aMenu.findItem(R.id.wifi).setEnabled(mConnector.hasWifi()).setChecked(mConnector.getConnectionType() == ConnectionType.WIFI);
+		}
+		return super.onPrepareOptionsMenu(aMenu);
 	}
 	
 	@Override
@@ -272,19 +311,19 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 		switch (aType)
 		{
 			case ACCEPT :
-				setEnabled(true);
+				setOnline(true);
 				break;
 			case NAME_IN_USE :
+				mChar.setOnline(false);
 				makeText(R.string.name_in_use, Toast.LENGTH_SHORT);
-				exit(true);
 				break;
 			case KICKED :
+				mChar.setOnline(false);
 				makeText(R.string.kicked, Toast.LENGTH_SHORT);
-				exit(true);
 				break;
 			case CLOSED :
+				mChar.setOnline(false);
 				makeText(R.string.host_closed, Toast.LENGTH_SHORT);
-				exit(true);
 				break;
 			case BANNED :
 				banned(null);
@@ -332,7 +371,7 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 	}
 	
 	@Override
-	public void setConnector(Connector aConnector)
+	public void setConnector(final Connector aConnector)
 	{
 		mConnector = aConnector;
 		
@@ -400,6 +439,11 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 		
 		mConnector.bind(this, this, mHandler);
 		
+		if ( !mConnector.hasBluetooth() && !mConnector.hasNetwork() && !mConnector.hasWifi())
+		{
+			exit(false);
+		}
+		
 		final String xml = getIntent().getStringExtra(CreateCharActivity.CHARACTER);
 		CharacterInstance character = null;
 		try
@@ -425,6 +469,7 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 		mMessageList = (LinearLayout) findViewById(R.id.ca_message_list);
 		final LinearLayout controllersPanel = (LinearLayout) findViewById(R.id.ca_controllers_list);
 		final Button exit = (Button) findViewById(R.id.ca_exit_button);
+		mConnectButton = (Button) findViewById(R.id.ca_connect_button);
 		
 		mChar.updateUI();
 		
@@ -447,6 +492,23 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 		
 		controllersPanel.addView(mChar.getActions().getContainer());
 		
+		mConnectButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View aV)
+			{
+				if (mConnector.hasHost())
+				{
+					mConnector.disconnect(mConnector.getHost());
+					setOnline(false);
+				}
+				else
+				{
+					mConnector.connect();
+				}
+			}
+		});
+		
 		exit.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -459,10 +521,19 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 				exit(true);
 			}
 		});
+		
+		setOnline(false);
 	}
 	
-	private void setEnabled(boolean aEnabled)
+	private void updateUI()
 	{
-		// TODO Implement
+		ViewUtil.setEnabled(mConnectButton, mChar.isOnline() || mConnector.isActive());
+		mConnectButton.setText(getString(mChar.isOnline() ? R.string.disconnect : R.string.connect));
+	}
+	
+	private void setOnline(final boolean aOnline)
+	{
+		mChar.setOnline(aOnline);
+		updateUI();
 	}
 }

@@ -40,6 +40,8 @@ public class MoneyControllerInstance implements Saveable, Viewable
 {
 	private final List<MoneyDepot> mDepots = new ArrayList<MoneyDepot>();
 	
+	private final CharacterInstance mChar;
+	
 	private final Currency mCurrency;
 	
 	private final LinearLayout mContainer;
@@ -58,6 +60,8 @@ public class MoneyControllerInstance implements Saveable, Viewable
 	
 	private final LinearLayout mDepotsList;
 	
+	private final Button mAddDepot;
+	
 	/**
 	 * Creates a new money controller.
 	 * 
@@ -67,18 +71,21 @@ public class MoneyControllerInstance implements Saveable, Viewable
 	 *            The underlying context.
 	 * @param aHost
 	 *            Whether this controller is host sided.
-	 * @param aChangeListener
+	 * @param aChar
+	 *            The parent character.
+	 * @param aMessageListener
 	 *            The change listener.
 	 * @param aResizeListener
 	 *            The resize listener.
 	 */
-	public MoneyControllerInstance(final Currency aCurrency, final Context aContext, final boolean aHost, final MessageListener aChangeListener,
-			final ResizeListener aResizeListener)
+	public MoneyControllerInstance(final Currency aCurrency, final Context aContext, final boolean aHost, final CharacterInstance aChar,
+			final MessageListener aMessageListener, final ResizeListener aResizeListener)
 	{
 		mCurrency = aCurrency;
 		mHost = aHost;
 		mContext = aContext;
-		mMessageListener = aChangeListener;
+		mChar = aChar;
+		mMessageListener = aMessageListener;
 		mResizeListener = aResizeListener;
 		final int id = mHost ? R.layout.host_money : R.layout.client_money;
 		mContainer = (LinearLayout) View.inflate(mContext, id, null);
@@ -88,9 +95,9 @@ public class MoneyControllerInstance implements Saveable, Viewable
 		mExpander.init();
 		
 		mDepotsList = (LinearLayout) getContainer().findViewById(mHost ? R.id.h_depot_list : R.id.c_depot_list);
-		final Button addDepot = (Button) getContainer().findViewById(mHost ? R.id.h_add_depot_button : R.id.c_add_depot_button);
+		mAddDepot = (Button) getContainer().findViewById(mHost ? R.id.h_add_depot_button : R.id.c_add_depot_button);
 		
-		addDepot.setOnClickListener(new OnClickListener()
+		mAddDepot.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(final View aV)
@@ -114,17 +121,20 @@ public class MoneyControllerInstance implements Saveable, Viewable
 	 *            The underlying context.
 	 * @param aHost
 	 *            Whether this controller is host sided.
+	 * @param aChar
+	 *            The parent character.
 	 * @param aChangeListener
 	 *            The change listener.
 	 * @param aResizeListener
 	 *            The resize listener.
 	 */
 	public MoneyControllerInstance(final Currency aCurrency, final Element aElement, final Context aContext, final boolean aHost,
-			final MessageListener aChangeListener, final ResizeListener aResizeListener)
+			final CharacterInstance aChar, final MessageListener aChangeListener, final ResizeListener aResizeListener)
 	{
 		mCurrency = aCurrency;
 		mHost = aHost;
 		mContext = aContext;
+		mChar = aChar;
 		mMessageListener = aChangeListener;
 		mResizeListener = aResizeListener;
 		final int id = mHost ? R.layout.host_money : R.layout.client_money;
@@ -135,9 +145,9 @@ public class MoneyControllerInstance implements Saveable, Viewable
 		mExpander.init();
 		
 		mDepotsList = (LinearLayout) getContainer().findViewById(mHost ? R.id.h_depot_list : R.id.c_depot_list);
-		final Button addDepot = (Button) getContainer().findViewById(mHost ? R.id.h_add_depot_button : R.id.c_add_depot_button);
+		mAddDepot = (Button) getContainer().findViewById(mHost ? R.id.h_add_depot_button : R.id.c_add_depot_button);
 		
-		addDepot.setOnClickListener(new OnClickListener()
+		mAddDepot.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(final View aV)
@@ -235,7 +245,7 @@ public class MoneyControllerInstance implements Saveable, Viewable
 	 */
 	public CharacterInstance getCharacter()
 	{
-		return mMessageListener.getCharacter();
+		return mChar;
 	}
 	
 	@Override
@@ -351,5 +361,6 @@ public class MoneyControllerInstance implements Saveable, Viewable
 		{
 			depot.updateUI();
 		}
+		ViewUtil.setEnabled(mAddDepot, mHost || getCharacter().isOnline());
 	}
 }

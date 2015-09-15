@@ -136,10 +136,4 @@ public interface ItemControllerInstance extends Saveable, Viewable, DependableIn
 	 *            Whether the controller should be enabled.
 	 */
 	public void setEnabled(boolean aEnabled);
-	
-	/**
-	 * Updates the user interface.
-	 */
-	@Override
-	public void updateUI();
 }

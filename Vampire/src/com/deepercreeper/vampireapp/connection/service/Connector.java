@@ -12,7 +12,13 @@ public interface Connector extends Toaster
 {
 	public void bind(Activity aContext, ConnectionListener aListener, Handler aHandler);
 	
-	public void checkConnectionState();
+	public void checkActiveState();
+	
+	public boolean isActive();
+	
+	public boolean hasNetwork();
+	
+	public boolean hasWifi();
 	
 	public void connect();
 	

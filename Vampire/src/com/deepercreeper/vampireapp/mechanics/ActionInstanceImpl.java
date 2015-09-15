@@ -128,7 +128,7 @@ public class ActionInstanceImpl implements ActionInstance
 		{
 			level = mParent.getValue();
 		}
-		if (level >= 0 && level < mAction.getMinLevel() || !mChar.getMode().getMode().canUseAction())
+		if (level >= 0 && level < mAction.getMinLevel() || !mChar.getMode().getMode().canUseAction() || !mChar.isOnline())
 		{
 			return false;
 		}

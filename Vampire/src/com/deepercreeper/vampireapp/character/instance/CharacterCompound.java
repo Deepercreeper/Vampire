@@ -263,17 +263,6 @@ public class CharacterCompound implements Comparable<CharacterCompound>, Viewabl
 		ViewUtil.release(getContainer());
 	}
 	
-	/**
-	 * Sets whether this character can be played.
-	 * 
-	 * @param aEnabled
-	 *            Whether this character can be played.
-	 */
-	public void setPlayingEnabled(final boolean aEnabled)
-	{
-		ViewUtil.setEnabled(mPlay, aEnabled);
-	}
-	
 	@Override
 	public String toString()
 	{

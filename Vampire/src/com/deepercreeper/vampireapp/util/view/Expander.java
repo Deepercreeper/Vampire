@@ -173,7 +173,6 @@ public class Expander implements ResizeListener, AnimatorUpdateListener
 		}
 		
 		getContainer().requestLayout();
-		
 	}
 	
 	@Override

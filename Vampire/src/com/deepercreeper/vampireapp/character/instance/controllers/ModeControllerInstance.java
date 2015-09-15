@@ -174,5 +174,7 @@ public class ModeControllerInstance implements Viewable, Saveable
 	
 	@Override
 	public void updateUI()
-	{}
+	{
+		ViewUtil.setEnabled(mSpinner, mHost || mChar.isOnline());
+	}
 }

@@ -181,7 +181,7 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 	}
 	
 	@Override
-	public void setConnector(Connector aConnector)
+	public void setConnector(final Connector aConnector)
 	{
 		mConnector = aConnector;
 		
@@ -200,6 +200,7 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 		mHandler = new Handler();
 		
 		ConnectionUtil.loadItems(this, this);
+		ConnectionUtil.loadConnector(this, this);
 	}
 	
 	@Override
@@ -207,7 +208,8 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 	{
 		if (mConnector != null)
 		{
-			mConnector.checkConnectionState();
+			// TODO Remove
+			mConnector.checkActiveState();
 		}
 		super.onResume();
 	}

@@ -7,6 +7,7 @@
     <string name="accept_take">You took {0} of {1}.</string>
     <string name="accept_use">You are allowed to use {0} with {1} dices{2?, {2} instant success|}{x? and additional dice(s) {x}|}. Difficulty {3}.</string>
 	<string name="actions">Actions</string>
+	<string name="activate_bluetooth">Activate bluetooth.</string>
     <string name="add">Add</string>
     <string name="add_depot">Add depot</string>
     <string name="add_health_step">Add health step</string>
@@ -48,7 +49,9 @@
     <string name="clan_colon">Clan:</string>
     <string name="concept">Concept</string>
     <string name="concept_colon">Concept:</string>
+    <string name="connect">Connect</string>
     <string name="connection">Connection</string>
+    <string name="connection_service">Connection service</string>
     <string name="content_description">Placeholder</string>
     <string name="create_armor">Create new armor</string>
     <string name="create_char">Charactercreation</string>
@@ -70,6 +73,7 @@
     <string name="deny_use">You have no access to use {0}.</string>
     <string name="description">Description</string>
     <string name="difficulty">Difficulty</string>
+	<string name="disconnect">Disconnect</string>
     <string name="distance">Distance</string>
     <string name="distance_weapon">Distanceweapon</string>
     <string name="distance_unit">m</string>
@@ -102,6 +106,7 @@
     <string name="item_ep_cost_multi">Item EP cost multiplicator</string>
     <string name="item_ep_cost_new">New item EP cost</string>
     <string name="item_name">Item name</string>
+    <string name="item_provider">Item provider</string>
     <string name="item_value">Item value</string>
     <string name="item_weight">Item weight</string>
     <string name="items">Items</string>
@@ -142,7 +147,6 @@
     <string name="reset">Reset</string>
     <string name="restrictions">Restrictions</string>
     <string name="round">Round</string>
-    <string name="service_name">Item provider</string>
     <string name="sleeping">Sleeping</string>
     <string name="stash">Stash</string>
     <string name="to_much_weight">The item is too heavy.</string>
@@ -158,6 +162,7 @@
     <string name="value">Value</string>
     <string name="weight">Weight</string>
     <string name="weight_unit">kg</string>
+    <string name="wifi">Wifi</string>
     <string name="yes">Yes</string>
 
 </resources>

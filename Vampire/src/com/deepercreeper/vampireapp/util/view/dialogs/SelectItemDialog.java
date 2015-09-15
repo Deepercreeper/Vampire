@@ -8,12 +8,16 @@ import java.util.List;
 import java.util.Map;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.items.interfaces.Nameable;
+import com.deepercreeper.vampireapp.util.ViewUtil;
 import com.deepercreeper.vampireapp.util.view.listeners.ItemSelectionListener;
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.Context;
+import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -34,6 +38,8 @@ public class SelectItemDialog <T extends Nameable> extends DefaultDialog<ItemSel
 	
 	private final ArrayAdapter<T> mAdapter;
 	
+	private Handler mHandler;
+	
 	private SelectItemDialog(final List<T> aItems, final String aTitle, final Context aContext, final ItemSelectionListener<T> aAction)
 	{
 		super(aTitle, aContext, aAction, R.layout.dialog_select_item, ListView.class);
@@ -43,9 +49,9 @@ public class SelectItemDialog <T extends Nameable> extends DefaultDialog<ItemSel
 		mAdapter = new ArrayAdapter<T>(getContext(), android.R.layout.simple_list_item_1, mItems)
 		{
 			@Override
-			public boolean isEnabled(int aPosition)
+			public boolean isEnabled(final int aPosition)
 			{
-				Boolean value = mEnabledStates.get(mAdapter.getItem(aPosition));
+				final Boolean value = mEnabledStates.get(mAdapter.getItem(aPosition));
 				return value == null || value;
 			}
 			
@@ -60,6 +66,14 @@ public class SelectItemDialog <T extends Nameable> extends DefaultDialog<ItemSel
 					}
 				}
 				return true;
+			}
+			
+			@Override
+			public View getView(final int aPosition, final View aConvertView, final ViewGroup aParent)
+			{
+				final View view = super.getView(aPosition, aConvertView, aParent);
+				ViewUtil.setEnabled(view, isEnabled(aPosition));
+				return view;
 			}
 		};
 		getContainer().setOnItemClickListener(new OnItemClickListener()
@@ -82,9 +96,23 @@ public class SelectItemDialog <T extends Nameable> extends DefaultDialog<ItemSel
 	 */
 	public void addOption(final T aOption)
 	{
+		addOption(aOption, true);
+	}
+	
+	/**
+	 * Adds the given option to the list of items.
+	 * 
+	 * @param aOption
+	 *            The option to add.
+	 * @param aEnabled
+	 *            Whether the option should be enabled.
+	 */
+	public void addOption(final T aOption, final boolean aEnabled)
+	{
 		if ( !mItems.contains(aOption))
 		{
 			mAdapter.add(aOption);
+			mEnabledStates.put(aOption, aEnabled);
 		}
 	}
 	
@@ -96,11 +124,19 @@ public class SelectItemDialog <T extends Nameable> extends DefaultDialog<ItemSel
 	 * @param aEnabled
 	 *            Whether it should be enabled.
 	 */
-	public void setOptionEnabled(T aOption, boolean aEnabled)
+	public void setOptionEnabled(final T aOption, final boolean aEnabled)
 	{
 		if (mItems.contains(aOption))
 		{
 			mEnabledStates.put(aOption, aEnabled);
+			mHandler.post(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					mAdapter.notifyDataSetChanged();
+				}
+			});
 		}
 	}
 	
@@ -108,6 +144,13 @@ public class SelectItemDialog <T extends Nameable> extends DefaultDialog<ItemSel
 	public Dialog createDialog(final Builder aBuilder)
 	{
 		return aBuilder.create();
+	}
+	
+	@Override
+	public void onCreate(final Bundle aSavedInstanceState)
+	{
+		super.onCreate(aSavedInstanceState);
+		mHandler = new Handler();
 	}
 	
 	@Override
