@@ -5,10 +5,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.Arrays;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
+import com.deepercreeper.vampireapp.connection.service.Connector;
 import com.deepercreeper.vampireapp.util.CodingUtil;
 import com.deepercreeper.vampireapp.util.Log;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 
 /**
  * Each device that was connected and is able to send and receive messages is stored inside a ConnectedDevice.
@@ -85,43 +86,43 @@ public class ConnectedDevice
 		MESSAGE
 	}
 	
-	private static final String			TAG				= "ConnectedDevice";
+	private static final String TAG = "ConnectedDevice";
 	
-	private static final String			ARGS_DELIM		= ",";
+	private static final String ARGS_DELIM = ",";
 	
-	private static final char			MESSAGES_DELIM	= '\n';
+	private static final char MESSAGES_DELIM = '\n';
 	
-	private final BluetoothSocket		mSocket;
+	private final BluetoothSocket mSocket;
 	
-	private final OutputStream			mOut;
+	private final OutputStream mOut;
 	
-	private final InputStream			mIn;
+	private final InputStream mIn;
 	
-	private final ConnectionListener	mConnectionListener;
+	private final Connector mConnector;
 	
-	private final boolean				mHost;
+	private final boolean mHost;
 	
-	private boolean						mClosing		= false;
+	private boolean mClosing = false;
 	
 	/**
 	 * Creates a new connected device, that listens for messages.
 	 * 
 	 * @param aSocket
 	 *            The Bluetooth socket.
-	 * @param aConnectionListener
-	 *            The listener for Bluetooth, connection and message events.
+	 * @param aConnector
+	 *            The connector.
 	 * @param aHost
 	 *            Whether this is a host device or not.
 	 * @throws IOException
 	 *             if the in-/ or output stream could not be resolved.
 	 */
-	public ConnectedDevice(final BluetoothSocket aSocket, final ConnectionListener aConnectionListener, final boolean aHost) throws IOException
+	public ConnectedDevice(final BluetoothSocket aSocket, final Connector aConnector, final boolean aHost) throws IOException
 	{
 		mSocket = aSocket;
 		mOut = aSocket.getOutputStream();
 		mIn = aSocket.getInputStream();
 		mHost = aHost;
-		mConnectionListener = aConnectionListener;
+		mConnector = aConnector;
 		
 		new Thread()
 		{
@@ -150,7 +151,7 @@ public class ConnectedDevice
 				Log.e(TAG, "Could not close the socket.");
 			}
 		}
-		mConnectionListener.disconnectedFrom(this);
+		mConnector.disconnectedFrom(this);
 	}
 	
 	/**
@@ -227,7 +228,7 @@ public class ConnectedDevice
 						{
 							args[i] = CodingUtil.decode(args[i]);
 						}
-						mConnectionListener.receiveMessage(this, MessageType.valueOf(message[0]), args);
+						mConnector.receiveMessage(this, MessageType.valueOf(message[0]), args);
 						messageBuilder.delete(0, messageBuilder.length());
 					}
 					else

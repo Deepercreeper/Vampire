@@ -1,6 +1,7 @@
 package com.deepercreeper.vampireapp.connection;
 
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
+import com.deepercreeper.vampireapp.connection.service.Connector;
 import com.deepercreeper.vampireapp.host.Player;
 import com.deepercreeper.vampireapp.util.interfaces.Toaster;
 
@@ -20,10 +21,12 @@ public interface ConnectionListener extends Toaster
 	public void banned(Player aPlayer);
 	
 	/**
-	 * Sometimes the connection is cancelled by a user action.<br>
-	 * This method is invoked if the user doesn't allow a socket connection.
+	 * Sets the connector.
+	 * 
+	 * @param aConnector
+	 *            The connector.
 	 */
-	public void cancel();
+	public void setConnector(Connector aConnector);
 	
 	/**
 	 * Called when this device was connected to another device with the given name.

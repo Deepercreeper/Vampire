@@ -7,8 +7,9 @@ import com.deepercreeper.vampireapp.character.instance.CharacterCompound;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
-import com.deepercreeper.vampireapp.connection.ConnectionController;
 import com.deepercreeper.vampireapp.connection.ConnectionListener;
+import com.deepercreeper.vampireapp.connection.service.Connector;
+import com.deepercreeper.vampireapp.connection.service.ConnectorImpl.ConnectionType;
 import com.deepercreeper.vampireapp.host.Host;
 import com.deepercreeper.vampireapp.host.HostController;
 import com.deepercreeper.vampireapp.host.Player;
@@ -111,7 +112,7 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 	
 	private Handler mHandler;
 	
-	private ConnectionController mConnection;
+	private Connector mConnector = null;
 	
 	private Menu mOptionsMenu;
 	
@@ -119,7 +120,7 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 	
 	private HostController mHosts;
 	
-	private ItemProvider mItems;
+	private ItemProvider mItems = null;
 	
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 	
@@ -127,10 +128,6 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 	
 	@Override
 	public void banned(final Player aPlayer)
-	{}
-	
-	@Override
-	public void cancel()
 	{}
 	
 	@Override
@@ -157,7 +154,21 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 	{
 		mItems = aItems;
 		
-		init();
+		if (mConnector != null)
+		{
+			init();
+		}
+	}
+	
+	@Override
+	public void setConnector(Connector aConnector)
+	{
+		mConnector = aConnector;
+		
+		if (mItems != null)
+		{
+			init();
+		}
 	}
 	
 	@Override
@@ -171,7 +182,7 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 	 */
 	public void exit()
 	{
-		mConnection.exit();
+		mConnector.unbind();
 		finish();
 	}
 	
@@ -210,10 +221,10 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 				mChars.deleteChars();
 				return true;
 			case R.id.bluetooth :
-				setBluetooth(true);
+				setConnectionType(ConnectionType.BLUETOOTH);
 				return true;
 			case R.id.network :
-				setBluetooth(false);
+				setConnectionType(ConnectionType.NETWORK);
 				return true;
 		}
 		
@@ -291,16 +302,7 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 		mHandler = new Handler();
 		
 		ConnectionUtil.loadItems(this, this);
-	}
-	
-	@Override
-	protected void onResume()
-	{
-		if (mConnection != null)
-		{
-			mConnection.checkConnectionState();
-		}
-		super.onResume();
+		ConnectionUtil.loadConnector(this, this);
 	}
 	
 	private void createChar(final boolean aFree)
@@ -313,9 +315,9 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 	
 	private void init()
 	{
-		mConnection = new ConnectionController(this, this, mHandler);
+		mConnector.bind(this, this, mHandler);
 		
-		if ( !mConnection.hasBluetooth())
+		if ( !mConnector.hasBluetooth())
 		{
 			mOptionsMenu.findItem(R.id.bluetooth).setEnabled(false).setChecked(false);
 			mOptionsMenu.findItem(R.id.network).setChecked(true);
@@ -323,8 +325,8 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 		
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
 		
-		mChars = new CharController(this, mConnection);
-		mHosts = new HostController(this, mConnection);
+		mChars = new CharController(this);
+		mHosts = new HostController(this);
 		
 		setContentView(R.layout.activity_main);
 		
@@ -332,8 +334,6 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		
 		mViewPager.setCurrentItem(1);
-		
-		mConnection.checkConnectionState();
 	}
 	
 	private void initChars(final ViewGroup aRoot)
@@ -387,10 +387,10 @@ public class MainActivity extends Activity implements ItemConsumer, ConnectionLi
 		return fragment;
 	}
 	
-	private void setBluetooth(final boolean aBluetooth)
+	private void setConnectionType(final ConnectionType aConnectionType)
 	{
-		mConnection.setBluetooth(aBluetooth);
-		mOptionsMenu.findItem(R.id.bluetooth).setChecked(mConnection.isBluetooth());
-		mOptionsMenu.findItem(R.id.network).setChecked( !mConnection.isBluetooth());
+		mConnector.setConnectionType(aConnectionType);
+		mOptionsMenu.findItem(R.id.bluetooth).setChecked(mConnector.getConnectionType() == ConnectionType.BLUETOOTH);
+		mOptionsMenu.findItem(R.id.network).setChecked(mConnector.getConnectionType() == ConnectionType.BLUETOOTH);
 	}
 }

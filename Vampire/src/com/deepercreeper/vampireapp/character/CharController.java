@@ -9,7 +9,6 @@ import java.util.Map;
 import com.deepercreeper.vampireapp.activities.ClientActivity;
 import com.deepercreeper.vampireapp.character.instance.CharacterCompound;
 import com.deepercreeper.vampireapp.character.instance.CharacterInstance;
-import com.deepercreeper.vampireapp.connection.ConnectionController;
 import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.view.CharacterContextMenu.CharacterListener;
@@ -28,8 +27,6 @@ public class CharController implements CharacterListener
 	
 	private static final String CHARACTER_LIST = "Chars.lst";
 	
-	private final ConnectionController mConnection;
-	
 	private final List<CharacterCompound> mCharacterCompoundsList = new ArrayList<CharacterCompound>();
 	
 	private final Map<String, CharacterCompound> mCharacterCompounds = new HashMap<String, CharacterCompound>();
@@ -45,13 +42,10 @@ public class CharController implements CharacterListener
 	 * 
 	 * @param aContext
 	 *            The underlying context.
-	 * @param aConnection
-	 *            The connection controller. Needed to make sure that characters can be played.
 	 */
-	public CharController(final Activity aContext, final ConnectionController aConnection)
+	public CharController(final Activity aContext)
 	{
 		mContext = aContext;
-		mConnection = aConnection;
 	}
 	
 	/**
@@ -65,7 +59,8 @@ public class CharController implements CharacterListener
 		saveChar(aCharacter);
 		
 		final CharacterCompound charCompound = new CharacterCompound(aCharacter, this, mContext);
-		charCompound.setPlayingEnabled(mConnection.isEnabled());
+		// TODO Make sure and remove
+		// charCompound.setPlayingEnabled(mConnection.isEnabled());
 		mCharacterCompoundsList.add(charCompound);
 		mCharacterCompounds.put(charCompound.getName(), charCompound);
 		sortChars();
@@ -163,7 +158,8 @@ public class CharController implements CharacterListener
 			for (final String character : data.split("\n"))
 			{
 				final CharacterCompound charCompound = new CharacterCompound(character, this, mContext);
-				charCompound.setPlayingEnabled(mConnection.isEnabled());
+				// TODO Make sure and remove
+				// charCompound.setPlayingEnabled(mConnection.isEnabled());
 				mCharacterCompoundsList.add(charCompound);
 				mCharacterCompounds.put(charCompound.getName(), charCompound);
 			}

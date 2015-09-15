@@ -12,7 +12,7 @@ import com.deepercreeper.vampireapp.items.interfaces.Nameable;
 public interface ItemSelectionListener <S extends Nameable>
 {
 	/**
-	 * Invoked when the user hit the back button or has touched beside the dialog.
+	 * The dialog was cancelled.
 	 */
 	public void cancel();
 	

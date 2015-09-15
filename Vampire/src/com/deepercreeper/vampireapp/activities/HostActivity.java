@@ -4,8 +4,8 @@ import java.util.List;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
-import com.deepercreeper.vampireapp.connection.ConnectionController;
 import com.deepercreeper.vampireapp.connection.ConnectionListener;
+import com.deepercreeper.vampireapp.connection.service.Connector;
 import com.deepercreeper.vampireapp.host.BannedPlayer;
 import com.deepercreeper.vampireapp.host.Host;
 import com.deepercreeper.vampireapp.host.Message;
@@ -51,7 +51,7 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 	
 	private Handler mHandler;
 	
-	private ConnectionController mConnection;
+	private Connector mConnector;
 	
 	private Host mHost;
 	
@@ -65,10 +65,6 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 		device.send(MessageType.BANNED);
 		device.exit();
 	}
-	
-	@Override
-	public void cancel()
-	{}
 	
 	@Override
 	public void connectedTo(final ConnectedDevice aDevice)
@@ -89,7 +85,10 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 		mItems = aItems;
 		mHost = new Host(getIntent().getStringExtra(HOST), this, true);
 		
-		init();
+		if (mConnector != null)
+		{
+			init();
+		}
 	}
 	
 	@Override
@@ -103,8 +102,8 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 	 */
 	public void exit()
 	{
-		mConnection.sendToAll(MessageType.CLOSED);
-		mConnection.exit();
+		mConnector.sendToAll(MessageType.CLOSED);
+		mConnector.unbind();
 		final Intent intent = new Intent();
 		intent.putExtra(HOST, DataUtil.serialize(mHost));
 		setResult(RESULT_OK, intent);
@@ -161,7 +160,7 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 				break;
 			case LEFT_GAME :
 				makeText(player.getName() + " " + getString(R.string.left_game), Toast.LENGTH_SHORT);
-				mConnection.disconnect(aDevice);
+				mConnector.disconnect(aDevice);
 				break;
 			case AFK :
 				player.setAFK(true);
@@ -182,6 +181,18 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 	}
 	
 	@Override
+	public void setConnector(Connector aConnector)
+	{
+		mConnector = aConnector;
+		
+		if (mItems != null)
+		{
+			init();
+		}
+		
+	}
+	
+	@Override
 	protected void onCreate(final Bundle aSavedInstanceState)
 	{
 		super.onCreate(aSavedInstanceState);
@@ -194,17 +205,17 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 	@Override
 	protected void onResume()
 	{
-		if (mConnection != null)
+		if (mConnector != null)
 		{
-			mConnection.checkConnectionState();
+			mConnector.checkConnectionState();
 		}
 		super.onResume();
 	}
 	
 	private void init()
 	{
-		mConnection = new ConnectionController(this, this, mHandler);
-		mConnection.startServer();
+		mConnector.bind(this, this, mHandler);
+		mConnector.startServer();
 		
 		LanguageUtil.init(this);
 		
@@ -290,7 +301,7 @@ public class HostActivity extends Activity implements ItemConsumer, ConnectionLi
 			{
 				aDevice.send(MessageType.NAME_IN_USE);
 			}
-			mConnection.disconnect(aDevice);
+			mConnector.disconnect(aDevice);
 		}
 		else
 		{

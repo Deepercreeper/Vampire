@@ -9,7 +9,6 @@ import java.util.Map;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.activities.CreateHostActivity;
 import com.deepercreeper.vampireapp.activities.HostActivity;
-import com.deepercreeper.vampireapp.connection.ConnectionController;
 import com.deepercreeper.vampireapp.util.DataUtil;
 import com.deepercreeper.vampireapp.util.Log;
 import com.deepercreeper.vampireapp.util.ViewUtil;
@@ -35,8 +34,6 @@ public class HostController implements HostListener
 	
 	private static final String HOSTS_LIST = "Hosts.lst";
 	
-	private final ConnectionController mConnection;
-	
 	private final Map<String, Host> mHostsCache = new HashMap<String, Host>();
 	
 	private final List<String> mHostNames = new ArrayList<String>();
@@ -50,13 +47,10 @@ public class HostController implements HostListener
 	 * 
 	 * @param aContext
 	 *            The underlying context.
-	 * @param aConnection
-	 *            The connection controller.
 	 */
-	public HostController(final Activity aContext, final ConnectionController aConnection)
+	public HostController(final Activity aContext)
 	{
 		mContext = aContext;
-		mConnection = aConnection;
 	}
 	
 	/**
@@ -238,7 +232,8 @@ public class HostController implements HostListener
 					return true;
 				}
 			});
-			playHost.setEnabled(mConnection.isEnabled());
+			// TODO Make sure and remove
+			// playHost.setEnabled(mConnection.isEnabled());
 			playHost.setOnClickListener(new OnClickListener()
 			{
 				@Override

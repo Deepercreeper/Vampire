@@ -10,8 +10,8 @@ import com.deepercreeper.vampireapp.character.instance.controllers.InventoryCont
 import com.deepercreeper.vampireapp.character.inventory.Artifact;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
-import com.deepercreeper.vampireapp.connection.ConnectionController;
 import com.deepercreeper.vampireapp.connection.ConnectionListener;
+import com.deepercreeper.vampireapp.connection.service.Connector;
 import com.deepercreeper.vampireapp.host.Message;
 import com.deepercreeper.vampireapp.host.Message.Builder;
 import com.deepercreeper.vampireapp.host.Message.ButtonAction;
@@ -39,14 +39,12 @@ import com.deepercreeper.vampireapp.util.LanguageUtil;
 import com.deepercreeper.vampireapp.util.interfaces.ResizeListener;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -75,9 +73,9 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 	
 	private Handler mHandler;
 	
-	private ConnectionController mConnection;
+	private Connector mConnector = null;
 	
-	private ItemProvider mItems;
+	private ItemProvider mItems = null;
 	
 	private LinearLayout mMessageList;
 	
@@ -185,16 +183,6 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 	}
 	
 	@Override
-	public void cancel()
-	{
-		if (mConnection.hasHost())
-		{
-			mConnection.sendToAll(MessageType.LEFT_GAME);
-		}
-		exit(true);
-	}
-	
-	@Override
 	public void connectedTo(final ConnectedDevice aDevice)
 	{
 		aDevice.send(MessageType.LOGIN, ContactsUtil.getPhoneNumber(this), DataUtil.serialize(mChar));
@@ -205,9 +193,9 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 	{
 		if ( !aEnabled)
 		{
-			if (mConnection.hasHost())
+			if (mConnector.hasHost())
 			{
-				mConnection.sendToAll(MessageType.LEFT_GAME);
+				mConnector.sendToAll(MessageType.LEFT_GAME);
 			}
 			exit(true);
 		}
@@ -218,7 +206,10 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 	{
 		mItems = aItems;
 		
-		init();
+		if (mConnector != null)
+		{
+			init();
+		}
 	}
 	
 	@Override
@@ -233,7 +224,7 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 	 */
 	public void exit(final boolean aSaveCharacter)
 	{
-		mConnection.exit();
+		mConnector.unbind();
 		final Intent intent = new Intent();
 		intent.putExtra(CHARACTER, DataUtil.serialize(mChar));
 		setResult(aSaveCharacter ? RESULT_OK : RESULT_CANCELED, intent);
@@ -261,9 +252,9 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 	@Override
 	public void onBackPressed()
 	{
-		if (mConnection.hasHost())
+		if (mConnector.hasHost())
 		{
-			mConnection.sendToAll(MessageType.LEFT_GAME);
+			mConnector.sendToAll(MessageType.LEFT_GAME);
 		}
 		exit(true);
 	}
@@ -325,52 +316,29 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 	@Override
 	public void sendChange(final CharacterChange aChange)
 	{
-		if (mConnection.hasHost())
+		if (mConnector.hasHost())
 		{
-			mConnection.getHost().send(MessageType.UPDATE, DataUtil.serialize(aChange), aChange.getType());
+			mConnector.getHost().send(MessageType.UPDATE, DataUtil.serialize(aChange), aChange.getType());
 		}
 	}
 	
 	@Override
 	public void sendMessage(final Message aMessage)
 	{
-		if (mConnection.hasHost())
+		if (mConnector.hasHost())
 		{
-			mConnection.getHost().send(MessageType.MESSAGE, DataUtil.serialize(aMessage));
+			mConnector.getHost().send(MessageType.MESSAGE, DataUtil.serialize(aMessage));
 		}
 	}
 	
-	/**
-	 * Disables or enables the whole activity.
-	 * 
-	 * @param aEnabled
-	 *            Whether the user should be able to do anything.
-	 */
-	public void setEnabled(final boolean aEnabled)
+	@Override
+	public void setConnector(Connector aConnector)
 	{
-		if ( !aEnabled)
+		mConnector = aConnector;
+		
+		if (mItems != null)
 		{
-			mHandler.post(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-					findViewById(android.R.id.content).setBackgroundColor(Color.DKGRAY);
-				}
-			});
-		}
-		else
-		{
-			mHandler.post(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-					findViewById(android.R.id.content).setBackgroundColor(Color.BLACK);
-				}
-			});
+			init();
 		}
 	}
 	
@@ -401,14 +369,15 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 		mHandler = new Handler();
 		
 		ConnectionUtil.loadItems(this, this);
+		ConnectionUtil.loadConnector(this, this);
 	}
 	
 	@Override
 	protected void onPause()
 	{
-		if (mConnection != null && mConnection.hasHost())
+		if (mConnector != null && mConnector.hasHost())
 		{
-			mConnection.getHost().send(MessageType.AFK);
+			mConnector.getHost().send(MessageType.AFK);
 		}
 		
 		super.onPause();
@@ -417,9 +386,9 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 	@Override
 	protected void onResume()
 	{
-		if (mConnection != null && mConnection.hasHost())
+		if (mConnector != null && mConnector.hasHost())
 		{
-			mConnection.getHost().send(MessageType.BACK);
+			mConnector.getHost().send(MessageType.BACK);
 		}
 		
 		super.onResume();
@@ -429,8 +398,7 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 	{
 		LanguageUtil.init(this);
 		
-		mConnection = new ConnectionController(this, this, mHandler);
-		mConnection.connect(this);
+		mConnector.bind(this, this, mHandler);
 		
 		final String xml = getIntent().getStringExtra(CreateCharActivity.CHARACTER);
 		CharacterInstance character = null;
@@ -484,14 +452,17 @@ public class ClientActivity extends Activity implements ItemConsumer, Connection
 			@Override
 			public void onClick(final View aV)
 			{
-				if (mConnection.hasHost())
+				if (mConnector.hasHost())
 				{
-					mConnection.sendToAll(MessageType.LEFT_GAME);
+					mConnector.sendToAll(MessageType.LEFT_GAME);
 				}
 				exit(true);
 			}
 		});
-		
-		setEnabled(false);
+	}
+	
+	private void setEnabled(boolean aEnabled)
+	{
+		// TODO Implement
 	}
 }

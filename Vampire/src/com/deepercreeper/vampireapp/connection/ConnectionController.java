@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.UUID;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
+import com.deepercreeper.vampireapp.connection.service.Connector;
 import com.deepercreeper.vampireapp.host.Player;
 import com.deepercreeper.vampireapp.util.BluetoothReceiver;
 import com.deepercreeper.vampireapp.util.BluetoothReceiver.BluetoothListener;
@@ -29,6 +30,7 @@ import android.widget.Toast;
  * 
  * @author vrl
  */
+@Deprecated
 public class ConnectionController implements ConnectionListener
 {
 	private static final String TAG = "ConnectionController";
@@ -77,19 +79,6 @@ public class ConnectionController implements ConnectionListener
 	public void banned(final Player aPlayer)
 	{}
 	
-	@Override
-	public void cancel()
-	{
-		mHandler.post(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				mConnectionListener.cancel();
-			}
-		});
-	}
-	
 	/**
 	 * Checks the used connection even if nothing changed.
 	 */
@@ -105,6 +94,12 @@ public class ConnectionController implements ConnectionListener
 		}
 	}
 	
+	@Override
+	public void setConnector(Connector aConnector)
+	{
+		// Do nothing
+	}
+	
 	/**
 	 * Tries to connect to any of the user paired devices and logs in if possible.
 	 * 
@@ -116,7 +111,7 @@ public class ConnectionController implements ConnectionListener
 		final List<Device> devices = new ArrayList<Device>();
 		for (final BluetoothDevice device : mBluetoothAdapter.getBondedDevices())
 		{
-			devices.add(new Device(device));
+			devices.add(new Device(device, null));
 		}
 		final ItemSelectionListener<Device> listener = new ItemSelectionListener<Device>()
 		{
@@ -124,7 +119,6 @@ public class ConnectionController implements ConnectionListener
 			public void cancel()
 			{
 				mReceiver.removeDeviceListener(BluetoothDevice.ACTION_FOUND);
-				ConnectionController.this.cancel();
 			}
 			
 			@Override
@@ -150,7 +144,7 @@ public class ConnectionController implements ConnectionListener
 						{
 							Log.i(TAG, "Tried to add no name device.");
 						}
-						dialog.addOption(new Device(aDevice));
+						dialog.addOption(new Device(aDevice, null));
 					}
 				});
 			}
@@ -159,7 +153,7 @@ public class ConnectionController implements ConnectionListener
 		{
 			for (final BluetoothDevice device : mBluetoothAdapter.getBondedDevices())
 			{
-				devices.add(new Device(device));
+				devices.add(new Device(device, null));
 			}
 			if (devices.isEmpty())
 			{
@@ -237,7 +231,7 @@ public class ConnectionController implements ConnectionListener
 			{
 				try
 				{
-					connectedTo(new ConnectedDevice(socket, this, true));
+					connectedTo(new ConnectedDevice(socket, null, true));
 					connected = true;
 				}
 				catch (final IOException e)
@@ -246,7 +240,6 @@ public class ConnectionController implements ConnectionListener
 		}
 		if ( !connected)
 		{
-			cancel();
 			Log.w(TAG, "Could not connect to device.");
 		}
 	}
@@ -528,7 +521,7 @@ public class ConnectionController implements ConnectionListener
 				boolean connected = false;
 				try
 				{
-					connectedTo(new ConnectedDevice(socket, this, false));
+					connectedTo(new ConnectedDevice(socket, null, false));
 					connected = true;
 				}
 				catch (final IOException e)

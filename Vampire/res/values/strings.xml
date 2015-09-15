@@ -27,6 +27,7 @@
 	<string name="ask_depot_money">Will {0} in {1} lagern.</string>
 	<string name="ask_increase">Will {0} auf {1} erhöhen.</string>
 	<string name="ask_take_money">Will {0} von {1} nehmen.</string>
+    <string name="available">Verfügbar</string>
     <string name="back">Zurück</string>
     <string name="bag">Tasche</string>
     <string name="ban">Bannen</string>
@@ -127,6 +128,7 @@
     <string name="no_paired_device">Sie haben keine gekoppelten Geräte.</string>
     <string name="normal">Normal</string>
     <string name="ok">OK</string>
+    <string name="pending">Ausstehend ...</string>
     <string name="play">Spielen</string>
     <string name="play_host">Starten</string>
     <string name="play_host_button">Host starten</string>
@@ -134,6 +136,7 @@
     <string name="player_lost_insanity">Ist folgende Geistesstörung los: {0}</string>
     <string name="quantity">Anzahl</string>
     <string name="rage">Rasend</string>
+    <string name="refused">Verweigert</string>
     <string name="reload_time">Nachladezeit</string>
     <string name="removed_item">Folgendes Item wurde entfernt: {0}</string>
     <string name="reset">Zurücksetzen</string>

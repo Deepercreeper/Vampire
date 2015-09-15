@@ -27,6 +27,7 @@
     <string name="ask_depot_money">Wants to depot {0} at {1}.</string>
     <string name="ask_increase">Wants to increase {0} to {1}.</string>
     <string name="ask_take_money">Wants to take {0} from {1}.</string>
+    <string name="available">Available</string>
     <string name="back">Back</string>
     <string name="bag">Bag</string>
     <string name="ban">Ban</string>
@@ -127,6 +128,7 @@
     <string name="no_paired_device">You have no paired devices.</string>
     <string name="normal">Normal</string>
     <string name="ok">OK</string>
+    <string name="pending">Pending ...</string>
     <string name="play">Play</string>
     <string name="play_host">Play</string>
     <string name="play_host_button">Start host</string>
@@ -134,6 +136,7 @@
     <string name="player_lost_insanity">Lost the following insanity: {0}</string>
     <string name="quantity">Quantity</string>
     <string name="rage">Raging</string>
+    <string name="refused">Refused</string>
     <string name="reload_time">Reload time</string>
     <string name="removed_item">The following item was removed: {0}</string>
     <string name="reset">Reset</string>

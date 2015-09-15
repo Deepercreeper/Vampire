@@ -1,8 +1,11 @@
 package com.deepercreeper.vampireapp.util.view.dialogs;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import com.deepercreeper.vampireapp.R;
 import com.deepercreeper.vampireapp.items.interfaces.Nameable;
 import com.deepercreeper.vampireapp.util.view.listeners.ItemSelectionListener;
@@ -25,17 +28,40 @@ import android.widget.ListView;
  */
 public class SelectItemDialog <T extends Nameable> extends DefaultDialog<ItemSelectionListener<T>, ListView>
 {
-	private final List<T> mItems;
+	private final List<T> mItems = new ArrayList<T>();
+	
+	private final Map<T, Boolean> mEnabledStates = new HashMap<T, Boolean>();
 	
 	private final ArrayAdapter<T> mAdapter;
 	
 	private SelectItemDialog(final List<T> aItems, final String aTitle, final Context aContext, final ItemSelectionListener<T> aAction)
 	{
 		super(aTitle, aContext, aAction, R.layout.dialog_select_item, ListView.class);
-		mItems = aItems;
+		mItems.addAll(aItems);
 		Collections.sort(mItems);
 		
-		mAdapter = new ArrayAdapter<T>(getContext(), android.R.layout.simple_list_item_1, mItems);
+		mAdapter = new ArrayAdapter<T>(getContext(), android.R.layout.simple_list_item_1, mItems)
+		{
+			@Override
+			public boolean isEnabled(int aPosition)
+			{
+				Boolean value = mEnabledStates.get(mAdapter.getItem(aPosition));
+				return value == null || value;
+			}
+			
+			@Override
+			public boolean areAllItemsEnabled()
+			{
+				for (int i = 0; i < mItems.size(); i++ )
+				{
+					if ( !isEnabled(i))
+					{
+						return false;
+					}
+				}
+				return true;
+			}
+		};
 		getContainer().setOnItemClickListener(new OnItemClickListener()
 		{
 			@Override
@@ -62,10 +88,32 @@ public class SelectItemDialog <T extends Nameable> extends DefaultDialog<ItemSel
 		}
 	}
 	
+	/**
+	 * Sets whether the given item should be enabled.
+	 * 
+	 * @param aOption
+	 *            The option.
+	 * @param aEnabled
+	 *            Whether it should be enabled.
+	 */
+	public void setOptionEnabled(T aOption, boolean aEnabled)
+	{
+		if (mItems.contains(aOption))
+		{
+			mEnabledStates.put(aOption, aEnabled);
+		}
+	}
+	
 	@Override
 	public Dialog createDialog(final Builder aBuilder)
 	{
 		return aBuilder.create();
+	}
+	
+	@Override
+	protected void cancel()
+	{
+		getListener().cancel();
 	}
 	
 	/**
@@ -77,12 +125,6 @@ public class SelectItemDialog <T extends Nameable> extends DefaultDialog<ItemSel
 	public void removeOption(final T aOption)
 	{
 		mAdapter.remove(aOption);
-	}
-	
-	@Override
-	protected void cancel()
-	{
-		getListener().cancel();
 	}
 	
 	/**
