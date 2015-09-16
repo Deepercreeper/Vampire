@@ -10,7 +10,6 @@ import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
 import com.deepercreeper.vampireapp.connection.ConnectionListener;
 import com.deepercreeper.vampireapp.connection.Device;
-import com.deepercreeper.vampireapp.connection.Device.State;
 import com.deepercreeper.vampireapp.util.BluetoothReceiver;
 import com.deepercreeper.vampireapp.util.BluetoothReceiver.BluetoothListener;
 import com.deepercreeper.vampireapp.util.Log;
@@ -55,9 +54,136 @@ public class ConnectorImpl implements Connector
 		WIFI
 	}
 	
+	private class ServerListener extends Thread
+	{
+		private boolean mListening = true;
+		
+		private SelectItemDialog<Device> mDialog;
+		
+		private List<Device> mServerDevices;
+		
+		private void setDialog(final SelectItemDialog<Device> aDialog)
+		{
+			mDialog = aDialog;
+			mServerDevices = mDialog.getItems();
+		}
+		
+		private void stopListening()
+		{
+			mListening = false;
+		}
+		
+		@Override
+		public void run()
+		{
+			int index = 0;
+			while (mListening)
+			{
+				while ((mBluetoothAdapter.isDiscovering() || mServerDevices.size() <= index) && mListening)
+				{
+					try
+					{
+						Thread.sleep(1);
+					}
+					catch (final InterruptedException e)
+					{}
+				}
+				if ( !mListening)
+				{
+					return;
+				}
+				final Device device = mServerDevices.get(index++ );
+				device.setState(Device.State.SEARCHING);
+				mDialog.updateUI();
+				askForServer(device);
+			}
+		}
+		
+		private void askForServer(final Device aDevice)
+		{
+			final BluetoothDevice device = aDevice.getDevice();
+			BluetoothSocket socket = null;
+			try
+			{
+				socket = device.createInsecureRfcommSocketToServiceRecord(DEFAULT_UUID);
+			}
+			catch (final IOException e)
+			{}
+			if (socket == null)
+			{
+				try
+				{
+					socket = device.createRfcommSocketToServiceRecord(DEFAULT_UUID);
+				}
+				catch (final IOException e)
+				{}
+			}
+			boolean connected = false;
+			if (socket != null)
+			{
+				try
+				{
+					final BluetoothSocket remoteSocket = socket;
+					final Thread thread = Thread.currentThread();
+					new Thread()
+					{
+						@Override
+						public void run()
+						{
+							boolean exception = false;
+							try
+							{
+								remoteSocket.connect();
+							}
+							catch (final Exception e)
+							{
+								exception = true;
+							}
+							if ( !exception)
+							{
+								thread.interrupt();
+							}
+						}
+					}.start();
+					try
+					{
+						Thread.sleep(TIMEOUT);
+					}
+					catch (final InterruptedException e)
+					{}
+					if ( !socket.isConnected())
+					{
+						socket.close();
+					}
+				}
+				catch (final Exception e)
+				{}
+				if (socket.isConnected())
+				{
+					aDevice.setState(Device.State.AVAILABLE);
+					mDialog.setOptionEnabled(aDevice, true);
+					connected = true;
+					try
+					{
+						socket.close();
+					}
+					catch (final IOException e)
+					{}
+				}
+			}
+			if ( !connected)
+			{
+				aDevice.setState(Device.State.REFUSED);
+				mDialog.setOptionEnabled(aDevice, false);
+			}
+		}
+	}
+	
 	private static final String TAG = "Connector";
 	
 	private static final UUID DEFAULT_UUID = UUID.fromString("c155da2d-302d-4f10-bc3b-fa277af3599d");
+	
+	private static final int TIMEOUT = 3000;
 	
 	private final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 	
@@ -147,21 +273,6 @@ public class ConnectorImpl implements Connector
 	}
 	
 	@Override
-	public boolean isActive()
-	{
-		switch (getConnectionType())
-		{
-			case BLUETOOTH :
-				return mBluetoothAdapter.isEnabled();
-			case NETWORK :
-				return false;
-			case WIFI :
-				return false;
-		}
-		return false;
-	}
-	
-	@Override
 	public void connect()
 	{
 		if ( !isActive())
@@ -169,27 +280,31 @@ public class ConnectorImpl implements Connector
 			makeText(R.string.activate_bluetooth, Toast.LENGTH_SHORT);
 			return;
 		}
+		final ServerListener serverListener = new ServerListener();
 		final ItemSelectionListener<Device> listener = new ItemSelectionListener<Device>()
 		{
 			@Override
 			public void cancel()
 			{
 				mBluetoothReceiver.removeDeviceListener(BluetoothDevice.ACTION_FOUND);
+				serverListener.stopListening();
 			}
 			
 			@Override
 			public void select(final Device aDevice)
 			{
 				mBluetoothReceiver.removeDeviceListener(BluetoothDevice.ACTION_FOUND);
+				serverListener.stopListening();
 				connectTo(aDevice);
 			}
 		};
 		final SelectItemDialog<Device> dialog = SelectItemDialog.createSelectionDialog(Collections.<Device> emptyList(),
 				mContext.getString(R.string.choose_host), mContext, listener);
-				
+		serverListener.setDialog(dialog);
+		
 		for (final BluetoothDevice device : mBluetoothAdapter.getBondedDevices())
 		{
-			dialog.addOption(createDevice(device, dialog), false);
+			dialog.addOption(new Device(device, mContext), false);
 		}
 		mBluetoothReceiver.setDeviceListener(BluetoothDevice.ACTION_FOUND, new BluetoothListener()
 		{
@@ -205,7 +320,7 @@ public class ConnectorImpl implements Connector
 						{
 							Log.i(TAG, "Added no name device.");
 						}
-						dialog.addOption(createDevice(aDevice, dialog), false);
+						dialog.addOption(new Device(aDevice, mContext), false);
 					}
 				});
 			}
@@ -219,6 +334,7 @@ public class ConnectorImpl implements Connector
 			}
 		}
 		dialog.show(mContext.getFragmentManager(), mContext.getString(R.string.choose_host));
+		serverListener.start();
 	}
 	
 	@Override
@@ -281,6 +397,12 @@ public class ConnectorImpl implements Connector
 	}
 	
 	@Override
+	public boolean hasHost()
+	{
+		return getHost() != null;
+	}
+	
+	@Override
 	public boolean hasNetwork()
 	{
 		// TODO Implement
@@ -295,9 +417,18 @@ public class ConnectorImpl implements Connector
 	}
 	
 	@Override
-	public boolean hasHost()
+	public boolean isActive()
 	{
-		return getHost() != null;
+		switch (getConnectionType())
+		{
+			case BLUETOOTH :
+				return mBluetoothAdapter.isEnabled();
+			case NETWORK :
+				return false;
+			case WIFI :
+				return false;
+		}
+		return false;
 	}
 	
 	@Override
@@ -417,55 +548,6 @@ public class ConnectorImpl implements Connector
 		}.start();
 	}
 	
-	private void listenForDevices(final boolean aSecure)
-	{
-		final BluetoothServerSocket server = aSecure ? mSecureSocket : mInsecureSocket;
-		while (mCheckingForDevies && server != null)
-		{
-			BluetoothSocket socket = null;
-			try
-			{
-				socket = server.accept(1000);
-			}
-			catch (final IOException e)
-			{}
-			if (socket != null)
-			{
-				boolean connected = false;
-				try
-				{
-					connectedTo(new ConnectedDevice(socket, this, false));
-					connected = true;
-				}
-				catch (final IOException e)
-				{}
-				if ( !connected)
-				{
-					Log.i(TAG, "Connection listening failed.");
-				}
-			}
-		}
-		if (server != null)
-		{
-			try
-			{
-				server.close();
-			}
-			catch (final IOException e)
-			{
-				Log.e(TAG, "Could not close insecure socket.");
-			}
-		}
-		if (aSecure)
-		{
-			mSecureSocket = null;
-		}
-		else
-		{
-			mInsecureSocket = null;
-		}
-	}
-	
 	@Override
 	public void unbind()
 	{
@@ -474,54 +556,6 @@ public class ConnectorImpl implements Connector
 		mContext = null;
 		mListener = null;
 		mHandler = null;
-	}
-	
-	private void askForServer(final Device aDevice, final SelectItemDialog<Device> aDialog)
-	{
-		final BluetoothDevice device = aDevice.getDevice();
-		BluetoothSocket socket = null;
-		try
-		{
-			socket = device.createInsecureRfcommSocketToServiceRecord(DEFAULT_UUID);
-		}
-		catch (final IOException e)
-		{}
-		if (socket == null)
-		{
-			try
-			{
-				socket = device.createRfcommSocketToServiceRecord(DEFAULT_UUID);
-			}
-			catch (final IOException e)
-			{}
-		}
-		boolean connected = false;
-		if (socket != null)
-		{
-			try
-			{
-				socket.connect();
-			}
-			catch (final IOException e)
-			{}
-			if (socket.isConnected())
-			{
-				aDevice.setState(State.AVAILABLE);
-				aDialog.setOptionEnabled(aDevice, true);
-				connected = true;
-				try
-				{
-					socket.close();
-				}
-				catch (final IOException e)
-				{}
-			}
-		}
-		if ( !connected)
-		{
-			aDevice.setState(State.REFUSED);
-			aDialog.setOptionEnabled(aDevice, false);
-		}
 	}
 	
 	private void connectTo(final Device aDevice)
@@ -569,17 +603,52 @@ public class ConnectorImpl implements Connector
 		}
 	}
 	
-	private Device createDevice(final BluetoothDevice aDevice, final SelectItemDialog<Device> aDialog)
+	private void listenForDevices(final boolean aSecure)
 	{
-		final Device device = new Device(aDevice, mContext);
-		new Thread()
+		final BluetoothServerSocket server = aSecure ? mSecureSocket : mInsecureSocket;
+		while (mCheckingForDevies && server != null)
 		{
-			@Override
-			public void run()
+			BluetoothSocket socket = null;
+			try
 			{
-				askForServer(device, aDialog);
+				socket = server.accept(1000);
 			}
-		}.start();
-		return device;
+			catch (final IOException e)
+			{}
+			if (socket != null)
+			{
+				boolean connected = false;
+				try
+				{
+					connectedTo(new ConnectedDevice(socket, this, false));
+					connected = true;
+				}
+				catch (final IOException e)
+				{}
+				if ( !connected)
+				{
+					Log.i(TAG, "Connection listening failed.");
+				}
+			}
+		}
+		if (server != null)
+		{
+			try
+			{
+				server.close();
+			}
+			catch (final IOException e)
+			{
+				Log.e(TAG, "Could not close insecure socket.");
+			}
+		}
+		if (aSecure)
+		{
+			mSecureSocket = null;
+		}
+		else
+		{
+			mInsecureSocket = null;
+		}
 	}
 }

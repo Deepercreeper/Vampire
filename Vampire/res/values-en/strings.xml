@@ -6,8 +6,8 @@
     <string name="accept_increase">{0} was increased to {1}.</string>
     <string name="accept_take">You took {0} of {1}.</string>
     <string name="accept_use">You are allowed to use {0} with {1} dices{2?, {2} instant success|}{x? and additional dice(s) {x}|}. Difficulty {3}.</string>
-	<string name="actions">Actions</string>
-	<string name="activate_bluetooth">Activate bluetooth.</string>
+    <string name="actions">Actions</string>
+    <string name="activate_bluetooth">Activate bluetooth.</string>
     <string name="add">Add</string>
     <string name="add_depot">Add depot</string>
     <string name="add_health_step">Add health step</string>
@@ -41,7 +41,7 @@
     <string name="cancel">Cancel</string>
     <string name="char_name">Character name</string>
     <string name="characters">Characters</string>
-	<string name="choose_difficulty">Choose difficulty for action {0}</string>
+    <string name="choose_difficulty">Choose difficulty for action {0}</string>
     <string name="choose_host">Choose host</string>
     <string name="choose_item_type">Choose item type</string>
     <string name="choose_dices_amount">Choose the amount of each dice</string>
@@ -73,7 +73,7 @@
     <string name="deny_use">You have no access to use {0}.</string>
     <string name="description">Description</string>
     <string name="difficulty">Difficulty</string>
-	<string name="disconnect">Disconnect</string>
+    <string name="disconnect">Disconnect</string>
     <string name="distance">Distance</string>
     <string name="distance_weapon">Distanceweapon</string>
     <string name="distance_unit">m</string>
@@ -86,7 +86,7 @@
     <string name="free_points_info">Free bonus points</string>
     <string name="friends">Friends</string>
     <string name="generation_colon">Generation:</string>
-	<string name="got_insanity">You got the following insanity: {0}</string>
+    <string name="got_insanity">You got the following insanity: {0}</string>
     <string name="got_item">You got the following item: {x}</string>
     <string name="got_step">You got a health step.</string>
     <string name="health_colon">Health:</string>
@@ -119,7 +119,7 @@
     <string name="magazine">Magazine</string>
     <string name="max">Max</string>
     <string name="max_weight">Maximum weight</string>
-	<string name="maximum">Maximum</string>
+    <string name="maximum">Maximum</string>
     <string name="minimum">Minimum</string>
     <string name="mode_colon">Mode:</string>
     <string name="money">Money</string>
@@ -147,6 +147,7 @@
     <string name="reset">Reset</string>
     <string name="restrictions">Restrictions</string>
     <string name="round">Round</string>
+    <string name="searching">Searching ...</string>
     <string name="sleeping">Sleeping</string>
     <string name="stash">Stash</string>
     <string name="to_much_weight">The item is too heavy.</string>

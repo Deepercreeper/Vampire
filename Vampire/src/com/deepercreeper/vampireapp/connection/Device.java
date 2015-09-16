@@ -20,9 +20,14 @@ public class Device extends Named
 	public static enum State
 	{
 		/**
-		 * This device is not reached yet.
+		 * Not searching yet.
 		 */
 		PENDING(R.string.pending),
+		
+		/**
+		 * This device is being searched.
+		 */
+		SEARCHING(R.string.searching),
 		
 		/**
 		 * The device has no open connection.
@@ -36,7 +41,7 @@ public class Device extends Named
 		
 		private final int mResourceId;
 		
-		private State(int aResourceId)
+		private State(final int aResourceId)
 		{
 			mResourceId = aResourceId;
 		}
@@ -64,7 +69,7 @@ public class Device extends Named
 	 * @param aContext
 	 *            The underlying context.
 	 */
-	public Device(final BluetoothDevice aDevice, Context aContext)
+	public Device(final BluetoothDevice aDevice, final Context aContext)
 	{
 		super(aDevice.getName() == null ? aDevice.getAddress() : aDevice.getName());
 		mDevice = aDevice;
@@ -72,11 +77,11 @@ public class Device extends Named
 	}
 	
 	@Override
-	public boolean equals(Object aObj)
+	public boolean equals(final Object aObj)
 	{
 		if (aObj instanceof Device)
 		{
-			Device dev = (Device) aObj;
+			final Device dev = (Device) aObj;
 			return dev.getAddress().equals(getAddress());
 		}
 		return false;
@@ -110,7 +115,7 @@ public class Device extends Named
 	 * @param aState
 	 *            The new state.
 	 */
-	public void setState(State aState)
+	public void setState(final State aState)
 	{
 		mState = aState;
 	}

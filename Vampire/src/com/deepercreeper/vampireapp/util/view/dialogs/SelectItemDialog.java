@@ -129,6 +129,15 @@ public class SelectItemDialog <T extends Nameable> extends DefaultDialog<ItemSel
 		if (mItems.contains(aOption))
 		{
 			mEnabledStates.put(aOption, aEnabled);
+			while (mHandler == null)
+			{
+				try
+				{
+					Thread.sleep(1);
+				}
+				catch (final InterruptedException e)
+				{}
+			}
 			mHandler.post(new Runnable()
 			{
 				@Override
@@ -144,6 +153,30 @@ public class SelectItemDialog <T extends Nameable> extends DefaultDialog<ItemSel
 	public Dialog createDialog(final Builder aBuilder)
 	{
 		return aBuilder.create();
+	}
+	
+	/**
+	 * Updates the list.
+	 */
+	public void updateUI()
+	{
+		while (mHandler == null)
+		{
+			try
+			{
+				Thread.sleep(1);
+			}
+			catch (final InterruptedException e)
+			{}
+		}
+		mHandler.post(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				mAdapter.notifyDataSetChanged();
+			}
+		});
 	}
 	
 	@Override
@@ -200,6 +233,14 @@ public class SelectItemDialog <T extends Nameable> extends DefaultDialog<ItemSel
 	public static boolean isDialogOpen()
 	{
 		return isDialogOpen(SelectItemDialog.class);
+	}
+	
+	/**
+	 * @return the list of items.
+	 */
+	public List<T> getItems()
+	{
+		return mItems;
 	}
 	
 	/**

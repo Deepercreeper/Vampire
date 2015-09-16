@@ -520,23 +520,24 @@ public final class R {
         public static final int reset=0x7f06008f;
         public static final int restrictions=0x7f060090;
         public static final int round=0x7f060091;
-        public static final int sleeping=0x7f060092;
-        public static final int stash=0x7f060093;
-        public static final int to_much_weight=0x7f060094;
-        public static final int took_item=0x7f060095;
-        public static final int unban=0x7f060096;
-        public static final int use=0x7f060097;
-        public static final int use_action=0x7f060098;
-        public static final int used_action=0x7f06009a;
-        public static final int used_action_none=0x7f06009b;
-        public static final int uses_action=0x7f060099;
-        public static final int using_action=0x7f06009c;
-        public static final int using_action_none=0x7f06009d;
-        public static final int value=0x7f06009e;
-        public static final int weight=0x7f06009f;
-        public static final int weight_unit=0x7f0600a0;
-        public static final int wifi=0x7f0600a1;
-        public static final int yes=0x7f0600a2;
+        public static final int searching=0x7f060092;
+        public static final int sleeping=0x7f060093;
+        public static final int stash=0x7f060094;
+        public static final int to_much_weight=0x7f060095;
+        public static final int took_item=0x7f060096;
+        public static final int unban=0x7f060097;
+        public static final int use=0x7f060098;
+        public static final int use_action=0x7f060099;
+        public static final int used_action=0x7f06009b;
+        public static final int used_action_none=0x7f06009c;
+        public static final int uses_action=0x7f06009a;
+        public static final int using_action=0x7f06009d;
+        public static final int using_action_none=0x7f06009e;
+        public static final int value=0x7f06009f;
+        public static final int weight=0x7f0600a0;
+        public static final int weight_unit=0x7f0600a1;
+        public static final int wifi=0x7f0600a2;
+        public static final int yes=0x7f0600a3;
     }
     public static final class style {
         /**  Maybe add an own style for all used views some day 
