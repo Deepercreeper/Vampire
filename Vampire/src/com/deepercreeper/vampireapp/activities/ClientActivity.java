@@ -10,9 +10,9 @@ import com.deepercreeper.vampireapp.character.instance.controllers.InventoryCont
 import com.deepercreeper.vampireapp.character.inventory.Artifact;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
+import com.deepercreeper.vampireapp.connection.connector.Connector;
+import com.deepercreeper.vampireapp.connection.connector.ConnectorImpl.ConnectionType;
 import com.deepercreeper.vampireapp.connection.ConnectionListener;
-import com.deepercreeper.vampireapp.connection.service.Connector;
-import com.deepercreeper.vampireapp.connection.service.ConnectorImpl.ConnectionType;
 import com.deepercreeper.vampireapp.host.Message;
 import com.deepercreeper.vampireapp.host.Message.Builder;
 import com.deepercreeper.vampireapp.host.Message.ButtonAction;

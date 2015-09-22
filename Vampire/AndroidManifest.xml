@@ -27,7 +27,7 @@
         </service>
 
         <service
-            android:name="com.deepercreeper.vampireapp.connection.service.ConnectionService"
+            android:name="com.deepercreeper.vampireapp.connection.connector.ConnectionService"
             android:icon="@drawable/ic_launcher"
             android:label="@string/connection_service" >
         </service>

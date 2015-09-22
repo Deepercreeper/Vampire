@@ -1,11 +1,13 @@
-package com.deepercreeper.vampireapp.connection.service;
+package com.deepercreeper.vampireapp.connection.connector;
 
 import com.deepercreeper.vampireapp.connection.ConnectedDevice;
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
+import com.deepercreeper.vampireapp.connection.connector.ConnectorImpl.ConnectionType;
 import com.deepercreeper.vampireapp.connection.ConnectionListener;
-import com.deepercreeper.vampireapp.connection.service.ConnectorImpl.ConnectionType;
+import com.deepercreeper.vampireapp.util.BluetoothReceiver;
 import com.deepercreeper.vampireapp.util.interfaces.Toaster;
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.os.Handler;
 
 /**
@@ -26,6 +28,11 @@ public interface Connector extends Toaster
 	 *            The handler for toasting.
 	 */
 	public void bind(Activity aContext, ConnectionListener aListener, Handler aHandler);
+	
+	/**
+	 * @return the current Bluetooth adapter.
+	 */
+	public BluetoothAdapter getBluetoothAdapter();
 	
 	/**
 	 * Checks whether the current connection is active.
@@ -87,7 +94,7 @@ public interface Connector extends Toaster
 	public ConnectedDevice getHost();
 	
 	/**
-	 * @return whether this device is able to connect via bluetooth.
+	 * @return whether this device is able to connect via Bluetooth.
 	 */
 	public boolean hasBluetooth();
 	
@@ -107,6 +114,16 @@ public interface Connector extends Toaster
 	 *            The message arguments.
 	 */
 	public void receiveMessage(final ConnectedDevice aDevice, final MessageType aType, final String[] aArgs);
+	
+	/**
+	 * @return the Bluetooth receiver.
+	 */
+	public BluetoothReceiver getBluetoothReceiver();
+	
+	/**
+	 * @return the context handler.
+	 */
+	public Handler getHandler();
 	
 	/**
 	 * Sends the given message to all connected devices.

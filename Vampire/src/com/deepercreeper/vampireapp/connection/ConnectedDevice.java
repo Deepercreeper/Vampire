@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.Arrays;
-import com.deepercreeper.vampireapp.connection.service.Connector;
+import com.deepercreeper.vampireapp.connection.connector.Connector;
 import com.deepercreeper.vampireapp.util.CodingUtil;
 import com.deepercreeper.vampireapp.util.Log;
 import android.bluetooth.BluetoothDevice;

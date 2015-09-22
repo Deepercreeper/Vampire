@@ -2,7 +2,7 @@ package com.deepercreeper.vampireapp.util;
 
 import com.deepercreeper.vampireapp.activities.ItemProviderService;
 import com.deepercreeper.vampireapp.connection.ConnectionListener;
-import com.deepercreeper.vampireapp.connection.service.ConnectionService;
+import com.deepercreeper.vampireapp.connection.connector.ConnectionService;
 import com.deepercreeper.vampireapp.items.ItemConsumer;
 import android.app.Activity;
 import android.content.ComponentName;

@@ -1,4 +1,4 @@
-package com.deepercreeper.vampireapp.connection.service;
+package com.deepercreeper.vampireapp.connection.connector;
 
 import com.deepercreeper.vampireapp.util.Log;
 import android.app.Service;

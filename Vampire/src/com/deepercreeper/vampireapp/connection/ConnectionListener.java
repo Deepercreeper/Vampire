@@ -1,7 +1,7 @@
 package com.deepercreeper.vampireapp.connection;
 
 import com.deepercreeper.vampireapp.connection.ConnectedDevice.MessageType;
-import com.deepercreeper.vampireapp.connection.service.Connector;
+import com.deepercreeper.vampireapp.connection.connector.Connector;
 import com.deepercreeper.vampireapp.host.Player;
 import com.deepercreeper.vampireapp.util.interfaces.Toaster;
 
