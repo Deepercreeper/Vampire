@@ -63,6 +63,8 @@ import android.util.SparseIntArray;
  */
 public class DataUtil
 {
+	private static final String DATA = "data";
+	
 	private static final String FILE_ENDING = ".xml";
 	
 	private static final String TAG = "DataUtil";
@@ -1076,7 +1078,7 @@ public class DataUtil
 	{
 		if (sData == null)
 		{
-			sData = loadDocument(aContext, "data", false);
+			sData = loadDocument(aContext, DATA, false);
 		}
 		return sData;
 	}
